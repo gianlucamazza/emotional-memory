@@ -1,0 +1,120 @@
+"""Layer 4: AppraisalVector and AppraisalEngine.
+
+Emotion is not given — it is *generated* by evaluating an event against
+the system's goals and norms (Lazarus, 1991; Scherer's Component Process
+Model, 2009; Stoic phantasia-assent model).
+
+The AppraisalVector implements Scherer's five Stimulus Evaluation Checks:
+  1. novelty          — how unexpected is this?
+  2. goal_relevance   — does it further or obstruct goals?
+  3. coping_potential — can the system handle it?
+  4. norm_congruence  — does it conform to expectations/values?
+  5. self_relevance   — how much does it concern the system's "self"?
+
+consolidation_strength() implements the Yerkes-Dodson inverted-U:
+high arousal (but not maximal) → strongest memory consolidation
+(McGaugh 2004; Brown & Kulik 1977).
+"""
+
+from __future__ import annotations
+
+from typing import Any, Protocol, runtime_checkable
+
+from pydantic import BaseModel, field_validator
+
+from emotional_memory.affect import CoreAffect
+
+
+class AppraisalVector(BaseModel):
+    """Multi-component appraisal of an event (Scherer CPM)."""
+
+    model_config = {"frozen": True}
+
+    novelty: float  # [-1.0, +1.0]  fully expected ↔ totally new
+    goal_relevance: float  # [-1.0, +1.0]  obstructs ↔ furthers goals
+    coping_potential: float  # [ 0.0,  1.0]  helpless ↔ full control
+    norm_congruence: float  # [-1.0, +1.0]  violates norms ↔ conforms
+    self_relevance: float  # [ 0.0,  1.0]  irrelevant ↔ highly self-relevant
+
+    @field_validator("novelty", "goal_relevance", "norm_congruence")
+    @classmethod
+    def _clamp_signed(cls, v: float) -> float:
+        return max(-1.0, min(1.0, v))
+
+    @field_validator("coping_potential", "self_relevance")
+    @classmethod
+    def _clamp_unit(cls, v: float) -> float:
+        return max(0.0, min(1.0, v))
+
+    @classmethod
+    def neutral(cls) -> "AppraisalVector":
+        return cls(
+            novelty=0.0,
+            goal_relevance=0.0,
+            coping_potential=0.5,
+            norm_congruence=0.0,
+            self_relevance=0.0,
+        )
+
+    def to_core_affect(self) -> CoreAffect:
+        """Map appraisal dimensions to valence-arousal space.
+
+        Mapping (design doc §05):
+          valence = 0.4*goal_relevance + 0.3*norm_congruence
+                  + 0.2*coping_potential_signed + 0.1*novelty
+          arousal = 0.5*|novelty| + 0.3*(1 - coping_potential)
+                  + 0.2*self_relevance
+
+        coping_potential_signed: coping=1 → +1 (calm confidence),
+                                 coping=0 → -1 (helpless urgency)
+        """
+        coping_signed = 2.0 * self.coping_potential - 1.0  # [0,1] → [-1,+1]
+        valence = (
+            0.4 * self.goal_relevance
+            + 0.3 * self.norm_congruence
+            + 0.2 * coping_signed
+            + 0.1 * self.novelty
+        )
+        arousal = (
+            0.5 * abs(self.novelty)
+            + 0.3 * (1.0 - self.coping_potential)
+            + 0.2 * self.self_relevance
+        )
+        return CoreAffect(valence=valence, arousal=arousal)
+
+
+@runtime_checkable
+class AppraisalEngine(Protocol):
+    """Protocol for computing an AppraisalVector from an event description.
+
+    Implementations may call an LLM, use rule-based heuristics, or any
+    other strategy. The library ships only StaticAppraisalEngine for testing.
+    """
+
+    def appraise(
+        self, event_text: str, context: dict[str, Any] | None = None
+    ) -> AppraisalVector: ...
+
+
+class StaticAppraisalEngine:
+    """Returns a fixed AppraisalVector regardless of input. For testing."""
+
+    def __init__(self, vector: AppraisalVector | None = None) -> None:
+        self._vector = vector or AppraisalVector.neutral()
+
+    def appraise(self, event_text: str, context: dict[str, Any] | None = None) -> AppraisalVector:
+        return self._vector
+
+
+def consolidation_strength(arousal: float, stimmung_arousal: float) -> float:
+    """Arousal-modulated consolidation strength (Yerkes-Dodson inverted-U).
+
+    Effective arousal blends encoding arousal (70%) with background
+    Stimmung arousal (30%). Peak consolidation near effective_arousal=0.7.
+
+    Returns a value in [0.0, 1.0].
+    """
+    effective = 0.7 * max(0.0, min(1.0, arousal)) + 0.3 * max(0.0, min(1.0, stimmung_arousal))
+    # Inverted parabola with peak=1.0 at x=0.7
+    raw = -4.0 * (effective - 0.7) ** 2 + 1.0
+    return max(0.0, min(1.0, raw))

@@ -1,0 +1,45 @@
+"""Emotional memory library for LLMs based on Affective Field Theory."""
+
+from emotional_memory.affect import AffectiveMomentum, CoreAffect
+from emotional_memory.appraisal import (
+    AppraisalEngine,
+    AppraisalVector,
+    StaticAppraisalEngine,
+    consolidation_strength,
+)
+from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
+from emotional_memory.interfaces import Embedder, MemoryStore
+from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
+from emotional_memory.resonance import ResonanceConfig
+from emotional_memory.retrieval import RetrievalConfig
+from emotional_memory.state import AffectiveState
+from emotional_memory.stimmung import StimmungField
+from emotional_memory.stores.in_memory import InMemoryStore
+
+__all__ = [
+    # Core affect
+    "CoreAffect",
+    "AffectiveMomentum",
+    "StimmungField",
+    "AffectiveState",
+    # Appraisal
+    "AppraisalVector",
+    "AppraisalEngine",
+    "StaticAppraisalEngine",
+    "consolidation_strength",
+    # Models
+    "EmotionalTag",
+    "ResonanceLink",
+    "Memory",
+    "make_emotional_tag",
+    # Interfaces
+    "Embedder",
+    "MemoryStore",
+    # Stores
+    "InMemoryStore",
+    # Config & Engine
+    "EmotionalMemoryConfig",
+    "RetrievalConfig",
+    "ResonanceConfig",
+    "EmotionalMemory",
+]
