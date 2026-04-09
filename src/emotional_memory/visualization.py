@@ -6,7 +6,7 @@ Each function returns the ``Figure`` it drew on.
 
 Requires the optional ``viz`` extra::
 
-    pip install emotional_memory[viz]
+    pip install emotional-memory[viz]
     # or
     from emotional_memory.visualization import plot_circumplex
 
@@ -72,7 +72,7 @@ def _require_matplotlib() -> None:
     except ImportError:
         raise ImportError(
             "matplotlib is required for visualization. "
-            "Install it with: pip install 'emotional_memory[viz]'"
+            "Install it with: pip install 'emotional-memory[viz]'"
         ) from None
 
 

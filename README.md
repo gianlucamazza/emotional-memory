@@ -10,9 +10,9 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 ## Installation
 
 ```bash
-pip install emotional_memory
-pip install emotional_memory[sqlite]   # with SQLite persistence
-pip install emotional_memory[viz]      # with matplotlib visualization
+pip install emotional-memory
+pip install emotional-memory[sqlite]   # with SQLite persistence
+pip install emotional-memory[viz]      # with matplotlib visualization
 ```
 
 For development:
@@ -160,7 +160,7 @@ dunder methods cannot be coroutines.
 
 **Stores included:**
 - `InMemoryStore` — dict-backed, brute-force cosine search (no extra deps)
-- `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`pip install emotional_memory[sqlite]`)
+- `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`pip install emotional-memory[sqlite]`)
 
 ### Appraisal Engines
 

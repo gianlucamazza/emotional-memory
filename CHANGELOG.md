@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Visualization module** (`visualization.py`) — 8 matplotlib plot functions: circumplex,
   decay curves, Yerkes-Dodson, retrieval radar, Stimmung evolution, adaptive weights heatmap,
-  resonance network, appraisal radar; install via `pip install emotional_memory[viz]`
+  resonance network, appraisal radar; install via `pip install emotional-memory[viz]`
 - **LLM integration tests** (`tests/test_llm_integration.py`) — 5 end-to-end tests against a
   real OpenAI-compatible endpoint; gated behind `pytest.mark.llm` and API key env var
 - **Appraisal quality benchmarks** (`benchmarks/appraisal_quality/`) — 15 natural-language
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Sync-to-async bridge adapters** in `async_adapters.py`: `SyncToAsyncEmbedder`,
   `SyncToAsyncStore`, `SyncToAsyncAppraisalEngine`, and `as_async()` convenience wrapper
 - **`SQLiteStore`** in `stores/sqlite.py` — persistent `MemoryStore` backed by SQLite +
-  sqlite-vec for ANN vector search; install via `pip install emotional_memory[sqlite]`;
+  sqlite-vec for ANN vector search; install via `pip install emotional-memory[sqlite]`;
   context-manager support; lazy vector index creation
 - **`LLMAppraisalEngine`** — provider-agnostic LLM-backed appraisal via user-supplied
   `LLMCallable` protocol; LRU cache (configurable size), fallback-on-error, markdown fence
