@@ -216,12 +216,23 @@ def retrieval_score(
     now: datetime,
     decay_config: DecayConfig,
     retrieval_config: RetrievalConfig,
+    precomputed_weights: NDArray[np.float64] | None = None,
 ) -> float:
-    """Compute the composite retrieval score for a single memory."""
-    w = adaptive_weights(
-        current_stimmung,
-        retrieval_config.base_weights,
-        retrieval_config.adaptive_weights_config,
+    """Compute the composite retrieval score for a single memory.
+
+    Args:
+        precomputed_weights: Pre-computed adaptive weights from ``adaptive_weights()``.
+            Pass this when scoring many memories with the same stimmung/config to avoid
+            redundant computation. If None, weights are computed inline.
+    """
+    w = (
+        precomputed_weights
+        if precomputed_weights is not None
+        else adaptive_weights(
+            current_stimmung,
+            retrieval_config.base_weights,
+            retrieval_config.adaptive_weights_config,
+        )
     )
 
     emb = memory.embedding or []

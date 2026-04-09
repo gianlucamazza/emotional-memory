@@ -5,6 +5,12 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      run_llm_tests:
+        description: "Run real-LLM tests (requires LLM_API_KEY secret)"
+        type: boolean
+        default: false
 
 jobs:
   test:
@@ -105,3 +111,74 @@ jobs:
           alert-threshold: "150%"
           comment-on-alert: true
           benchmark-data-dir-path: dev/bench
+
+  sqlite-tests:
+    name: SQLite store tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,sqlite]"
+
+      - name: Run SQLite store tests
+        run: pytest tests/test_sqlite_store.py -v
+
+  viz-tests:
+    name: Visualization tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,viz]"
+
+      - name: Run visualization tests
+        run: pytest tests/test_visualization.py -v
+
+  llm-tests:
+    name: LLM integration + quality benchmarks
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.run_llm_tests == 'true' &&
+      secrets.EMOTIONAL_MEMORY_LLM_API_KEY != ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,llm-test]"
+
+      - name: Validate LLM test files are importable
+        run: pytest --collect-only -m llm -q
+
+      - name: Run LLM integration tests
+        env:
+          EMOTIONAL_MEMORY_LLM_API_KEY: ${{ secrets.EMOTIONAL_MEMORY_LLM_API_KEY }}
+          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-4o-mini' }}
+        run: pytest tests/test_llm_integration.py -v -m llm
+
+      - name: Run appraisal quality benchmarks
+        env:
+          EMOTIONAL_MEMORY_LLM_API_KEY: ${{ secrets.EMOTIONAL_MEMORY_LLM_API_KEY }}
+          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-4o-mini' }}
+          EMOTIONAL_MEMORY_LLM_REPEATS: "1"
+        run: pytest benchmarks/appraisal_quality/ -v -m appraisal_quality

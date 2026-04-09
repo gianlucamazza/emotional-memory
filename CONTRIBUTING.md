@@ -7,6 +7,10 @@ git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,bench,sqlite]"
+# For real-LLM tests (optional):
+pip install -e ".[dev,llm-test]"
+# For visualization (optional):
+pip install -e ".[dev,viz]"
 pre-commit install
 ```
 
@@ -29,6 +33,18 @@ pytest benchmarks/fidelity/ -v        # psychological fidelity tests
 pytest benchmarks/perf/ --benchmark-only  # performance benchmarks
 ```
 
+Real-LLM tests (require `EMOTIONAL_MEMORY_LLM_API_KEY`):
+
+```bash
+make test-llm        # end-to-end integration tests with a real LLM
+make bench-appraisal # Scherer CPM prompt quality benchmarks (15 phrases)
+# Use any OpenAI-compatible endpoint:
+EMOTIONAL_MEMORY_LLM_BASE_URL=http://localhost:11434/v1 \
+EMOTIONAL_MEMORY_LLM_MODEL=llama3.2 \
+EMOTIONAL_MEMORY_LLM_API_KEY=dummy \
+make bench-appraisal
+```
+
 ## Code style
 
 - **Formatter/linter**: ruff (config in `ruff.toml`)
@@ -38,11 +54,13 @@ pytest benchmarks/perf/ --benchmark-only  # performance benchmarks
 
 ## Tests
 
-| Location | Purpose |
-|---|---|
-| `tests/` | Unit and integration tests — run on every PR |
-| `benchmarks/fidelity/` | Psychological invariants (Bower, Yerkes-Dodson, etc.) |
-| `benchmarks/perf/` | Performance benchmarks — run on push to main |
+| Location | Purpose | CI |
+|---|---|---|
+| `tests/` | Unit and integration tests | Every PR |
+| `tests/test_llm_integration.py` | Real-LLM end-to-end tests (`pytest.mark.llm`) | Manual (API key required) |
+| `benchmarks/fidelity/` | Psychological invariants (Bower, Yerkes-Dodson, etc.) | Push to main |
+| `benchmarks/perf/` | Performance benchmarks | Push to main |
+| `benchmarks/appraisal_quality/` | LLM appraisal prompt quality (`pytest.mark.appraisal_quality`) | Manual (API key required) |
 
 Add tests for all new code. Coverage must stay above 80% (`fail_under = 80` in `pyproject.toml`).
 
@@ -76,3 +94,4 @@ Entry point for encode/retrieve is `EmotionalMemory` in `src/emotional_memory/en
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec |
+| `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |

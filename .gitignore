@@ -20,8 +20,16 @@ htmlcov/
 
 # Local config
 .claude/
+.env
 
 # IDE
 .idea/
 .vscode/
 *.swp
+
+# SQLite databases
+*.db
+*.sqlite
+
+# pytest-benchmark results
+.benchmarks/

@@ -7,6 +7,7 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 ```bash
 pip install emotional_memory
 pip install emotional_memory[sqlite]   # with SQLite persistence
+pip install emotional_memory[viz]      # with matplotlib visualization
 ```
 
 For development:
@@ -15,6 +16,8 @@ For development:
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
 pip install -e ".[dev,sqlite]"
+pip install -e ".[dev,llm-test]"  # add httpx for real-LLM tests
+pip install -e ".[dev,viz]"       # add matplotlib for visualization
 ```
 
 ## Quickstart
@@ -97,6 +100,9 @@ em = EmotionalMemory(
 | `encode_batch(contents, metadata=None) -> list[Memory]` | Batch encode with `embed_batch()`, per-item appraisal |
 | `retrieve(query, top_k=5) -> list[Memory]` | Emotionally-weighted retrieval + reconsolidation |
 | `delete(memory_id)` | Remove a memory from the store |
+| `get(memory_id) -> Memory \| None` | Look up a single memory by ID |
+| `list_all() -> list[Memory]` | Return all stored memories |
+| `len(engine) -> int` | Number of memories in the store |
 | `get_state() -> AffectiveState` | Current affective state (read-only copy) |
 | `set_affect(core_affect)` | Manually inject a CoreAffect |
 | `save_state() -> dict` | Serialise affective state for persistence |
@@ -181,6 +187,68 @@ from emotional_memory import KeywordAppraisalEngine
 engine = KeywordAppraisalEngine()  # or pass custom KeywordRule list
 ```
 
+## Visualization
+
+The optional `viz` extra provides 8 plotting functions for inspecting and presenting the model's internals. Each function accepts an optional `ax` parameter for subplot composition and returns a `matplotlib.Figure`.
+
+```python
+from emotional_memory.visualization import plot_circumplex, plot_decay_curves
+```
+
+### Valence-Arousal Circumplex
+
+Memories plotted on Russell's (1980) 2D circumplex, colored by consolidation strength.
+
+![Circumplex](docs/images/circumplex.png)
+
+### Decay Curves (ACT-R Power Law)
+
+Family of curves showing how arousal (McGaugh 2004) and retrieval count (spacing effect) modulate memory decay.
+
+![Decay Curves](docs/images/decay_curves.png)
+
+### Yerkes-Dodson Inverted-U
+
+Consolidation strength peaks near effective arousal 0.7, then drops — the classic Yerkes-Dodson curve.
+
+![Yerkes-Dodson](docs/images/yerkes_dodson.png)
+
+### 6-Signal Retrieval Breakdown
+
+Radar chart of the six retrieval signals: semantic similarity, Stimmung congruence, affect proximity, momentum alignment, recency, and resonance boost.
+
+![Retrieval Radar](docs/images/retrieval_radar.png)
+
+### Stimmung Field Evolution
+
+Time series of valence, arousal, and dominance with dashed baselines showing the regression attractors.
+
+![Stimmung Evolution](docs/images/stimmung_evolution.png)
+
+### Adaptive Retrieval Weights
+
+Heatmap showing how retrieval weights shift across different Stimmung states (valence x arousal grid).
+
+![Adaptive Weights](docs/images/adaptive_weights_heatmap.png)
+
+### Resonance Network
+
+Directed graph with memories as nodes and edges colored by link type (semantic, emotional, temporal, causal, contrastive).
+
+![Resonance Network](docs/images/resonance_network.png)
+
+### Appraisal Radar (Scherer CPM)
+
+Spider chart of the 5 Stimulus Evaluation Check dimensions.
+
+![Appraisal Radar](docs/images/appraisal_radar.png)
+
+### Generating images
+
+```bash
+make docs-images   # regenerate all PNGs in docs/images/
+```
+
 ## Benchmarks
 
 ### Psychological fidelity (77 tests)
@@ -224,13 +292,43 @@ your `MemoryStore` to benefit from the pre-filter (`candidate_multiplier`).
 
 Run with: `make bench-perf`
 
+### Appraisal quality (LLM prompt validation)
+
+15 natural-language phrases with expected directional outcomes against Scherer's 5 dimensions:
+
+| Phrase category | Key assertions |
+|---|---|
+| Personal loss ("I got fired") | `goal_relevance < -0.2`, `coping_potential < 0.6` |
+| Achievement ("Got promoted") | `goal_relevance > 0.2`, `norm_congruence > 0.0` |
+| Moral violation ("Coworker stole credit") | `norm_congruence < -0.2`, `goal_relevance < 0.0` |
+| Grief, danger, betrayal, relief, … | dimension-specific directional bounds |
+
+Assertions use wide bands (e.g. `> 0.3`, `< -0.2`) and evaluate the median over 3 LLM calls to tolerate non-determinism. Designed to catch systematic prompt regressions, not exact calibration.
+
+Run with: `EMOTIONAL_MEMORY_LLM_API_KEY=... make bench-appraisal`
+
+Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOTIONAL_MEMORY_LLM_BASE_URL`.
+
 ## Development
 
 ```bash
 make check                    # lint + typecheck + test
 make cov                      # tests with branch coverage report
 make bench                    # fidelity + performance benchmarks
+
+# Real-LLM tests (require API key):
+make test-llm                 # end-to-end integration tests
+make bench-appraisal          # Scherer CPM prompt quality benchmarks
 ```
+
+### LLM test environment variables
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `EMOTIONAL_MEMORY_LLM_API_KEY` | — | API key (required) |
+| `EMOTIONAL_MEMORY_LLM_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
+| `EMOTIONAL_MEMORY_LLM_MODEL` | `gpt-4o-mini` | Model |
+| `EMOTIONAL_MEMORY_LLM_REPEATS` | `3` | Repeats per phrase in quality benchmarks |
 
 ## License
 

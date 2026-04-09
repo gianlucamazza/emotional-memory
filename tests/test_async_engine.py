@@ -304,3 +304,61 @@ class TestAsAsync:
         sync_em.set_affect(CoreAffect(valence=0.9, arousal=0.7))
         async_em = as_async(sync_em)
         assert async_em.get_state().core_affect.valence == pytest.approx(0.9)
+
+
+class TestAsyncFacadeMethods:
+    async def test_get_returns_encoded_memory(self):
+        em = _async_engine()
+        m = await em.encode("findable")
+        result = await em.get(m.id)
+        assert result is not None
+        assert result.content == "findable"
+
+    async def test_get_missing_returns_none(self):
+        em = _async_engine()
+        assert await em.get("nonexistent-id") is None
+
+    async def test_list_all_empty(self):
+        em = _async_engine()
+        assert await em.list_all() == []
+
+    async def test_list_all_returns_all(self):
+        em = _async_engine()
+        m1 = await em.encode("one")
+        m2 = await em.encode("two")
+        ids = {m.id for m in await em.list_all()}
+        assert m1.id in ids
+        assert m2.id in ids
+
+    async def test_count_empty(self):
+        em = _async_engine()
+        assert await em.count() == 0
+
+    async def test_count_after_encode(self):
+        em = _async_engine()
+        await em.encode("a")
+        await em.encode("b")
+        assert await em.count() == 2
+
+
+# ---------------------------------------------------------------------------
+# Input validation
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncInputValidation:
+    async def test_encode_batch_metadata_length_mismatch(self):
+        em = _async_engine()
+        with pytest.raises(ValueError, match="metadata length"):
+            await em.encode_batch(["a", "b"], metadata=[{"x": 1}])
+
+    async def test_retrieve_top_k_zero_raises(self):
+        em = _async_engine()
+        await em.encode("something")
+        with pytest.raises(ValueError, match="top_k"):
+            await em.retrieve("query", top_k=0)
+
+    async def test_retrieve_top_k_negative_raises(self):
+        em = _async_engine()
+        with pytest.raises(ValueError, match="top_k"):
+            await em.retrieve("query", top_k=-1)

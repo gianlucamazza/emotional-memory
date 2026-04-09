@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Visualization module** (`visualization.py`) — 8 matplotlib plot functions: circumplex,
+  decay curves, Yerkes-Dodson, retrieval radar, Stimmung evolution, adaptive weights heatmap,
+  resonance network, appraisal radar; install via `pip install emotional_memory[viz]`
+- **LLM integration tests** (`tests/test_llm_integration.py`) — 5 end-to-end tests against a
+  real OpenAI-compatible endpoint; gated behind `pytest.mark.llm` and API key env var
+- **Appraisal quality benchmarks** (`benchmarks/appraisal_quality/`) — 15 natural-language
+  phrases with directional assertions on Scherer's 5 dimensions; evaluates median over N repeats
+- **numpy cosine similarity** — replaced pure-Python loop with `np.dot + np.linalg.norm`;
+  added NaN guard returning 0.0 to prevent NaN propagation in scoring
+- **Performance: hoisted `adaptive_weights()`** — computed once per `retrieve()` call instead
+  of once per candidate per pass; `retrieval_score()` accepts `precomputed_weights` parameter
+- **Performance: skip Pass 2** when no resonance links target the active memory set
+- **Engine facade methods**: `get(memory_id)`, `list_all()`, `__len__()`/`count()` on both
+  `EmotionalMemory` and `AsyncEmotionalMemory`
+- **Input validation** on `encode_batch()` (metadata/contents length mismatch raises `ValueError`)
+  and `retrieve()` (top_k < 1 raises `ValueError`)
+- **CI jobs for optional extras** — dedicated sqlite-tests and viz-tests jobs install and
+  exercise those extras explicitly so they are never silently skipped
+- **`__init__.py` export smoke test** — verifies all `__all__` entries are importable
 - **`AsyncEmotionalMemory`** — async-native facade mirroring `EmotionalMemory`; all I/O methods
   (`encode`, `retrieve`, `encode_batch`, `delete`) are coroutines; state accessors remain sync
 - **Async protocols** in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStore` (uses
@@ -76,3 +95,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI: GitHub Actions matrix (Python 3.11-3.14), Codecov upload, benchmark regression tracking
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
+
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/gianlucamazza/emotional-memory/releases/tag/v0.1.0

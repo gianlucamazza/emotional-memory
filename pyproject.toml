@@ -26,8 +26,10 @@ classifiers = [
 dependencies = ["numpy>=1.24", "pydantic>=2.0,<3"]
 
 [project.urls]
+Homepage = "https://github.com/gianlucamazza/emotional-memory"
 Repository = "https://github.com/gianlucamazza/emotional-memory"
 "Bug Tracker" = "https://github.com/gianlucamazza/emotional-memory/issues"
+Changelog = "https://github.com/gianlucamazza/emotional-memory/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [
@@ -38,21 +40,25 @@ dev = [
   "mypy>=1.10",
 ]
 bench = ["pytest-benchmark>=4.0", "psutil>=5.9"]
+llm-test = ["httpx>=0.27"]
 sqlite = ["sqlite-vec>=0.1.1"]
+viz = ["matplotlib>=3.7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --tb=short"
-pythonpath = ["tests"]
+addopts = "-q --tb=short -m 'not llm and not appraisal_quality'"
+pythonpath = ["tests", "benchmarks"]
 python_files = ["test_*.py", "bench_*.py"]
 python_functions = ["test_*", "bench_*"]
 asyncio_mode = "auto"
 markers = [
   "fidelity: psychological fidelity benchmarks",
   "perf: performance benchmarks",
+  "llm: integration tests requiring a real LLM (skipped without EMOTIONAL_MEMORY_LLM_API_KEY)",
+  "appraisal_quality: LLM appraisal prompt quality benchmarks (skipped without EMOTIONAL_MEMORY_LLM_API_KEY)",
 ]
 
 [tool.coverage.run]

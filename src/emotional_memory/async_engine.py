@@ -31,8 +31,11 @@ Or wrap an existing sync engine::
 
 from __future__ import annotations
 
+import warnings
 from datetime import UTC, datetime
 from typing import Any
+
+import numpy as np
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, consolidation_strength
@@ -41,6 +44,7 @@ from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedde
 from emotional_memory.models import Memory, make_emotional_tag
 from emotional_memory.resonance import build_resonance_links
 from emotional_memory.retrieval import (
+    adaptive_weights,
     affective_prediction_error,
     reconsolidate,
     retrieval_score,
@@ -115,6 +119,12 @@ class AsyncEmotionalMemory:
 
         # Step 4: embed (async I/O)
         embedding = await self._embedder.embed(content)
+        if embedding and bool(np.isnan(np.asarray(embedding)).any()):
+            warnings.warn(
+                f"Embedder returned NaN values for content (len={len(content)}). "
+                "Semantic retrieval will be degraded for this memory.",
+                stacklevel=2,
+            )
 
         # Step 5: store (async I/O)
         memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=metadata)
@@ -143,6 +153,8 @@ class AsyncEmotionalMemory:
 
         Mirrors ``EmotionalMemory.retrieve`` with awaited I/O calls.
         """
+        if top_k < 1:
+            raise ValueError(f"top_k must be >= 1, got {top_k}")
         now = datetime.now(tz=UTC)
         query_embedding = await self._embedder.embed(query)
 
@@ -159,6 +171,11 @@ class AsyncEmotionalMemory:
             return []
 
         # G1 two-pass scoring (sync — pure computation)
+        # Compute adaptive weights once — invariant across all candidates
+        weights = adaptive_weights(
+            self._state.stimmung, rc.base_weights, rc.adaptive_weights_config
+        )
+
         def _score_all(active_ids: list[str]) -> list[tuple[float, Memory]]:
             scored = []
             for mem in candidates:
@@ -172,6 +189,7 @@ class AsyncEmotionalMemory:
                     now=now,
                     decay_config=self._config.decay,
                     retrieval_config=rc,
+                    precomputed_weights=weights,
                 )
                 scored.append((score, mem))
             scored.sort(key=lambda t: t[0], reverse=True)
@@ -179,7 +197,14 @@ class AsyncEmotionalMemory:
 
         pass1 = _score_all([])
         active_ids = [mem.id for _, mem in pass1[:top_k]]
-        pass2 = _score_all(active_ids)
+
+        # Skip Pass 2 when no candidate has resonance links targeting the active set
+        active_set = set(active_ids)
+        needs_pass2 = any(
+            any(link.target_id in active_set for link in mem.tag.resonance_links)
+            for _, mem in pass1
+        )
+        pass2 = _score_all(active_ids) if needs_pass2 else pass1
         top = [mem for _, mem in pass2[:top_k]]
 
         # Reconsolidation + retrieval count update (async store writes)
@@ -221,6 +246,10 @@ class AsyncEmotionalMemory:
         metadata: list[dict[str, Any]] | None = None,
     ) -> list[Memory]:
         """Encode multiple contents using a single embed_batch call (async)."""
+        if metadata is not None and len(metadata) != len(contents):
+            raise ValueError(
+                f"metadata length ({len(metadata)}) must match contents length ({len(contents)})"
+            )
         embeddings = await self._embedder.embed_batch(contents)
         results = []
         for i, (content, embedding) in enumerate(zip(contents, embeddings, strict=True)):
@@ -250,6 +279,12 @@ class AsyncEmotionalMemory:
                 appraisal=appraisal,
             )
 
+            if embedding and bool(np.isnan(np.asarray(embedding)).any()):
+                warnings.warn(
+                    f"Embedder returned NaN values for content[{i}] (len={len(content)}). "
+                    "Semantic retrieval will be degraded for this memory.",
+                    stacklevel=2,
+                )
             memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=meta)
             await self._store.save(memory)
 
@@ -276,6 +311,18 @@ class AsyncEmotionalMemory:
     async def delete(self, memory_id: str) -> None:
         """Remove a memory from the store."""
         await self._store.delete(memory_id)
+
+    async def get(self, memory_id: str) -> Memory | None:
+        """Look up a single memory by ID, or None if not found."""
+        return await self._store.get(memory_id)
+
+    async def list_all(self) -> list[Memory]:
+        """Return all memories in the store."""
+        return await self._store.list_all()
+
+    async def count(self) -> int:
+        """Return the number of memories in the store."""
+        return await self._store.count()
 
     def get_state(self) -> AffectiveState:
         """Return a copy of the current affective state."""

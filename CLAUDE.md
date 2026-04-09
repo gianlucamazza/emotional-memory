@@ -13,12 +13,26 @@ make lint           # ruff check
 make format         # ruff format
 make bench-fidelity # Psychological invariant tests (77 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
+make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
+make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMORY_LLM_API_KEY)
+make install-llm-test # Install llm-test dependencies (httpx)
+make install-viz     # Install visualization dependencies (matplotlib)
+make docs-images     # Generate docs/images/ PNGs from synthetic data
 ```
 
 Single test:
 ```bash
 uv run pytest tests/test_engine.py::test_name -v
 ```
+
+### LLM test environment variables
+
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `EMOTIONAL_MEMORY_LLM_API_KEY` | Yes | — | API key for LLM provider |
+| `EMOTIONAL_MEMORY_LLM_BASE_URL` | No | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
+| `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-4o-mini` | Model to use |
+| `EMOTIONAL_MEMORY_LLM_REPEATS` | No | `3` | Repeats per phrase in quality benchmarks |
 
 ## Architecture
 
@@ -43,6 +57,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
+| `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
 ### Key Data Flow
 
@@ -87,3 +102,4 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
 - mypy strict is enforced — all new code must be fully annotated.
 - Fidelity benchmarks in `benchmarks/fidelity/` validate psychological phenomena — run after logic changes to retrieval, decay, or resonance.
+- Appraisal quality benchmarks in `benchmarks/appraisal_quality/` validate LLM prompt output — run after changes to the Scherer CPM prompt in `appraisal_llm.py`.

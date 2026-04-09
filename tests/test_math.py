@@ -35,3 +35,12 @@ class TestCosineSimilarity:
         b = [0.8, 0.2, 0.7]
         s = cosine_similarity(a, b)
         assert -1.0 <= s <= 1.0
+
+    def test_nan_in_first_vector_returns_zero(self):
+        assert cosine_similarity([float("nan"), 1.0], [1.0, 1.0]) == 0.0
+
+    def test_nan_in_second_vector_returns_zero(self):
+        assert cosine_similarity([1.0, 1.0], [1.0, float("nan")]) == 0.0
+
+    def test_both_nan_returns_zero(self):
+        assert cosine_similarity([float("nan")], [float("nan")]) == 0.0
