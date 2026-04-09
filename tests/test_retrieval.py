@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig
-from emotional_memory.models import Memory, make_emotional_tag
+from emotional_memory.models import make_emotional_tag
 from emotional_memory.retrieval import (
     RetrievalConfig,
     adaptive_weights,
@@ -12,6 +12,8 @@ from emotional_memory.retrieval import (
     retrieval_score,
 )
 from emotional_memory.stimmung import StimmungField
+
+from conftest import make_test_memory
 
 
 def _neutral_stimmung():
@@ -26,16 +28,6 @@ def _stimmung(valence: float = 0.0, arousal: float = 0.0):
         inertia=0.5,
         timestamp=datetime.now(tz=timezone.utc),
     )
-
-
-def _memory(valence: float = 0.0, arousal: float = 0.5, embedding=None):
-    tag = make_emotional_tag(
-        core_affect=CoreAffect(valence=valence, arousal=arousal),
-        momentum=AffectiveMomentum.zero(),
-        stimmung=_neutral_stimmung(),
-        consolidation_strength=0.7,
-    )
-    return Memory.create(content="test", tag=tag, embedding=embedding)
 
 
 class TestAdaptiveWeights:
@@ -160,7 +152,7 @@ class TestRetrievalScore:
     def test_returns_float_in_unit_range(self):
         config = RetrievalConfig()
         decay = DecayConfig()
-        m = _memory(embedding=[1.0, 0.0])
+        m = make_test_memory(embedding=[1.0, 0.0])
         score = retrieval_score(
             query_embedding=[1.0, 0.0],
             query_affect=CoreAffect.neutral(),
@@ -182,8 +174,8 @@ class TestRetrievalScore:
         decay = DecayConfig(base_decay=0.01)  # minimal decay
         now = datetime.now(tz=timezone.utc)
 
-        neg_mem = _memory(valence=-0.8)
-        pos_mem = _memory(valence=0.8)
+        neg_mem = make_test_memory(valence=-0.8)
+        pos_mem = make_test_memory(valence=0.8)
 
         def score(m):
             return retrieval_score(

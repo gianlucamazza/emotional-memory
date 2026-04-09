@@ -6,39 +6,11 @@ from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector
 from emotional_memory.decay import DecayConfig
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
+from emotional_memory.resonance import ResonanceConfig
 from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.stores.in_memory import InMemoryStore
 
-
-class DeterministicEmbedder:
-    """Returns distinct embeddings per content string, deterministically."""
-
-    def __init__(self) -> None:
-        self._cache: dict[str, list[float]] = {}
-        self._dim = 8
-
-    def embed(self, text: str) -> list[float]:
-        if text not in self._cache:
-            h = hash(text) & 0xFFFFFFFF
-            vec = [(((h >> i) & 0xFF) / 255.0) for i in range(self._dim)]
-            total = sum(vec) or 1.0
-            self._cache[text] = [v / total for v in vec]
-        return self._cache[text]
-
-    def embed_batch(self, texts: list[str]) -> list[list[float]]:
-        return [self.embed(t) for t in texts]
-
-
-class PolarEmbedder:
-    """Two distinct embeddings: 'positive' and 'negative' content families."""
-
-    def embed(self, text: str) -> list[float]:
-        if any(w in text.lower() for w in ("joy", "happy", "success", "good")):
-            return [1.0, 0.0, 0.0, 0.0]
-        return [0.0, 0.0, 0.0, 1.0]
-
-    def embed_batch(self, texts: list[str]) -> list[list[float]]:
-        return [self.embed(t) for t in texts]
+from conftest import DeterministicEmbedder, PolarEmbedder
 
 
 def _positive_appraisal() -> AppraisalVector:
@@ -142,11 +114,7 @@ class TestResonanceLinks:
         em = EmotionalMemory(
             store=InMemoryStore(),
             embedder=DeterministicEmbedder(),
-            config=EmotionalMemoryConfig(
-                resonance=__import__(
-                    "emotional_memory.resonance", fromlist=["ResonanceConfig"]
-                ).ResonanceConfig(threshold=0.05, max_links=5)
-            ),
+            config=EmotionalMemoryConfig(resonance=ResonanceConfig(threshold=0.05, max_links=5)),
         )
         # Encode same content twice — embeddings identical → high semantic resonance
         em.encode("the project went well")

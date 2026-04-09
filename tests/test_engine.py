@@ -1,24 +1,14 @@
-"""Tests for EmotionalMemory facade (Step 10)."""
+"""Tests for EmotionalMemory facade."""
 
 import pytest
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
+from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.stores.in_memory import InMemoryStore
 
-
-class FixedEmbedder:
-    """Always returns the same embedding regardless of input."""
-
-    def __init__(self, vec: list[float]) -> None:
-        self._vec = vec
-
-    def embed(self, text: str) -> list[float]:
-        return list(self._vec)
-
-    def embed_batch(self, texts: list[str]) -> list[list[float]]:
-        return [self.embed(t) for t in texts]
+from conftest import FixedEmbedder
 
 
 class IndexEmbedder:
@@ -154,8 +144,6 @@ class TestRetrieve:
 
     def test_reconsolidation_on_large_ape(self):
         """Retrieval with very different affect should update the tag's core_affect."""
-        from emotional_memory.retrieval import RetrievalConfig
-
         config = EmotionalMemoryConfig(
             retrieval=RetrievalConfig(ape_threshold=0.01, reconsolidation_learning_rate=0.5)
         )
