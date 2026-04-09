@@ -1,6 +1,7 @@
 import math
 from datetime import UTC, datetime, timedelta
 
+import pytest
 from conftest import make_test_memory
 
 from emotional_memory.resonance import ResonanceConfig, build_resonance_links, temporal_proximity
@@ -96,3 +97,41 @@ class TestBuildResonanceLinks:
         links = build_resonance_links(new_m, [weak, strong], config)
         if len(links) >= 2:
             assert links[0].strength >= links[1].strength
+
+
+class TestResonanceProperties:
+    """Mathematical invariants for the resonance module."""
+
+    @pytest.mark.parametrize("n_candidates", [1, 5, 10, 25])
+    def test_max_links_always_respected(self, n_candidates):
+        max_links = 3
+        config = ResonanceConfig(threshold=0.0, max_links=max_links)
+        new_m = make_test_memory(embedding=[1.0, 0.0])
+        candidates = [make_test_memory(embedding=[1.0, 0.0]) for _ in range(n_candidates)]
+        links = build_resonance_links(new_m, candidates, config)
+        assert len(links) <= max_links
+
+    def test_no_self_links_always(self):
+        config = ResonanceConfig(threshold=0.0)
+        m = make_test_memory()
+        links = build_resonance_links(m, [m, m, m], config)
+        assert links == []
+
+    def test_link_strength_in_unit_range(self):
+        """All resonance link strengths are in [0, 1]."""
+        config = ResonanceConfig(threshold=0.0)
+        new_m = make_test_memory(embedding=[1.0, 0.0])
+        candidates = [
+            make_test_memory(embedding=[1.0, 0.0], valence=0.8),
+            make_test_memory(embedding=[0.5, 0.5], valence=-0.5),
+            make_test_memory(embedding=[0.0, 1.0], valence=0.0),
+        ]
+        links = build_resonance_links(new_m, candidates, config)
+        for link in links:
+            assert 0.0 <= link.strength <= 1.0
+
+    def test_temporal_proximity_symmetric(self):
+        """temporal_proximity(t1, t2) == temporal_proximity(t2, t1)."""
+        t1 = datetime.now(tz=UTC)
+        t2 = t1 + timedelta(hours=3)
+        assert math.isclose(temporal_proximity(t1, t2), temporal_proximity(t2, t1))

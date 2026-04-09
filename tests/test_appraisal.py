@@ -162,3 +162,39 @@ class TestStaticAppraisalEngine:
     def test_satisfies_protocol(self):
         engine = StaticAppraisalEngine()
         assert isinstance(engine, AppraisalEngine)
+
+
+class TestConsolidationProperties:
+    """Mathematical invariants for consolidation_strength."""
+
+    @pytest.mark.parametrize(
+        "arousal,stimmung_arousal",
+        [
+            (0.0, 0.0),
+            (0.5, 0.5),
+            (1.0, 1.0),
+            (0.7, 0.7),
+            (0.0, 1.0),
+            (1.0, 0.0),
+            (-1.0, -1.0),
+            (2.0, 2.0),
+        ],
+    )
+    def test_always_in_unit_range(self, arousal, stimmung_arousal):
+        v = consolidation_strength(arousal, stimmung_arousal)
+        assert 0.0 <= v <= 1.0, (
+            f"consolidation_strength({arousal}, {stimmung_arousal}) = {v} out of [0,1]"
+        )
+
+    def test_inverted_u_peak_not_at_extremes(self):
+        """Peak consolidation is not at arousal=0 or arousal=1 (with balanced stimmung)."""
+        arousal_levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        values = [consolidation_strength(a, 0.7) for a in arousal_levels]
+        peak_idx = values.index(max(values))
+        assert peak_idx not in (0, len(arousal_levels) - 1)
+
+    @pytest.mark.parametrize("stimmung_arousal", [0.0, 0.3, 0.5, 0.7, 1.0])
+    def test_stimmung_arousal_blending(self, stimmung_arousal):
+        """Different stimmung_arousal values all yield valid consolidation."""
+        v = consolidation_strength(0.5, stimmung_arousal)
+        assert 0.0 <= v <= 1.0

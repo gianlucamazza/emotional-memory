@@ -145,7 +145,10 @@ class TestReconsolidation:
         em.encode("the event")
         original_valence = em._store.list_all()[0].tag.core_affect.valence
 
-        # Retrieve under very positive affect → reconsolidation
+        # First retrieval — destabilises the memory (sets last_retrieved)
+        em.retrieve("the event", top_k=1)
+
+        # Second retrieval within window under very positive affect → reconsolidation
         em.set_affect(CoreAffect(valence=1.0, arousal=0.9))
         results = em.retrieve("the event", top_k=1)
 

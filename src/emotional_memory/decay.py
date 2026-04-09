@@ -38,6 +38,11 @@ class DecayConfig(BaseModel):
     min_seconds: float = 1.0
     """Avoid division by zero: treat elapsed < min_seconds as min_seconds."""
 
+    power: float = 1.0
+    """Scaling exponent applied to the decay formula.
+    Values > 1 accelerate decay; values < 1 slow it.
+    1.0 = standard ACT-R power-law."""
+
 
 def compute_effective_strength(
     tag: EmotionalTag,
@@ -67,7 +72,7 @@ def compute_effective_strength(
     )
     effective_decay = max(effective_decay, 0.0)
 
-    strength = tag.consolidation_strength * (elapsed**-effective_decay)
+    strength = tag.consolidation_strength * (elapsed ** (-effective_decay * config.power))
     strength = max(0.0, min(1.0, strength))
 
     if arousal >= config.floor_arousal_threshold:

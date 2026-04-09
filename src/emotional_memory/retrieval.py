@@ -20,6 +20,7 @@ a threshold.
 
 from __future__ import annotations
 
+import math
 from datetime import datetime
 
 import numpy as np
@@ -30,6 +31,35 @@ from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink
 from emotional_memory.stimmung import StimmungField
+
+
+class AdaptiveWeightsConfig(BaseModel):
+    """Parameters for smooth Stimmung-modulated retrieval weight adjustment.
+
+    Each of the three psychological conditions (negative mood, high arousal,
+    calm/neutral) is modelled as a continuous sigmoid or Gaussian gate rather
+    than a hard threshold, eliminating discontinuities in retrieval behaviour.
+
+    ``sharpness`` controls how step-like the transition is: a value of ~50
+    approximates the old hard-threshold behaviour; the default of 5.0 produces
+    a smooth transition centred at the given point.
+    """
+
+    # Negative mood: weight shift from semantic → emotional signals
+    negative_mood_strength: float = 0.15
+    negative_mood_center: float = -0.5
+    negative_mood_sharpness: float = 5.0
+
+    # High arousal: weight shift from semantic → momentum alignment
+    high_arousal_strength: float = 0.10
+    high_arousal_center: float = 0.7
+    high_arousal_sharpness: float = 5.0
+
+    # Calm/neutral: weight shift from emotional → semantic
+    calm_strength: float = 0.15
+    calm_valence_width: float = 0.2
+    calm_arousal_center: float = 0.3
+    calm_sharpness: float = 5.0
 
 
 class RetrievalConfig(BaseModel):
@@ -48,36 +78,69 @@ class RetrievalConfig(BaseModel):
     reconsolidation_window_seconds: float = 300.0
     """Seconds after retrieval during which the tag remains labile."""
 
+    candidate_multiplier: int = 3
+    """Pre-filter multiplier: when the store has > top_k * candidate_multiplier
+    entries, use search_by_embedding to fetch top_k * candidate_multiplier
+    candidates before full multi-signal scoring."""
+
+    adaptive_weights_config: AdaptiveWeightsConfig = AdaptiveWeightsConfig()
+    """Parameters for smooth Stimmung-modulated weight adjustment."""
+
 
 # ---------------------------------------------------------------------------
 # Adaptive weights
 # ---------------------------------------------------------------------------
 
 
-def adaptive_weights(stimmung: StimmungField, base: list[float]) -> NDArray[np.float64]:
+def _smooth_gate(x: float, center: float, sharpness: float) -> float:
+    """Smooth sigmoid gate via tanh, centred at ``center``.
+
+    Positive sharpness → activates *above* center (approaches 1 as x → +∞).
+    Negative sharpness → activates *below* center (approaches 1 as x → -∞).
+    Returns values in [0, 1].
+    """
+    return 0.5 * (1.0 + math.tanh(sharpness * (x - center)))
+
+
+def adaptive_weights(
+    stimmung: StimmungField,
+    base: list[float],
+    config: AdaptiveWeightsConfig | None = None,
+) -> NDArray[np.float64]:
     """Return retrieval weights modulated by current Stimmung.
 
     Heidegger: mood is not a filter on cognition but its ground — the
     Stimmung shapes what stands out and what recedes.
+
+    Three conditions are applied as smooth continuous functions (tanh /
+    Gaussian) rather than hard thresholds, eliminating discontinuities at
+    boundary values while preserving the same directional intent:
+      - Negative mood  → emotional signals dominate (s2, s3 ↑, s1 ↓)
+      - High arousal   → momentum alignment dominates (s4 ↑, s1 ↓)
+      - Calm/neutral   → semantic retrieval dominates (s1 ↑, s2, s3 ↓)
     """
+    cfg = config or AdaptiveWeightsConfig()
     w = np.array(base, dtype=float)
 
-    # Negative mood intensifies emotional bias
-    if stimmung.valence < -0.5:
-        w[1] += 0.10  # stimmung congruence
-        w[2] += 0.05  # affect proximity
-        w[0] -= 0.15  # less semantic weight
+    # Negative mood: sigmoid activates below negative_mood_center
+    neg = _smooth_gate(stimmung.valence, cfg.negative_mood_center, -cfg.negative_mood_sharpness)
+    w[1] += cfg.negative_mood_strength * neg * (2.0 / 3.0)  # stimmung congruence
+    w[2] += cfg.negative_mood_strength * neg * (1.0 / 3.0)  # affect proximity
+    w[0] -= cfg.negative_mood_strength * neg  # semantic
 
-    # High arousal sensitises to momentum (direction of change)
-    if stimmung.arousal > 0.7:
-        w[3] += 0.10  # momentum alignment
-        w[0] -= 0.10
+    # High arousal: sigmoid activates above high_arousal_center
+    aro = _smooth_gate(stimmung.arousal, cfg.high_arousal_center, cfg.high_arousal_sharpness)
+    w[3] += cfg.high_arousal_strength * aro  # momentum alignment
+    w[0] -= cfg.high_arousal_strength * aro  # semantic
 
-    # Neutral calm → more rational/semantic retrieval
-    if abs(stimmung.valence) < 0.2 and stimmung.arousal < 0.3:
-        w[0] += 0.15
-        w[1] -= 0.10
-        w[2] -= 0.05
+    # Calm/neutral: Gaussian over valence x inverted sigmoid over arousal
+    # Peaks at (valence≈0, arousal≈0); falls off smoothly in all directions
+    valence_calm = math.exp(-((stimmung.valence / cfg.calm_valence_width) ** 2))
+    arousal_calm = _smooth_gate(stimmung.arousal, cfg.calm_arousal_center, -cfg.calm_sharpness)
+    calm = valence_calm * arousal_calm
+    w[0] += cfg.calm_strength * calm  # semantic
+    w[1] -= cfg.calm_strength * calm * (2.0 / 3.0)  # stimmung congruence
+    w[2] -= cfg.calm_strength * calm * (1.0 / 3.0)  # affect proximity
 
     # Clamp negatives and normalise
     w = np.clip(w, 0.0, None)
@@ -155,7 +218,11 @@ def retrieval_score(
     retrieval_config: RetrievalConfig,
 ) -> float:
     """Compute the composite retrieval score for a single memory."""
-    w = adaptive_weights(current_stimmung, retrieval_config.base_weights)
+    w = adaptive_weights(
+        current_stimmung,
+        retrieval_config.base_weights,
+        retrieval_config.adaptive_weights_config,
+    )
 
     emb = memory.embedding or []
     s1 = _cosine(query_embedding, emb) if (query_embedding and emb) else 0.0

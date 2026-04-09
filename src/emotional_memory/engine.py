@@ -34,6 +34,7 @@ from emotional_memory.retrieval import (
     retrieval_score,
 )
 from emotional_memory.state import AffectiveState
+from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
 
 
 class EmotionalMemoryConfig(BaseModel):
@@ -41,6 +42,8 @@ class EmotionalMemoryConfig(BaseModel):
     retrieval: RetrievalConfig = RetrievalConfig()
     resonance: ResonanceConfig = ResonanceConfig()
     stimmung_alpha: float = 0.1
+    stimmung_decay: StimmungDecayConfig | None = None
+    """Time-based regression of Stimmung toward baseline. None = disabled."""
 
 
 class EmotionalMemory:
@@ -98,7 +101,7 @@ class EmotionalMemory:
 
         # Step 1: resolve affect
         if appraisal is None and self._appraisal_engine is not None:
-            appraisal = self._appraisal_engine.appraise(content)
+            appraisal = self._appraisal_engine.appraise(content, context=metadata)
 
         if appraisal is not None:
             new_affect = appraisal.to_core_affect()
@@ -107,7 +110,10 @@ class EmotionalMemory:
 
         # Step 2: update affective state
         self._state = self._state.update(
-            new_affect, now=now, stimmung_alpha=self._config.stimmung_alpha
+            new_affect,
+            now=now,
+            stimmung_alpha=self._config.stimmung_alpha,
+            stimmung_decay=self._config.stimmung_decay,
         )
 
         # Step 3: build EmotionalTag
@@ -127,8 +133,14 @@ class EmotionalMemory:
         memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=metadata)
         self._store.save(memory)
 
-        # Step 6: build resonance links against all existing memories
-        candidates = self._store.list_all()
+        # Step 6: build resonance links — pre-filter when store is large (G2)
+        resonance_limit = (
+            self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+        )
+        if len(self._store) > resonance_limit and memory.embedding is not None:
+            candidates = self._store.search_by_embedding(memory.embedding, resonance_limit)
+        else:
+            candidates = self._store.list_all()
         links = build_resonance_links(memory, candidates, self._config.resonance)
 
         if links:
@@ -142,36 +154,60 @@ class EmotionalMemory:
         """Retrieve the top-k most relevant memories for the query.
 
         Scoring uses all 6 AFT signals with Stimmung-adaptive weights.
-        Each retrieved memory undergoes a reconsolidation check: if the
-        Affective Prediction Error exceeds the threshold, the tag's
-        core_affect is updated.
+
+        Two-pass strategy for spreading activation (G1):
+          Pass 1 — score all candidates with empty active_ids to get an initial
+                   top-k ranking; their IDs become the active set.
+          Pass 2 — re-score with the active set, allowing resonance links to
+                   boost memories associated with the initially top-ranked ones.
+
+        Pre-filter (G2): when the store is large, use search_by_embedding to
+        narrow candidates to top_k * candidate_multiplier before full scoring.
+
+        Reconsolidation (D1): only triggered if the memory was last retrieved
+        within the reconsolidation_window_seconds lability window.
         """
         now = datetime.now(tz=UTC)
         query_embedding = self._embedder.embed(query)
 
-        candidates = self._store.list_all()
+        # G2 — pre-filter candidates via embedding search when store is large
+        rc = self._config.retrieval
+        candidate_limit = top_k * rc.candidate_multiplier
+        if len(self._store) > candidate_limit:
+            candidates = self._store.search_by_embedding(query_embedding, candidate_limit)
+        else:
+            candidates = self._store.list_all()
+
         if not candidates:
             return []
 
-        scored = []
-        for mem in candidates:
-            score = retrieval_score(
-                query_embedding=query_embedding,
-                query_affect=self._state.core_affect,
-                current_stimmung=self._state.stimmung,
-                current_momentum=self._state.momentum,
-                memory=mem,
-                active_memory_ids=[],
-                now=now,
-                decay_config=self._config.decay,
-                retrieval_config=self._config.retrieval,
-            )
-            scored.append((score, mem))
+        def _score_all(active_ids: list[str]) -> list[tuple[float, Memory]]:
+            scored = []
+            for mem in candidates:
+                score = retrieval_score(
+                    query_embedding=query_embedding,
+                    query_affect=self._state.core_affect,
+                    current_stimmung=self._state.stimmung,
+                    current_momentum=self._state.momentum,
+                    memory=mem,
+                    active_memory_ids=active_ids,
+                    now=now,
+                    decay_config=self._config.decay,
+                    retrieval_config=rc,
+                )
+                scored.append((score, mem))
+            scored.sort(key=lambda t: t[0], reverse=True)
+            return scored
 
-        scored.sort(key=lambda t: t[0], reverse=True)
-        top = [mem for _, mem in scored[:top_k]]
+        # G1 — two-pass: first pass seeds the active set for spreading activation
+        pass1 = _score_all([])
+        active_ids = [mem.id for _, mem in pass1[:top_k]]
+        pass2 = _score_all(active_ids)
+
+        top = [mem for _, mem in pass2[:top_k]]
 
         # Reconsolidation check and retrieval count update
+        window = rc.reconsolidation_window_seconds
         result = []
         for mem in top:
             updated = mem.model_copy(
@@ -185,14 +221,17 @@ class EmotionalMemory:
                 }
             )
             ape = affective_prediction_error(mem.tag.core_affect, self._state.core_affect)
-            if ape > self._config.retrieval.ape_threshold:
+            # D1 — only reconsolidate within the lability window
+            last = mem.tag.last_retrieved
+            in_window = last is not None and (now - last).total_seconds() <= window
+            if ape > rc.ape_threshold and in_window:
                 updated = updated.model_copy(
                     update={
                         "tag": reconsolidate(
                             updated.tag,
                             self._state.core_affect,
                             ape,
-                            self._config.retrieval.reconsolidation_learning_rate,
+                            rc.reconsolidation_learning_rate,
                         )
                     }
                 )
@@ -200,6 +239,73 @@ class EmotionalMemory:
             result.append(updated)
 
         return result
+
+    def encode_batch(
+        self,
+        contents: list[str],
+        metadata: list[dict[str, Any]] | None = None,
+    ) -> list[Memory]:
+        """Encode multiple contents using a single embed_batch call.
+
+        Uses embed_batch() for efficient batched embedding (G6), then encodes
+        each item sequentially so that AffectiveState evolves naturally.
+        Resonance links are built against the store state at each step, meaning
+        later items in the batch can link to earlier ones.
+        """
+        embeddings = self._embedder.embed_batch(contents)
+        results = []
+        for i, (content, embedding) in enumerate(zip(contents, embeddings, strict=True)):
+            meta = metadata[i] if metadata else None
+            now = datetime.now(tz=UTC)
+
+            # Resolve appraisal per item (mirrors encode())
+            appraisal: AppraisalVector | None = None
+            if self._appraisal_engine is not None:
+                appraisal = self._appraisal_engine.appraise(content, context=meta)
+
+            if appraisal is not None:
+                new_affect = appraisal.to_core_affect()
+            else:
+                new_affect = self._state.core_affect
+
+            self._state = self._state.update(
+                new_affect,
+                now=now,
+                stimmung_alpha=self._config.stimmung_alpha,
+                stimmung_decay=self._config.stimmung_decay,
+            )
+
+            cs = consolidation_strength(new_affect.arousal, self._state.stimmung.arousal)
+            tag = make_emotional_tag(
+                core_affect=self._state.core_affect,
+                momentum=self._state.momentum,
+                stimmung=self._state.stimmung,
+                consolidation_strength=cs,
+                appraisal=appraisal,
+            )
+
+            memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=meta)
+            self._store.save(memory)
+
+            resonance_limit = (
+                self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+            )
+            if len(self._store) > resonance_limit and memory.embedding is not None:
+                candidates = self._store.search_by_embedding(memory.embedding, resonance_limit)
+            else:
+                candidates = self._store.list_all()
+            links = build_resonance_links(memory, candidates, self._config.resonance)
+            if links:
+                updated_tag = tag.model_copy(update={"resonance_links": links})
+                memory = memory.model_copy(update={"tag": updated_tag})
+                self._store.update(memory)
+
+            results.append(memory)
+        return results
+
+    def delete(self, memory_id: str) -> None:
+        """Remove a memory from the store."""
+        self._store.delete(memory_id)
 
     def get_state(self) -> AffectiveState:
         """Return a copy of the current affective state."""
@@ -213,4 +319,36 @@ class EmotionalMemory:
         self._state = self._state.update(
             core_affect,
             stimmung_alpha=self._config.stimmung_alpha,
+            stimmung_decay=self._config.stimmung_decay,
         )
+
+    def save_state(self) -> dict[str, Any]:
+        """Serialise the current affective state for persistence.
+
+        Returns a JSON-serialisable dict that can be stored alongside the
+        memory store and later restored with ``load_state()``.  The private
+        momentum history is included so that momentum computation continues
+        correctly after a restart.
+        """
+        return self._state.snapshot()
+
+    def load_state(self, data: dict[str, Any]) -> None:
+        """Restore a previously saved affective state.
+
+        Args:
+            data: A dict produced by a previous ``save_state()`` call.
+        """
+        self._state = AffectiveState.restore(data)
+
+    def get_current_stimmung(self, now: datetime | None = None) -> StimmungField:
+        """Return the Stimmung regressed to ``now`` without modifying state.
+
+        Useful for read-only mood inspection between encode/retrieve calls.
+        If ``stimmung_decay`` is not configured, returns the frozen Stimmung.
+        """
+
+        if now is None:
+            now = datetime.now(tz=UTC)
+        if self._config.stimmung_decay is not None:
+            return self._state.stimmung.regress(now, self._config.stimmung_decay)
+        return self._state.stimmung

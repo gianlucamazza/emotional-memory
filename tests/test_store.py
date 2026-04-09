@@ -1,5 +1,6 @@
 from conftest import make_test_memory
 
+from emotional_memory.interfaces import MemoryStore
 from emotional_memory.stores.in_memory import InMemoryStore
 
 
@@ -76,3 +77,6 @@ class TestInMemoryStore:
             store.save(make_test_memory(embedding=[1.0, 0.0]))
         results = store.search_by_embedding([1.0, 0.0], top_k=3)
         assert len(results) == 3
+
+    def test_protocol_conformance(self):
+        assert isinstance(InMemoryStore(), MemoryStore)

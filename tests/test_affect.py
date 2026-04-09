@@ -100,3 +100,39 @@ class TestAffectiveMomentum:
         m = AffectiveMomentum(d_valence=0.1, d_arousal=0.2)
         assert m.dd_valence == 0.0
         assert m.dd_arousal == 0.0
+
+
+class TestCoreAffectProperties:
+    """Mathematical invariants for CoreAffect."""
+
+    @pytest.mark.parametrize(
+        "valence,arousal",
+        [(-5.0, 3.0), (2.0, -1.0), (0.5, 0.5), (-1.0, 0.0), (1.0, 1.0)],
+    )
+    def test_always_clamped(self, valence, arousal):
+        ca = CoreAffect(valence=valence, arousal=arousal)
+        assert -1.0 <= ca.valence <= 1.0
+        assert 0.0 <= ca.arousal <= 1.0
+
+    @pytest.mark.parametrize(
+        "v1,v2",
+        [(0.0, 0.5), (-0.5, 0.5), (0.3, 0.8), (-0.9, -0.4)],
+    )
+    def test_positive_velocity_when_valence_increases(self, v1, v2):
+        """After two updates where valence rises, d_valence must be positive."""
+        from emotional_memory.state import AffectiveState
+
+        state = AffectiveState.initial()
+        state = state.update(CoreAffect(valence=v1, arousal=0.5))
+        state = state.update(CoreAffect(valence=v2, arousal=0.5))
+        assert state.momentum.d_valence > 0.0, (
+            f"v1={v1}→v2={v2}: expected positive d_valence, got {state.momentum.d_valence:.3f}"
+        )
+
+    @pytest.mark.parametrize("alpha", [0.0, 0.25, 0.5, 0.75, 1.0])
+    def test_lerp_output_in_range(self, alpha):
+        a = CoreAffect(valence=-1.0, arousal=0.0)
+        b = CoreAffect(valence=1.0, arousal=1.0)
+        c = a.lerp(b, alpha)
+        assert -1.0 <= c.valence <= 1.0
+        assert 0.0 <= c.arousal <= 1.0

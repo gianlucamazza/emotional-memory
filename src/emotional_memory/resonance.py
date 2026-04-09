@@ -15,7 +15,7 @@ import math
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from emotional_memory._math import cosine_similarity
 from emotional_memory.affect import CoreAffect
@@ -35,8 +35,15 @@ class ResonanceConfig(BaseModel):
     emotional_weight: float = 0.3
     temporal_weight: float = 0.2
 
-    temporal_half_life_seconds: float = 3600.0
-    """Half-life for temporal proximity decay."""
+    temporal_half_life_seconds: float = Field(default=3600.0, gt=0)
+    """Half-life for temporal proximity decay. Must be positive."""
+
+    candidate_multiplier: int = 3
+    """Pre-filter multiplier for encode-side resonance building.
+
+    When the store has more than ``max_links * candidate_multiplier`` entries,
+    ``search_by_embedding`` is used to narrow candidates before scoring, keeping
+    resonance-link construction sub-linear in store size."""
 
 
 def temporal_proximity(t1: datetime, t2: datetime, half_life_seconds: float = 3600.0) -> float:
@@ -45,6 +52,8 @@ def temporal_proximity(t1: datetime, t2: datetime, half_life_seconds: float = 36
     proximity = exp(-|delta_t| * ln(2) / half_life)
     Returns 1.0 for simultaneous events, approaches 0 for distant events.
     """
+    if half_life_seconds <= 0:
+        return 0.0
     delta = abs((t1 - t2).total_seconds())
     return math.exp(-delta * math.log(2) / half_life_seconds)
 
@@ -59,8 +68,24 @@ def _classify_link_type(
     semantic_sim: float,
     emotional_sim: float,
     temporal_prox: float,
+    source_affect: CoreAffect | None = None,
+    target_affect: CoreAffect | None = None,
+    source_before_target: bool = False,
 ) -> Literal["semantic", "emotional", "temporal", "causal", "contrastive"]:
-    """Return the dominant associative principle for a link."""
+    """Return the dominant associative principle for a link.
+
+    Causal: temporally ordered, semantically similar memories (A caused B).
+    Contrastive: temporally close memories with opposing valence (A contrasts B).
+    """
+    if (
+        source_affect is not None
+        and target_affect is not None
+        and temporal_prox > 0.5
+        and abs(source_affect.valence - target_affect.valence) > 1.0
+    ):
+        return "contrastive"
+    if source_before_target and temporal_prox > 0.7 and semantic_sim > 0.6:
+        return "causal"
     if semantic_sim >= emotional_sim and semantic_sim >= temporal_prox:
         return "semantic"
     if emotional_sim >= temporal_prox:
@@ -105,7 +130,15 @@ def build_resonance_links(
         if score < config.threshold:
             continue
 
-        link_type = _classify_link_type(sem_sim, emo_sim, temp_prox)
+        source_before_target = new_memory.tag.timestamp < mem.tag.timestamp
+        link_type = _classify_link_type(
+            sem_sim,
+            emo_sim,
+            temp_prox,
+            source_affect=new_memory.tag.core_affect,
+            target_affect=mem.tag.core_affect,
+            source_before_target=source_before_target,
+        )
         link = ResonanceLink(
             source_id=new_memory.id,
             target_id=mem.id,

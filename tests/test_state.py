@@ -1,5 +1,7 @@
 from datetime import UTC, datetime, timedelta
 
+import pytest
+
 from emotional_memory.affect import CoreAffect
 from emotional_memory.state import AffectiveState
 
@@ -66,3 +68,62 @@ class TestAffectiveState:
         s2 = s.update(CoreAffect(valence=0.5, arousal=0.5))
         # Only 1 history point → no diff possible → zero momentum
         assert s2.momentum.d_valence == 0.0
+
+
+class TestAffectiveStateSnapshot:
+    def test_snapshot_contains_history(self):
+        s = AffectiveState.initial()
+        s = s.update(CoreAffect(valence=0.5, arousal=0.5))
+        snap = s.snapshot()
+        assert "_history" in snap
+        assert len(snap["_history"]) >= 1
+
+    def test_restore_roundtrip_core_affect(self):
+        s = AffectiveState.initial()
+        s = s.update(CoreAffect(valence=0.7, arousal=0.4))
+        snap = s.snapshot()
+        restored = AffectiveState.restore(snap)
+        assert restored.core_affect.valence == pytest.approx(0.7)
+        assert restored.core_affect.arousal == pytest.approx(0.4)
+
+    def test_restore_roundtrip_stimmung(self):
+        s = AffectiveState.initial()
+        for _ in range(20):
+            s = s.update(CoreAffect(valence=1.0, arousal=0.8), stimmung_alpha=0.2)
+        snap = s.snapshot()
+        restored = AffectiveState.restore(snap)
+        assert restored.stimmung.valence == pytest.approx(s.stimmung.valence, abs=1e-9)
+
+    def test_restore_preserves_momentum_history(self):
+        s = AffectiveState.initial()
+        s = s.update(CoreAffect(valence=0.2, arousal=0.3))
+        s = s.update(CoreAffect(valence=0.5, arousal=0.5))
+        s = s.update(CoreAffect(valence=0.8, arousal=0.7))
+        snap = s.snapshot()
+        restored = AffectiveState.restore(snap)
+        # Next update should yield same momentum in both
+        next_s = s.update(CoreAffect(valence=0.9, arousal=0.9))
+        next_r = restored.update(CoreAffect(valence=0.9, arousal=0.9))
+        assert next_s.momentum.d_valence == pytest.approx(next_r.momentum.d_valence, abs=1e-6)
+
+    def test_restore_does_not_mutate_snapshot(self):
+        s = AffectiveState.initial()
+        s = s.update(CoreAffect(valence=0.5, arousal=0.5))
+        snap = s.snapshot()
+        keys_before = set(snap.keys())
+        AffectiveState.restore(snap)
+        assert set(snap.keys()) == keys_before
+
+    def test_restore_handles_empty_history(self):
+        s = AffectiveState.initial()
+        snap = s.snapshot()
+        snap["_history"] = []
+        restored = AffectiveState.restore(snap)
+        assert restored.momentum.d_valence == 0.0
+
+    def test_restore_skips_malformed_history_entries(self):
+        s = AffectiveState.initial()
+        snap = s.snapshot()
+        snap["_history"] = [["2024-01-01", 0.5, 0.5], ["bad"]]  # second entry malformed
+        restored = AffectiveState.restore(snap)
+        assert len(restored._history) == 1
