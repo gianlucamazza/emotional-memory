@@ -1,5 +1,9 @@
 """Emotional memory library for LLMs based on Affective Field Theory."""
 
+from importlib.metadata import version
+
+__version__ = version("emotional_memory")
+
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import (
     AppraisalEngine,
@@ -17,6 +21,7 @@ from emotional_memory.stimmung import StimmungField
 from emotional_memory.stores.in_memory import InMemoryStore
 
 __all__ = [
+    "__version__",
     # Core affect
     "CoreAffect",
     "AffectiveMomentum",

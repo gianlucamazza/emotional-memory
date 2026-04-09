@@ -8,10 +8,33 @@ version = "0.1.0"
 description = "Emotional memory library for LLMs based on Affective Field Theory"
 requires-python = ">=3.11"
 license = "MIT"
+readme = "README.md"
+authors = [{ name = "Gianluca Mazza", email = "info@gianlucamazza.it" }]
+keywords = ["llm", "memory", "emotion", "affective-computing", "ai"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Typing :: Typed",
+]
 dependencies = ["numpy>=1.24", "pydantic>=2.0,<3"]
 
+[project.urls]
+Repository = "https://github.com/gianlucamazza/emotional-memory"
+"Bug Tracker" = "https://github.com/gianlucamazza/emotional-memory/issues"
+
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.4"]
+dev = ["pytest>=7", "ruff>=0.4", "mypy>=1.10", "pydantic[mypy]"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --tb=short"
