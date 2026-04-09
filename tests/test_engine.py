@@ -1,14 +1,13 @@
 """Tests for EmotionalMemory facade."""
 
 import pytest
+from conftest import FixedEmbedder
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.stores.in_memory import InMemoryStore
-
-from conftest import FixedEmbedder
 
 
 class IndexEmbedder:

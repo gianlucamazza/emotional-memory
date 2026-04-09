@@ -73,4 +73,4 @@ def compute_effective_strength(
     if arousal >= config.floor_arousal_threshold:
         strength = max(strength, config.floor_value)
 
-    return strength
+    return float(strength)

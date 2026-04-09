@@ -39,3 +39,10 @@ where = ["src"]
 testpaths = ["tests"]
 addopts = "-q --tb=short"
 pythonpath = ["tests"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+packages = ["emotional_memory"]
+plugins = ["pydantic.mypy"]

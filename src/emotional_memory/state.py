@@ -13,7 +13,7 @@ AffectiveState is immutable — update() returns a new instance.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, PrivateAttr
 
@@ -36,7 +36,7 @@ class AffectiveState(BaseModel):
     _history: list[_HistoryEntry] = PrivateAttr(default_factory=list)
 
     @classmethod
-    def initial(cls) -> "AffectiveState":
+    def initial(cls) -> AffectiveState:
         """Neutral starting state."""
         return cls(
             core_affect=CoreAffect.neutral(),
@@ -49,16 +49,16 @@ class AffectiveState(BaseModel):
         new_affect: CoreAffect,
         now: datetime | None = None,
         stimmung_alpha: float = 0.1,
-    ) -> "AffectiveState":
+    ) -> AffectiveState:
         """Return a new AffectiveState reflecting the updated affect.
 
         Momentum is computed from finite differences over the last 3 history
         points (velocity = Δaffect, acceleration = Δvelocity).
         """
         if now is None:
-            now = datetime.now(tz=timezone.utc)
+            now = datetime.now(tz=UTC)
 
-        history = list(self._history) + [(now.isoformat(), new_affect.valence, new_affect.arousal)]
+        history = [*self._history, (now.isoformat(), new_affect.valence, new_affect.arousal)]
         history = history[-3:]
 
         momentum = _compute_momentum(history)
@@ -69,7 +69,7 @@ class AffectiveState(BaseModel):
             momentum=momentum,
             stimmung=new_stimmung,
         )
-        next_state._history = history  # noqa: SLF001
+        next_state._history = history
         return next_state
 
 

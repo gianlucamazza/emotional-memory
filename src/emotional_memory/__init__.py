@@ -21,30 +21,24 @@ from emotional_memory.stimmung import StimmungField
 from emotional_memory.stores.in_memory import InMemoryStore
 
 __all__ = [
-    "__version__",
-    # Core affect
-    "CoreAffect",
     "AffectiveMomentum",
-    "StimmungField",
     "AffectiveState",
-    # Appraisal
-    "AppraisalVector",
     "AppraisalEngine",
-    "StaticAppraisalEngine",
-    "consolidation_strength",
-    # Models
-    "EmotionalTag",
-    "ResonanceLink",
-    "Memory",
-    "make_emotional_tag",
-    # Interfaces
+    "AppraisalVector",
+    "CoreAffect",
     "Embedder",
-    "MemoryStore",
-    # Stores
-    "InMemoryStore",
-    # Config & Engine
-    "EmotionalMemoryConfig",
-    "RetrievalConfig",
-    "ResonanceConfig",
     "EmotionalMemory",
+    "EmotionalMemoryConfig",
+    "EmotionalTag",
+    "InMemoryStore",
+    "Memory",
+    "MemoryStore",
+    "ResonanceConfig",
+    "ResonanceLink",
+    "RetrievalConfig",
+    "StaticAppraisalEngine",
+    "StimmungField",
+    "__version__",
+    "consolidation_strength",
+    "make_emotional_tag",
 ]

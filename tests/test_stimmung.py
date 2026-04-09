@@ -1,6 +1,7 @@
 import math
 
 import pytest
+from pydantic import ValidationError
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.stimmung import StimmungField
@@ -16,7 +17,7 @@ class TestStimmungField:
 
     def test_frozen(self):
         s = StimmungField.neutral()
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             s.valence = 0.5  # type: ignore[misc]
 
     def test_clamp_valence(self):

@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from emotional_memory.appraisal import (
     AppraisalEngine,
@@ -42,7 +43,7 @@ class TestAppraisalVector:
 
     def test_frozen(self):
         v = AppraisalVector.neutral()
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             v.novelty = 0.5  # type: ignore[misc]
 
     def test_to_core_affect_produces_valid_affect(self):

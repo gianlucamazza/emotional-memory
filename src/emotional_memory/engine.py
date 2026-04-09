@@ -16,7 +16,7 @@ Orchestrates the full AFT pipeline:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pydantic import BaseModel
@@ -94,7 +94,7 @@ class EmotionalMemory:
           6. Build resonance links against existing memories
           7. Update stored memory with resonance links
         """
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
 
         # Step 1: resolve affect
         if appraisal is None and self._appraisal_engine is not None:
@@ -146,7 +146,7 @@ class EmotionalMemory:
         Affective Prediction Error exceeds the threshold, the tag's
         core_affect is updated.
         """
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
         query_embedding = self._embedder.embed(query)
 
         candidates = self._store.list_all()

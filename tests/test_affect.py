@@ -1,6 +1,7 @@
 import math
 
 import pytest
+from pydantic import ValidationError
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 
@@ -76,7 +77,7 @@ class TestCoreAffect:
 
     def test_frozen(self):
         ca = CoreAffect(valence=0.5, arousal=0.5)
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             ca.valence = 0.9  # type: ignore[misc]
 
 

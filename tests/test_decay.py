@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
@@ -17,7 +17,7 @@ def _tag(arousal: float = 0.5, strength: float = 0.8, retrieval_count: int = 0):
 
 
 def _now():
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 def _later(seconds: float):

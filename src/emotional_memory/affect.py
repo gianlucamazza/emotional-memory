@@ -39,14 +39,14 @@ class CoreAffect(BaseModel):
         return max(0.0, min(1.0, v))
 
     @classmethod
-    def neutral(cls) -> "CoreAffect":
+    def neutral(cls) -> CoreAffect:
         return cls(valence=0.0, arousal=0.0)
 
-    def distance(self, other: "CoreAffect") -> float:
+    def distance(self, other: CoreAffect) -> float:
         """Euclidean distance in valence-arousal space."""
         return math.sqrt((self.valence - other.valence) ** 2 + (self.arousal - other.arousal) ** 2)
 
-    def lerp(self, other: "CoreAffect", alpha: float) -> "CoreAffect":
+    def lerp(self, other: CoreAffect, alpha: float) -> CoreAffect:
         """Linear interpolation. alpha=0 → self, alpha=1 → other."""
         alpha = max(0.0, min(1.0, alpha))
         return CoreAffect(
@@ -73,7 +73,7 @@ class AffectiveMomentum(BaseModel):
     dd_arousal: float = 0.0
 
     @classmethod
-    def zero(cls) -> "AffectiveMomentum":
+    def zero(cls) -> AffectiveMomentum:
         return cls()
 
     def magnitude(self) -> float:

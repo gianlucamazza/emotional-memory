@@ -15,7 +15,7 @@ system: Pleasure (valence), Arousal, Dominance.
 from __future__ import annotations
 
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, field_validator
 
@@ -50,16 +50,16 @@ class StimmungField(BaseModel):
         return max(0.0, min(1.0, v))
 
     @classmethod
-    def neutral(cls) -> "StimmungField":
+    def neutral(cls) -> StimmungField:
         return cls(
             valence=0.0,
             arousal=0.0,
             dominance=0.5,
             inertia=0.5,
-            timestamp=datetime.now(tz=timezone.utc),
+            timestamp=datetime.now(tz=UTC),
         )
 
-    def update(self, core_affect: CoreAffect, alpha: float = 0.1) -> "StimmungField":
+    def update(self, core_affect: CoreAffect, alpha: float = 0.1) -> StimmungField:
         """Return a new StimmungField updated via exponential moving average.
 
         Effective alpha is modulated by inertia:
@@ -78,10 +78,10 @@ class StimmungField(BaseModel):
             arousal=new_arousal,
             dominance=new_dominance,
             inertia=self.inertia,
-            timestamp=datetime.now(tz=timezone.utc),
+            timestamp=datetime.now(tz=UTC),
         )
 
-    def distance(self, other: "StimmungField") -> float:
+    def distance(self, other: StimmungField) -> float:
         """Euclidean distance in valence-arousal-dominance space."""
         return math.sqrt(
             (self.valence - other.valence) ** 2

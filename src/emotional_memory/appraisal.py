@@ -47,7 +47,7 @@ class AppraisalVector(BaseModel):
         return max(0.0, min(1.0, v))
 
     @classmethod
-    def neutral(cls) -> "AppraisalVector":
+    def neutral(cls) -> AppraisalVector:
         return cls(
             novelty=0.0,
             goal_relevance=0.0,

@@ -1,6 +1,6 @@
 """Shared test helpers for emotional_memory test suite."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.models import Memory, make_emotional_tag
@@ -23,7 +23,7 @@ def make_test_memory(
         embedding: Optional embedding vector.
         offset_seconds: Seconds to subtract from now for the tag timestamp.
     """
-    ts = datetime.now(tz=timezone.utc) - timedelta(seconds=offset_seconds)
+    ts = datetime.now(tz=UTC) - timedelta(seconds=offset_seconds)
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=valence, arousal=arousal),
         momentum=AffectiveMomentum.zero(),

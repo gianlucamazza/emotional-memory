@@ -1,13 +1,13 @@
 import math
-from datetime import datetime, timedelta, timezone
-
-from emotional_memory.resonance import ResonanceConfig, build_resonance_links, temporal_proximity
+from datetime import UTC, datetime, timedelta
 
 from conftest import make_test_memory
 
+from emotional_memory.resonance import ResonanceConfig, build_resonance_links, temporal_proximity
+
 
 def _now():
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 class TestTemporalProximity:

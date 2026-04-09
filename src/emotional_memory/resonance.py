@@ -61,12 +61,11 @@ def _classify_link_type(
     temporal_prox: float,
 ) -> Literal["semantic", "emotional", "temporal", "causal", "contrastive"]:
     """Return the dominant associative principle for a link."""
-    scores = {
-        "semantic": semantic_sim,
-        "emotional": emotional_sim,
-        "temporal": temporal_prox,
-    }
-    return max(scores, key=lambda k: scores[k])  # type: ignore[return-value]
+    if semantic_sim >= emotional_sim and semantic_sim >= temporal_prox:
+        return "semantic"
+    if emotional_sim >= temporal_prox:
+        return "emotional"
+    return "temporal"
 
 
 def build_resonance_links(

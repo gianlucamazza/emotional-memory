@@ -20,12 +20,15 @@ a threshold.
 
 from __future__ import annotations
 
+from datetime import datetime
+
 import numpy as np
+from numpy.typing import NDArray
 from pydantic import BaseModel
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
-from emotional_memory.models import EmotionalTag, Memory
+from emotional_memory.models import EmotionalTag, Memory, ResonanceLink
 from emotional_memory.stimmung import StimmungField
 
 
@@ -51,7 +54,7 @@ class RetrievalConfig(BaseModel):
 # ---------------------------------------------------------------------------
 
 
-def adaptive_weights(stimmung: StimmungField, base: list[float]) -> np.ndarray:
+def adaptive_weights(stimmung: StimmungField, base: list[float]) -> NDArray[np.float64]:
     """Return retrieval weights modulated by current Stimmung.
 
     Heidegger: mood is not a filter on cognition but its ground — the
@@ -78,10 +81,10 @@ def adaptive_weights(stimmung: StimmungField, base: list[float]) -> np.ndarray:
 
     # Clamp negatives and normalise
     w = np.clip(w, 0.0, None)
-    total = w.sum()
+    total = float(w.sum())
     if total > 0:
-        w /= total
-    return w
+        w = w / total
+    return np.asarray(w, dtype=np.float64)
 
 
 # ---------------------------------------------------------------------------
@@ -126,7 +129,7 @@ def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) 
     return (cos + 1.0) / 2.0
 
 
-def _resonance_boost(active_ids: list[str], links: list) -> float:
+def _resonance_boost(active_ids: list[str], links: list[ResonanceLink]) -> float:
     """Boost from active memories connected via resonance links."""
     if not links or not active_ids:
         return 0.0
@@ -147,7 +150,7 @@ def retrieval_score(
     current_momentum: AffectiveMomentum,
     memory: Memory,
     active_memory_ids: list[str],
-    now,
+    now: datetime,
     decay_config: DecayConfig,
     retrieval_config: RetrievalConfig,
 ) -> float:

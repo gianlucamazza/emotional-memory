@@ -1,5 +1,7 @@
 import math
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+from conftest import make_test_memory
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig
@@ -13,8 +15,6 @@ from emotional_memory.retrieval import (
 )
 from emotional_memory.stimmung import StimmungField
 
-from conftest import make_test_memory
-
 
 def _neutral_stimmung():
     return StimmungField.neutral()
@@ -26,7 +26,7 @@ def _stimmung(valence: float = 0.0, arousal: float = 0.0):
         arousal=arousal,
         dominance=0.5,
         inertia=0.5,
-        timestamp=datetime.now(tz=timezone.utc),
+        timestamp=datetime.now(tz=UTC),
     )
 
 
@@ -160,7 +160,7 @@ class TestRetrievalScore:
             current_momentum=AffectiveMomentum.zero(),
             memory=m,
             active_memory_ids=[],
-            now=datetime.now(tz=timezone.utc),
+            now=datetime.now(tz=UTC),
             decay_config=decay,
             retrieval_config=config,
         )
@@ -172,7 +172,7 @@ class TestRetrievalScore:
         neg_stimmung = _stimmung(valence=-0.9, arousal=0.2)
         config = RetrievalConfig()
         decay = DecayConfig(base_decay=0.01)  # minimal decay
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
 
         neg_mem = make_test_memory(valence=-0.8)
         pos_mem = make_test_memory(valence=0.8)

@@ -1,11 +1,11 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.state import AffectiveState
 
 
 def _now():
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 def _later(seconds: float):

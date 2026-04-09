@@ -1,6 +1,8 @@
 """End-to-end integration scenarios for emotional_memory."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
+from conftest import DeterministicEmbedder, PolarEmbedder
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector
@@ -9,8 +11,6 @@ from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.resonance import ResonanceConfig
 from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.stores.in_memory import InMemoryStore
-
-from conftest import DeterministicEmbedder, PolarEmbedder
 
 
 def _positive_appraisal() -> AppraisalVector:
@@ -99,7 +99,7 @@ class TestDecayRanking:
         all_mems = store.list_all()
         old = next(m for m in all_mems if m.content == "old memory")
         old_tag = old.tag.model_copy(
-            update={"timestamp": datetime.now(tz=timezone.utc) - timedelta(days=30)}
+            update={"timestamp": datetime.now(tz=UTC) - timedelta(days=30)}
         )
         store.update(old.model_copy(update={"tag": old_tag}))
 

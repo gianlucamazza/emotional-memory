@@ -11,7 +11,7 @@ memories (Colombetti, 2014; Richter-Levin, 2004).
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
@@ -88,7 +88,7 @@ class Memory(BaseModel):
         tag: EmotionalTag,
         embedding: list[float] | None = None,
         metadata: dict[str, Any] | None = None,
-    ) -> "Memory":
+    ) -> Memory:
         return cls(
             content=content,
             tag=tag,
@@ -98,7 +98,7 @@ class Memory(BaseModel):
 
 
 def _now() -> datetime:
-    return datetime.now(tz=timezone.utc)
+    return datetime.now(tz=UTC)
 
 
 def make_emotional_tag(

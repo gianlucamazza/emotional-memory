@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import AppraisalVector
@@ -22,12 +23,12 @@ class TestResonanceLink:
             assert link.link_type == lt
 
     def test_invalid_link_type(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             ResonanceLink(source_id="a", target_id="b", strength=0.5, link_type="invalid")
 
     def test_frozen(self):
         link = ResonanceLink(source_id="a", target_id="b", strength=0.5, link_type="semantic")
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             link.strength = 0.9  # type: ignore[misc]
 
 

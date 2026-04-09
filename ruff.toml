@@ -2,7 +2,7 @@ line-length = 99
 target-version = "py311"
 
 [lint]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "W", "UP", "B", "SIM", "RUF"]
 
 [lint.isort]
 known-first-party = ["emotional_memory"]

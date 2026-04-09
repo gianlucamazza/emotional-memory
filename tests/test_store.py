@@ -1,6 +1,6 @@
-from emotional_memory.stores.in_memory import InMemoryStore
-
 from conftest import make_test_memory
+
+from emotional_memory.stores.in_memory import InMemoryStore
 
 
 class TestInMemoryStore:
