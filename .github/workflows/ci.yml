@@ -153,8 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.run_llm_tests == 'true' &&
-      secrets.EMOTIONAL_MEMORY_LLM_API_KEY != ''
+      github.event.inputs.run_llm_tests == 'true'
 
     steps:
       - uses: actions/checkout@v4
