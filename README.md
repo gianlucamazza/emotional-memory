@@ -6,6 +6,7 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 
 ```bash
 pip install emotional_memory
+pip install emotional_memory[sqlite]   # with SQLite persistence
 ```
 
 For development:
@@ -13,7 +14,7 @@ For development:
 ```bash
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
-pip install -e ".[dev]"
+pip install -e ".[dev,sqlite]"
 ```
 
 ## Quickstart
@@ -43,6 +44,25 @@ results = em.retrieve("difficult project success", top_k=3)
 for mem in results:
     print(mem.content, mem.tag.core_affect)
 ```
+
+### Async
+
+```python
+import asyncio
+from emotional_memory import EmotionalMemory, InMemoryStore, as_async
+
+sync_em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
+em = as_async(sync_em)  # wraps sync components with asyncio.to_thread bridges
+
+async def main():
+    await em.encode("Meeting went surprisingly well today.")
+    results = await em.retrieve("work meeting", top_k=3)
+
+asyncio.run(main())
+```
+
+For native async embedders or stores, construct `AsyncEmotionalMemory` directly with
+`SyncToAsyncEmbedder`, `SyncToAsyncStore`, or your own `AsyncEmbedder`/`AsyncMemoryStore`.
 
 ## Affective Field Theory
 
@@ -74,16 +94,37 @@ em = EmotionalMemory(
 | Method | Description |
 |---|---|
 | `encode(content, appraisal=None, metadata=None) -> Memory` | Encode content with full AFT pipeline |
+| `encode_batch(contents, metadata=None) -> list[Memory]` | Batch encode with `embed_batch()`, per-item appraisal |
 | `retrieve(query, top_k=5) -> list[Memory]` | Emotionally-weighted retrieval + reconsolidation |
+| `delete(memory_id)` | Remove a memory from the store |
 | `get_state() -> AffectiveState` | Current affective state (read-only copy) |
 | `set_affect(core_affect)` | Manually inject a CoreAffect |
+| `save_state() -> dict` | Serialise affective state for persistence |
+| `load_state(data)` | Restore previously saved affective state |
+| `get_current_stimmung(now=None) -> StimmungField` | Read-only Stimmung with time regression |
+
+### `AsyncEmotionalMemory`
+
+Same method signatures as `EmotionalMemory`, with `encode`, `retrieve`, `encode_batch`, and
+`delete` as coroutines. State accessors (`get_state`, `set_affect`, `save_state`, `load_state`,
+`get_current_stimmung`) remain synchronous.
+
+```python
+from emotional_memory import AsyncEmotionalMemory, SyncToAsyncEmbedder, SyncToAsyncStore
+```
+
+Bridge adapters: `SyncToAsyncEmbedder`, `SyncToAsyncStore`, `SyncToAsyncAppraisalEngine` wrap
+any sync implementation. `as_async(engine)` wraps a complete `EmotionalMemory` in one call.
 
 ### Key config classes
 
-- `EmotionalMemoryConfig` — top-level config (decay, retrieval, resonance, stimmung alpha)
+- `EmotionalMemoryConfig` — top-level config (decay, retrieval, resonance, stimmung alpha, stimmung decay)
 - `RetrievalConfig` — weights, APE threshold, reconsolidation learning rate
-- `ResonanceConfig` — similarity threshold, max links, semantic/emotional/temporal weights
+- `ResonanceConfig` — similarity threshold, max links, semantic/emotional/temporal weights, candidate multiplier
 - `DecayConfig` — power-law decay parameters, arousal modulation, floor values
+- `StimmungDecayConfig` — time-based Stimmung regression (half-life, inertia scale, baselines)
+- `AdaptiveWeightsConfig` — smooth Stimmung-adaptive retrieval weight tuning (sigmoid/Gaussian gates)
+- `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour)
 
 ### Interfaces (bring your own)
 
@@ -99,17 +140,96 @@ class MemoryStore(Protocol):
     def delete(self, memory_id: str) -> None: ...
     def list_all(self) -> list[Memory]: ...
     def search_by_embedding(self, embedding: list[float], top_k: int) -> list[Memory]: ...
+    def __len__(self) -> int: ...
 ```
 
-`InMemoryStore` is included as a reference implementation (dict-backed, brute-force cosine search).
+Async variants (`AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine`) are defined in
+`interfaces_async.py`. `AsyncMemoryStore` uses `count() -> int` instead of `__len__` since
+dunder methods cannot be coroutines.
+
+**Stores included:**
+- `InMemoryStore` — dict-backed, brute-force cosine search (no extra deps)
+- `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`pip install emotional_memory[sqlite]`)
+
+### Appraisal Engines
+
+```python
+class AppraisalEngine(Protocol):
+    def appraise(self, event_text: str, context: dict | None = None) -> AppraisalVector: ...
+```
+
+Pass an `appraisal_engine` to `EmotionalMemory` to auto-generate `AppraisalVector` during encode.
+
+**`LLMAppraisalEngine`** — wrap any LLM SDK in a single callable:
+
+```python
+from emotional_memory import LLMAppraisalEngine
+
+def my_llm(prompt: str, json_schema: dict) -> str:
+    # call openai / anthropic / local model here
+    return response_text
+
+engine = LLMAppraisalEngine(llm=my_llm)
+em = EmotionalMemory(store=..., embedder=..., appraisal_engine=engine)
+```
+
+**`KeywordAppraisalEngine`** — regex-based fallback, zero external dependencies, ships with
+default rules covering success, failure, novelty, danger, and social norms:
+
+```python
+from emotional_memory import KeywordAppraisalEngine
+engine = KeywordAppraisalEngine()  # or pass custom KeywordRule list
+```
+
+## Benchmarks
+
+### Psychological fidelity (77 tests)
+
+The library validates 10 phenomena from the affective science literature:
+
+| Phenomenon | Reference | Tests |
+|---|---|---|
+| Mood-congruent recall | Bower 1981 | 3 |
+| Emotional enhancement | Cahill & McGaugh 1995 | 3 |
+| Yerkes-Dodson inverted-U | Yerkes & Dodson 1908 | 12 |
+| Spacing effect | Ebbinghaus 1885 | 7 |
+| Arousal floor | McGaugh 2004 | 7 |
+| Reconsolidation (APE) | Nader & Schiller 2000 | 5 |
+| State-dependent retrieval | Godden & Baddeley 1975 | 3 |
+| Affective momentum | Spinoza, Ethics III | 9 |
+| Stimmung-adaptive weights | Heidegger, Being & Time §29 | 14 |
+| Appraisal-to-affect mapping | Scherer CPM 2009 | 11 |
+
+Run with: `make bench-fidelity`
+
+### Performance (hash-based embedder, InMemoryStore)
+
+| Operation | N | Mean | OPS |
+|---|---|---|---|
+| Encode (single) | 1 | 59 ms | 17/s |
+| Encode (batch of 100) | 100 | 12 ms/op | 84/s |
+| Encode (batch of 1 000) | 1 000 | 70 ms/op | 14/s |
+| Resonance build | 50 | 1.7 ms | 587/s |
+| Resonance build | 200 | 6.9 ms | 145/s |
+| Resonance build | 500 | 17.6 ms | 57/s |
+| Retrieve top-5 | 100 | 4.8 ms | 210/s |
+| Retrieve top-5 | 1 000 | 28.6 ms | 35/s |
+| Retrieve top-5 | 10 000 | 423 ms | 2.4/s |
+| Retrieve (top-k 1–25) | 1 000 | 33–51 ms | 20–30/s |
+| Retrieve + reconsolidation | 200 | 8.9 ms | 113/s |
+
+Retrieval uses two-pass scoring (spreading activation), so latency scales linearly
+with store size. For stores > 1 000 memories, implement `search_by_embedding` on
+your `MemoryStore` to benefit from the pre-filter (`candidate_multiplier`).
+
+Run with: `make bench-perf`
 
 ## Development
 
 ```bash
-pytest                        # run tests
-ruff check .                  # lint
-ruff format .                 # format
-mypy src/emotional_memory/    # type check
+make check                    # lint + typecheck + test
+make cov                      # tests with branch coverage report
+make bench                    # fidelity + performance benchmarks
 ```
 
 ## License
