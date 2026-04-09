@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - name: Install dependencies
         run: pip install -e ".[dev]"
@@ -32,8 +33,15 @@ jobs:
       - name: Format check (ruff format)
         run: ruff format --check .
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests with coverage
+        run: pytest --cov --cov-report=xml
+
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.13'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
 
   typecheck:
     name: Type check (mypy)
@@ -52,3 +60,48 @@ jobs:
 
       - name: Type check
         run: mypy src/emotional_memory/
+
+      - name: Verify py.typed marker
+        run: >
+          python -c "
+          import importlib.resources;
+          assert (importlib.resources.files('emotional_memory') / 'py.typed').is_file(),
+          'py.typed marker missing'
+          "
+
+  benchmarks:
+    name: Benchmarks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,bench]"
+
+      - name: Run fidelity benchmarks
+        run: pytest benchmarks/fidelity/ -v
+
+      - name: Run performance benchmarks
+        run: >
+          pytest benchmarks/perf/
+          --benchmark-only
+          --benchmark-sort=mean
+          --benchmark-json=benchmark-results.json
+
+      - name: Store benchmark results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: pytest
+          output-file-path: benchmark-results.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "150%"
+          comment-on-alert: true
+          benchmark-data-dir-path: dev/bench
