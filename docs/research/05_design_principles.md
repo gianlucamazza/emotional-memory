@@ -89,13 +89,17 @@ AppraisalVector:
     self_relevance: float       # [0.0, 1.0] quanto riguarda il "sé" del sistema
 ```
 
-**Mapping appraisal → Core Affect** (semplificato):
+**Mapping appraisal → Core Affect**:
 ```python
-valence = 0.4*goal_relevance + 0.3*norm_congruence + 0.2*coping_potential + 0.1*novelty_valence
+# coping_potential [0,1] viene convertito a signed [-1,+1]:
+# coping=1 → +1 (fiducia), coping=0 → -1 (helplessness)
+coping_signed = 2.0 * coping_potential - 1.0
+
+valence = 0.4*goal_relevance + 0.3*norm_congruence + 0.2*coping_signed + 0.1*novelty
 arousal = 0.5*abs(novelty) + 0.3*(1-coping_potential) + 0.2*self_relevance
 ```
 
-Il mapping preciso è appreso o configurabile — questa è la componente più empiricamente aperta del sistema.
+Il mapping è configurabile — questa è la componente più empiricamente aperta del sistema.
 
 ---
 

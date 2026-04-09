@@ -143,7 +143,7 @@ Klaus Scherer ha espanso la teoria dell'appraisal in un modello di processo mult
 
 L'emozione è definita come la sincronizzazione di cinque componenti: appraisal cognitivo, arousal fisiologico, espressione motoria, tendenza all'azione, e sentimento soggettivo.
 
-**Implicazione per il Layer 4**: Il nostro **Appraisal Vector** implementa una versione computazionale dei SECs di Scherer. Le quattro dimensioni dell'appraisal nel nostro modello (novelty, goal_relevance, coping_potential, norm_congruence) derivano direttamente da questo framework.
+**Implicazione per il Layer 4**: Il nostro **Appraisal Vector** implementa una versione computazionale dei SECs di Scherer. Le cinque dimensioni dell'appraisal nel nostro modello (novelty, goal_relevance, coping_potential, norm_congruence, self_relevance) derivano direttamente da questo framework.
 
 ---
 
