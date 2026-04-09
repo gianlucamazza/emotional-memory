@@ -11,6 +11,7 @@ from emotional_memory.appraisal import (
     StaticAppraisalEngine,
     consolidation_strength,
 )
+from emotional_memory.decay import DecayConfig
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.interfaces import Embedder, MemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
@@ -26,6 +27,7 @@ __all__ = [
     "AppraisalEngine",
     "AppraisalVector",
     "CoreAffect",
+    "DecayConfig",
     "Embedder",
     "EmotionalMemory",
     "EmotionalMemoryConfig",
