@@ -2,19 +2,19 @@
 -include .env
 export
 
-.PHONY: install install-bench install-llm-test install-viz lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal test-llm docs-images
+.PHONY: install install-bench install-llm-test install-viz lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal test-llm docs-images dist publish
 
 install:
-	pip install -e ".[dev]"
+	uv pip install -e ".[dev]"
 
 install-viz:
-	pip install -e ".[dev,viz]"
+	uv pip install -e ".[dev,viz]"
 
 install-bench:
-	pip install -e ".[dev,bench]"
+	uv pip install -e ".[dev,bench]"
 
 install-llm-test:
-	pip install -e ".[dev,llm-test]"
+	uv pip install -e ".[dev,llm-test]"
 
 lint:
 	ruff check .
@@ -50,3 +50,9 @@ test-llm:
 
 docs-images:
 	uv run python scripts/generate_docs_images.py
+
+dist:
+	uv build
+
+publish: dist
+	uv publish
