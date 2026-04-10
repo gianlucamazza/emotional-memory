@@ -111,8 +111,8 @@ print(f"Current Stimmung: valence={sm.valence:.3f}, arousal={sm.arousal:.3f}\n")
 results = em.retrieve("project work accomplishment", top_k=3)
 for i, mem in enumerate(results, 1):
     ca = mem.tag.core_affect
-    sign = "+" if ca.valence > 0 else "-"
-    print(f"  {i}. [{sign}] {mem.content[:60]}")
+    sign = "[+]" if ca.valence > 0 else "[-]"
+    print(f"  {i}. {sign} {mem.content[:60]}")
     print(f"       valence={ca.valence:.2f}  retrieval_count={mem.tag.retrieval_count}")
 
 # ---------------------------------------------------------------------------
