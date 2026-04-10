@@ -11,8 +11,9 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 
 ```bash
 pip install emotional-memory
-pip install emotional-memory[sqlite]   # with SQLite persistence
-pip install emotional-memory[viz]      # with matplotlib visualization
+pip install emotional-memory[sqlite]   # SQLite persistence via sqlite-vec
+pip install emotional-memory[viz]      # matplotlib visualization
+pip install emotional-memory[dotenv]   # .env file loading via python-dotenv
 ```
 
 For development:
@@ -363,6 +364,30 @@ logging.getLogger("emotional_memory").setLevel(logging.DEBUG)
 
 Debug events include: encode start/stored/resonance, retrieve start/done, reconsolidation
 triggers, LLM appraisal cache hits, and fallback activations.
+
+## Examples
+
+The [`examples/`](examples/) directory contains runnable scripts covering the full API.
+All scripts are self-contained and use a deterministic `HashEmbedder` so they run without
+any ML dependencies.
+
+| Script | Description | Extra |
+|--------|-------------|-------|
+| `basic_usage.py` | Encode/retrieve, reconsolidation, resonance links | — |
+| `advanced_config.py` | ACT-R decay, Stimmung regression, adaptive weights | — |
+| `appraisal_engines.py` | Keyword, static, and custom appraisal rules | — |
+| `reconsolidation.py` | Two-retrieval lability window (Nader & Schiller 2000) | — |
+| `async_usage.py` | `as_async()`, `SyncToAsync*` adapters, `encode_batch` | — |
+| `persistence.py` | SQLiteStore, save/load state, export/import, prune | `[sqlite]` |
+| `emotional_journal.py` | Multi-session journaling with full lifecycle | `[sqlite]` |
+| `llm_appraisal.py` | LLM-backed appraisal via OpenAI-compatible API | `openai` |
+| `httpx_llm_integration.py` | httpx LLMCallable, `.env` config, 7 API deep-dives | `httpx` |
+| `sentence_transformers_embedder.py` | `SequentialEmbedder` with real embeddings | `sentence-transformers` |
+| `visualization.py` | All 8 matplotlib plot types | `[viz]` |
+| `resonance_network.py` | Resonance graph and link-type distribution | `[viz]` |
+| `retrieval_signals.py` | 6-signal decomposition, radar chart, weight heatmap | `[viz]` |
+
+Run any script: `python examples/<script>.py`
 
 ## Development
 

@@ -1,11 +1,15 @@
 """Tests for EmotionalMemory facade."""
 
+import json
+from datetime import UTC, datetime, timedelta
+
 import pytest
 from conftest import FixedEmbedder
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
+from emotional_memory.interfaces import Embedder, SequentialEmbedder
 from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.stores.in_memory import InMemoryStore
 
@@ -400,3 +404,209 @@ class TestInputValidation:
         em = _engine()
         with pytest.raises(ValueError, match="top_k"):
             em.retrieve("query", top_k=-1)
+
+
+# ---------------------------------------------------------------------------
+# Helpers for close / context-manager tests
+# ---------------------------------------------------------------------------
+
+
+class _CloseableStore(InMemoryStore):
+    """InMemoryStore extended with a close() method that records the call."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
+
+
+def _engine_with_closeable() -> tuple[EmotionalMemory, _CloseableStore]:
+    store = _CloseableStore()
+    em = EmotionalMemory(store=store, embedder=FixedEmbedder([1.0, 0.0]))
+    return em, store
+
+
+def _old_timestamp() -> datetime:
+    """Return a timestamp far enough in the past that decay reduces strength to ~0."""
+    return datetime.now(tz=UTC) - timedelta(days=365)
+
+
+# ---------------------------------------------------------------------------
+# prune()
+# ---------------------------------------------------------------------------
+
+
+class TestPrune:
+    def test_prune_removes_old_memories(self) -> None:
+        em = _engine()
+        mem = em.encode("old memory")
+        # Backdate the tag so compute_effective_strength drops near zero
+        aged = mem.model_copy(
+            update={"tag": mem.tag.model_copy(update={"timestamp": _old_timestamp()})}
+        )
+        em._store.update(aged)
+        removed = em.prune(threshold=0.05)
+        assert removed == 1
+        assert len(em) == 0
+
+    def test_prune_keeps_fresh_memories(self) -> None:
+        em = _engine()
+        em.set_affect(CoreAffect(valence=0.5, arousal=0.8))  # high arousal → non-zero strength
+        em.encode("fresh memory")
+        removed = em.prune(threshold=0.05)
+        assert removed == 0
+        assert len(em) == 1
+
+    def test_prune_returns_count(self) -> None:
+        em = _engine()
+        # arousal=0.5: gives non-zero initial strength but stays below the floor
+        # threshold (0.7), so backdated memories decay below prune threshold=0.05
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mems = [em.encode(f"mem{i}") for i in range(3)]
+        # Backdate first two
+        for m in mems[:2]:
+            aged = m.model_copy(
+                update={"tag": m.tag.model_copy(update={"timestamp": _old_timestamp()})}
+            )
+            em._store.update(aged)
+        removed = em.prune(threshold=0.05)
+        assert removed == 2
+        assert len(em) == 1
+
+    def test_prune_empty_store(self) -> None:
+        em = _engine()
+        assert em.prune() == 0
+
+
+# ---------------------------------------------------------------------------
+# export_memories() / import_memories()
+# ---------------------------------------------------------------------------
+
+
+class TestExportImport:
+    def test_export_returns_list_of_dicts(self) -> None:
+        em = _engine()
+        em.encode("first")
+        em.encode("second")
+        data = em.export_memories()
+        assert isinstance(data, list)
+        assert len(data) == 2
+        assert all(isinstance(d, dict) for d in data)
+
+    def test_export_is_json_serialisable(self) -> None:
+        em = _engine()
+        em.encode("serialisable content")
+        json.dumps(em.export_memories())  # must not raise
+
+    def test_import_restores_to_new_engine(self) -> None:
+        em1 = _engine()
+        em1.encode("alpha")
+        em1.encode("beta")
+        data = em1.export_memories()
+
+        em2 = _engine()
+        written = em2.import_memories(data)
+        assert written == 2
+        contents = {m.content for m in em2.list_all()}
+        assert "alpha" in contents
+        assert "beta" in contents
+
+    def test_import_skips_duplicates(self) -> None:
+        em = _engine()
+        em.encode("unique")
+        data = em.export_memories()
+        written = em.import_memories(data)  # already present
+        assert written == 0
+        assert len(em) == 1
+
+    def test_import_overwrites(self) -> None:
+        em1 = _engine()
+        em1.encode("original")
+        data = em1.export_memories()
+
+        em2 = _engine()
+        em2.import_memories(data)
+        written = em2.import_memories(data, overwrite=True)
+        assert written == 1
+
+    def test_roundtrip_preserves_tags(self) -> None:
+        em1 = _engine()
+        m = em1.encode("roundtrip")
+        data = em1.export_memories()
+
+        em2 = _engine()
+        em2.import_memories(data)
+        restored = em2.list_all()[0]
+        assert restored.content == m.content
+        assert restored.tag.core_affect.valence == pytest.approx(m.tag.core_affect.valence)
+        assert restored.tag.consolidation_strength == pytest.approx(m.tag.consolidation_strength)
+
+
+# ---------------------------------------------------------------------------
+# close() and context manager
+# ---------------------------------------------------------------------------
+
+
+class TestCloseAndContextManager:
+    def test_close_calls_store_close(self) -> None:
+        em, store = _engine_with_closeable()
+        em.close()
+        assert store.closed
+
+    def test_close_safe_without_close_method(self) -> None:
+        em = _engine()  # InMemoryStore has no close()
+        em.close()  # must not raise
+
+    def test_context_manager_calls_close(self) -> None:
+        store = _CloseableStore()
+        with EmotionalMemory(store=store, embedder=FixedEmbedder([1.0, 0.0])):
+            pass
+        assert store.closed
+
+    def test_context_manager_returns_engine(self) -> None:
+        with _engine() as em:
+            assert isinstance(em, EmotionalMemory)
+
+
+# ---------------------------------------------------------------------------
+# SequentialEmbedder
+# ---------------------------------------------------------------------------
+
+
+class _SimpleEmbedder(SequentialEmbedder):
+    """Minimal SequentialEmbedder subclass for testing."""
+
+    def embed(self, text: str) -> list[float]:
+        return [1.0, 0.0]
+
+
+class _BatchAwareEmbedder(SequentialEmbedder):
+    """Subclass that overrides embed_batch to record calls."""
+
+    def __init__(self) -> None:
+        self.batch_called = False
+
+    def embed(self, text: str) -> list[float]:
+        return [0.5, 0.5]
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        self.batch_called = True
+        return [self.embed(t) for t in texts]
+
+
+class TestSequentialEmbedder:
+    def test_embed_batch_delegates_to_embed(self) -> None:
+        emb = _SimpleEmbedder()
+        result = emb.embed_batch(["a", "b", "c"])
+        assert result == [[1.0, 0.0], [1.0, 0.0], [1.0, 0.0]]
+
+    def test_embed_batch_override_is_called(self) -> None:
+        emb = _BatchAwareEmbedder()
+        emb.embed_batch(["x", "y"])
+        assert emb.batch_called
+
+    def test_satisfies_embedder_protocol(self) -> None:
+        emb = _SimpleEmbedder()
+        assert isinstance(emb, Embedder)

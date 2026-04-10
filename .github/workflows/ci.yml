@@ -127,8 +127,8 @@ jobs:
       - name: Install dependencies
         run: pip install -e ".[dev,sqlite]"
 
-      - name: Run SQLite store tests
-        run: pytest tests/test_sqlite_store.py -v
+      - name: Run SQLite store tests and example smoke tests
+        run: pytest tests/test_sqlite_store.py tests/test_examples.py -v
 
   viz-tests:
     name: Visualization tests
@@ -147,6 +147,27 @@ jobs:
 
       - name: Run visualization tests
         run: pytest tests/test_visualization.py -v
+
+  dotenv-tests:
+    name: Dotenv extra smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev,dotenv]"
+
+      - name: Verify python-dotenv is importable
+        run: python -c "from dotenv import load_dotenv; print('dotenv OK')"
+
+      - name: Run core tests with dotenv installed
+        run: pytest tests/ -k "not sqlite and not visualization and not llm" -q
 
   llm-tests:
     name: LLM integration + quality benchmarks

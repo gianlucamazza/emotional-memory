@@ -30,6 +30,7 @@ Homepage = "https://github.com/gianlucamazza/emotional-memory"
 Repository = "https://github.com/gianlucamazza/emotional-memory"
 "Bug Tracker" = "https://github.com/gianlucamazza/emotional-memory/issues"
 Changelog = "https://github.com/gianlucamazza/emotional-memory/blob/main/CHANGELOG.md"
+Documentation = "https://gianlucamazza.github.io/emotional-memory"
 
 [project.optional-dependencies]
 dev = [

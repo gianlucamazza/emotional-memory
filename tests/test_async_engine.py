@@ -1,6 +1,8 @@
 """Tests for AsyncEmotionalMemory and async adapters."""
 
 import asyncio
+import json
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from conftest import DeterministicEmbedder, FixedEmbedder
@@ -195,8 +197,11 @@ class TestAsyncStatePersistence:
 
         em2 = _async_engine()
         em2.load_state(snapshot)
-        next1 = em.get_state().update(CoreAffect(valence=0.9, arousal=0.5))
-        next2 = em2.get_state().update(CoreAffect(valence=0.9, arousal=0.5))
+        # Pin `now` so both update() calls use the same timestamp and the
+        # momentum comparison is deterministic regardless of test ordering.
+        now = datetime.now(UTC)
+        next1 = em.get_state().update(CoreAffect(valence=0.9, arousal=0.5), now=now)
+        next2 = em2.get_state().update(CoreAffect(valence=0.9, arousal=0.5), now=now)
         assert next1.momentum.d_valence == pytest.approx(next2.momentum.d_valence, abs=1e-6)
 
 
@@ -362,3 +367,167 @@ class TestAsyncInputValidation:
         em = _async_engine()
         with pytest.raises(ValueError, match="top_k"):
             await em.retrieve("query", top_k=-1)
+
+
+# ---------------------------------------------------------------------------
+# Helpers for close / context-manager tests
+# ---------------------------------------------------------------------------
+
+
+class _AsyncCloseableStore(InMemoryStore):
+    """InMemoryStore extended with close() that records the call."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
+
+
+def _async_engine_with_closeable() -> tuple[AsyncEmotionalMemory, _AsyncCloseableStore]:
+    store = _AsyncCloseableStore()
+    em = AsyncEmotionalMemory(
+        store=SyncToAsyncStore(store),
+        embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+    )
+    return em, store
+
+
+def _old_timestamp() -> datetime:
+    return datetime.now(tz=UTC) - timedelta(days=365)
+
+
+# ---------------------------------------------------------------------------
+# Async prune()
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncPrune:
+    async def test_prune_removes_old_memories(self) -> None:
+        store = _sync_store()
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(store),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+        )
+        mem = await em.encode("old")
+        aged = mem.model_copy(
+            update={"tag": mem.tag.model_copy(update={"timestamp": _old_timestamp()})}
+        )
+        store.update(aged)
+        removed = await em.prune(threshold=0.05)
+        assert removed == 1
+        assert await em.count() == 0
+
+    async def test_prune_keeps_fresh_memories(self) -> None:
+        em = _async_engine()
+        em.set_affect(CoreAffect(valence=0.5, arousal=0.8))  # high arousal → non-zero strength
+        await em.encode("fresh")
+        removed = await em.prune(threshold=0.05)
+        assert removed == 0
+        assert await em.count() == 1
+
+    async def test_prune_returns_count(self) -> None:
+        store = _sync_store()
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(store),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+        )
+        # arousal=0.5: gives non-zero initial strength but stays below the floor
+        # threshold (0.7), so backdated memories decay below prune threshold=0.05
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mems = [await em.encode(f"mem{i}") for i in range(3)]
+        for m in mems[:2]:
+            aged = m.model_copy(
+                update={"tag": m.tag.model_copy(update={"timestamp": _old_timestamp()})}
+            )
+            store.update(aged)
+        removed = await em.prune(threshold=0.05)
+        assert removed == 2
+        assert await em.count() == 1
+
+    async def test_prune_empty_store(self) -> None:
+        em = _async_engine()
+        assert await em.prune() == 0
+
+
+# ---------------------------------------------------------------------------
+# Async export_memories() / import_memories()
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncExportImport:
+    async def test_export_returns_list_of_dicts(self) -> None:
+        em = _async_engine()
+        await em.encode("first")
+        await em.encode("second")
+        data = await em.export_memories()
+        assert isinstance(data, list)
+        assert len(data) == 2
+        assert all(isinstance(d, dict) for d in data)
+
+    async def test_export_is_json_serialisable(self) -> None:
+        em = _async_engine()
+        await em.encode("content")
+        json.dumps(await em.export_memories())  # must not raise
+
+    async def test_import_restores_to_new_engine(self) -> None:
+        em1 = _async_engine()
+        await em1.encode("alpha")
+        await em1.encode("beta")
+        data = await em1.export_memories()
+
+        em2 = _async_engine()
+        written = await em2.import_memories(data)
+        assert written == 2
+        contents = {m.content for m in await em2.list_all()}
+        assert "alpha" in contents
+        assert "beta" in contents
+
+    async def test_import_skips_duplicates(self) -> None:
+        em = _async_engine()
+        await em.encode("unique")
+        data = await em.export_memories()
+        written = await em.import_memories(data)
+        assert written == 0
+        assert await em.count() == 1
+
+    async def test_roundtrip_preserves_tags(self) -> None:
+        em1 = _async_engine()
+        m = await em1.encode("roundtrip")
+        data = await em1.export_memories()
+
+        em2 = _async_engine()
+        await em2.import_memories(data)
+        restored = (await em2.list_all())[0]
+        assert restored.content == m.content
+        assert restored.tag.core_affect.valence == pytest.approx(m.tag.core_affect.valence)
+
+
+# ---------------------------------------------------------------------------
+# Async close() and context manager
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncCloseAndContextManager:
+    async def test_close_calls_store_close(self) -> None:
+        em, store = _async_engine_with_closeable()
+        await em.close()
+        assert store.closed
+
+    async def test_close_safe_without_close_method(self) -> None:
+        em = _async_engine()  # SyncToAsyncStore wrapping InMemoryStore (no close)
+        await em.close()  # must not raise
+
+    async def test_async_context_manager_calls_close(self) -> None:
+        store = _AsyncCloseableStore()
+        async with AsyncEmotionalMemory(
+            store=SyncToAsyncStore(store),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+        ):
+            pass
+        assert store.closed
+
+    async def test_async_context_manager_returns_engine(self) -> None:
+        async with _async_engine() as em:
+            assert isinstance(em, AsyncEmotionalMemory)
