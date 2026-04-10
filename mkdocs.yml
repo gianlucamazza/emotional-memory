@@ -1,0 +1,78 @@
+site_name: emotional_memory
+site_description: Emotional memory for LLMs based on Affective Field Theory
+site_url: https://gianlucamazza.github.io/emotional-memory
+repo_url: https://github.com/gianlucamazza/emotional-memory
+repo_name: gianlucamazza/emotional-memory
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            docstring_style: google
+            merge_init_into_class: true
+            show_signature_annotations: true
+
+nav:
+  - Home: index.md
+  - API Reference:
+    - Engine (sync): api/engine.md
+    - Engine (async): api/async_engine.md
+    - Stores: api/stores.md
+    - Appraisal: api/appraisal.md
+    - Models: api/models.md
+    - Interfaces: api/interfaces.md
+    - Retrieval: api/retrieval.md
+    - Decay: api/decay.md
+    - Resonance: api/resonance.md
+    - Stimmung: api/stimmung.md
+    - Affect: api/affect.md
+    - Visualization: api/visualization.md
+  - Research:
+    - Overview: research/index.md
+    - Philosophical Foundations: research/01_foundations.md
+    - Neuroscience: research/02_neuroscience.md
+    - Computational Models: research/03_computational_models.md
+    - State of the Art: research/04_state_of_art.md
+    - Design Principles: research/05_design_principles.md
+    - Bibliography: research/06_bibliography.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
