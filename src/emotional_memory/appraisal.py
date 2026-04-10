@@ -99,11 +99,16 @@ class AppraisalEngine(Protocol):
 class StaticAppraisalEngine:
     """Returns a fixed AppraisalVector regardless of input. For testing."""
 
+    __slots__ = ("_vector",)
+
     def __init__(self, vector: AppraisalVector | None = None) -> None:
         self._vector = vector or AppraisalVector.neutral()
 
     def appraise(self, event_text: str, context: dict[str, Any] | None = None) -> AppraisalVector:
         return self._vector
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(vector={self._vector!r})"
 
 
 def consolidation_strength(arousal: float, stimmung_arousal: float) -> float:

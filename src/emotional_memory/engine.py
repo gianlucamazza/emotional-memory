@@ -16,6 +16,8 @@ Orchestrates the full AFT pipeline:
 
 from __future__ import annotations
 
+import json
+import logging
 import warnings
 from datetime import UTC, datetime
 from typing import Any
@@ -38,6 +40,8 @@ from emotional_memory.retrieval import (
 )
 from emotional_memory.state import AffectiveState
 from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
+
+logger = logging.getLogger(__name__)
 
 
 class EmotionalMemoryConfig(BaseModel):
@@ -66,6 +70,8 @@ class EmotionalMemory:
         results = engine.retrieve("challenging work accomplishment")
     """
 
+    __slots__ = ("_appraisal_engine", "_config", "_embedder", "_state", "_store")
+
     def __init__(
         self,
         store: MemoryStore,
@@ -78,6 +84,9 @@ class EmotionalMemory:
         self._appraisal_engine = appraisal_engine
         self._config = config or EmotionalMemoryConfig()
         self._state = AffectiveState.initial()
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(store={self._store!r}, memories={len(self._store)})"
 
     # ------------------------------------------------------------------
     # Public API
@@ -101,6 +110,7 @@ class EmotionalMemory:
           7. Update stored memory with resonance links
         """
         now = datetime.now(tz=UTC)
+        logger.debug("encode start: content_len=%d", len(content))
 
         # Step 1: resolve affect
         if appraisal is None and self._appraisal_engine is not None:
@@ -141,6 +151,13 @@ class EmotionalMemory:
         # Step 5: create and store memory (without resonance links yet)
         memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=metadata)
         self._store.save(memory)
+        logger.debug(
+            "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
+            memory.id,
+            tag.core_affect.valence,
+            tag.core_affect.arousal,
+            cs,
+        )
 
         # Step 6: build resonance links — pre-filter when store is large (G2)
         resonance_limit = (
@@ -156,6 +173,7 @@ class EmotionalMemory:
             updated_tag = tag.model_copy(update={"resonance_links": links})
             memory = memory.model_copy(update={"tag": updated_tag})
             self._store.update(memory)
+            logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
         return memory
 
@@ -179,6 +197,9 @@ class EmotionalMemory:
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
         now = datetime.now(tz=UTC)
+        logger.debug(
+            "retrieve start: query_len=%d top_k=%d store=%d", len(query), top_k, len(self._store)
+        )
         query_embedding = self._embedder.embed(query)
 
         # G2 — pre-filter candidates via embedding search when store is large
@@ -259,9 +280,11 @@ class EmotionalMemory:
                         )
                     }
                 )
+                logger.debug("reconsolidate: id=%s ape=%.3f", mem.id, ape)
             self._store.update(updated)
             result.append(updated)
 
+        logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
 
     def encode_batch(
@@ -386,15 +409,79 @@ class EmotionalMemory:
         """
         self._state = AffectiveState.restore(data)
 
+    def prune(self, threshold: float = 0.05) -> int:
+        """Remove memories whose effective consolidation strength has fallen below *threshold*.
+
+        Args:
+            threshold: Minimum acceptable strength in [0, 1].  Memories whose
+                       ``compute_effective_strength()`` is below this value are deleted.
+                       Defaults to 0.05 (5%).
+
+        Returns:
+            Number of memories removed.
+        """
+        from emotional_memory.decay import compute_effective_strength
+
+        now = datetime.now(tz=UTC)
+        removed = 0
+        for memory in self._store.list_all():
+            if compute_effective_strength(memory.tag, now, self._config.decay) < threshold:
+                self._store.delete(memory.id)
+                removed += 1
+        return removed
+
+    def export_memories(self) -> list[dict[str, Any]]:
+        """Export all memories as a list of JSON-serialisable dicts.
+
+        Suitable for backup or migration between store backends.  The output
+        can be restored with ``import_memories()``.
+        """
+        return [json.loads(m.model_dump_json()) for m in self._store.list_all()]
+
+    def import_memories(self, data: list[dict[str, Any]], *, overwrite: bool = False) -> int:
+        """Import memories from a list of dicts produced by ``export_memories()``.
+
+        Args:
+            data:      List of memory dicts (as returned by ``export_memories()``).
+            overwrite: When True, existing memories with the same ID are replaced.
+                       When False (default), duplicates are skipped silently.
+
+        Returns:
+            Number of memories actually written.
+        """
+        written = 0
+        for item in data:
+            memory = Memory.model_validate(item)
+            if not overwrite and self._store.get(memory.id) is not None:
+                continue
+            self._store.save(memory)
+            written += 1
+        return written
+
     def get_current_stimmung(self, now: datetime | None = None) -> StimmungField:
         """Return the Stimmung regressed to ``now`` without modifying state.
 
         Useful for read-only mood inspection between encode/retrieve calls.
         If ``stimmung_decay`` is not configured, returns the frozen Stimmung.
         """
-
         if now is None:
             now = datetime.now(tz=UTC)
         if self._config.stimmung_decay is not None:
             return self._state.stimmung.regress(now, self._config.stimmung_decay)
         return self._state.stimmung
+
+    def close(self) -> None:
+        """Release resources held by the underlying store, if supported.
+
+        Calls ``store.close()`` when the store exposes that method (e.g.
+        ``SQLiteStore``).  Safe to call on stores that do not implement it.
+        """
+        close = getattr(self._store, "close", None)
+        if callable(close):
+            close()
+
+    def __enter__(self) -> EmotionalMemory:
+        return self
+
+    def __exit__(self, *_: object) -> None:
+        self.close()

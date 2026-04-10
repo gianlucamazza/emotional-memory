@@ -41,6 +41,11 @@ if TYPE_CHECKING:
 class SyncToAsyncEmbedder:
     """Wraps a synchronous ``Embedder`` for use with ``AsyncEmotionalMemory``."""
 
+    __slots__ = ("_inner",)
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(inner={self._inner!r})"
+
     def __init__(self, sync_embedder: Embedder) -> None:
         self._inner = sync_embedder
 
@@ -53,6 +58,11 @@ class SyncToAsyncEmbedder:
 
 class SyncToAsyncStore:
     """Wraps a synchronous ``MemoryStore`` for use with ``AsyncEmotionalMemory``."""
+
+    __slots__ = ("_inner",)
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(inner={self._inner!r})"
 
     def __init__(self, sync_store: MemoryStore) -> None:
         self._inner = sync_store
@@ -78,9 +88,20 @@ class SyncToAsyncStore:
     async def count(self) -> int:
         return await asyncio.to_thread(len, self._inner)
 
+    async def close(self) -> None:
+        """Proxy ``close()`` to the wrapped store if it supports it."""
+        close = getattr(self._inner, "close", None)
+        if callable(close):
+            await asyncio.to_thread(close)
+
 
 class SyncToAsyncAppraisalEngine:
     """Wraps a synchronous ``AppraisalEngine`` for use with ``AsyncEmotionalMemory``."""
+
+    __slots__ = ("_inner",)
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(inner={self._inner!r})"
 
     def __init__(self, sync_engine: AppraisalEngine) -> None:
         self._inner = sync_engine

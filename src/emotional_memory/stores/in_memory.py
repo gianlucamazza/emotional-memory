@@ -13,6 +13,8 @@ class InMemoryStore:
     small datasets and testing. For production, use a vector database.
     """
 
+    __slots__ = ("_store",)
+
     def __init__(self) -> None:
         self._store: dict[str, Memory] = {}
 
@@ -47,3 +49,6 @@ class InMemoryStore:
 
     def __len__(self) -> int:
         return len(self._store)
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(count={len(self._store)})"

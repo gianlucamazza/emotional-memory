@@ -1,5 +1,6 @@
 """Emotional memory library for LLMs based on Affective Field Theory."""
 
+import contextlib
 from importlib.metadata import version
 
 __version__ = version("emotional_memory")
@@ -27,7 +28,7 @@ from emotional_memory.async_adapters import (
 from emotional_memory.async_engine import AsyncEmotionalMemory
 from emotional_memory.decay import DecayConfig
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
-from emotional_memory.interfaces import Embedder, MemoryStore
+from emotional_memory.interfaces import Embedder, MemoryStore, SequentialEmbedder
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.resonance import ResonanceConfig
@@ -35,6 +36,9 @@ from emotional_memory.retrieval import AdaptiveWeightsConfig, RetrievalConfig
 from emotional_memory.state import AffectiveState
 from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
 from emotional_memory.stores.in_memory import InMemoryStore
+
+with contextlib.suppress(ImportError):
+    from emotional_memory.stores.sqlite import SQLiteStore as SQLiteStore
 
 __all__ = [
     "AdaptiveWeightsConfig",
@@ -63,6 +67,7 @@ __all__ = [
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalConfig",
+    "SequentialEmbedder",
     "StaticAppraisalEngine",
     "StimmungDecayConfig",
     "StimmungField",

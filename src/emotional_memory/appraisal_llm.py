@@ -39,13 +39,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import re
+import threading
 from collections import OrderedDict
 from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel
 
 from emotional_memory.appraisal import AppraisalVector
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # JSON schema exposed to the LLM
@@ -156,9 +160,13 @@ class LLMAppraisalConfig(BaseModel):
 class LLMAppraisalEngine:
     """AppraisalEngine backed by any LLM via a provider-agnostic callable.
 
-    Thread-safety: the LRU cache uses an OrderedDict without a lock.  For
-    concurrent use, wrap in an external lock or disable caching.
+    Thread-safety: the LRU cache is protected by a ``threading.Lock``.
+    Concurrent ``appraise()`` calls with the same key will each call the LLM
+    independently (no stampede protection), but the cache dict is always
+    mutated under the lock.
     """
+
+    __slots__ = ("_cache", "_cache_lock", "_config", "_fallback", "_llm")
 
     def __init__(
         self,
@@ -170,6 +178,7 @@ class LLMAppraisalEngine:
         self._config = config or LLMAppraisalConfig()
         self._fallback = fallback or AppraisalVector.neutral()
         self._cache: OrderedDict[str, AppraisalVector] = OrderedDict()
+        self._cache_lock = threading.Lock()
 
     # ------------------------------------------------------------------
     # Public API
@@ -184,9 +193,12 @@ class LLMAppraisalEngine:
         """
         cache_key = self._make_cache_key(event_text, context)
 
-        if self._config.cache_size > 0 and cache_key in self._cache:
-            self._cache.move_to_end(cache_key)
-            return self._cache[cache_key]
+        if self._config.cache_size > 0:
+            with self._cache_lock:
+                if cache_key in self._cache:
+                    self._cache.move_to_end(cache_key)
+                    logger.debug("appraise cache hit: key=%s", cache_key[:8])
+                    return self._cache[cache_key]
 
         prompt = self._build_prompt(event_text, context)
         try:
@@ -195,19 +207,32 @@ class LLMAppraisalEngine:
             vector = AppraisalVector(**data)
         except Exception:
             if self._config.fallback_on_error:
+                logger.debug("appraise fallback: text_len=%d", len(event_text))
                 return self._fallback
             raise
 
         if self._config.cache_size > 0:
-            if len(self._cache) >= self._config.cache_size:
-                self._cache.popitem(last=False)
-            self._cache[cache_key] = vector
+            with self._cache_lock:
+                if len(self._cache) >= self._config.cache_size:
+                    self._cache.popitem(last=False)
+                self._cache[cache_key] = vector
 
         return vector
 
     def clear_cache(self) -> None:
         """Evict all cached appraisals."""
-        self._cache.clear()
+        with self._cache_lock:
+            self._cache.clear()
+
+    def __repr__(self) -> str:
+        with self._cache_lock:
+            cache_size = len(self._cache)
+        return (
+            f"{type(self).__name__}("
+            f"cache_size={self._config.cache_size}, "
+            f"cached={cache_size}, "
+            f"fallback_on_error={self._config.fallback_on_error})"
+        )
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -251,6 +276,11 @@ class KeywordRule:
     0.0 for coping_potential/self_relevance — the engine adds the baseline
     0.5 for coping_potential after accumulation).
     """
+
+    __slots__ = ("_re", "scores")
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(pattern={self._re.pattern!r})"
 
     def __init__(
         self,
@@ -336,8 +366,13 @@ class KeywordAppraisalEngine:
     baseline of 0.5 is re-applied.  AppraisalVector validators clamp to range.
     """
 
+    __slots__ = ("_rules",)
+
     def __init__(self, rules: list[KeywordRule] | None = None) -> None:
         self._rules = rules if rules is not None else _DEFAULT_RULES
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(rules={len(self._rules)})"
 
     def appraise(self, event_text: str, context: dict[str, Any] | None = None) -> AppraisalVector:
         # Accumulate deltas from zero
