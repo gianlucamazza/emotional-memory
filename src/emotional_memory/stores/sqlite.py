@@ -91,12 +91,16 @@ class SQLiteStore:
         in-memory database (useful in tests without writing to disk).
     """
 
+    __slots__ = ("_conn", "_dim", "_path", "_vec_ready")
+
     def __init__(self, path: str | Path = ":memory:") -> None:
         self._path = str(path)
         sqlite_vec = _load_sqlite_vec()
         self._conn: sqlite3.Connection = sqlite3.connect(self._path)
         self._conn.row_factory = sqlite3.Row
+        self._conn.enable_load_extension(True)
         sqlite_vec.load(self._conn)
+        self._conn.enable_load_extension(False)
         self._conn.execute(_CREATE_MEMORIES)
         self._conn.commit()
         self._vec_ready = False
@@ -115,8 +119,9 @@ class SQLiteStore:
                 (memory.id, memory.content, memory.model_dump_json()),
             )
             if self._vec_ready and memory.embedding is not None:
+                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
                 self._conn.execute(
-                    "INSERT OR REPLACE INTO memory_vec (id, embedding) VALUES (?, ?)",
+                    "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
                     (memory.id, _pack_embedding(memory.embedding)),
                 )
 
@@ -134,8 +139,9 @@ class SQLiteStore:
                 (memory.content, memory.model_dump_json(), memory.id),
             )
             if self._vec_ready and memory.embedding is not None:
+                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
                 self._conn.execute(
-                    "INSERT OR REPLACE INTO memory_vec (id, embedding) VALUES (?, ?)",
+                    "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
                     (memory.id, _pack_embedding(memory.embedding)),
                 )
 
@@ -163,9 +169,8 @@ class SQLiteStore:
             SELECT m.data
             FROM memory_vec v
             JOIN memories m ON m.id = v.id
-            WHERE v.embedding MATCH ?
+            WHERE v.embedding MATCH ? AND k = ?
             ORDER BY distance
-            LIMIT ?
             """,
             (_pack_embedding(embedding), top_k),
         ).fetchall()
@@ -216,6 +221,9 @@ class SQLiteStore:
     def close(self) -> None:
         """Close the underlying database connection."""
         self._conn.close()
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(path={self._path!r}, count={len(self)})"
 
     def __enter__(self) -> SQLiteStore:
         return self
