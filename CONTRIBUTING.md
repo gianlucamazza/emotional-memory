@@ -11,6 +11,8 @@ pip install -e ".[dev,bench,sqlite]"
 pip install -e ".[dev,llm-test]"
 # For visualization (optional):
 pip install -e ".[dev,viz]"
+# For documentation (optional):
+pip install -e ".[docs]"
 pre-commit install
 ```
 
@@ -20,6 +22,8 @@ pre-commit install
 make check      # lint + typecheck + test (full suite)
 make cov        # tests with branch coverage report
 make bench      # fidelity + performance benchmarks
+make docs       # build static documentation site
+make docs-serve # serve docs locally with live reload
 ```
 
 Individual commands:
@@ -92,6 +96,7 @@ Entry point for encode/retrieve is `EmotionalMemory` in `src/emotional_memory/en
 | `appraisal_llm.py` | `LLMAppraisalEngine` + `KeywordAppraisalEngine` |
 | `async_engine.py` | `AsyncEmotionalMemory` — async facade |
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` |
+| `interfaces.py` | `Embedder`, `MemoryStore` protocols + `SequentialEmbedder` base class |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |

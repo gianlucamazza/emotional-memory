@@ -13,11 +13,20 @@ make lint           # ruff check
 make format         # ruff format
 make bench-fidelity # Psychological invariant tests (77 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
+make bench          # fidelity + performance benchmarks (combined)
 make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
 make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMORY_LLM_API_KEY)
+make install        # Install package in editable mode with dev deps
 make install-llm-test # Install llm-test dependencies (httpx)
-make install-viz     # Install visualization dependencies (matplotlib)
-make docs-images     # Generate docs/images/ PNGs from synthetic data
+make install-dotenv  # Install dotenv dependencies (python-dotenv)
+make install-bench  # Install benchmark dependencies
+make install-viz    # Install visualization dependencies (matplotlib)
+make install-docs   # Install documentation dependencies (mkdocs + material + mkdocstrings)
+make docs-images    # Generate docs/images/ PNGs from synthetic data
+make docs           # Build static documentation site (docs/ → site/)
+make docs-serve     # Serve documentation locally with live reload
+make dist           # Build distribution packages (wheel + sdist)
+make publish        # Build and publish to PyPI
 ```
 
 Single test:
@@ -52,10 +61,11 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 | Module | Purpose |
 |--------|---------|
-| `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed) + `KeywordAppraisalEngine` (rule-based fallback) |
+| `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback) |
 | `async_engine.py` | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory` |
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
+| `interfaces.py` | `Embedder`, `MemoryStore` protocols + `SequentialEmbedder` base class |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
@@ -68,6 +78,12 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 **async encode/retrieve**: Same pipeline as sync. Embed/store/appraise calls are awaited. CPU-bound scoring (retrieval_score, decay, resonance) runs synchronously inline.
 
 **state persistence**: `save_state()` → `AffectiveState.snapshot()` → JSON-safe dict (includes private `_history`). `load_state(data)` → `AffectiveState.restore()`. Round-trip preserves momentum history.
+
+**prune**: `prune(threshold=0.05)` → iterate all memories, call `compute_effective_strength()`, delete those below threshold. Returns count removed. Async variant awaits each store call.
+
+**export/import**: `export_memories()` → `[Memory.model_dump_json() | json.loads(...)]`. `import_memories(data, overwrite=False)` → `Memory.model_validate(item)` per dict, skip duplicates unless `overwrite=True`. Returns count written.
+
+**resource cleanup**: `close()` delegates to `store.close()` if available (duck-typed via `getattr`). Both engines support context manager: `with EmotionalMemory(...) as em` / `async with AsyncEmotionalMemory(...) as em`.
 
 ### 6-Signal Retrieval Scoring (retrieval.py)
 
@@ -87,11 +103,15 @@ ACT-R power-law: `strength(t) = initial * elapsed^(-effective_decay)`, modulated
 
 `Embedder` and `MemoryStore` are `typing.Protocol` in `interfaces.py` — duck-typed, no inheritance required. `MemoryStore` requires `__len__`. `InMemoryStore` is the reference implementation.
 
+`SequentialEmbedder` in `interfaces.py` is a concrete base class: subclass it and implement `embed()`; `embed_batch()` is provided as a sequential fallback.
+
 Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStore` (uses `count() -> int` instead of `__len__`), `AsyncAppraisalEngine`.
 
 `AppraisalEngine` protocol is in `appraisal.py`. `LLMCallable` protocol is in `appraisal_llm.py`.
 
 `get_current_stimmung(now)` on both engines reads Stimmung regressed via `StimmungDecayConfig` without mutating state. Configured via `EmotionalMemoryConfig.stimmung_decay`.
+
+`SQLiteStore` is exported from the top-level `__init__.py` and from `stores/__init__.py` when `sqlite-vec` is installed (guarded by `contextlib.suppress(ImportError)`).
 
 ## Conventions
 
@@ -100,6 +120,9 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 - **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `StimmungDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`).
 - **Theory references**: Each component cites source papers — preserve these in docstrings/comments.
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
+- **`__slots__`**: All non-Pydantic classes define `__slots__` for memory efficiency and attribute safety.
+- **`__repr__`**: All non-Pydantic concrete classes implement a useful `__repr__`.
+- **Logging**: Modules with observable pipeline events (`engine.py`, `async_engine.py`, `appraisal_llm.py`) use `logging.getLogger(__name__)` at `DEBUG` level. `warnings.warn` is reserved for user-visible degradation (e.g., NaN embeddings).
 - mypy strict is enforced — all new code must be fully annotated.
 - Fidelity benchmarks in `benchmarks/fidelity/` validate psychological phenomena — run after logic changes to retrieval, decay, or resonance.
 - Appraisal quality benchmarks in `benchmarks/appraisal_quality/` validate LLM prompt output — run after changes to the Scherer CPM prompt in `appraisal_llm.py`.

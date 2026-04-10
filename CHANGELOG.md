@@ -7,7 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-10
+
 ### Added
+
+- **13 runnable examples** covering the full public API — `basic_usage`, `advanced_config`,
+  `appraisal_engines`, `async_usage`, `emotional_journal`, `httpx_llm_integration`,
+  `llm_appraisal`, `persistence`, `reconsolidation`, `resonance_network`, `retrieval_signals`,
+  `sentence_transformers_embedder`, `visualization`; each is self-contained and always runnable
+  without ML dependencies
+- **`python-dotenv` optional extra** (`pip install emotional-memory[dotenv]`) and
+  `make install-dotenv` Makefile target
+- **`examples/httpx_llm_integration.py`** — SDK-agnostic LLM pipeline using raw httpx; covers
+  `AffectiveMomentum`, `LLMCallable`, `ResonanceLink`, `SyncToAsyncAppraisalEngine`,
+  `make_emotional_tag`, `consolidation_strength`, and `__version__` (previously uncovered)
+- **`examples/emotional_journal.py`** — capstone multi-session journaling app combining
+  `SQLiteStore`, `KeywordAppraisalEngine`, `StimmungDecayConfig`, mood-congruent retrieval,
+  reconsolidation, and `prune()`
+- **MkDocs documentation site** with API reference (mkdocstrings) and research pages
+- **`prune(threshold=0.05)`** on `EmotionalMemory` and `AsyncEmotionalMemory` — removes memories
+  whose `compute_effective_strength()` has fallen below the given threshold; returns count removed
+- **`export_memories()` / `import_memories(data, overwrite=False)`** on both engines — bulk
+  serialise all memories to a list of JSON-safe dicts for backup or store migration;
+  `import_memories` skips duplicate IDs by default, returns count written
+- **`close()` and context-manager support** on both engines — `with EmotionalMemory(...) as em`
+  and `async with AsyncEmotionalMemory(...) as em` propagate cleanup to the underlying store
+  (calls `store.close()` when available, no-ops otherwise)
+- **`SequentialEmbedder`** base class in `interfaces.py` — subclass and implement `embed()`;
+  `embed_batch()` is provided automatically as a sequential fallback; exported from top-level `__init__`
+- **`SQLiteStore` re-export** — now importable as `from emotional_memory import SQLiteStore`
+  (when `sqlite-vec` is installed); also re-exported from `emotional_memory.stores`
+- **Structured logging** — `engine.py`, `async_engine.py`, and `appraisal_llm.py` emit `DEBUG`
+  log records at key pipeline points (encode start/stored/resonance, retrieve start/done,
+  reconsolidate, cache hit/fallback) via `logging.getLogger(__name__)`
+- **`__repr__`** on all non-Pydantic concrete classes — `EmotionalMemory`, `AsyncEmotionalMemory`,
+  `InMemoryStore`, `SQLiteStore`, `LLMAppraisalEngine`, `KeywordAppraisalEngine`,
+  `StaticAppraisalEngine`
+- **`__slots__`** on all non-Pydantic classes — reduces per-instance memory footprint and
+  prevents accidental attribute creation
+- **Smoke test for `examples/basic_usage.py`** (`tests/test_examples.py`) — executed via
+  `runpy.run_path` to catch silent breakage in the example script
+
+
 
 - **Visualization module** (`visualization.py`) — 8 matplotlib plot functions: circumplex,
   decay curves, Yerkes-Dodson, retrieval radar, Stimmung evolution, adaptive weights heatmap,
@@ -96,5 +137,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/gianlucamazza/emotional-memory/releases/tag/v0.1.0

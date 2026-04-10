@@ -33,3 +33,6 @@ htmlcov/
 
 # pytest-benchmark results
 .benchmarks/
+
+# MkDocs build output
+site/

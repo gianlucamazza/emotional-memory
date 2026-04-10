@@ -108,24 +108,47 @@ em = EmotionalMemory(
 | `get(memory_id) -> Memory \| None` | Look up a single memory by ID |
 | `list_all() -> list[Memory]` | Return all stored memories |
 | `len(engine) -> int` | Number of memories in the store |
+| `prune(threshold=0.05) -> int` | Delete memories below effective strength threshold; returns count removed |
+| `export_memories() -> list[dict]` | Serialise all memories to JSON-safe dicts (backup / migration) |
+| `import_memories(data, overwrite=False) -> int` | Restore from `export_memories()` output; returns count written |
 | `get_state() -> AffectiveState` | Current affective state (read-only copy) |
 | `set_affect(core_affect)` | Manually inject a CoreAffect |
 | `save_state() -> dict` | Serialise affective state for persistence |
 | `load_state(data)` | Restore previously saved affective state |
 | `get_current_stimmung(now=None) -> StimmungField` | Read-only Stimmung with time regression |
+| `close()` | Release store resources (e.g. SQLite connection); also via `with` |
+
+Both engines support context managers for automatic resource cleanup:
+
+```python
+with EmotionalMemory(store=SQLiteStore("mem.db"), embedder=MyEmbedder()) as em:
+    em.encode("Session start")
+    results = em.retrieve("relevant context")
+# SQLiteStore.close() called automatically
+```
 
 ### `AsyncEmotionalMemory`
 
-Same method signatures as `EmotionalMemory`, with `encode`, `retrieve`, `encode_batch`, and
-`delete` as coroutines. State accessors (`get_state`, `set_affect`, `save_state`, `load_state`,
-`get_current_stimmung`) remain synchronous.
+Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `encode_batch`, `retrieve`,
+`delete`, `get`, `list_all`, `prune`, `export_memories`, `import_memories`, `close`.
+State accessors (`get_state`, `set_affect`, `save_state`, `load_state`, `get_current_stimmung`)
+remain synchronous.
+
+Supports `async with` for automatic resource cleanup:
+
+```python
+async with AsyncEmotionalMemory(store=..., embedder=...) as em:
+    await em.encode("Session start")
+    results = await em.retrieve("relevant context")
+```
 
 ```python
 from emotional_memory import AsyncEmotionalMemory, SyncToAsyncEmbedder, SyncToAsyncStore
 ```
 
 Bridge adapters: `SyncToAsyncEmbedder`, `SyncToAsyncStore`, `SyncToAsyncAppraisalEngine` wrap
-any sync implementation. `as_async(engine)` wraps a complete `EmotionalMemory` in one call.
+any sync implementation. `SyncToAsyncStore` also proxies `close()` to the underlying store.
+`as_async(engine)` wraps a complete `EmotionalMemory` in one call.
 
 ### Key config classes
 
@@ -138,6 +161,19 @@ any sync implementation. `as_async(engine)` wraps a complete `EmotionalMemory` i
 - `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour)
 
 ### Interfaces (bring your own)
+
+If your embedder has no native batching, subclass `SequentialEmbedder` — `embed_batch()` is
+provided automatically:
+
+```python
+from emotional_memory import SequentialEmbedder
+
+class MyEmbedder(SequentialEmbedder):
+    def embed(self, text: str) -> list[float]:
+        return my_model.encode(text).tolist()
+```
+
+Otherwise implement the full `Embedder` protocol:
 
 ```python
 class Embedder(Protocol):
@@ -313,6 +349,20 @@ Assertions use wide bands (e.g. `> 0.3`, `< -0.2`) and evaluate the median over 
 Run with: `EMOTIONAL_MEMORY_LLM_API_KEY=... make bench-appraisal`
 
 Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOTIONAL_MEMORY_LLM_BASE_URL`.
+
+## Logging
+
+The library uses the standard `logging` module. Enable debug output to trace the full pipeline:
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+# or just for emotional_memory:
+logging.getLogger("emotional_memory").setLevel(logging.DEBUG)
+```
+
+Debug events include: encode start/stored/resonance, retrieve start/done, reconsolidation
+triggers, LLM appraisal cache hits, and fallback activations.
 
 ## Development
 
