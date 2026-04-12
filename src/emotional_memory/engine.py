@@ -1,4 +1,4 @@
-"""Step 10: EmotionalMemory — the main facade.
+"""EmotionalMemory — the main facade.
 
 Orchestrates the full AFT pipeline:
 

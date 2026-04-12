@@ -1,4 +1,4 @@
-"""Step 8: Associative Resonance Builder.
+"""Associative Resonance Builder.
 
 When a memory is encoded, it resonates with existing memories via:
   - semantic similarity   (Aristotle: resemblance)

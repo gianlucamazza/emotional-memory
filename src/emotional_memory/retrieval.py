@@ -1,4 +1,4 @@
-"""Step 7: Retrieval Scoring Engine.
+"""Retrieval Scoring Engine.
 
 Multi-signal retrieval scoring combining six components:
   s1 — semantic similarity         (cosine, query embedding vs memory)
@@ -282,20 +282,16 @@ def reconsolidate(
     current_affect: CoreAffect,
     ape: float,
     learning_rate: float,
-    adapt_rate: bool = False,
 ) -> EmotionalTag:
     """Update the tag's core_affect proportionally to the APE.
 
-    When adapt_rate=False (default): alpha = min(ape * learning_rate, 0.5).
-    When adapt_rate=True (Pearce-Hall): alpha = min(ape * learning_rate * (1 + ape), 0.5).
-    Max 50% shift per retrieval.
+    alpha = min(ape * learning_rate, 0.5) — linearly scaled, capped at 50% per retrieval.
+    Pearce-Hall associability (large errors increase the learning rate) is handled separately
+    by update_prediction().
     Only core_affect is updated; all other fields remain unchanged.
     reconsolidation_count is incremented.
     """
-    if adapt_rate:
-        alpha = min(ape * learning_rate * (1.0 + ape), 0.5)
-    else:
-        alpha = min(ape * learning_rate, 0.5)
+    alpha = min(ape * learning_rate, 0.5)
     new_affect = tag.core_affect.lerp(current_affect, alpha)
     return tag.model_copy(
         update={

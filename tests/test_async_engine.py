@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import warnings
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -280,6 +281,30 @@ class TestSyncToAsyncAdapters:
         await adapter.save(make_test_memory("b"))
         all_mems = await adapter.list_all()
         assert len(all_mems) == 2
+
+    async def test_sync_to_async_store_update(self):
+        from conftest import make_test_memory
+
+        store = _sync_store()
+        adapter = SyncToAsyncStore(store)
+        m = make_test_memory("original")
+        await adapter.save(m)
+        m_updated = m.model_copy(update={"content": "updated"})
+        await adapter.update(m_updated)
+        got = await adapter.get(m.id)
+        assert got is not None
+        assert got.content == "updated"
+
+    async def test_sync_to_async_store_search_by_embedding(self):
+        from conftest import make_test_memory
+
+        store = _sync_store()
+        adapter = SyncToAsyncStore(store)
+        m = make_test_memory("searchable", embedding=[1.0, 0.0])
+        await adapter.save(m)
+        results = await adapter.search_by_embedding([1.0, 0.0], top_k=1)
+        assert len(results) == 1
+        assert results[0].id == m.id
 
     async def test_sync_to_async_appraisal_engine(self):
         vector = AppraisalVector.neutral()
@@ -634,3 +659,252 @@ class TestAsyncSpreadingAndHebbian:
         all_links = list(a_after.tag.resonance_links) + list(b_after.tag.resonance_links)
         link_targets = {lnk.target_id for lnk in all_links}
         assert a.id in link_targets or b.id in link_targets
+
+
+# ---------------------------------------------------------------------------
+# Async elaborate() and elaborate_pending()
+# ---------------------------------------------------------------------------
+
+
+def _appraisal_engine(valence: float = 0.7, arousal: float = 0.6) -> StaticAppraisalEngine:
+    return StaticAppraisalEngine(
+        AppraisalVector(
+            novelty=0.5,
+            goal_relevance=0.8,
+            coping_potential=0.7,
+            norm_congruence=0.6,
+            self_relevance=0.5,
+        )
+    )
+
+
+def _dual_path_engine() -> AsyncEmotionalMemory:
+    return AsyncEmotionalMemory(
+        store=SyncToAsyncStore(InMemoryStore()),
+        embedder=SyncToAsyncEmbedder(DeterministicEmbedder()),
+        appraisal_engine=SyncToAsyncAppraisalEngine(_appraisal_engine()),
+        config=EmotionalMemoryConfig(dual_path_encoding=True),
+    )
+
+
+class TestAsyncElaborate:
+    async def test_elaborate_clears_pending_appraisal(self) -> None:
+        em = _dual_path_engine()
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mem = await em.encode("Pending appraisal memory.")
+        assert mem.tag.pending_appraisal is True
+
+        updated = await em.elaborate(mem.id)
+        assert updated is not None
+        assert updated.tag.pending_appraisal is False
+
+    async def test_elaborate_populates_appraisal_vector(self) -> None:
+        em = _dual_path_engine()
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mem = await em.encode("Memory needing appraisal.")
+        updated = await em.elaborate(mem.id)
+        assert updated is not None
+        assert updated.tag.appraisal is not None
+
+    async def test_elaborate_blends_core_affect(self) -> None:
+        em = _dual_path_engine()
+        em.set_affect(CoreAffect(valence=0.0, arousal=0.1))
+        mem = await em.encode("Memory at low arousal.")
+        raw_affect = mem.tag.core_affect
+
+        updated = await em.elaborate(mem.id)
+        assert updated is not None
+        assert updated.tag.core_affect != raw_affect
+
+    async def test_elaborate_opens_reconsolidation_window(self) -> None:
+        em = _dual_path_engine()
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mem = await em.encode("Memory to elaborate.")
+        assert mem.tag.window_opened_at is None
+
+        updated = await em.elaborate(mem.id)
+        assert updated is not None
+        assert updated.tag.window_opened_at is not None
+
+    async def test_elaborate_persists_to_store(self) -> None:
+        em = _dual_path_engine()
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mem = await em.encode("Stored memory.")
+        await em.elaborate(mem.id)
+        stored = await em.get(mem.id)
+        assert stored is not None
+        assert stored.tag.pending_appraisal is False
+
+    async def test_elaborate_returns_none_when_not_pending(self) -> None:
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(DeterministicEmbedder()),
+            appraisal_engine=SyncToAsyncAppraisalEngine(_appraisal_engine()),
+            config=EmotionalMemoryConfig(dual_path_encoding=False),
+        )
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        mem = await em.encode("Already elaborated.")
+        assert mem.tag.pending_appraisal is False
+        result = await em.elaborate(mem.id)
+        assert result is None
+
+    async def test_elaborate_returns_none_for_missing_id(self) -> None:
+        em = _dual_path_engine()
+        result = await em.elaborate("nonexistent-id")
+        assert result is None
+
+    async def test_elaborate_returns_none_without_appraisal_engine(self) -> None:
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(DeterministicEmbedder()),
+            appraisal_engine=None,
+            config=EmotionalMemoryConfig(dual_path_encoding=True),
+        )
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        # No engine → fast path not activated → pending_appraisal is False
+        mem = await em.encode("No engine.")
+        result = await em.elaborate(mem.id)
+        assert result is None
+
+
+class TestAsyncElaboratePending:
+    async def test_elaborate_pending_processes_all(self) -> None:
+        em = _dual_path_engine()
+        for i in range(3):
+            em.set_affect(CoreAffect(valence=0.1 * i, arousal=0.5))
+            await em.encode(f"Memory {i} pending appraisal.")
+
+        all_mems = await em.list_all()
+        pending_before = sum(1 for m in all_mems if m.tag.pending_appraisal)
+        assert pending_before == 3
+
+        elaborated = await em.elaborate_pending()
+        assert len(elaborated) == 3
+
+        all_mems_after = await em.list_all()
+        pending_after = sum(1 for m in all_mems_after if m.tag.pending_appraisal)
+        assert pending_after == 0
+
+    async def test_elaborate_pending_skips_non_pending(self) -> None:
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(DeterministicEmbedder()),
+            appraisal_engine=SyncToAsyncAppraisalEngine(_appraisal_engine()),
+            config=EmotionalMemoryConfig(dual_path_encoding=False),
+        )
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.5))
+        await em.encode("Already elaborated.")
+        result = await em.elaborate_pending()
+        assert result == []
+
+    async def test_elaborate_pending_empty_store(self) -> None:
+        em = _dual_path_engine()
+        result = await em.elaborate_pending()
+        assert result == []
+
+
+# ---------------------------------------------------------------------------
+# Async import_memories(overwrite=True)
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncImportOverwrite:
+    async def test_overwrite_replaces_existing(self) -> None:
+        em = _async_engine()
+        mem = await em.encode("Original content.")
+        exported = await em.export_memories()
+
+        # Mutate the exported data
+        exported[0]["content"] = "Replaced content."
+
+        count = await em.import_memories(exported, overwrite=True)
+        assert count == 1
+        updated = await em.get(mem.id)
+        assert updated is not None
+        assert updated.content == "Replaced content."
+
+    async def test_no_overwrite_skips_duplicates(self) -> None:
+        em = _async_engine()
+        mem = await em.encode("Original content.")
+        exported = await em.export_memories()
+        exported[0]["content"] = "Should not replace."
+
+        count = await em.import_memories(exported, overwrite=False)
+        assert count == 0
+        unchanged = await em.get(mem.id)
+        assert unchanged is not None
+        assert unchanged.content == "Original content."
+
+
+# ---------------------------------------------------------------------------
+# Async auto_categorize
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncAutoCategorize:
+    async def test_auto_categorize_attaches_emotion_label(self) -> None:
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+            config=EmotionalMemoryConfig(auto_categorize=True),
+        )
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
+        mem = await em.encode("A joyful event.")
+        assert mem.tag.emotion_label is not None
+
+    async def test_auto_categorize_false_leaves_label_none(self) -> None:
+        em = _async_engine()
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
+        mem = await em.encode("A joyful event.")
+        assert mem.tag.emotion_label is None
+
+
+# ---------------------------------------------------------------------------
+# NaN embedding warning (async)
+# ---------------------------------------------------------------------------
+
+
+class _NaNEmbedder:
+    """Embedder that always returns NaN values."""
+
+    def embed(self, text: str) -> list[float]:
+        return [float("nan"), float("nan")]
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        return [[float("nan"), float("nan")] for _ in texts]
+
+
+class TestAsyncNaNEmbeddingWarning:
+    async def test_nan_embedding_emits_warning(self) -> None:
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(_NaNEmbedder()),
+        )
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            await em.encode("This will produce a NaN embedding.")
+        assert any("NaN" in str(w.message) for w in caught)
+
+
+# ---------------------------------------------------------------------------
+# Async concurrency: concurrent encodes on separate engines
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncConcurrentEncode:
+    async def test_independent_engines_concurrent(self) -> None:
+        """Multiple AsyncEmotionalMemory instances running concurrently
+        with asyncio.gather() must not interfere with each other."""
+        import asyncio
+
+        async def run_engine(n: int) -> int:
+            em = AsyncEmotionalMemory(
+                store=SyncToAsyncStore(InMemoryStore()),
+                embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+            )
+            for i in range(n):
+                await em.encode(f"async memory {i}")
+            return await em.count()
+
+        counts = await asyncio.gather(*[run_engine(4) for _ in range(6)])
+        assert all(c == 4 for c in counts), f"Unexpected counts: {counts}"

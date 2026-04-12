@@ -1,4 +1,4 @@
-"""Step 9: AffectiveState — the runtime emotional state machine.
+"""AffectiveState — the runtime emotional state machine.
 
 Bundles CoreAffect, AffectiveMomentum, and MoodField into a single
 evolving object. On each update:

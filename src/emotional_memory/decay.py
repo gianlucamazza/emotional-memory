@@ -1,4 +1,4 @@
-"""Step 6: Decay Engine.
+"""Decay Engine.
 
 Memory consolidation strength decays as a power law (ACT-R, Anderson 1983),
 modulated by:

@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-04-12
+
+### Fixed
+
+- **CHANGELOG accuracy** — v0.4.0 incorrectly described `reconsolidate()` as using a
+  "sigmoid-scaled adaptive learning rate"; the actual formula is linear: `alpha = min(ape * lr, 0.5)`.
+  Pearce-Hall associability is handled exclusively by `update_prediction()`, not `reconsolidate()`.
+- **Dead `adapt_rate` parameter removed** from `reconsolidate()` (`retrieval.py`) — the
+  `adapt_rate=True` Pearce-Hall branch was unreachable dead code; no engine ever called it with
+  `True`. Removing it eliminates a misleading public signature.
+- **`stores/__init__.py` `__all__`** — added `SQLiteStore` so `from emotional_memory.stores import *`
+  exports it correctly when `sqlite-vec` is installed.
+- **Duplicate `AffectiveState` in docs** — removed the redundant `:::` directive from
+  `docs/api/affect.md`; the class is documented exclusively in `docs/api/state.md`.
+- **CHANGELOG v0.1.0/v0.2.0 terminology** — replaced stale "Stimmung" references with
+  "MoodField"/"mood" throughout the historical changelog entries for consistency.
+- **Module docstring artifacts** — removed internal "Step N:" prefixes from module-level
+  docstrings in `engine.py`, `decay.py`, `retrieval.py`, `resonance.py`, `state.py`.
+
+### Added
+
+- **`elaborate()` / `elaborate_pending()` async tests** — 11 new tests in `test_async_engine.py`
+  covering both methods (clear pending flag, blend affect, persist to store, window, edge cases).
+- **`SyncToAsyncStore` direct tests** — `update()` and `search_by_embedding()` adapter methods
+  now have dedicated unit tests.
+- **NaN embedding warning tests** — sync and async engines both verified to emit `warnings.warn`
+  when the embedder returns NaN values.
+- **Reconsolidation window expiry test** — explicit test for the branch that clears
+  `window_opened_at` when the lability window has elapsed.
+- **Async `import_memories(overwrite=True)` test** — overwrite path previously untested.
+- **Async `auto_categorize` during encode** — verified `emotion_label` is attached when the flag
+  is set, and absent when it is not.
+- **Concurrency tests** — threading test for independent sync engines; `asyncio.gather` test
+  for independent async engines; concurrent read test for `SQLiteStore`.
+- **`SQLiteStore` edge cases** — `update()` with a changed embedding vector replaces the vec
+  table row correctly; dimension mismatch raises `sqlite3.OperationalError`.
+- **Fidelity benchmark: Hebbian co-retrieval strengthening** (`test_hebbian_strengthening.py`) —
+  4 tests validating Hebb (1949): co-retrieval increases link strength, monotonic growth over
+  rounds, zero-increment leaves strength unchanged, strength capped at 1.0.
+- **Fidelity benchmark: ACT-R power-law decay** (`test_decay_power_law.py`) — 5 tests
+  verifying Anderson (1983) + McGaugh (2004): strictly decreasing strength, log-log linearity
+  R² > 0.99, arousal slows decay, high-arousal floor respected, low-arousal can fall below floor.
+- **Fidelity benchmark: PAD dominance** (`test_pad_dominance.py`) — 8 tests (+ parametrised)
+  validating Mehrabian & Russell (1974): positive×high-arousal raises dominance, negative×high
+  lowers it, low arousal stays near neutral, dominance clamped to [0, 1], formula verified
+  numerically.
+
+### Documentation
+
+- **README** — `EmotionalMemory` API table now includes `elaborate()` and `elaborate_pending()`;
+  `AsyncEmotionalMemory` coroutine list now includes `elaborate`, `elaborate_pending`, `count`.
+
 ## [0.4.0] - 2026-04-12
 
 ### Added
@@ -33,8 +85,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `reconsolidate()` now applies a sigmoid-scaled adaptive learning rate based on APE magnitude:
-  larger prediction errors produce proportionally larger core affect updates (Schultz 1997)
+- `reconsolidate()` now applies a linearly-scaled alpha (`min(ape * learning_rate, 0.5)`) so
+  larger prediction errors produce proportionally larger core affect updates, capped at 50% per
+  retrieval (Schultz 1997); Pearce-Hall associability is handled separately by `update_prediction()`
 - `encode_batch()` now honours `dual_path_encoding` and `auto_categorize` flags, consistent with
   the single-item `encode()` path
 
@@ -107,6 +160,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `llm_appraisal`, `persistence`, `reconsolidation`, `resonance_network`, `retrieval_signals`,
   `sentence_transformers_embedder`, `visualization`; each is self-contained and always runnable
   without ML dependencies
+- **Visualization module** (`visualization.py`) — 8 matplotlib plot functions: circumplex,
+  decay curves, Yerkes-Dodson, retrieval radar, mood evolution, adaptive weights heatmap,
+  resonance network, appraisal radar; install via `pip install emotional-memory[viz]`
 - **`python-dotenv` optional extra** (`pip install emotional-memory[dotenv]`) and
   `make install-dotenv` Makefile target
 - **`examples/httpx_llm_integration.py`** — SDK-agnostic LLM pipeline using raw httpx; covers
@@ -138,12 +194,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   prevents accidental attribute creation
 - **Smoke test for `examples/basic_usage.py`** (`tests/test_examples.py`) — executed via
   `runpy.run_path` to catch silent breakage in the example script
-
-
-
-- **Visualization module** (`visualization.py`) — 8 matplotlib plot functions: circumplex,
-  decay curves, Yerkes-Dodson, retrieval radar, Stimmung evolution, adaptive weights heatmap,
-  resonance network, appraisal radar; install via `pip install emotional-memory[viz]`
 - **LLM integration tests** (`tests/test_llm_integration.py`) — 5 end-to-end tests against a
   real OpenAI-compatible endpoint; gated behind `pytest.mark.llm` and API key env var
 - **Appraisal quality benchmarks** (`benchmarks/appraisal_quality/`) — 15 natural-language
@@ -176,11 +226,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   patterns with dimension score deltas; ships with defaults covering success, failure,
   novelty, danger, and social norms
 - **`save_state()` / `load_state()`** on `EmotionalMemory` and `AsyncEmotionalMemory` —
-  serialise and restore the full `AffectiveState` (core affect, momentum history, Stimmung)
+  serialise and restore the full `AffectiveState` (core affect, momentum history, MoodField)
   as a JSON-safe dict, enabling session persistence
-- **`get_current_mood(now)`** — read-only Stimmung inspection with time-based regression
+- **`get_current_mood(now)`** — read-only mood inspection with time-based regression
   applied on-the-fly without mutating engine state
-- **`MoodDecayConfig`** — exponential Stimmung regression toward PAD baselines, modulated
+- **`MoodDecayConfig`** — exponential mood regression toward PAD baselines, modulated
   by inertia; configurable half-life and inertia scale; applied via `MoodField.regress()`
 - **`AdaptiveWeightsConfig`** — continuous sigmoid/Gaussian modulation of retrieval weights
   replacing hard thresholds; `_smooth_gate()` helper for tanh-based gate functions
@@ -206,16 +256,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `EmotionalMemory` — main facade:
   - `encode(content, appraisal, metadata)` — single-item encode with full AFT pipeline
   - `encode_batch(contents, metadata)` — batched encode via `embed_batch()`, per-item appraisal
-  - `retrieve(query, top_k)` — two-pass spreading activation with Stimmung-adaptive weights
+  - `retrieve(query, top_k)` — two-pass spreading activation with mood-adaptive weights
   - `delete(memory_id)` — remove a memory from the store
   - `get_state()` / `set_affect()` — read and write the runtime affective state
 - `InMemoryStore` — dict-backed `MemoryStore` with brute-force cosine search
 - `Embedder` and `MemoryStore` — `typing.Protocol` interfaces for dependency injection (PEP 544)
 - Power-law memory decay (ACT-R, Anderson 1983), arousal-modulated, with configurable `power`
   exponent and high-arousal floor (Merleau-Ponty body memory)
-- Mood-congruent retrieval: 6-signal weighted scoring (semantic, stimmung-congruence,
+- Mood-congruent retrieval: 6-signal weighted scoring (semantic, mood-congruence,
   affect-proximity, momentum-alignment, recency, resonance-boost)
-- Stimmung-adaptive retrieval weights (Heidegger: mood is the ground of disclosure)
+- Mood-adaptive retrieval weights (Heidegger: mood is the ground of disclosure)
 - Two-pass spreading activation: first pass seeds active memory IDs for resonance boost
 - Embedding pre-filter: `candidate_multiplier` limits scoring candidates in large stores
 - Reconsolidation with lability window: tag updated on high APE only within

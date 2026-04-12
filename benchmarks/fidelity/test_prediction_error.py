@@ -90,7 +90,7 @@ def test_reconsolidation_shift_proportional_to_ape():
 
     shifts = []
     for ape in (0.1, 0.5, 1.0):
-        updated = reconsolidate(tag, target, ape=ape, learning_rate=lr, adapt_rate=True)
+        updated = reconsolidate(tag, target, ape=ape, learning_rate=lr)
         shifts.append(updated.core_affect.valence)
 
     assert shifts[0] < shifts[1] < shifts[2], (

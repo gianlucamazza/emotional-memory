@@ -290,3 +290,65 @@ class TestSQLiteStoreEdgeCases:
             store.save(make_test_memory(f"m{i}", embedding=[float(i), 0.0]))
         results = store.search_by_embedding([3.0, 0.0], top_k=2)
         assert len(results) == 2
+
+    def test_update_replaces_embedding_in_vec_table(self, tmp_path):
+        """update() must swap the embedding in memory_vec, not just memories."""
+        store = SQLiteStore(":memory:")
+        # Save with embedding [1.0, 0.0]
+        m = make_test_memory("update-emb", embedding=[1.0, 0.0])
+        store.save(m)
+
+        # Search should return m as nearest to [1.0, 0.0]
+        results_before = store.search_by_embedding([1.0, 0.0], top_k=1)
+        assert len(results_before) == 1
+        assert results_before[0].id == m.id
+
+        # Update with embedding [0.0, 1.0]
+        m_updated = m.model_copy(update={"embedding": [0.0, 1.0]})
+        store.update(m_updated)
+
+        # Search nearest to [0.0, 1.0] — should still find m
+        results_after = store.search_by_embedding([0.0, 1.0], top_k=1)
+        assert len(results_after) == 1
+        assert results_after[0].id == m.id
+
+    def test_dimension_mismatch_raises(self):
+        """Saving a memory with a different embedding dimension must fail."""
+        store = SQLiteStore(":memory:")
+        store.save(make_test_memory("first", embedding=[1.0, 0.0]))  # dim=2
+
+        # Second memory with dim=3 — sqlite-vec cannot accept mismatched dimensions
+        with pytest.raises(sqlite3.OperationalError):
+            store.save(make_test_memory("second", embedding=[1.0, 0.0, 0.5]))
+
+
+# ---------------------------------------------------------------------------
+# Concurrency (threading)
+# ---------------------------------------------------------------------------
+
+
+class TestSQLiteStoreConcurrency:
+    def test_concurrent_reads_are_safe(self, tmp_path):
+        """Multiple threads reading concurrently must not raise."""
+        import threading
+
+        db_path = tmp_path / "concurrent.db"
+        store = SQLiteStore(str(db_path))
+        for i in range(10):
+            store.save(make_test_memory(f"mem-{i}", embedding=[float(i), 0.0]))
+
+        errors: list[Exception] = []
+
+        def reader() -> None:
+            try:
+                store.search_by_embedding([5.0, 0.0], top_k=3)
+            except Exception as exc:
+                errors.append(exc)
+
+        threads = [threading.Thread(target=reader) for _ in range(8)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert errors == [], f"Concurrent reads raised: {errors}"

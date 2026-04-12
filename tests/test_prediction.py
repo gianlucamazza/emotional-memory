@@ -129,30 +129,29 @@ class TestUpdatePrediction:
 
 
 # ---------------------------------------------------------------------------
-# reconsolidate with adaptive rate
+# reconsolidate — linear scaling
 # ---------------------------------------------------------------------------
 
 
-class TestReconsolidateAdaptive:
-    def test_adapt_rate_true_larger_ape_gives_larger_shift(self):
+class TestReconsolidateLinear:
+    def test_larger_ape_gives_larger_shift(self):
         tag = _tag(valence=0.0, arousal=0.5)
         target = CoreAffect(valence=1.0, arousal=1.0)
-        small = reconsolidate(tag, target, ape=0.1, learning_rate=0.3, adapt_rate=True)
-        large = reconsolidate(tag, target, ape=1.0, learning_rate=0.3, adapt_rate=True)
+        small = reconsolidate(tag, target, ape=0.1, learning_rate=0.3)
+        large = reconsolidate(tag, target, ape=1.0, learning_rate=0.3)
         assert large.core_affect.valence > small.core_affect.valence
 
-    def test_adapt_rate_false_matches_original_formula(self):
-        """adapt_rate=False should behave like the original formula."""
+    def test_matches_linear_formula(self):
         tag = _tag(valence=0.0, arousal=0.5)
         target = CoreAffect(valence=1.0, arousal=1.0)
         ape, lr = 0.5, 0.2
-        updated = reconsolidate(tag, target, ape=ape, learning_rate=lr, adapt_rate=False)
-        alpha = min(ape * lr, 0.5)  # original formula
+        updated = reconsolidate(tag, target, ape=ape, learning_rate=lr)
+        alpha = min(ape * lr, 0.5)
         expected_valence = tag.core_affect.lerp(target, alpha).valence
         assert updated.core_affect.valence == pytest.approx(expected_valence)
 
-    def test_cap_still_holds_with_adapt_rate(self):
+    def test_cap_at_50_percent(self):
         tag = _tag(valence=0.0, arousal=0.5)
         target = CoreAffect(valence=1.0, arousal=1.0)
-        updated = reconsolidate(tag, target, ape=100.0, learning_rate=100.0, adapt_rate=True)
+        updated = reconsolidate(tag, target, ape=100.0, learning_rate=100.0)
         assert updated.core_affect.valence <= 0.5 + 1e-9

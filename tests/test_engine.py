@@ -797,3 +797,111 @@ class TestHebbianStrengtheningInEngine:
 
         for tid, before in strengths_before.items():
             assert strengths_after.get(tid, before) == pytest.approx(before)
+
+
+# ---------------------------------------------------------------------------
+# NaN embedding warning (sync)
+# ---------------------------------------------------------------------------
+
+
+class _NaNEmbedder:
+    """Embedder that always returns NaN values."""
+
+    def embed(self, text: str) -> list[float]:
+        return [float("nan"), float("nan")]
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        return [[float("nan"), float("nan")] for _ in texts]
+
+
+class TestNaNEmbeddingWarning:
+    def test_nan_embedding_emits_warning(self) -> None:
+        import warnings
+
+        em = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=_NaNEmbedder(),
+        )
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            em.encode("This will produce a NaN embedding.")
+        assert any("NaN" in str(w.message) for w in caught)
+
+
+# ---------------------------------------------------------------------------
+# Reconsolidation window expiry
+# ---------------------------------------------------------------------------
+
+
+class TestReconsolidationWindowExpiry:
+    def _engine_with_window(self, window_seconds: float) -> EmotionalMemory:
+        from emotional_memory.retrieval import RetrievalConfig
+
+        return EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=FixedEmbedder([1.0, 0.0]),
+            config=EmotionalMemoryConfig(
+                retrieval=RetrievalConfig(
+                    ape_threshold=0.0,
+                    reconsolidation_learning_rate=0.5,
+                    reconsolidation_window_seconds=window_seconds,
+                )
+            ),
+        )
+
+    def test_window_expires_and_closes(self) -> None:
+        """After the lability window expires, window_opened_at is cleared."""
+        em = self._engine_with_window(window_seconds=0.0)  # zero-length window
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.9))
+        em.encode("High-arousal memory.")
+
+        # First retrieval opens the window (APE threshold=0.0 so always opens)
+        em.set_affect(CoreAffect(valence=-0.5, arousal=0.5))  # diverge affect
+        results = em.retrieve("memory", top_k=1)
+        assert len(results) == 1
+        first = em.get(results[0].id)
+        assert first is not None
+        # window_opened_at is set (or None if window expired immediately)
+        # Either way, a second retrieval after an expired window must clear it
+        results2 = em.retrieve("memory", top_k=1)
+        assert len(results2) == 1
+        after_expiry = em.get(results2[0].id)
+        assert after_expiry is not None
+        # With window_seconds=0.0 the window expires immediately — must be None
+        assert after_expiry.tag.window_opened_at is None
+
+
+# ---------------------------------------------------------------------------
+# Thread-safety: concurrent encodes on separate engines share no state
+# ---------------------------------------------------------------------------
+
+
+class TestConcurrentEncode:
+    def test_independent_engines_thread_safe(self) -> None:
+        """Two separate EmotionalMemory instances can encode from different threads
+        without interference — each has its own store and state."""
+        import threading
+
+        results: list[int] = []
+        errors: list[Exception] = []
+
+        def encode_batch(n: int) -> None:
+            try:
+                em = EmotionalMemory(
+                    store=InMemoryStore(),
+                    embedder=FixedEmbedder([1.0, 0.0]),
+                )
+                for i in range(n):
+                    em.encode(f"thread memory {i}")
+                results.append(len(em.list_all()))
+            except Exception as exc:
+                errors.append(exc)
+
+        threads = [threading.Thread(target=encode_batch, args=(5,)) for _ in range(6)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert errors == [], f"Threads raised: {errors}"
+        assert all(r == 5 for r in results), f"Unexpected counts: {results}"

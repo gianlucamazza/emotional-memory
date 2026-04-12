@@ -105,6 +105,8 @@ em = EmotionalMemory(
 | `encode(content, appraisal=None, metadata=None) -> Memory` | Encode content with full AFT pipeline |
 | `encode_batch(contents, metadata=None) -> list[Memory]` | Batch encode with `embed_batch()`, per-item appraisal |
 | `retrieve(query, top_k=5) -> list[Memory]` | Emotionally-weighted retrieval + reconsolidation |
+| `elaborate(memory_id) -> Memory \| None` | Run full appraisal on a fast-path (`pending_appraisal=True`) memory and blend core_affect |
+| `elaborate_pending() -> list[Memory]` | Elaborate all pending fast-path memories in one call |
 | `delete(memory_id)` | Remove a memory from the store |
 | `get(memory_id) -> Memory \| None` | Look up a single memory by ID |
 | `list_all() -> list[Memory]` | Return all stored memories |
@@ -131,7 +133,8 @@ with EmotionalMemory(store=SQLiteStore("mem.db"), embedder=MyEmbedder()) as em:
 ### `AsyncEmotionalMemory`
 
 Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `encode_batch`, `retrieve`,
-`delete`, `get`, `list_all`, `prune`, `export_memories`, `import_memories`, `close`.
+`elaborate`, `elaborate_pending`, `delete`, `get`, `list_all`, `count`, `prune`,
+`export_memories`, `import_memories`, `close`.
 State accessors (`get_state`, `set_affect`, `save_state`, `load_state`, `get_current_mood`)
 remain synchronous.
 
