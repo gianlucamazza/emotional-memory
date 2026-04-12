@@ -908,3 +908,17 @@ class TestAsyncConcurrentEncode:
 
         counts = await asyncio.gather(*[run_engine(4) for _ in range(6)])
         assert all(c == 4 for c in counts), f"Unexpected counts: {counts}"
+
+    async def test_shared_engine_concurrent_encode_no_lost_updates(self) -> None:
+        """Concurrent encode() on the same engine must not lose state updates (Lock test).
+
+        Without asyncio.Lock, two coroutines could both read the old _state, suspend
+        at 'await embed()', then both update from the same base — losing one update.
+        """
+        import asyncio
+
+        em = _async_engine(embedder=FixedEmbedder([1.0, 0.0]))
+        n = 12
+        await asyncio.gather(*[em.encode(f"memory {i}") for i in range(n)])
+        count = await em.count()
+        assert count == n, f"Expected {n} memories after {n} concurrent encodes, got {count}"

@@ -229,7 +229,8 @@ class TestAutoCategorize:
             embedder=DeterministicEmbedder(),
             config=EmotionalMemoryConfig(auto_categorize=True),
         )
-        em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
+        # (0.8, 0.5) → a_scaled=0.0 → angle=0° → joy sector
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.5))
         mem = em.encode("A joyful event!")
         assert mem.tag.emotion_label is not None
         assert mem.tag.emotion_label.primary == "joy"

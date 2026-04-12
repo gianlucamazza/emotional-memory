@@ -20,7 +20,7 @@ from __future__ import annotations
 import math
 from datetime import UTC, datetime
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from emotional_memory.affect import CoreAffect
 
@@ -36,7 +36,7 @@ class MoodDecayConfig(BaseModel):
     """
 
     base_half_life_seconds: float = 3600.0
-    """Base half-life in seconds (default 1 hour). Modulated by inertia."""
+    """Base half-life in seconds (default 1 hour, must be > 0). Modulated by inertia."""
 
     inertia_scale: float = 2.0
     """Multiplier on inertia: effective_half_life = base * (1 + inertia * scale)."""
@@ -49,6 +49,14 @@ class MoodDecayConfig(BaseModel):
 
     baseline_dominance: float = 0.5
     """Resting dominance attractor (balanced perceived control)."""
+
+    @model_validator(mode="after")
+    def _validate_half_life(self) -> MoodDecayConfig:
+        if self.base_half_life_seconds <= 0:
+            raise ValueError(
+                f"base_half_life_seconds must be > 0, got {self.base_half_life_seconds}"
+            )
+        return self
 
 
 class MoodField(BaseModel):
@@ -143,14 +151,15 @@ class MoodField(BaseModel):
         eff_alpha = alpha * (1.0 - base.inertia)
         new_valence = (1.0 - eff_alpha) * base.valence + eff_alpha * core_affect.valence
         new_arousal = (1.0 - eff_alpha) * base.arousal + eff_alpha * core_affect.arousal
-        # Dominance: PAD heuristic - valence x arousal shifts perceived control
-        dominance_signal = 0.5 + 0.25 * core_affect.valence * core_affect.arousal
+        # Dominance: PAD heuristic — valence * arousal shifts perceived control.
+        # Coefficient 0.5 gives full [-1,1] * [0,1] -> [0, 1] range coverage.
+        dominance_signal = 0.5 + 0.5 * core_affect.valence * core_affect.arousal
         new_dominance = (1.0 - eff_alpha) * base.dominance + eff_alpha * dominance_signal
         return MoodField(
             valence=new_valence,
             arousal=new_arousal,
             dominance=new_dominance,
-            inertia=self.inertia,
+            inertia=base.inertia,
             timestamp=now,
         )
 

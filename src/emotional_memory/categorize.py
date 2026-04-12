@@ -4,11 +4,14 @@ Maps continuous (valence, arousal) coordinates from the Russell circumplex
 to Plutchik's 8 primary emotions with intensity tiers (Plutchik, 1980).
 
 The mapping is angular: each of the 8 primaries occupies a 45° sector in
-the centered valence-arousal plane (arousal shifted to [-0.5, 0.5]).
+the isotropic valence-arousal plane.  Arousal is first re-centred to
+[-0.5, 0.5] and then scaled by *2 so that both axes span [-1, 1].  This
+produces equal angular sectors without distortion.
 Radial distance from the origin determines intensity:
   low      r < 0.30  (serenity, acceptance, apprehension, …)
   moderate r ∈ [0.30, 0.70)  (joy, trust, fear, …)
   high     r ≥ 0.70  (ecstasy, admiration, terror, …)
+  neutral  r < 0.05  (near-origin — no reliable categorization)
 
 When ``dominance`` is available (e.g. from MoodField), it disambiguates
 the fear/anger region (negative valence + high arousal):
@@ -40,10 +43,13 @@ PrimaryEmotion = Literal[
 ]
 Intensity = Literal["low", "moderate", "high"]
 
-# Intensity thresholds based on radial distance in centered affect space
-# Max r ≈ sqrt(1² + 0.5²) ≈ 1.12; thresholds are relative to that range.
+# Intensity thresholds based on radial distance in the isotropic affect space.
+# With arousal re-centred and *2-scaled, both axes span [-1, 1], so
+# max r = sqrt(1² + 1²) ≈ 1.41.  Thresholds are relative to that range.
 _INTENSITY_LOW_THRESHOLD: float = 0.30
 _INTENSITY_HIGH_THRESHOLD: float = 0.70
+# Points within this radius are too close to the origin to categorise reliably.
+_NEUTRAL_RADIUS: float = 0.05
 
 # Plutchik's dyadic intensity tier names for each primary
 _INTENSITY_NAMES: dict[PrimaryEmotion, dict[Intensity, str]] = {
@@ -67,7 +73,7 @@ _INTENSITY_NAMES: dict[PrimaryEmotion, dict[Intensity, str]] = {
 #  sector 3  [112.5deg, 157.5deg) -> fear / anger  (- valence, high arousal) <- dominance
 #  sector 4  [157.5deg, 202.5deg) -> disgust       (- valence, neutral arousal)
 #  sector 5  [202.5deg, 247.5deg) -> sadness       (- valence, - arousal)
-#  sector 6  [247.5deg, 292.5deg) -> sadness       (neutral valence, very - arousal) [boredom]
+#  sector 6  [247.5deg, 292.5deg) -> disgust       (neutral valence, very - arousal) [boredom]
 #  sector 7  [292.5deg, 337.5deg) -> trust         (+ valence, - arousal / calm)
 _SECTOR_EMOTION: list[PrimaryEmotion] = [
     "joy",  # sector 0 — centre 0°   (happiness, contentment)
@@ -76,7 +82,7 @@ _SECTOR_EMOTION: list[PrimaryEmotion] = [
     "fear",  # sector 3 — centre 135° (overridden to "anger" when dominance >= 0.5)
     "disgust",  # sector 4 — centre 180° (revulsion, loathing)
     "sadness",  # sector 5 — centre 225° (grief, depression)
-    "sadness",  # sector 6 — centre 270° (boredom, lethargy)
+    "disgust",  # sector 6 — centre 270° (boredom, lethargy — low tier of disgust)
     "trust",  # sector 7 — centre 315° (serenity, acceptance)
 ]
 _FEAR_ANGER_SECTOR: int = 3
@@ -117,14 +123,23 @@ def categorize_affect(
         canonical tier name, and sector-centre confidence.
 
     Notes:
-        The arousal axis is centred at 0.5 before computing angles so that
-        the neutral point aligns with the origin of the circumplex.
+        Arousal is re-centred to [-0.5, 0.5] and then scaled *2 to [-1, 1]
+        so that both axes have equal span.  This makes the 45° sectors
+        isotropic in the valence-arousal plane.
+
+        Points within radius ``_NEUTRAL_RADIUS`` of the origin are too
+        ambiguous to categorise reliably; they are returned with
+        ``confidence=0.0``.
     """
     v = core_affect.valence
-    a_centered = core_affect.arousal - 0.5  # re-centre to [-0.5, 0.5]
+    # Re-centre arousal to [-0.5, 0.5], then scale to [-1, 1] for isotropy.
+    a_scaled = (core_affect.arousal - 0.5) * 2.0
+
+    # Radial distance in the isotropic space (max ≈ sqrt(2) ≈ 1.41)
+    r = math.sqrt(v**2 + a_scaled**2)
 
     # Angular position in degrees, normalised to [0°, 360°)
-    angle_deg = math.degrees(math.atan2(a_centered, v))
+    angle_deg = math.degrees(math.atan2(a_scaled, v))
     angle_norm = angle_deg % 360.0  # [0, 360)
 
     # Determine sector index (0-7)
@@ -135,8 +150,7 @@ def categorize_affect(
     if sector_idx == _FEAR_ANGER_SECTOR and dominance is not None:
         primary = "anger" if dominance >= _DOMINANCE_THRESHOLD else "fear"
 
-    # Radial distance from origin → intensity
-    r = math.sqrt(v**2 + a_centered**2)
+    # Intensity from radial distance
     if r < _INTENSITY_LOW_THRESHOLD:
         intensity: Intensity = "low"
     elif r < _INTENSITY_HIGH_THRESHOLD:
@@ -144,11 +158,14 @@ def categorize_affect(
     else:
         intensity = "high"
 
-    # Confidence: 1.0 at sector centre, 0.0 at sector edge (±22.5°)
-    sector_center_deg = (sector_idx * 45.0) % 360.0
-    # Angular distance, wrapped to [0°, 180°]
-    delta = abs((angle_norm - sector_center_deg + 180.0) % 360.0 - 180.0)
-    confidence = max(0.0, 1.0 - delta / 22.5)
+    # Confidence: 1.0 at sector centre, 0.0 at sector edge (±22.5°).
+    # Near-origin points are unreliable — confidence forced to 0.0.
+    if r < _NEUTRAL_RADIUS:
+        confidence = 0.0
+    else:
+        sector_center_deg = (sector_idx * 45.0) % 360.0
+        delta = abs((angle_norm - sector_center_deg + 180.0) % 360.0 - 180.0)
+        confidence = max(0.0, 1.0 - delta / 22.5)
 
     return EmotionLabel(
         primary=primary,

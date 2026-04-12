@@ -208,8 +208,9 @@ class LLMAppraisalEngine:
         except Exception:
             if self._config.fallback_on_error:
                 logger.debug("appraise fallback: text_len=%d", len(event_text))
-                return self._fallback
-            raise
+                vector = self._fallback
+            else:
+                raise
 
         if self._config.cache_size > 0:
             with self._cache_lock:
@@ -254,8 +255,8 @@ class LLMAppraisalEngine:
         """Extract the first JSON object from *raw*, tolerating markdown fences."""
         # Strip markdown code fences if present
         cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
-        # Find first {...} block
-        match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+        # Find first {...} block (non-greedy to avoid spanning multiple objects)
+        match = re.search(r"\{[^{}]*\}", cleaned)
         if not match:
             raise ValueError(f"No JSON object found in LLM response: {raw!r}")
         result = json.loads(match.group())
@@ -375,7 +376,9 @@ class KeywordAppraisalEngine:
         return f"{type(self).__name__}(rules={len(self._rules)})"
 
     def appraise(self, event_text: str, context: dict[str, Any] | None = None) -> AppraisalVector:
-        # Accumulate deltas from zero
+        # Accumulate deltas and per-dimension hit counts from zero.
+        # Each dimension is averaged independently so that a dimension set
+        # by only one rule is not diluted by other rules that did not touch it.
         accum: dict[str, float] = {
             "novelty": 0.0,
             "goal_relevance": 0.0,
@@ -383,17 +386,17 @@ class KeywordAppraisalEngine:
             "norm_congruence": 0.0,
             "self_relevance": 0.0,
         }
-        hits = 0
+        dim_hits: dict[str, int] = dict.fromkeys(accum, 0)
         for rule in self._rules:
             if rule.matches(event_text):
                 for dim, val in rule.scores.items():
                     accum[dim] += val
-                hits += 1
+                    dim_hits[dim] += 1
 
-        # Average when multiple rules fire to avoid runaway accumulation
-        if hits > 1:
-            for dim in accum:
-                accum[dim] /= hits
+        # Average each dimension by the number of rules that contributed to it.
+        for dim in accum:
+            if dim_hits[dim] > 1:
+                accum[dim] /= dim_hits[dim]
 
         # Re-apply the 0.5 resting baseline for coping_potential
         accum["coping_potential"] += 0.5

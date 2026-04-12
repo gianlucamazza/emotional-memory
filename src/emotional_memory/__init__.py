@@ -43,8 +43,11 @@ from emotional_memory.retrieval import (
 from emotional_memory.state import AffectiveState
 from emotional_memory.stores.in_memory import InMemoryStore
 
+_sqlite_available = False
 with contextlib.suppress(ImportError):
     from emotional_memory.stores.sqlite import SQLiteStore as SQLiteStore
+
+    _sqlite_available = True
 
 __all__ = [
     "AdaptiveWeightsConfig",
@@ -76,7 +79,6 @@ __all__ = [
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalConfig",
-    "SQLiteStore",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",
@@ -93,3 +95,6 @@ __all__ = [
     "spreading_activation",
     "update_prediction",
 ]
+
+if _sqlite_available:
+    __all__ = [*__all__, "SQLiteStore"]

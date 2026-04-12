@@ -31,7 +31,7 @@ Or wrap an existing sync engine::
 
 from __future__ import annotations
 
-import json
+import asyncio
 import logging
 import warnings
 from datetime import UTC, datetime
@@ -66,13 +66,21 @@ logger = logging.getLogger(__name__)
 class AsyncEmotionalMemory:
     """Async-native EmotionalMemory using the AFT pipeline.
 
-    All public methods are coroutines.  The internal affective state machine
-    (AffectiveState, MoodField, AffectiveMomentum) updates synchronously
-    between awaits — state is not shared across concurrent calls, so callers
-    should serialise encode/retrieve calls that must observe a consistent state.
+    All public methods are coroutines.  An internal ``asyncio.Lock`` protects
+    the affective state from interleaved mutations across concurrent
+    ``encode`` / ``encode_batch`` calls.  Synchronous helpers
+    (``set_affect``, ``load_state``) are intended for setup before concurrent
+    work begins and are **not** lock-protected.
     """
 
-    __slots__ = ("_appraisal_engine", "_config", "_embedder", "_state", "_store")
+    __slots__ = (
+        "_appraisal_engine",
+        "_config",
+        "_embedder",
+        "_state",
+        "_state_lock",
+        "_store",
+    )
 
     def __init__(
         self,
@@ -86,6 +94,7 @@ class AsyncEmotionalMemory:
         self._appraisal_engine = appraisal_engine
         self._config = config or EmotionalMemoryConfig()
         self._state = AffectiveState.initial()
+        self._state_lock: asyncio.Lock = asyncio.Lock()
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(store={self._store!r})"
@@ -123,20 +132,22 @@ class AsyncEmotionalMemory:
             appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
         )
 
-        # Step 2: update affective state (sync — pure computation)
-        self._state = self._state.update(
-            new_affect,
-            now=now,
-            mood_alpha=self._config.mood_alpha,
-            mood_decay=self._config.mood_decay,
-        )
+        # Step 2: update affective state — lock protects against concurrent encodes
+        async with self._state_lock:
+            self._state = self._state.update(
+                new_affect,
+                now=now,
+                mood_alpha=self._config.mood_alpha,
+                mood_decay=self._config.mood_decay,
+            )
+            _state_snapshot = self._state
 
-        # Step 3: build EmotionalTag (sync)
-        cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
+        # Step 3: build EmotionalTag (sync) — use snapshot captured under lock
+        cs = consolidation_strength(new_affect.arousal, _state_snapshot.mood.arousal)
         tag = make_emotional_tag(
-            core_affect=self._state.core_affect,
-            momentum=self._state.momentum,
-            mood=self._state.mood,
+            core_affect=_state_snapshot.core_affect,
+            momentum=_state_snapshot.momentum,
+            mood=_state_snapshot.mood,
             consolidation_strength=cs,
             appraisal=appraisal,
         )
@@ -179,30 +190,7 @@ class AsyncEmotionalMemory:
             await self._store.update(memory)
             logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
-            # Bidirectional links: add backward links on each target memory
-            for link in links:
-                target_mem = await self._store.get(link.target_id)
-                if target_mem is None:
-                    continue
-                backward = ResonanceLink(
-                    source_id=link.target_id,
-                    target_id=memory.id,
-                    strength=link.strength,
-                    link_type=link.link_type,
-                )
-                existing = list(target_mem.tag.resonance_links)
-                max_links = self._config.resonance.max_links
-                if len(existing) >= max_links:
-                    weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
-                    if backward.strength <= existing[weakest_idx].strength:
-                        continue
-                    existing[weakest_idx] = backward
-                else:
-                    existing.append(backward)
-                updated_target = target_mem.model_copy(
-                    update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
-                )
-                await self._store.update(updated_target)
+            await self._add_bidirectional_links(memory, links)
 
         logger.debug(
             "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
@@ -230,7 +218,7 @@ class AsyncEmotionalMemory:
         # G2 pre-filter (async)
         rc = self._config.retrieval
         candidate_limit = top_k * rc.candidate_multiplier
-        store_size = await self._store.count()
+        store_size = store_count  # reuse the count already fetched above
         if store_size > candidate_limit:
             candidates = await self._store.search_by_embedding(query_embedding, candidate_limit)
         else:
@@ -358,18 +346,20 @@ class AsyncEmotionalMemory:
             new_affect = (
                 appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
             )
-            self._state = self._state.update(
-                new_affect,
-                now=now,
-                mood_alpha=self._config.mood_alpha,
-                mood_decay=self._config.mood_decay,
-            )
+            async with self._state_lock:
+                self._state = self._state.update(
+                    new_affect,
+                    now=now,
+                    mood_alpha=self._config.mood_alpha,
+                    mood_decay=self._config.mood_decay,
+                )
+                _state_snap = self._state
 
-            cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
+            cs = consolidation_strength(new_affect.arousal, _state_snap.mood.arousal)
             tag = make_emotional_tag(
-                core_affect=self._state.core_affect,
-                momentum=self._state.momentum,
-                mood=self._state.mood,
+                core_affect=_state_snap.core_affect,
+                momentum=_state_snap.momentum,
+                mood=_state_snap.mood,
                 consolidation_strength=cs,
                 appraisal=appraisal,
             )
@@ -408,51 +398,46 @@ class AsyncEmotionalMemory:
                 memory = memory.model_copy(update={"tag": updated_tag})
                 await self._store.update(memory)
 
-                # Bidirectional links: add backward links on each target memory
-                for link in links:
-                    target_mem = await self._store.get(link.target_id)
-                    if target_mem is None:
-                        continue
-                    backward = ResonanceLink(
-                        source_id=link.target_id,
-                        target_id=memory.id,
-                        strength=link.strength,
-                        link_type=link.link_type,
-                    )
-                    existing = list(target_mem.tag.resonance_links)
-                    max_links = self._config.resonance.max_links
-                    if len(existing) >= max_links:
-                        weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
-                        if backward.strength <= existing[weakest_idx].strength:
-                            continue
-                        existing[weakest_idx] = backward
-                    else:
-                        existing.append(backward)
-                    updated_target = target_mem.model_copy(
-                        update={
-                            "tag": target_mem.tag.model_copy(update={"resonance_links": existing})
-                        }
-                    )
-                    await self._store.update(updated_target)
+                await self._add_bidirectional_links(memory, links)
 
             results.append(memory)
         return results
 
-    async def elaborate(self, memory_id: str) -> Memory | None:
-        """Run full appraisal on a fast-path (pending) memory and blend core_affect.
+    async def _add_bidirectional_links(self, memory: Memory, links: list[ResonanceLink]) -> None:
+        """Persist backward resonance links on each target memory (async).
 
-        Async version of ``EmotionalMemory.elaborate()``.
-
-        Args:
-            memory_id: ID of the memory to elaborate.
-
-        Returns:
-            The updated Memory, or None if the memory does not exist,
-            is not pending appraisal, or no appraisal engine is configured.
+        Mirrors ``EmotionalMemory._add_bidirectional_links`` with awaited I/O.
         """
-        mem = await self._store.get(memory_id)
-        if mem is None:
-            return None
+        max_links = self._config.resonance.max_links
+        for link in links:
+            target_mem = await self._store.get(link.target_id)
+            if target_mem is None:
+                continue
+            backward = ResonanceLink(
+                source_id=link.target_id,
+                target_id=memory.id,
+                strength=link.strength,
+                link_type=link.link_type,
+            )
+            existing = list(target_mem.tag.resonance_links)
+            if len(existing) >= max_links:
+                weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                if backward.strength <= existing[weakest_idx].strength:
+                    continue
+                existing[weakest_idx] = backward
+            else:
+                existing.append(backward)
+            updated_target = target_mem.model_copy(
+                update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
+            )
+            await self._store.update(updated_target)
+
+    async def _elaborate_with_memory(self, mem: Memory) -> Memory | None:
+        """Run the slow-path appraisal on an already-fetched pending memory (async).
+
+        Internal helper shared by ``elaborate()`` and ``elaborate_pending()``
+        to avoid a redundant store.get() when the caller already holds the object.
+        """
         if not mem.tag.pending_appraisal:
             return None
         if self._appraisal_engine is None:
@@ -461,12 +446,9 @@ class AsyncEmotionalMemory:
         appraisal = await self._appraisal_engine.appraise(mem.content)
         appraised_affect = appraisal.to_core_affect()
 
-        # Blend: elaboration_learning_rate controls how much the appraised
-        # affect replaces the raw fast-path affect (30% raw, 70% appraised).
         lr = self._config.elaboration_learning_rate
         blended_affect = mem.tag.core_affect.lerp(appraised_affect, lr)
 
-        # Use appraised arousal for consolidation_strength
         new_cs = consolidation_strength(appraised_affect.arousal, mem.tag.mood_snapshot.arousal)
 
         now = datetime.now(tz=UTC)
@@ -483,11 +465,28 @@ class AsyncEmotionalMemory:
         await self._store.update(updated_mem)
         logger.debug(
             "elaborate: id=%s blended_valence=%.3f blended_arousal=%.3f",
-            memory_id,
+            mem.id,
             blended_affect.valence,
             blended_affect.arousal,
         )
         return updated_mem
+
+    async def elaborate(self, memory_id: str) -> Memory | None:
+        """Run full appraisal on a fast-path (pending) memory and blend core_affect.
+
+        Async version of ``EmotionalMemory.elaborate()``.
+
+        Args:
+            memory_id: ID of the memory to elaborate.
+
+        Returns:
+            The updated Memory, or None if the memory does not exist,
+            is not pending appraisal, or no appraisal engine is configured.
+        """
+        mem = await self._store.get(memory_id)
+        if mem is None:
+            return None
+        return await self._elaborate_with_memory(mem)
 
     async def elaborate_pending(self) -> list[Memory]:
         """Elaborate all memories with pending_appraisal=True (async).
@@ -498,7 +497,7 @@ class AsyncEmotionalMemory:
         results = []
         for mem in await self._store.list_all():
             if mem.tag.pending_appraisal:
-                updated = await self.elaborate(mem.id)
+                updated = await self._elaborate_with_memory(mem)
                 if updated is not None:
                     results.append(updated)
         return results
@@ -551,17 +550,19 @@ class AsyncEmotionalMemory:
         from emotional_memory.decay import compute_effective_strength
 
         now = datetime.now(tz=UTC)
-        removed = 0
-        for memory in await self._store.list_all():
-            if compute_effective_strength(memory.tag, now, self._config.decay) < threshold:
-                await self._store.delete(memory.id)
-                removed += 1
-        return removed
+        to_delete = [
+            m.id
+            for m in await self._store.list_all()
+            if compute_effective_strength(m.tag, now, self._config.decay) < threshold
+        ]
+        for memory_id in to_delete:
+            await self._store.delete(memory_id)
+        return len(to_delete)
 
     async def export_memories(self) -> list[dict[str, Any]]:
         """Export all memories as a list of JSON-serialisable dicts (async)."""
         memories = await self._store.list_all()
-        return [json.loads(m.model_dump_json()) for m in memories]
+        return [m.model_dump(mode="json") for m in memories]
 
     async def import_memories(self, data: list[dict[str, Any]], *, overwrite: bool = False) -> int:
         """Import memories from a list of dicts produced by ``export_memories()`` (async).
@@ -578,9 +579,12 @@ class AsyncEmotionalMemory:
         for item in data:
             memory = Memory.model_validate(item)
             existing = await self._store.get(memory.id)
-            if not overwrite and existing is not None:
-                continue
-            await self._store.save(memory)
+            if existing is not None:
+                if not overwrite:
+                    continue
+                await self._store.update(memory)
+            else:
+                await self._store.save(memory)
             written += 1
         return written
 
@@ -601,7 +605,6 @@ class AsyncEmotionalMemory:
         close = getattr(self._store, "close", None)
         if close is None:
             return
-        import asyncio
         import inspect
 
         if inspect.iscoroutinefunction(close):

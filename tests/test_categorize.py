@@ -102,8 +102,8 @@ class TestIntensityTiers:
     def test_joy_intensity_tier_names(self):
         serenity = categorize_affect(CoreAffect(valence=0.1, arousal=0.5))
         joy = categorize_affect(CoreAffect(valence=0.5, arousal=0.6))
-        # (1.0, 0.75) → angle ≈ 14° → joy sector, r ≈ 1.03 → high → ecstasy
-        ecstasy = categorize_affect(CoreAffect(valence=1.0, arousal=0.75))
+        # (1.0, 0.55) → a_scaled=0.1 → angle ≈ 5.7° → joy sector, r ≈ 1.00 → high → ecstasy
+        ecstasy = categorize_affect(CoreAffect(valence=1.0, arousal=0.55))
         assert serenity.name == "serenity"
         assert joy.name == "joy"
         assert ecstasy.name == "ecstasy"
@@ -176,7 +176,8 @@ class TestEmotionLabel:
 
 class TestLabelTag:
     def test_label_tag_sets_emotion_label(self):
-        tag = _make_tag(valence=0.8, arousal=0.7)
+        # (0.8, 0.5) → a_scaled=0.0 → angle=0° → joy sector
+        tag = _make_tag(valence=0.8, arousal=0.5)
         assert tag.emotion_label is None
         labelled = label_tag(tag)
         assert labelled.emotion_label is not None

@@ -15,13 +15,14 @@ through the associative network. Hebbian co-retrieval strengthening
 
 from __future__ import annotations
 
+import heapq
 import math
 from datetime import datetime
 from typing import Literal
 
+import numpy as np
 from pydantic import BaseModel, Field
 
-from emotional_memory._math import cosine_similarity
 from emotional_memory.affect import CoreAffect
 from emotional_memory.models import Memory, ResonanceLink
 
@@ -166,17 +167,36 @@ def build_resonance_links(
     on each target memory (candidate → new_memory) to maintain a bidirectional
     associative network.
     """
+    # Separate memories that have embeddings from those that do not.
+    # Semantic similarities for the former are computed in a single
+    # vectorised numpy operation instead of a Python loop.
+    cands = [m for m in candidates if m.id != new_memory.id]
+    if not cands:
+        return []
+
+    new_emb = new_memory.embedding
+    if new_emb is not None:
+        emb_cands = [m for m in cands if m.embedding is not None]
+        if emb_cands:
+            matrix = np.array([m.embedding for m in emb_cands], dtype=np.float64)
+            q = np.array(new_emb, dtype=np.float64)
+            q_norm = np.linalg.norm(q)
+            if q_norm > 0:
+                row_norms = np.linalg.norm(matrix, axis=1)
+                safe_norms = np.where(row_norms > 0, row_norms, 1.0)
+                sims = (matrix @ q) / (safe_norms * q_norm)
+            else:
+                sims = np.zeros(len(emb_cands))
+            sem_sim_map: dict[str, float] = {m.id: float(sims[i]) for i, m in enumerate(emb_cands)}
+        else:
+            sem_sim_map = {}
+    else:
+        sem_sim_map = {}
+
     links: list[tuple[float, ResonanceLink]] = []
 
-    for mem in candidates:
-        if mem.id == new_memory.id:
-            continue
-
-        # Semantic similarity (requires embeddings on both)
-        if new_memory.embedding and mem.embedding:
-            sem_sim = cosine_similarity(new_memory.embedding, mem.embedding)
-        else:
-            sem_sim = 0.0
+    for mem in cands:
+        sem_sim = sem_sim_map.get(mem.id, 0.0)
 
         emo_sim = _emotional_similarity(new_memory.tag.core_affect, mem.tag.core_affect)
         temp_prox = temporal_proximity(
@@ -215,8 +235,9 @@ def build_resonance_links(
         )
         links.append((score, link))
 
-    links.sort(key=lambda t: t[0], reverse=True)
-    return [lnk for _, lnk in links[: config.max_links]]
+    # heapq.nlargest is O(n log k) vs O(n log n) for full sort when k << n
+    top = heapq.nlargest(config.max_links, links, key=lambda t: t[0])
+    return [lnk for _, lnk in top]
 
 
 def spreading_activation(

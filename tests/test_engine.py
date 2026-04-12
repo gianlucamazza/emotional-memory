@@ -274,9 +274,11 @@ class TestSaveLoadState:
 
         em2 = _engine()
         em2.load_state(snapshot)
-        # Next update should produce same momentum in both
-        next1 = em.get_state().update(CoreAffect(valence=0.9, arousal=0.8))
-        next2 = em2.get_state().update(CoreAffect(valence=0.9, arousal=0.8))
+        # Use a fixed future `now` so both calls compute dt from identical timestamps,
+        # avoiding flakiness when set_affect calls happened < 1 ms ago (dt clamped to 0.001).
+        fixed_now = datetime.now(tz=UTC) + timedelta(seconds=1)
+        next1 = em.get_state().update(CoreAffect(valence=0.9, arousal=0.8), now=fixed_now)
+        next2 = em2.get_state().update(CoreAffect(valence=0.9, arousal=0.8), now=fixed_now)
         assert next1.momentum.d_valence == pytest.approx(next2.momentum.d_valence, abs=1e-6)
 
     def test_save_does_not_mutate_on_load(self):

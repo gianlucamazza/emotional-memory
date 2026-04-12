@@ -109,7 +109,7 @@ class TestPADDominanceFidelity:
         alpha = 0.3
         updated = mood.update(CoreAffect(valence=valence, arousal=arousal), alpha=alpha)
 
-        expected_signal = 0.5 + 0.25 * valence * arousal
+        expected_signal = 0.5 + 0.5 * valence * arousal
         expected_dominance = (1.0 - alpha * (1.0 - mood.inertia)) * mood.dominance + alpha * (
             1.0 - mood.inertia
         ) * expected_signal

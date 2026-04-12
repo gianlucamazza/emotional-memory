@@ -27,10 +27,21 @@ import numpy as np
 from numpy.typing import NDArray
 from pydantic import BaseModel, field_validator
 
+from emotional_memory._math import cosine_similarity
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import EmotionalTag, Memory
 from emotional_memory.mood import MoodField
+
+# Max Euclidean distance in the 3-D PAD space used by MoodField:
+# valence [-1,1] (range 2), arousal [0,1] (range 1), dominance [0,1] (range 1)
+# => sqrt(4 + 1 + 1) = sqrt(6)
+_MAX_MOOD_DIST: float = math.sqrt(6.0)
+# Max Euclidean distance in the 2-D CoreAffect space:
+# valence [-1,1] (range 2), arousal [0,1] (range 1) => sqrt(4 + 1) = sqrt(5)
+_MAX_AFFECT_DIST: float = math.sqrt(5.0)
+# Threshold below which momentum magnitudes are treated as zero (float stability)
+_MOMENTUM_ZERO_THRESHOLD: float = 1e-12
 
 
 class AdaptiveWeightsConfig(BaseModel):
@@ -150,11 +161,11 @@ def adaptive_weights(
     w[1] -= cfg.calm_strength * calm * (2.0 / 3.0)  # mood congruence
     w[2] -= cfg.calm_strength * calm * (1.0 / 3.0)  # affect proximity
 
-    # Clamp negatives and normalise
+    # Clamp negatives and normalise; fall back to uniform weights when all
+    # signals cancel out (extreme mood state) to avoid zero-score retrieval.
     w = np.clip(w, 0.0, None)
     total = float(w.sum())
-    if total > 0:
-        w = w / total
+    w = w / total if total > 0 else np.full(6, 1.0 / 6.0)
     return np.asarray(w, dtype=np.float64)
 
 
@@ -164,8 +175,6 @@ def adaptive_weights(
 
 
 def _cosine(a: list[float], b: list[float]) -> float:
-    from emotional_memory._math import cosine_similarity
-
     return cosine_similarity(a, b)
 
 
@@ -176,16 +185,17 @@ def _mood_congruence(current: MoodField, snapshot: MoodField) -> float:
     accessible when the current mood matches the encoding mood.
 
     Maps PAD distance [0, max_dist] → similarity [1, 0].
-    max_dist ≈ sqrt(4 + 1 + 1) ≈ 2.45 for PAD space.
+    max_dist = sqrt(6) ≈ 2.449 for the 3-D PAD space
+    (valence [-1,1], arousal [0,1], dominance [0,1]).
     """
     dist = current.distance(snapshot)
-    return max(0.0, 1.0 - dist / 2.45)
+    return max(0.0, 1.0 - dist / _MAX_MOOD_DIST)
 
 
 def _affect_proximity(current: CoreAffect, encoded: CoreAffect) -> float:
-    """Similarity in core affect space. Distance ≤ sqrt(4+1)≈2.24."""
+    """Similarity in core affect space. Distance <= sqrt(5) ~= 2.236."""
     dist = current.distance(encoded)
-    return max(0.0, 1.0 - dist / 2.24)
+    return max(0.0, 1.0 - dist / _MAX_AFFECT_DIST)
 
 
 def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) -> float:
@@ -195,7 +205,7 @@ def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) 
     """
     mag_c = current.magnitude()
     mag_e = encoded.magnitude()
-    if mag_c == 0.0 or mag_e == 0.0:
+    if mag_c < _MOMENTUM_ZERO_THRESHOLD or mag_e < _MOMENTUM_ZERO_THRESHOLD:
         return 0.5
     dot = current.d_valence * encoded.d_valence + current.d_arousal * encoded.d_arousal
     cos = dot / (mag_c * mag_e)

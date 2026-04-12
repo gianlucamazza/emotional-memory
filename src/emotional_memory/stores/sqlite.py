@@ -27,6 +27,7 @@ Usage::
 
 from __future__ import annotations
 
+import re
 import sqlite3
 import struct
 import types
@@ -96,11 +97,16 @@ class SQLiteStore:
     def __init__(self, path: str | Path = ":memory:") -> None:
         self._path = str(path)
         sqlite_vec = _load_sqlite_vec()
-        self._conn: sqlite3.Connection = sqlite3.connect(self._path)
+        # check_same_thread=False is required when the store is used through
+        # SyncToAsyncStore (asyncio.to_thread dispatches on arbitrary threads).
+        # WAL mode allows concurrent readers without blocking writers.
+        self._conn: sqlite3.Connection = sqlite3.connect(self._path, check_same_thread=False)
         self._conn.row_factory = sqlite3.Row
         self._conn.enable_load_extension(True)
         sqlite_vec.load(self._conn)
         self._conn.enable_load_extension(False)
+        if self._path != ":memory:":
+            self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute(_CREATE_MEMORIES)
         self._conn.commit()
         self._vec_ready = False
@@ -199,8 +205,16 @@ class SQLiteStore:
         try:
             row = self._conn.execute("SELECT embedding FROM memory_vec LIMIT 1").fetchone()
             if row is not None:
-                dim = len(_unpack_embedding(bytes(row["embedding"])))
-                self._dim = dim
+                self._dim = len(_unpack_embedding(bytes(row["embedding"])))
+            else:
+                # Table exists but is empty — parse dimension from schema SQL.
+                schema_row = self._conn.execute(
+                    "SELECT sql FROM sqlite_master WHERE name = 'memory_vec'"
+                ).fetchone()
+                if schema_row is not None and schema_row[0]:
+                    m = re.search(r"float\[(\d+)\]", schema_row[0])
+                    if m:
+                        self._dim = int(m.group(1))
             self._vec_ready = True
         except sqlite3.OperationalError:
             # Table does not exist yet — will be created on first save()

@@ -16,7 +16,6 @@ Orchestrates the full AFT pipeline:
 
 from __future__ import annotations
 
-import json
 import logging
 import warnings
 from datetime import UTC, datetime
@@ -208,33 +207,7 @@ class EmotionalMemory:
             self._store.update(memory)
             logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
-            # Bidirectional links: add a backward link on each target memory
-            # so that spreading activation can traverse the graph in both
-            # directions (new→old and old→new).
-            for link in links:
-                target_mem = self._store.get(link.target_id)
-                if target_mem is None:
-                    continue
-                backward = ResonanceLink(
-                    source_id=link.target_id,
-                    target_id=memory.id,
-                    strength=link.strength,
-                    link_type=link.link_type,
-                )
-                existing = list(target_mem.tag.resonance_links)
-                max_links = self._config.resonance.max_links
-                if len(existing) >= max_links:
-                    # Replace the weakest link only if backward is stronger
-                    weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
-                    if backward.strength <= existing[weakest_idx].strength:
-                        continue
-                    existing[weakest_idx] = backward
-                else:
-                    existing.append(backward)
-                updated_target = target_mem.model_copy(
-                    update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
-                )
-                self._store.update(updated_target)
+            self._add_bidirectional_links(memory, links)
 
         return memory
 
@@ -449,54 +422,17 @@ class EmotionalMemory:
                 memory = memory.model_copy(update={"tag": updated_tag})
                 self._store.update(memory)
 
-                # Bidirectional links: add backward links on target memories
-                for link in links:
-                    target_mem = self._store.get(link.target_id)
-                    if target_mem is None:
-                        continue
-                    backward = ResonanceLink(
-                        source_id=link.target_id,
-                        target_id=memory.id,
-                        strength=link.strength,
-                        link_type=link.link_type,
-                    )
-                    existing = list(target_mem.tag.resonance_links)
-                    max_links = self._config.resonance.max_links
-                    if len(existing) >= max_links:
-                        weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
-                        if backward.strength <= existing[weakest_idx].strength:
-                            continue
-                        existing[weakest_idx] = backward
-                    else:
-                        existing.append(backward)
-                    updated_target = target_mem.model_copy(
-                        update={
-                            "tag": target_mem.tag.model_copy(update={"resonance_links": existing})
-                        }
-                    )
-                    self._store.update(updated_target)
+                self._add_bidirectional_links(memory, links)
 
             results.append(memory)
         return results
 
-    def elaborate(self, memory_id: str) -> Memory | None:
-        """Run full appraisal on a fast-path (pending) memory and blend core_affect.
+    def _elaborate_with_memory(self, mem: Memory) -> Memory | None:
+        """Run the slow-path appraisal on an already-fetched pending memory.
 
-        Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal
-        on the memory's content, blends the appraised affect with the raw
-        fast-path affect, updates consolidation_strength, clears
-        pending_appraisal, and opens the reconsolidation window.
-
-        Args:
-            memory_id: ID of the memory to elaborate.
-
-        Returns:
-            The updated Memory, or None if the memory does not exist,
-            is not pending appraisal, or no appraisal engine is configured.
+        Internal helper shared by ``elaborate()`` and ``elaborate_pending()``
+        to avoid a redundant store.get() when the caller already holds the object.
         """
-        mem = self._store.get(memory_id)
-        if mem is None:
-            return None
         if not mem.tag.pending_appraisal:
             return None
         if self._appraisal_engine is None:
@@ -529,11 +465,31 @@ class EmotionalMemory:
         self._store.update(updated_mem)
         logger.debug(
             "elaborate: id=%s blended_valence=%.3f blended_arousal=%.3f",
-            memory_id,
+            mem.id,
             blended_affect.valence,
             blended_affect.arousal,
         )
         return updated_mem
+
+    def elaborate(self, memory_id: str) -> Memory | None:
+        """Run full appraisal on a fast-path (pending) memory and blend core_affect.
+
+        Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal
+        on the memory's content, blends the appraised affect with the raw
+        fast-path affect, updates consolidation_strength, clears
+        pending_appraisal, and opens the reconsolidation window.
+
+        Args:
+            memory_id: ID of the memory to elaborate.
+
+        Returns:
+            The updated Memory, or None if the memory does not exist,
+            is not pending appraisal, or no appraisal engine is configured.
+        """
+        mem = self._store.get(memory_id)
+        if mem is None:
+            return None
+        return self._elaborate_with_memory(mem)
 
     def elaborate_pending(self) -> list[Memory]:
         """Elaborate all memories with pending_appraisal=True.
@@ -547,7 +503,7 @@ class EmotionalMemory:
         results = []
         for mem in self._store.list_all():
             if mem.tag.pending_appraisal:
-                updated = self.elaborate(mem.id)
+                updated = self._elaborate_with_memory(mem)
                 if updated is not None:
                     results.append(updated)
         return results
@@ -559,6 +515,37 @@ class EmotionalMemory:
     def get(self, memory_id: str) -> Memory | None:
         """Look up a single memory by ID, or None if not found."""
         return self._store.get(memory_id)
+
+    def _add_bidirectional_links(self, memory: Memory, links: list[ResonanceLink]) -> None:
+        """Persist backward resonance links on each target memory.
+
+        Called after forward links have already been saved on *memory*.  Each
+        link in *links* gets a symmetric backward entry on its target so that
+        spreading activation can traverse the graph in both directions.
+        """
+        max_links = self._config.resonance.max_links
+        for link in links:
+            target_mem = self._store.get(link.target_id)
+            if target_mem is None:
+                continue
+            backward = ResonanceLink(
+                source_id=link.target_id,
+                target_id=memory.id,
+                strength=link.strength,
+                link_type=link.link_type,
+            )
+            existing = list(target_mem.tag.resonance_links)
+            if len(existing) >= max_links:
+                weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                if backward.strength <= existing[weakest_idx].strength:
+                    continue
+                existing[weakest_idx] = backward
+            else:
+                existing.append(backward)
+            updated_target = target_mem.model_copy(
+                update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
+            )
+            self._store.update(updated_target)
 
     def list_all(self) -> list[Memory]:
         """Return all memories in the store."""
@@ -615,12 +602,14 @@ class EmotionalMemory:
         from emotional_memory.decay import compute_effective_strength
 
         now = datetime.now(tz=UTC)
-        removed = 0
-        for memory in self._store.list_all():
-            if compute_effective_strength(memory.tag, now, self._config.decay) < threshold:
-                self._store.delete(memory.id)
-                removed += 1
-        return removed
+        to_delete = [
+            m.id
+            for m in self._store.list_all()
+            if compute_effective_strength(m.tag, now, self._config.decay) < threshold
+        ]
+        for memory_id in to_delete:
+            self._store.delete(memory_id)
+        return len(to_delete)
 
     def export_memories(self) -> list[dict[str, Any]]:
         """Export all memories as a list of JSON-serialisable dicts.
@@ -628,7 +617,7 @@ class EmotionalMemory:
         Suitable for backup or migration between store backends.  The output
         can be restored with ``import_memories()``.
         """
-        return [json.loads(m.model_dump_json()) for m in self._store.list_all()]
+        return [m.model_dump(mode="json") for m in self._store.list_all()]
 
     def import_memories(self, data: list[dict[str, Any]], *, overwrite: bool = False) -> int:
         """Import memories from a list of dicts produced by ``export_memories()``.
@@ -644,9 +633,13 @@ class EmotionalMemory:
         written = 0
         for item in data:
             memory = Memory.model_validate(item)
-            if not overwrite and self._store.get(memory.id) is not None:
+            exists = self._store.get(memory.id) is not None
+            if exists and not overwrite:
                 continue
-            self._store.save(memory)
+            if exists:
+                self._store.update(memory)
+            else:
+                self._store.save(memory)
             written += 1
         return written
 

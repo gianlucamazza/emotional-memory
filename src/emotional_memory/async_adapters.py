@@ -135,8 +135,9 @@ def as_async(engine: EmotionalMemory) -> AsyncEmotionalMemory:
         appraisal_engine=appraisal_async,
         config=engine._config,
     )
-    # Copy the current affective state as the async engine's starting point.
-    # AffectiveState is replaced (not mutated) on each update, so both engines
-    # start with the same snapshot but diverge independently thereafter.
+    # Share the current AffectiveState reference as the async engine's starting
+    # point.  AffectiveState is always *replaced* (never mutated) on every
+    # update, so both engines immediately diverge once either processes an event.
+    # There is no aliasing hazard because the object is effectively immutable.
     async_engine._state = engine._state
     return async_engine

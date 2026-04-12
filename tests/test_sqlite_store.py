@@ -352,3 +352,160 @@ class TestSQLiteStoreConcurrency:
             t.join()
 
         assert errors == [], f"Concurrent reads raised: {errors}"
+
+    def test_concurrent_write_from_other_thread(self, tmp_path):
+        """Writing from a different thread must not raise (check_same_thread=False)."""
+        import threading
+
+        db_path = tmp_path / "thread_write.db"
+        store = SQLiteStore(str(db_path))
+
+        errors: list[Exception] = []
+        written: list[str] = []
+
+        def writer(i: int) -> None:
+            try:
+                m = make_test_memory(f"thread-{i}")
+                store.save(m)
+                written.append(m.id)
+            except Exception as exc:
+                errors.append(exc)
+
+        threads = [threading.Thread(target=writer, args=(i,)) for i in range(4)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        assert errors == [], f"Cross-thread writes raised: {errors}"
+        assert len(written) == 4
+
+
+# ---------------------------------------------------------------------------
+# __repr__
+# ---------------------------------------------------------------------------
+
+
+class TestSQLiteStoreRepr:
+    def test_repr_contains_path_and_count(self):
+        store = SQLiteStore(":memory:")
+        store.save(make_test_memory("a"))
+        r = repr(store)
+        assert ":memory:" in r
+        assert "1" in r
+
+
+# ---------------------------------------------------------------------------
+# Brute-force path with embeddings present
+# ---------------------------------------------------------------------------
+
+
+class TestSQLiteStoreBruteForce:
+    def test_brute_force_ranks_by_cosine(self):
+        """When _vec_ready=False but memories have embeddings, brute-force returns correct rank."""
+        store = SQLiteStore(":memory:")
+        near = make_test_memory("near", embedding=[1.0, 0.0, 0.0])
+        far = make_test_memory("far", embedding=[0.0, 0.0, 1.0])
+        # Insert directly into memories table (bypasses _ensure_vec → _vec_ready stays False)
+        for m in (near, far):
+            store._conn.execute(
+                "INSERT INTO memories (id, content, data) VALUES (?, ?, ?)",
+                (m.id, m.content, m.model_dump_json()),
+            )
+        store._conn.commit()
+        assert not store._vec_ready
+
+        results = store.search_by_embedding([1.0, 0.0, 0.0], top_k=1)
+        assert len(results) == 1
+        assert results[0].id == near.id
+
+
+# ---------------------------------------------------------------------------
+# _ensure_vec edge cases
+# ---------------------------------------------------------------------------
+
+
+class TestEnsureVec:
+    def test_save_no_embedding_when_vec_ready_does_not_touch_vec_table(self):
+        """Saving no-embedding memory when vec table exists leaves vec row count unchanged."""
+        store = SQLiteStore(":memory:")
+        # Seed the vec table
+        store.save(make_test_memory("seed", embedding=[1.0, 0.0]))
+        assert store._vec_ready
+
+        # Save a memory without embedding — should not insert into memory_vec
+        store.save(make_test_memory("no-emb"))
+        # Only the seeded memory should be in the vec table
+        results = store.search_by_embedding([1.0, 0.0], top_k=10)
+        assert len(results) == 1, f"Expected 1 vec entry, got {len(results)}"
+
+    def test_update_creates_vec_table(self):
+        """update() with an embedding triggers vec table creation even when _vec_ready=False."""
+        store = SQLiteStore(":memory:")
+        # Save without embedding → _vec_ready=False
+        m = make_test_memory("no-emb")
+        store.save(m)
+        assert not store._vec_ready
+
+        # Now update with an embedding → _ensure_vec must create the vec table
+        m_with_emb = m.model_copy(update={"embedding": [1.0, 0.0]})
+        store.update(m_with_emb)
+        assert store._vec_ready
+
+        results = store.search_by_embedding([1.0, 0.0], top_k=1)
+        assert len(results) == 1
+        assert results[0].id == m.id
+
+    def test_delete_when_vec_not_ready(self):
+        """delete() must not raise when _vec_ready=False (vec table absent)."""
+        store = SQLiteStore(":memory:")
+        m = make_test_memory("no-emb")
+        store.save(m)
+        assert not store._vec_ready
+        store.delete(m.id)  # must not raise
+        assert store.get(m.id) is None
+
+
+# ---------------------------------------------------------------------------
+# _init_vec_from_db with empty vec table (Task 4 bug fix)
+# ---------------------------------------------------------------------------
+
+
+class TestInitVecFromDb:
+    def test_empty_vec_table_sets_correct_dim(self, tmp_path):
+        """Reopening a DB where memory_vec exists but is empty must set _dim from the schema."""
+        db_path = tmp_path / "empty_vec.db"
+        dim = 3
+
+        # Session 1: save a memory with embedding (creates vec table with dim=3), then delete it
+        with SQLiteStore(db_path) as s1:
+            m = make_test_memory("transient", embedding=[1.0, 0.0, 0.0])
+            s1.save(m)
+            assert s1._dim == dim
+            s1.delete(m.id)  # vec table now exists but is empty
+            assert s1._vec_ready
+
+        # Session 2: reopen — vec table exists, is empty
+        with SQLiteStore(db_path) as s2:
+            assert s2._vec_ready, "_vec_ready should be True (table exists)"
+            assert s2._dim == dim, f"Expected _dim={dim} from schema, got {s2._dim}"
+
+
+# ---------------------------------------------------------------------------
+# WAL mode
+# ---------------------------------------------------------------------------
+
+
+class TestWALMode:
+    def test_wal_mode_enabled_for_file_backed(self, tmp_path):
+        db_path = tmp_path / "wal.db"
+        with SQLiteStore(db_path) as store:
+            row = store._conn.execute("PRAGMA journal_mode").fetchone()
+            assert row[0] == "wal", f"Expected WAL mode, got {row[0]!r}"
+
+    def test_no_wal_for_in_memory(self):
+        """In-memory databases use memory journal (WAL pragma is not applied)."""
+        store = SQLiteStore(":memory:")
+        row = store._conn.execute("PRAGMA journal_mode").fetchone()
+        # In-memory dbs use "memory" journal mode, not WAL
+        assert row[0] == "memory"
