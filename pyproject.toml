@@ -22,7 +22,7 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Typing :: Typed",
 ]
-dependencies = ["numpy>=1.24", "pydantic>=2.0,<3"]
+dependencies = ["numpy>=1.24", "pydantic>=2.12.5,<3"]
 
 [project.urls]
 Homepage = "https://github.com/gianlucamazza/emotional-memory"
