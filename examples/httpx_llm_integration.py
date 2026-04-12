@@ -201,17 +201,17 @@ print(f"  magnitude  (speed):         {mom.magnitude():.4f}")
 print("\n=== Manual EmotionalTag construction ===\n")
 
 # consolidation_strength: standalone function (not just the property)
-high_arousal_strength = consolidation_strength(arousal=0.8, stimmung_arousal=0.5)
-low_arousal_strength = consolidation_strength(arousal=0.1, stimmung_arousal=0.2)
-print(f"  consolidation_strength(arousal=0.8, stimmung=0.5): {high_arousal_strength:.3f}")
-print(f"  consolidation_strength(arousal=0.1, stimmung=0.2): {low_arousal_strength:.3f}")
+high_arousal_strength = consolidation_strength(arousal=0.8, mood_arousal=0.5)
+low_arousal_strength = consolidation_strength(arousal=0.1, mood_arousal=0.2)
+print(f"  consolidation_strength(arousal=0.8, mood=0.5): {high_arousal_strength:.3f}")
+print(f"  consolidation_strength(arousal=0.1, mood=0.2): {low_arousal_strength:.3f}")
 print("  (Yerkes-Dodson inverted-U — high arousal → stronger consolidation)")
 
 # make_emotional_tag: convenience constructor
 manual_tag = make_emotional_tag(
     core_affect=CoreAffect(valence=0.6, arousal=0.8),
     momentum=mom,
-    stimmung=state.stimmung,
+    mood=state.mood,
     consolidation_strength=high_arousal_strength,
 )
 print(f"\n  make_emotional_tag → consolidation_strength={manual_tag.consolidation_strength:.3f}")

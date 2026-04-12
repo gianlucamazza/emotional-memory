@@ -11,7 +11,7 @@
 
 ::: emotional_memory.visualization.plot_retrieval_radar
 
-::: emotional_memory.visualization.plot_stimmung_evolution
+::: emotional_memory.visualization.plot_mood_evolution
 
 ::: emotional_memory.visualization.plot_adaptive_weights_heatmap
 

@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from emotional_memory._math import cosine_similarity
+import numpy as np
+
 from emotional_memory.models import Memory
 
 
@@ -36,16 +37,34 @@ class InMemoryStore:
     def search_by_embedding(self, embedding: list[float], top_k: int) -> list[Memory]:
         """Return top_k memories by cosine similarity to the query embedding.
 
-        Memories without an embedding are skipped.
+        Memories without an embedding are skipped. Uses vectorized matrix
+        multiplication to compute all cosine similarities in a single batch
+        rather than calling cosine_similarity individually for each memory.
         """
-        scored: list[tuple[float, Memory]] = []
-        for memory in self._store.values():
-            if memory.embedding is None:
-                continue
-            score = cosine_similarity(embedding, memory.embedding)
-            scored.append((score, memory))
-        scored.sort(key=lambda t: t[0], reverse=True)
-        return [m for _, m in scored[:top_k]]
+        candidates = [m for m in self._store.values() if m.embedding is not None]
+        if not candidates:
+            return []
+
+        query = np.asarray(embedding, dtype=np.float64)
+        query_norm = float(np.linalg.norm(query))
+        if query_norm == 0.0:
+            return candidates[:top_k]
+
+        # Stack all embeddings into a (n x d) matrix — single allocation
+        matrix = np.asarray([m.embedding for m in candidates], dtype=np.float64)
+        norms = np.linalg.norm(matrix, axis=1)  # shape (n,)
+
+        # Avoid division by zero for zero-norm embeddings
+        with np.errstate(invalid="ignore", divide="ignore"):
+            scores = (matrix @ query) / (norms * query_norm)
+        scores = np.nan_to_num(scores, nan=0.0)
+
+        n = len(candidates)
+        k = min(top_k, n)
+        # np.argpartition is O(n) for finding top-k; sort only the k winners
+        top_indices = np.argpartition(scores, n - k)[n - k :]
+        top_indices = top_indices[np.argsort(scores[top_indices])[::-1]]
+        return [candidates[i] for i in top_indices]
 
     def __len__(self) -> int:
         return len(self._store)

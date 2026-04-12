@@ -4,9 +4,10 @@ CoreAffect is the fundamental continuous substrate — a point in the
 valence-arousal circumplex (Russell, 1980).
 
 AffectiveMomentum captures the first and second time-derivatives of
-CoreAffect, implementing Spinoza's insight that affect *is* transition,
-not a static state ("Laetitia est transitio hominis a minore ad maiorem
-perfectionem", Ethics III).
+CoreAffect — velocity and acceleration over recent history. Inspired by
+the idea that affect is inherently a transition rather than a static state
+(cf. Spinoza, Ethics III: "Laetitia est transitio hominis a minore ad
+maiorem perfectionem").
 """
 
 from __future__ import annotations
@@ -58,8 +59,9 @@ class CoreAffect(BaseModel):
 class AffectiveMomentum(BaseModel):
     """Time-derivatives of CoreAffect.
 
-    Captures the direction and speed of affective change — the Spinozist
-    "transition" that is constitutive of the emotion itself.
+    Captures the direction and speed of affective change — velocity and
+    acceleration in valence-arousal space (inspired by the view that affect
+    is inherently a process of transition, cf. Spinoza).
 
     d_valence / d_arousal  : first derivatives  (velocity)
     dd_valence / dd_arousal: second derivatives (acceleration)

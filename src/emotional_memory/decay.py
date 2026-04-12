@@ -73,7 +73,10 @@ def compute_effective_strength(
     effective_decay = max(effective_decay, 0.0)
 
     strength = tag.consolidation_strength * (elapsed ** (-effective_decay * config.power))
-    strength = max(0.0, min(1.0, strength))
+    # Decay must never boost strength above the initial consolidation value.
+    # (sub-min_seconds elapsed times can produce elapsed^(-x) > 1 when min_seconds < 1)
+    strength = min(strength, tag.consolidation_strength)
+    strength = max(0.0, strength)
 
     if arousal >= config.floor_arousal_threshold:
         strength = max(strength, config.floor_value)

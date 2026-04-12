@@ -37,7 +37,7 @@ LINK_TYPE_COLORS: dict[str, str] = {
 
 SIGNAL_LABELS: list[str] = [
     "Semantic",
-    "Stimmung",
+    "Mood",
     "Affect",
     "Momentum",
     "Recency",
@@ -52,8 +52,8 @@ APPRAISAL_LABELS: list[str] = [
     "Self Relevance",
 ]
 
-# Stimmung baselines (from StimmungDecayConfig defaults)
-_STIMMUNG_BASELINES: dict[str, float] = {
+# Mood baselines (from MoodDecayConfig defaults)
+_MOOD_BASELINES: dict[str, float] = {
     "Valence": 0.0,
     "Arousal": 0.3,
     "Dominance": 0.5,
@@ -261,18 +261,18 @@ def plot_decay_curves(
 
 def plot_yerkes_dodson(
     *,
-    stimmung_arousal: float = 0.3,
+    mood_arousal: float = 0.3,
     ax: Axes | None = None,
     title: str = "Yerkes-Dodson: Consolidation vs Arousal",
 ) -> Figure:
     """Plot the Yerkes-Dodson inverted-U for memory consolidation strength.
 
-    Uses ``consolidation_strength(arousal, stimmung_arousal)`` directly —
+    Uses ``consolidation_strength(arousal, mood_arousal)`` directly —
     the same function the engine calls at encoding time. Peak is near
-    effective_arousal ≈ 0.7 (blend of encoding + Stimmung arousal).
+    effective_arousal ≈ 0.7 (blend of encoding + mood arousal).
 
     Args:
-        stimmung_arousal: Background Stimmung arousal (default 0.3).
+        mood_arousal: Background mood arousal (default 0.3).
         ax: Optional existing ``Axes``.
         title: Plot title.
 
@@ -287,7 +287,7 @@ def plot_yerkes_dodson(
     fig, _ax = _make_figure(ax, figsize=(6.0, 4.5))
 
     aro = np.linspace(0.0, 1.0, 200)
-    cs = np.array([consolidation_strength(float(a), stimmung_arousal) for a in aro])
+    cs = np.array([consolidation_strength(float(a), mood_arousal) for a in aro])
 
     _ax.plot(aro, cs, color="#DD5555", linewidth=2.2)
     _ax.fill_between(aro, cs, alpha=0.15, color="#DD5555")
@@ -311,7 +311,7 @@ def plot_yerkes_dodson(
     _ax.text(
         0.02,
         0.03,
-        f"Stimmung arousal = {stimmung_arousal:.2f}",
+        f"Mood arousal = {mood_arousal:.2f}",
         transform=_ax.transAxes,
         fontsize=8,
         color="gray",
@@ -337,7 +337,7 @@ def plot_retrieval_radar(
 
     Args:
         scores: Six values in [0, 1] corresponding to the six signals:
-            [semantic, stimmung, affect, momentum, recency, resonance].
+            [semantic, mood, affect, momentum, recency, resonance].
         labels: Spoke labels (must match length of ``scores``).
         ax: Optional existing *polar* ``Axes``.
         title: Plot title.
@@ -375,15 +375,15 @@ def plot_retrieval_radar(
 
 
 # ---------------------------------------------------------------------------
-# 5. Stimmung Evolution Time Series
+# 5. Mood Evolution Time Series
 # ---------------------------------------------------------------------------
 
 
-def plot_stimmung_evolution(
+def plot_mood_evolution(
     history: Sequence[tuple[float, float, float, float]],
     *,
     ax: Axes | None = None,
-    title: str = "Stimmung Field Evolution",
+    title: str = "Mood Field Evolution",
 ) -> Figure:
     """Plot valence, arousal, and dominance over time.
 
@@ -415,7 +415,7 @@ def plot_stimmung_evolution(
 
     # Baseline attractors
     baseline_colors = {"Valence": "#4C72B0", "Arousal": "#DD5555", "Dominance": "#55A868"}
-    for name, bv in _STIMMUNG_BASELINES.items():
+    for name, bv in _MOOD_BASELINES.items():
         _ax.axhline(
             bv,
             color=baseline_colors[name],
@@ -444,9 +444,9 @@ def plot_adaptive_weights_heatmap(
     base_weights: Sequence[float] = (0.35, 0.25, 0.15, 0.10, 0.10, 0.05),
     resolution: int = 20,
     ax: Axes | None = None,
-    title: str = "Adaptive Retrieval Weights vs Stimmung",
+    title: str = "Adaptive Retrieval Weights vs Mood",
 ) -> Figure:
-    """Heatmap of how each retrieval weight shifts across Stimmung states.
+    """Heatmap of how each retrieval weight shifts across mood states.
 
     Sweeps valence ∈ [-1, +1] and arousal ∈ [0, 1] on a grid
     (dominance fixed at 0.5). For each grid cell calls
@@ -467,8 +467,8 @@ def plot_adaptive_weights_heatmap(
     import matplotlib.pyplot as plt
     import numpy as np
 
+    from emotional_memory.mood import MoodField
     from emotional_memory.retrieval import AdaptiveWeightsConfig, adaptive_weights
-    from emotional_memory.stimmung import StimmungField
 
     valences = np.linspace(-1.0, 1.0, resolution)
     arousals = np.linspace(0.0, 1.0, resolution)
@@ -481,7 +481,7 @@ def plot_adaptive_weights_heatmap(
 
     for i, aro in enumerate(arousals):
         for j, val in enumerate(valences):
-            sf = StimmungField(
+            sf = MoodField(
                 valence=float(val),
                 arousal=float(aro),
                 dominance=0.5,

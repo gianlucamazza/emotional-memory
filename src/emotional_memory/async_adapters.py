@@ -116,9 +116,11 @@ def as_async(engine: EmotionalMemory) -> AsyncEmotionalMemory:
     """Wrap a synchronous ``EmotionalMemory`` into an async one.
 
     All I/O calls (embed, store, appraise) are delegated via
-    ``asyncio.to_thread``.  The engine's current affective state and config
-    are shared by reference — do not use the sync and async engines
-    concurrently from different threads.
+    ``asyncio.to_thread``.  The engine's affective state is **copied** at
+    wrap time — the two engines are independent after this point and their
+    states diverge as each processes new events.  The underlying store and
+    embedder are shared (same object references), so concurrent writes from
+    both engines will interleave.
     """
     from emotional_memory.async_engine import AsyncEmotionalMemory
 
@@ -133,6 +135,8 @@ def as_async(engine: EmotionalMemory) -> AsyncEmotionalMemory:
         appraisal_engine=appraisal_async,
         config=engine._config,
     )
-    # Share the live affective state
+    # Copy the current affective state as the async engine's starting point.
+    # AffectiveState is replaced (not mutated) on each update, so both engines
+    # start with the same snapshot but diverge independently thereafter.
     async_engine._state = engine._state
     return async_engine

@@ -77,7 +77,7 @@ with EmotionalMemory(store=SQLiteStore(db_path), embedder=HashEmbedder(), config
 
     # Save affective state so the next session resumes the same mood trajectory
     state_snapshot = em.save_state()
-    print(f"Stimmung at close: valence={state_snapshot['stimmung']['valence']:.3f}")
+    print(f"Mood at close: valence={state_snapshot['mood']['valence']:.3f}")
 
     # Export all memories as JSON-serialisable dicts (for backup / migration)
     exported = em.export_memories()
@@ -94,10 +94,10 @@ print(f"\n=== Session 2: reopening {db_path} ===\n")
 with EmotionalMemory(store=SQLiteStore(db_path), embedder=HashEmbedder(), config=config) as em2:
     print(f"Memories in store: {len(em2)}")
 
-    # Restore affective state — stimmung and momentum history resume
+    # Restore affective state — mood and momentum history resume
     em2.load_state(state_snapshot)
-    sm = em2.get_state().stimmung
-    print(f"Restored Stimmung: valence={sm.valence:.3f}  arousal={sm.arousal:.3f}")
+    sm = em2.get_state().mood
+    print(f"Restored Mood: valence={sm.valence:.3f}  arousal={sm.arousal:.3f}")
 
     # Retrieval works identically to session 1
     results = em2.retrieve("client deal revenue", top_k=2)

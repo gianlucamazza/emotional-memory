@@ -3,7 +3,7 @@
 Capstone example combining:
   - KeywordAppraisalEngine for automatic emotional tagging
   - SQLiteStore for persistence across sessions
-  - Stimmung evolution and time-based regression
+  - Mood evolution and time-based regression
   - Mood-congruent retrieval that shifts as mood changes
   - Session save → close → reopen → load → continue
   - Pruning to remove faded low-arousal memories
@@ -24,10 +24,10 @@ from emotional_memory import (
     EmotionalMemory,
     EmotionalMemoryConfig,
     KeywordAppraisalEngine,
+    MoodDecayConfig,
     ResonanceConfig,
     RetrievalConfig,
     SQLiteStore,
-    StimmungDecayConfig,
 )
 
 # ---------------------------------------------------------------------------
@@ -65,8 +65,8 @@ config = EmotionalMemoryConfig(
         reconsolidation_window_seconds=3600.0,  # 1-hour lability window
         reconsolidation_learning_rate=0.25,
     ),
-    stimmung_alpha=0.25,
-    stimmung_decay=StimmungDecayConfig(base_half_life_seconds=1800.0),  # 30-min half-life
+    mood_alpha=0.25,
+    mood_decay=MoodDecayConfig(base_half_life_seconds=1800.0),  # 30-min half-life
     decay=DecayConfig(base_decay=1.5),  # aggressive decay for pruning demo
 )
 
@@ -78,12 +78,12 @@ config = EmotionalMemoryConfig(
 
 def print_mood(em: EmotionalMemory, label: str) -> None:
     s = em.get_state()
-    sm = s.stimmung
+    sm = s.mood
     mom = s.momentum
     print(
         f"  [{label}]  "
         f"affect={s.core_affect.valence:+.2f}  "
-        f"stimmung={sm.valence:+.3f}  "
+        f"mood={sm.valence:+.3f}  "
         f"momentum={mom.magnitude():.3f}"
     )
 
@@ -166,12 +166,12 @@ with EmotionalMemory(
     # Restore affective state from session 1
     em2.load_state(saved_state)
 
-    # Inspect Stimmung regression 1 hour after session 1
+    # Inspect Mood regression 1 hour after session 1
     future = datetime.now(UTC) + timedelta(hours=1)
-    regressed = em2.get_current_stimmung(now=future)
-    current = em2.get_state().stimmung
+    regressed = em2.get_current_mood(now=future)
+    current = em2.get_state().mood
 
-    print("Stimmung continuity check:")
+    print("Mood continuity check:")
     print(f"  At session close: valence={current.valence:+.3f}  arousal={current.arousal:.3f}")
     print(
         f"  Regressed +1h:    valence={regressed.valence:+.3f}  "
@@ -247,7 +247,7 @@ print(f"  {'Memories in final backup:':<38} {len(backup)}")
 print()
 print("  Lifecycle completed:")
 print("    encode → save_state → close → reopen → load_state")
-print("    → get_current_stimmung (time regression) → encode")
+print("    → get_current_mood (time regression) → encode")
 print("    → mood-congruent retrieval → prune → export_memories")
 
 print("\nDone.")

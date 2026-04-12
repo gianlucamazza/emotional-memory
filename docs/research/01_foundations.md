@@ -141,7 +141,7 @@ La Stimmung ha una struttura triadica di disclosure:
 
 **L'insight fondamentale per la libreria**: Il mood non è un attributo dei singoli ricordi — è lo stato globale del sistema che colora tutte le operazioni cognitive. Non si può "togliere" il mood dall'esperienza e avere ancora esperienza.
 
-Questo è il fondamento del **Layer 3 — Stimmung Field** della nostra architettura: un campo a variazione lenta che non cambia per singoli eventi ma per accumulo, e che agisce come bias gravitazionale su ogni operazione di encoding e retrieval.
+Questo è il fondamento del **Layer 3 — MoodField** della nostra architettura: un campo a variazione lenta che non cambia per singoli eventi ma per accumulo, e che agisce come bias gravitazionale su ogni operazione di encoding e retrieval.
 
 ---
 
@@ -155,7 +155,7 @@ Questo è il fondamento del **Layer 3 — Stimmung Field** della nostra architet
 
 **Memoria intercorporea**: Le nostre interazioni incarnate sono modellate dall'esperienza precedente a tal punto da poter parlare di una memoria implicita, inconscia, che opera in ogni incontro sociale. La risonanza emotiva con gli altri è corporea prima di essere cognitiva.
 
-**Implicazione per la libreria**: La "memoria corporea" del sistema è il Layer 3 (Stimmung) — l'accumulo di pattern affettivi che non si ricordano esplicitamente ma che colorano ogni nuova esperienza. Le disposizioni emotive abituali sono il nostro equivalente computazionale della memoria corporea.
+**Implicazione per la libreria**: La "memoria corporea" del sistema è il Layer 3 (MoodField) — l'accumulo di pattern affettivi che non si ricordano esplicitamente ma che colorano ogni nuova esperienza. Le disposizioni emotive abituali sono il nostro equivalente computazionale della memoria corporea.
 
 ---
 
@@ -197,7 +197,7 @@ Questo è il fondamento del **Layer 3 — Stimmung Field** della nostra architet
 | Spinoza | Affetto come transizione, non stato; conatus | Layer 2: Affective Momentum; goal-relevance nell'appraisal |
 | Hume | Primato delle passioni; associazionismo | Retrieval bias verso contenuto emotivamente congruente |
 | Husserl | Struttura temporale dell'esperienza; prominenza affettiva | Temporal structure nell'encoding; sorpresa come evento affettivo |
-| Heidegger | Stimmung come campo globale | Layer 3: Stimmung Field; pesi di retrieval mood-dependent |
+| Heidegger | Stimmung come campo globale | Layer 3: MoodField; pesi di retrieval mood-dependent |
 | Merleau-Ponty | Memoria corporea come disposizione | Pattern emotivi abituali; decay floor per memorie consolidate |
 | Colombetti | Cognizione intrinsecamente affettiva | Emotional tagging pervasivo — ogni memoria ha metadata affettivo |
 | Clark & Chalmers | Mente estesa | Storage esterno come estensione del sistema affettivo |

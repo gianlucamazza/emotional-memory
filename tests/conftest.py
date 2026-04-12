@@ -4,7 +4,7 @@ from datetime import UTC, datetime, timedelta
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.models import Memory, make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 
 def make_test_memory(
@@ -27,7 +27,7 @@ def make_test_memory(
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=valence, arousal=arousal),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=0.7,
     )
     tag = tag.model_copy(update={"timestamp": ts})

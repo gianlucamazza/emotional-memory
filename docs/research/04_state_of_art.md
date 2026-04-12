@@ -97,7 +97,7 @@ Ogni EMU combina:
 - Stato emotivo al momento dell'encoding
 - Tracce di impatto emotivo successive
 
-**Rilevanza**: L'approccio EMU è il più vicino alla nostra visione. Ma rimane limitato — non ha la struttura multi-layer (momentum, stimmung, appraisal vettoriale) né il retrieval multi-segnale con pesi adattivi.
+**Rilevanza**: L'approccio EMU è il più vicino alla nostra visione. Ma rimane limitato — non ha la struttura multi-layer (momentum, mood field, appraisal vettoriale) né il retrieval multi-segnale con pesi adattivi.
 
 ---
 
@@ -212,7 +212,7 @@ Prima serie di LLM open-source per analisi affettiva completa. Include AAID (234
 |-----|---------|-----------------|
 | Emozione come settore separato, non dimensione pervasiva | Ogni sistema manca l'impatto affettivo su encoding/retrieval | Emotional tagging pervasivo su ogni memoria |
 | Rappresentazione statica (punto nello spazio) | Non cattura la dinamica — dove stai andando | Layer 2: Affective Momentum (derivate) |
-| Nessun mood field globale | Il mood corrente non pesa nel retrieval in modo strutturato | Layer 3: Stimmung Field |
+| Nessun mood field globale | Il mood corrente non pesa nel retrieval in modo strutturato | Layer 3: MoodField |
 | Nessun appraisal integrato | L'emozione viene assunta come input, non generata | Layer 4: Appraisal Vector |
 | Retrieval mono-segnale | Solo semantica, o semantica + un segnale emotivo statico | Retrieval multi-segnale con 6 componenti e pesi adattivi |
 | Nessun riconsolidamento | Il retrieval non può aggiornare il tag emotivo | Finestra di riconsolidamento post-retrieval |
@@ -234,7 +234,7 @@ l'emozione nel sistema)  │                      │
                          └─────────────────────┘
 ```
 
-Siamo gli unici con **alta profondità** (emozione come dimensione pervasiva) **e** **alta ampiezza** (multi-layer: core affect + momentum + stimmung + appraisal + resonance).
+Siamo gli unici con **alta profondità** (emozione come dimensione pervasiva) **e** **alta ampiezza** (multi-layer: core affect + momentum + mood field + appraisal + resonance).
 
 ---
 

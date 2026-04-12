@@ -59,7 +59,7 @@ em = EmotionalMemory(
             reconsolidation_learning_rate=0.3,  # higher than default 0.2 → bigger shift
             reconsolidation_window_seconds=300.0,  # 5-minute lability window
         ),
-        stimmung_alpha=0.3,
+        mood_alpha=0.3,
     ),
 )
 
@@ -88,7 +88,7 @@ for _ in range(6):
 current_affect = em.get_state().core_affect
 ape = affective_prediction_error(mem_r1.tag.core_affect, current_affect)
 print("\nAfter 6x set_affect(valence=+0.9, arousal=0.8):")
-print(f"  current Stimmung valence: {em.get_state().stimmung.valence:+.3f}")
+print(f"  current Mood valence: {em.get_state().mood.valence:+.3f}")
 print(f"  APE vs encoded affect:    {ape:.3f}  (threshold: 0.2)")
 
 # --- Second retrieval within lability window → reconsolidation ---
@@ -122,7 +122,7 @@ em2 = EmotionalMemory(
             reconsolidation_learning_rate=0.3,
             reconsolidation_window_seconds=0.01,  # 10 ms window
         ),
-        stimmung_alpha=0.3,
+        mood_alpha=0.3,
     ),
 )
 
@@ -163,7 +163,7 @@ em3 = EmotionalMemory(
             reconsolidation_learning_rate=0.3,
             reconsolidation_window_seconds=300.0,
         ),
-        stimmung_alpha=0.3,
+        mood_alpha=0.3,
     ),
 )
 

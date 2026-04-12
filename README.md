@@ -81,9 +81,9 @@ AFT models emotion as a **field** — distributed, dynamic, multi-layer — rath
 |---|---|---|
 | **CoreAffect** | Barrett/Russell circumplex | Continuous `(valence, arousal)` — the emotional substrate |
 | **AffectiveMomentum** | Spinoza — affect as transition | Velocity and acceleration of affect change |
-| **StimmungField** | Heidegger — *Stimmung* as attunement | Slow-moving global mood with inertia (EMA) |
+| **MoodField** | Heidegger — *Stimmung* as attunement | Slow-moving global mood with inertia (EMA) |
 | **AppraisalVector** | Scherer/Lazarus/Stoics | Emotion derived from evaluation: novelty, goal-relevance, coping, norm-congruence, self-relevance |
-| **ResonanceLinks** | Aristotle/Hume/Bower | Associative graph: semantic, emotional, temporal, causal, contrastive links |
+| **ResonanceLinks** | Aristotle/Hume/Bower/Collins & Loftus/Hebb | Associative bidirectional graph: semantic, emotional, temporal, causal, contrastive links; multi-hop spreading activation + Hebbian co-retrieval strengthening |
 
 Full theoretical foundations: [`docs/research/`](docs/research/)
 
@@ -116,7 +116,7 @@ em = EmotionalMemory(
 | `set_affect(core_affect)` | Manually inject a CoreAffect |
 | `save_state() -> dict` | Serialise affective state for persistence |
 | `load_state(data)` | Restore previously saved affective state |
-| `get_current_stimmung(now=None) -> StimmungField` | Read-only Stimmung with time regression |
+| `get_current_mood(now=None) -> MoodField` | Read-only mood with time regression |
 | `close()` | Release store resources (e.g. SQLite connection); also via `with` |
 
 Both engines support context managers for automatic resource cleanup:
@@ -132,7 +132,7 @@ with EmotionalMemory(store=SQLiteStore("mem.db"), embedder=MyEmbedder()) as em:
 
 Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `encode_batch`, `retrieve`,
 `delete`, `get`, `list_all`, `prune`, `export_memories`, `import_memories`, `close`.
-State accessors (`get_state`, `set_affect`, `save_state`, `load_state`, `get_current_stimmung`)
+State accessors (`get_state`, `set_affect`, `save_state`, `load_state`, `get_current_mood`)
 remain synchronous.
 
 Supports `async with` for automatic resource cleanup:
@@ -153,12 +153,12 @@ any sync implementation. `SyncToAsyncStore` also proxies `close()` to the underl
 
 ### Key config classes
 
-- `EmotionalMemoryConfig` — top-level config (decay, retrieval, resonance, stimmung alpha, stimmung decay)
+- `EmotionalMemoryConfig` — top-level config (decay, retrieval, resonance, mood_alpha, mood_decay)
 - `RetrievalConfig` — weights, APE threshold, reconsolidation learning rate
-- `ResonanceConfig` — similarity threshold, max links, semantic/emotional/temporal weights, candidate multiplier
+- `ResonanceConfig` — similarity threshold, max links, semantic/emotional/temporal weights, candidate multiplier, `propagation_hops`, `hebbian_increment`, configurable link-classification thresholds
 - `DecayConfig` — power-law decay parameters, arousal modulation, floor values
-- `StimmungDecayConfig` — time-based Stimmung regression (half-life, inertia scale, baselines)
-- `AdaptiveWeightsConfig` — smooth Stimmung-adaptive retrieval weight tuning (sigmoid/Gaussian gates)
+- `MoodDecayConfig` — time-based mood regression (half-life, inertia scale, baselines)
+- `AdaptiveWeightsConfig` — smooth mood-adaptive retrieval weight tuning (sigmoid/Gaussian gates)
 - `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour)
 
 ### Interfaces (bring your own)
@@ -257,19 +257,19 @@ Consolidation strength peaks near effective arousal 0.7, then drops — the clas
 
 ### 6-Signal Retrieval Breakdown
 
-Radar chart of the six retrieval signals: semantic similarity, Stimmung congruence, affect proximity, momentum alignment, recency, and resonance boost.
+Radar chart of the six retrieval signals: semantic similarity, mood congruence, affect proximity, momentum alignment, recency, and resonance boost.
 
 ![Retrieval Radar](docs/images/retrieval_radar.png)
 
-### Stimmung Field Evolution
+### Mood Field Evolution
 
 Time series of valence, arousal, and dominance with dashed baselines showing the regression attractors.
 
-![Stimmung Evolution](docs/images/stimmung_evolution.png)
+![Mood Evolution](docs/images/mood_evolution.png)
 
 ### Adaptive Retrieval Weights
 
-Heatmap showing how retrieval weights shift across different Stimmung states (valence x arousal grid).
+Heatmap showing how retrieval weights shift across different mood states (valence x arousal grid).
 
 ![Adaptive Weights](docs/images/adaptive_weights_heatmap.png)
 
@@ -293,9 +293,9 @@ make docs-images   # regenerate all PNGs in docs/images/
 
 ## Benchmarks
 
-### Psychological fidelity (77 tests)
+### Psychological fidelity (82 tests)
 
-The library validates 10 phenomena from the affective science literature:
+The library validates 12 phenomena from the affective science literature:
 
 | Phenomenon | Reference | Tests |
 |---|---|---|
@@ -307,8 +307,10 @@ The library validates 10 phenomena from the affective science literature:
 | Reconsolidation (APE) | Nader & Schiller 2000 | 5 |
 | State-dependent retrieval | Godden & Baddeley 1975 | 3 |
 | Affective momentum | Spinoza, Ethics III | 9 |
-| Stimmung-adaptive weights | Heidegger, Being & Time §29 | 14 |
+| Mood-adaptive weights | Heidegger, Being & Time §29 | 14 |
 | Appraisal-to-affect mapping | Scherer CPM 2009 | 11 |
+| Spreading activation | Collins & Loftus 1975 | 5 |
+| Design gap regression | (various) | 3 |
 
 Run with: `make bench-fidelity`
 
@@ -316,21 +318,20 @@ Run with: `make bench-fidelity`
 
 | Operation | N | Mean | OPS |
 |---|---|---|---|
-| Encode (single) | 1 | 59 ms | 17/s |
-| Encode (batch of 100) | 100 | 12 ms/op | 84/s |
-| Encode (batch of 1 000) | 1 000 | 70 ms/op | 14/s |
-| Resonance build | 50 | 1.7 ms | 587/s |
-| Resonance build | 200 | 6.9 ms | 145/s |
-| Resonance build | 500 | 17.6 ms | 57/s |
-| Retrieve top-5 | 100 | 4.8 ms | 210/s |
-| Retrieve top-5 | 1 000 | 28.6 ms | 35/s |
-| Retrieve top-5 | 10 000 | 423 ms | 2.4/s |
-| Retrieve (top-k 1–25) | 1 000 | 33–51 ms | 20–30/s |
-| Retrieve + reconsolidation | 200 | 8.9 ms | 113/s |
+| Encode (single) | 1 | 1.7 ms | 590/s |
+| Encode (batch of 100) | 100 | 9.9 ms/op | 101/s |
+| Encode w/ resonance graph | 500 | 4.0 ms | 250/s |
+| Retrieve top-5 | 100 | ~2 ms | ~500/s |
+| Retrieve top-5 | 1 000 | ~12 ms | ~85/s |
+| Retrieve top-5 | 10 000 | ~120 ms | ~8/s |
+| Retrieve (top-k 1–25) | 1 000 | 10–18 ms | 55–100/s |
+| Retrieve + reconsolidation | 200 | 2.6 ms | 385/s |
 
-Retrieval uses two-pass scoring (spreading activation), so latency scales linearly
-with store size. For stores > 1 000 memories, implement `search_by_embedding` on
-your `MemoryStore` to benefit from the pre-filter (`candidate_multiplier`).
+`InMemoryStore.search_by_embedding` uses vectorized matrix multiplication (numpy),
+making retrieval O(n · d) in a single batch rather than n individual cosine calls.
+Retrieval uses two-pass scoring (spreading activation); when no resonance links are
+active the second pass is skipped. For stores > 10 000 memories, use `SQLiteStore`
+(sqlite-vec ANN) or a vector database implementing the `MemoryStore` protocol.
 
 Run with: `make bench-perf`
 
@@ -374,7 +375,7 @@ any ML dependencies.
 | Script | Description | Extra |
 |--------|-------------|-------|
 | `basic_usage.py` | Encode/retrieve, reconsolidation, resonance links | — |
-| `advanced_config.py` | ACT-R decay, Stimmung regression, adaptive weights | — |
+| `advanced_config.py` | ACT-R decay, mood regression, adaptive weights | — |
 | `appraisal_engines.py` | Keyword, static, and custom appraisal rules | — |
 | `reconsolidation.py` | Two-retrieval lability window (Nader & Schiller 2000) | — |
 | `async_usage.py` | `as_async()`, `SyncToAsync*` adapters, `encode_batch` | — |

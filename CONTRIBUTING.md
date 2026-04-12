@@ -83,7 +83,7 @@ The library implements **Affective Field Theory (AFT)** — five layers of emoti
 |---|---|---|
 | 1 | `CoreAffect` | Russell 1980 circumplex |
 | 2 | `AffectiveMomentum` | Spinoza — affect as transition |
-| 3 | `StimmungField` | Heidegger §29 / PAD model |
+| 3 | `MoodField` | Heidegger §29 / PAD model |
 | 4 | `AppraisalVector` | Scherer CPM / Lazarus |
 | 5 | `ResonanceLink` | Aristotle / Bower spreading activation |
 

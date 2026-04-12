@@ -1,6 +1,6 @@
-"""Advanced configuration — decay, Stimmung decay, and adaptive weights.
+"""Advanced configuration — decay, Mood decay, and adaptive weights.
 
-Demonstrates how to tune the ACT-R decay engine, time-based Stimmung
+Demonstrates how to tune the ACT-R decay engine, time-based Mood
 regression, and the adaptive retrieval weight system. Includes side-by-side
 comparisons showing how config choices change retrieval rankings.
 
@@ -17,8 +17,8 @@ from emotional_memory import (
     EmotionalMemory,
     EmotionalMemoryConfig,
     InMemoryStore,
+    MoodDecayConfig,
     RetrievalConfig,
-    StimmungDecayConfig,
 )
 from emotional_memory.decay import compute_effective_strength
 
@@ -106,17 +106,17 @@ print("\nHigh-arousal memories (outage, record quarter) retain more strength")
 print("under the default config thanks to the arousal_modulation floor.\n")
 
 # ---------------------------------------------------------------------------
-# StimmungDecayConfig — mood regresses toward baseline over time
+# MoodDecayConfig — mood regresses toward baseline over time
 # ---------------------------------------------------------------------------
 
-print("=== StimmungDecayConfig — time-based mood regression ===\n")
+print("=== MoodDecayConfig — time-based mood regression ===\n")
 
 em_sd = EmotionalMemory(
     store=InMemoryStore(),
     embedder=HashEmbedder(),
     config=EmotionalMemoryConfig(
-        stimmung_alpha=0.3,
-        stimmung_decay=StimmungDecayConfig(
+        mood_alpha=0.3,
+        mood_decay=MoodDecayConfig(
             base_half_life_seconds=60.0,  # fast decay for demo (1 minute half-life)
             inertia_scale=1.0,
             baseline_valence=0.0,
@@ -126,28 +126,28 @@ em_sd = EmotionalMemory(
 )
 
 em_sd.set_affect(CoreAffect(valence=0.9, arousal=0.9))
-em_sd.set_affect(CoreAffect(valence=0.9, arousal=0.9))  # repeat to build Stimmung
+em_sd.set_affect(CoreAffect(valence=0.9, arousal=0.9))  # repeat to build Mood
 
-sm_now = em_sd.get_current_stimmung()
-print("Stimmung right after encoding:")
+sm_now = em_sd.get_current_mood()
+print("Mood right after encoding:")
 print(
     f"  valence={sm_now.valence:.3f}  arousal={sm_now.arousal:.3f}  inertia={sm_now.inertia:.3f}"
 )
 
-# Simulate what Stimmung would be an hour from now (read-only, no mutation)
-sm_future = em_sd.get_current_stimmung(now=datetime.now(UTC) + timedelta(hours=1))
-print("\nStimmung projected 1 hour from now (toward baseline):")
+# Simulate what Mood would be an hour from now (read-only, no mutation)
+sm_future = em_sd.get_current_mood(now=datetime.now(UTC) + timedelta(hours=1))
+print("\nMood projected 1 hour from now (toward baseline):")
 print(f"  valence={sm_future.valence:.3f}  arousal={sm_future.arousal:.3f}")
 print("  baseline: valence=0.000  arousal=0.300")
-print("\nget_current_stimmung() is read-only — the stored state is unchanged.")
-sm_check = em_sd.get_state().stimmung
-print(f"Stored stimmung still: valence={sm_check.valence:.3f}\n")
+print("\nget_current_mood() is read-only — the stored state is unchanged.")
+sm_check = em_sd.get_state().mood
+print(f"Stored mood still: valence={sm_check.valence:.3f}\n")
 
 # ---------------------------------------------------------------------------
-# AdaptiveWeightsConfig — how Stimmung modulates retrieval signal weights
+# AdaptiveWeightsConfig — how Mood modulates retrieval signal weights
 # ---------------------------------------------------------------------------
 
-print("=== AdaptiveWeightsConfig — Stimmung-driven weight modulation ===\n")
+print("=== AdaptiveWeightsConfig — Mood-driven weight modulation ===\n")
 
 # Exaggerated config: strong negative-mood boost to emotional signals
 em_aw = EmotionalMemory(
@@ -166,11 +166,11 @@ em_aw = EmotionalMemory(
 )
 seed_memories(em_aw)
 
-# Retrieval under positive Stimmung (calm semantic search dominates)
+# Retrieval under positive Mood (calm semantic search dominates)
 em_aw.set_affect(CoreAffect(valence=0.7, arousal=0.2))  # calm
 results_calm = em_aw.retrieve("work performance review", top_k=4)
 
-# Retrieval under negative Stimmung (emotional congruence dominates)
+# Retrieval under negative Mood (emotional congruence dominates)
 for _ in range(6):
     em_aw.set_affect(CoreAffect(valence=-0.9, arousal=0.7))
 results_neg = em_aw.retrieve("work performance review", top_k=4)

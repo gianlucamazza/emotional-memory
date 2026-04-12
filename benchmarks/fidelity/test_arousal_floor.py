@@ -15,7 +15,7 @@ from emotional_memory import CoreAffect
 from emotional_memory.affect import AffectiveMomentum
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 pytestmark = pytest.mark.fidelity
 
@@ -28,7 +28,7 @@ def _tag(arousal: float, strength: float = 1.0):
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=arousal),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=strength,
     )
     return tag.model_copy(update={"timestamp": _ancient_time()})

@@ -134,8 +134,8 @@ async def main() -> None:
         # State persistence is sync — no await needed
         snapshot = aem2.save_state()
         aem2.load_state(snapshot)
-        sm = aem2.get_state().stimmung
-        print(f"Stimmung after load_state: valence={sm.valence:.3f}  arousal={sm.arousal:.3f}")
+        sm = aem2.get_state().mood
+        print(f"Mood after load_state: valence={sm.valence:.3f}  arousal={sm.arousal:.3f}")
 
     # async with block called aem2.close() automatically
 

@@ -262,7 +262,7 @@ Due strategie di retrieval mood-dependent:
 
 Supera RAG standard su dataset di role-playing.
 
-**Rilevanza**: Conferma l'utilità del segnale `emotional_congruence` nel retrieval scoring. Il nostro approccio estende questo con il momentum e lo Stimmung.
+**Rilevanza**: Conferma l'utilità del segnale `emotional_congruence` nel retrieval scoring. Il nostro approccio estende questo con il momentum, il Mood field e la spreading activation.
 
 ### Dynamic Affective Memory Management (2025)
 

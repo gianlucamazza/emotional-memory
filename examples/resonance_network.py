@@ -60,7 +60,7 @@ em = EmotionalMemory(
         retrieval=RetrievalConfig(
             base_weights=[0.20, 0.30, 0.25, 0.10, 0.10, 0.05],
         ),
-        stimmung_alpha=0.25,
+        mood_alpha=0.25,
     ),
 )
 

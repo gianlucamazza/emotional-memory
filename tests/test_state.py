@@ -21,7 +21,7 @@ class TestAffectiveState:
         assert s.core_affect.arousal == 0.0
         assert s.momentum.d_valence == 0.0
         assert s.momentum.d_arousal == 0.0
-        assert s.stimmung.valence == 0.0
+        assert s.mood.valence == 0.0
 
     def test_update_returns_new_instance(self):
         s = AffectiveState.initial()
@@ -35,11 +35,11 @@ class TestAffectiveState:
         assert s2.core_affect.valence == 0.7
         assert s2.core_affect.arousal == 0.6
 
-    def test_stimmung_drifts_positive_after_positive_updates(self):
+    def test_mood_drifts_positive_after_positive_updates(self):
         s = AffectiveState.initial()
         for _ in range(30):
-            s = s.update(CoreAffect(valence=1.0, arousal=0.8), stimmung_alpha=0.2)
-        assert s.stimmung.valence > 0.3
+            s = s.update(CoreAffect(valence=1.0, arousal=0.8), mood_alpha=0.2)
+        assert s.mood.valence > 0.3
 
     def test_momentum_reflects_direction(self):
         s = AffectiveState.initial()
@@ -86,13 +86,13 @@ class TestAffectiveStateSnapshot:
         assert restored.core_affect.valence == pytest.approx(0.7)
         assert restored.core_affect.arousal == pytest.approx(0.4)
 
-    def test_restore_roundtrip_stimmung(self):
+    def test_restore_roundtrip_mood(self):
         s = AffectiveState.initial()
         for _ in range(20):
-            s = s.update(CoreAffect(valence=1.0, arousal=0.8), stimmung_alpha=0.2)
+            s = s.update(CoreAffect(valence=1.0, arousal=0.8), mood_alpha=0.2)
         snap = s.snapshot()
         restored = AffectiveState.restore(snap)
-        assert restored.stimmung.valence == pytest.approx(s.stimmung.valence, abs=1e-9)
+        assert restored.mood.valence == pytest.approx(s.mood.valence, abs=1e-9)
 
     def test_restore_preserves_momentum_history(self):
         s = AffectiveState.initial()

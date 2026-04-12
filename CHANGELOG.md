@@ -7,6 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-12
+
+### Added
+
+- **Spreading activation** (Collins & Loftus, 1975) — `spreading_activation()` in `resonance.py`
+  performs BFS-based multi-hop propagation through the associative link graph; activation decays
+  multiplicatively per hop and uses max-aggregation to prevent path-count inflation; configurable
+  via `ResonanceConfig.propagation_hops` (1–5, default 2)
+- **Bidirectional resonance links** — encoding a memory now creates backward links on all target
+  memories so activation flows in both directions through the network; the weakest existing link is
+  evicted if the target is already at `max_links`
+- **Hebbian co-retrieval strengthening** (Hebb, 1949) — `hebbian_strengthen()` in `resonance.py`
+  increments the strength of every link shared between memories returned in the same retrieval call
+  ("neurons that fire together wire together"); increment configurable via
+  `ResonanceConfig.hebbian_increment` (default 0.05, capped at 1.0)
+- **Configurable link-classification thresholds** — causal, contrastive, and temporal thresholds
+  that were previously hardcoded magic numbers in `_classify_link_type()` are now named fields on
+  `ResonanceConfig`: `contrastive_temporal_threshold`, `contrastive_valence_threshold`,
+  `causal_temporal_threshold`, `causal_semantic_threshold`
+- **Vectorized `InMemoryStore.search_by_embedding`** — rewrites the per-memory Python loop with a
+  NumPy batch matrix multiply + `np.argpartition` (O(n)) for top-k selection; significant speedup
+  for stores > 500 memories
+- `spreading_activation` and `hebbian_strengthen` exported from the top-level package (`__all__`)
+
+### Breaking Changes
+
+- **`StimmungField` → `MoodField`** — import from `emotional_memory.mood`; the old
+  `emotional_memory.stimmung` module is removed entirely
+- **`StimmungDecayConfig` → `MoodDecayConfig`** — same module move
+- **`EmotionalMemoryConfig.stimmung_alpha` → `mood_alpha`**
+- **`EmotionalMemoryConfig.stimmung_decay` → `mood_decay`**
+- **`EmotionalTag.stimmung_snapshot` → `mood_snapshot`**
+- **`AffectiveState.stimmung` → `mood`**
+- **`get_current_stimmung()` → `get_current_mood()`** on both `EmotionalMemory` and
+  `AsyncEmotionalMemory`
+- **`make_emotional_tag()` parameter `stimmung` → `mood`**
+- **`EmotionalTag` is now frozen** (`model_config = ConfigDict(frozen=True)`) — consistent
+  with all other value objects; mutating tag fields now raises `ValidationError`
+
+### Fixed
+
+- **Decay formula boost** — `compute_effective_strength()` no longer returns a value above
+  the initial `consolidation_strength` for very small elapsed times (power-law exponent can
+  produce values > 1 when `elapsed < 1 s`)
+- **Calm-event floor** — `consolidation_strength()` now has a minimum of `0.1`; memories
+  encoded under low-arousal states are no longer immediately prunable
+- **`RetrievalConfig.base_weights` length** — a Pydantic `field_validator` now raises
+  `ValidationError` if the list does not contain exactly 6 elements
+- **`ResonanceLink.strength` range** — field is now declared with `ge=0.0, le=1.0`
+- **`as_async()` documentation** — docstring now correctly states that state is copied at
+  wrap time; the two engines are independent afterwards
+
+### Changed
+
+- Docstrings reworked for theoretical honesty: "implements X" → "inspired by X" where the
+  code is a simplification (Scherer CPM note added; Heidegger reference demoted to loose
+  inspiration in `mood.py`)
+- `appraisal.py` module docstring notes that the CPM evaluation is a simultaneous linear
+  combination, not the original sequential model
+
 ## [0.2.0] - 2026-04-10
 
 ### Added
@@ -22,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `AffectiveMomentum`, `LLMCallable`, `ResonanceLink`, `SyncToAsyncAppraisalEngine`,
   `make_emotional_tag`, `consolidation_strength`, and `__version__` (previously uncovered)
 - **`examples/emotional_journal.py`** — capstone multi-session journaling app combining
-  `SQLiteStore`, `KeywordAppraisalEngine`, `StimmungDecayConfig`, mood-congruent retrieval,
+  `SQLiteStore`, `KeywordAppraisalEngine`, `MoodDecayConfig`, mood-congruent retrieval,
   reconsolidation, and `prune()`
 - **MkDocs documentation site** with API reference (mkdocstrings) and research pages
 - **`prune(threshold=0.05)`** on `EmotionalMemory` and `AsyncEmotionalMemory` — removes memories
@@ -87,10 +147,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`save_state()` / `load_state()`** on `EmotionalMemory` and `AsyncEmotionalMemory` —
   serialise and restore the full `AffectiveState` (core affect, momentum history, Stimmung)
   as a JSON-safe dict, enabling session persistence
-- **`get_current_stimmung(now)`** — read-only Stimmung inspection with time-based regression
+- **`get_current_mood(now)`** — read-only Stimmung inspection with time-based regression
   applied on-the-fly without mutating engine state
-- **`StimmungDecayConfig`** — exponential Stimmung regression toward PAD baselines, modulated
-  by inertia; configurable half-life and inertia scale; applied via `StimmungField.regress()`
+- **`MoodDecayConfig`** — exponential Stimmung regression toward PAD baselines, modulated
+  by inertia; configurable half-life and inertia scale; applied via `MoodField.regress()`
 - **`AdaptiveWeightsConfig`** — continuous sigmoid/Gaussian modulation of retrieval weights
   replacing hard thresholds; `_smooth_gate()` helper for tanh-based gate functions
 - **`ResonanceConfig.candidate_multiplier`** — pre-filter resonance candidates in large stores
@@ -105,7 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Affective Field Theory (AFT)** — original 5-layer emotional model for LLM memory systems
 - `CoreAffect` — continuous valence/arousal circumplex (Barrett/Russell 1980)
 - `AffectiveMomentum` — time-normalised velocity and acceleration of affect transitions (Spinoza)
-- `StimmungField` — slow-moving global mood with inertia and PAD-based dominance update,
+- `MoodField` — slow-moving global mood with inertia and PAD-based dominance update,
   evolved via EMA (Heidegger §29 / Mehrabian & Russell 1974)
 - `AppraisalVector` — emotion derived from 5-dimension cognitive evaluation with `to_core_affect()`
   mapping (Scherer CPM 2009 / Lazarus / Stoics)
@@ -137,6 +197,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/gianlucamazza/emotional-memory/releases/tag/v0.1.0

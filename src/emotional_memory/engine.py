@@ -29,8 +29,14 @@ from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalEngine, AppraisalVector, consolidation_strength
 from emotional_memory.decay import DecayConfig
 from emotional_memory.interfaces import Embedder, MemoryStore
-from emotional_memory.models import Memory, make_emotional_tag
-from emotional_memory.resonance import ResonanceConfig, build_resonance_links
+from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
+from emotional_memory.mood import MoodDecayConfig, MoodField
+from emotional_memory.resonance import (
+    ResonanceConfig,
+    build_resonance_links,
+    hebbian_strengthen,
+    spreading_activation,
+)
 from emotional_memory.retrieval import (
     RetrievalConfig,
     adaptive_weights,
@@ -39,7 +45,6 @@ from emotional_memory.retrieval import (
     retrieval_score,
 )
 from emotional_memory.state import AffectiveState
-from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
 
 logger = logging.getLogger(__name__)
 
@@ -48,9 +53,9 @@ class EmotionalMemoryConfig(BaseModel):
     decay: DecayConfig = DecayConfig()
     retrieval: RetrievalConfig = RetrievalConfig()
     resonance: ResonanceConfig = ResonanceConfig()
-    stimmung_alpha: float = 0.1
-    stimmung_decay: StimmungDecayConfig | None = None
-    """Time-based regression of Stimmung toward baseline. None = disabled."""
+    mood_alpha: float = 0.1
+    mood_decay: MoodDecayConfig | None = None
+    """Time-based regression of mood toward baseline. None = disabled."""
 
 
 class EmotionalMemory:
@@ -102,7 +107,7 @@ class EmotionalMemory:
 
         Pipeline:
           1. Compute/use appraisal → derive CoreAffect
-          2. Update AffectiveState (core_affect, momentum, stimmung)
+          2. Update AffectiveState (core_affect, momentum, mood)
           3. Build EmotionalTag (snapshot of all 5 layers)
           4. Embed content
           5. Store memory
@@ -125,16 +130,16 @@ class EmotionalMemory:
         self._state = self._state.update(
             new_affect,
             now=now,
-            stimmung_alpha=self._config.stimmung_alpha,
-            stimmung_decay=self._config.stimmung_decay,
+            mood_alpha=self._config.mood_alpha,
+            mood_decay=self._config.mood_decay,
         )
 
         # Step 3: build EmotionalTag
-        cs = consolidation_strength(new_affect.arousal, self._state.stimmung.arousal)
+        cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
         tag = make_emotional_tag(
             core_affect=self._state.core_affect,
             momentum=self._state.momentum,
-            stimmung=self._state.stimmung,
+            mood=self._state.mood,
             consolidation_strength=cs,
             appraisal=appraisal,
         )
@@ -175,12 +180,40 @@ class EmotionalMemory:
             self._store.update(memory)
             logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
+            # Bidirectional links: add a backward link on each target memory
+            # so that spreading activation can traverse the graph in both
+            # directions (new→old and old→new).
+            for link in links:
+                target_mem = self._store.get(link.target_id)
+                if target_mem is None:
+                    continue
+                backward = ResonanceLink(
+                    source_id=link.target_id,
+                    target_id=memory.id,
+                    strength=link.strength,
+                    link_type=link.link_type,
+                )
+                existing = list(target_mem.tag.resonance_links)
+                max_links = self._config.resonance.max_links
+                if len(existing) >= max_links:
+                    # Replace the weakest link only if backward is stronger
+                    weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                    if backward.strength <= existing[weakest_idx].strength:
+                        continue
+                    existing[weakest_idx] = backward
+                else:
+                    existing.append(backward)
+                updated_target = target_mem.model_copy(
+                    update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
+                )
+                self._store.update(updated_target)
+
         return memory
 
     def retrieve(self, query: str, top_k: int = 5) -> list[Memory]:
         """Retrieve the top-k most relevant memories for the query.
 
-        Scoring uses all 6 AFT signals with Stimmung-adaptive weights.
+        Scoring uses all 6 AFT signals with mood-adaptive weights.
 
         Two-pass strategy for spreading activation (G1):
           Pass 1 — score all candidates with empty active_ids to get an initial
@@ -214,20 +247,18 @@ class EmotionalMemory:
             return []
 
         # Compute adaptive weights once — invariant across all candidates
-        weights = adaptive_weights(
-            self._state.stimmung, rc.base_weights, rc.adaptive_weights_config
-        )
+        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
 
-        def _score_all(active_ids: list[str]) -> list[tuple[float, Memory]]:
+        def _score_all(activation_map: dict[str, float]) -> list[tuple[float, Memory]]:
             scored = []
             for mem in candidates:
                 score = retrieval_score(
                     query_embedding=query_embedding,
                     query_affect=self._state.core_affect,
-                    current_stimmung=self._state.stimmung,
+                    current_mood=self._state.mood,
                     current_momentum=self._state.momentum,
                     memory=mem,
-                    active_memory_ids=active_ids,
+                    activation_map=activation_map,
                     now=now,
                     decay_config=self._config.decay,
                     retrieval_config=rc,
@@ -237,17 +268,18 @@ class EmotionalMemory:
             scored.sort(key=lambda t: t[0], reverse=True)
             return scored
 
-        # G1 — two-pass: first pass seeds the active set for spreading activation
-        pass1 = _score_all([])
-        active_ids = [mem.id for _, mem in pass1[:top_k]]
+        # G1 — spreading activation (Collins & Loftus, 1975)
+        # Pass 1: score without resonance to identify seed memories
+        pass1 = _score_all({})
+        seed_ids = {mem.id for _, mem in pass1[:top_k]}
 
-        # Skip Pass 2 when no candidate has resonance links targeting the active set
-        active_set = set(active_ids)
-        needs_pass2 = any(
-            any(link.target_id in active_set for link in mem.tag.resonance_links)
-            for _, mem in pass1
+        # Compute multi-hop activation map from seeds through the link graph
+        act_map = spreading_activation(
+            seed_ids, candidates, self._config.resonance.propagation_hops
         )
-        pass2 = _score_all(active_ids) if needs_pass2 else pass1
+
+        # Pass 2: re-score with activation map (skip when no activation spread)
+        pass2 = _score_all(act_map) if act_map else pass1
 
         top = [mem for _, mem in pass2[:top_k]]
 
@@ -283,6 +315,21 @@ class EmotionalMemory:
                 logger.debug("reconsolidate: id=%s ape=%.3f", mem.id, ape)
             self._store.update(updated)
             result.append(updated)
+
+        # Hebbian co-retrieval strengthening (Hebb, 1949)
+        # Strengthen links between memories retrieved together in the same query.
+        increment = self._config.resonance.hebbian_increment
+        if increment > 0.0 and len(result) > 1:
+            co_ids = {m.id for m in result}
+            for i, mem in enumerate(result):
+                new_links = hebbian_strengthen(mem, co_ids - {mem.id}, increment)
+                if new_links != list(mem.tag.resonance_links):
+                    strengthened = mem.model_copy(
+                        update={"tag": mem.tag.model_copy(update={"resonance_links": new_links})}
+                    )
+                    self._store.update(strengthened)
+                    result[i] = strengthened
+                    logger.debug("hebbian: id=%s links_strengthened=%d", mem.id, len(new_links))
 
         logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
@@ -322,15 +369,15 @@ class EmotionalMemory:
             self._state = self._state.update(
                 new_affect,
                 now=now,
-                stimmung_alpha=self._config.stimmung_alpha,
-                stimmung_decay=self._config.stimmung_decay,
+                mood_alpha=self._config.mood_alpha,
+                mood_decay=self._config.mood_decay,
             )
 
-            cs = consolidation_strength(new_affect.arousal, self._state.stimmung.arousal)
+            cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
             tag = make_emotional_tag(
                 core_affect=self._state.core_affect,
                 momentum=self._state.momentum,
-                stimmung=self._state.stimmung,
+                mood=self._state.mood,
                 consolidation_strength=cs,
                 appraisal=appraisal,
             )
@@ -356,6 +403,33 @@ class EmotionalMemory:
                 updated_tag = tag.model_copy(update={"resonance_links": links})
                 memory = memory.model_copy(update={"tag": updated_tag})
                 self._store.update(memory)
+
+                # Bidirectional links: add backward links on target memories
+                for link in links:
+                    target_mem = self._store.get(link.target_id)
+                    if target_mem is None:
+                        continue
+                    backward = ResonanceLink(
+                        source_id=link.target_id,
+                        target_id=memory.id,
+                        strength=link.strength,
+                        link_type=link.link_type,
+                    )
+                    existing = list(target_mem.tag.resonance_links)
+                    max_links = self._config.resonance.max_links
+                    if len(existing) >= max_links:
+                        weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                        if backward.strength <= existing[weakest_idx].strength:
+                            continue
+                        existing[weakest_idx] = backward
+                    else:
+                        existing.append(backward)
+                    updated_target = target_mem.model_copy(
+                        update={
+                            "tag": target_mem.tag.model_copy(update={"resonance_links": existing})
+                        }
+                    )
+                    self._store.update(updated_target)
 
             results.append(memory)
         return results
@@ -383,12 +457,12 @@ class EmotionalMemory:
     def set_affect(self, core_affect: CoreAffect) -> None:
         """Manually inject a CoreAffect (e.g. from external appraisal).
 
-        Updates core_affect, momentum, and stimmung.
+        Updates core_affect, momentum, and mood.
         """
         self._state = self._state.update(
             core_affect,
-            stimmung_alpha=self._config.stimmung_alpha,
-            stimmung_decay=self._config.stimmung_decay,
+            mood_alpha=self._config.mood_alpha,
+            mood_decay=self._config.mood_decay,
         )
 
     def save_state(self) -> dict[str, Any]:
@@ -458,17 +532,17 @@ class EmotionalMemory:
             written += 1
         return written
 
-    def get_current_stimmung(self, now: datetime | None = None) -> StimmungField:
-        """Return the Stimmung regressed to ``now`` without modifying state.
+    def get_current_mood(self, now: datetime | None = None) -> MoodField:
+        """Return the mood field regressed to ``now`` without modifying state.
 
         Useful for read-only mood inspection between encode/retrieve calls.
-        If ``stimmung_decay`` is not configured, returns the frozen Stimmung.
+        If ``mood_decay`` is not configured, returns the frozen mood.
         """
         if now is None:
             now = datetime.now(tz=UTC)
-        if self._config.stimmung_decay is not None:
-            return self._state.stimmung.regress(now, self._config.stimmung_decay)
-        return self._state.stimmung
+        if self._config.mood_decay is not None:
+            return self._state.mood.regress(now, self._config.mood_decay)
+        return self._state.mood
 
     def close(self) -> None:
         """Release resources held by the underlying store, if supported.

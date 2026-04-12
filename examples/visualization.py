@@ -4,7 +4,7 @@ Demonstrates 5 of the 8 matplotlib-based plot functions:
   - plot_circumplex        → memories on the Russell valence-arousal plane
   - plot_decay_curves      → ACT-R power-law decay families
   - plot_yerkes_dodson     → consolidation sweet spot (inverted-U)
-  - plot_stimmung_evolution→ mood drift over a sequence of events
+  - plot_mood_evolution→ mood drift over a sequence of events
   - plot_appraisal_radar   → Scherer CPM spider chart for one memory
 
 Requires:
@@ -27,7 +27,7 @@ from emotional_memory.visualization import (
     plot_appraisal_radar,
     plot_circumplex,
     plot_decay_curves,
-    plot_stimmung_evolution,
+    plot_mood_evolution,
     plot_yerkes_dodson,
 )
 
@@ -61,7 +61,7 @@ em = EmotionalMemory(
     appraisal_engine=KeywordAppraisalEngine(),
     config=EmotionalMemoryConfig(
         retrieval=RetrievalConfig(base_weights=[0.20, 0.30, 0.25, 0.10, 0.10, 0.05]),
-        stimmung_alpha=0.25,
+        mood_alpha=0.25,
     ),
 )
 
@@ -76,13 +76,13 @@ events = [
     "Investor call went sideways — many hard questions.",
 ]
 
-stimmung_history: list[tuple[float, float, float, float]] = []
+mood_history: list[tuple[float, float, float, float]] = []
 t = 0.0
 
 for text in events:
     mem = em.encode(text)
-    sm = em.get_state().stimmung
-    stimmung_history.append((t, sm.valence, sm.arousal, sm.dominance))
+    sm = em.get_state().mood
+    mood_history.append((t, sm.valence, sm.arousal, sm.dominance))
     t += 60.0  # 60 seconds between each event
 
 all_mems = em.list_all()
@@ -120,20 +120,20 @@ print("Plot 2: decay curves ready.")
 # ---------------------------------------------------------------------------
 
 fig3 = plot_yerkes_dodson(
-    stimmung_arousal=0.3,
+    mood_arousal=0.3,
     title="Yerkes-Dodson: Consolidation vs. Encoding Arousal",
 )
 print("Plot 3: Yerkes-Dodson ready.")
 
 # ---------------------------------------------------------------------------
-# Plot 4: Stimmung evolution — mood drift over the event sequence
+# Plot 4: Mood evolution — mood drift over the event sequence
 # ---------------------------------------------------------------------------
 
-fig4 = plot_stimmung_evolution(
-    stimmung_history,
-    title="Stimmung Evolution Across Events",
+fig4 = plot_mood_evolution(
+    mood_history,
+    title="Mood Evolution Across Events",
 )
-print("Plot 4: stimmung evolution ready.")
+print("Plot 4: mood evolution ready.")
 
 # ---------------------------------------------------------------------------
 # Plot 5: Appraisal radar — pick the memory with the most vivid appraisal

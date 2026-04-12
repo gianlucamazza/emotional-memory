@@ -106,10 +106,10 @@ class TestAppraisalVector:
 
 class TestConsolidationStrength:
     def test_peaks_at_effective_07(self):
-        # effective_arousal = 0.7*arousal + 0.3*stimmung_arousal
-        # With stimmung_arousal=0: peak is at arousal=1.0 (effective=0.7)
-        # With stimmung_arousal=1: peak is at arousal=0.571 (effective≈0.7)
-        # Test with equal stimmung so effective_arousal = raw arousal
+        # effective_arousal = 0.7*arousal + 0.3*mood_arousal
+        # With mood_arousal=0: peak is at arousal=1.0 (effective=0.7)
+        # With mood_arousal=1: peak is at arousal=0.571 (effective≈0.7)
+        # Test with equal mood so effective_arousal = raw arousal
         s_peak = consolidation_strength(0.7, 0.7)  # effective = 0.7 → peak
         s_low = consolidation_strength(0.0, 0.0)  # effective = 0.0 → low
         s_high = consolidation_strength(1.0, 1.0)  # effective = 1.0 → low
@@ -122,13 +122,19 @@ class TestConsolidationStrength:
             v = consolidation_strength(arousal, 0.0)
             assert 0.0 <= v <= 1.0
 
+    def test_calm_event_has_minimum_floor(self):
+        """Even completely calm events (arousal=0, mood=0) have a minimum
+        consolidation strength, ensuring they are not immediately prunable."""
+        v = consolidation_strength(0.0, 0.0)
+        assert v >= 0.1, f"calm event floor should be >= 0.1, got {v}"
+
     def test_clamped_inputs(self):
         assert consolidation_strength(-1.0, -1.0) >= 0.0
         assert consolidation_strength(2.0, 2.0) <= 1.0
 
-    def test_stimmung_arousal_blends_in(self):
-        # With stimmung_arousal=1.0, effective arousal shifts higher
-        # relative to stimmung_arousal=0.0
+    def test_mood_arousal_blends_in(self):
+        # With mood_arousal=1.0, effective arousal shifts higher
+        # relative to mood_arousal=0.0
         v1 = consolidation_strength(0.0, 0.0)
         v2 = consolidation_strength(0.0, 1.0)
         # effective_arousal shifts from 0.0 to 0.3 → closer to peak → stronger
@@ -168,7 +174,7 @@ class TestConsolidationProperties:
     """Mathematical invariants for consolidation_strength."""
 
     @pytest.mark.parametrize(
-        "arousal,stimmung_arousal",
+        "arousal,mood_arousal",
         [
             (0.0, 0.0),
             (0.5, 0.5),
@@ -180,21 +186,21 @@ class TestConsolidationProperties:
             (2.0, 2.0),
         ],
     )
-    def test_always_in_unit_range(self, arousal, stimmung_arousal):
-        v = consolidation_strength(arousal, stimmung_arousal)
+    def test_always_in_unit_range(self, arousal, mood_arousal):
+        v = consolidation_strength(arousal, mood_arousal)
         assert 0.0 <= v <= 1.0, (
-            f"consolidation_strength({arousal}, {stimmung_arousal}) = {v} out of [0,1]"
+            f"consolidation_strength({arousal}, {mood_arousal}) = {v} out of [0,1]"
         )
 
     def test_inverted_u_peak_not_at_extremes(self):
-        """Peak consolidation is not at arousal=0 or arousal=1 (with balanced stimmung)."""
+        """Peak consolidation is not at arousal=0 or arousal=1 (with balanced mood)."""
         arousal_levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         values = [consolidation_strength(a, 0.7) for a in arousal_levels]
         peak_idx = values.index(max(values))
         assert peak_idx not in (0, len(arousal_levels) - 1)
 
-    @pytest.mark.parametrize("stimmung_arousal", [0.0, 0.3, 0.5, 0.7, 1.0])
-    def test_stimmung_arousal_blending(self, stimmung_arousal):
-        """Different stimmung_arousal values all yield valid consolidation."""
-        v = consolidation_strength(0.5, stimmung_arousal)
+    @pytest.mark.parametrize("mood_arousal", [0.0, 0.3, 0.5, 0.7, 1.0])
+    def test_mood_arousal_blending(self, mood_arousal):
+        """Different mood_arousal values all yield valid consolidation."""
+        v = consolidation_strength(0.5, mood_arousal)
         assert 0.0 <= v <= 1.0

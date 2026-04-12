@@ -4,14 +4,14 @@ from pydantic import ValidationError
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import AppraisalVector
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 
 def _tag() -> EmotionalTag:
     return make_emotional_tag(
         core_affect=CoreAffect(valence=0.3, arousal=0.5),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=0.7,
     )
 
@@ -26,6 +26,12 @@ class TestResonanceLink:
         with pytest.raises(ValidationError):
             ResonanceLink(source_id="a", target_id="b", strength=0.5, link_type="invalid")
 
+    def test_strength_out_of_range_raises(self):
+        with pytest.raises(ValidationError):
+            ResonanceLink(source_id="a", target_id="b", strength=1.5, link_type="semantic")
+        with pytest.raises(ValidationError):
+            ResonanceLink(source_id="a", target_id="b", strength=-0.1, link_type="semantic")
+
     def test_frozen(self):
         link = ResonanceLink(source_id="a", target_id="b", strength=0.5, link_type="semantic")
         with pytest.raises(ValidationError):
@@ -33,6 +39,12 @@ class TestResonanceLink:
 
 
 class TestEmotionalTag:
+    def test_frozen(self):
+        """EmotionalTag must be immutable like all other value objects."""
+        tag = _tag()
+        with pytest.raises((ValidationError, TypeError)):
+            tag.retrieval_count = 99  # type: ignore[misc]
+
     def test_defaults(self):
         tag = _tag()
         assert tag.retrieval_count == 0
@@ -45,7 +57,7 @@ class TestEmotionalTag:
         tag = make_emotional_tag(
             core_affect=CoreAffect.neutral(),
             momentum=AffectiveMomentum.zero(),
-            stimmung=StimmungField.neutral(),
+            mood=MoodField.neutral(),
             consolidation_strength=1.5,
         )
         assert tag.consolidation_strength == 1.0
@@ -55,7 +67,7 @@ class TestEmotionalTag:
         tag = make_emotional_tag(
             core_affect=CoreAffect.neutral(),
             momentum=AffectiveMomentum.zero(),
-            stimmung=StimmungField.neutral(),
+            mood=MoodField.neutral(),
             consolidation_strength=0.5,
             appraisal=appraisal,
         )

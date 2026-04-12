@@ -1,11 +1,11 @@
 """Step 9: AffectiveState — the runtime emotional state machine.
 
-Bundles CoreAffect, AffectiveMomentum, and StimmungField into a single
+Bundles CoreAffect, AffectiveMomentum, and MoodField into a single
 evolving object. On each update:
   1. Momentum is recalculated from the recent history of CoreAffect values
      via finite differences (velocity = current - previous,
      acceleration = current_velocity - previous_velocity).
-  2. StimmungField is updated via EMA.
+  2. MoodField is updated via EMA.
   3. History is maintained for momentum computation (last 3 points).
 
 AffectiveState is immutable — update() returns a new instance.
@@ -19,7 +19,7 @@ from typing import Any
 from pydantic import BaseModel, PrivateAttr
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
-from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
+from emotional_memory.mood import MoodDecayConfig, MoodField
 
 # History entry: (iso_timestamp, valence, arousal)
 _HistoryEntry = tuple[str, float, float]
@@ -30,7 +30,7 @@ class AffectiveState(BaseModel):
 
     core_affect: CoreAffect
     momentum: AffectiveMomentum
-    stimmung: StimmungField
+    mood: MoodField
 
     # Private: not serialised, not part of the schema.
     # Stores the last 3 (timestamp, valence, arousal) points for momentum.
@@ -42,7 +42,7 @@ class AffectiveState(BaseModel):
         return cls(
             core_affect=CoreAffect.neutral(),
             momentum=AffectiveMomentum.zero(),
-            stimmung=StimmungField.neutral(),
+            mood=MoodField.neutral(),
         )
 
     def snapshot(self) -> dict[str, Any]:
@@ -78,8 +78,8 @@ class AffectiveState(BaseModel):
         self,
         new_affect: CoreAffect,
         now: datetime | None = None,
-        stimmung_alpha: float = 0.1,
-        stimmung_decay: StimmungDecayConfig | None = None,
+        mood_alpha: float = 0.1,
+        mood_decay: MoodDecayConfig | None = None,
     ) -> AffectiveState:
         """Return a new AffectiveState reflecting the updated affect.
 
@@ -93,14 +93,12 @@ class AffectiveState(BaseModel):
         history = history[-3:]
 
         momentum = _compute_momentum(history)
-        new_stimmung = self.stimmung.update(
-            new_affect, alpha=stimmung_alpha, now=now, decay_config=stimmung_decay
-        )
+        new_mood = self.mood.update(new_affect, alpha=mood_alpha, now=now, decay_config=mood_decay)
 
         next_state = AffectiveState(
             core_affect=new_affect,
             momentum=momentum,
-            stimmung=new_stimmung,
+            mood=new_mood,
         )
         next_state._history = history
         return next_state

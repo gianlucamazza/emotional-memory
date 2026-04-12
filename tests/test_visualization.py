@@ -40,7 +40,7 @@ def _sample_memories() -> list[tuple[float, float, float]]:
     ]
 
 
-def _sample_stimmung_history() -> list[tuple[float, float, float, float]]:
+def _sample_mood_history() -> list[tuple[float, float, float, float]]:
     return [
         (0.0, 0.0, 0.3, 0.5),
         (300.0, -0.3, 0.6, 0.4),
@@ -151,30 +151,30 @@ def test_plot_retrieval_radar_six_scores() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 5. Stimmung Evolution
+# 5. Mood Evolution
 # ---------------------------------------------------------------------------
 
 
-def test_plot_stimmung_evolution_returns_figure() -> None:
-    from emotional_memory.visualization import plot_stimmung_evolution
+def test_plot_mood_evolution_returns_figure() -> None:
+    from emotional_memory.visualization import plot_mood_evolution
 
-    fig = plot_stimmung_evolution(_sample_stimmung_history())
+    fig = plot_mood_evolution(_sample_mood_history())
     assert fig is not None
 
 
-def test_plot_stimmung_evolution_three_main_lines() -> None:
-    from emotional_memory.visualization import plot_stimmung_evolution
+def test_plot_mood_evolution_three_main_lines() -> None:
+    from emotional_memory.visualization import plot_mood_evolution
 
-    fig = plot_stimmung_evolution(_sample_stimmung_history())
+    fig = plot_mood_evolution(_sample_mood_history())
     ax = fig.axes[0]
     # 3 data lines + 3 baseline lines = 6 total
     assert len(ax.lines) >= 3
 
 
-def test_plot_stimmung_evolution_empty() -> None:
-    from emotional_memory.visualization import plot_stimmung_evolution
+def test_plot_mood_evolution_empty() -> None:
+    from emotional_memory.visualization import plot_mood_evolution
 
-    fig = plot_stimmung_evolution([])
+    fig = plot_mood_evolution([])
     assert fig is not None
 
 

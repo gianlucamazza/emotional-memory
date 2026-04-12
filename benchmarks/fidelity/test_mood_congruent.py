@@ -30,11 +30,11 @@ def _encode_emotional_pairs(engine):
 
 
 def test_positive_mood_surfaces_positive_memories():
-    """Under positive Stimmung, positive memories should dominate the top-3."""
-    engine = make_fidelity_engine(stimmung_alpha=0.4)
+    """Under positive Mood, positive memories should dominate the top-3."""
+    engine = make_fidelity_engine(mood_alpha=0.4)
     _encode_emotional_pairs(engine)
 
-    # Drive Stimmung strongly positive
+    # Drive Mood strongly positive
     for _ in range(15):
         engine.set_affect(CoreAffect(valence=0.95, arousal=0.7))
 
@@ -48,11 +48,11 @@ def test_positive_mood_surfaces_positive_memories():
 
 
 def test_negative_mood_surfaces_negative_memories():
-    """Under negative Stimmung, negative memories should dominate the top-3."""
-    engine = make_fidelity_engine(stimmung_alpha=0.4)
+    """Under negative Mood, negative memories should dominate the top-3."""
+    engine = make_fidelity_engine(mood_alpha=0.4)
     _encode_emotional_pairs(engine)
 
-    # Drive Stimmung strongly negative
+    # Drive Mood strongly negative
     for _ in range(15):
         engine.set_affect(CoreAffect(valence=-0.95, arousal=0.6))
 
@@ -67,7 +67,7 @@ def test_negative_mood_surfaces_negative_memories():
 
 def test_mood_switch_reverses_retrieval_priority():
     """Switching from positive to negative mood should reverse what surfaces first."""
-    engine = make_fidelity_engine(stimmung_alpha=0.4)
+    engine = make_fidelity_engine(mood_alpha=0.4)
     _encode_emotional_pairs(engine)
 
     # Retrieve under positive mood

@@ -49,14 +49,14 @@ Il momentum informa:
 
 ---
 
-### Layer 3 — Stimmung Field
-**Ispirazione**: Heidegger (*Essere e Tempo*, §29-30), Bower (1981) mood-congruent memory
+### Layer 3 — MoodField
+**Ispirazione**: Heidegger (*Essere e Tempo*, §29-30) — Stimmung come modo di essere nel mondo; Bower (1981) mood-congruent memory
 **Struttura**: Vettore PAD a variazione lenta — il "tono di fondo" del sistema
 
-La Stimmung heideggeriana non è un'emozione ma un **modo di essere nel mondo** — non cambia per singoli eventi ma per accumulo. È il campo gravitazionale che orienta tutte le operazioni cognitive.
+La Stimmung heideggeriana non è un'emozione ma un **modo di essere nel mondo** — non cambia per singoli eventi ma per accumulo. È il campo gravitazionale che orienta tutte le operazioni cognitive. Nella libreria questo concetto è incarnato da `MoodField`.
 
 ```python
-StimmungField:
+MoodField:
     valence: float         # [-1.0, +1.0] media mobile pesata della storia affettiva
     arousal: float         # [0.0, 1.0]
     dominance: float       # [0.0, 1.0] — estensione PAD
@@ -66,11 +66,11 @@ StimmungField:
 
 **Aggiornamento**: Media esponenzialmente pesata del Core Affect nel tempo:
 ```
-Stimmung(t) = α * CoreAffect(t) + (1-α) * Stimmung(t-1)
+Mood(t) = α * CoreAffect(t) + (1-α) * Mood(t-1)
 ```
-dove `α` è piccolo (0.05-0.15) — la Stimmung cambia lentamente.
+dove `α` è piccolo (0.05-0.15) — il Mood cambia lentamente.
 
-**Effetto sul retrieval**: Lo Stimmung pesa tutti i segnali di retrieval — in uno stato di Stimmung negativo, il bias verso memorie negative aumenta (mood-congruent memory).
+**Effetto sul retrieval**: Il Mood pesa tutti i segnali di retrieval — in uno stato di Mood negativo, il bias verso memorie negative aumenta (mood-congruent memory).
 
 ---
 
@@ -139,8 +139,8 @@ class EmotionalTag:
     # Layer 2: Momentum al momento dell'encoding
     momentum: Tuple[Tuple[float, float], Tuple[float, float]]  # (velocity, acceleration)
 
-    # Layer 3: Stimmung snapshot al momento dell'encoding
-    stimmung_snapshot: Tuple[float, float, float]  # (valence, arousal, dominance)
+    # Layer 3: Mood snapshot al momento dell'encoding
+    mood_snapshot: Tuple[float, float, float]  # (valence, arousal, dominance)
 
     # Layer 4: Appraisal che ha generato questa emozione
     appraisal: AppraisalVector | None         # None se emozione esogena
@@ -163,16 +163,16 @@ class EmotionalTag:
 ### Principio 1 — Emotional Tagging è Pervasivo
 *Fonte: Colombetti (2014), Richter-Levin (2004)*
 
-Ogni memoria — senza eccezione — porta un `EmotionalTag`. Non esiste memoria "emotivamente neutra". Se non c'è appraisal esplicito, il tag usa il Core Affect e lo Stimmung correnti come baseline.
+Ogni memoria — senza eccezione — porta un `EmotionalTag`. Non esiste memoria "emotivamente neutra". Se non c'è appraisal esplicito, il tag usa il Core Affect e il Mood correnti come baseline.
 
 ### Principio 2 — Consolidation Strength è Funzione dell'Arousal
 *Fonte: McGaugh (2004), Brown & Kulik (1977), Yerkes-Dodson*
 
 ```python
-def consolidation_strength(arousal: float, stimmung_arousal: float) -> float:
+def consolidation_strength(arousal: float, mood_arousal: float) -> float:
     # Relazione a U invertita — non lineare
     # Peak attorno ad arousal=0.7, degradazione per valori estremi
-    effective_arousal = 0.7 * arousal + 0.3 * stimmung_arousal
+    effective_arousal = 0.7 * arousal + 0.3 * mood_arousal
     return -4 * (effective_arousal - 0.7)**2 + 1.0
     # oppure: curva di Yerkes-Dodson parametrica
 ```
@@ -196,46 +196,46 @@ Memorie ad alta arousal (ma non massima) hanno la massima consolidation_strength
 def retrieval_score(
     query_embedding: np.ndarray,
     query_affect: Tuple[float, float],        # Core Affect corrente
-    current_stimmung: StimmungField,
+    current_mood: MoodField,
     current_momentum: AffectiveMomentum,
     memory: Memory,
-    active_memory_ids: list[str]
+    activation_map: dict[str, float]          # pre-calcolato da spreading_activation()
 ) -> float:
 
-    w = adaptive_weights(current_stimmung)    # pesi modulati dallo Stimmung
+    w = adaptive_weights(current_mood)        # pesi modulati dal Mood
 
     s1 = cosine_similarity(query_embedding, memory.embedding)
-    s2 = emotional_congruence(current_stimmung, memory.tag.stimmung_snapshot)
+    s2 = emotional_congruence(current_mood, memory.tag.mood_snapshot)
     s3 = core_affect_proximity(query_affect, memory.tag.core_affect)
     s4 = momentum_alignment(current_momentum, memory.tag.momentum)
     s5 = recency_decay(memory.tag.timestamp, memory.tag.consolidation_strength)
-    s6 = resonance_boost(active_memory_ids, memory.tag.resonance_links)
+    s6 = activation_map.get(memory.id, 0.0)   # spreading activation boost
 
     return w[0]*s1 + w[1]*s2 + w[2]*s3 + w[3]*s4 + w[4]*s5 + w[5]*s6
 ```
 
-### Principio 5 — Pesi Adattivi Modulati dallo Stimmung
+### Principio 5 — Pesi Adattivi Modulati dal Mood
 *Fonte: Heidegger (disclosure attraverso il mood), Bower (1981)*
 
-I pesi `w` non sono fissi — dipendono dallo Stimmung corrente:
+I pesi `w` non sono fissi — dipendono dal Mood corrente:
 
 ```python
-def adaptive_weights(stimmung: StimmungField) -> np.ndarray:
+def adaptive_weights(mood: MoodField) -> np.ndarray:
     # Base weights
     w = np.array([0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
 
-    # Stimmung negativo intenso → più peso all'emotional congruence
-    if stimmung.valence < -0.5:
+    # Mood negativo intenso → più peso all'emotional congruence
+    if mood.valence < -0.5:
         w[1] += 0.1; w[2] += 0.05
         w[0] -= 0.15  # meno peso semantico
 
     # Alta arousal → più sensibilità al momentum
-    if stimmung.arousal > 0.7:
+    if mood.arousal > 0.7:
         w[3] += 0.1
         w[0] -= 0.1
 
-    # Stimmung neutro/calmo → retrieval più razionale/semantico
-    if abs(stimmung.valence) < 0.2 and stimmung.arousal < 0.3:
+    # Mood neutro/calmo → retrieval più razionale/semantico
+    if abs(mood.valence) < 0.2 and mood.arousal < 0.3:
         w[0] += 0.15
         w[1] -= 0.1; w[2] -= 0.05
 
@@ -392,6 +392,38 @@ def build_resonance_links(
     return sorted(links, key=lambda l: l.strength, reverse=True)[:top_k]
 ```
 
+### Principio 9b — Link Bidirezionali e Spreading Activation
+*Fonte: Collins & Loftus (1975), "A spreading-activation theory of semantic processing"*
+
+I link di risonanza sono **bidirezionali**: quando la memoria A si connette alla memoria B, viene
+creato anche il link inverso su B. Questo garantisce che l'attivazione si propaghi in entrambe le
+direzioni nella rete associativa.
+
+Durante il retrieval, **spreading activation** BFS a multi-hop propaga l'attivazione dalle memorie
+seed verso le memorie adiacenti: ogni hop moltiplica l'attivazione per la forza del link
+attraversato. Se due percorsi convergono sulla stessa memoria, si usa il massimo (non la somma) per
+evitare inflazione artificiale dovuta al numero di percorsi convergenti.
+
+```python
+def spreading_activation(
+    seeds: dict[str, float],          # memory_id -> activation iniziale
+    store: MemoryStore,
+    max_hops: int = 2,
+) -> dict[str, float]:                # memory_id -> max activation raggiunta
+    ...
+```
+
+### Principio 9c — Hebbian Co-Retrieval Strengthening
+*Fonte: Hebb (1949), "The Organization of Behavior"*
+
+> "Neurons that fire together, wire together."
+
+Ogni volta che un gruppo di memorie viene recuperato insieme nella stessa query, i link esistenti
+tra di esse vengono rinforzati di un incremento fisso (`hebbian_increment`, default 0.05). Questo
+modella il fatto che l'associazione si consolida con l'uso: memorie co-attivate frequentemente
+diventano progressivamente più connesse, emergendo spontaneamente come cluster tematici o
+emotivi senza supervisione esplicita.
+
 ---
 
 ## Architettura di Sistema
@@ -414,7 +446,7 @@ INPUT: evento/conversazione
     Calcola derivate temporali
          |
          v
-    [4. Stimmung Update]
+    [4. Mood Update]
     Media mobile pesata (α piccolo)
          |
          v
@@ -441,24 +473,34 @@ QUERY: testo + stato affettivo corrente
          |
          v
     [1. Query Processing]
-    Embedding + Core Affect + Stimmung correnti
+    Embedding + Core Affect + Mood correnti
          |
          v
     [2. Adaptive Weights]
-    Calcola pesi in funzione dello Stimmung
+    Calcola pesi in funzione del Mood
          |
          v
     [3. Multi-Signal Scoring]
     Calcola score per ogni candidato
          |
          v
-    [4. Top-K Selection]
+    [4. Spreading Activation]
+    BFS multi-hop dalla seed set (Collins & Loftus 1975)
+    Costruisce activation_map per il Pass 2
+         |
+         v
+    [5. Pass 2 Scoring + Top-K Selection]
+    Re-score con resonance boost da activation_map
     Seleziona le memorie più rilevanti
          |
          v
-    [5. Reconsolidation Check]
+    [6. Reconsolidation Check]
     Per ogni memoria recuperata: apre finestra,
     calcola APE, aggiorna tag se necessario
+         |
+         v
+    [7. Hebbian Strengthening]
+    Rinforza i link tra memorie co-recuperate (Hebb 1949)
          |
          v
     OUTPUT: memorie recuperate + tag aggiornati
@@ -471,7 +513,7 @@ QUERY: testo + stato affettivo corrente
 | Principio | Fonte teorica | Implementazione |
 |-----------|---------------|-----------------|
 | Affetto come transizione | Spinoza, *Ethica* III | Layer 2: Affective Momentum |
-| Stimmung come campo globale | Heidegger, BT §29 | Layer 3: Stimmung Field |
+| Stimmung come campo globale | Heidegger, BT §29 | Layer 3: MoodField |
 | Emozione come appraisal | Stoici, Scherer, Lazarus | Layer 4: Appraisal Vector |
 | Risonanza associativa | Aristotele, Hume, Bower | Layer 5: Resonance Links |
 | Consolidation ∝ arousal | McGaugh, LeDoux | consolidation_strength formula |

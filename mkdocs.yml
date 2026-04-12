@@ -44,6 +44,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - Migration Guide: migration.md
   - API Reference:
     - Engine (sync): api/engine.md
     - Engine (async): api/async_engine.md
@@ -54,7 +55,7 @@ nav:
     - Retrieval: api/retrieval.md
     - Decay: api/decay.md
     - Resonance: api/resonance.md
-    - Stimmung: api/stimmung.md
+    - Mood: api/mood.md
     - Affect: api/affect.md
     - Visualization: api/visualization.md
   - Research:

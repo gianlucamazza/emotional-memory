@@ -5,14 +5,14 @@ import pytest
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 
 def _tag(arousal: float = 0.5, strength: float = 0.8, retrieval_count: int = 0):
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=arousal),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=strength,
     )
     return tag.model_copy(update={"retrieval_count": retrieval_count})
@@ -75,6 +75,17 @@ class TestComputeEffectiveStrength:
         tag = _tag(strength=1.0)
         s = compute_effective_strength(tag, _later(1), config)
         assert 0.0 <= s <= 1.0
+
+    def test_strength_never_exceeds_initial(self):
+        """Decay must never boost strength above the initial consolidation value."""
+        # With min_seconds < 1, elapsed^(-decay) > 1 could boost strength
+        config = DecayConfig(min_seconds=0.1, base_decay=0.5)
+        tag = _tag(strength=0.6)
+        # elapsed clamped to 0.1: 0.1^(-0.5*1) = 0.1^(-0.5) ≈ 3.16 → would boost
+        s = compute_effective_strength(tag, _later(0), config)
+        assert s <= tag.consolidation_strength + 1e-9, (
+            f"strength {s:.4f} exceeds initial {tag.consolidation_strength}"
+        )
 
 
 class TestDecayProperties:

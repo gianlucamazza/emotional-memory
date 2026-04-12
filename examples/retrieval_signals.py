@@ -2,10 +2,10 @@
 
 Imports the internal signal helpers from emotional_memory.retrieval to compute
 each signal individually, showing which dimensions drive retrieval for each
-memory. Also demonstrates adaptive_weights() — how Stimmung modulates signal
+memory. Also demonstrates adaptive_weights() — how Mood modulates signal
 importance — and visualises both with radar and heatmap plots.
 
-Note: the private helpers (_cosine, _stimmung_congruence, etc.) are intentionally
+Note: the private helpers (_cosine, _mood_congruence, etc.) are intentionally
 accessed here for introspection. They are not part of the stable public API.
 
 Requires (for plots):
@@ -24,17 +24,17 @@ from emotional_memory import (
     EmotionalMemory,
     EmotionalMemoryConfig,
     InMemoryStore,
+    MoodField,
     ResonanceConfig,
     RetrievalConfig,
-    StimmungField,
 )
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.retrieval import (
     _affect_proximity,
     _cosine,
     _momentum_alignment,
+    _mood_congruence,
     _resonance_boost,
-    _stimmung_congruence,
     adaptive_weights,
 )
 from emotional_memory.visualization import (
@@ -75,7 +75,7 @@ em = EmotionalMemory(
     config=EmotionalMemoryConfig(
         resonance=ResonanceConfig(threshold=0.05, max_links=5),
         retrieval=RetrievalConfig(base_weights=[0.20, 0.30, 0.25, 0.10, 0.10, 0.05]),
-        stimmung_alpha=0.3,
+        mood_alpha=0.3,
     ),
 )
 
@@ -114,10 +114,10 @@ now = datetime.now(UTC)
 decay_cfg = DecayConfig()
 
 ca = state.core_affect
-sm = state.stimmung
+sm = state.mood
 print(f"Query: '{query_text}'")
 print(f"Current affect:   valence={ca.valence:+.2f}  arousal={ca.arousal:.2f}")
-print(f"Current Stimmung: valence={sm.valence:+.3f}  arousal={sm.arousal:.3f}")
+print(f"Current Mood: valence={sm.valence:+.3f}  arousal={sm.arousal:.3f}")
 
 # ---------------------------------------------------------------------------
 # Compute 6 signals per memory
@@ -127,7 +127,7 @@ print("\n=== Per-memory signal breakdown ===\n")
 
 SIGNAL_NAMES = [
     "s1:semantic",
-    "s2:stimmung",
+    "s2:mood",
     "s3:affect",
     "s4:momentum",
     "s5:recency",
@@ -148,7 +148,7 @@ print("-" * len(header))
 for mem in all_mems:
     emb = mem.embedding or []
     s1 = _cosine(query_emb, emb) if emb else 0.0
-    s2 = _stimmung_congruence(state.stimmung, mem.tag.stimmung_snapshot)
+    s2 = _mood_congruence(state.mood, mem.tag.mood_snapshot)
     s3 = _affect_proximity(state.core_affect, mem.tag.core_affect)
     s4 = _momentum_alignment(state.momentum, mem.tag.momentum)
     s5 = compute_effective_strength(mem.tag, now, decay_cfg)
@@ -179,24 +179,24 @@ fig1 = plot_retrieval_radar(
 )
 
 # ---------------------------------------------------------------------------
-# Adaptive weights under 3 Stimmung scenarios
+# Adaptive weights under 3 Mood scenarios
 # ---------------------------------------------------------------------------
 
-print("\n=== Adaptive weights by Stimmung ===\n")
+print("\n=== Adaptive weights by Mood ===\n")
 
 _ts = datetime.now(UTC)
-stimmung_scenarios = [
+mood_scenarios = [
     (
         "Negative mood  (val=-0.8, ar=0.6)",
-        StimmungField(valence=-0.8, arousal=0.6, dominance=0.3, inertia=0.5, timestamp=_ts),
+        MoodField(valence=-0.8, arousal=0.6, dominance=0.3, inertia=0.5, timestamp=_ts),
     ),
     (
         "High arousal   (val=+0.1, ar=0.9)",
-        StimmungField(valence=0.1, arousal=0.9, dominance=0.5, inertia=0.5, timestamp=_ts),
+        MoodField(valence=0.1, arousal=0.9, dominance=0.5, inertia=0.5, timestamp=_ts),
     ),
     (
         "Calm / neutral (val=+0.1, ar=0.2)",
-        StimmungField(valence=0.1, arousal=0.2, dominance=0.6, inertia=0.5, timestamp=_ts),
+        MoodField(valence=0.1, arousal=0.2, dominance=0.6, inertia=0.5, timestamp=_ts),
     ),
 ]
 
@@ -205,7 +205,7 @@ short_labels = ["semant", "stimm", "affect", "moment", "recency", "resonan"]
 
 print(f"{'Scenario':<35}" + "".join(f"  {lbl:>7}" for lbl in short_labels))
 print("-" * 78)
-for label, sf in stimmung_scenarios:
+for label, sf in mood_scenarios:
     w = adaptive_weights(sf, base_weights)
     print(f"  {label:<33}" + "".join(f"  {v:>7.3f}" for v in w))
 
@@ -215,14 +215,14 @@ print("High arousal   → momentum (s4) boosted.")
 print("Calm/neutral   → semantic (s1) boosted, emotional signals reduced.")
 
 # ---------------------------------------------------------------------------
-# Adaptive weights heatmap — full Stimmung space
+# Adaptive weights heatmap — full Mood space
 # ---------------------------------------------------------------------------
 
-print("\n=== Adaptive weights heatmap (full Stimmung space) ===")
+print("\n=== Adaptive weights heatmap (full Mood space) ===")
 fig2 = plot_adaptive_weights_heatmap(
     base_weights=base_weights,
     resolution=25,
-    title="Retrieval Weight Landscape vs Stimmung (valence x arousal)",
+    title="Retrieval Weight Landscape vs Mood (valence x arousal)",
 )
 
 plt.show()

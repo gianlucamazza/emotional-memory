@@ -14,11 +14,11 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import AppraisalVector
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 
 class ResonanceLink(BaseModel):
@@ -37,7 +37,7 @@ class ResonanceLink(BaseModel):
 
     source_id: str
     target_id: str
-    strength: float  # [0.0, 1.0]
+    strength: float = Field(ge=0.0, le=1.0)
     link_type: Literal["semantic", "emotional", "temporal", "causal", "contrastive"]
 
 
@@ -47,7 +47,7 @@ class EmotionalTag(BaseModel):
     Captures all five AFT layers as snapshots:
       Layer 1: core_affect          — where the system was
       Layer 2: momentum             — where it was heading
-      Layer 3: stimmung_snapshot    — global mood background
+      Layer 3: mood_snapshot    — global mood background
       Layer 4: appraisal            — why this emotion arose (if computed)
       Layer 5: resonance_links      — associative cluster membership
 
@@ -58,11 +58,15 @@ class EmotionalTag(BaseModel):
     the tag. reconsolidation_count tracks how many times this occurred.
     reconsolidation_window is managed at runtime via last_retrieved +
     window_seconds — not stored as a boolean flag.
+
+    Frozen like all other value objects — use model_copy(update=...) to derive modified versions.
     """
+
+    model_config = ConfigDict(frozen=True)
 
     core_affect: CoreAffect
     momentum: AffectiveMomentum
-    stimmung_snapshot: StimmungField
+    mood_snapshot: MoodField
     appraisal: AppraisalVector | None = None
     resonance_links: list[ResonanceLink] = Field(default_factory=list)
     timestamp: datetime
@@ -104,7 +108,7 @@ def _now() -> datetime:
 def make_emotional_tag(
     core_affect: CoreAffect,
     momentum: AffectiveMomentum,
-    stimmung: StimmungField,
+    mood: MoodField,
     consolidation_strength: float,
     appraisal: AppraisalVector | None = None,
 ) -> EmotionalTag:
@@ -112,7 +116,7 @@ def make_emotional_tag(
     return EmotionalTag(
         core_affect=core_affect,
         momentum=momentum,
-        stimmung_snapshot=stimmung,
+        mood_snapshot=mood,
         appraisal=appraisal,
         timestamp=_now(),
         consolidation_strength=max(0.0, min(1.0, consolidation_strength)),

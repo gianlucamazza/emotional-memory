@@ -35,7 +35,7 @@ class ScalableEmbedder:
 class ConstantEmbedder:
     """Returns identical embedding for all inputs.
 
-    Neutralises the semantic signal so that emotional/stimmung signals
+    Neutralises the semantic signal so that emotional/mood signals
     dominate retrieval — useful for psychological fidelity tests.
     """
 
@@ -66,7 +66,7 @@ def make_engine(
 
 
 def make_fidelity_engine(
-    stimmung_alpha: float = 0.3,
+    mood_alpha: float = 0.3,
     ape_threshold: float = 0.01,
     emotional_bias: bool = True,
 ) -> EmotionalMemory:
@@ -90,7 +90,7 @@ def make_fidelity_engine(
                 reconsolidation_learning_rate=0.4,
             ),
             resonance=ResonanceConfig(threshold=0.9),  # disable resonance links
-            stimmung_alpha=stimmung_alpha,
+            mood_alpha=mood_alpha,
         ),
     )
 

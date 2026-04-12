@@ -20,7 +20,7 @@ AROUSAL_LEVELS = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 def test_consolidation_peak_is_not_at_extremes():
     """The peak consolidation is not at arousal=0 or arousal=1.
 
-    With stimmung_arousal=1.0, effective = 0.7*enc + 0.3, so the peak
+    With mood_arousal=1.0, effective = 0.7*enc + 0.3, so the peak
     (effective=0.7) is reached at enc_arousal ≈ 0.571 — safely in the interior.
     """
     values = [consolidation_strength(a, 1.0) for a in AROUSAL_LEVELS]
@@ -33,10 +33,10 @@ def test_consolidation_peak_is_not_at_extremes():
 
 def test_consolidation_inverted_u_shape():
     """Consolidation rises then falls — classic inverted-U."""
-    # Use stimmung_arousal=0.7 so effective_arousal = 0.7*enc + 0.21
+    # Use mood_arousal=0.7 so effective_arousal = 0.7*enc + 0.21
     # Peak at effective=0.7 → enc_arousal ≈ 0.7 (effective = 0.7*0.7+0.21=0.7)
-    stimmung_a = 0.7
-    values = [consolidation_strength(a, stimmung_a) for a in AROUSAL_LEVELS]
+    mood_a = 0.7
+    values = [consolidation_strength(a, mood_a) for a in AROUSAL_LEVELS]
     peak_idx = values.index(max(values))
 
     # Monotone increase up to peak, monotone decrease after
@@ -58,7 +58,7 @@ def test_consolidation_peak_near_effective_07():
 
 
 @pytest.mark.parametrize(
-    "arousal,stimmung_arousal",
+    "arousal,mood_arousal",
     [
         (0.0, 0.0),
         (0.5, 0.5),
@@ -70,11 +70,11 @@ def test_consolidation_peak_near_effective_07():
         (2.0, 2.0),  # clamped inputs
     ],
 )
-def test_consolidation_always_in_unit_range(arousal, stimmung_arousal):
+def test_consolidation_always_in_unit_range(arousal, mood_arousal):
     """consolidation_strength is always in [0.0, 1.0] regardless of inputs."""
-    v = consolidation_strength(arousal, stimmung_arousal)
+    v = consolidation_strength(arousal, mood_arousal)
     assert 0.0 <= v <= 1.0, (
-        f"Out of range: consolidation_strength({arousal}, {stimmung_arousal}) = {v}"
+        f"Out of range: consolidation_strength({arousal}, {mood_arousal}) = {v}"
     )
 
 

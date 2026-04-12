@@ -11,7 +11,7 @@ make cov            # Tests with branch coverage (80% minimum enforced)
 make typecheck      # mypy strict mode
 make lint           # ruff check
 make format         # ruff format
-make bench-fidelity # Psychological invariant tests (77 tests in benchmarks/)
+make bench-fidelity # Psychological invariant tests (82 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
 make bench          # fidelity + performance benchmarks (combined)
 make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
@@ -53,9 +53,9 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 |-------|-------|--------|
 | 1 | `CoreAffect` (affect.py) | Russell 1980 valence-arousal circumplex |
 | 2 | `AffectiveMomentum` (affect.py) | Spinozist velocity + acceleration over 3-point history |
-| 3 | `StimmungField` (stimmung.py) | Heidegger's slow-moving PAD mood background (EMA) |
+| 3 | `MoodField` (mood.py) | Heidegger's slow-moving PAD mood background (EMA) |
 | 4 | `AppraisalVector` (appraisal.py) | Scherer's 5 Stimulus Evaluation Checks → CoreAffect |
-| 5 | `ResonanceLink` (resonance.py) | Associative graph: 5 link types, top-5 per memory |
+| 5 | `ResonanceLink` (resonance.py) | Bidirectional associative graph: 5 link types, top-5 per memory; spreading activation (Collins & Loftus 1975) + Hebbian strengthening (Hebb 1949) |
 
 ### Additional Modules
 
@@ -71,9 +71,9 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 ### Key Data Flow
 
-**encode**: `AppraisalVector → CoreAffect → AffectiveState.update() → EmotionalTag → embed → store → resonance links`
+**encode**: `AppraisalVector → CoreAffect → AffectiveState.update() → EmotionalTag → embed → store → resonance links (forward + backward bidirectional)`
 
-**retrieve**: `embed query → Pass 1 (6-signal score, no spreading) → seed active set → Pass 2 (resonance boost) → reconsolidation check → return top-k`
+**retrieve**: `embed query → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (BFS multi-hop) → Pass 2 (activation_map boost) → reconsolidation check → hebbian_strengthen() on co-retrieved links → return top-k`
 
 **async encode/retrieve**: Same pipeline as sync. Embed/store/appraise calls are awaited. CPU-bound scoring (retrieval_score, decay, resonance) runs synchronously inline.
 
@@ -87,9 +87,9 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 ### 6-Signal Retrieval Scoring (retrieval.py)
 
-Composite score weighted by current Stimmung (Heidegger adaptive weights):
+Composite score weighted by current mood (adaptive weights):
 1. Semantic similarity (cosine)
-2. Stimmung congruence (Bower 1981 mood-congruent retrieval)
+2. Mood congruence (Bower 1981 mood-congruent retrieval)
 3. Core affect proximity
 4. Momentum alignment
 5. Recency/decay (ACT-R power-law)
@@ -109,7 +109,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 `AppraisalEngine` protocol is in `appraisal.py`. `LLMCallable` protocol is in `appraisal_llm.py`.
 
-`get_current_stimmung(now)` on both engines reads Stimmung regressed via `StimmungDecayConfig` without mutating state. Configured via `EmotionalMemoryConfig.stimmung_decay`.
+`get_current_mood(now)` on both engines reads the `MoodField` regressed via `MoodDecayConfig` without mutating state. Configured via `EmotionalMemoryConfig.mood_decay`.
 
 `SQLiteStore` is exported from the top-level `__init__.py` and from `stores/__init__.py` when `sqlite-vec` is installed (guarded by `contextlib.suppress(ImportError)`).
 
@@ -117,7 +117,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 - **Immutability**: All value objects are Pydantic `frozen=True`. `update()` methods return new instances.
 - **Protocols over ABCs**: Extend via duck-typed protocols, not inheritance.
-- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `StimmungDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`).
+- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`).
 - **Theory references**: Each component cites source papers — preserve these in docstrings/comments.
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
 - **`__slots__`**: All non-Pydantic classes define `__slots__` for memory efficiency and attribute safety.

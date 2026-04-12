@@ -88,6 +88,11 @@
 - **Barrett, L.F.** (2017). *How Emotions Are Made: The Secret Life of the Brain*. Boston: Houghton Mifflin Harcourt.
 - **Barrett, L.F.** (2017). "The theory of constructed emotion: an active inference account of interoception and categorization." *Social Cognitive and Affective Neuroscience*, 12(1), 1-23. Disponibile: https://academic.oup.com/scan/article/12/1/1/2823712
 
+### Spreading Activation e Apprendimento Associativo
+
+- **Collins, A.M. & Loftus, E.F.** (1975). "A spreading-activation theory of semantic processing." *Psychological Review*, 82(6), 407-428.
+- **Hebb, D.O.** (1949). *The Organization of Behavior: A Neuropsychological Theory*. New York: Wiley.
+
 ### Mood-Congruent Memory e State-Dependent Learning
 
 - **Bower, G.H.** (1981). "Mood and memory." *American Psychologist*, 36(2), 129-148.

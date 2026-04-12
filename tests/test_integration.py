@@ -34,15 +34,15 @@ def _negative_appraisal() -> AppraisalVector:
 
 
 class TestMoodCongruentRetrieval:
-    """Under negative Stimmung, negative memories should rank higher."""
+    """Under negative Mood, negative memories should rank higher."""
 
-    def test_negative_stimmung_biases_toward_negative_memories(self):
+    def test_negative_mood_biases_toward_negative_memories(self):
         config = EmotionalMemoryConfig(
             retrieval=RetrievalConfig(
                 base_weights=[0.15, 0.40, 0.25, 0.10, 0.05, 0.05],  # strong emotional bias
                 ape_threshold=0.5,
             ),
-            stimmung_alpha=0.3,
+            mood_alpha=0.3,
         )
         em = EmotionalMemory(
             store=InMemoryStore(),
@@ -56,7 +56,7 @@ class TestMoodCongruentRetrieval:
         for _ in range(5):
             em.encode("sadness and failure", appraisal=_negative_appraisal())
 
-        # Drive Stimmung deeply negative
+        # Drive Mood deeply negative
         em.set_affect(CoreAffect(valence=-0.95, arousal=0.6))
         for _ in range(10):
             em.set_affect(CoreAffect(valence=-0.95, arousal=0.6))

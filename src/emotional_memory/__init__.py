@@ -31,10 +31,10 @@ from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.interfaces import Embedder, MemoryStore, SequentialEmbedder
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
-from emotional_memory.resonance import ResonanceConfig
+from emotional_memory.mood import MoodDecayConfig, MoodField
+from emotional_memory.resonance import ResonanceConfig, hebbian_strengthen, spreading_activation
 from emotional_memory.retrieval import AdaptiveWeightsConfig, RetrievalConfig
 from emotional_memory.state import AffectiveState
-from emotional_memory.stimmung import StimmungDecayConfig, StimmungField
 from emotional_memory.stores.in_memory import InMemoryStore
 
 with contextlib.suppress(ImportError):
@@ -64,18 +64,20 @@ __all__ = [
     "LLMCallable",
     "Memory",
     "MemoryStore",
+    "MoodDecayConfig",
+    "MoodField",
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalConfig",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
-    "StimmungDecayConfig",
-    "StimmungField",
     "SyncToAsyncAppraisalEngine",
     "SyncToAsyncEmbedder",
     "SyncToAsyncStore",
     "__version__",
     "as_async",
     "consolidation_strength",
+    "hebbian_strengthen",
     "make_emotional_tag",
+    "spreading_activation",
 ]

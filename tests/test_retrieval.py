@@ -3,10 +3,12 @@ from datetime import UTC, datetime
 
 import pytest
 from conftest import make_test_memory
+from pydantic import ValidationError
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig
 from emotional_memory.models import make_emotional_tag
+from emotional_memory.mood import MoodField
 from emotional_memory.retrieval import (
     RetrievalConfig,
     adaptive_weights,
@@ -14,15 +16,14 @@ from emotional_memory.retrieval import (
     reconsolidate,
     retrieval_score,
 )
-from emotional_memory.stimmung import StimmungField
 
 
-def _neutral_stimmung():
-    return StimmungField.neutral()
+def _neutral_mood():
+    return MoodField.neutral()
 
 
-def _stimmung(valence: float = 0.0, arousal: float = 0.0):
-    return StimmungField(
+def _mood(valence: float = 0.0, arousal: float = 0.0):
+    return MoodField(
         valence=valence,
         arousal=arousal,
         dominance=0.5,
@@ -33,54 +34,52 @@ def _stimmung(valence: float = 0.0, arousal: float = 0.0):
 
 class TestAdaptiveWeights:
     def test_sums_to_one_neutral(self):
-        w = adaptive_weights(_neutral_stimmung(), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
+        w = adaptive_weights(_neutral_mood(), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
         assert math.isclose(w.sum(), 1.0, rel_tol=1e-9)
 
     def test_sums_to_one_negative(self):
-        w = adaptive_weights(_stimmung(valence=-0.8), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
+        w = adaptive_weights(_mood(valence=-0.8), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
         assert math.isclose(w.sum(), 1.0, rel_tol=1e-9)
 
     def test_sums_to_one_high_arousal(self):
-        w = adaptive_weights(_stimmung(arousal=0.9), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
+        w = adaptive_weights(_mood(arousal=0.9), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
         assert math.isclose(w.sum(), 1.0, rel_tol=1e-9)
 
     def test_sums_to_one_calm(self):
-        w = adaptive_weights(
-            _stimmung(valence=0.1, arousal=0.1), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        )
+        w = adaptive_weights(_mood(valence=0.1, arousal=0.1), [0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
         assert math.isclose(w.sum(), 1.0, rel_tol=1e-9)
 
-    def test_negative_stimmung_increases_emotional_weight(self):
+    def test_negative_mood_increases_emotional_weight(self):
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_neg = adaptive_weights(_stimmung(valence=-0.8), base)
-        w_neu = adaptive_weights(_neutral_stimmung(), base)
-        # w[1] = stimmung_congruence, w[2] = affect_proximity
+        w_neg = adaptive_weights(_mood(valence=-0.8), base)
+        w_neu = adaptive_weights(_neutral_mood(), base)
+        # w[1] = mood_congruence, w[2] = affect_proximity
         assert w_neg[1] > w_neu[1]
 
-    def test_negative_stimmung_reduces_semantic_weight(self):
+    def test_negative_mood_reduces_semantic_weight(self):
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_neg = adaptive_weights(_stimmung(valence=-0.8), base)
-        w_neu = adaptive_weights(_neutral_stimmung(), base)
+        w_neg = adaptive_weights(_mood(valence=-0.8), base)
+        w_neu = adaptive_weights(_neutral_mood(), base)
         assert w_neg[0] < w_neu[0]
 
     def test_high_arousal_increases_momentum_weight(self):
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_high = adaptive_weights(_stimmung(arousal=0.9), base)
-        w_neu = adaptive_weights(_neutral_stimmung(), base)
+        w_high = adaptive_weights(_mood(arousal=0.9), base)
+        w_neu = adaptive_weights(_neutral_mood(), base)
         assert w_high[3] > w_neu[3]
 
     def test_calm_increases_semantic_weight(self):
         # Compare calm (qualifies) vs non-calm (does not qualify)
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_calm = adaptive_weights(_stimmung(valence=0.1, arousal=0.1), base)
-        w_active = adaptive_weights(_stimmung(valence=0.5, arousal=0.6), base)
+        w_calm = adaptive_weights(_mood(valence=0.1, arousal=0.1), base)
+        w_active = adaptive_weights(_mood(valence=0.5, arousal=0.6), base)
         assert w_calm[0] > w_active[0]
 
     def test_no_negative_weights(self):
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
         for valence in [-1.0, -0.5, 0.0, 0.5]:
             for arousal in [0.0, 0.5, 1.0]:
-                w = adaptive_weights(_stimmung(valence, arousal), base)
+                w = adaptive_weights(_mood(valence, arousal), base)
                 assert all(wi >= 0.0 for wi in w)
 
 
@@ -92,7 +91,7 @@ class TestAdaptiveWeightsConfig:
 
         cfg = AdaptiveWeightsConfig(negative_mood_strength=0.20)
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w = adaptive_weights(_stimmung(valence=-0.9), base, config=cfg)
+        w = adaptive_weights(_mood(valence=-0.9), base, config=cfg)
         assert math.isclose(w.sum(), 1.0, rel_tol=1e-9)
 
     def test_high_sharpness_approximates_hard_threshold(self):
@@ -102,38 +101,38 @@ class TestAdaptiveWeightsConfig:
         cfg_sharp = AdaptiveWeightsConfig(negative_mood_sharpness=50.0)
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
         # Well below threshold — high gate activation
-        w_far = adaptive_weights(_stimmung(valence=-0.9), base, config=cfg_sharp)
+        w_far = adaptive_weights(_mood(valence=-0.9), base, config=cfg_sharp)
         # Well above threshold — near-zero gate activation
-        w_near = adaptive_weights(_stimmung(valence=0.0), base, config=cfg_sharp)
+        w_near = adaptive_weights(_mood(valence=0.0), base, config=cfg_sharp)
         assert w_far[1] > w_near[1]
 
     def test_smooth_monotone_negative_mood(self):
         """Emotional weight should rise monotonically as valence decreases."""
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
         valences = [0.0, -0.2, -0.5, -0.8, -1.0]
-        weights = [adaptive_weights(_stimmung(valence=v), base)[1] for v in valences]
+        weights = [adaptive_weights(_mood(valence=v), base)[1] for v in valences]
         assert all(weights[i] <= weights[i + 1] for i in range(len(weights) - 1))
 
     def test_smooth_monotone_high_arousal(self):
         """Momentum weight should rise monotonically as arousal increases."""
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
         arousals = [0.0, 0.3, 0.6, 0.8, 1.0]
-        weights = [adaptive_weights(_stimmung(arousal=a), base)[3] for a in arousals]
+        weights = [adaptive_weights(_mood(arousal=a), base)[3] for a in arousals]
         assert all(weights[i] <= weights[i + 1] for i in range(len(weights) - 1))
 
     def test_continuity_at_old_threshold_valence(self):
         """No discontinuous jump at old hard threshold valence=-0.5."""
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_just_above = adaptive_weights(_stimmung(valence=-0.49), base)
-        w_just_below = adaptive_weights(_stimmung(valence=-0.51), base)
+        w_just_above = adaptive_weights(_mood(valence=-0.49), base)
+        w_just_below = adaptive_weights(_mood(valence=-0.51), base)
         # Difference should be small (continuous transition), not a step
         assert abs(float(w_just_below[1]) - float(w_just_above[1])) < 0.05
 
     def test_continuity_at_old_threshold_arousal(self):
         """No discontinuous jump at old hard threshold arousal=0.7."""
         base = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-        w_just_below = adaptive_weights(_stimmung(arousal=0.69), base)
-        w_just_above = adaptive_weights(_stimmung(arousal=0.71), base)
+        w_just_below = adaptive_weights(_mood(arousal=0.69), base)
+        w_just_above = adaptive_weights(_mood(arousal=0.71), base)
         assert abs(float(w_just_above[3]) - float(w_just_below[3])) < 0.05
 
 
@@ -187,7 +186,7 @@ class TestReconsolidate:
         tag = make_emotional_tag(
             core_affect=CoreAffect(valence=-0.5, arousal=0.3),
             momentum=AffectiveMomentum.zero(),
-            stimmung=_neutral_stimmung(),
+            mood=_neutral_mood(),
             consolidation_strength=0.7,
         )
         new_affect = CoreAffect(valence=0.5, arousal=0.7)
@@ -206,7 +205,7 @@ class TestReconsolidate:
         tag = make_emotional_tag(
             core_affect=CoreAffect(valence=0.0, arousal=0.0),
             momentum=AffectiveMomentum.zero(),
-            stimmung=_neutral_stimmung(),
+            mood=_neutral_mood(),
             consolidation_strength=0.5,
         )
         target = CoreAffect(valence=1.0, arousal=1.0)
@@ -219,7 +218,7 @@ class TestReconsolidate:
         tag = make_emotional_tag(
             core_affect=CoreAffect(valence=0.0, arousal=0.0),
             momentum=AffectiveMomentum.zero(),
-            stimmung=_neutral_stimmung(),
+            mood=_neutral_mood(),
             consolidation_strength=0.5,
         )
         target = CoreAffect(valence=1.0, arousal=1.0)
@@ -236,10 +235,10 @@ class TestRetrievalScore:
         score = retrieval_score(
             query_embedding=[1.0, 0.0],
             query_affect=CoreAffect.neutral(),
-            current_stimmung=_neutral_stimmung(),
+            current_mood=_neutral_mood(),
             current_momentum=AffectiveMomentum.zero(),
             memory=m,
-            active_memory_ids=[],
+            activation_map={},
             now=datetime.now(tz=UTC),
             decay_config=decay,
             retrieval_config=config,
@@ -247,9 +246,9 @@ class TestRetrievalScore:
         assert isinstance(score, float)
         assert 0.0 <= score <= 1.0
 
-    def test_emotionally_congruent_scores_higher_under_negative_stimmung(self):
-        """Under strong negative Stimmung, a negative memory should outscore a positive one."""
-        neg_stimmung = _stimmung(valence=-0.9, arousal=0.2)
+    def test_emotionally_congruent_scores_higher_under_negative_mood(self):
+        """Under strong negative Mood, a negative memory should outscore a positive one."""
+        neg_mood = _mood(valence=-0.9, arousal=0.2)
         config = RetrievalConfig()
         decay = DecayConfig(base_decay=0.01)  # minimal decay
         now = datetime.now(tz=UTC)
@@ -261,13 +260,75 @@ class TestRetrievalScore:
             return retrieval_score(
                 query_embedding=[],
                 query_affect=CoreAffect(valence=-0.8, arousal=0.3),
-                current_stimmung=neg_stimmung,
+                current_mood=neg_mood,
                 current_momentum=AffectiveMomentum.zero(),
                 memory=m,
-                active_memory_ids=[],
+                activation_map={},
                 now=now,
                 decay_config=decay,
                 retrieval_config=config,
             )
 
         assert score(neg_mem) > score(pos_mem)
+
+    def test_activation_map_boosts_score(self):
+        """A memory with a positive activation level scores higher than without."""
+        config = RetrievalConfig()
+        decay = DecayConfig(base_decay=0.01)
+        now = datetime.now(tz=UTC)
+        m = make_test_memory(embedding=[1.0, 0.0])
+
+        score_no_boost = retrieval_score(
+            query_embedding=[1.0, 0.0],
+            query_affect=CoreAffect.neutral(),
+            current_mood=_neutral_mood(),
+            current_momentum=AffectiveMomentum.zero(),
+            memory=m,
+            activation_map={},
+            now=now,
+            decay_config=decay,
+            retrieval_config=config,
+        )
+        score_boosted = retrieval_score(
+            query_embedding=[1.0, 0.0],
+            query_affect=CoreAffect.neutral(),
+            current_mood=_neutral_mood(),
+            current_momentum=AffectiveMomentum.zero(),
+            memory=m,
+            activation_map={m.id: 1.0},
+            now=now,
+            decay_config=decay,
+            retrieval_config=config,
+        )
+        assert score_boosted > score_no_boost
+
+    def test_activation_map_absent_memory_gets_zero_boost(self):
+        """A memory not in the activation map gets 0.0 from s6."""
+        from emotional_memory.retrieval import _resonance_boost
+
+        assert _resonance_boost("some-id", {}) == 0.0
+        assert _resonance_boost("some-id", {"other-id": 0.8}) == 0.0
+
+    def test_activation_map_present_memory_returns_level(self):
+        """A memory in the activation map returns its exact activation level."""
+        from emotional_memory.retrieval import _resonance_boost
+
+        assert _resonance_boost("abc", {"abc": 0.6}) == pytest.approx(0.6)
+
+
+class TestRetrievalConfig:
+    def test_default_weights_valid(self):
+        cfg = RetrievalConfig()
+        assert len(cfg.base_weights) == 6
+
+    def test_wrong_weights_length_raises(self):
+        with pytest.raises(ValidationError, match="exactly 6"):
+            RetrievalConfig(base_weights=[0.5, 0.5])
+
+    def test_five_weights_raises(self):
+        with pytest.raises(ValidationError):
+            RetrievalConfig(base_weights=[0.2, 0.2, 0.2, 0.2, 0.2])
+
+    def test_seven_weights_raises(self):
+        with pytest.raises(ValidationError):
+            RetrievalConfig(base_weights=[0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1])

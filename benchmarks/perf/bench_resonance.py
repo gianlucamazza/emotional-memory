@@ -1,4 +1,4 @@
-"""Performance benchmarks: resonance graph build time.
+"""Performance benchmarks: resonance graph build time and spreading activation.
 
 Run with:
     pytest benchmarks/perf/bench_resonance.py --benchmark-only --benchmark-sort=mean
@@ -9,9 +9,13 @@ import pytest
 from benchmarks.conftest import ScalableEmbedder, make_engine, populate_store
 from emotional_memory import CoreAffect
 from emotional_memory.affect import AffectiveMomentum
-from emotional_memory.models import Memory, make_emotional_tag
-from emotional_memory.resonance import ResonanceConfig, build_resonance_links
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
+from emotional_memory.mood import MoodField
+from emotional_memory.resonance import (
+    ResonanceConfig,
+    build_resonance_links,
+    spreading_activation,
+)
 
 
 def _make_memories(n: int, dim: int = 64) -> list[Memory]:
@@ -22,7 +26,7 @@ def _make_memories(n: int, dim: int = 64) -> list[Memory]:
         tag = make_emotional_tag(
             core_affect=CoreAffect(valence=0.5 if i % 2 == 0 else -0.5, arousal=0.5),
             momentum=AffectiveMomentum.zero(),
-            stimmung=StimmungField.neutral(),
+            mood=MoodField.neutral(),
             consolidation_strength=0.7,
         )
         mem = Memory.create(
@@ -32,6 +36,26 @@ def _make_memories(n: int, dim: int = 64) -> list[Memory]:
         )
         memories.append(mem)
     return memories
+
+
+def _make_linked_memories(n: int, links_per_memory: int = 3) -> list[Memory]:
+    """Create n memories each with ``links_per_memory`` resonance links to predecessors."""
+    base = _make_memories(n)
+    result: list[Memory] = []
+    for i, mem in enumerate(base):
+        links = []
+        for j in range(max(0, i - links_per_memory), i):
+            links.append(
+                ResonanceLink(
+                    source_id=mem.id,
+                    target_id=base[j].id,
+                    strength=0.6,
+                    link_type="semantic",
+                )
+            )
+        tag = mem.tag.model_copy(update={"resonance_links": links})
+        result.append(mem.model_copy(update={"tag": tag}))
+    return result
 
 
 @pytest.mark.parametrize("n_candidates", [50, 200, 500])
@@ -46,12 +70,21 @@ def bench_resonance_build(benchmark, n_candidates):
 
 
 def bench_encode_with_large_resonance_graph(benchmark):
-    """Full encode cycle including resonance graph scan against 500 memories."""
+    """Full encode cycle including resonance graph scan and backward links (500 memories)."""
     engine = make_engine(resonance_threshold=0.2)
     populate_store(engine, 500)
     engine.set_affect(CoreAffect(valence=0.7, arousal=0.8))
 
     benchmark(engine.encode, "New memory entering a large resonance graph.")
+
+
+@pytest.mark.parametrize("n_memories,hops", [(100, 1), (100, 2), (500, 1), (500, 2)])
+def bench_spreading_activation(benchmark, n_memories, hops):
+    """Spreading activation latency as a function of store size and hop count."""
+    memories = _make_linked_memories(n_memories, links_per_memory=5)
+    seed_ids = {m.id for m in memories[:5]}
+
+    benchmark(spreading_activation, seed_ids, memories, hops)
 
 
 def test_resonance_links_count_bounded():
@@ -63,3 +96,13 @@ def test_resonance_links_count_bounded():
 
     links = build_resonance_links(new_memory, candidates, config)
     assert len(links) <= config.max_links
+
+
+def test_spreading_activation_bounded():
+    """spreading_activation activation values are always in (0, 1]."""
+    memories = _make_linked_memories(50, links_per_memory=4)
+    seed_ids = {m.id for m in memories[:5]}
+
+    act = spreading_activation(seed_ids, memories, hops=3)
+    for val in act.values():
+        assert 0.0 < val <= 1.0

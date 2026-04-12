@@ -27,9 +27,9 @@ from emotional_memory.visualization import (
     plot_appraisal_radar,
     plot_circumplex,
     plot_decay_curves,
+    plot_mood_evolution,
     plot_resonance_network,
     plot_retrieval_radar,
-    plot_stimmung_evolution,
     plot_yerkes_dodson,
 )
 
@@ -73,7 +73,7 @@ def main() -> None:
     )
 
     # 3. Yerkes-Dodson
-    _save(plot_yerkes_dodson(stimmung_arousal=0.3), "yerkes_dodson")
+    _save(plot_yerkes_dodson(mood_arousal=0.3), "yerkes_dodson")
 
     # 4. Retrieval radar
     _save(
@@ -81,7 +81,7 @@ def main() -> None:
         "retrieval_radar",
     )
 
-    # 5. Stimmung evolution — simulate 30 minutes of events
+    # 5. Mood evolution — simulate 30 minutes of events
     history = [
         (0.0, 0.0, 0.30, 0.50),
         (120.0, -0.20, 0.55, 0.40),
@@ -93,7 +93,7 @@ def main() -> None:
         (1500.0, 0.10, 0.32, 0.50),
         (1800.0, 0.02, 0.31, 0.50),
     ]
-    _save(plot_stimmung_evolution(history), "stimmung_evolution")
+    _save(plot_mood_evolution(history), "mood_evolution")
 
     # 6. Adaptive weights heatmap
     _save(plot_adaptive_weights_heatmap(resolution=30), "adaptive_weights_heatmap")

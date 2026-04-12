@@ -49,7 +49,7 @@ em = EmotionalMemory(
             base_weights=[0.20, 0.30, 0.25, 0.10, 0.10, 0.05],  # stronger emotional bias
         ),
         resonance=ResonanceConfig(threshold=0.05),
-        stimmung_alpha=0.2,
+        mood_alpha=0.2,
     ),
 )
 
@@ -105,8 +105,8 @@ print("\n=== Retrieving under positive mood ===\n")
 
 em.set_affect(CoreAffect(valence=0.8, arousal=0.6))
 state: AffectiveState = em.get_state()
-sm = state.stimmung
-print(f"Current Stimmung: valence={sm.valence:.3f}, arousal={sm.arousal:.3f}\n")
+sm = state.mood
+print(f"Current Mood: valence={sm.valence:.3f}, arousal={sm.arousal:.3f}\n")
 
 results = em.retrieve("project work accomplishment", top_k=3)
 for i, mem in enumerate(results, 1):
@@ -125,8 +125,8 @@ for _ in range(5):
     em.set_affect(CoreAffect(valence=-0.9, arousal=0.5))
 
 state = em.get_state()
-sm = state.stimmung
-print(f"Current Stimmung: valence={sm.valence:.3f}, arousal={sm.arousal:.3f}\n")
+sm = state.mood
+print(f"Current Mood: valence={sm.valence:.3f}, arousal={sm.arousal:.3f}\n")
 
 results = em.retrieve("team meeting discussion", top_k=3)
 for i, mem in enumerate(results, 1):

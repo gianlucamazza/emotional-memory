@@ -44,8 +44,8 @@ with EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder()) as em:
 |---|---|---|
 | **CoreAffect** | `CoreAffect` | Barrett/Russell circumplex — continuous (valence, arousal) |
 | **AffectiveMomentum** | `AffectiveMomentum` | Spinoza — affect as transition (velocity + acceleration) |
-| **StimmungField** | `StimmungField` | Heidegger §29 — slow-moving global mood with inertia |
+| **MoodField** | `MoodField` | Heidegger §29 — slow-moving global mood with inertia |
 | **AppraisalVector** | `AppraisalVector` | Scherer CPM — emotion from evaluation (5 dimensions) |
-| **ResonanceLinks** | `ResonanceLink` | Aristotle/Bower — associative graph (5 link types) |
+| **ResonanceLinks** | `ResonanceLink` | Aristotle/Bower/Collins & Loftus/Hebb — bidirectional associative graph (5 link types), multi-hop spreading activation + Hebbian co-retrieval strengthening |
 
 See [Research](research/index.md) for full theoretical foundations.

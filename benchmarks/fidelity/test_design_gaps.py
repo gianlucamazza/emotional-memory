@@ -1,7 +1,7 @@
-"""Design gap documentation — known limitations of the current implementation.
+"""Design gap regression tests — formerly xfail, now passing.
 
-These tests use xfail to document behaviours that are theoretically specified
-but not yet fully implemented. Each xfail is a future work item, not a bug.
+These tests verify previously-unimplemented behaviours that have since
+been implemented. They serve as regression guards.
 """
 
 import pytest
@@ -22,7 +22,7 @@ def test_causal_link_type_reachable():
         temporal_prox=0.9,
         source_affect=affect,
         target_affect=affect,
-        source_before_target=True,
+        target_precedes_source=True,
     )
     assert result == "causal"
 

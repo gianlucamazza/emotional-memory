@@ -104,7 +104,7 @@ em = EmotionalMemory(
     config=EmotionalMemoryConfig(
         resonance=ResonanceConfig(threshold=0.10),
         retrieval=RetrievalConfig(base_weights=[0.40, 0.25, 0.15, 0.08, 0.08, 0.04]),
-        stimmung_alpha=0.2,
+        mood_alpha=0.2,
     ),
 )
 
@@ -194,7 +194,7 @@ if isinstance(embedder, SentenceTransformerEmbedder):
     print("With real embeddings: infrastructure/ops memories rank first because")
     print("the semantic signal (s1, weight=0.40) captures genuine meaning.")
 else:
-    print("With HashEmbedder: ranking is driven by emotional/Stimmung signals")
+    print("With HashEmbedder: ranking is driven by emotional/Mood signals")
     print("(s2, s3) since the semantic signal is hash-based and effectively random.")
     print("Install sentence-transformers to see semantic retrieval in action.")
 

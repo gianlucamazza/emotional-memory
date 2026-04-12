@@ -43,8 +43,13 @@ from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, consolidation_strength
 from emotional_memory.engine import EmotionalMemoryConfig
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
-from emotional_memory.models import Memory, make_emotional_tag
-from emotional_memory.resonance import build_resonance_links
+from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
+from emotional_memory.mood import MoodField
+from emotional_memory.resonance import (
+    build_resonance_links,
+    hebbian_strengthen,
+    spreading_activation,
+)
 from emotional_memory.retrieval import (
     adaptive_weights,
     affective_prediction_error,
@@ -52,7 +57,6 @@ from emotional_memory.retrieval import (
     retrieval_score,
 )
 from emotional_memory.state import AffectiveState
-from emotional_memory.stimmung import StimmungField
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +65,7 @@ class AsyncEmotionalMemory:
     """Async-native EmotionalMemory using the AFT pipeline.
 
     All public methods are coroutines.  The internal affective state machine
-    (AffectiveState, StimmungField, AffectiveMomentum) updates synchronously
+    (AffectiveState, MoodField, AffectiveMomentum) updates synchronously
     between awaits — state is not shared across concurrent calls, so callers
     should serialise encode/retrieve calls that must observe a consistent state.
     """
@@ -113,16 +117,16 @@ class AsyncEmotionalMemory:
         self._state = self._state.update(
             new_affect,
             now=now,
-            stimmung_alpha=self._config.stimmung_alpha,
-            stimmung_decay=self._config.stimmung_decay,
+            mood_alpha=self._config.mood_alpha,
+            mood_decay=self._config.mood_decay,
         )
 
         # Step 3: build EmotionalTag (sync)
-        cs = consolidation_strength(new_affect.arousal, self._state.stimmung.arousal)
+        cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
         tag = make_emotional_tag(
             core_affect=self._state.core_affect,
             momentum=self._state.momentum,
-            stimmung=self._state.stimmung,
+            mood=self._state.mood,
             consolidation_strength=cs,
             appraisal=appraisal,
         )
@@ -156,6 +160,31 @@ class AsyncEmotionalMemory:
             memory = memory.model_copy(update={"tag": updated_tag})
             await self._store.update(memory)
             logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
+
+            # Bidirectional links: add backward links on each target memory
+            for link in links:
+                target_mem = await self._store.get(link.target_id)
+                if target_mem is None:
+                    continue
+                backward = ResonanceLink(
+                    source_id=link.target_id,
+                    target_id=memory.id,
+                    strength=link.strength,
+                    link_type=link.link_type,
+                )
+                existing = list(target_mem.tag.resonance_links)
+                max_links = self._config.resonance.max_links
+                if len(existing) >= max_links:
+                    weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                    if backward.strength <= existing[weakest_idx].strength:
+                        continue
+                    existing[weakest_idx] = backward
+                else:
+                    existing.append(backward)
+                updated_target = target_mem.model_copy(
+                    update={"tag": target_mem.tag.model_copy(update={"resonance_links": existing})}
+                )
+                await self._store.update(updated_target)
 
         logger.debug(
             "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
@@ -192,22 +221,20 @@ class AsyncEmotionalMemory:
         if not candidates:
             return []
 
-        # G1 two-pass scoring (sync — pure computation)
+        # G1 — spreading activation (Collins & Loftus, 1975)
         # Compute adaptive weights once — invariant across all candidates
-        weights = adaptive_weights(
-            self._state.stimmung, rc.base_weights, rc.adaptive_weights_config
-        )
+        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
 
-        def _score_all(active_ids: list[str]) -> list[tuple[float, Memory]]:
+        def _score_all(activation_map: dict[str, float]) -> list[tuple[float, Memory]]:
             scored = []
             for mem in candidates:
                 score = retrieval_score(
                     query_embedding=query_embedding,
                     query_affect=self._state.core_affect,
-                    current_stimmung=self._state.stimmung,
+                    current_mood=self._state.mood,
                     current_momentum=self._state.momentum,
                     memory=mem,
-                    active_memory_ids=active_ids,
+                    activation_map=activation_map,
                     now=now,
                     decay_config=self._config.decay,
                     retrieval_config=rc,
@@ -217,16 +244,17 @@ class AsyncEmotionalMemory:
             scored.sort(key=lambda t: t[0], reverse=True)
             return scored
 
-        pass1 = _score_all([])
-        active_ids = [mem.id for _, mem in pass1[:top_k]]
+        # Pass 1: score without resonance to identify seed memories
+        pass1 = _score_all({})
+        seed_ids = {mem.id for _, mem in pass1[:top_k]}
 
-        # Skip Pass 2 when no candidate has resonance links targeting the active set
-        active_set = set(active_ids)
-        needs_pass2 = any(
-            any(link.target_id in active_set for link in mem.tag.resonance_links)
-            for _, mem in pass1
+        # Compute multi-hop activation map from seeds through the link graph
+        act_map = spreading_activation(
+            seed_ids, candidates, self._config.resonance.propagation_hops
         )
-        pass2 = _score_all(active_ids) if needs_pass2 else pass1
+
+        # Pass 2: re-score with activation map (skip when no activation spread)
+        pass2 = _score_all(act_map) if act_map else pass1
         top = [mem for _, mem in pass2[:top_k]]
 
         # Reconsolidation + retrieval count update (async store writes)
@@ -261,6 +289,20 @@ class AsyncEmotionalMemory:
             await self._store.update(updated)
             result.append(updated)
 
+        # Hebbian co-retrieval strengthening (Hebb, 1949)
+        increment = self._config.resonance.hebbian_increment
+        if increment > 0.0 and len(result) > 1:
+            co_ids = {m.id for m in result}
+            for i, mem in enumerate(result):
+                new_links = hebbian_strengthen(mem, co_ids - {mem.id}, increment)
+                if new_links != list(mem.tag.resonance_links):
+                    strengthened = mem.model_copy(
+                        update={"tag": mem.tag.model_copy(update={"resonance_links": new_links})}
+                    )
+                    await self._store.update(strengthened)
+                    result[i] = strengthened
+                    logger.debug("hebbian: id=%s links_strengthened=%d", mem.id, len(new_links))
+
         logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
 
@@ -290,15 +332,15 @@ class AsyncEmotionalMemory:
             self._state = self._state.update(
                 new_affect,
                 now=now,
-                stimmung_alpha=self._config.stimmung_alpha,
-                stimmung_decay=self._config.stimmung_decay,
+                mood_alpha=self._config.mood_alpha,
+                mood_decay=self._config.mood_decay,
             )
 
-            cs = consolidation_strength(new_affect.arousal, self._state.stimmung.arousal)
+            cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
             tag = make_emotional_tag(
                 core_affect=self._state.core_affect,
                 momentum=self._state.momentum,
-                stimmung=self._state.stimmung,
+                mood=self._state.mood,
                 consolidation_strength=cs,
                 appraisal=appraisal,
             )
@@ -329,6 +371,33 @@ class AsyncEmotionalMemory:
                 memory = memory.model_copy(update={"tag": updated_tag})
                 await self._store.update(memory)
 
+                # Bidirectional links: add backward links on each target memory
+                for link in links:
+                    target_mem = await self._store.get(link.target_id)
+                    if target_mem is None:
+                        continue
+                    backward = ResonanceLink(
+                        source_id=link.target_id,
+                        target_id=memory.id,
+                        strength=link.strength,
+                        link_type=link.link_type,
+                    )
+                    existing = list(target_mem.tag.resonance_links)
+                    max_links = self._config.resonance.max_links
+                    if len(existing) >= max_links:
+                        weakest_idx = min(range(len(existing)), key=lambda i: existing[i].strength)
+                        if backward.strength <= existing[weakest_idx].strength:
+                            continue
+                        existing[weakest_idx] = backward
+                    else:
+                        existing.append(backward)
+                    updated_target = target_mem.model_copy(
+                        update={
+                            "tag": target_mem.tag.model_copy(update={"resonance_links": existing})
+                        }
+                    )
+                    await self._store.update(updated_target)
+
             results.append(memory)
         return results
 
@@ -356,8 +425,8 @@ class AsyncEmotionalMemory:
         """Manually inject a CoreAffect, updating state synchronously."""
         self._state = self._state.update(
             core_affect,
-            stimmung_alpha=self._config.stimmung_alpha,
-            stimmung_decay=self._config.stimmung_decay,
+            mood_alpha=self._config.mood_alpha,
+            mood_decay=self._config.mood_decay,
         )
 
     def save_state(self) -> dict[str, Any]:
@@ -413,13 +482,13 @@ class AsyncEmotionalMemory:
             written += 1
         return written
 
-    def get_current_stimmung(self, now: datetime | None = None) -> StimmungField:
-        """Return Stimmung regressed to ``now`` without modifying state."""
+    def get_current_mood(self, now: datetime | None = None) -> MoodField:
+        """Return the mood field regressed to ``now`` without modifying state."""
         if now is None:
             now = datetime.now(tz=UTC)
-        if self._config.stimmung_decay is not None:
-            return self._state.stimmung.regress(now, self._config.stimmung_decay)
-        return self._state.stimmung
+        if self._config.mood_decay is not None:
+            return self._state.mood.regress(now, self._config.mood_decay)
+        return self._state.mood
 
     async def close(self) -> None:
         """Release resources held by the underlying store, if supported.

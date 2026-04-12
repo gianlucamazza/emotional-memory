@@ -11,7 +11,7 @@ import pytest
 from benchmarks.conftest import make_engine, populate_store
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.models import Memory, make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 
 def _measure_memory_bytes(obj: object) -> int:
@@ -24,7 +24,7 @@ def bench_memory_per_record(benchmark):
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=0.5, arousal=0.6),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=0.8,
     )
 
@@ -54,7 +54,7 @@ def test_memory_object_size_reasonable():
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=0.5, arousal=0.6),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=0.8,
     )
     mem = Memory.create(

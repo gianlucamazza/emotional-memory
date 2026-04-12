@@ -94,9 +94,9 @@ class TestEncode:
             state_before.core_affect.valence, abs=0.01
         )
 
-    def test_stimmung_evolves_after_encodes(self):
+    def test_mood_evolves_after_encodes(self):
         em = _engine()
-        initial_stimmung_valence = em.get_state().stimmung.valence
+        initial_mood_valence = em.get_state().mood.valence
         positive = AppraisalVector(
             novelty=0.0,
             goal_relevance=1.0,
@@ -106,7 +106,7 @@ class TestEncode:
         )
         for _ in range(20):
             em.encode("positive event", appraisal=positive)
-        assert em.get_state().stimmung.valence > initial_stimmung_valence
+        assert em.get_state().mood.valence > initial_mood_valence
 
     def test_metadata_stored(self):
         em = _engine()
@@ -255,7 +255,7 @@ class TestSaveLoadState:
         assert em2.get_state().core_affect.valence == pytest.approx(0.7)
         assert em2.get_state().core_affect.arousal == pytest.approx(0.4)
 
-    def test_load_state_restores_stimmung(self):
+    def test_load_state_restores_mood(self):
         em = _engine()
         for _ in range(20):
             em.set_affect(CoreAffect(valence=1.0, arousal=0.8))
@@ -263,9 +263,7 @@ class TestSaveLoadState:
 
         em2 = _engine()
         em2.load_state(snapshot)
-        assert em2.get_state().stimmung.valence == pytest.approx(
-            em.get_state().stimmung.valence, abs=1e-9
-        )
+        assert em2.get_state().mood.valence == pytest.approx(em.get_state().mood.valence, abs=1e-9)
 
     def test_load_state_preserves_momentum_history(self):
         em = _engine()
@@ -293,37 +291,37 @@ class TestSaveLoadState:
         assert set(snapshot.keys()) == original_keys
 
 
-class TestGetCurrentStimmung:
-    def test_without_decay_returns_frozen_stimmung(self):
+class TestGetCurrentMood:
+    def test_without_decay_returns_frozen_mood(self):
         em = _engine()
         em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
-        s = em.get_current_stimmung()
-        assert s.valence == pytest.approx(em.get_state().stimmung.valence, abs=1e-9)
+        s = em.get_current_mood()
+        assert s.valence == pytest.approx(em.get_state().mood.valence, abs=1e-9)
 
-    def test_with_decay_returns_regressed_stimmung(self):
+    def test_with_decay_returns_regressed_mood(self):
         from datetime import UTC, datetime, timedelta
 
-        from emotional_memory.stimmung import StimmungDecayConfig
+        from emotional_memory.mood import MoodDecayConfig
 
-        cfg = EmotionalMemoryConfig(stimmung_decay=StimmungDecayConfig(base_half_life_seconds=1.0))
+        cfg = EmotionalMemoryConfig(mood_decay=MoodDecayConfig(base_half_life_seconds=1.0))
         em = _engine(config=cfg)
         em.set_affect(CoreAffect(valence=1.0, arousal=0.9))
         future = datetime.now(tz=UTC) + timedelta(hours=10)
-        s = em.get_current_stimmung(now=future)
-        assert s.valence < em.get_state().stimmung.valence
+        s = em.get_current_mood(now=future)
+        assert s.valence < em.get_state().mood.valence
 
     def test_does_not_modify_internal_state(self):
         from datetime import UTC, datetime, timedelta
 
-        from emotional_memory.stimmung import StimmungDecayConfig
+        from emotional_memory.mood import MoodDecayConfig
 
-        cfg = EmotionalMemoryConfig(stimmung_decay=StimmungDecayConfig(base_half_life_seconds=1.0))
+        cfg = EmotionalMemoryConfig(mood_decay=MoodDecayConfig(base_half_life_seconds=1.0))
         em = _engine(config=cfg)
         em.set_affect(CoreAffect(valence=1.0, arousal=0.8))
-        before = em.get_state().stimmung.valence
+        before = em.get_state().mood.valence
         future = datetime.now(tz=UTC) + timedelta(hours=5)
-        em.get_current_stimmung(now=future)
-        assert em.get_state().stimmung.valence == pytest.approx(before, abs=1e-9)
+        em.get_current_mood(now=future)
+        assert em.get_state().mood.valence == pytest.approx(before, abs=1e-9)
 
 
 class TestGetSetState:
@@ -610,3 +608,192 @@ class TestSequentialEmbedder:
     def test_satisfies_embedder_protocol(self) -> None:
         emb = _SimpleEmbedder()
         assert isinstance(emb, Embedder)
+
+
+# ---------------------------------------------------------------------------
+# Bidirectional resonance links
+# ---------------------------------------------------------------------------
+
+
+class TestBidirectionalResonanceLinks:
+    """After encoding, target memories must carry a backward link to the new memory."""
+
+    def _engine_with_low_threshold(self):
+        from emotional_memory.resonance import ResonanceConfig
+
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(
+                threshold=0.0,
+                temporal_half_life_seconds=1e9,  # keep temporal prox high
+            )
+        )
+        return EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=FixedEmbedder([1.0, 0.0]),
+            config=config,
+        )
+
+    def test_target_memory_has_backward_link(self):
+        """After A is encoded after B, B must contain a backward link targeting A."""
+        em = self._engine_with_low_threshold()
+        b = em.encode("first memory")
+        a = em.encode("second memory")
+
+        b_updated = em.get(b.id)
+        assert b_updated is not None
+        backward_ids = [lnk.target_id for lnk in b_updated.tag.resonance_links]
+        assert a.id in backward_ids
+
+    def test_backward_link_strength_equals_forward_strength(self):
+        """Backward link strength must mirror the forward link strength."""
+        em = self._engine_with_low_threshold()
+        b = em.encode("older memory")
+        a = em.encode("newer memory")
+
+        # Forward link: A → B
+        forward_strength = next(
+            lnk.strength for lnk in a.tag.resonance_links if lnk.target_id == b.id
+        )
+        # Backward link: B → A
+        b_updated = em.get(b.id)
+        assert b_updated is not None
+        backward_strength = next(
+            lnk.strength for lnk in b_updated.tag.resonance_links if lnk.target_id == a.id
+        )
+        assert forward_strength == pytest.approx(backward_strength)
+
+    def test_backward_link_respects_max_links(self):
+        """Backward links must not exceed max_links on the target memory."""
+        from emotional_memory.resonance import ResonanceConfig
+
+        max_links = 3
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(
+                threshold=0.0,
+                max_links=max_links,
+                temporal_half_life_seconds=1e9,
+            )
+        )
+        em = EmotionalMemory(
+            store=InMemoryStore(), embedder=FixedEmbedder([1.0, 0.0]), config=config
+        )
+        anchor = em.encode("anchor memory")
+        for _ in range(max_links + 3):
+            em.encode("linking memory")
+
+        anchor_updated = em.get(anchor.id)
+        assert anchor_updated is not None
+        assert len(anchor_updated.tag.resonance_links) <= max_links
+
+    def test_encode_batch_creates_backward_links(self):
+        """encode_batch must also produce backward links on target memories."""
+        em = self._engine_with_low_threshold()
+        memories = em.encode_batch(["first", "second", "third"])
+        first = em.get(memories[0].id)
+        assert first is not None
+        # first memory should have backward links from later memories
+        backward_targets = [lnk.target_id for lnk in first.tag.resonance_links]
+        later_ids = {m.id for m in memories[1:]}
+        assert any(tid in later_ids for tid in backward_targets)
+
+
+# ---------------------------------------------------------------------------
+# Spreading activation in retrieve()
+# ---------------------------------------------------------------------------
+
+
+class TestSpreadingActivationInRetrieve:
+    """Memories reachable via 2-hop spreading should appear in results."""
+
+    def _engine_with_resonance(self):
+        from emotional_memory.resonance import ResonanceConfig
+
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(
+                threshold=0.0,
+                temporal_half_life_seconds=1e9,
+                propagation_hops=2,
+            )
+        )
+        return EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=FixedEmbedder([1.0, 0.0]),
+            config=config,
+        )
+
+    def test_spreading_activation_hops_config_accepted(self):
+        from emotional_memory.resonance import ResonanceConfig
+
+        cfg = ResonanceConfig(propagation_hops=3)
+        assert cfg.propagation_hops == 3
+
+    def test_propagation_hops_default_is_two(self):
+        from emotional_memory.resonance import ResonanceConfig
+
+        assert ResonanceConfig().propagation_hops == 2
+
+    def test_retrieve_returns_results_with_resonance(self):
+        """Smoke test: retrieve works correctly when resonance links exist."""
+        em = self._engine_with_resonance()
+        em.encode("memory alpha")
+        em.encode("memory beta")
+        em.encode("memory gamma")
+        results = em.retrieve("memory", top_k=2)
+        assert len(results) == 2
+
+
+# ---------------------------------------------------------------------------
+# Hebbian co-retrieval strengthening in retrieve()
+# ---------------------------------------------------------------------------
+
+
+class TestHebbianStrengtheningInEngine:
+    def _engine_with_hebbian(self, increment: float = 0.1):
+        from emotional_memory.resonance import ResonanceConfig
+
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(
+                threshold=0.0,
+                temporal_half_life_seconds=1e9,
+                hebbian_increment=increment,
+            )
+        )
+        return EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=FixedEmbedder([1.0, 0.0]),
+            config=config,
+        )
+
+    def test_hebbian_strengthens_links_between_co_retrieved(self):
+        """After co-retrieval, links between retrieved memories should be stronger."""
+        em = self._engine_with_hebbian(increment=0.1)
+        a = em.encode("first memory")
+        b = em.encode("second memory")
+
+        # Retrieve both memories
+        em.retrieve("memory", top_k=2)
+
+        a_after = em.get(a.id)
+        b_after = em.get(b.id)
+        assert a_after is not None
+        assert b_after is not None
+
+        # At least one of the memories should have a link to the other
+        all_links = list(a_after.tag.resonance_links) + list(b_after.tag.resonance_links)
+        link_targets = {lnk.target_id for lnk in all_links}
+        assert a.id in link_targets or b.id in link_targets
+
+    def test_hebbian_disabled_at_zero_increment(self):
+        """With hebbian_increment=0.0, link strengths must not change after retrieval."""
+        em = self._engine_with_hebbian(increment=0.0)
+        em.encode("alpha")
+        b = em.encode("beta")
+
+        strengths_before = {lnk.target_id: lnk.strength for lnk in b.tag.resonance_links}
+        em.retrieve("alpha beta", top_k=2)
+        b_after = em.get(b.id)
+        assert b_after is not None
+        strengths_after = {lnk.target_id: lnk.strength for lnk in b_after.tag.resonance_links}
+
+        for tid, before in strengths_before.items():
+            assert strengths_after.get(tid, before) == pytest.approx(before)

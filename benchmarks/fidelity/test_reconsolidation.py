@@ -16,8 +16,8 @@ from benchmarks.conftest import make_fidelity_engine
 from emotional_memory import CoreAffect
 from emotional_memory.affect import AffectiveMomentum
 from emotional_memory.models import make_emotional_tag
+from emotional_memory.mood import MoodField
 from emotional_memory.retrieval import reconsolidate
-from emotional_memory.stimmung import StimmungField
 
 pytestmark = pytest.mark.fidelity
 
@@ -26,7 +26,7 @@ def _neutral_tag():
     tag = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=0.0),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=0.5,
     )
     return tag
@@ -39,7 +39,7 @@ def test_reconsolidation_updates_core_affect():
     (sets last_retrieved); the second, within reconsolidation_window_seconds,
     updates the tag if APE exceeds the threshold.
     """
-    engine = make_fidelity_engine(ape_threshold=0.01, stimmung_alpha=0.3)
+    engine = make_fidelity_engine(ape_threshold=0.01, mood_alpha=0.3)
 
     engine.set_affect(CoreAffect(valence=0.0, arousal=0.3))
     engine.encode("A neutral workplace discussion that ended inconclusively.")

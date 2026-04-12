@@ -14,7 +14,7 @@ from emotional_memory import CoreAffect
 from emotional_memory.affect import AffectiveMomentum
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import make_emotional_tag
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.mood import MoodField
 
 pytestmark = pytest.mark.fidelity
 
@@ -30,7 +30,7 @@ def test_multiple_retrievals_slow_decay():
     tag_base = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=0.5),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=1.0,
     )
     tag_base = tag_base.model_copy(update={"timestamp": now})
@@ -61,7 +61,7 @@ def test_more_retrievals_monotonically_slower_decay(retrieval_count):
     tag_base = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=0.5),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=1.0,
     )
     tag_base = tag_base.model_copy(update={"timestamp": now})

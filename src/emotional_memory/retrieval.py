@@ -2,16 +2,16 @@
 
 Multi-signal retrieval scoring combining six components:
   s1 — semantic similarity         (cosine, query embedding vs memory)
-  s2 — Stimmung congruence         (mood-congruent memory, Bower 1981)
+  s2 — mood congruence             (mood-congruent recall, Bower 1981)
   s3 — core affect proximity       (current affect vs affect at encoding)
-  s4 — momentum alignment          (Spinoza: trajectory matters)
+  s4 — momentum alignment          (trajectory of affective change)
   s5 — recency / decay score       (ACT-R power-law)
   s6 — resonance boost             (spreading activation, Bower 1981)
 
-Weights are adaptive: modulated by current Stimmung (Heidegger).
-  Negative Stimmung → weight shifts toward emotional signals
-  High arousal      → weight shifts toward momentum
-  Neutral/calm      → weight shifts toward semantic
+Weights are adaptive: modulated by current mood state.
+  Negative mood  → weight shifts toward emotional signals
+  High arousal   → weight shifts toward momentum
+  Neutral/calm   → weight shifts toward semantic
 
 Reconsolidation (Nader & Schiller 2000): retrieval computes Affective
 Prediction Error (APE) and updates the tag's core_affect if APE exceeds
@@ -25,16 +25,16 @@ from datetime import datetime
 
 import numpy as np
 from numpy.typing import NDArray
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
-from emotional_memory.models import EmotionalTag, Memory, ResonanceLink
-from emotional_memory.stimmung import StimmungField
+from emotional_memory.models import EmotionalTag, Memory
+from emotional_memory.mood import MoodField
 
 
 class AdaptiveWeightsConfig(BaseModel):
-    """Parameters for smooth Stimmung-modulated retrieval weight adjustment.
+    """Parameters for smooth mood-modulated retrieval weight adjustment.
 
     Each of the three psychological conditions (negative mood, high arousal,
     calm/neutral) is modelled as a continuous sigmoid or Gaussian gate rather
@@ -66,8 +66,15 @@ class RetrievalConfig(BaseModel):
     """Parameters for multi-signal retrieval scoring."""
 
     base_weights: list[float] = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
-    """Weights for [semantic, stimmung_congruence, affect_proximity,
-    momentum_alignment, recency, resonance_boost]."""
+    """Weights for [semantic, mood_congruence, affect_proximity,
+    momentum_alignment, recency, resonance_boost]. Must have exactly 6 elements."""
+
+    @field_validator("base_weights")
+    @classmethod
+    def _check_weights_length(cls, v: list[float]) -> list[float]:
+        if len(v) != 6:
+            raise ValueError(f"base_weights must have exactly 6 elements, got {len(v)}")
+        return v
 
     ape_threshold: float = 0.3
     """Affective Prediction Error threshold to trigger reconsolidation."""
@@ -84,7 +91,7 @@ class RetrievalConfig(BaseModel):
     candidates before full multi-signal scoring."""
 
     adaptive_weights_config: AdaptiveWeightsConfig = AdaptiveWeightsConfig()
-    """Parameters for smooth Stimmung-modulated weight adjustment."""
+    """Parameters for smooth mood-modulated weight adjustment."""
 
 
 # ---------------------------------------------------------------------------
@@ -103,14 +110,15 @@ def _smooth_gate(x: float, center: float, sharpness: float) -> float:
 
 
 def adaptive_weights(
-    stimmung: StimmungField,
+    mood: MoodField,
     base: list[float],
     config: AdaptiveWeightsConfig | None = None,
 ) -> NDArray[np.float64]:
-    """Return retrieval weights modulated by current Stimmung.
+    """Return retrieval weights modulated by current mood state.
 
-    Heidegger: mood is not a filter on cognition but its ground — the
-    Stimmung shapes what stands out and what recedes.
+    Mood acts as a weight modulator — not a hard filter but a continuous
+    shaping of what signals dominate retrieval (inspired by mood-congruent
+    recall research, Bower 1981).
 
     Three conditions are applied as smooth continuous functions (tanh /
     Gaussian) rather than hard thresholds, eliminating discontinuities at
@@ -123,23 +131,23 @@ def adaptive_weights(
     w = np.array(base, dtype=float)
 
     # Negative mood: sigmoid activates below negative_mood_center
-    neg = _smooth_gate(stimmung.valence, cfg.negative_mood_center, -cfg.negative_mood_sharpness)
-    w[1] += cfg.negative_mood_strength * neg * (2.0 / 3.0)  # stimmung congruence
+    neg = _smooth_gate(mood.valence, cfg.negative_mood_center, -cfg.negative_mood_sharpness)
+    w[1] += cfg.negative_mood_strength * neg * (2.0 / 3.0)  # mood congruence
     w[2] += cfg.negative_mood_strength * neg * (1.0 / 3.0)  # affect proximity
     w[0] -= cfg.negative_mood_strength * neg  # semantic
 
     # High arousal: sigmoid activates above high_arousal_center
-    aro = _smooth_gate(stimmung.arousal, cfg.high_arousal_center, cfg.high_arousal_sharpness)
+    aro = _smooth_gate(mood.arousal, cfg.high_arousal_center, cfg.high_arousal_sharpness)
     w[3] += cfg.high_arousal_strength * aro  # momentum alignment
     w[0] -= cfg.high_arousal_strength * aro  # semantic
 
     # Calm/neutral: Gaussian over valence x inverted sigmoid over arousal
     # Peaks at (valence≈0, arousal≈0); falls off smoothly in all directions
-    valence_calm = math.exp(-((stimmung.valence / cfg.calm_valence_width) ** 2))
-    arousal_calm = _smooth_gate(stimmung.arousal, cfg.calm_arousal_center, -cfg.calm_sharpness)
+    valence_calm = math.exp(-((mood.valence / cfg.calm_valence_width) ** 2))
+    arousal_calm = _smooth_gate(mood.arousal, cfg.calm_arousal_center, -cfg.calm_sharpness)
     calm = valence_calm * arousal_calm
     w[0] += cfg.calm_strength * calm  # semantic
-    w[1] -= cfg.calm_strength * calm * (2.0 / 3.0)  # stimmung congruence
+    w[1] -= cfg.calm_strength * calm * (2.0 / 3.0)  # mood congruence
     w[2] -= cfg.calm_strength * calm * (1.0 / 3.0)  # affect proximity
 
     # Clamp negatives and normalise
@@ -161,10 +169,13 @@ def _cosine(a: list[float], b: list[float]) -> float:
     return cosine_similarity(a, b)
 
 
-def _stimmung_congruence(current: StimmungField, snapshot: StimmungField) -> float:
-    """Similarity between current Stimmung and the Stimmung at encoding.
+def _mood_congruence(current: MoodField, snapshot: MoodField) -> float:
+    """Similarity between current mood and the mood at encoding.
 
-    Maps distance [0, max_dist] → similarity [1, 0].
+    Implements mood-congruent recall (Bower, 1981): memories are more
+    accessible when the current mood matches the encoding mood.
+
+    Maps PAD distance [0, max_dist] → similarity [1, 0].
     max_dist ≈ sqrt(4 + 1 + 1) ≈ 2.45 for PAD space.
     """
     dist = current.distance(snapshot)
@@ -192,13 +203,15 @@ def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) 
     return (cos + 1.0) / 2.0
 
 
-def _resonance_boost(active_ids: list[str], links: list[ResonanceLink]) -> float:
-    """Boost from active memories connected via resonance links."""
-    if not links or not active_ids:
-        return 0.0
-    active_set = set(active_ids)
-    strengths = [lnk.strength for lnk in links if lnk.target_id in active_set]
-    return min(1.0, sum(strengths)) if strengths else 0.0
+def _resonance_boost(memory_id: str, activation_map: dict[str, float]) -> float:
+    """Boost from spreading activation (Collins & Loftus, 1975).
+
+    Returns the pre-computed activation level for this memory from the
+    spreading activation map, or 0.0 if the memory was not reached.
+    The activation map is built by ``spreading_activation()`` in the
+    engine before Pass 2 scoring.
+    """
+    return activation_map.get(memory_id, 0.0)
 
 
 # ---------------------------------------------------------------------------
@@ -209,10 +222,10 @@ def _resonance_boost(active_ids: list[str], links: list[ResonanceLink]) -> float
 def retrieval_score(
     query_embedding: list[float],
     query_affect: CoreAffect,
-    current_stimmung: StimmungField,
+    current_mood: MoodField,
     current_momentum: AffectiveMomentum,
     memory: Memory,
-    active_memory_ids: list[str],
+    activation_map: dict[str, float],
     now: datetime,
     decay_config: DecayConfig,
     retrieval_config: RetrievalConfig,
@@ -221,15 +234,19 @@ def retrieval_score(
     """Compute the composite retrieval score for a single memory.
 
     Args:
+        activation_map: Pre-computed spreading activation levels from
+            ``spreading_activation()``.  Pass an empty dict for Pass 1
+            (no resonance boost).  Pass the result of ``spreading_activation()``
+            for Pass 2 to enable Collins & Loftus (1975) multi-hop boosting.
         precomputed_weights: Pre-computed adaptive weights from ``adaptive_weights()``.
-            Pass this when scoring many memories with the same stimmung/config to avoid
+            Pass this when scoring many memories with the same mood/config to avoid
             redundant computation. If None, weights are computed inline.
     """
     w = (
         precomputed_weights
         if precomputed_weights is not None
         else adaptive_weights(
-            current_stimmung,
+            current_mood,
             retrieval_config.base_weights,
             retrieval_config.adaptive_weights_config,
         )
@@ -237,11 +254,11 @@ def retrieval_score(
 
     emb = memory.embedding or []
     s1 = _cosine(query_embedding, emb) if (query_embedding and emb) else 0.0
-    s2 = _stimmung_congruence(current_stimmung, memory.tag.stimmung_snapshot)
+    s2 = _mood_congruence(current_mood, memory.tag.mood_snapshot)
     s3 = _affect_proximity(query_affect, memory.tag.core_affect)
     s4 = _momentum_alignment(current_momentum, memory.tag.momentum)
     s5 = compute_effective_strength(memory.tag, now, decay_config)
-    s6 = _resonance_boost(active_memory_ids, memory.tag.resonance_links)
+    s6 = _resonance_boost(memory.id, activation_map)
 
     return float(w[0] * s1 + w[1] * s2 + w[2] * s3 + w[3] * s4 + w[4] * s5 + w[5] * s6)
 

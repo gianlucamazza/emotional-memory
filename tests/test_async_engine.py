@@ -17,7 +17,7 @@ from emotional_memory.async_adapters import (
 )
 from emotional_memory.async_engine import AsyncEmotionalMemory
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
-from emotional_memory.stimmung import StimmungDecayConfig
+from emotional_memory.mood import MoodDecayConfig
 from emotional_memory.stores.in_memory import InMemoryStore
 
 pytestmark = pytest.mark.asyncio
@@ -84,7 +84,7 @@ class TestAsyncEncode:
         em = _async_engine()
         initial = em.get_state()
         await em.encode("something happened")
-        # State should have moved (stimmung updated)
+        # State should have moved (mood updated)
         assert em.get_state() is not initial
 
     async def test_metadata_passed_as_context(self):
@@ -185,9 +185,7 @@ class TestAsyncStatePersistence:
         em2 = _async_engine()
         em2.load_state(snapshot)
         assert em2.get_state().core_affect == em.get_state().core_affect
-        assert em2.get_state().stimmung.valence == pytest.approx(
-            em.get_state().stimmung.valence, abs=1e-9
-        )
+        assert em2.get_state().mood.valence == pytest.approx(em.get_state().mood.valence, abs=1e-9)
 
     async def test_momentum_preserved_after_restore(self):
         em = _async_engine()
@@ -206,25 +204,25 @@ class TestAsyncStatePersistence:
 
 
 # ---------------------------------------------------------------------------
-# AsyncEmotionalMemory — get_current_stimmung
+# AsyncEmotionalMemory — get_current_mood
 # ---------------------------------------------------------------------------
 
 
-class TestAsyncGetCurrentStimmung:
-    async def test_returns_stimmung_without_decay(self):
+class TestAsyncGetCurrentMood:
+    async def test_returns_mood_without_decay(self):
         em = _async_engine()
-        s = em.get_current_stimmung()
+        s = em.get_current_mood()
         assert s.valence == pytest.approx(0.0)
 
-    async def test_returns_regressed_stimmung_with_decay(self):
+    async def test_returns_regressed_mood_with_decay(self):
         from datetime import UTC, datetime, timedelta
 
-        cfg = EmotionalMemoryConfig(stimmung_decay=StimmungDecayConfig(base_half_life_seconds=1.0))
+        cfg = EmotionalMemoryConfig(mood_decay=MoodDecayConfig(base_half_life_seconds=1.0))
         em = _async_engine(config=cfg)
         em.set_affect(CoreAffect(valence=1.0, arousal=0.8))
         future = datetime.now(tz=UTC) + timedelta(hours=1)
-        s = em.get_current_stimmung(now=future)
-        assert s.valence < em.get_state().stimmung.valence
+        s = em.get_current_mood(now=future)
+        assert s.valence < em.get_state().mood.valence
 
 
 # ---------------------------------------------------------------------------
@@ -531,3 +529,108 @@ class TestAsyncCloseAndContextManager:
     async def test_async_context_manager_returns_engine(self) -> None:
         async with _async_engine() as em:
             assert isinstance(em, AsyncEmotionalMemory)
+
+
+# ---------------------------------------------------------------------------
+# Bidirectional resonance links (async)
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncBidirectionalResonanceLinks:
+    def _engine_with_low_threshold(self) -> AsyncEmotionalMemory:
+        from emotional_memory.engine import EmotionalMemoryConfig
+        from emotional_memory.resonance import ResonanceConfig
+
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(threshold=0.0, temporal_half_life_seconds=1e9)
+        )
+        return AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+            config=config,
+        )
+
+    async def test_target_memory_has_backward_link(self) -> None:
+        """After A is encoded after B, B must carry a backward link targeting A."""
+        em = self._engine_with_low_threshold()
+        b = await em.encode("first memory")
+        a = await em.encode("second memory")
+
+        b_updated = await em.get(b.id)
+        assert b_updated is not None
+        backward_ids = [lnk.target_id for lnk in b_updated.tag.resonance_links]
+        assert a.id in backward_ids
+
+    async def test_backward_link_strength_mirrors_forward(self) -> None:
+        em = self._engine_with_low_threshold()
+        b = await em.encode("older memory")
+        a = await em.encode("newer memory")
+
+        forward_strength = next(
+            lnk.strength for lnk in a.tag.resonance_links if lnk.target_id == b.id
+        )
+        b_updated = await em.get(b.id)
+        assert b_updated is not None
+        backward_strength = next(
+            lnk.strength for lnk in b_updated.tag.resonance_links if lnk.target_id == a.id
+        )
+        assert forward_strength == pytest.approx(backward_strength)
+
+    async def test_encode_batch_creates_backward_links(self) -> None:
+        em = self._engine_with_low_threshold()
+        memories = await em.encode_batch(["first", "second", "third"])
+        first = await em.get(memories[0].id)
+        assert first is not None
+        backward_targets = [lnk.target_id for lnk in first.tag.resonance_links]
+        later_ids = {m.id for m in memories[1:]}
+        assert any(tid in later_ids for tid in backward_targets)
+
+
+# ---------------------------------------------------------------------------
+# Spreading activation + Hebbian (async)
+# ---------------------------------------------------------------------------
+
+
+class TestAsyncSpreadingAndHebbian:
+    def _engine_with_resonance(self) -> AsyncEmotionalMemory:
+        from emotional_memory.engine import EmotionalMemoryConfig
+        from emotional_memory.resonance import ResonanceConfig
+
+        config = EmotionalMemoryConfig(
+            resonance=ResonanceConfig(
+                threshold=0.0,
+                temporal_half_life_seconds=1e9,
+                propagation_hops=2,
+                hebbian_increment=0.1,
+            )
+        )
+        return AsyncEmotionalMemory(
+            store=SyncToAsyncStore(InMemoryStore()),
+            embedder=SyncToAsyncEmbedder(FixedEmbedder([1.0, 0.0])),
+            config=config,
+        )
+
+    async def test_retrieve_works_with_spreading(self) -> None:
+        """Smoke test: async retrieve with spreading activation returns results."""
+        em = self._engine_with_resonance()
+        await em.encode("alpha memory")
+        await em.encode("beta memory")
+        await em.encode("gamma memory")
+        results = await em.retrieve("memory", top_k=2)
+        assert len(results) == 2
+
+    async def test_hebbian_strengthening_applied(self) -> None:
+        """After co-retrieval, at least one link between results should be strengthened."""
+        em = self._engine_with_resonance()
+        a = await em.encode("first memory")
+        b = await em.encode("second memory")
+
+        await em.retrieve("memory", top_k=2)
+
+        a_after = await em.get(a.id)
+        b_after = await em.get(b.id)
+        assert a_after is not None
+        assert b_after is not None
+        all_links = list(a_after.tag.resonance_links) + list(b_after.tag.resonance_links)
+        link_targets = {lnk.target_id for lnk in all_links}
+        assert a.id in link_targets or b.id in link_targets

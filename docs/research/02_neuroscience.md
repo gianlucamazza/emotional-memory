@@ -170,7 +170,7 @@ Le persone codificano e recuperano preferenzialmente informazioni che corrispond
 
 **Evidenza empirica**: Gli individui felici ricordano meglio il materiale positivo; gli individui tristi ricordano meglio il materiale negativo. Gli effetti MCM sono più robusti per gli umoris positivi che negativi.
 
-**Implicazione**: Il segnale `emotional_congruence` nel retrieval multi-segnale deve misurare il match tra lo Stimmung corrente del sistema e lo stimmung_snapshot della memoria al momento dell'encoding.
+**Implicazione**: Il segnale `emotional_congruence` nel retrieval multi-segnale deve misurare il match tra il Mood corrente del sistema e il `mood_snapshot` della memoria al momento dell'encoding.
 
 ---
 
@@ -180,7 +180,7 @@ Il retrieval è potenziato quando lo stato interno (umore, arousal fisiologico, 
 
 Distinto dalla memoria mood-congruente: la memoria state-dependent riguarda il **match tra contesti di encoding e retrieval**, non il match tra umore e valenza del materiale.
 
-**Implicazione**: Lo Stimmung al momento dell'encoding deve essere catturato come parte del tag (`stimmung_snapshot`). Il retrieval con Stimmung molto diverso dallo stimmung_snapshot può penalizzare il score di una memoria altrimenti rilevante.
+**Implicazione**: Il Mood al momento dell'encoding deve essere catturato come parte del tag (`mood_snapshot`). Il retrieval con Mood molto diverso dal `mood_snapshot` può penalizzare il score di una memoria altrimenti rilevante.
 
 ---
 
@@ -225,7 +225,7 @@ La revisione sistematica di Fang et al. (2025) dimostra che la fusione multimoda
 | Riconsolidamento al retrieval | Finestra di aggiornamento del `EmotionalTag` post-retrieval |
 | Somatic Marker Hypothesis | `EmotionalTag` come bias di navigazione decisionale |
 | Mood-Congruent Memory | Peso `emotional_congruence` nel retrieval scoring |
-| State-Dependent Learning | `stimmung_snapshot` nell'`EmotionalTag` + match al retrieval |
+| State-Dependent Learning | `mood_snapshot` nell'`EmotionalTag` + match al retrieval |
 | Affective Prediction Error | Trigger per apertura finestra di riconsolidamento |
 | Panksepp 7 sistemi | Possibile base per categorie discrete di emozione |
 | Costruzionismo di Barrett | Etichette discrete come pattern emergenti nello spazio continuo |

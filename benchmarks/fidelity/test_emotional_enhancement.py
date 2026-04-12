@@ -39,15 +39,15 @@ def test_high_arousal_yields_stronger_consolidation():
 
 def test_emotional_enhancement_peaks_at_mid_arousal():
     """Consolidation follows an inverted-U: peak near arousal=0.7, not at max."""
-    # With stimmung_arousal = 0, effective_arousal = 0.7 * encoding_arousal
+    # With mood_arousal = 0, effective_arousal = 0.7 * encoding_arousal
     # Peak at effective_arousal = 0.7 → encoding_arousal = 1.0
     # (Because 0.7 * 1.0 = 0.7 exactly)
     # Mid-high arousal (0.7) vs max arousal (1.0) vs low (0.0)
-    stimmung_arousal = 0.7  # fix stimmung to make effective_arousal predictable
+    mood_arousal = 0.7  # fix mood to make effective_arousal predictable
 
-    s_low = consolidation_strength(0.0, stimmung_arousal)
-    s_mid = consolidation_strength(0.7, stimmung_arousal)
-    s_max = consolidation_strength(1.0, stimmung_arousal)
+    s_low = consolidation_strength(0.0, mood_arousal)
+    s_mid = consolidation_strength(0.7, mood_arousal)
+    s_max = consolidation_strength(1.0, mood_arousal)
 
     # The inverted-U: neither extreme should beat the mid-range
     assert s_mid >= s_low, f"Mid arousal should beat low: {s_mid:.3f} vs {s_low:.3f}"
@@ -61,7 +61,7 @@ def test_arousal_modulates_decay():
     from emotional_memory.affect import AffectiveMomentum
     from emotional_memory.decay import DecayConfig, compute_effective_strength
     from emotional_memory.models import make_emotional_tag
-    from emotional_memory.stimmung import StimmungField
+    from emotional_memory.mood import MoodField
 
     config = DecayConfig()
     now = datetime.now(tz=UTC)
@@ -70,7 +70,7 @@ def test_arousal_modulates_decay():
     tag_high = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=0.9),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=1.0,
     )
     tag_high = tag_high.model_copy(update={"timestamp": now})
@@ -78,7 +78,7 @@ def test_arousal_modulates_decay():
     tag_low = make_emotional_tag(
         core_affect=CoreAffect(valence=0.0, arousal=0.1),
         momentum=AffectiveMomentum.zero(),
-        stimmung=StimmungField.neutral(),
+        mood=MoodField.neutral(),
         consolidation_strength=1.0,
     )
     tag_low = tag_low.model_copy(update={"timestamp": now})
