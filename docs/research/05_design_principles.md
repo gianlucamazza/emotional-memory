@@ -38,8 +38,10 @@ L'insight fondamentale di Spinoza: "Laetitia est transitio hominis a minore ad m
 
 ```python
 AffectiveMomentum:
-    velocity: Tuple[float, float]      # (dv/dt, da/dt) — velocità nel piano valence-arousal
-    acceleration: Tuple[float, float]  # (d²v/dt², d²a/dt²) — accelerazione
+    d_valence: float   # dv/dt — prima derivata della valence
+    d_arousal: float   # da/dt — prima derivata dell'arousal
+    dd_valence: float  # d²v/dt² — accelerazione della valence
+    dd_arousal: float  # d²a/dt² — accelerazione dell'arousal
 ```
 
 Il momentum informa:
@@ -116,8 +118,8 @@ Quando una memoria viene encodata o recuperata, **risuona** con altre per:
 
 ```python
 ResonanceLink:
-    source_memory_id: str
-    target_memory_id: str
+    source_id: str
+    target_id: str
     strength: float             # [0.0, 1.0]
     link_type: Literal['semantic', 'emotional', 'temporal', 'causal', 'contrastive']
 ```
@@ -131,16 +133,15 @@ I link di risonanza formano cluster emotivi che si rinforzano reciprocamente dur
 Ogni memoria porta un `EmotionalTag` che cattura tutti e 5 i layer al momento dell'encoding:
 
 ```python
-@dataclass
-class EmotionalTag:
+class EmotionalTag(BaseModel):  # Pydantic, frozen=True
     # Layer 1: Core Affect al momento dell'encoding
-    core_affect: Tuple[float, float]          # (valence, arousal)
+    core_affect: CoreAffect                   # (valence, arousal)
 
     # Layer 2: Momentum al momento dell'encoding
-    momentum: Tuple[Tuple[float, float], Tuple[float, float]]  # (velocity, acceleration)
+    momentum: AffectiveMomentum               # (d_valence, d_arousal, dd_valence, dd_arousal)
 
     # Layer 3: Mood snapshot al momento dell'encoding
-    mood_snapshot: Tuple[float, float, float]  # (valence, arousal, dominance)
+    mood_snapshot: MoodField                  # (valence, arousal, dominance, inertia, timestamp)
 
     # Layer 4: Appraisal che ha generato questa emozione
     appraisal: AppraisalVector | None         # None se emozione esogena
@@ -151,9 +152,22 @@ class EmotionalTag:
     # Metadata
     timestamp: datetime
     consolidation_strength: float             # [0.0, 1.0] — modulata da arousal
-    reconsolidation_window_open: bool         # True per T_recon secondi dopo retrieval
     last_retrieved: datetime | None
     retrieval_count: int
+    reconsolidation_count: int                # numero di riconsolidamenti avvenuti
+
+    # Dual-path encoding (LeDoux, 1996)
+    pending_appraisal: bool                   # True quando fast-path; elaborate() completarà il tag
+
+    # APE-gated reconsolidation window (Pearce & Hall, 1980)
+    window_opened_at: datetime | None         # timestamp apertura finestra; None = chiusa
+
+    # Pearce-Hall predictive learning
+    expected_affect: CoreAffect | None        # previsione EMA del core_affect futuro
+    prediction_learning_rate: float           # tasso adattivo in [0.05, 0.80]
+
+    # Plutchik discrete emotion label (auto_categorize)
+    emotion_label: EmotionLabel | None        # None se auto_categorize=False
 ```
 
 ---
@@ -220,26 +234,31 @@ def retrieval_score(
 I pesi `w` non sono fissi — dipendono dal Mood corrente:
 
 ```python
-def adaptive_weights(mood: MoodField) -> np.ndarray:
-    # Base weights
-    w = np.array([0.35, 0.25, 0.15, 0.10, 0.10, 0.05])
+def adaptive_weights(mood: MoodField, base: list[float], config: AdaptiveWeightsConfig) -> np.ndarray:
+    # I pesi vengono modulati con smooth sigmoid (tanh) — nessuna soglia hard
+    w = np.array(base, dtype=float)
 
-    # Mood negativo intenso → più peso all'emotional congruence
-    if mood.valence < -0.5:
-        w[1] += 0.1; w[2] += 0.05
-        w[0] -= 0.15  # meno peso semantico
+    # Mood negativo → emotional signals dominano (s2, s3 ↑, s1 ↓)
+    neg = smooth_gate(mood.valence, center=-0.3, sharpness=5.0)  # attiva sotto center
+    w[1] += config.negative_mood_strength * neg * (2/3)   # mood congruence
+    w[2] += config.negative_mood_strength * neg * (1/3)   # affect proximity
+    w[0] -= config.negative_mood_strength * neg           # semantic
 
-    # Alta arousal → più sensibilità al momentum
-    if mood.arousal > 0.7:
-        w[3] += 0.1
-        w[0] -= 0.1
+    # Alta arousal → momentum alignment domina (s4 ↑, s1 ↓)
+    high_a = smooth_gate(mood.arousal, center=0.6, sharpness=5.0)  # attiva sopra center
+    w[3] += config.high_arousal_strength * high_a
+    w[0] -= config.high_arousal_strength * high_a
 
-    # Mood neutro/calmo → retrieval più razionale/semantico
-    if abs(mood.valence) < 0.2 and mood.arousal < 0.3:
-        w[0] += 0.15
-        w[1] -= 0.1; w[2] -= 0.05
+    # Mood calmo/neutro → retrieval semantico prevale (s1 ↑, s2, s3 ↓)
+    calm = smooth_gate(mood.arousal, center=0.3, sharpness=-5.0) * \
+           (1.0 - abs(mood.valence))  # bassa arousal + valence neutro
+    w[0] += config.calm_semantic_strength * calm
+    w[1] -= config.calm_semantic_strength * calm * (2/3)
+    w[2] -= config.calm_semantic_strength * calm * (1/3)
 
-    return w / w.sum()  # normalizza
+    w = w.clip(0.0)  # nessun peso negativo
+    total = w.sum()
+    return w / total if total > 0 else np.full(len(w), 1.0 / len(w))  # fallback uniforme
 ```
 
 ---
@@ -283,43 +302,38 @@ def consolidation_at_time_t(
 ## Principio 7 — Riconsolidamento al Retrieval
 *Fonte: Nader, Schiller (2000, 2010), prediction error theory*
 
-Ogni retrieval apre una finestra di riconsolidamento:
+Il retrieval non apre sempre la finestra di riconsolidamento — è l'**Affective Prediction Error (APE)** a determinarla. Solo quando l'APE supera una soglia configurabile si apre la finestra (`window_opened_at` viene impostato). Qualsiasi retrieval successivo durante la finestra aperta effettua il riconsolidamento. I tag sono immutabili (Pydantic `frozen=True`): si usa `model_copy(update=...)` per produrre nuove istanze.
 
 ```python
-RECONSOLIDATION_WINDOW_SECONDS = 300  # 5 minuti (configurabile)
-
 def on_retrieval(memory: Memory, current_state: AffectiveState) -> Memory:
-    # Apre la finestra di riconsolidamento
-    memory.tag.reconsolidation_window_open = True
-    memory.tag.last_retrieved = datetime.now()
-    memory.tag.retrieval_count += 1
+    # Aggiorna metadata (ritorna nuova istanza immutabile)
+    new_tag = memory.tag.model_copy(update={
+        "last_retrieved": datetime.now(tz=UTC),
+        "retrieval_count": memory.tag.retrieval_count + 1,
+    })
 
-    # Calcola l'affective prediction error
-    ape = affective_prediction_error(
-        expected=memory.tag.core_affect,
-        observed=current_state.core_affect
-    )
+    # Calcola APE e aggiorna la previsione (Pearce & Hall, 1980)
+    ape = compute_ape(new_tag, current_state.core_affect)
+    new_tag = update_prediction(new_tag, current_state.core_affect)
 
-    # Se APE è significativo, aggiorna il tag emotivo
-    if abs(ape) > APE_THRESHOLD:
-        memory.tag = update_emotional_tag(memory.tag, current_state, ape)
+    # Apre la finestra solo se APE supera la soglia
+    if ape >= APE_THRESHOLD and new_tag.window_opened_at is None:
+        new_tag = new_tag.model_copy(update={"window_opened_at": datetime.now(tz=UTC)})
 
-    return memory
+    # Riconsolida se la finestra è aperta (qualsiasi retrieval entro la finestra)
+    if new_tag.window_opened_at is not None:
+        alpha = min(ape * RECONSOLIDATION_LEARNING_RATE, 0.5)
+        blended = CoreAffect(
+            valence=(1-alpha)*new_tag.core_affect.valence + alpha*current_state.core_affect.valence,
+            arousal=(1-alpha)*new_tag.core_affect.arousal + alpha*current_state.core_affect.arousal,
+        )
+        new_tag = new_tag.model_copy(update={
+            "core_affect": blended,
+            "reconsolidation_count": new_tag.reconsolidation_count + 1,
+            "window_opened_at": None,  # finestra si chiude dopo il riconsolidamento
+        })
 
-
-def update_emotional_tag(
-    old_tag: EmotionalTag,
-    new_state: AffectiveState,
-    ape: float
-) -> EmotionalTag:
-    # Interpolazione pesata: il tag si aggiorna verso lo stato corrente
-    # proporzionalmente all'entità dell'APE
-    alpha = min(abs(ape) * LEARNING_RATE, 0.5)  # max 50% update
-    new_core_affect = (
-        (1-alpha) * old_tag.core_affect[0] + alpha * new_state.core_affect[0],
-        (1-alpha) * old_tag.core_affect[1] + alpha * new_state.core_affect[1]
-    )
-    return replace(old_tag, core_affect=new_core_affect)
+    return memory.model_copy(update={"tag": new_tag})
 ```
 
 ---
@@ -330,23 +344,18 @@ def update_emotional_tag(
 L'emozione non è un input — è un **output** dell'appraisal dell'evento rispetto ai goal del sistema. Il sistema deve poter definire un **goal set** (conatus) che orienta l'appraisal.
 
 ```python
-class AppraisalEngine:
-    def __init__(self, goal_set: list[Goal], norm_set: list[Norm]):
-        self.goals = goal_set
-        self.norms = norm_set
+class AppraisalEngine(Protocol):
+    """Duck-typed protocol — nessuna ereditarietà richiesta.
 
-    def appraise(self, event: Event, context: Context) -> AppraisalVector:
-        novelty = self._compute_novelty(event, context)
-        goal_relevance = self._compute_goal_relevance(event)
-        coping = self._compute_coping_potential(event, context)
-        norm_congruence = self._compute_norm_congruence(event)
-        self_relevance = self._compute_self_relevance(event)
-        return AppraisalVector(novelty, goal_relevance, coping, norm_congruence, self_relevance)
+    Le implementazioni disponibili:
+      - LLMAppraisalEngine  : usa un LLM (OpenAI-compatible) con prompt Scherer CPM
+      - KeywordAppraisalEngine: regole basate su keyword, nessuna dipendenza esterna
+      - StaticAppraisalEngine : ritorna un vettore fisso (per test)
+    """
 
-    def appraise_to_affect(self, event: Event, context: Context) -> Tuple[CoreAffect, AppraisalVector]:
-        vec = self.appraise(event, context)
-        affect = self._map_appraisal_to_affect(vec)
-        return affect, vec
+    def appraise(
+        self, event_text: str, context: dict | None = None
+    ) -> AppraisalVector: ...
 ```
 
 ---
@@ -383,8 +392,8 @@ def build_resonance_links(
         if resonance > RESONANCE_THRESHOLD:
             link_type = classify_link_type(sem_sim, emo_sim, temporal_prox)
             links.append(ResonanceLink(
-                source_memory_id=new_memory.id,
-                target_memory_id=mem.id,
+                source_id=new_memory.id,
+                target_id=mem.id,
                 strength=resonance,
                 link_type=link_type
             ))

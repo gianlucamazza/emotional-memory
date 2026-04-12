@@ -112,7 +112,7 @@ Karim Nader, Glenn Schaller e Daniela Schiller hanno dimostrato che le memorie r
 
 **Applicazione clinica**: I ricordi di paura possono essere modificati durante il riconsolidamento attraverso interventi comportamentali (estinzione durante la finestra di riconsolidamento) o farmacologici.
 
-**Implicazione critica per la libreria**: Ogni operazione di **retrieval** deve aprire una finestra di riconsolidamento durante la quale il `EmotionalTag` della memoria può essere aggiornato. Questo significa che il retrieval non è un'operazione read-only — può modificare la memoria stessa.
+**Implicazione critica per la libreria**: Il retrieval non è un'operazione read-only — l'**errore di predizione affettiva** (APE) determina se il tag emotivo diventa labile. Solo quando l'APE supera una soglia configurabile si apre la finestra di riconsolidamento (`window_opened_at`), durante la quale il `EmotionalTag` della memoria puo' essere aggiornato. Questo modello APE-gated si ispira anche a **Pearce & Hall (1980)**: l'associability aumenta dopo errori di predizione elevati, e diminuisce dopo predizioni accurate.
 
 ---
 
@@ -229,7 +229,7 @@ La revisione sistematica di Fang et al. (2025) dimostra che la fusione multimoda
 | Affective Prediction Error | Trigger per apertura finestra di riconsolidamento |
 | Panksepp 7 sistemi | Possibile base per categorie discrete di emozione |
 | Costruzionismo di Barrett | Etichette discrete come pattern emergenti nello spazio continuo |
-| SECs di Scherer | Layer 4: Appraisal Vector (4 dimensioni) |
+| SECs di Scherer | Layer 4: Appraisal Vector (5 dimensioni) |
 
 ---
 

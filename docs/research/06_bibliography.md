@@ -83,6 +83,11 @@
 - **Scherer, K.R.** (2009). "The dynamic architecture of emotion: Evidence for the component process model." *Cognition and Emotion*, 23(7), 1307-1351.
 - **Arnold, M.B.** (1960). *Emotion and Personality* (2 vols). New York: Columbia University Press.
 
+### Predictive Learning e Arousal
+
+- **Pearce, J.M. & Hall, G.** (1980). "A model for Pavlovian learning: Variations in the effectiveness of conditioned but not of unconditioned stimuli." *Psychological Review*, 87(6), 532-552. La teoria predictor-error di Pearce-Hall è alla base del meccanismo APE-gated reconsolidation: solo eventi con alta prediction error aprono la finestra di riconsolidamento.
+- **Yerkes, R.M. & Dodson, J.D.** (1908). "The relation of strength of stimulus to rapidity of habit-formation." *Journal of Comparative Neurology and Psychology*, 18(5), 459-482. La curva Yerkes-Dodson informa la relazione non lineare tra arousal e consolidation strength: picco attorno ad arousal moderato, degradazione agli estremi.
+
 ### Emozione Costruita
 
 - **Barrett, L.F.** (2017). *How Emotions Are Made: The Secret Life of the Brain*. Boston: Houghton Mifflin Harcourt.

@@ -171,7 +171,7 @@ Le emozioni composte emergono dalle combinazioni (es. gratification = joy + prid
 
 Il CPM è il più ricco tra i modelli di appraisal. La sequenza dei 5 SECs (Stimulus Evaluation Checks) genera stati emotivi in modo processuale.
 
-**Formato computazionale**:
+**Formato computazionale** (CPM originale di Scherer):
 ```
 appraisal_result = {
     novelty_check: float,          # 0=completamente previsto, 1=totalmente nuovo
@@ -182,9 +182,11 @@ appraisal_result = {
 }
 ```
 
-Questi 5 valori determinano lo stato emotivo risultante attraverso regole compositiva.
+Questi 5 valori determinano lo stato emotivo risultante attraverso regole compositive.
 
 **Rilevanza**: Il CPM è il modello che più direttamente informa il **Layer 4 — Appraisal Vector** della nostra architettura.
+
+**Nota di implementazione**: nella libreria `intrinsic_pleasantness` è sostituita da `self_relevance` (quanto l'evento riguarda il "sé" del sistema, `[0.0, 1.0]`). Questa deviazione rispetto al CPM originale è intenzionale: `self_relevance` è più operazionalizzabile in un agente LLM e contribuisce all'arousal (non alla valence), preservando i 5 SEC ma ridistribuendo i ruoli.
 
 ---
 
