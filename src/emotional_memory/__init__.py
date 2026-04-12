@@ -69,6 +69,7 @@ __all__ = [
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalConfig",
+    "SQLiteStore",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",
