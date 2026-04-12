@@ -296,9 +296,9 @@ make docs-images   # regenerate all PNGs in docs/images/
 
 ## Benchmarks
 
-### Psychological fidelity (106 tests)
+### Psychological fidelity (126 tests)
 
-The library validates 16 phenomena from the affective science literature:
+The library validates 20 phenomena from the affective science literature:
 
 | Phenomenon | Reference | Tests |
 |---|---|---|
@@ -313,6 +313,10 @@ The library validates 16 phenomena from the affective science literature:
 | Mood-adaptive weights | Heidegger, Being & Time §29 | 14 |
 | Appraisal-to-affect mapping | Scherer CPM 2009 | 11 |
 | Spreading activation | Collins & Loftus 1975 | 5 |
+| Hebbian co-retrieval strengthening | Hebb 1949 | 4 |
+| ACT-R power-law decay | Anderson 1983 / McGaugh 2004 | 5 |
+| PAD dominance | Mehrabian & Russell 1974 | 8 |
+| Emotional retrieval vs. cosine | Bower 1981 / Russell 1980 / Nader 2000 | 3 |
 | Design gap regression | (various) | 3 |
 | Dual-path encoding | LeDoux 1996 | 6 |
 | Emotion categorization | Plutchik 1980 | 10 |

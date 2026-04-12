@@ -7,6 +7,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-04-12
+
+### Fixed
+
+- **Plutchik categorization — sector 6 bug** (`categorize.py`) — sector 6 (270°, low-arousal
+  neutral) incorrectly mapped to `"sadness"` (duplicate of sector 5); corrected to `"disgust"`,
+  restoring all 8 Plutchik primary emotions to the circumplex.
+- **Isotropic circumplex mapping** (`categorize.py`) — arousal coordinates were asymmetric
+  (`[-0.5, 0.5]` span 1 vs valence `[-1, 1]` span 2); `atan2` on raw coordinates compressed
+  high-arousal sectors and expanded high-valence ones. Fixed by scaling `a_centered × 2` before
+  `atan2`, producing geometrically correct equal-angle sectors.
+- **Neutral origin classified as "joy"** (`categorize.py`) — `atan2(0, 0) = 0°` → sector 0 →
+  `"joy"` with `confidence=1.0`. Neutral points (`r < 0.05`) now return `confidence=0.0`.
+- **`prune()` mutation during iteration** (`engine.py`, `async_engine.py`) — `delete()` during
+  iteration over `list_all()` could skip entries or raise `RuntimeError` with lazy-iterator stores.
+  IDs are now collected first, then deleted in a second pass.
+- **`import_memories(overwrite=True)` used `save()` instead of `update()`** (`engine.py`,
+  `async_engine.py`) — `save()` is `INSERT OR REPLACE` on `SQLiteStore` (worked by accident)
+  but custom stores with pure-INSERT `save()` would silently create duplicates. Fixed to call
+  `update()` for existing records.
+- **LLM response regex greedy** (`appraisal_llm.py`) — `\{.*\}` captured from the first `{` to
+  the last `}`, breaking multi-object LLM responses. Fixed to `\{[^{}]*\}` (non-greedy, flat
+  schema only).
+- **`SQLiteStore` thread safety** (`stores/sqlite.py`) — `sqlite3.connect()` defaulted to
+  `check_same_thread=True`; `SyncToAsyncStore` dispatches via `asyncio.to_thread()` on arbitrary
+  threads, raising `ProgrammingError`. Fixed to `check_same_thread=False` + WAL journal mode for
+  concurrent reader/writer access.
+- **`SQLiteStore._init_vec_from_db` empty-table bug** (`stores/sqlite.py`) — reopening a DB
+  where `memory_vec` exists but is empty left `_dim=0` while `_vec_ready=True`. Fixed by parsing
+  the embedding dimension from `sqlite_master` schema SQL when no rows are present.
+
+### Changed
+
+- **`MoodField` dominance signal range extended** (`mood.py`) — coefficient `0.25 → 0.5`,
+  giving `dominance_signal = 0.5 + 0.5 × valence × arousal ∈ [0, 1]` (previously capped at
+  `[0.25, 0.75]`; PAD model requires the full unit range).
+- **`MoodDecayConfig` validates `base_half_life_seconds > 0`** (`mood.py`) — zero or negative
+  values previously silenced regression silently; now raises `ValidationError`.
+- **`AsyncEmotionalMemory._state` protected by `asyncio.Lock`** (`async_engine.py`) —
+  concurrent `encode()` coroutines no longer race on affective state: the lock is held only
+  during the synchronous state mutation, not during `await embed()`.
+- **`async_engine.py` fully mirrors `engine.py`** — extracted `_add_bidirectional_links()` and
+  `_elaborate_with_memory()` private helpers (deduplication + no double-fetch on
+  `elaborate_pending()`); `close()` no longer performs a redundant inline `import asyncio`.
+- **`AsyncEmotionalMemory.retrieve()` single `store.count()` call** — previously made two
+  round-trips (one for logging, one for candidate limit); now reuses the first value.
+- **`KeywordAppraisalEngine` per-dimension averaging** (`appraisal_llm.py`) — dimensions
+  untouched by a rule were previously diluted when averaging over all firing rules. Each
+  dimension is now averaged only over rules that contributed to it.
+- **`as_async()` docstring clarified** (`async_adapters.py`) — `AffectiveState` reference
+  sharing is safe because the object is always *replaced* (never mutated) on update.
+- **`SQLiteStore` excluded from `__all__` when unavailable** (`__init__.py`) — previously
+  declared in `__all__` even when `sqlite-vec` was absent, causing `AttributeError` on
+  wildcard imports.
+
+### Performance
+
+- **Batch numpy cosine in `build_resonance_links()`** (`resonance.py`) — replaced Python
+  per-item loop with `matrix @ q / (norms × q_norm)`; significant speedup for stores > 500.
+- **`heapq.nlargest()` for top-k resonance links** (`resonance.py`) — O(n log k) vs O(n log n)
+  full sort.
+- **`export_memories()` single serialization** (`engine.py`, `async_engine.py`) — replaced
+  `json.loads(m.model_dump_json())` double round-trip with `m.model_dump(mode="json")`.
+- **`cosine_similarity` module-level import** (`retrieval.py`) — removed per-call import from
+  the hot retrieval scoring path.
+- **LLM fallback result cached** (`appraisal_llm.py`) — when `fallback_on_error=True` and the
+  LLM call fails, the fallback `AppraisalVector` is now cached so repeated identical inputs
+  don't re-invoke the LLM.
+- **Retrieval weight constants** (`retrieval.py`) — `_MAX_MOOD_DIST = sqrt(6)`,
+  `_MAX_AFFECT_DIST = sqrt(5)` replace the previous hardcoded approximations.
+- **Zero-weight adaptive fallback** (`retrieval.py`) — when all weights clip to 0.0 under
+  extreme mood states, retrieval now falls back to uniform `[1/6] × 6` instead of returning
+  arbitrary zero-scored results.
+- **Float threshold for momentum zero-check** (`retrieval.py`) — `mag_c == 0.0` exact
+  comparison replaced with `mag_c < 1e-12` to avoid overflow on subnormal floats.
+- **`MoodField.update()` uses `base.inertia`** (`mood.py`) — after `regress()`, the new field
+  correctly inherits `base.inertia` rather than `self.inertia` (latent inconsistency with no
+  current runtime effect, corrected for future `regress()` extensions).
+
+### Added
+
+- **Fidelity benchmark: emotional retrieval vs. cosine baseline**
+  (`benchmarks/fidelity/test_emotional_vs_cosine.py`) — 3 tests demonstrating that the 6-signal
+  retrieval outperforms pure cosine when embeddings are identical: mood-congruent recall (Bower
+  1981), core-affect proximity (Russell 1980), and reconsolidation strengthening (Nader 2000).
+- **`SQLiteStore` test coverage** (`tests/test_sqlite_store.py`) — 8 new tests: `__repr__`,
+  brute-force cosine ranking path, `_ensure_vec()` edge cases (no-embedding save when vec ready,
+  `update()` triggers vec creation, delete when vec absent), `_init_vec_from_db` empty-table
+  regression, WAL mode verification, cross-thread write safety.
+- **Concurrent encode test** (`tests/test_async_engine.py`) — 12 concurrent `encode()` calls
+  on a shared `AsyncEmotionalMemory` verify that the `asyncio.Lock` prevents lost state updates.
+- **Flaky test fix** (`tests/test_engine.py`) — `test_load_state_preserves_momentum_history`
+  now passes explicit `now=fixed_now` to both `update()` calls, eliminating a timing race where
+  sub-millisecond deltas produced inconsistent velocity values.
+
+### Documentation
+
+- **README** — updated fidelity benchmark count (106 → 126), added PAD dominance, Hebbian
+  co-retrieval, ACT-R power-law decay, and emotional-vs-cosine to the phenomena table; updated
+  phenomenon test counts to reflect v0.4.1 and v0.5.0 additions.
+
 ## [0.4.1] - 2026-04-12
 
 ### Fixed
@@ -278,7 +379,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.2.0...v0.3.0
