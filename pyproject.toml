@@ -40,7 +40,7 @@ dev = [
   "mypy>=1.10",
 ]
 bench = ["pytest-benchmark>=4.0", "psutil>=5.9"]
-llm-test = ["httpx>=0.27"]
+llm-test = ["httpx>=0.28.1"]
 dotenv = ["python-dotenv>=1.0"]
 sqlite = ["sqlite-vec>=0.1.1"]
 viz = ["matplotlib>=3.7"]
