@@ -43,16 +43,15 @@ def _make_linked_memories(n: int, links_per_memory: int = 3) -> list[Memory]:
     base = _make_memories(n)
     result: list[Memory] = []
     for i, mem in enumerate(base):
-        links = []
-        for j in range(max(0, i - links_per_memory), i):
-            links.append(
-                ResonanceLink(
-                    source_id=mem.id,
-                    target_id=base[j].id,
-                    strength=0.6,
-                    link_type="semantic",
-                )
+        links = [
+            ResonanceLink(
+                source_id=mem.id,
+                target_id=base[j].id,
+                strength=0.6,
+                link_type="semantic",
             )
+            for j in range(max(0, i - links_per_memory), i)
+        ]
         tag = mem.tag.model_copy(update={"resonance_links": links})
         result.append(mem.model_copy(update={"tag": tag}))
     return result

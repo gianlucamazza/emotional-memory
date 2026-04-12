@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-04-12
+
+### Added
+
+- **Discrete emotion categorization** (`categorize.py`) — `EmotionLabel`, `categorize_affect()`,
+  `label_tag()`: maps continuous (valence, arousal) coordinates to Plutchik's 8 primary emotions
+  with intensity tiers (low/moderate/high) via angular sector lookup in the Russell circumplex;
+  optional dominance parameter disambiguates fear vs anger (Mehrabian & Russell 1974)
+- **`auto_categorize` config flag** — when `True`, every `encode()` / `encode_batch()` call
+  automatically attaches an `EmotionLabel` to the stored `EmotionalTag`
+- **Dual-speed encoding** (LeDoux, 1996) — `dual_path_encoding` config flag enables fast
+  thalamo-amygdala path (`pending_appraisal=True`, no appraisal call); `elaborate(memory_id)` runs
+  the slow thalamo-cortical appraisal later and blends affect (70% appraised / 30% raw);
+  `elaborate_pending()` processes all outstanding fast-path memories in one call
+- **Adaptive prediction error** (Schultz 1997, Pearce-Hall 1980) — `compute_ape()` computes
+  affective prediction error against `expected_affect` (EMA prediction) when available; called on
+  every retrieval so the prediction model learns continuously; `update_prediction()` applies
+  Pearce-Hall associability: large errors increase the learning rate, small errors decrease it
+- **APE-gated reconsolidation window** — `window_opened_at` field on `EmotionalTag` separates
+  window-opening (requires APE above threshold) from `last_retrieved` (any retrieval); fixes the
+  prior behaviour where any retrieval could open the lability window
+- 76 new tests across `tests/test_categorize.py`, `tests/test_prediction.py`,
+  `tests/test_dual_path.py` and 4 new fidelity benchmarks in `benchmarks/fidelity/`
+
+### Changed
+
+- `reconsolidate()` now applies a sigmoid-scaled adaptive learning rate based on APE magnitude:
+  larger prediction errors produce proportionally larger core affect updates (Schultz 1997)
+- `encode_batch()` now honours `dual_path_encoding` and `auto_categorize` flags, consistent with
+  the single-item `encode()` path
+
 ## [0.3.0] - 2026-04-12
 
 ### Added
@@ -197,7 +228,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/gianlucamazza/emotional-memory/releases/tag/v0.1.0

@@ -52,11 +52,13 @@ nav:
     - Appraisal: api/appraisal.md
     - Models: api/models.md
     - Interfaces: api/interfaces.md
+    - Categorize: api/categorize.md
     - Retrieval: api/retrieval.md
     - Decay: api/decay.md
     - Resonance: api/resonance.md
     - Mood: api/mood.md
     - Affect: api/affect.md
+    - State: api/state.md
     - Visualization: api/visualization.md
   - Research:
     - Overview: research/index.md

@@ -101,9 +101,10 @@ class TestAffectiveStateSnapshot:
         s = s.update(CoreAffect(valence=0.8, arousal=0.7))
         snap = s.snapshot()
         restored = AffectiveState.restore(snap)
-        # Next update should yield same momentum in both
-        next_s = s.update(CoreAffect(valence=0.9, arousal=0.9))
-        next_r = restored.update(CoreAffect(valence=0.9, arousal=0.9))
+        # Use identical `now` so dt is the same for both and momentum is deterministic
+        test_now = datetime.now(tz=UTC)
+        next_s = s.update(CoreAffect(valence=0.9, arousal=0.9), now=test_now)
+        next_r = restored.update(CoreAffect(valence=0.9, arousal=0.9), now=test_now)
         assert next_s.momentum.d_valence == pytest.approx(next_r.momentum.d_valence, abs=1e-6)
 
     def test_restore_does_not_mutate_snapshot(self):

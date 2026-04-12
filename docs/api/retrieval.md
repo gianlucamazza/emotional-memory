@@ -10,4 +10,6 @@
 
 ::: emotional_memory.retrieval.reconsolidate
 
-::: emotional_memory.retrieval.affective_prediction_error
+::: emotional_memory.retrieval.compute_ape
+
+::: emotional_memory.retrieval.update_prediction

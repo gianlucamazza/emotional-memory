@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-bench install-llm-test install-viz install-docs lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal test-llm docs-images docs docs-serve dist publish
+.PHONY: install install-sqlite install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal test-llm docs-images docs docs-serve dist publish clean
 
 install:
 	uv pip install -e ".[dev]"
@@ -21,6 +21,12 @@ install-llm-test:
 
 install-dotenv:
 	uv pip install -e ".[dev,dotenv]"
+
+install-sqlite:
+	uv pip install -e ".[dev,sqlite]"
+
+install-all:
+	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite]"
 
 lint:
 	ruff check .
@@ -68,3 +74,9 @@ dist:
 
 publish: dist
 	uv publish
+
+clean:
+	rm -rf dist/ build/ site/ htmlcov/ .coverage coverage.xml
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type f -name "*.pyc" -delete

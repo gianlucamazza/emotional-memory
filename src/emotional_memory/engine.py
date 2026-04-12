@@ -27,6 +27,7 @@ from pydantic import BaseModel
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalEngine, AppraisalVector, consolidation_strength
+from emotional_memory.categorize import label_tag
 from emotional_memory.decay import DecayConfig
 from emotional_memory.interfaces import Embedder, MemoryStore
 from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
@@ -40,9 +41,10 @@ from emotional_memory.resonance import (
 from emotional_memory.retrieval import (
     RetrievalConfig,
     adaptive_weights,
-    affective_prediction_error,
+    compute_ape,
     reconsolidate,
     retrieval_score,
+    update_prediction,
 )
 from emotional_memory.state import AffectiveState
 
@@ -56,6 +58,16 @@ class EmotionalMemoryConfig(BaseModel):
     mood_alpha: float = 0.1
     mood_decay: MoodDecayConfig | None = None
     """Time-based regression of mood toward baseline. None = disabled."""
+
+    dual_path_encoding: bool = False
+    """When True, fast-path encoding skips appraisal; call elaborate() later
+    to run full appraisal and blend core_affect (LeDoux, 1996)."""
+
+    elaboration_learning_rate: float = 0.7
+    """Blend ratio used in elaborate(): 70% appraised / 30% raw affect."""
+
+    auto_categorize: bool = False
+    """When True, run Plutchik categorization on encode and store EmotionLabel."""
 
 
 class EmotionalMemory:
@@ -118,7 +130,15 @@ class EmotionalMemory:
         logger.debug("encode start: content_len=%d", len(content))
 
         # Step 1: resolve affect
-        if appraisal is None and self._appraisal_engine is not None:
+        # Dual-path (LeDoux 1996): when dual_path_encoding is True and an explicit
+        # appraisal was NOT supplied, skip appraisal and mark tag as pending.
+        use_fast_path = (
+            self._config.dual_path_encoding
+            and appraisal is None
+            and self._appraisal_engine is not None
+        )
+
+        if not use_fast_path and appraisal is None and self._appraisal_engine is not None:
             appraisal = self._appraisal_engine.appraise(content, context=metadata)
 
         if appraisal is not None:
@@ -143,6 +163,14 @@ class EmotionalMemory:
             consolidation_strength=cs,
             appraisal=appraisal,
         )
+
+        # Mark pending_appraisal for fast-path memories
+        if use_fast_path:
+            tag = tag.model_copy(update={"pending_appraisal": True})
+
+        # Auto-categorize: attach Plutchik EmotionLabel
+        if self._config.auto_categorize:
+            tag = label_tag(tag)
 
         # Step 4: embed
         embedding = self._embedder.embed(content)
@@ -284,35 +312,42 @@ class EmotionalMemory:
         top = [mem for _, mem in pass2[:top_k]]
 
         # Reconsolidation check and retrieval count update
-        window = rc.reconsolidation_window_seconds
+        cfg = rc
         result = []
         for mem in top:
-            updated = mem.model_copy(
+            tag = mem.tag.model_copy(
                 update={
-                    "tag": mem.tag.model_copy(
-                        update={
-                            "last_retrieved": now,
-                            "retrieval_count": mem.tag.retrieval_count + 1,
-                        }
-                    )
+                    "last_retrieved": now,
+                    "retrieval_count": mem.tag.retrieval_count + 1,
                 }
             )
-            ape = affective_prediction_error(mem.tag.core_affect, self._state.core_affect)
-            # D1 — only reconsolidate within the lability window
-            last = mem.tag.last_retrieved
-            in_window = last is not None and (now - last).total_seconds() <= window
-            if ape > rc.ape_threshold and in_window:
-                updated = updated.model_copy(
-                    update={
-                        "tag": reconsolidate(
-                            updated.tag,
-                            self._state.core_affect,
-                            ape,
-                            rc.reconsolidation_learning_rate,
-                        )
-                    }
+            ape = compute_ape(tag, self._state.core_affect)
+
+            # APE-gated reconsolidation window (Nader & Schiller, 2000)
+            # HIGH APE: open window + reconsolidate
+            if ape > cfg.ape_threshold and tag.window_opened_at is None:
+                tag = reconsolidate(
+                    tag, self._state.core_affect, ape, cfg.reconsolidation_learning_rate
                 )
-                logger.debug("reconsolidate: id=%s ape=%.3f", mem.id, ape)
+                tag = tag.model_copy(update={"window_opened_at": now})
+                logger.debug("reconsolidate: id=%s ape=%.3f (window opened)", mem.id, ape)
+
+            # WITHIN OPEN WINDOW: reconsolidate regardless of APE
+            elif tag.window_opened_at is not None:
+                elapsed = (now - tag.window_opened_at).total_seconds()
+                if elapsed <= cfg.reconsolidation_window_seconds:
+                    tag = reconsolidate(
+                        tag, self._state.core_affect, ape, cfg.reconsolidation_learning_rate
+                    )
+                    logger.debug("reconsolidate: id=%s ape=%.3f (within window)", mem.id, ape)
+                else:
+                    # Window expired — close it
+                    tag = tag.model_copy(update={"window_opened_at": None})
+
+            # Pearce-Hall predictive learning: always update prediction
+            tag = update_prediction(tag, self._state.core_affect, ape)
+
+            updated = mem.model_copy(update={"tag": tag})
             self._store.update(updated)
             result.append(updated)
 
@@ -357,8 +392,10 @@ class EmotionalMemory:
             now = datetime.now(tz=UTC)
 
             # Resolve appraisal per item (mirrors encode())
+            # Dual-path: skip appraisal on fast path
+            use_fast_path = self._config.dual_path_encoding and self._appraisal_engine is not None
             appraisal: AppraisalVector | None = None
-            if self._appraisal_engine is not None:
+            if not use_fast_path and self._appraisal_engine is not None:
                 appraisal = self._appraisal_engine.appraise(content, context=meta)
 
             if appraisal is not None:
@@ -381,6 +418,14 @@ class EmotionalMemory:
                 consolidation_strength=cs,
                 appraisal=appraisal,
             )
+
+            # Mark pending_appraisal for fast-path memories
+            if use_fast_path:
+                tag = tag.model_copy(update={"pending_appraisal": True})
+
+            # Auto-categorize: attach Plutchik EmotionLabel
+            if self._config.auto_categorize:
+                tag = label_tag(tag)
 
             if embedding and bool(np.isnan(np.asarray(embedding)).any()):
                 warnings.warn(
@@ -432,6 +477,79 @@ class EmotionalMemory:
                     self._store.update(updated_target)
 
             results.append(memory)
+        return results
+
+    def elaborate(self, memory_id: str) -> Memory | None:
+        """Run full appraisal on a fast-path (pending) memory and blend core_affect.
+
+        Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal
+        on the memory's content, blends the appraised affect with the raw
+        fast-path affect, updates consolidation_strength, clears
+        pending_appraisal, and opens the reconsolidation window.
+
+        Args:
+            memory_id: ID of the memory to elaborate.
+
+        Returns:
+            The updated Memory, or None if the memory does not exist,
+            is not pending appraisal, or no appraisal engine is configured.
+        """
+        mem = self._store.get(memory_id)
+        if mem is None:
+            return None
+        if not mem.tag.pending_appraisal:
+            return None
+        if self._appraisal_engine is None:
+            return None
+
+        appraisal = self._appraisal_engine.appraise(mem.content)
+        appraised_affect = appraisal.to_core_affect()
+
+        # Blend: elaboration_learning_rate controls how much the appraised
+        # affect replaces the raw fast-path affect (30% raw, 70% appraised).
+        lr = self._config.elaboration_learning_rate
+        blended_affect = mem.tag.core_affect.lerp(appraised_affect, lr)
+
+        # Use appraised arousal for consolidation_strength — the elaboration
+        # process re-evaluates significance; the appraised arousal captures
+        # how emotionally significant the event truly is (McGaugh, 2004).
+        new_cs = consolidation_strength(appraised_affect.arousal, mem.tag.mood_snapshot.arousal)
+
+        now = datetime.now(tz=UTC)
+        updated_tag = mem.tag.model_copy(
+            update={
+                "core_affect": blended_affect,
+                "appraisal": appraisal,
+                "consolidation_strength": new_cs,
+                "pending_appraisal": False,
+                "window_opened_at": now,
+            }
+        )
+        updated_mem = mem.model_copy(update={"tag": updated_tag})
+        self._store.update(updated_mem)
+        logger.debug(
+            "elaborate: id=%s blended_valence=%.3f blended_arousal=%.3f",
+            memory_id,
+            blended_affect.valence,
+            blended_affect.arousal,
+        )
+        return updated_mem
+
+    def elaborate_pending(self) -> list[Memory]:
+        """Elaborate all memories with pending_appraisal=True.
+
+        Convenience method to run the slow appraisal path on all fast-path
+        memories in the store. Each memory is elaborated in sequence.
+
+        Returns:
+            List of updated Memory objects (only those that were elaborated).
+        """
+        results = []
+        for mem in self._store.list_all():
+            if mem.tag.pending_appraisal:
+                updated = self.elaborate(mem.id)
+                if updated is not None:
+                    results.append(updated)
         return results
 
     def delete(self, memory_id: str) -> None:

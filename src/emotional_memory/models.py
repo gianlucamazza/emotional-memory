@@ -18,6 +18,12 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import AppraisalVector
+
+# EmotionLabel is imported directly (not under TYPE_CHECKING) because Pydantic
+# needs the class at model-definition time for field type resolution when
+# `from __future__ import annotations` is active.  categorize.py is a leaf
+# module with no runtime imports from models.py, so there is no circular dep.
+from emotional_memory.categorize import EmotionLabel
 from emotional_memory.mood import MoodField
 
 
@@ -74,6 +80,25 @@ class EmotionalTag(BaseModel):
     last_retrieved: datetime | None = None
     retrieval_count: int = 0
     reconsolidation_count: int = 0
+
+    # Dual-path encoding (LeDoux, 1996)
+    pending_appraisal: bool = False
+    """True when fast-path encoding was used; appraisal is deferred to elaborate()."""
+
+    # APE-gated reconsolidation window
+    window_opened_at: datetime | None = None
+    """Timestamp when the reconsolidation lability window was opened (APE-gated)."""
+
+    # Pearce-Hall predictive learning
+    expected_affect: CoreAffect | None = None
+    """EMA prediction of core_affect, updated by update_prediction() on retrieval."""
+
+    prediction_learning_rate: float = 0.2
+    """Adaptive learning rate for expected_affect EMA. Clamped to [0.05, 0.80]."""
+
+    # Plutchik discrete emotion label (auto_categorize)
+    emotion_label: EmotionLabel | None = None
+    """Discrete Plutchik emotion label, set when auto_categorize=True."""
 
 
 class Memory(BaseModel):

@@ -86,10 +86,12 @@ def _make_figure(
 
     if ax is None:
         fig, new_ax = plt.subplots(figsize=figsize)
-        assert isinstance(fig, MplFigure)
+        if not isinstance(fig, MplFigure):
+            raise TypeError(f"plt.subplots returned unexpected type: {type(fig)}")
         return fig, new_ax
     parent = ax.get_figure()
-    assert isinstance(parent, MplFigure)
+    if not isinstance(parent, MplFigure):
+        raise TypeError(f"ax.get_figure() returned unexpected type: {type(parent)}")
     return parent, ax
 
 
@@ -146,9 +148,13 @@ def plot_circumplex(
         cbar.set_label("Consolidation strength", fontsize=9)
 
     # Quadrant labels
-    label_kw: dict[str, object] = dict(
-        fontsize=8, color="gray", ha="center", va="center", style="italic"
-    )
+    label_kw: dict[str, object] = {
+        "fontsize": 8,
+        "color": "gray",
+        "ha": "center",
+        "va": "center",
+        "style": "italic",
+    }
     _ax.text(-0.7, 0.85, "Tense / Distressed", **label_kw)  # type: ignore[arg-type]
     _ax.text(0.7, 0.85, "Excited / Elated", **label_kw)  # type: ignore[arg-type]
     _ax.text(-0.7, 0.15, "Sad / Depressed", **label_kw)  # type: ignore[arg-type]
@@ -552,10 +558,7 @@ def plot_resonance_network(
 
     from emotional_memory.models import ResonanceLink as RL
 
-    typed_links: list[RL] = []
-    for lnk in links:
-        if isinstance(lnk, RL):
-            typed_links.append(lnk)
+    typed_links: list[RL] = [lnk for lnk in links if isinstance(lnk, RL)]
 
     if not typed_links:
         return fig
@@ -582,13 +585,13 @@ def plot_resonance_network(
             "",
             xy=(tx, ty),
             xytext=(sx, sy),
-            arrowprops=dict(
-                arrowstyle="-|>",
-                color=color,
-                lw=1.0 + lnk.strength * 2.0,
-                alpha=0.7,
-                connectionstyle="arc3,rad=0.1",
-            ),
+            arrowprops={
+                "arrowstyle": "-|>",
+                "color": color,
+                "lw": 1.0 + lnk.strength * 2.0,
+                "alpha": 0.7,
+                "connectionstyle": "arc3,rad=0.1",
+            },
         )
 
     # Draw nodes

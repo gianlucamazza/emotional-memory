@@ -77,27 +77,27 @@ def test_high_self_relevance_low_coping_raises_arousal():
 def test_output_always_in_valid_range():
     """to_core_affect() always returns valid valence-arousal bounds."""
     test_cases = [
-        dict(
-            novelty=1.0,
-            goal_relevance=1.0,
-            coping_potential=1.0,
-            norm_congruence=1.0,
-            self_relevance=1.0,
-        ),
-        dict(
-            novelty=-1.0,
-            goal_relevance=-1.0,
-            coping_potential=0.0,
-            norm_congruence=-1.0,
-            self_relevance=1.0,
-        ),
-        dict(
-            novelty=0.0,
-            goal_relevance=0.0,
-            coping_potential=0.5,
-            norm_congruence=0.0,
-            self_relevance=0.0,
-        ),
+        {
+            "novelty": 1.0,
+            "goal_relevance": 1.0,
+            "coping_potential": 1.0,
+            "norm_congruence": 1.0,
+            "self_relevance": 1.0,
+        },
+        {
+            "novelty": -1.0,
+            "goal_relevance": -1.0,
+            "coping_potential": 0.0,
+            "norm_congruence": -1.0,
+            "self_relevance": 1.0,
+        },
+        {
+            "novelty": 0.0,
+            "goal_relevance": 0.0,
+            "coping_potential": 0.5,
+            "norm_congruence": 0.0,
+            "self_relevance": 0.0,
+        },
     ]
     for kwargs in test_cases:
         ca = _appraise(**kwargs)

@@ -293,9 +293,9 @@ make docs-images   # regenerate all PNGs in docs/images/
 
 ## Benchmarks
 
-### Psychological fidelity (82 tests)
+### Psychological fidelity (106 tests)
 
-The library validates 12 phenomena from the affective science literature:
+The library validates 16 phenomena from the affective science literature:
 
 | Phenomenon | Reference | Tests |
 |---|---|---|
@@ -311,6 +311,10 @@ The library validates 12 phenomena from the affective science literature:
 | Appraisal-to-affect mapping | Scherer CPM 2009 | 11 |
 | Spreading activation | Collins & Loftus 1975 | 5 |
 | Design gap regression | (various) | 3 |
+| Dual-path encoding | LeDoux 1996 | 6 |
+| Emotion categorization | Plutchik 1980 | 10 |
+| Affective prediction error | Schultz 1997 / Pearce-Hall 1980 | 5 |
+| APE-gated reconsolidation window | Nader & Schiller 2000 | 3 |
 
 Run with: `make bench-fidelity`
 

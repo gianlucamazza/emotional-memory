@@ -11,7 +11,7 @@ make cov            # Tests with branch coverage (80% minimum enforced)
 make typecheck      # mypy strict mode
 make lint           # ruff check
 make format         # ruff format
-make bench-fidelity # Psychological invariant tests (82 tests in benchmarks/)
+make bench-fidelity # Psychological invariant tests (106 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
 make bench          # fidelity + performance benchmarks (combined)
 make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
@@ -61,6 +61,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 | Module | Purpose |
 |--------|---------|
+| `categorize.py` | `EmotionLabel`, `categorize_affect()`, `label_tag()` — Plutchik wheel: maps (valence, arousal) to 8 primary emotions with intensity tiers (Russell 1980 + Plutchik 1980) |
 | `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback) |
 | `async_engine.py` | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory` |
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
@@ -71,9 +72,11 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 ### Key Data Flow
 
-**encode**: `AppraisalVector → CoreAffect → AffectiveState.update() → EmotionalTag → embed → store → resonance links (forward + backward bidirectional)`
+**encode (single path)**: `AppraisalVector → CoreAffect → AffectiveState.update() → EmotionalTag → [label_tag() if auto_categorize] → embed → store → resonance links (forward + backward bidirectional)`
 
-**retrieve**: `embed query → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (BFS multi-hop) → Pass 2 (activation_map boost) → reconsolidation check → hebbian_strengthen() on co-retrieved links → return top-k`
+**encode (dual-path, LeDoux 1996)**: When `dual_path_encoding=True` and an appraisal engine is configured — fast path: skip appraisal, use raw `state.core_affect`, set `pending_appraisal=True`. Slow path: call `elaborate(memory_id)` later to run full appraisal and blend core_affect (70% appraised / 30% raw).
+
+**retrieve**: `embed query → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (BFS multi-hop) → Pass 2 (activation_map boost) → per-memory: compute_ape() + update_prediction() → APE-gated reconsolidation (high APE opens window_opened_at; any retrieval within open window reconsolidates) → hebbian_strengthen() on co-retrieved links → return top-k`
 
 **async encode/retrieve**: Same pipeline as sync. Embed/store/appraise calls are awaited. CPU-bound scoring (retrieval_score, decay, resonance) runs synchronously inline.
 
@@ -117,7 +120,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 - **Immutability**: All value objects are Pydantic `frozen=True`. `update()` methods return new instances.
 - **Protocols over ABCs**: Extend via duck-typed protocols, not inheritance.
-- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`).
+- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`). New top-level flags: `dual_path_encoding` (bool), `elaboration_learning_rate` (float, blend ratio in `elaborate()`), `auto_categorize` (bool, run Plutchik categorization on encode).
 - **Theory references**: Each component cites source papers — preserve these in docstrings/comments.
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
 - **`__slots__`**: All non-Pydantic classes define `__slots__` for memory efficiency and attribute safety.

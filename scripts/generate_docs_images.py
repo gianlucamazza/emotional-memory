@@ -40,7 +40,8 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 def _save(fig: object, name: str) -> None:
     import matplotlib.figure
 
-    assert isinstance(fig, matplotlib.figure.Figure)
+    if not isinstance(fig, matplotlib.figure.Figure):
+        raise TypeError(f"Expected Figure, got {type(fig)}")
     path = OUT_DIR / f"{name}.png"
     fig.savefig(path, dpi=150, bbox_inches="tight")
     plt.close(fig)

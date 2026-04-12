@@ -282,18 +282,102 @@ def reconsolidate(
     current_affect: CoreAffect,
     ape: float,
     learning_rate: float,
+    adapt_rate: bool = False,
 ) -> EmotionalTag:
     """Update the tag's core_affect proportionally to the APE.
 
-    alpha = min(ape * learning_rate, 0.5) — max 50% shift per retrieval.
+    When adapt_rate=False (default): alpha = min(ape * learning_rate, 0.5).
+    When adapt_rate=True (Pearce-Hall): alpha = min(ape * learning_rate * (1 + ape), 0.5).
+    Max 50% shift per retrieval.
     Only core_affect is updated; all other fields remain unchanged.
     reconsolidation_count is incremented.
     """
-    alpha = min(ape * learning_rate, 0.5)
+    if adapt_rate:
+        alpha = min(ape * learning_rate * (1.0 + ape), 0.5)
+    else:
+        alpha = min(ape * learning_rate, 0.5)
     new_affect = tag.core_affect.lerp(current_affect, alpha)
     return tag.model_copy(
         update={
             "core_affect": new_affect,
             "reconsolidation_count": tag.reconsolidation_count + 1,
+        }
+    )
+
+
+# ---------------------------------------------------------------------------
+# Pearce-Hall predictive learning
+# ---------------------------------------------------------------------------
+
+
+def compute_ape(tag: EmotionalTag, observed: CoreAffect) -> float:
+    """Compute Affective Prediction Error for a memory tag.
+
+    Uses ``tag.expected_affect`` as the reference point when set; otherwise
+    falls back to ``tag.core_affect`` (i.e. the encoding-time affect).
+
+    The APE is the Euclidean distance in affect space between the expected
+    and observed affect (Pearce & Hall, 1980).
+    """
+    reference = tag.expected_affect if tag.expected_affect is not None else tag.core_affect
+    return affective_prediction_error(reference, observed)
+
+
+def update_prediction(
+    tag: EmotionalTag,
+    observed: CoreAffect,
+    ape: float,
+) -> EmotionalTag:
+    """Update the tag's expected_affect via Pearce-Hall associability learning.
+
+    The learning rate is adaptive: large APE increases the rate (fast relearning
+    after surprise), small APE decreases it (stable predictions need less updating).
+
+    Learning rate update (EMA of APE toward target LR):
+      new_lr = lr + lr_step * ape — current_lr_step  (simplified)
+    Concretely:
+      target_lr = base_lr * (1 + ape)   (larger APE → higher LR)
+      new_lr = lerp(current_lr, target_lr, 0.2)  (smooth adaptation)
+    Clamped to [0.05, 0.80].
+
+    The new expected_affect is an EMA blend:
+      new_expected = lerp(current_expected, observed, new_lr)
+
+    Args:
+        tag:      The tag whose prediction should be updated.
+        observed: The affect observed at retrieval time.
+        ape:      The pre-computed APE (from compute_ape).
+
+    Returns:
+        Updated tag with new ``expected_affect`` and ``prediction_learning_rate``.
+        All other fields are unchanged.
+
+    References
+    ----------
+    Pearce, J. M., & Hall, G. (1980). A model for Pavlovian learning: Variations
+    in the effectiveness of conditioned but not of unconditioned stimuli.
+    Psychological Review, 87(6), 532-552.
+    """
+    _LR_MIN: float = 0.05
+    _LR_MAX: float = 0.80
+    _LR_ADAPT_RATE: float = 0.2  # meta-learning rate for lr update
+
+    current_lr = tag.prediction_learning_rate
+    # Pearce-Hall: associability tracks prediction error.
+    # APE (clamped to [LR_MIN, LR_MAX]) is the attractor — large surprise
+    # drives LR up, accurate predictions drive LR down toward LR_MIN.
+    target_lr = max(_LR_MIN, min(_LR_MAX, ape))
+    # Smooth adaptation of current_lr toward target_lr
+    new_lr = current_lr + _LR_ADAPT_RATE * (target_lr - current_lr)
+    new_lr = max(_LR_MIN, min(_LR_MAX, new_lr))
+
+    # Update expected_affect: EMA blend toward observed
+    base = tag.expected_affect if tag.expected_affect is not None else tag.core_affect
+    new_expected = base.lerp(observed, new_lr)
+
+    return tag.model_copy(
+        update={
+            "expected_affect": new_expected,
+            "prediction_learning_rate": new_lr,
         }
     )

@@ -12,6 +12,10 @@ on:
         type: boolean
         default: false
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test (Python ${{ matrix.python-version }})
@@ -24,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
@@ -31,7 +38,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: uv pip install -e ".[dev]" --system
 
       - name: Lint (ruff check)
         run: ruff check .
@@ -56,13 +63,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: uv pip install -e ".[dev]" --system
 
       - name: Type check
         run: mypy src/emotional_memory/
@@ -75,6 +85,27 @@ jobs:
           'py.typed marker missing'
           "
 
+  security:
+    name: Security (pip-audit)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install pip-audit
+        run: uv pip install pip-audit --system
+
+      - name: Audit dependencies
+        run: pip-audit -r <(uv pip compile pyproject.toml --extra dev --quiet)
+
   benchmarks:
     name: Benchmarks
     runs-on: ubuntu-latest
@@ -83,13 +114,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: pip install -e ".[dev,bench]"
+        run: uv pip install -e ".[dev,bench]" --system
 
       - name: Run fidelity benchmarks
         run: pytest benchmarks/fidelity/ -v
@@ -119,13 +153,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: pip install -e ".[dev,sqlite]"
+        run: uv pip install -e ".[dev,sqlite]" --system
 
       - name: Run SQLite store tests and example smoke tests
         run: pytest tests/test_sqlite_store.py tests/test_examples.py -v
@@ -137,13 +174,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: pip install -e ".[dev,viz]"
+        run: uv pip install -e ".[dev,viz]" --system
 
       - name: Run visualization tests
         run: pytest tests/test_visualization.py -v
@@ -155,13 +195,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: pip install -e ".[dev,dotenv]"
+        run: uv pip install -e ".[dev,dotenv]" --system
 
       - name: Verify python-dotenv is importable
         run: python -c "from dotenv import load_dotenv; print('dotenv OK')"
@@ -179,13 +222,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: pip install -e ".[dev,llm-test]"
+        run: uv pip install -e ".[dev,llm-test]" --system
 
       - name: Validate LLM test files are importable
         run: pytest --collect-only -m llm -q

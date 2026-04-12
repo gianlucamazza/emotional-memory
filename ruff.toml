@@ -2,7 +2,34 @@ line-length = 99
 target-version = "py311"
 
 [lint]
-select = ["E", "F", "I", "W", "UP", "B", "SIM", "RUF"]
+select = [
+  "E",
+  "F",
+  "I",
+  "W",
+  "UP",
+  "B",
+  "SIM",
+  "RUF",
+  "C4",
+  "T20",
+  "TCH",
+  "PERF",
+  "S",
+  "PTH",
+]
+
+[lint.per-file-ignores]
+# assert is idiomatic in tests and benchmarks
+"tests/**" = ["S101"]
+"benchmarks/**" = ["S101"]
+# print() is intentional in examples and scripts
+"examples/**" = ["T201"]
+"scripts/**" = ["T201"]
+# TCH (TYPE_CHECKING) is incompatible with Pydantic models that use
+# `from __future__ import annotations` — types must be available at runtime
+# for model_rebuild() to succeed.
+"src/**" = ["TCH"]
 
 [lint.isort]
 known-first-party = ["emotional_memory"]

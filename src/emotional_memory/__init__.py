@@ -26,6 +26,7 @@ from emotional_memory.async_adapters import (
     as_async,
 )
 from emotional_memory.async_engine import AsyncEmotionalMemory
+from emotional_memory.categorize import EmotionLabel, categorize_affect, label_tag
 from emotional_memory.decay import DecayConfig
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.interfaces import Embedder, MemoryStore, SequentialEmbedder
@@ -33,7 +34,12 @@ from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedde
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
 from emotional_memory.resonance import ResonanceConfig, hebbian_strengthen, spreading_activation
-from emotional_memory.retrieval import AdaptiveWeightsConfig, RetrievalConfig
+from emotional_memory.retrieval import (
+    AdaptiveWeightsConfig,
+    RetrievalConfig,
+    compute_ape,
+    update_prediction,
+)
 from emotional_memory.state import AffectiveState
 from emotional_memory.stores.in_memory import InMemoryStore
 
@@ -53,6 +59,7 @@ __all__ = [
     "CoreAffect",
     "DecayConfig",
     "Embedder",
+    "EmotionLabel",
     "EmotionalMemory",
     "EmotionalMemoryConfig",
     "EmotionalTag",
@@ -77,8 +84,12 @@ __all__ = [
     "SyncToAsyncStore",
     "__version__",
     "as_async",
+    "categorize_affect",
+    "compute_ape",
     "consolidation_strength",
     "hebbian_strengthen",
+    "label_tag",
     "make_emotional_tag",
     "spreading_activation",
+    "update_prediction",
 ]
