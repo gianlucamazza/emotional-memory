@@ -33,18 +33,18 @@ Documentation = "https://gianlucamazza.github.io/emotional-memory"
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=7",
-  "pytest-cov>=5",
-  "pytest-asyncio>=0.24",
-  "ruff>=0.4",
-  "mypy>=1.10",
+  "pytest>=9.0.3",
+  "pytest-cov>=7.1.0",
+  "pytest-asyncio>=1.3.0",
+  "ruff>=0.15.10",
+  "mypy>=1.20.1",
 ]
-bench = ["pytest-benchmark>=4.0", "psutil>=5.9"]
+bench = ["pytest-benchmark>=5.2.3", "psutil>=5.9"]
 llm-test = ["httpx>=0.27"]
 dotenv = ["python-dotenv>=1.0"]
 sqlite = ["sqlite-vec>=0.1.1"]
 viz = ["matplotlib>=3.7"]
-docs = ["mkdocs>=1.6", "mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
+docs = ["mkdocs>=1.6.1", "mkdocs-material>=9.7.6", "mkdocstrings[python]>=1.0.3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
