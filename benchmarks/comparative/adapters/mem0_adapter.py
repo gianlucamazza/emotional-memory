@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import contextlib
 import os
-import shutil
 import tempfile
 import uuid
 
@@ -20,7 +19,7 @@ class Mem0Adapter(MemoryAdapter):
     name = "mem0"
 
     def __init__(self) -> None:
-        self._qdrant_dir: str | None = None
+        self._tmpdir: tempfile.TemporaryDirectory | None = None  # type: ignore[type-arg]
 
         if not os.environ.get("OPENAI_API_KEY"):
             self._available = False
@@ -29,9 +28,9 @@ class Mem0Adapter(MemoryAdapter):
             return
 
         try:
-            from mem0 import Memory  # type: ignore[import-untyped]
+            from mem0 import Memory
 
-            self._qdrant_dir = tempfile.mkdtemp(prefix="qdrant_bench_")
+            self._tmpdir = tempfile.TemporaryDirectory(prefix="qdrant_bench_")
             self._mem = Memory.from_config(
                 {
                     "llm": {"provider": "openai", "config": {"model": "gpt-4o-mini"}},
@@ -39,7 +38,7 @@ class Mem0Adapter(MemoryAdapter):
                     "vector_store": {
                         "provider": "qdrant",
                         "config": {
-                            "path": self._qdrant_dir,
+                            "path": self._tmpdir.name,
                             "collection_name": "bench",
                         },
                     },
@@ -101,12 +100,22 @@ class Mem0Adapter(MemoryAdapter):
         if self._available and self._mem is not None:
             with contextlib.suppress(Exception):
                 self._mem.delete_all(user_id=self._user_id)
-        # Clean up and recreate the qdrant temp directory between runs
-        if self._qdrant_dir:
+
+    def close(self) -> None:
+        if self._mem is not None:
             with contextlib.suppress(Exception):
-                shutil.rmtree(self._qdrant_dir)
+                client = getattr(self._mem, "vector_store", None)
+                if client is not None:
+                    qdrant_client = getattr(client, "client", None)
+                    if qdrant_client is not None:
+                        qdrant_client.close()
+        if self._tmpdir is not None:
             with contextlib.suppress(Exception):
-                self._qdrant_dir = tempfile.mkdtemp(prefix="qdrant_bench_")
+                self._tmpdir.cleanup()
+            self._tmpdir = None
+
+    def __del__(self) -> None:
+        self.close()
 
     @property
     def available(self) -> bool:

@@ -6,6 +6,7 @@ Requires OPENAI_API_KEY for the embedding index and pip install 'langmem>=0.0.30
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import uuid
 
@@ -31,8 +32,8 @@ class LangMemAdapter(MemoryAdapter):
             return
 
         try:
-            from langgraph.store.memory import InMemoryStore  # type: ignore[import-untyped]
-            from langmem import (  # type: ignore[import-untyped]
+            from langgraph.store.memory import InMemoryStore
+            from langmem import (
                 create_manage_memory_tool,
                 create_search_memory_tool,
             )
@@ -63,7 +64,9 @@ class LangMemAdapter(MemoryAdapter):
         if not self._available or self._manage is None:
             return str(uuid.uuid4())
         with contextlib.suppress(Exception):
-            self._manage.invoke({"action": "create", "content": text})
+            # Returns "created memory <UUID>" — parse the UUID back as the stable ID.
+            result: str = self._manage.invoke({"action": "create", "content": text})
+            return result.rsplit(" ", 1)[-1]
         return str(uuid.uuid4())
 
     def retrieve(
@@ -76,17 +79,28 @@ class LangMemAdapter(MemoryAdapter):
         if not self._available or self._search is None:
             return []
         try:
-            hits = self._search.invoke({"query": query, "limit": top_k})
-            if not isinstance(hits, list):
-                hits = list(hits) if hits else []
-            return [
-                RetrievedItem(
-                    id=str(getattr(h, "id", uuid.uuid4())),
-                    text=str(getattr(h, "content", getattr(h, "page_content", str(h)))),
-                    score=float(getattr(h, "score", 1.0 / (i + 1))),
+            # search_memory returns a JSON-serialised list of Item dicts:
+            # [{"key": "<uuid>", "value": {"content": "..."}, "score": ..., ...}, ...]
+            raw: str = self._search.invoke({"query": query, "limit": top_k})
+            parsed: list[dict[str, object]] = (
+                json.loads(raw) if isinstance(raw, str) else list(raw)
+            )
+            result_items = []
+            for i, item in enumerate(parsed[:top_k]):
+                if not isinstance(item, dict):
+                    continue
+                value = item.get("value") or {}
+                content = value.get("content", "") if isinstance(value, dict) else ""
+                score_raw = item.get("score")
+                score = float(score_raw) if isinstance(score_raw, (int, float)) else 1.0 / (i + 1)
+                result_items.append(
+                    RetrievedItem(
+                        id=str(item.get("key", uuid.uuid4())),
+                        text=str(content),
+                        score=score,
+                    )
                 )
-                for i, h in enumerate(hits[:top_k])
-            ]
+            return result_items
         except Exception:
             return []
 
@@ -94,8 +108,8 @@ class LangMemAdapter(MemoryAdapter):
         if not self._available:
             return
         with contextlib.suppress(Exception):
-            from langgraph.store.memory import InMemoryStore  # type: ignore[import-untyped]
-            from langmem import (  # type: ignore[import-untyped]
+            from langgraph.store.memory import InMemoryStore
+            from langmem import (
                 create_manage_memory_tool,
                 create_search_memory_tool,
             )

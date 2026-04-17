@@ -32,7 +32,7 @@ class LettaAdapter(MemoryAdapter):
             return
 
         try:
-            from letta_client import Letta  # type: ignore[import-untyped]
+            from letta_client import Letta
 
             self._client = Letta(token=self._api_key)
             self._agent_id = self._create_agent()
