@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned for v0.6.0
+
+- Additional comparative baselines: Mem0, Letta, LangMem adapters in `benchmarks/comparative/`
+- GitHub Pages docs site deploy (`gianlucamazza.github.io/emotional-memory`)
+- HuggingFace Spaces demo deploy (`homen3/emotional-memory-demo`)
+- arXiv submission (cs.AI)
+
 ## [0.5.2] - 2026-04-17
 
 ### Fixed

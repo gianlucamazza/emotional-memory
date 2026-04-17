@@ -6,7 +6,7 @@ For already-shipped features see [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
-## v0.5.x — Stabilisation (current)
+## v0.5.x — Stabilisation (shipped ✓)
 
 Patch releases fixing regressions and improving developer experience. No new APIs.
 
@@ -16,39 +16,44 @@ Patch releases fixing regressions and improving developer experience. No new API
 - [x] `CITATION.cff` — Zenodo-ready, GitHub "Cite this repository" button
 - [x] Fidelity benchmark table links to source test files
 - [x] `docs/research/08_limitations.md` — documented known limits
-- [ ] Publish to PyPI (blocked: GitHub billing + Trusted Publisher setup)
-- [ ] Zenodo DOI (blocked: depends on PyPI publish)
-- [ ] Merge 9 pending Dependabot PRs (blocked: GitHub billing)
+- [x] Published to PyPI as `emotional-memory==0.5.2`
+- [x] Zenodo DOI `10.5281/zenodo.19636356`
+- [x] arXiv-style paper 10p (`paper/main.tex`) — 4 figures, comparative + perf tables
+- [ ] Merge Dependabot PR #10 (blocked: GitHub billing — re-run CI once billing resolved)
 
 ---
 
-## v0.6.0 — Discovery & Integration (target: 2026 Q2)
+## v0.6.0 — Discovery & Integration (current, target: 2026 Q2)
 
 Goal: make the library discoverable and integrable into existing LLM workflows.
 
-### LangChain adapter
-- `EmotionalMemoryChatHistory` in `src/emotional_memory/integrations/langchain.py`
-- Implements `BaseChatMessageHistory` — drop-in replacement in LangChain chains
-- `[langchain]` optional extra
-- CI job for the new extra
+### LangChain adapter ✓
+- [x] `EmotionalMemoryChatHistory` in `src/emotional_memory/integrations/langchain.py`
+- [x] Implements `BaseChatMessageHistory` — drop-in replacement in LangChain chains
+- [x] `[langchain]` optional extra + CI job
 
-### Comparative benchmark
-- Dataset: 200-500 affect-labeled examples in `benchmarks/datasets/affect_reference_v1.jsonl`
-- Harness in `benchmarks/comparative/` benchmarking AFT vs Mem0 / Letta / Zep on mood-congruent retrieval recall@k
-- `make bench-comparative` and `make reproduce-paper` targets
+### Comparative benchmark ✓
+- [x] Dataset: 258 affect-labeled examples in `benchmarks/datasets/affect_reference_v1.jsonl`
+- [x] Harness in `benchmarks/comparative/` — AFT vs `naive_cosine` vs `recency` baselines
+- [x] `make bench-comparative` and `make reproduce-paper` targets
+- [ ] Additional baselines: Mem0, Letta, LangMem adapters
 
-### arXiv technical report
-- 10-12 page paper describing AFT, fidelity validation, and comparative results
-- Submitted to arXiv cs.AI (software track or workshop)
-- `paper/` directory with LaTeX source
+### arXiv technical report ✓
+- [x] 10-page paper (`paper/main.tex`) — AFT, fidelity validation, comparative benchmark
+- [x] Zenodo DOI `10.5281/zenodo.19636356`, PyPI `emotional-memory==0.5.2`
+- [ ] arXiv submission (cs.AI / software track)
 
 ### Docs site
-- mkdocs-material site deployed on GitHub Pages (`gianlucamazza.github.io/emotional-memory`)
-- API reference auto-generated via mkdocstrings
-- Tutorials: basic usage, async, LangChain integration, persistence
+- [x] mkdocs-material source in `docs/`
+- [ ] Deploy to GitHub Pages (`gianlucamazza.github.io/emotional-memory`) — blocked: GitHub billing
+- [ ] Tutorials: async, LangChain integration, persistence
 
-### Classifier bump
-- `Development Status :: 4 - Beta` in `pyproject.toml`
+### Classifier bump ✓
+- [x] `Development Status :: 4 - Beta` in `pyproject.toml`
+
+### HuggingFace Spaces demo
+- [x] `demo/app.py` Gradio app ready
+- [ ] Deploy to `homen3/emotional-memory-demo` (requires HF token + `huggingface-cli` push)
 
 ---
 
