@@ -315,7 +315,7 @@ make docs-images   # regenerate all PNGs in docs/images/
 | **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | ✅ tool-call edit | ✅ edge invalidation | ❌ |
 | **Persistent mood state** | ✅ MoodField (Heidegger EMA) | ❌ | ❌ | ❌ | ❌ |
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **LangChain integration** | ⚠️ v0.6 planned | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
+| **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
 | **Public benchmark** | ✅ 126 fidelity test cases (intra-theory) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
 | **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
@@ -391,6 +391,41 @@ Assertions use wide bands (e.g. `> 0.3`, `< -0.2`) and evaluate the median over 
 Run with: `EMOTIONAL_MEMORY_LLM_API_KEY=... make bench-appraisal`
 
 Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOTIONAL_MEMORY_LLM_BASE_URL`.
+
+## LangChain integration
+
+`EmotionalMemoryChatHistory` is a drop-in replacement for any LangChain chat history object.
+It backs the history with an `EmotionalMemory` instance so the affective state evolves
+naturally as the conversation unfolds.
+
+```bash
+pip install "emotional-memory[langchain,sentence-transformers]"
+```
+
+```python
+from emotional_memory import EmotionalMemory, InMemoryStore
+from emotional_memory.embedders import SentenceTransformerEmbedder
+from emotional_memory.integrations import EmotionalMemoryChatHistory
+
+em = EmotionalMemory(
+    store=InMemoryStore(),
+    embedder=SentenceTransformerEmbedder(),
+)
+history = EmotionalMemoryChatHistory(em)
+
+# Works anywhere BaseChatMessageHistory is accepted:
+history.add_user_message("I'm anxious about the deadline.")
+history.add_ai_message("Let's break the work into smaller steps.")
+
+print(history.messages)   # [HumanMessage(...), AIMessage(...)]
+
+# The underlying engine has tracked the affective state:
+state = em.get_state()
+print(f"valence={state.core_affect.valence:.2f}  arousal={state.core_affect.arousal:.2f}")
+```
+
+The adapter uses dependency injection — pass a fully-configured `EmotionalMemory` so you
+control the store backend and embedder. The `clear()` method removes all memories from the store.
 
 ## Logging
 

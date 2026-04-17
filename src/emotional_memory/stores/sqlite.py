@@ -163,11 +163,10 @@ class SQLiteStore:
                     )
 
     def delete(self, memory_id: str) -> None:
-        with self._lock:
-            with self._conn:
-                self._conn.execute("DELETE FROM memories WHERE id = ?", (memory_id,))
-                if self._vec_ready:
-                    self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory_id,))
+        with self._lock, self._conn:
+            self._conn.execute("DELETE FROM memories WHERE id = ?", (memory_id,))
+            if self._vec_ready:
+                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory_id,))
 
     def list_all(self) -> list[Memory]:
         with self._lock:

@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper test-llm docs-images docs docs-serve dist publish clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper test-llm docs-images docs docs-serve dist publish clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -28,8 +28,11 @@ install-sqlite:
 install-sentence-transformers:
 	uv pip install -e ".[dev,sentence-transformers]"
 
+install-langchain:
+	uv pip install -e ".[dev,langchain]"
+
 install-all:
-	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers]"
+	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain]"
 
 lint:
 	ruff check .
@@ -58,18 +61,11 @@ bench-perf:
 bench: bench-fidelity bench-perf
 
 bench-comparative:
-	@echo "Comparative benchmark vs Mem0/Letta/Zep — coming in v0.6"
-	@echo "Requires: pip install -e '.[dev,bench]' + external system installs"
-	@echo "See benchmarks/comparative/ (not yet implemented)"
+	pytest benchmarks/comparative/ -v 2>/dev/null || \
+		echo "Comparative benchmark not yet available — see benchmarks/comparative/README.md"
 
 reproduce-paper:
-	@echo "=== Reproducing paper tables ==="
-	$(MAKE) bench-fidelity
-	$(MAKE) bench-perf
-	@echo ""
-	@echo "Fidelity table: see benchmarks/fidelity/ test output above"
-	@echo "Performance table: see benchmark-results.json"
-	@echo "Comparative table: run 'make bench-comparative' (v0.6)"
+	uv run python scripts/reproduce_paper.py
 
 bench-appraisal:
 	pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
@@ -105,6 +101,7 @@ help:
 	@echo "  install                    Install package with dev dependencies"
 	@echo "  install-sqlite             + sqlite-vec (SQLiteStore)"
 	@echo "  install-sentence-transformers  + sentence-transformers (real embeddings)"
+	@echo "  install-langchain              + langchain-core (LangChain adapter)"
 	@echo "  install-viz                + matplotlib (visualization)"
 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"
 	@echo "  install-llm-test           + httpx (real-LLM tests)"

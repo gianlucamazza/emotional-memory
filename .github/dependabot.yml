@@ -26,6 +26,7 @@ updates:
           - "sqlite-vec"
           - "matplotlib"
           - "python-dotenv"
+          - "langchain-core"
 
   - package-ecosystem: "github-actions"
     directory: "/"

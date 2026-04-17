@@ -25,7 +25,8 @@ select = [
 "benchmarks/**" = ["S101"]
 # print() is intentional in examples and scripts
 "examples/**" = ["T201"]
-"scripts/**" = ["T201"]
+# print() intentional; S603/S314 are false positives (controlled subprocess + self-generated XML)
+"scripts/**" = ["T201", "S603", "S314"]
 # TCH (TYPE_CHECKING) is incompatible with Pydantic models that use
 # `from __future__ import annotations` — types must be available at runtime
 # for model_rebuild() to succeed.

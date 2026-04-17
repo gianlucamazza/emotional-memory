@@ -13,7 +13,6 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Skip entire module when sentence-transformers is not installed
 # ---------------------------------------------------------------------------
@@ -38,7 +37,7 @@ def mock_st(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     return mock_cls
 
 
-def _fake_encode(input: Any, **_: Any) -> np.ndarray:  # noqa: A002
+def _fake_encode(input: Any, **_: Any) -> np.ndarray:
     """Return 384-dim float32 vectors (same dim as all-MiniLM-L6-v2)."""
     if isinstance(input, list):
         return np.random.default_rng(0).random((len(input), 384)).astype("float32")
@@ -118,9 +117,11 @@ def test_import_error_without_package() -> None:
     from emotional_memory.embedders.sentence_transformers import SentenceTransformerEmbedder
 
     # sys.modules[key] = None makes `from key import ...` raise ImportError
-    with patch.dict(sys.modules, {"sentence_transformers": None}):  # type: ignore[dict-item]
-        with pytest.raises(ImportError, match="sentence-transformers"):
-            SentenceTransformerEmbedder()
+    with (
+        patch.dict(sys.modules, {"sentence_transformers": None}),
+        pytest.raises(ImportError, match="sentence-transformers"),
+    ):  # type: ignore[dict-item]
+        SentenceTransformerEmbedder()
 
 
 # ---------------------------------------------------------------------------
@@ -129,7 +130,7 @@ def test_import_error_without_package() -> None:
 
 
 def test_works_as_emotional_memory_embedder(mock_st: MagicMock) -> None:
-    from emotional_memory import EmotionalMemory, InMemoryStore, CoreAffect
+    from emotional_memory import CoreAffect, EmotionalMemory, InMemoryStore
     from emotional_memory.embedders.sentence_transformers import SentenceTransformerEmbedder
 
     embedder = SentenceTransformerEmbedder()

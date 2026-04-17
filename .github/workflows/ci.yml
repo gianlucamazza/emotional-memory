@@ -180,6 +180,29 @@ jobs:
       - name: Run SQLite store tests and example smoke tests
         run: pytest tests/test_sqlite_store.py tests/test_examples.py -v
 
+  langchain-tests:
+    name: LangChain adapter tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv pip install -e ".[dev,langchain]" --system
+
+      - name: Run LangChain adapter tests
+        run: pytest tests/test_langchain_adapter.py -v
+
   sentence-transformers-tests:
     name: SentenceTransformerEmbedder tests
     runs-on: ubuntu-latest

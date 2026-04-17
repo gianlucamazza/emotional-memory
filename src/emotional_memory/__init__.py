@@ -57,6 +57,14 @@ with contextlib.suppress(ImportError):
 
     _sentence_transformers_available = True
 
+_langchain_available = False
+with contextlib.suppress(ImportError):
+    from emotional_memory.integrations.langchain import (
+        EmotionalMemoryChatHistory as EmotionalMemoryChatHistory,
+    )
+
+    _langchain_available = True
+
 __all__ = [
     "AdaptiveWeightsConfig",
     "AffectiveMomentum",
@@ -109,3 +117,6 @@ if _sqlite_available:
 
 if _sentence_transformers_available:
     __all__ = [*__all__, "SentenceTransformerEmbedder"]
+
+if _langchain_available:
+    __all__ = [*__all__, "EmotionalMemoryChatHistory"]
