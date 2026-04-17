@@ -103,6 +103,28 @@ def _run_fidelity(out_dir: Path) -> None:
     out.write_text("\n".join(lines) + "\n")
     print(f"[OK] Table 1 written → {out.relative_to(ROOT)}")
 
+    # LaTeX tabular fragment (booktabs) — used by \input{tables/table1_fidelity.tex}
+    rate_total = f"{100 * total_passed / total_tests:.0f}\\%" if total_tests > 0 else "---"
+    tex_lines = [
+        "\\begin{tabular}{lrrr}",
+        "\\toprule",
+        "\\textbf{Test module} & \\textbf{Passed} & \\textbf{Total} & \\textbf{Rate} \\\\",
+        "\\midrule",
+    ]
+    for name, passed, total in sorted(rows):
+        rate = f"{100 * passed / total:.0f}\\%" if total > 0 else "---"
+        short = name.replace("benchmarks/fidelity/", "").replace(".py", "").replace("_", "\\_")
+        tex_lines.append(f"{short} & {passed} & {total} & {rate} \\\\")
+    tex_lines += [
+        "\\midrule",
+        f"\\textbf{{Total}} & \\textbf{{{total_passed}}} & \\textbf{{{total_tests}}} & \\textbf{{{rate_total}}} \\\\",
+        "\\bottomrule",
+        "\\end{tabular}",
+    ]
+    tex_out = out_dir / "table1_fidelity.tex"
+    tex_out.write_text("\n".join(tex_lines) + "\n")
+    print(f"[OK] Table 1 LaTeX written → {tex_out.relative_to(ROOT)}")
+
 
 # ---------------------------------------------------------------------------
 # Table 2 — performance latency
@@ -145,6 +167,26 @@ def _write_perf_table(out_dir: Path) -> None:
     out = out_dir / "table2_perf.md"
     out.write_text("\n".join(lines) + "\n")
     print(f"[OK] Table 2 written → {out.relative_to(ROOT)}")
+
+    # LaTeX tabular fragment (booktabs) — used by \input{tables/table2_perf.tex}
+    tex_lines = [
+        "\\begin{tabular}{lrrrr}",
+        "\\toprule",
+        "\\textbf{Operation} & \\textbf{Mean (ms)} & \\textbf{Median (ms)} & \\textbf{p95 (ms)} & \\textbf{Rounds} \\\\",
+        "\\midrule",
+    ]
+    for b in benchmarks:
+        name = b.get("name", "?").replace("_", "\\_")
+        stats = b.get("stats", {})
+        mean = stats.get("mean", 0) * 1000
+        median = stats.get("median", 0) * 1000
+        p95 = stats.get("q95", stats.get("p95", stats.get("max", 0))) * 1000
+        rounds = stats.get("rounds", "?")
+        tex_lines.append(f"{name} & {mean:.2f} & {median:.2f} & {p95:.2f} & {rounds} \\\\")
+    tex_lines += ["\\bottomrule", "\\end{tabular}"]
+    tex_out = out_dir / "table2_perf.tex"
+    tex_out.write_text("\n".join(tex_lines) + "\n")
+    print(f"[OK] Table 2 LaTeX written → {tex_out.relative_to(ROOT)}")
 
 
 # ---------------------------------------------------------------------------

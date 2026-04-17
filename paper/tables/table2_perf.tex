@@ -1,0 +1,20 @@
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Operation} & \textbf{Mean (ms)} & \textbf{Median (ms)} & \textbf{p95 (ms)} & \textbf{Rounds} \\
+\midrule
+bench\_encode\_single & 4.39 & 4.19 & 15.94 & 1641 \\
+bench\_encode\_with\_resonance & 3.13 & 3.09 & 10.32 & 917 \\
+bench\_encode\_no\_resonance & 4.01 & 3.71 & 12.24 & 1328 \\
+bench\_encode\_scaling[10] & 6.79 & 6.29 & 54.27 & 2187 \\
+bench\_encode\_scaling[100] & 2.91 & 2.83 & 7.94 & 902 \\
+bench\_encode\_scaling[1000] & 5.92 & 5.80 & 10.97 & 184 \\
+bench\_retrieve\_top5[100] & 1.37 & 1.29 & 2.94 & 614 \\
+bench\_retrieve\_top5[1000] & 5.60 & 5.46 & 8.41 & 176 \\
+bench\_retrieve\_top5[10000] & 99.23 & 97.03 & 112.00 & 10 \\
+bench\_retrieve\_varying\_topk[1] & 5.72 & 5.50 & 11.54 & 196 \\
+bench\_retrieve\_varying\_topk[5] & 6.42 & 6.32 & 9.79 & 172 \\
+bench\_retrieve\_varying\_topk[10] & 7.33 & 7.20 & 11.89 & 107 \\
+bench\_retrieve\_varying\_topk[25] & 10.06 & 9.94 & 15.69 & 107 \\
+bench\_retrieve\_with\_reconsolidation & 1.87 & 1.78 & 4.24 & 472 \\
+\bottomrule
+\end{tabular}

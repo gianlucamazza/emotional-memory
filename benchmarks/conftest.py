@@ -102,6 +102,9 @@ def populate_store(engine: EmotionalMemory, n: int) -> None:
     setup O(n) instead of O(n²). The engine's resonance config is restored
     afterward so benchmarked operations use the original threshold.
     """
+    import sys
+
+    milestones = {100, 500, 1_000, 5_000, 10_000}
     original_config = engine._config
     fast_config = original_config.model_copy(update={"resonance": ResonanceConfig(threshold=2.0)})
     engine._config = fast_config
@@ -110,6 +113,11 @@ def populate_store(engine: EmotionalMemory, n: int) -> None:
         arousal = 0.3 + (i % 5) * 0.1
         engine.set_affect(CoreAffect(valence=valence, arousal=arousal))
         engine.encode(f"Memory content number {i} with various contextual details about the event")
+        done = i + 1
+        if done in milestones and done < n:
+            print(
+                f"\n  [populate_store] {done}/{n} memories encoded...", flush=True, file=sys.stderr
+            )
     engine._config = original_config
 
 

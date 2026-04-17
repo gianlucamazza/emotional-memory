@@ -68,7 +68,8 @@ def _make_mood_evolution(out_dir: Path) -> None:
         v = max(-1.0, min(1.0, v + rng.gauss(0, 0.12)))
         a = max(0.0, min(1.0, a + rng.gauss(0, 0.08)))
         d = max(-1.0, min(1.0, d + rng.gauss(0, 0.10)))
-        history.append((float(t), v, a, d))
+        # 180 s per conversational turn → x-axis shows realistic minutes (0-57)
+        history.append((float(t * 180), v, a, d))
 
     fig = plot_mood_evolution(history, title="PAD mood-field trajectory (simulated conversation)")
     fig.savefig(out_dir / "fig3_mood_evolution.pdf", bbox_inches="tight")
@@ -77,26 +78,20 @@ def _make_mood_evolution(out_dir: Path) -> None:
 
 
 def _make_resonance_network(out_dir: Path) -> None:
+    from emotional_memory.models import ResonanceLink
     from emotional_memory.visualization import plot_resonance_network
-
-    class _Link:
-        def __init__(
-            self,
-            source_id: str,
-            target_id: str,
-            link_type: str,
-            strength: float,
-        ) -> None:
-            self.source_id = source_id
-            self.target_id = target_id
-            self.link_type = link_type
-            self.strength = strength
 
     rng = random.Random(99)
     node_ids = [f"m{i}" for i in range(7)]
-    link_types = ["semantic", "temporal", "causal", "contrast", "amplify"]
+    # canonical types matching Literal in ResonanceLink + visualization color map
+    link_types: list[str] = ["semantic", "emotional", "temporal", "causal", "contrastive"]
     links = [
-        _Link(src, tgt, rng.choice(link_types), rng.uniform(0.3, 1.0))
+        ResonanceLink(
+            source_id=src,
+            target_id=tgt,
+            link_type=rng.choice(link_types),  # type: ignore[arg-type]
+            strength=round(rng.uniform(0.3, 1.0), 4),
+        )
         for i, src in enumerate(node_ids)
         for tgt in node_ids[i + 1 :]
         if rng.random() < 0.45
