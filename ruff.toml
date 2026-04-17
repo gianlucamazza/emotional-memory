@@ -20,13 +20,16 @@ select = [
 ]
 
 [lint.per-file-ignores]
-# assert is idiomatic in tests and benchmarks
+# assert idiomatic in tests
 "tests/**" = ["S101"]
-"benchmarks/**" = ["S101"]
-# print() is intentional in examples and scripts
+# benchmarks: assert OK, print OK, pseudo-random for reproducibility, TCH not needed
+"benchmarks/**" = ["S101", "T201", "S311", "TCH"]
+# print() intentional in examples
 "examples/**" = ["T201"]
-# print() intentional; S603/S314 are false positives (controlled subprocess + self-generated XML)
+# S603/S314: false positives (controlled subprocess + self-generated XML)
 "scripts/**" = ["T201", "S603", "S314"]
+# demo: print OK in gradio apps; TCH not needed
+"demo/**" = ["T201", "TCH"]
 # TCH (TYPE_CHECKING) is incompatible with Pydantic models that use
 # `from __future__ import annotations` — types must be available at runtime
 # for model_rebuild() to succeed.

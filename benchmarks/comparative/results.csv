@@ -1,0 +1,3 @@
+system,recall@5,encode_ms_avg,retrieve_p50_ms,retrieve_p95_ms,n_examples,top_k,status,reason
+aft,0.4,0.92,2.34,3.13,258,5,ok,
+naive_cosine,0.45,0.01,2.55,2.7,258,5,ok,

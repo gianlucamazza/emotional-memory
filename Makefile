@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper test-llm docs-images docs docs-serve dist publish clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm docs-images docs docs-serve dist publish clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -61,11 +61,13 @@ bench-perf:
 bench: bench-fidelity bench-perf
 
 bench-comparative:
-	pytest benchmarks/comparative/ -v 2>/dev/null || \
-		echo "Comparative benchmark not yet available — see benchmarks/comparative/README.md"
+	uv run python -m benchmarks.comparative.runner
 
 reproduce-paper:
 	uv run python scripts/reproduce_paper.py
+
+paper:
+	cd paper && latexmk -pdf -interaction=nonstopmode main.tex
 
 bench-appraisal:
 	pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
