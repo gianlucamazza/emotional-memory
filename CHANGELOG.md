@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-04-17
+
+### Fixed
+
+- **Paper (`paper/main.tex`) — figure 4 rendered empty**: generator used a duck-typed
+  `_Link` class that was silently discarded by `isinstance(lnk, ResonanceLink)` in
+  `visualization.py`. Generator now uses the real `ResonanceLink` Pydantic model.
+- **Paper — figure 3 x-axis mislabeled**: timestamps were passed as step integers
+  (0..19); x-axis showed 0..0.32 minutes. Generator now passes seconds (180 s/turn)
+  so the axis correctly shows 0..57 minutes for a 20-turn conversation.
+- **Paper — Table 2 (performance) missing**: `benchmark-results.json` was not
+  generated with `--benchmark-json`. Added to bench-perf pipeline; table is now
+  auto-included via `\input{tables/table2_perf.tex}`.
+- **Paper — 10 dead bib entries** pruned from `refs.bib`; 2 missing references
+  added (`ebbinghaus1885memory`, `kensinger2004emotional`).
+- **Paper — symbol collision** `α`: appraisal vector in Layer 4 renamed to `\mathbf{a}`
+  to avoid collision with arousal `α` in Layer 1.
+- **Paper — PDF metadata empty**: `pdftitle`, `pdfauthor`, `pdfkeywords`, `pdfsubject`
+  now populated via `\hypersetup`.
+- **Paper — §Related Work**: 8 recent LLM-emotion papers now cited; MemEmo claim
+  softened from "the first benchmark" to "a recent holistic benchmark".
+- **Paper — §Conclusion**: future-work wording updated to reflect actual sbert baseline.
+- **Paper — §Reproducibility**: DOI link, Python ≥3.11 requirement, and expected
+  runtimes added.
+- **`scripts/generate_paper_figures.py`**: wrong link type names (`"contrast"`,
+  `"amplify"`) replaced with canonical Literal values (`"contrastive"`, `"emotional"`).
+- **`benchmarks/conftest.py`**: `populate_store` now prints progress to stderr at
+  100/500/1k/5k/10k milestones for long-running perf setups.
+
 ## [0.5.1] - 2026-04-17
 
 ### Fixed
