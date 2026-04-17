@@ -49,3 +49,9 @@ with EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder()) as em:
 | **ResonanceLinks** | `ResonanceLink` | Aristotle/Bower/Collins & Loftus/Hebb — bidirectional associative graph (5 link types), multi-hop spreading activation + Hebbian co-retrieval strengthening |
 
 See [Research](research/index.md) for full theoretical foundations.
+
+## Tutorials
+
+- [Async usage](tutorials/async.md) — `AsyncEmotionalMemory`, `as_async()`, `encode_batch()`
+- [Persistence](tutorials/persistence.md) — `SQLiteStore`, `save_state`, `export_memories`, `prune()`
+- [LangChain integration](tutorials/langchain.md) — `EmotionalMemoryChatHistory`, `RunnableWithMessageHistory`

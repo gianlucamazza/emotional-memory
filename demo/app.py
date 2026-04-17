@@ -100,12 +100,12 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> bytes:
 
 def chat(
     user_msg: str,
-    chat_history: list[list[str]],
+    chat_history: list[dict[str, str]],
     em_state: EmotionalMemory,
     history_state: EmotionalMemoryChatHistory,
     pad_history: list[tuple[float, float, float]],
 ) -> tuple[
-    list[list[str]],
+    list[dict[str, str]],
     EmotionalMemory,
     EmotionalMemoryChatHistory,
     list[tuple[float, float, float]],
@@ -161,7 +161,11 @@ def chat(
     if len(pad_history) > _PAD_HISTORY_MAX:
         pad_history = pad_history[-_PAD_HISTORY_MAX:]
 
-    chat_history = [*chat_history, [user_msg, reply]]
+    chat_history = [
+        *chat_history,
+        {"role": "user", "content": user_msg},
+        {"role": "assistant", "content": reply},
+    ]
     plot = _pad_plot(pad_history)
     return chat_history, em_state, history_state, pad_history, plot, ""
 

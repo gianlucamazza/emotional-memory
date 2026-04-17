@@ -45,6 +45,10 @@ plugins:
 nav:
   - Home: index.md
   - Migration Guide: migration.md
+  - Tutorials:
+    - Async usage: tutorials/async.md
+    - Persistence: tutorials/persistence.md
+    - LangChain integration: tutorials/langchain.md
   - API Reference:
     - Engine (sync): api/engine.md
     - Engine (async): api/async_engine.md

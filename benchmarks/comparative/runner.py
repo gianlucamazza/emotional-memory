@@ -21,10 +21,22 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import statistics
 import time
 from pathlib import Path
 from typing import Any
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
+except ImportError:
+    pass
+
+# Bridge project-specific key → standard OpenAI env var expected by mem0/langmem.
+if "OPENAI_API_KEY" not in os.environ and "EMOTIONAL_MEMORY_LLM_API_KEY" in os.environ:
+    os.environ["OPENAI_API_KEY"] = os.environ["EMOTIONAL_MEMORY_LLM_API_KEY"]
 
 from benchmarks.comparative.adapters.aft import AFTAdapter
 from benchmarks.comparative.adapters.base import MemoryAdapter
@@ -41,7 +53,7 @@ DEFAULT_OUT = ROOT / "benchmarks" / "comparative" / "results.csv"
 # passed to affect-aware adapters so mood-congruent scoring is active.
 # ---------------------------------------------------------------------------
 
-QUERIES = [
+QUERIES: list[dict[str, Any]] = [
     {
         "query": "feeling joyful and enthusiastic about new opportunities",
         "valence_min": 0.0,
@@ -190,6 +202,20 @@ def _make_adapters(system_names: list[str], embedder: Any = None) -> list[Memory
     except ImportError:
         pass
 
+    try:
+        from benchmarks.comparative.adapters.letta_adapter import LettaAdapter
+
+        registry["letta"] = LettaAdapter
+    except ImportError:
+        pass
+
+    try:
+        from benchmarks.comparative.adapters.langmem_adapter import LangMemAdapter
+
+        registry["langmem"] = LangMemAdapter
+    except ImportError:
+        pass
+
     adapters: list[MemoryAdapter] = []
     for name in system_names:
         factory = registry.get(name)
@@ -231,7 +257,7 @@ def main() -> None:
 
     for adapter in adapters:
         # Check if adapter has an availability flag (optional adapters)
-        if hasattr(adapter, "available") and not adapter.available:  # type: ignore[union-attr]
+        if hasattr(adapter, "available") and not adapter.available:
             reason = getattr(adapter, "not_available_reason", "not installed")
             print(f"[SKIP] {adapter.name}: {reason}")
             rows.append(

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "emotional_memory"
-version = "0.5.2"
+version = "0.6.0"
 description = "Emotional memory library for LLMs based on Affective Field Theory"
 requires-python = ">=3.11"
 license = "MIT"
@@ -12,7 +12,7 @@ readme = "README.md"
 authors = [{ name = "Gianluca Mazza", email = "info@gianlucamazza.it" }]
 keywords = ["llm", "memory", "emotion", "affective-computing", "ai"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
   "Programming Language :: Python :: 3",
@@ -46,6 +46,8 @@ dotenv = ["python-dotenv>=1.0"]
 sentence-transformers = ["sentence-transformers>=2.2"]
 sqlite = ["sqlite-vec>=0.1.1"]
 langchain = ["langchain-core>=0.3"]
+mem0 = ["mem0ai>=2.0"]
+langmem = ["langmem>=0.0.30", "langgraph>=0.3"]
 viz = ["matplotlib>=3.7"]
 docs = ["mkdocs>=1.6", "mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
 
@@ -93,4 +95,16 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["langchain_core", "langchain_core.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["mem0", "mem0.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["langmem", "langmem.*", "langgraph", "langgraph.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["letta_client", "letta_client.*"]
 ignore_missing_imports = true
