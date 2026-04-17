@@ -54,7 +54,7 @@ Goal: make the library discoverable and integrable into existing LLM workflows.
 ### HuggingFace Spaces demo
 - [x] `demo/app.py` Gradio app ready
 - [x] `demo/README.md` HF Space metadata complete (`python_version: "3.11"` pinned)
-- [ ] Deploy to `homen3/emotional-memory-demo` (requires HF token + `huggingface-cli` push)
+- [x] Deploy to `homen3/emotional-memory-demo` — live at https://huggingface.co/spaces/homen3/emotional-memory-demo
 
 ---
 

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Makefile` target `paper-arxiv` — builds `paper/arxiv-submission.tar.gz` (`.tex` + `.bbl` + figures + tables, no build artifacts)
 - `paper/SUBMISSION.md` — arXiv submission checklist (category options, metadata template, pre-submission checks, post-acceptance steps)
 - `demo/README.md`: `python_version: "3.11"` pinned in HF Space front-matter
+- HuggingFace Space deployed to https://huggingface.co/spaces/homen3/emotional-memory-demo
 
 ### Fixed
 
