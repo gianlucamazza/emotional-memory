@@ -30,6 +30,7 @@ from __future__ import annotations
 import re
 import sqlite3
 import struct
+import threading
 import types
 from pathlib import Path
 
@@ -92,7 +93,7 @@ class SQLiteStore:
         in-memory database (useful in tests without writing to disk).
     """
 
-    __slots__ = ("_conn", "_dim", "_path", "_vec_ready")
+    __slots__ = ("_conn", "_dim", "_lock", "_path", "_vec_ready")
 
     def __init__(self, path: str | Path = ":memory:") -> None:
         self._path = str(path)
@@ -111,6 +112,11 @@ class SQLiteStore:
         self._conn.commit()
         self._vec_ready = False
         self._dim: int = 0
+        # Serialise all connection access across threads: a single shared
+        # sqlite3.Connection is not safe for concurrent use even with
+        # check_same_thread=False (Python's sqlite3 module leaves locking to
+        # the caller).
+        self._lock: threading.RLock = threading.RLock()
         self._init_vec_from_db()
 
     # ------------------------------------------------------------------
@@ -118,47 +124,54 @@ class SQLiteStore:
     # ------------------------------------------------------------------
 
     def save(self, memory: Memory) -> None:
-        self._ensure_vec(memory)
-        with self._conn:
-            self._conn.execute(
-                "INSERT OR REPLACE INTO memories (id, content, data) VALUES (?, ?, ?)",
-                (memory.id, memory.content, memory.model_dump_json()),
-            )
-            if self._vec_ready and memory.embedding is not None:
-                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
+        with self._lock:
+            self._ensure_vec(memory)
+            with self._conn:
                 self._conn.execute(
-                    "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
-                    (memory.id, _pack_embedding(memory.embedding)),
+                    "INSERT OR REPLACE INTO memories (id, content, data) VALUES (?, ?, ?)",
+                    (memory.id, memory.content, memory.model_dump_json()),
                 )
+                if self._vec_ready and memory.embedding is not None:
+                    self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
+                    self._conn.execute(
+                        "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
+                        (memory.id, _pack_embedding(memory.embedding)),
+                    )
 
     def get(self, memory_id: str) -> Memory | None:
-        row = self._conn.execute("SELECT data FROM memories WHERE id = ?", (memory_id,)).fetchone()
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT data FROM memories WHERE id = ?", (memory_id,)
+            ).fetchone()
         if row is None:
             return None
         return Memory.model_validate_json(row["data"])
 
     def update(self, memory: Memory) -> None:
-        self._ensure_vec(memory)
-        with self._conn:
-            self._conn.execute(
-                "UPDATE memories SET content = ?, data = ? WHERE id = ?",
-                (memory.content, memory.model_dump_json(), memory.id),
-            )
-            if self._vec_ready and memory.embedding is not None:
-                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
+        with self._lock:
+            self._ensure_vec(memory)
+            with self._conn:
                 self._conn.execute(
-                    "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
-                    (memory.id, _pack_embedding(memory.embedding)),
+                    "UPDATE memories SET content = ?, data = ? WHERE id = ?",
+                    (memory.content, memory.model_dump_json(), memory.id),
                 )
+                if self._vec_ready and memory.embedding is not None:
+                    self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
+                    self._conn.execute(
+                        "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
+                        (memory.id, _pack_embedding(memory.embedding)),
+                    )
 
     def delete(self, memory_id: str) -> None:
-        with self._conn:
-            self._conn.execute("DELETE FROM memories WHERE id = ?", (memory_id,))
-            if self._vec_ready:
-                self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory_id,))
+        with self._lock:
+            with self._conn:
+                self._conn.execute("DELETE FROM memories WHERE id = ?", (memory_id,))
+                if self._vec_ready:
+                    self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory_id,))
 
     def list_all(self) -> list[Memory]:
-        rows = self._conn.execute("SELECT data FROM memories").fetchall()
+        with self._lock:
+            rows = self._conn.execute("SELECT data FROM memories").fetchall()
         return [Memory.model_validate_json(row["data"]) for row in rows]
 
     def search_by_embedding(self, embedding: list[float], top_k: int) -> list[Memory]:
@@ -167,23 +180,25 @@ class SQLiteStore:
         Falls back to brute-force cosine scan when the vector table is not yet
         initialised (e.g. no memories with embeddings have been saved yet).
         """
-        if not self._vec_ready:
-            return self._brute_force_search(embedding, top_k)
+        with self._lock:
+            if not self._vec_ready:
+                return self._brute_force_search(embedding, top_k)
 
-        rows = self._conn.execute(
-            """
-            SELECT m.data
-            FROM memory_vec v
-            JOIN memories m ON m.id = v.id
-            WHERE v.embedding MATCH ? AND k = ?
-            ORDER BY distance
-            """,
-            (_pack_embedding(embedding), top_k),
-        ).fetchall()
+            rows = self._conn.execute(
+                """
+                SELECT m.data
+                FROM memory_vec v
+                JOIN memories m ON m.id = v.id
+                WHERE v.embedding MATCH ? AND k = ?
+                ORDER BY distance
+                """,
+                (_pack_embedding(embedding), top_k),
+            ).fetchall()
         return [Memory.model_validate_json(row["data"]) for row in rows]
 
     def __len__(self) -> int:
-        row = self._conn.execute("SELECT COUNT(*) FROM memories").fetchone()
+        with self._lock:
+            row = self._conn.execute("SELECT COUNT(*) FROM memories").fetchone()
         return int(row[0])
 
     # ------------------------------------------------------------------
