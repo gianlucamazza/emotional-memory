@@ -183,4 +183,4 @@ for m in results:
 - Full theoretical foundations: [`docs/research/`](research/)
 - Known limitations: [`docs/research/08_limitations.md`](research/08_limitations.md)
 - API reference: generated from docstrings (run `make docs-serve`)
-- Source of truth for retrieval scoring: [`src/emotional_memory/retrieval.py`](../src/emotional_memory/retrieval.py)
+- Source of truth for retrieval scoring: [`src/emotional_memory/retrieval.py`](https://github.com/gianlucamazza/emotional-memory/blob/main/src/emotional_memory/retrieval.py)

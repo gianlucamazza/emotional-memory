@@ -69,6 +69,19 @@ reproduce-paper:
 paper:
 	cd paper && latexmk -pdf -interaction=nonstopmode main.tex
 
+paper-arxiv:
+	cd paper && latexmk -pdf -interaction=nonstopmode main.tex
+	mkdir -p paper/arxiv-build
+	cp paper/main.tex paper/arxiv-build/
+	cp paper/main.bbl paper/arxiv-build/
+	cp paper/refs.bib paper/arxiv-build/
+	cp -r paper/figures paper/arxiv-build/
+	cp -r paper/tables paper/arxiv-build/
+	tar -czf paper/arxiv-submission.tar.gz -C paper/arxiv-build .
+	rm -rf paper/arxiv-build
+	@echo "arXiv bundle ready: paper/arxiv-submission.tar.gz"
+	@tar -tzf paper/arxiv-submission.tar.gz
+
 bench-appraisal:
 	pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
 

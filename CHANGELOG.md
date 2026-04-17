@@ -7,12 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/tutorials/async.md` — async usage guide (`AsyncEmotionalMemory`, `as_async()`, `encode_batch()`)
+- `docs/tutorials/persistence.md` — persistence guide (`SQLiteStore`, `save_state`, `export_memories`, `prune()`)
+- `docs/tutorials/langchain.md` — LangChain integration guide (`EmotionalMemoryChatHistory`, `RunnableWithMessageHistory`)
+- `mkdocs.yml` nav: new **Tutorials** section linking all three guides
+- `Makefile` target `paper-arxiv` — builds `paper/arxiv-submission.tar.gz` (`.tex` + `.bbl` + figures + tables, no build artifacts)
+- `paper/SUBMISSION.md` — arXiv submission checklist (category options, metadata template, pre-submission checks, post-acceptance steps)
+- `demo/README.md`: `python_version: "3.11"` pinned in HF Space front-matter
+
+### Fixed
+
+- `docs/mental_model.md`: broken relative link to `retrieval.py` replaced with absolute GitHub URL
+
 ### Planned for v0.6.0
 
 - Additional comparative baselines: Mem0, Letta, LangMem adapters in `benchmarks/comparative/`
-- GitHub Pages docs site deploy (`gianlucamazza.github.io/emotional-memory`)
-- HuggingFace Spaces demo deploy (`homen3/emotional-memory-demo`)
-- arXiv submission (cs.AI)
+- GitHub Pages docs site deploy (`gianlucamazza.github.io/emotional-memory`) — blocked: GitHub billing
+- HuggingFace Spaces demo deploy (`homen3/emotional-memory-demo`) — kit ready, push pending HF token
+- arXiv submission (cs.AI / cs.LG) — bundle ready at `paper/arxiv-submission.tar.gz`
 
 ## [0.5.2] - 2026-04-17
 

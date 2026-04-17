@@ -40,18 +40,20 @@ Goal: make the library discoverable and integrable into existing LLM workflows.
 ### arXiv technical report ✓
 - [x] 10-page paper (`paper/main.tex`) — AFT, fidelity validation, comparative benchmark
 - [x] Zenodo DOI `10.5281/zenodo.19636356`, PyPI `emotional-memory==0.5.2`
-- [ ] arXiv submission (cs.AI / software track)
+- [x] `paper/arxiv-submission.tar.gz` target (`make paper-arxiv`) + `paper/SUBMISSION.md` checklist
+- [ ] arXiv submission (cs.AI / cs.LG) — bundle ready, pending endorsement choice
 
 ### Docs site
 - [x] mkdocs-material source in `docs/`
+- [x] Tutorials: async (`docs/tutorials/async.md`), LangChain (`docs/tutorials/langchain.md`), persistence (`docs/tutorials/persistence.md`)
 - [ ] Deploy to GitHub Pages (`gianlucamazza.github.io/emotional-memory`) — blocked: GitHub billing
-- [ ] Tutorials: async, LangChain integration, persistence
 
 ### Classifier bump ✓
 - [x] `Development Status :: 4 - Beta` in `pyproject.toml`
 
 ### HuggingFace Spaces demo
 - [x] `demo/app.py` Gradio app ready
+- [x] `demo/README.md` HF Space metadata complete (`python_version: "3.11"` pinned)
 - [ ] Deploy to `homen3/emotional-memory-demo` (requires HF token + `huggingface-cli` push)
 
 ---
