@@ -5,12 +5,15 @@ Measures recall@k and latency for AFT vs baselines on affect_reference_v1.jsonl.
 Usage::
 
     python -m benchmarks.comparative.runner
-    python -m benchmarks.comparative.runner --systems aft,naive_cosine
-    python -m benchmarks.comparative.runner --top-k 5 --out results.csv
+    python -m benchmarks.comparative.runner --systems aft,naive_cosine,recency
+    python -m benchmarks.comparative.runner --embedder sbert --top-k 5 --out results.csv
 
 The benchmark encodes all 258 examples, then issues mood-congruent queries
 (one per Russell quadrant) and measures recall@k: how many of the top-k
 results belong to the correct quadrant (same valence sign x arousal level).
+
+For affect-aware adapters (AFT) the query's affective centroid is passed to
+``retrieve()`` so the mood-congruent scorer operates on the correct quadrant.
 """
 
 from __future__ import annotations
@@ -21,17 +24,21 @@ import json
 import statistics
 import time
 from pathlib import Path
+from typing import Any
 
 from benchmarks.comparative.adapters.aft import AFTAdapter
 from benchmarks.comparative.adapters.base import MemoryAdapter
 from benchmarks.comparative.adapters.naive_cosine import NaiveCosineAdapter
+from benchmarks.comparative.adapters.recency import RecencyAdapter
 
 ROOT = Path(__file__).parent.parent.parent
 DATASET = ROOT / "benchmarks" / "datasets" / "affect_reference_v1.jsonl"
 DEFAULT_OUT = ROOT / "benchmarks" / "comparative" / "results.csv"
 
 # ---------------------------------------------------------------------------
-# Mood-congruent query set — one representative query per quadrant
+# Mood-congruent query set — one representative query per quadrant.
+# query_valence / query_arousal are the centroid of each Russell quadrant,
+# passed to affect-aware adapters so mood-congruent scoring is active.
 # ---------------------------------------------------------------------------
 
 QUERIES = [
@@ -39,24 +46,32 @@ QUERIES = [
         "query": "feeling joyful and enthusiastic about new opportunities",
         "valence_min": 0.0,
         "arousal_min": 0.5,
+        "query_valence": 0.6,
+        "query_arousal": 0.75,
         "label": "Q1_joy",
     },
     {
         "query": "anxious and tense, something bad might happen",
         "valence_max": 0.0,
         "arousal_min": 0.5,
+        "query_valence": -0.6,
+        "query_arousal": 0.75,
         "label": "Q2_fear",
     },
     {
         "query": "sad, hopeless, and exhausted",
         "valence_max": 0.0,
         "arousal_max": 0.5,
+        "query_valence": -0.6,
+        "query_arousal": 0.25,
         "label": "Q3_sadness",
     },
     {
         "query": "calm, peaceful, and contentedly at rest",
         "valence_min": 0.0,
         "arousal_max": 0.5,
+        "query_valence": 0.5,
+        "query_arousal": 0.25,
         "label": "Q4_calm",
     },
 ]
@@ -116,13 +131,18 @@ def run_adapter(
     encode_total = time.perf_counter() - t0
     encode_ms = (encode_total / len(examples)) * 1000
 
-    # Retrieve — one query per quadrant, measure latency
+    # Retrieve — one query per quadrant, pass affective centroid for mood-aware adapters
     recall_scores: list[float] = []
     latencies_ms: list[float] = []
 
     for q in QUERIES:
         t1 = time.perf_counter()
-        retrieved = adapter.retrieve(q["query"], top_k=top_k)
+        retrieved = adapter.retrieve(
+            q["query"],
+            top_k=top_k,
+            valence=q["query_valence"],
+            arousal=q["query_arousal"],
+        )
         latency = (time.perf_counter() - t1) * 1000
         latencies_ms.append(latency)
         recall_scores.append(_recall_at_k(retrieved, id_map, q, top_k))
@@ -144,10 +164,23 @@ def run_adapter(
     }
 
 
-def _make_adapters(system_names: list[str]) -> list[MemoryAdapter]:
-    registry: dict[str, type[MemoryAdapter]] = {
-        "aft": AFTAdapter,
-        "naive_cosine": NaiveCosineAdapter,
+def _build_embedder(embedder_type: str) -> Any:
+    if embedder_type == "sbert":
+        try:
+            from emotional_memory.embedders import SentenceTransformerEmbedder
+
+            print("  embedder: SentenceTransformer (all-MiniLM-L6-v2)")
+            return SentenceTransformerEmbedder()
+        except ImportError as exc:
+            print(f"[WARN] sentence-transformers not installed ({exc}); falling back to hash")
+    return None  # triggers _HashEmbedder inside adapters
+
+
+def _make_adapters(system_names: list[str], embedder: Any = None) -> list[MemoryAdapter]:
+    registry: dict[str, Any] = {
+        "aft": lambda: AFTAdapter(embedder=embedder),
+        "naive_cosine": lambda: NaiveCosineAdapter(embedder=embedder),
+        "recency": RecencyAdapter,
     }
     # Attempt optional adapters
     try:
@@ -159,11 +192,11 @@ def _make_adapters(system_names: list[str]) -> list[MemoryAdapter]:
 
     adapters: list[MemoryAdapter] = []
     for name in system_names:
-        cls = registry.get(name)
-        if cls is None:
+        factory = registry.get(name)
+        if factory is None:
             print(f"[WARN] Unknown system '{name}' — skipping")
             continue
-        adapters.append(cls())
+        adapters.append(factory())
     return adapters
 
 
@@ -171,18 +204,28 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Comparative memory benchmark")
     parser.add_argument(
         "--systems",
-        default="aft,naive_cosine",
-        help="Comma-separated list of systems (default: aft,naive_cosine)",
+        default="aft,naive_cosine,recency",
+        help="Comma-separated list of systems (default: aft,naive_cosine,recency)",
     )
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument(
+        "--embedder",
+        default="hash",
+        choices=["hash", "sbert"],
+        help=(
+            "Embedding backend: 'hash' (deterministic SHA-256) or 'sbert' (sentence-transformers)"
+        ),
+    )
     parser.add_argument("--out", default=str(DEFAULT_OUT))
     args = parser.parse_args()
 
     examples = _load_dataset()
     print(f"Dataset: {len(examples)} examples")
+    print(f"Embedder: {args.embedder}")
 
+    embedder = _build_embedder(args.embedder)
     system_names = [s.strip() for s in args.systems.split(",")]
-    adapters = _make_adapters(system_names)
+    adapters = _make_adapters(system_names, embedder=embedder)
 
     rows: list[dict] = []  # type: ignore[type-arg]
 

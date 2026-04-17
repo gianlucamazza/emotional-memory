@@ -1,3 +1,4 @@
 system,recall@5,encode_ms_avg,retrieve_p50_ms,retrieve_p95_ms,n_examples,top_k,status,reason
-aft,0.4,0.92,2.34,3.13,258,5,ok,
-naive_cosine,0.45,0.01,2.55,2.7,258,5,ok,
+aft,0.85,41.41,47.83,49.85,258,5,ok,
+naive_cosine,0.8,31.67,76.09,96.98,258,5,ok,
+recency,0.25,0.01,0.02,0.04,258,5,ok,

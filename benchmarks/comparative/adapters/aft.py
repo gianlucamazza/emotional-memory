@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from typing import Any
 
 from emotional_memory import CoreAffect, EmotionalMemory, InMemoryStore
 
@@ -20,25 +21,44 @@ class _HashEmbedder:
         return [self.embed(t) for t in texts]
 
 
+def _make_embedder(embedder: Any) -> Any:
+    if embedder is not None:
+        return embedder
+    return _HashEmbedder()
+
+
 class AFTAdapter(MemoryAdapter):
-    """emotional-memory (AFT) adapter."""
+    """emotional-memory (AFT) adapter.
+
+    Pass an embedder instance to use semantic embeddings instead of the
+    default SHA-256 hash embedder::
+
+        from emotional_memory.embedders import SentenceTransformerEmbedder
+        adapter = AFTAdapter(embedder=SentenceTransformerEmbedder())
+    """
 
     name = "aft"
 
-    def __init__(self) -> None:
-        self._em = EmotionalMemory(store=InMemoryStore(), embedder=_HashEmbedder())
+    def __init__(self, embedder: Any = None) -> None:
+        self._embedder = _make_embedder(embedder)
+        self._em = EmotionalMemory(store=InMemoryStore(), embedder=self._embedder)
 
     def encode(self, text: str, valence: float = 0.0, arousal: float = 0.5) -> str:
         self._em.set_affect(CoreAffect(valence=valence, arousal=arousal))
         mem = self._em.encode(text)
         return mem.id
 
-    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievedItem]:
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5,
+        valence: float = 0.0,
+        arousal: float = 0.5,
+    ) -> list[RetrievedItem]:
+        # Set affect to query quadrant so mood-congruent scoring is active
+        self._em.set_affect(CoreAffect(valence=valence, arousal=arousal))
         results = self._em.retrieve(query, top_k=top_k)
-        return [
-            RetrievedItem(id=m.id, text=m.content, score=m.tag.core_affect.valence)
-            for m in results
-        ]
+        return [RetrievedItem(id=m.id, text=m.content, score=0.0) for m in results]
 
     def reset(self) -> None:
-        self._em = EmotionalMemory(store=InMemoryStore(), embedder=_HashEmbedder())
+        self._em = EmotionalMemory(store=InMemoryStore(), embedder=self._embedder)

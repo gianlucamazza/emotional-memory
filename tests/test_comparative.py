@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from benchmarks.comparative.adapters.aft import AFTAdapter
 from benchmarks.comparative.adapters.naive_cosine import NaiveCosineAdapter
+from benchmarks.comparative.adapters.recency import RecencyAdapter
 from benchmarks.comparative.runner import QUERIES, _is_congruent, run_adapter
 
 
@@ -115,3 +116,20 @@ def test_is_congruent_q3() -> None:
     q = QUERIES[2]  # Q3 sadness
     assert _is_congruent({"valence": -0.7, "arousal": 0.2}, q)
     assert not _is_congruent({"valence": 0.5, "arousal": 0.2}, q)
+
+
+def test_recency_adapter_returns_most_recent() -> None:
+    adapter = RecencyAdapter()
+    for i in range(10):
+        adapter.encode(f"item {i}")
+    results = adapter.retrieve("anything", top_k=3)
+    assert len(results) == 3
+    assert results[0].text == "item 9"  # most recent first
+
+
+def test_queries_have_affect_centroids() -> None:
+    for q in QUERIES:
+        assert "query_valence" in q
+        assert "query_arousal" in q
+        assert -1.0 <= q["query_valence"] <= 1.0
+        assert 0.0 <= q["query_arousal"] <= 1.0

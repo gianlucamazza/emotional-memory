@@ -26,8 +26,20 @@ class MemoryAdapter(ABC):
         """Store *text* with optional affective hint. Returns the assigned id."""
 
     @abstractmethod
-    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievedItem]:
-        """Return the top-k most relevant items for *query*."""
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5,
+        valence: float = 0.0,
+        arousal: float = 0.5,
+    ) -> list[RetrievedItem]:
+        """Return the top-k most relevant items for *query*.
+
+        *valence* and *arousal* describe the affective context of the query
+        (i.e. the quadrant the user is currently in).  Affect-aware adapters
+        should set their internal state accordingly before scoring; baselines
+        may ignore these parameters.
+        """
 
     @abstractmethod
     def reset(self) -> None:

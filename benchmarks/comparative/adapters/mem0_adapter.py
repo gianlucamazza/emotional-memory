@@ -42,7 +42,13 @@ class Mem0Adapter(MemoryAdapter):
             result.get("id", str(uuid.uuid4())) if isinstance(result, dict) else str(uuid.uuid4())
         )
 
-    def retrieve(self, query: str, top_k: int = 5) -> list[RetrievedItem]:
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 5,
+        valence: float = 0.0,
+        arousal: float = 0.5,
+    ) -> list[RetrievedItem]:
         if not self._available or self._mem is None:
             return []
         results = self._mem.search(query, user_id=self._user_id, limit=top_k)

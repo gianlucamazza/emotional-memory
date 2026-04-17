@@ -27,7 +27,8 @@ select = [
 # print() intentional in examples
 "examples/**" = ["T201"]
 # S603/S314: false positives (controlled subprocess + self-generated XML)
-"scripts/**" = ["T201", "S603", "S314"]
+# S311: pseudo-random is intentional for reproducible synthetic data generation
+"scripts/**" = ["T201", "S603", "S314", "S311"]
 # demo: print OK in gradio apps; TCH not needed
 "demo/**" = ["T201", "TCH"]
 # TCH (TYPE_CHECKING) is incompatible with Pydantic models that use
