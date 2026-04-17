@@ -19,7 +19,6 @@ Patch releases fixing regressions and improving developer experience. No new API
 - [x] Published to PyPI as `emotional-memory==0.5.2`
 - [x] Zenodo DOI `10.5281/zenodo.19636356`
 - [x] arXiv-style paper 10p (`paper/main.tex`) — 4 figures, comparative + perf tables
-- [ ] Merge Dependabot PR #10 (blocked: GitHub billing — re-run CI once billing resolved)
 
 ---
 
@@ -74,11 +73,6 @@ Goal: make the library production-grade for teams running agents at scale.
 ### BYO appraisal schema
 - Parameterize the Scherer CPM prompt so custom appraisal taxonomies (OCC, GRID) can be injected without forking
 - `AppraisalSchema` config class
-
-### HuggingFace Spaces demo
-- Interactive Gradio demo: chat with an LLM that remembers your mood
-- PAD visualization panel in real-time
-- Hosted at `homen3/emotional-memory-demo` (or similar)
 
 ---
 
