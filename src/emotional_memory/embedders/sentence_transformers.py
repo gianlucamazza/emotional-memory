@@ -38,7 +38,7 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
 
     def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
         try:
-            from sentence_transformers import SentenceTransformer  # type: ignore[import-not-found]
+            from sentence_transformers import SentenceTransformer
         except ImportError as exc:
             raise ImportError(
                 "sentence-transformers is required for SentenceTransformerEmbedder.\n"
@@ -49,10 +49,12 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
         self._model_name = model_name
 
     def embed(self, text: str) -> list[float]:
-        return self._model.encode(text).tolist()  # type: ignore[no-any-return]
+        result: list[float] = self._model.encode(text).tolist()
+        return result
 
     def embed_batch(self, texts: list[str]) -> list[list[float]]:
-        return self._model.encode(texts).tolist()  # type: ignore[no-any-return]
+        result: list[list[float]] = self._model.encode(texts).tolist()
+        return result
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(model={self._model_name!r})"

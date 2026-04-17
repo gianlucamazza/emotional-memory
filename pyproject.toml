@@ -19,6 +19,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Typing :: Typed",
 ]
@@ -81,3 +82,10 @@ strict = true
 warn_return_any = true
 packages = ["emotional_memory"]
 plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+# Optional dependencies without bundled type stubs — ignore missing imports
+# so mypy works whether or not the extra is installed, with no # type: ignore
+# comments needed in source code.
+module = ["sentence_transformers", "sentence_transformers.*"]
+ignore_missing_imports = true
