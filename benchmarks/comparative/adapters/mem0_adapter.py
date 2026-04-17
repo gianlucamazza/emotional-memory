@@ -1,46 +1,74 @@
-"""Mem0 adapter — wraps mem0ai if installed, otherwise marks as not_evaluated."""
+"""Mem0 adapter — wraps mem0ai>=2.0 if installed, otherwise marks as not_evaluated."""
 
 from __future__ import annotations
 
+import contextlib
+import os
+import shutil
+import tempfile
 import uuid
 
 from .base import MemoryAdapter, RetrievedItem
 
-_NOT_INSTALLED_REASON = "mem0ai not installed (pip install mem0ai)"
+_MISSING_KEY_REASON = "OPENAI_API_KEY not set (required by mem0ai)"
+_NOT_INSTALLED_REASON = "mem0ai not installed (pip install 'mem0ai>=2.0')"
 
 
 class Mem0Adapter(MemoryAdapter):
-    """mem0 adapter (requires: pip install mem0ai)."""
+    """mem0 adapter (requires: pip install 'mem0ai>=2.0' and OPENAI_API_KEY)."""
 
     name = "mem0"
 
     def __init__(self) -> None:
-        try:
-            import mem0  # noqa: F401
+        self._qdrant_dir: str | None = None
 
-            self._available = True
-            # mem0 requires an OpenAI key by default; we use an in-memory config
+        if not os.environ.get("OPENAI_API_KEY"):
+            self._available = False
+            self._reason = _MISSING_KEY_REASON
+            self._mem = None
+            return
+
+        try:
             from mem0 import Memory  # type: ignore[import-untyped]
 
+            self._qdrant_dir = tempfile.mkdtemp(prefix="qdrant_bench_")
             self._mem = Memory.from_config(
                 {
                     "llm": {"provider": "openai", "config": {"model": "gpt-4o-mini"}},
                     "embedder": {"provider": "openai"},
-                    "vector_store": {"provider": "chroma", "config": {"collection_name": "bench"}},
+                    "vector_store": {
+                        "provider": "qdrant",
+                        "config": {
+                            "path": self._qdrant_dir,
+                            "collection_name": "bench",
+                        },
+                    },
                 }
             )
+            self._available = True
+            self._reason = ""
             self._user_id = "benchmark"
         except ImportError:
             self._available = False
+            self._reason = _NOT_INSTALLED_REASON
+            self._mem = None
+        except Exception as exc:
+            self._available = False
+            self._reason = f"mem0 init failed: {exc}"
             self._mem = None
 
     def encode(self, text: str, valence: float = 0.0, arousal: float = 0.5) -> str:
         if not self._available or self._mem is None:
             return str(uuid.uuid4())
-        result = self._mem.add(text, user_id=self._user_id)
-        return (
-            result.get("id", str(uuid.uuid4())) if isinstance(result, dict) else str(uuid.uuid4())
-        )
+        with contextlib.suppress(Exception):
+            result = self._mem.add(
+                [{"role": "user", "content": text}],
+                user_id=self._user_id,
+            )
+            results = result.get("results", []) if isinstance(result, dict) else []
+            if results and isinstance(results[0], dict):
+                return str(results[0].get("id", uuid.uuid4()))
+        return str(uuid.uuid4())
 
     def retrieve(
         self,
@@ -51,23 +79,34 @@ class Mem0Adapter(MemoryAdapter):
     ) -> list[RetrievedItem]:
         if not self._available or self._mem is None:
             return []
-        results = self._mem.search(query, user_id=self._user_id, limit=top_k)
-        items = results if isinstance(results, list) else results.get("results", [])
-        return [
-            RetrievedItem(
-                id=str(r.get("id", i)),
-                text=r.get("memory", ""),
-                score=r.get("score", 0.0),
+        try:
+            result = self._mem.search(
+                query,
+                filters={"user_id": self._user_id},
+                limit=top_k,
             )
-            for i, r in enumerate(items)
-        ]
+            items = result.get("results", []) if isinstance(result, dict) else result
+            return [
+                RetrievedItem(
+                    id=str(r.get("id", i)),
+                    text=r.get("memory", ""),
+                    score=float(r.get("score", 0.0)),
+                )
+                for i, r in enumerate(items)
+            ]
+        except Exception:
+            return []
 
     def reset(self) -> None:
-        import contextlib
-
         if self._available and self._mem is not None:
             with contextlib.suppress(Exception):
                 self._mem.delete_all(user_id=self._user_id)
+        # Clean up and recreate the qdrant temp directory between runs
+        if self._qdrant_dir:
+            with contextlib.suppress(Exception):
+                shutil.rmtree(self._qdrant_dir)
+            with contextlib.suppress(Exception):
+                self._qdrant_dir = tempfile.mkdtemp(prefix="qdrant_bench_")
 
     @property
     def available(self) -> bool:
@@ -75,4 +114,4 @@ class Mem0Adapter(MemoryAdapter):
 
     @property
     def not_available_reason(self) -> str:
-        return "" if self._available else _NOT_INSTALLED_REASON
+        return self._reason

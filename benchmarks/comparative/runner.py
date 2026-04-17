@@ -190,6 +190,20 @@ def _make_adapters(system_names: list[str], embedder: Any = None) -> list[Memory
     except ImportError:
         pass
 
+    try:
+        from benchmarks.comparative.adapters.letta_adapter import LettaAdapter
+
+        registry["letta"] = LettaAdapter
+    except ImportError:
+        pass
+
+    try:
+        from benchmarks.comparative.adapters.langmem_adapter import LangMemAdapter
+
+        registry["langmem"] = LangMemAdapter
+    except ImportError:
+        pass
+
     adapters: list[MemoryAdapter] = []
     for name in system_names:
         factory = registry.get(name)

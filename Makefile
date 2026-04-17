@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm docs-images docs docs-serve dist publish clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm docs-images docs docs-serve dist publish clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -30,6 +30,12 @@ install-sentence-transformers:
 
 install-langchain:
 	uv pip install -e ".[dev,langchain]"
+
+install-mem0:
+	uv pip install -e ".[dev,mem0]"
+
+install-langmem:
+	uv pip install -e ".[dev,langmem]"
 
 install-all:
 	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain]"
