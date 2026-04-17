@@ -37,14 +37,20 @@ htmlcov/
 # MkDocs build output
 site/
 
-# Paper — generated artefacts (keep sources, ignore outputs)
+# Paper — generated artefacts (keep LaTeX sources, ignore build outputs)
 paper/tables/table*.md
 paper/figures/*.png
 paper/figures/*.pdf
-*.aux
-*.log
-*.out
-*.synctex.gz
+paper/main.pdf
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/_minted*/
 
 # Coverage XML
 coverage.xml
