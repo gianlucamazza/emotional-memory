@@ -118,6 +118,7 @@
 - **Mehrabian, A. & Russell, J.A.** (1974). *An Approach to Environmental Psychology*. Cambridge: MIT Press.
 - **Plutchik, R.** (1980). *Emotion: A Psychoevolutionary Synthesis*. New York: Harper & Row.
 - **Ortony, A., Clore, G.L. & Collins, A.** (1988). *The Cognitive Structure of Emotions*. Cambridge: Cambridge University Press.
+- **Anderson, J.R.** (1983). *The Architecture of Cognition*. Cambridge, MA: Harvard University Press. [ACT-R power-law decay: `strength(t) = B · t^(-d)`]
 - **Anderson, J.R. et al.** (2004). "An integrated theory of the mind." *Psychological Review*, 111(4), 1036-1060.
 - **Marinier, R.P., Laird, J.E. & Lewis, R.L.** (2009). "A computational unification of cognitive behavior and emotion." *Cognitive Systems Research*, 10(1), 48-69. Disponibile: https://public.websites.umich.edu/~rickl/pubs/marinier-laird-lewis-2008-cogsys.pdf
 - **Sun, R.** (2016). *Anatomy of the Mind: Exploring Psychological Mechanisms and Processes with the CLARION Cognitive Architecture*. Oxford: Oxford University Press.
