@@ -11,9 +11,10 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 
 ```bash
 pip install emotional-memory
-pip install emotional-memory[sqlite]   # SQLite persistence via sqlite-vec
-pip install emotional-memory[viz]      # matplotlib visualization
-pip install emotional-memory[dotenv]   # .env file loading via python-dotenv
+pip install emotional-memory[sentence-transformers]  # real semantic embeddings (recommended)
+pip install emotional-memory[sqlite]                 # SQLite persistence via sqlite-vec
+pip install emotional-memory[viz]                    # matplotlib visualization
+pip install emotional-memory[dotenv]                 # .env file loading via python-dotenv
 ```
 
 For development:
@@ -21,25 +22,23 @@ For development:
 ```bash
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
-pip install -e ".[dev,sqlite]"
-pip install -e ".[dev,llm-test]"  # add httpx for real-LLM tests
-pip install -e ".[dev,viz]"       # add matplotlib for visualization
+pip install -e ".[dev,sqlite,sentence-transformers]"
 ```
 
 ## Quickstart
 
 ```python
-from emotional_memory import (
-    EmotionalMemory, EmotionalMemoryConfig,
-    InMemoryStore, CoreAffect, AppraisalVector,
+pip install emotional-memory[sentence-transformers]
+```
+
+```python
+from emotional_memory import EmotionalMemory, InMemoryStore, CoreAffect
+from emotional_memory.embedders import SentenceTransformerEmbedder
+
+em = EmotionalMemory(
+    store=InMemoryStore(),
+    embedder=SentenceTransformerEmbedder(),  # all-MiniLM-L6-v2 by default
 )
-
-# Bring your own embedder — anything with .embed(text) -> list[float]
-class MyEmbedder:
-    def embed(self, text: str) -> list[float]: ...
-    def embed_batch(self, texts: list[str]) -> list[list[float]]: ...
-
-em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
 
 # Set current emotional state
 em.set_affect(CoreAffect(valence=0.8, arousal=0.6))
@@ -54,13 +53,24 @@ for mem in results:
     print(mem.content, mem.tag.core_affect)
 ```
 
+**Bring your own embedder** — any object with `.embed(text) -> list[float]` works:
+
+```python
+class MyEmbedder:
+    def embed(self, text: str) -> list[float]: ...
+    def embed_batch(self, texts: list[str]) -> list[list[float]]: ...
+```
+
+Or subclass `SequentialEmbedder` and implement only `embed()` — `embed_batch()` is provided.
+
 ### Async
 
 ```python
 import asyncio
 from emotional_memory import EmotionalMemory, InMemoryStore, as_async
+from emotional_memory.embedders import SentenceTransformerEmbedder
 
-sync_em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
+sync_em = EmotionalMemory(store=InMemoryStore(), embedder=SentenceTransformerEmbedder())
 em = as_async(sync_em)  # wraps sync components with asyncio.to_thread bridges
 
 async def main():
@@ -294,34 +304,53 @@ Spider chart of the 5 Stimulus Evaluation Check dimensions.
 make docs-images   # regenerate all PNGs in docs/images/
 ```
 
+## Comparison with Existing Systems
+
+| | **emotional-memory (AFT)** | **Mem0** | **Letta** | **Zep** | **LangChain Memory** |
+|---|---|---|---|---|---|
+| **License** | MIT | Apache 2.0 | Apache 2.0 | Apache 2.0 | MIT |
+| **Persistence** | InMemory / SQLite | Qdrant, Chroma, Pinecone, PG, MongoDB | PostgreSQL / SQLite | Neo4j (self-hosted) / Cloud | In-memory / custom |
+| **BYO embedder** | ✅ any `Embedder` protocol | ✅ (OpenAI default) | ⚠️ partial | ⚠️ partial | ✅ |
+| **Emotion model** | ✅ 5-layer AFT (valence, arousal, mood, appraisal, resonance) | ❌ | ❌ | ❌ | ❌ |
+| **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | ✅ tool-call edit | ✅ edge invalidation | ❌ |
+| **Persistent mood state** | ✅ MoodField (Heidegger EMA) | ❌ | ❌ | ❌ | ❌ |
+| **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **LangChain integration** | ⚠️ v0.6 planned | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
+| **Public benchmark** | ✅ 126 fidelity test cases (intra-theory) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
+| **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
+
+**Key differentiator**: emotional-memory is the only system with an explicit multi-layer emotional model. Every other system treats memory as semantically-indexed text with no affective state — no mood congruence in retrieval, no reconsolidation triggered by affective prediction error, no momentum or appraisal.
+
+**Benchmark caveat**: AFT fidelity tests validate psychological invariants (intra-theory); Mem0/Letta/Zep benchmarks measure QA recall on dialog datasets (inter-system). A cross-system comparison on affect-labeled retrieval tasks is in progress (v0.6).
+
 ## Benchmarks
 
-### Psychological fidelity (126 tests)
+### Psychological fidelity (126 parametrized test cases, 20 phenomena)
 
-The library validates 20 phenomena from the affective science literature:
+The library validates 20 phenomena from the affective science literature via 126 parametrized test cases (run `pytest --collect-only benchmarks/fidelity/` to enumerate them):
 
-| Phenomenon | Reference | Tests |
-|---|---|---|
-| Mood-congruent recall | Bower 1981 | 3 |
-| Emotional enhancement | Cahill & McGaugh 1995 | 3 |
-| Yerkes-Dodson inverted-U | Yerkes & Dodson 1908 | 12 |
-| Spacing effect | Ebbinghaus 1885 | 7 |
-| Arousal floor | McGaugh 2004 | 7 |
-| Reconsolidation (APE) | Nader & Schiller 2000 | 5 |
-| State-dependent retrieval | Godden & Baddeley 1975 | 3 |
-| Affective momentum | Spinoza, Ethics III | 9 |
-| Mood-adaptive weights | Heidegger, Being & Time §29 | 14 |
-| Appraisal-to-affect mapping | Scherer CPM 2009 | 11 |
-| Spreading activation | Collins & Loftus 1975 | 5 |
-| Hebbian co-retrieval strengthening | Hebb 1949 | 4 |
-| ACT-R power-law decay | Anderson 1983 / McGaugh 2004 | 5 |
-| PAD dominance | Mehrabian & Russell 1974 | 8 |
-| Emotional retrieval vs. cosine | Bower 1981 / Russell 1980 / Nader 2000 | 3 |
-| Design gap regression | (various) | 3 |
-| Dual-path encoding | LeDoux 1996 | 6 |
-| Emotion categorization | Plutchik 1980 | 10 |
-| Affective prediction error | Schultz 1997 / Pearce-Hall 1980 | 5 |
-| APE-gated reconsolidation window | Nader & Schiller 2000 | 3 |
+| Phenomenon | Reference | Cases | Test file |
+|---|---|---|---|
+| Mood-congruent recall | Bower 1981 | 3 | [test_mood_congruent.py](benchmarks/fidelity/test_mood_congruent.py) |
+| Emotional enhancement | Cahill & McGaugh 1995 | 3 | [test_emotional_enhancement.py](benchmarks/fidelity/test_emotional_enhancement.py) |
+| Yerkes-Dodson inverted-U | Yerkes & Dodson 1908 | 12 | [test_yerkes_dodson.py](benchmarks/fidelity/test_yerkes_dodson.py) |
+| Spacing effect | Ebbinghaus 1885 | 7 | [test_spacing_effect.py](benchmarks/fidelity/test_spacing_effect.py) |
+| Arousal floor | McGaugh 2004 | 7 | [test_arousal_floor.py](benchmarks/fidelity/test_arousal_floor.py) |
+| Reconsolidation (APE) | Nader & Schiller 2000 | 5 | [test_reconsolidation.py](benchmarks/fidelity/test_reconsolidation.py) |
+| State-dependent retrieval | Godden & Baddeley 1975 | 3 | [test_state_dependent.py](benchmarks/fidelity/test_state_dependent.py) |
+| Affective momentum | Spinoza, Ethics III | 9 | [test_momentum.py](benchmarks/fidelity/test_momentum.py) |
+| Mood-adaptive weights | Heidegger, Being & Time §29 | 14 | [test_mood_adaptive.py](benchmarks/fidelity/test_mood_adaptive.py) |
+| Appraisal-to-affect mapping | Scherer CPM 2009 | 11 | [test_appraisal_affect.py](benchmarks/fidelity/test_appraisal_affect.py) |
+| Spreading activation | Collins & Loftus 1975 | 5 | [test_spreading_activation.py](benchmarks/fidelity/test_spreading_activation.py) |
+| Hebbian co-retrieval strengthening | Hebb 1949 | 4 | [test_hebbian_strengthening.py](benchmarks/fidelity/test_hebbian_strengthening.py) |
+| ACT-R power-law decay | Anderson 1983 / McGaugh 2004 | 5 | [test_decay_power_law.py](benchmarks/fidelity/test_decay_power_law.py) |
+| PAD dominance | Mehrabian & Russell 1974 | 8 | [test_pad_dominance.py](benchmarks/fidelity/test_pad_dominance.py) |
+| Emotional retrieval vs. cosine | Bower 1981 / Russell 1980 / Nader 2000 | 3 | [test_emotional_vs_cosine.py](benchmarks/fidelity/test_emotional_vs_cosine.py) |
+| Design gap regression | (various) | 3 | [test_design_gaps.py](benchmarks/fidelity/test_design_gaps.py) |
+| Dual-path encoding | LeDoux 1996 | 6 | [test_dual_path_encoding.py](benchmarks/fidelity/test_dual_path_encoding.py) |
+| Emotion categorization | Plutchik 1980 | 10 | [test_emotion_categorization.py](benchmarks/fidelity/test_emotion_categorization.py) |
+| Affective prediction error | Schultz 1997 / Pearce-Hall 1980 | 5 | [test_prediction_error.py](benchmarks/fidelity/test_prediction_error.py) |
+| APE-gated reconsolidation window | Nader & Schiller 2000 | 3 | [test_reconsolidation_window.py](benchmarks/fidelity/test_reconsolidation_window.py) |
 
 Run with: `make bench-fidelity`
 
