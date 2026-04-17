@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-04-18
+
 ### Added
 
 - `docs/tutorials/async.md` — async usage guide (`AsyncEmotionalMemory`, `as_async()`, `encode_batch()`)
@@ -17,17 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `paper/SUBMISSION.md` — arXiv submission checklist (category options, metadata template, pre-submission checks, post-acceptance steps)
 - `demo/README.md`: `python_version: "3.11"` pinned in HF Space front-matter
 - HuggingFace Space deployed to https://huggingface.co/spaces/homen3/emotional-memory-demo
+- **Comparative baselines — Mem0 and LangMem adapters** (`benchmarks/comparative/adapters/`):
+  - `mem0_adapter.py` — wraps `mem0ai>=2.0` with local qdrant backend; recall@5 = **0.95**, encode 1364 ms/item, p50 161 ms
+  - `langmem_adapter.py` — wraps `langmem>=0.0.30` + `langgraph InMemoryStore`; recall@5 = **0.90**, encode 143 ms/item, p50 170 ms
+  - `letta_adapter.py` — availability-guarded stub (cloud-only, requires `LETTA_API_KEY`); reports `not_evaluated` without key
+  - `[mem0]` and `[langmem]` optional extras in `pyproject.toml`; `install-mem0` / `install-langmem` Makefile targets
+- `benchmarks/comparative/runner.py`: `python-dotenv` integration + `EMOTIONAL_MEMORY_LLM_API_KEY → OPENAI_API_KEY` bridge for adapter compatibility
 
 ### Fixed
 
 - `docs/mental_model.md`: broken relative link to `retrieval.py` replaced with absolute GitHub URL
-
-### Planned for v0.6.0
-
-- Additional comparative baselines: Mem0, Letta, LangMem adapters in `benchmarks/comparative/`
-- GitHub Pages docs site deploy (`gianlucamazza.github.io/emotional-memory`) — blocked: GitHub billing
-- HuggingFace Spaces demo deploy (`homen3/emotional-memory-demo`) — kit ready, push pending HF token
-- arXiv submission (cs.AI / cs.LG) — bundle ready at `paper/arxiv-submission.tar.gz`
+- `Mem0Adapter.reset()`: removed `shutil.rmtree()` call on live qdrant dir (caused `SQLITE_READONLY` errors by orphaning SQLite/portalocker handles); reset now calls only `delete_all()`; temp dir lifecycle managed via `tempfile.TemporaryDirectory` + `close()`/`__del__`
+- `LangMemAdapter.encode()`: now parses the stable langmem UUID from the `"created memory <UUID>"` return string instead of generating a random UUID (which broke recall mapping)
+- `LangMemAdapter.retrieve()`: now `json.loads()` the JSON string returned by `search_memory_tool` instead of iterating over characters
 
 ## [0.5.2] - 2026-04-17
 

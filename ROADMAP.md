@@ -35,7 +35,7 @@ Goal: make the library discoverable and integrable into existing LLM workflows.
 - [x] Dataset: 258 affect-labeled examples in `benchmarks/datasets/affect_reference_v1.jsonl`
 - [x] Harness in `benchmarks/comparative/` — AFT vs `naive_cosine` vs `recency` baselines
 - [x] `make bench-comparative` and `make reproduce-paper` targets
-- [ ] Additional baselines: Mem0, Letta, LangMem adapters
+- [x] Additional baselines: Mem0 (recall@5=0.95) and LangMem (recall@5=0.90) adapters; Letta availability-guarded (cloud-only, `not_evaluated` without `LETTA_API_KEY`)
 
 ### arXiv technical report ✓
 - [x] 10-page paper (`paper/main.tex`) — AFT, fidelity validation, comparative benchmark
