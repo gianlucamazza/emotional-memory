@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-04-17
+
+### Fixed
+
+- **SQLiteStore thread-safety** (`stores/sqlite.py`) — concurrent writes from multiple threads
+  raised sqlite3 errors when a single `Connection` was shared without serialisation.
+  Added a `threading.RLock` that serialises all connection access; `check_same_thread=False`
+  was already set, but Python's sqlite3 leaves locking to the caller.
+  `test_concurrent_write_from_other_thread` now passes reliably.
+
+### Changed
+
+- `CITATION.cff` added — enables the GitHub "Cite this repository" button and integrates
+  with Zenodo for a citable DOI.
+- README: fidelity benchmark heading clarified to "126 parametrized test cases, 20 phenomena"
+  to accurately reflect pytest's counting of `@pytest.mark.parametrize` expansions.
+
 ## [0.5.0] - 2026-04-12
 
 ### Fixed
@@ -379,7 +396,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.3.0...v0.4.0

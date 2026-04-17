@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it using the metadata below."
+type: software
+title: "emotional-memory: Affective Field Theory for LLM Memory"
+abstract: >
+  A Python library implementing Affective Field Theory (AFT) — a 5-layer
+  emotional model for LLM memory that integrates valence-arousal affect
+  (Russell 1980), affective momentum (Spinoza), mood fields (Heidegger),
+  appraisal vectors (Scherer CPM), and resonance links with spreading
+  activation (Collins & Loftus 1975) and Hebbian strengthening (Hebb 1949).
+authors:
+  - family-names: Mazza
+    given-names: Gianluca
+    email: info@gianlucamazza.it
+    orcid: ""
+version: "0.5.1"
+date-released: "2026-04-17"
+repository-code: "https://github.com/gianlucamazza/emotional-memory"
+url: "https://gianlucamazza.github.io/emotional-memory"
+license: MIT
+keywords:
+  - llm
+  - memory
+  - emotion
+  - affective-computing
+  - artificial-intelligence
+  - affective-field-theory
+  - mood-congruent-retrieval
+  - reconsolidation
