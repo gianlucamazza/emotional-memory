@@ -28,7 +28,11 @@ select = [
 "examples/**" = ["T201"]
 # S603/S314: false positives (controlled subprocess + self-generated XML)
 # S311: pseudo-random is intentional for reproducible synthetic data generation
-"scripts/**" = ["T201", "S603", "S314", "S311"]
+# S306: tempfile.mktemp used for git-archive output path; file is written
+#       atomically by git and removed by the script
+# S607: partial executable path (`git`, `twine`) — PATH-resolved commands
+#       are standard for release tooling
+"scripts/**" = ["T201", "S603", "S314", "S311", "S306", "S607"]
 # demo: print OK in gradio apps; TCH not needed
 "demo/**" = ["T201", "TCH"]
 # TCH (TYPE_CHECKING) is incompatible with Pydantic models that use

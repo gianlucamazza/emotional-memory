@@ -54,3 +54,6 @@ paper/_minted*/
 
 # Coverage XML
 coverage.xml
+
+# Release artefacts
+.zenodo_doi

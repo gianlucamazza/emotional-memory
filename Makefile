@@ -87,7 +87,13 @@ docs-serve:
 dist:
 	uv build
 
-publish: dist
+preflight:
+	uv run python scripts/preflight.py
+
+preflight-fast:
+	uv run python scripts/preflight.py --fast
+
+publish: preflight dist
 	uv publish
 
 clean:
