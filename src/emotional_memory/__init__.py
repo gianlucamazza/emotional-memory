@@ -49,6 +49,14 @@ with contextlib.suppress(ImportError):
 
     _sqlite_available = True
 
+_sentence_transformers_available = False
+with contextlib.suppress(ImportError):
+    from emotional_memory.embedders.sentence_transformers import (
+        SentenceTransformerEmbedder as SentenceTransformerEmbedder,
+    )
+
+    _sentence_transformers_available = True
+
 __all__ = [
     "AdaptiveWeightsConfig",
     "AffectiveMomentum",
@@ -98,3 +106,6 @@ __all__ = [
 
 if _sqlite_available:
     __all__ = [*__all__, "SQLiteStore"]
+
+if _sentence_transformers_available:
+    __all__ = [*__all__, "SentenceTransformerEmbedder"]
