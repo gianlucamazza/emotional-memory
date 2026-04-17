@@ -6,6 +6,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
     groups:
       dev-dependencies:
         patterns:
@@ -15,6 +18,14 @@ updates:
           - "mkdocs*"
           - "mkdocstrings*"
           - "pip-audit"
+          - "psutil"
+          - "httpx"
+      optional-extras:
+        patterns:
+          - "sentence-transformers"
+          - "sqlite-vec"
+          - "matplotlib"
+          - "python-dotenv"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -22,3 +33,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build(deps)"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
