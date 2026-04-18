@@ -1,4 +1,2 @@
-emotional-memory[sentence-transformers]>=0.5.1
-gradio>=5.0,<6
-huggingface_hub<1.0
+emotional-memory>=0.6.0
 matplotlib>=3.7
