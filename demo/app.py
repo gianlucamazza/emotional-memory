@@ -13,6 +13,7 @@ import io
 
 import gradio as gr
 import matplotlib
+from PIL import Image
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -61,8 +62,8 @@ def _build_engine() -> tuple[EmotionalMemory, EmotionalMemoryChatHistory]:
 _PAD_HISTORY_MAX = 40
 
 
-def _pad_plot(pad_history: list[tuple[float, float, float]]) -> bytes:
-    """Return a PNG bytes object of the PAD trajectory plot."""
+def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
+    """Return a PIL Image of the PAD trajectory plot."""
     fig, axes = plt.subplots(3, 1, figsize=(6, 4), sharex=True)
     fig.patch.set_facecolor("#0f0f0f")
     labels = ["Valence", "Arousal", "Dominance"]
@@ -90,7 +91,7 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> bytes:
     fig.savefig(buf, format="png", dpi=110, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     buf.seek(0)
-    return buf.read()
+    return Image.open(buf)
 
 
 # ---------------------------------------------------------------------------
@@ -109,7 +110,7 @@ def chat(
     EmotionalMemory,
     EmotionalMemoryChatHistory,
     list[tuple[float, float, float]],
-    bytes,
+    Image.Image,
     str,
 ]:
     if not user_msg.strip():
@@ -175,7 +176,7 @@ def reset_session() -> tuple[
     EmotionalMemory,
     EmotionalMemoryChatHistory,
     list,
-    bytes,
+    Image.Image,
 ]:
     em, history = _build_engine()
     plot = _pad_plot([(0.0, 0.5, 0.0)])
@@ -245,4 +246,4 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch()
+    demo.launch(show_error=True)
