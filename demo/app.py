@@ -2,14 +2,21 @@
 
 Runs as a Hugging Face Space (sdk: gradio) or locally::
 
-    pip install "emotional-memory[sentence-transformers]" gradio matplotlib
+    pip install "emotional-memory[langchain]" httpx gradio matplotlib
     python demo/app.py
+
+Set EMOTIONAL_MEMORY_LLM_API_KEY (+ optionally EMOTIONAL_MEMORY_LLM_MODEL and
+EMOTIONAL_MEMORY_LLM_BASE_URL) to enable LLM-backed appraisal (multilingual,
+full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
+(rule-based, English only).
 """
 
 from __future__ import annotations
 
 import hashlib
 import io
+import os
+from typing import Any
 
 import gradio as gr
 import matplotlib
@@ -18,7 +25,14 @@ from PIL import Image
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from emotional_memory import EmotionalMemory, InMemoryStore
+from emotional_memory import (
+    EmotionalMemory,
+    InMemoryStore,
+    KeywordAppraisalEngine,
+    LLMAppraisalConfig,
+    LLMAppraisalEngine,
+    LLMCallable,
+)
 from emotional_memory.integrations import EmotionalMemoryChatHistory
 
 # ---------------------------------------------------------------------------
@@ -45,14 +59,73 @@ class _HashEmbedder:
 
 
 # ---------------------------------------------------------------------------
+# Appraisal engine — LLM if API key present, keyword fallback otherwise
+# ---------------------------------------------------------------------------
+
+_DEFAULT_BASE_URL = "https://api.openai.com/v1"
+_DEFAULT_MODEL = "gpt-4o-mini"
+
+
+def _make_httpx_llm(api_key: str) -> LLMCallable | None:
+    try:
+        import httpx
+    except ImportError:
+        return None
+
+    base_url = os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", _DEFAULT_BASE_URL).rstrip("/")
+    model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL)
+
+    def _call(prompt: str, json_schema: dict[str, Any]) -> str:
+        payload: dict[str, Any] = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "response_format": {"type": "json_object"},
+        }
+        response = httpx.post(
+            f"{base_url}/chat/completions",
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json=payload,
+            timeout=30.0,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return str(data["choices"][0]["message"]["content"])
+
+    return _call
+
+
+def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngine, str]:
+    api_key = os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", "")
+    if api_key:
+        llm = _make_httpx_llm(api_key)
+        if llm is not None:
+            engine = LLMAppraisalEngine(
+                llm=llm,
+                config=LLMAppraisalConfig(cache_size=64, fallback_on_error=True),
+            )
+            model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL)
+            return engine, f"🧠 LLM appraisal active (`{model}`)"
+    engine = KeywordAppraisalEngine()
+    return (
+        engine,
+        "📝 Keyword fallback active (English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for multilingual)",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Global state (one instance per Gradio session via State)
 # ---------------------------------------------------------------------------
 
 
-def _build_engine() -> tuple[EmotionalMemory, EmotionalMemoryChatHistory]:
-    em = EmotionalMemory(store=InMemoryStore(), embedder=_make_embedder())
+def _build_engine() -> tuple[EmotionalMemory, EmotionalMemoryChatHistory, str]:
+    appraisal_engine, mode = _make_appraisal_engine()
+    em = EmotionalMemory(
+        store=InMemoryStore(),
+        embedder=_make_embedder(),
+        appraisal_engine=appraisal_engine,
+    )
     history = EmotionalMemoryChatHistory(em)
-    return em, history
+    return em, history, mode
 
 
 # ---------------------------------------------------------------------------
@@ -98,6 +171,8 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
 # Chat handler
 # ---------------------------------------------------------------------------
 
+MAX_MSG_PER_SESSION = 20
+
 
 def chat(
     user_msg: str,
@@ -105,6 +180,7 @@ def chat(
     em_state: EmotionalMemory,
     history_state: EmotionalMemoryChatHistory,
     pad_history: list[tuple[float, float, float]],
+    msg_count: int,
 ) -> tuple[
     list[dict[str, str]],
     EmotionalMemory,
@@ -112,11 +188,28 @@ def chat(
     list[tuple[float, float, float]],
     Image.Image,
     str,
+    int,
 ]:
     if not user_msg.strip():
         plot = _pad_plot(pad_history) if pad_history else _pad_plot([(0.0, 0.5, 0.0)])
-        return chat_history, em_state, history_state, pad_history, plot, ""
+        return chat_history, em_state, history_state, pad_history, plot, "", msg_count
 
+    if msg_count >= MAX_MSG_PER_SESSION:
+        gr.Info(
+            f"Session limit of {MAX_MSG_PER_SESSION} messages reached. "
+            "Click '🔄 New session' to continue."
+        )
+        return (
+            chat_history,
+            em_state,
+            history_state,
+            pad_history,
+            _pad_plot(pad_history),
+            "",
+            msg_count,
+        )
+
+    # encode via history adapter — calls em.encode() internally
     history_state.add_user_message(user_msg)
 
     state = em_state.get_state()
@@ -168,7 +261,7 @@ def chat(
         {"role": "assistant", "content": reply},
     ]
     plot = _pad_plot(pad_history)
-    return chat_history, em_state, history_state, pad_history, plot, ""
+    return chat_history, em_state, history_state, pad_history, plot, "", msg_count + 1
 
 
 def reset_session() -> tuple[
@@ -177,10 +270,12 @@ def reset_session() -> tuple[
     EmotionalMemoryChatHistory,
     list,
     Image.Image,
+    str,
+    int,
 ]:
-    em, history = _build_engine()
+    em, history, mode = _build_engine()
     plot = _pad_plot([(0.0, 0.5, 0.0)])
-    return [], em, history, [(0.0, 0.5, 0.0)], plot
+    return [], em, history, [(0.0, 0.5, 0.0)], plot, mode, 0
 
 
 # ---------------------------------------------------------------------------
@@ -194,8 +289,19 @@ Every message you send is encoded with a full **affective fingerprint** (valence
 appraisal, mood, resonance links). The PAD plot shows your conversation's emotional trajectory
 in real time. Type **"recall X"** to trigger mood-congruent retrieval.
 
-Built with [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory).
+Built with [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v0.6.0 · \
+[PyPI](https://pypi.org/project/emotional-memory/) · \
+[GitHub](https://github.com/gianlucamazza/emotional-memory) · \
+[Zenodo DOI](https://doi.org/10.5281/zenodo.15233392)
 """
+
+_EXAMPLES = [
+    "I succeeded! My project is complete and it's a great personal victory.",
+    "I failed and made a terrible mistake — everything is broken.",
+    "There is danger here — this crisis is a serious risk I cannot handle.",
+    "How surprising and unexpected! I am completely amazed by this news.",
+    "recall happy moments",
+]
 
 with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     gr.Markdown(_DESCRIPTION)
@@ -203,10 +309,13 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     em_state = gr.State()
     history_state = gr.State()
     pad_history = gr.State([])
+    msg_count = gr.State(0)
 
     with gr.Row():
         with gr.Column(scale=3):
-            chatbot = gr.Chatbot(label="Conversation", height=420, type="messages")
+            chatbot = gr.Chatbot(
+                label="Conversation", height=420, type="messages", allow_tags=False
+            )
             with gr.Row():
                 msg_box = gr.Textbox(
                     placeholder="Type a message… try expressing joy, fear, sadness, or calm.",
@@ -214,7 +323,9 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
                     scale=4,
                 )
                 send_btn = gr.Button("Send", variant="primary", scale=1)
+            gr.Examples(examples=_EXAMPLES, inputs=msg_box)
             reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
+            appraisal_badge = gr.Markdown("", elem_id="appraisal-badge")
 
         with gr.Column(scale=2):
             pad_plot = gr.Image(label="PAD state trajectory", type="pil")
@@ -227,22 +338,40 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     # Init on load
     demo.load(
         fn=reset_session,
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot],
+        outputs=[
+            chatbot,
+            em_state,
+            history_state,
+            pad_history,
+            pad_plot,
+            appraisal_badge,
+            msg_count,
+        ],
     )
 
     send_btn.click(
         fn=chat,
-        inputs=[msg_box, chatbot, em_state, history_state, pad_history],
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box],
+        inputs=[msg_box, chatbot, em_state, history_state, pad_history, msg_count],
+        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box, msg_count],
+        concurrency_limit=2,
     )
     msg_box.submit(
         fn=chat,
-        inputs=[msg_box, chatbot, em_state, history_state, pad_history],
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box],
+        inputs=[msg_box, chatbot, em_state, history_state, pad_history, msg_count],
+        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box, msg_count],
+        concurrency_limit=2,
     )
     reset_btn.click(
         fn=reset_session,
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot],
+        outputs=[
+            chatbot,
+            em_state,
+            history_state,
+            pad_history,
+            pad_plot,
+            appraisal_badge,
+            msg_count,
+        ],
     )
 
 if __name__ == "__main__":
