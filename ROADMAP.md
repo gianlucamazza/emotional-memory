@@ -39,7 +39,7 @@ Goal: make the library discoverable and integrable into existing LLM workflows.
 
 ### arXiv technical report ✓
 - [x] 10-page paper (`paper/main.tex`) — AFT, fidelity validation, comparative benchmark
-- [x] Zenodo DOI `10.5281/zenodo.19636356`, PyPI `emotional-memory==0.5.2`
+- [x] Zenodo DOI `10.5281/zenodo.19640250`, PyPI `emotional-memory==0.6.0`
 - [x] `paper/arxiv-submission.tar.gz` target (`make paper-arxiv`) + `paper/SUBMISSION.md` checklist
 - [ ] arXiv submission (cs.AI / cs.LG) — bundle ready, pending endorsement choice
 
