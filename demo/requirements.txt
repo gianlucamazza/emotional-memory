@@ -1,2 +1,2 @@
-emotional-memory>=0.6.0
+emotional-memory[langchain]>=0.6.0
 matplotlib>=3.7
