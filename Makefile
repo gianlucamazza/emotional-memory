@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm docs-images docs docs-serve dist publish clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict docs-images docs docs-serve dist publish clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -41,28 +41,28 @@ install-all:
 	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain]"
 
 lint:
-	ruff check .
-	ruff format --check .
+	uv run ruff check .
+	uv run ruff format --check .
 
 format:
-	ruff format .
+	uv run ruff format .
 
 test:
-	pytest
+	uv run pytest
 
 cov:
-	pytest --cov --cov-report=term-missing
+	uv run pytest --cov --cov-report=term-missing
 
 typecheck:
-	mypy src/emotional_memory/
+	uv run mypy src/emotional_memory/
 
 check: lint typecheck test
 
 bench-fidelity:
-	pytest benchmarks/fidelity/ -v -m fidelity
+	uv run pytest benchmarks/fidelity/ -v -m fidelity
 
 bench-perf:
-	pytest benchmarks/perf/ --benchmark-only --benchmark-sort=mean
+	uv run pytest benchmarks/perf/ --benchmark-only --benchmark-sort=mean
 
 bench: bench-fidelity bench-perf
 
@@ -88,11 +88,17 @@ paper-arxiv:
 	@echo "arXiv bundle ready: paper/arxiv-submission.tar.gz"
 	@tar -tzf paper/arxiv-submission.tar.gz
 
-bench-appraisal:
-	pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
+bench-appraisal: llm-config-strict
+	uv run pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
 
-test-llm:
-	pytest tests/test_llm_integration.py -v -m llm
+test-llm: llm-config-strict
+	uv run pytest tests/test_llm_integration.py -v -m llm
+
+llm-config:
+	uv run python scripts/check_llm_config.py
+
+llm-config-strict:
+	uv run python scripts/check_llm_config.py --strict --require-key
 
 docs-images:
 	uv run python scripts/generate_docs_images.py
@@ -153,6 +159,8 @@ help:
 	@echo ""
 	@echo "LLM tests:"
 	@echo "  test-llm                   Integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
+	@echo "  llm-config                 Print resolved LLM config without secrets"
+	@echo "  llm-config-strict          Fail fast on missing/unsupported LLM config"
 	@echo ""
 	@echo "Docs:"
 	@echo "  docs                       Build static site"

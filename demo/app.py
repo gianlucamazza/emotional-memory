@@ -16,7 +16,6 @@ from __future__ import annotations
 import hashlib
 import io
 import os
-from typing import Any
 
 import gradio as gr
 import matplotlib
@@ -31,9 +30,12 @@ from emotional_memory import (
     KeywordAppraisalEngine,
     LLMAppraisalConfig,
     LLMAppraisalEngine,
-    LLMCallable,
 )
-from emotional_memory.integrations import EmotionalMemoryChatHistory
+from emotional_memory.integrations import (
+    EmotionalMemoryChatHistory,
+    recommended_conversation_policy,
+)
+from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
 
 # ---------------------------------------------------------------------------
 # Embedder — use SentenceTransformer if available, fall back to Hash
@@ -62,53 +64,25 @@ class _HashEmbedder:
 # Appraisal engine — LLM if API key present, keyword fallback otherwise
 # ---------------------------------------------------------------------------
 
-_DEFAULT_BASE_URL = "https://api.openai.com/v1"
-_DEFAULT_MODEL = "gpt-4o-mini"
-
-
-def _make_httpx_llm(api_key: str) -> LLMCallable | None:
-    try:
-        import httpx
-    except ImportError:
-        return None
-
-    base_url = os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", _DEFAULT_BASE_URL).rstrip("/")
-    model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL)
-
-    def _call(prompt: str, json_schema: dict[str, Any]) -> str:
-        payload: dict[str, Any] = {
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "response_format": {"type": "json_object"},
-        }
-        response = httpx.post(
-            f"{base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-            json=payload,
-            timeout=30.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-        return str(data["choices"][0]["message"]["content"])
-
-    return _call
-
 
 def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngine, str]:
-    api_key = os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", "")
-    if api_key:
-        llm = _make_httpx_llm(api_key)
+    config = OpenAICompatibleLLMConfig.from_env(os.environ)
+    if config is not None:
+        try:
+            llm = make_httpx_llm(config)
+        except ImportError:
+            llm = None
         if llm is not None:
             engine = LLMAppraisalEngine(
                 llm=llm,
                 config=LLMAppraisalConfig(cache_size=64, fallback_on_error=True),
             )
-            model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL)
-            return engine, f"🧠 LLM appraisal active (`{model}`)"
+            return engine, f"🧠 LLM appraisal active (`{config.model}`)"
     engine = KeywordAppraisalEngine()
     return (
         engine,
-        "📝 Keyword fallback active (English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for multilingual)",
+        "📝 Keyword fallback active "
+        "(English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for multilingual)",
     )
 
 
@@ -124,7 +98,7 @@ def _build_engine() -> tuple[EmotionalMemory, EmotionalMemoryChatHistory, str]:
         embedder=_make_embedder(),
         appraisal_engine=appraisal_engine,
     )
-    history = EmotionalMemoryChatHistory(em)
+    history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
     return em, history, mode
 
 
@@ -172,6 +146,16 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
 # ---------------------------------------------------------------------------
 
 MAX_MSG_PER_SESSION = 20
+
+
+def _is_recall_request(text: str) -> bool:
+    normalized = text.strip().lower()
+    return (
+        normalized == "recall"
+        or normalized.startswith("recall ")
+        or normalized == "remember"
+        or normalized.startswith("remember ")
+    )
 
 
 def chat(
@@ -236,7 +220,7 @@ def chat(
     )
 
     # Handle recall requests
-    if "recall" in user_msg.lower() or "remember" in user_msg.lower():
+    if _is_recall_request(user_msg):
         results = em_state.retrieve(user_msg, top_k=3)
         if results:
             excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])

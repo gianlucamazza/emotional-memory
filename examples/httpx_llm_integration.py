@@ -19,7 +19,9 @@ Requires (for real LLM calls):
 Create a .env file (or copy .env.example) to enable real LLM mode:
     EMOTIONAL_MEMORY_LLM_API_KEY=sk-...
     EMOTIONAL_MEMORY_LLM_BASE_URL=https://api.openai.com/v1  # optional
-    EMOTIONAL_MEMORY_LLM_MODEL=gpt-4o-mini                   # optional
+    EMOTIONAL_MEMORY_LLM_MODEL=gpt-5-mini                   # optional
+    EMOTIONAL_MEMORY_LLM_OUTPUT_MODE=plain                  # optional
+    EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS=30                 # optional
 
 Run with:
     python examples/httpx_llm_integration.py
@@ -27,7 +29,6 @@ Run with:
 
 import asyncio
 import os
-from typing import Any
 
 from emotional_memory import (
     AffectiveMomentum,
@@ -39,7 +40,6 @@ from emotional_memory import (
     KeywordAppraisalEngine,
     LLMAppraisalConfig,
     LLMAppraisalEngine,
-    LLMCallable,
     ResonanceConfig,
     ResonanceLink,
     RetrievalConfig,
@@ -49,6 +49,12 @@ from emotional_memory import (
     __version__,
     consolidation_strength,
     make_emotional_tag,
+)
+from emotional_memory.llm_http import (
+    DEFAULT_OPENAI_COMPAT_BASE_URL,
+    DEFAULT_OPENAI_COMPAT_MODEL,
+    OpenAICompatibleLLMConfig,
+    make_httpx_llm,
 )
 
 # ---------------------------------------------------------------------------
@@ -63,18 +69,22 @@ try:
 except ImportError:
     _dotenv_loaded = False
 
-_DEFAULT_BASE_URL = "https://api.openai.com/v1"
-_DEFAULT_MODEL = "gpt-4o-mini"
-
 api_key = os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", "")
-base_url = os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", _DEFAULT_BASE_URL).rstrip("/")
-model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL)
+llm_config = OpenAICompatibleLLMConfig.from_env(os.environ)
+base_url = (
+    llm_config.base_url if llm_config is not None else DEFAULT_OPENAI_COMPAT_BASE_URL
+).rstrip("/")
+model = llm_config.model if llm_config is not None else DEFAULT_OPENAI_COMPAT_MODEL
+output_mode = llm_config.output_mode if llm_config is not None else "plain"
+timeout_seconds = llm_config.timeout_seconds if llm_config is not None else 30.0
 
 print(f"emotional_memory v{__version__}")
 print(f"  dotenv loaded:  {_dotenv_loaded}")
 print(f"  API key set:    {bool(api_key)}")
 print(f"  base_url:       {base_url}")
 print(f"  model:          {model}")
+print(f"  output_mode:    {output_mode}")
+print(f"  timeout:        {timeout_seconds}")
 print()
 
 # ---------------------------------------------------------------------------
@@ -98,41 +108,10 @@ class HashEmbedder:
 
 
 # ---------------------------------------------------------------------------
-# 3. httpx-based LLMCallable (SDK-agnostic)
+# 3. Appraisal engine selection
 # ---------------------------------------------------------------------------
 
-
-def make_httpx_llm(key: str, endpoint: str, llm_model: str) -> LLMCallable | None:
-    """Build an LLMCallable using raw httpx — no openai package required."""
-    try:
-        import httpx
-    except ImportError:
-        return None
-
-    def _call(prompt: str, json_schema: dict[str, Any]) -> str:
-        payload: dict[str, Any] = {
-            "model": llm_model,
-            "messages": [{"role": "user", "content": prompt}],
-            "response_format": {"type": "json_object"},
-        }
-        response = httpx.post(
-            f"{endpoint}/chat/completions",
-            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-            json=payload,
-            timeout=30.0,
-        )
-        response.raise_for_status()
-        data = response.json()
-        return str(data["choices"][0]["message"]["content"])
-
-    return _call
-
-
-# ---------------------------------------------------------------------------
-# 4. Appraisal engine selection
-# ---------------------------------------------------------------------------
-
-_llm_callable: LLMCallable | None = make_httpx_llm(api_key, base_url, model) if api_key else None
+_llm_callable = make_httpx_llm(llm_config) if llm_config is not None else None
 
 if _llm_callable is not None:
     appraisal_engine = LLMAppraisalEngine(
@@ -147,7 +126,7 @@ else:
 print(f"Appraisal mode: {mode}\n")
 
 # ---------------------------------------------------------------------------
-# 5. Build engine + encode 4 events
+# 4. Build engine + encode 4 events
 # ---------------------------------------------------------------------------
 
 config = EmotionalMemoryConfig(
@@ -180,7 +159,7 @@ for affect, text in events:
     print(f"  {sign} {text[:60]}")
 
 # ---------------------------------------------------------------------------
-# 6. AffectiveMomentum inspection
+# 5. AffectiveMomentum inspection
 # ---------------------------------------------------------------------------
 
 print("\n=== AffectiveMomentum — velocity in affect-space ===\n")
@@ -195,7 +174,7 @@ print(f"  dd_arousal (acceleration):  {mom.dd_arousal:+.4f}")
 print(f"  magnitude  (speed):         {mom.magnitude():.4f}")
 
 # ---------------------------------------------------------------------------
-# 7. Manual tag: consolidation_strength + make_emotional_tag
+# 6. Manual tag: consolidation_strength + make_emotional_tag
 # ---------------------------------------------------------------------------
 
 print("\n=== Manual EmotionalTag construction ===\n")
@@ -222,7 +201,7 @@ engine_tag = encoded_mems[0].tag
 print(f"  engine tag          → consolidation_strength={engine_tag.consolidation_strength:.3f}")
 
 # ---------------------------------------------------------------------------
-# 8. Retrieve + ResonanceLink traversal
+# 7. Retrieve + ResonanceLink traversal
 # ---------------------------------------------------------------------------
 
 print("\n=== ResonanceLink traversal ===\n")
@@ -247,7 +226,7 @@ for mem in results:
 print(f"\n  Total resonance links across top-3 results: {total_links}")
 
 # ---------------------------------------------------------------------------
-# 9. Async bridge via SyncToAsyncAppraisalEngine
+# 8. Async bridge via SyncToAsyncAppraisalEngine
 # ---------------------------------------------------------------------------
 
 print("\n=== Async bridge — SyncToAsyncAppraisalEngine ===\n")

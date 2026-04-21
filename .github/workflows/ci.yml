@@ -304,12 +304,18 @@ jobs:
       - name: Run LLM integration tests
         env:
           EMOTIONAL_MEMORY_LLM_API_KEY: ${{ secrets.EMOTIONAL_MEMORY_LLM_API_KEY }}
-          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-4o-mini' }}
+          EMOTIONAL_MEMORY_LLM_BASE_URL: ${{ vars.EMOTIONAL_MEMORY_LLM_BASE_URL || 'https://api.openai.com/v1' }}
+          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-5-mini' }}
+          EMOTIONAL_MEMORY_LLM_OUTPUT_MODE: ${{ vars.EMOTIONAL_MEMORY_LLM_OUTPUT_MODE || 'plain' }}
+          EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS: ${{ vars.EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS || '30' }}
         run: pytest tests/test_llm_integration.py -v -m llm
 
       - name: Run appraisal quality benchmarks
         env:
           EMOTIONAL_MEMORY_LLM_API_KEY: ${{ secrets.EMOTIONAL_MEMORY_LLM_API_KEY }}
-          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-4o-mini' }}
+          EMOTIONAL_MEMORY_LLM_BASE_URL: ${{ vars.EMOTIONAL_MEMORY_LLM_BASE_URL || 'https://api.openai.com/v1' }}
+          EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-5-mini' }}
+          EMOTIONAL_MEMORY_LLM_OUTPUT_MODE: ${{ vars.EMOTIONAL_MEMORY_LLM_OUTPUT_MODE || 'plain' }}
+          EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS: ${{ vars.EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS || '30' }}
           EMOTIONAL_MEMORY_LLM_REPEATS: "1"
         run: pytest benchmarks/appraisal_quality/ -v -m appraisal_quality

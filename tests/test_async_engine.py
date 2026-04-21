@@ -107,6 +107,24 @@ class TestAsyncEncode:
         await em.encode("test", metadata={"key": "val"})
         assert captured[0] == {"key": "val"}
 
+    async def test_observe_updates_state_without_storing_memory(self):
+        vector = AppraisalVector(
+            novelty=1.0,
+            goal_relevance=1.0,
+            coping_potential=1.0,
+            norm_congruence=1.0,
+            self_relevance=1.0,
+        )
+        appraisal = SyncToAsyncAppraisalEngine(StaticAppraisalEngine(vector))
+        em = _async_engine(appraisal_engine=appraisal)
+        initial = em.get_state()
+
+        tag = await em.observe("assistant reassurance")
+
+        assert tag.appraisal == vector
+        assert await em.count() == 0
+        assert em.get_state() != initial
+
 
 # ---------------------------------------------------------------------------
 # AsyncEmotionalMemory — retrieve
@@ -202,6 +220,22 @@ class TestAsyncStatePersistence:
         next1 = em.get_state().update(CoreAffect(valence=0.9, arousal=0.5), now=now)
         next2 = em2.get_state().update(CoreAffect(valence=0.9, arousal=0.5), now=now)
         assert next1.momentum.d_valence == pytest.approx(next2.momentum.d_valence, abs=1e-6)
+
+    async def test_reset_state_restores_initial_baseline(self):
+        em = _async_engine()
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
+        baseline = _async_engine().get_state()
+        assert em.get_state().core_affect != baseline.core_affect
+
+        em.reset_state()
+
+        reset = em.get_state()
+        assert reset.core_affect == baseline.core_affect
+        assert reset.mood.valence == baseline.mood.valence
+        assert reset.mood.arousal == baseline.mood.arousal
+        assert reset.mood.dominance == baseline.mood.dominance
+        assert reset.mood.inertia == baseline.mood.inertia
+        assert reset.momentum == baseline.momentum
 
 
 # ---------------------------------------------------------------------------

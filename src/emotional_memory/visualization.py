@@ -155,10 +155,10 @@ def plot_circumplex(
         "va": "center",
         "style": "italic",
     }
-    _ax.text(-0.7, 0.85, "Tense / Distressed", **label_kw)  # type: ignore[arg-type]
-    _ax.text(0.7, 0.85, "Excited / Elated", **label_kw)  # type: ignore[arg-type]
-    _ax.text(-0.7, 0.15, "Sad / Depressed", **label_kw)  # type: ignore[arg-type]
-    _ax.text(0.7, 0.15, "Calm / Relaxed", **label_kw)  # type: ignore[arg-type]
+    _ax.text(-0.7, 0.85, "Tense / Distressed", **label_kw)
+    _ax.text(0.7, 0.85, "Excited / Elated", **label_kw)
+    _ax.text(-0.7, 0.15, "Sad / Depressed", **label_kw)
+    _ax.text(0.7, 0.15, "Calm / Relaxed", **label_kw)
 
     _ax.set_xlim(-1.0, 1.0)
     _ax.set_ylim(0.0, 1.0)
@@ -222,7 +222,7 @@ def plot_decay_curves(
 
     t = np.linspace(1, 86_400, 600)  # 1 second → 24 hours
 
-    colors = plt.cm.plasma(np.linspace(0.15, 0.85, len(arousal_values)))  # type: ignore[attr-defined]
+    colors = plt.cm.plasma(np.linspace(0.15, 0.85, len(arousal_values)))
     linestyles = ["-", "--", ":"][: len(retrieval_counts)]
     if len(retrieval_counts) > 3:
         linestyles += ["-."] * (len(retrieval_counts) - 3)
@@ -364,7 +364,7 @@ def plot_retrieval_radar(
     if ax is None:
         fig, _ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw={"polar": True})
     else:
-        fig = ax.get_figure()  # type: ignore[assignment]
+        fig = ax.get_figure()
         _ax = ax
 
     _ax.plot(angles_closed, values_closed, color=color, linewidth=2.0)
@@ -671,7 +671,7 @@ def plot_appraisal_radar(
     if ax is None:
         fig, _ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw={"polar": True})
     else:
-        fig = ax.get_figure()  # type: ignore[assignment]
+        fig = ax.get_figure()
         _ax = ax
 
     _ax.plot(angles_closed, values_closed, color=color, linewidth=2.0)

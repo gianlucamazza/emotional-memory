@@ -114,6 +114,7 @@ em = EmotionalMemory(
 | Method | Description |
 |---|---|
 | `encode(content, appraisal=None, metadata=None) -> Memory` | Encode content with full AFT pipeline |
+| `observe(content, appraisal=None, metadata=None) -> EmotionalTag` | Update affective state without storing a retrievable memory |
 | `encode_batch(contents, metadata=None) -> list[Memory]` | Batch encode with `embed_batch()`, per-item appraisal |
 | `retrieve(query, top_k=5) -> list[Memory]` | Emotionally-weighted retrieval + reconsolidation |
 | `elaborate(memory_id) -> Memory \| None` | Run full appraisal on a fast-path (`pending_appraisal=True`) memory and blend core_affect |
@@ -127,6 +128,7 @@ em = EmotionalMemory(
 | `import_memories(data, overwrite=False) -> int` | Restore from `export_memories()` output; returns count written |
 | `get_state() -> AffectiveState` | Current affective state (read-only copy) |
 | `set_affect(core_affect)` | Manually inject a CoreAffect |
+| `reset_state()` | Reset runtime affective state to the initial baseline |
 | `save_state() -> dict` | Serialise affective state for persistence |
 | `load_state(data)` | Restore previously saved affective state |
 | `get_current_mood(now=None) -> MoodField` | Read-only mood with time regression |
@@ -143,10 +145,10 @@ with EmotionalMemory(store=SQLiteStore("mem.db"), embedder=MyEmbedder()) as em:
 
 ### `AsyncEmotionalMemory`
 
-Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `encode_batch`, `retrieve`,
+Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `observe`, `encode_batch`, `retrieve`,
 `elaborate`, `elaborate_pending`, `delete`, `get`, `list_all`, `count`, `prune`,
 `export_memories`, `import_memories`, `close`.
-State accessors (`get_state`, `set_affect`, `save_state`, `load_state`, `get_current_mood`)
+State accessors (`get_state`, `set_affect`, `reset_state`, `save_state`, `load_state`, `get_current_mood`)
 remain synchronous.
 
 Supports `async with` for automatic resource cleanup:
@@ -396,8 +398,9 @@ Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOT
 ## LangChain integration
 
 `EmotionalMemoryChatHistory` is a drop-in replacement for any LangChain chat history object.
-It backs the history with an `EmotionalMemory` instance so the affective state evolves
-naturally as the conversation unfolds.
+It backs the transcript with an `EmotionalMemory` instance so the affective state evolves
+naturally as the conversation unfolds, while letting you control which messages become
+retrievable memories.
 
 ```bash
 pip install "emotional-memory[langchain,sentence-transformers]"
@@ -406,13 +409,16 @@ pip install "emotional-memory[langchain,sentence-transformers]"
 ```python
 from emotional_memory import EmotionalMemory, InMemoryStore
 from emotional_memory.embedders import SentenceTransformerEmbedder
-from emotional_memory.integrations import EmotionalMemoryChatHistory
+from emotional_memory.integrations import (
+    EmotionalMemoryChatHistory,
+    recommended_conversation_policy,
+)
 
 em = EmotionalMemory(
     store=InMemoryStore(),
     embedder=SentenceTransformerEmbedder(),
 )
-history = EmotionalMemoryChatHistory(em)
+history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
 
 # Works anywhere BaseChatMessageHistory is accepted:
 history.add_user_message("I'm anxious about the deadline.")
@@ -425,8 +431,11 @@ state = em.get_state()
 print(f"valence={state.core_affect.valence:.2f}  arousal={state.core_affect.arousal:.2f}")
 ```
 
-The adapter uses dependency injection — pass a fully-configured `EmotionalMemory` so you
-control the store backend and embedder. The `clear()` method removes all memories from the store.
+With `recommended_conversation_policy`, user messages become retrievable memories, assistant
+messages update affective state without being stored, and control commands such as
+`recall ...` are ignored by retrieval. The adapter uses dependency injection — pass a
+fully-configured `EmotionalMemory` so you control the store backend and embedder.
+`clear()` removes stored memories, clears the transcript, and resets affective state.
 
 ## Logging
 
@@ -474,6 +483,7 @@ make cov                      # tests with branch coverage report
 make bench                    # fidelity + performance benchmarks
 
 # Real-LLM tests (require API key):
+make llm-config                # print resolved LLM config (no secrets)
 make test-llm                 # end-to-end integration tests
 make bench-appraisal          # Scherer CPM prompt quality benchmarks
 ```
@@ -484,7 +494,9 @@ make bench-appraisal          # Scherer CPM prompt quality benchmarks
 |---|---|---|
 | `EMOTIONAL_MEMORY_LLM_API_KEY` | — | API key (required) |
 | `EMOTIONAL_MEMORY_LLM_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
-| `EMOTIONAL_MEMORY_LLM_MODEL` | `gpt-4o-mini` | Model |
+| `EMOTIONAL_MEMORY_LLM_MODEL` | `gpt-5-mini` | Model |
+| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | `plain` | LLM response mode: `plain` or `json_object` |
+| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | `30` | HTTP timeout for OpenAI-compatible calls |
 | `EMOTIONAL_MEMORY_LLM_REPEATS` | `3` | Repeats per phrase in quality benchmarks |
 
 ## License

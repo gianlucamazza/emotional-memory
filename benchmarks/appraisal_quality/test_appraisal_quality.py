@@ -11,7 +11,8 @@ Each phrase is run N times (default 3, via EMOTIONAL_MEMORY_LLM_REPEATS env var)
 and assertions are evaluated against the median to dampen non-determinism.
 
 Run with:
-    EMOTIONAL_MEMORY_LLM_API_KEY=... pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
+    EMOTIONAL_MEMORY_LLM_API_KEY=... \
+        uv run pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
 """
 
 from __future__ import annotations
@@ -34,7 +35,7 @@ _REPEATS = int(os.environ.get("EMOTIONAL_MEMORY_LLM_REPEATS", "3"))
 def appraisal_engine() -> LLMAppraisalEngine:
     llm = make_llm_or_skip()
     # Disable cache so each repeat issues a fresh LLM call
-    config = LLMAppraisalConfig(cache_size=0)
+    config = LLMAppraisalConfig(cache_size=0, fallback_on_error=False)
     return LLMAppraisalEngine(llm=llm, config=config)
 
 

@@ -60,7 +60,9 @@ with contextlib.suppress(ImportError):
 _langchain_available = False
 with contextlib.suppress(ImportError):
     from emotional_memory.integrations.langchain import (
-        EmotionalMemoryChatHistory as EmotionalMemoryChatHistory,
+        EmotionalMemoryChatHistory,
+        recommended_conversation_policy,
+        store_all_messages,
     )
 
     _langchain_available = True
@@ -119,4 +121,9 @@ if _sentence_transformers_available:
     __all__ = [*__all__, "SentenceTransformerEmbedder"]
 
 if _langchain_available:
-    __all__ = [*__all__, "EmotionalMemoryChatHistory"]
+    __all__ = [
+        *__all__,
+        "EmotionalMemoryChatHistory",
+        "recommended_conversation_policy",
+        "store_all_messages",
+    ]

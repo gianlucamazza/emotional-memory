@@ -108,3 +108,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["letta_client", "letta_client.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["matplotlib", "matplotlib.*"]
+ignore_missing_imports = true

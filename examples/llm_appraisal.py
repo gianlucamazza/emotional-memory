@@ -11,7 +11,8 @@ Requires (for real LLM mode):
 
 Optional overrides:
     export EMOTIONAL_MEMORY_LLM_BASE_URL=https://api.openai.com/v1
-    export EMOTIONAL_MEMORY_LLM_MODEL=gpt-4o-mini
+    export EMOTIONAL_MEMORY_LLM_MODEL=gpt-5-mini
+    export EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS=30
 
 Run with:
     python examples/llm_appraisal.py
@@ -20,6 +21,7 @@ Run with:
 import json
 import os
 import time
+from typing import Any
 
 from emotional_memory import (
     EmotionalMemory,
@@ -27,7 +29,12 @@ from emotional_memory import (
     InMemoryStore,
     LLMAppraisalConfig,
     LLMAppraisalEngine,
+    LLMCallable,
     RetrievalConfig,
+)
+from emotional_memory.llm_http import (
+    DEFAULT_OPENAI_COMPAT_BASE_URL,
+    DEFAULT_OPENAI_COMPAT_MODEL,
 )
 
 # ---------------------------------------------------------------------------
@@ -55,17 +62,20 @@ class HashEmbedder:
 # ---------------------------------------------------------------------------
 
 
-def make_openai_llm(api_key: str, base_url: str, model: str):  # type: ignore[return]
+def make_openai_llm(
+    api_key: str, base_url: str, model: str, timeout_seconds: float
+) -> LLMCallable | None:
     """Return an LLMCallable wrapping the openai SDK."""
     try:
-        from openai import OpenAI  # type: ignore[import-not-found]
+        from openai import OpenAI
     except ImportError:
         print("[!] 'openai' package not installed. Run: pip install openai")
         return None
 
-    client = OpenAI(api_key=api_key, base_url=base_url)
+    client = OpenAI(api_key=api_key, base_url=base_url, timeout=timeout_seconds)
 
-    def llm_callable(prompt: str, json_schema: dict) -> str:  # type: ignore[type-arg]
+    def llm_callable(prompt: str, json_schema: dict[str, Any]) -> str:
+        del json_schema
         response = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -76,7 +86,7 @@ def make_openai_llm(api_key: str, base_url: str, model: str):  # type: ignore[re
     return llm_callable
 
 
-def make_mock_llm():
+def make_mock_llm() -> LLMCallable:
     """Return a deterministic mock LLM for offline use."""
 
     # Hardcoded responses simulating Scherer CPM output
@@ -104,7 +114,8 @@ def make_mock_llm():
         },
     }
 
-    def mock_llm(prompt: str, json_schema: dict) -> str:  # type: ignore[type-arg]
+    def mock_llm(prompt: str, json_schema: dict[str, Any]) -> str:
+        del json_schema
         key = (
             "record"
             if "record" in prompt.lower()
@@ -122,11 +133,14 @@ def make_mock_llm():
 # ---------------------------------------------------------------------------
 
 api_key = os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", "")
-base_url = os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", "gpt-4o-mini")
+base_url = os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", DEFAULT_OPENAI_COMPAT_BASE_URL).rstrip(
+    "/"
+)
+model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", DEFAULT_OPENAI_COMPAT_MODEL)
+timeout_seconds = float(os.environ.get("EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS", "30"))
 
 if api_key:
-    llm = make_openai_llm(api_key, base_url, model)
+    llm = make_openai_llm(api_key, base_url, model, timeout_seconds)
     if llm is None:
         llm = make_mock_llm()
         mode = "mock (openai not installed)"
@@ -218,11 +232,11 @@ more_events = [
 
 for text in more_events:
     mem = em.encode(text)
-    av = mem.tag.appraisal
+    appraisal = mem.tag.appraisal
     ca = mem.tag.core_affect
     sign = "[+]" if ca.valence > 0.1 else "[-]" if ca.valence < -0.1 else "[~]"
     print(f"{sign} {mem.content[:60]}")
-    if av is not None:
+    if appraisal is not None:
         strength = mem.tag.consolidation_strength
         print(f"    valence={ca.valence:+.2f}  arousal={ca.arousal:.2f}  strength={strength:.2f}")
     print()

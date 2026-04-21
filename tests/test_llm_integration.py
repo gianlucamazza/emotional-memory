@@ -5,7 +5,7 @@ Gated behind:
     - EMOTIONAL_MEMORY_LLM_API_KEY env var (skipped if missing)
 
 Run with:
-    EMOTIONAL_MEMORY_LLM_API_KEY=... pytest tests/test_llm_integration.py -v -m llm
+    EMOTIONAL_MEMORY_LLM_API_KEY=... uv run pytest tests/test_llm_integration.py -v -m llm
 """
 
 from __future__ import annotations
@@ -35,7 +35,10 @@ def llm_engine(real_llm: object) -> EmotionalMemory:
     return EmotionalMemory(
         store=InMemoryStore(),
         embedder=DeterministicEmbedder(),
-        appraisal_engine=LLMAppraisalEngine(llm=real_llm),
+        appraisal_engine=LLMAppraisalEngine(
+            llm=real_llm,
+            config=LLMAppraisalConfig(fallback_on_error=False),
+        ),
     )
 
 
@@ -94,7 +97,10 @@ def test_emotional_retrieval_bias(real_llm: object) -> None:
     engine = EmotionalMemory(
         store=InMemoryStore(),
         embedder=FixedEmbedder([0.5, 0.5, 0.0, 0.0]),
-        appraisal_engine=LLMAppraisalEngine(llm=real_llm),
+        appraisal_engine=LLMAppraisalEngine(
+            llm=real_llm,
+            config=LLMAppraisalConfig(fallback_on_error=False),
+        ),
     )
 
     neg_memory = engine.encode("My father passed away and I feel completely devastated.")
@@ -133,7 +139,10 @@ def test_llm_appraisal_caching(real_llm: object) -> None:
         return original_llm(prompt, json_schema)
 
     assert isinstance(counting_llm, LLMCallable)
-    engine = LLMAppraisalEngine(llm=counting_llm, config=LLMAppraisalConfig(cache_size=128))
+    engine = LLMAppraisalEngine(
+        llm=counting_llm,
+        config=LLMAppraisalConfig(cache_size=128, fallback_on_error=False),
+    )
 
     text = "I aced my job interview!"
     engine.appraise(text)

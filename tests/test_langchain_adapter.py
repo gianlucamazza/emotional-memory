@@ -44,13 +44,19 @@ def _make_em(**kwargs: Any) -> Any:
 
 
 def test_importable_from_integrations_subpackage() -> None:
-    from emotional_memory.integrations import EmotionalMemoryChatHistory  # noqa: F401
+    from emotional_memory.integrations import (  # noqa: F401
+        EmotionalMemoryChatHistory,
+        recommended_conversation_policy,
+        store_all_messages,
+    )
 
 
 def test_importable_from_top_level() -> None:
     import emotional_memory as em
 
     assert "EmotionalMemoryChatHistory" in em.__all__
+    assert "recommended_conversation_policy" in em.__all__
+    assert "store_all_messages" in em.__all__
 
 
 # ---------------------------------------------------------------------------
@@ -195,3 +201,88 @@ def test_emotional_state_evolves_with_conversation() -> None:
 
     # Affective state should have been updated by the two encode() calls
     assert em.get_state().core_affect.valence != initial_valence or len(history.messages) == 2
+
+
+def test_history_reconstructs_existing_stored_messages() -> None:
+    from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
+    from emotional_memory.integrations.langchain import EmotionalMemoryChatHistory
+
+    em = _make_em()
+    em.encode("system prompt", metadata={"role": "system"})
+    em.encode("hello", metadata={"role": "user"})
+    em.encode("hi there", metadata={"role": "assistant"})
+
+    history = EmotionalMemoryChatHistory(em)
+    msgs = history.messages
+
+    assert len(msgs) == 3
+    assert isinstance(msgs[0], SystemMessage)
+    assert isinstance(msgs[1], HumanMessage)
+    assert isinstance(msgs[2], AIMessage)
+
+
+def test_clear_resets_affective_state() -> None:
+    from emotional_memory.integrations.langchain import EmotionalMemoryChatHistory
+
+    em = _make_em()
+    history = EmotionalMemoryChatHistory(em)
+    baseline = em.get_state()
+
+    history.add_user_message("I am thrilled about this launch.")
+    assert em.get_state() != baseline
+
+    history.clear()
+
+    assert history.messages == []
+    assert em.get_state() == baseline
+
+
+def test_recommended_policy_keeps_transcript_but_filters_retrieval_corpus() -> None:
+    from emotional_memory import KeywordAppraisalEngine
+    from emotional_memory.integrations.langchain import (
+        EmotionalMemoryChatHistory,
+        recommended_conversation_policy,
+    )
+
+    em = _make_em(appraisal_engine=KeywordAppraisalEngine())
+    history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
+
+    history.add_user_message("I won the award and feel amazing.")
+    history.add_ai_message("That is fantastic news.")
+    history.add_user_message("recall happy moments")
+
+    assert [m.content for m in history.messages] == [
+        "I won the award and feel amazing.",
+        "That is fantastic news.",
+        "recall happy moments",
+    ]
+    assert [m.content for m in em.list_all()] == ["I won the award and feel amazing."]
+
+    results = em.retrieve("happy moments", top_k=3)
+    assert [m.content for m in results] == ["I won the award and feel amazing."]
+
+
+def test_recommended_policy_state_only_messages_update_affect_without_storing() -> None:
+    from emotional_memory import StaticAppraisalEngine
+    from emotional_memory.appraisal import AppraisalVector
+    from emotional_memory.integrations.langchain import (
+        EmotionalMemoryChatHistory,
+        recommended_conversation_policy,
+    )
+
+    positive = AppraisalVector(
+        novelty=1.0,
+        goal_relevance=1.0,
+        coping_potential=1.0,
+        norm_congruence=1.0,
+        self_relevance=1.0,
+    )
+    em = _make_em(appraisal_engine=StaticAppraisalEngine(positive))
+    history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
+    baseline = em.get_state()
+
+    history.add_ai_message("Wonderful progress. Keep going.")
+
+    assert len(em.list_all()) == 0
+    assert em.get_state() != baseline

@@ -117,7 +117,10 @@ def _run_fidelity(out_dir: Path) -> None:
         tex_lines.append(f"{short} & {passed} & {total} & {rate} \\\\")
     tex_lines += [
         "\\midrule",
-        f"\\textbf{{Total}} & \\textbf{{{total_passed}}} & \\textbf{{{total_tests}}} & \\textbf{{{rate_total}}} \\\\",
+        (
+            f"\\textbf{{Total}} & \\textbf{{{total_passed}}} & "
+            f"\\textbf{{{total_tests}}} & \\textbf{{{rate_total}}} \\\\"
+        ),
         "\\bottomrule",
         "\\end{tabular}",
     ]
@@ -172,7 +175,10 @@ def _write_perf_table(out_dir: Path) -> None:
     tex_lines = [
         "\\begin{tabular}{lrrrr}",
         "\\toprule",
-        "\\textbf{Operation} & \\textbf{Mean (ms)} & \\textbf{Median (ms)} & \\textbf{p95 (ms)} & \\textbf{Rounds} \\\\",
+        (
+            "\\textbf{Operation} & \\textbf{Mean (ms)} & \\textbf{Median (ms)} & "
+            "\\textbf{p95 (ms)} & \\textbf{Rounds} \\\\"
+        ),
         "\\midrule",
     ]
     for b in benchmarks:

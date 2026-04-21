@@ -113,6 +113,23 @@ class TestEncode:
         m = em.encode("with meta", metadata={"source": "test"})
         assert m.metadata == {"source": "test"}
 
+    def test_observe_updates_state_without_storing_memory(self):
+        fixed_appraisal = AppraisalVector(
+            novelty=0.9,
+            goal_relevance=1.0,
+            coping_potential=1.0,
+            norm_congruence=1.0,
+            self_relevance=0.8,
+        )
+        em = _engine(appraisal_engine=StaticAppraisalEngine(fixed_appraisal))
+
+        initial_state = em.get_state()
+        tag = em.observe("Assistant acknowledged a major success.")
+
+        assert len(em.list_all()) == 0
+        assert tag.appraisal == fixed_appraisal
+        assert em.get_state().core_affect != initial_state.core_affect
+
 
 class TestRetrieve:
     def test_retrieve_empty_store(self):
@@ -186,6 +203,27 @@ class TestDelete:
     def test_delete_nonexistent_no_error(self):
         em = _engine()
         em.delete("nonexistent-id")  # must not raise
+
+
+class TestStateLifecycle:
+    def test_reset_state_restores_initial_baseline(self):
+        em = _engine()
+        em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
+        baseline = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=FixedEmbedder([1.0]),
+        ).get_state()
+        assert em.get_state().core_affect != baseline.core_affect
+
+        em.reset_state()
+
+        reset = em.get_state()
+        assert reset.core_affect == baseline.core_affect
+        assert reset.mood.valence == baseline.mood.valence
+        assert reset.mood.arousal == baseline.mood.arousal
+        assert reset.mood.dominance == baseline.mood.dominance
+        assert reset.mood.inertia == baseline.mood.inertia
+        assert reset.momentum == baseline.momentum
 
 
 class TestEncodeBatch:

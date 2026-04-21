@@ -33,7 +33,7 @@ class Mem0Adapter(MemoryAdapter):
             self._tmpdir = tempfile.TemporaryDirectory(prefix="qdrant_bench_")
             self._mem = Memory.from_config(
                 {
-                    "llm": {"provider": "openai", "config": {"model": "gpt-4o-mini"}},
+                    "llm": {"provider": "openai", "config": {"model": "gpt-5-mini"}},
                     "embedder": {"provider": "openai"},
                     "vector_store": {
                         "provider": "qdrant",

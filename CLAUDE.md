@@ -40,7 +40,9 @@ uv run pytest tests/test_engine.py::test_name -v
 |---|---|---|---|
 | `EMOTIONAL_MEMORY_LLM_API_KEY` | Yes | — | API key for LLM provider |
 | `EMOTIONAL_MEMORY_LLM_BASE_URL` | No | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
-| `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-4o-mini` | Model to use |
+| `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-5-mini` | Model to use |
+| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | No | `plain` | Response mode: `plain` or `json_object` |
+| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | No | `30` | HTTP timeout in seconds |
 | `EMOTIONAL_MEMORY_LLM_REPEATS` | No | `3` | Repeats per phrase in quality benchmarks |
 
 ## Architecture

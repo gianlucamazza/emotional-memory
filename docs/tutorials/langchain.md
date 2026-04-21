@@ -1,9 +1,9 @@
 # LangChain integration
 
 `emotional_memory` ships a drop-in `BaseChatMessageHistory` implementation
-that backs any LangChain chain or agent with the full AFT pipeline.  Every
-message added to the history is **encoded into emotional memory**, so the
-agent's mood and momentum evolve naturally with the conversation.
+that backs any LangChain chain or agent with the full AFT pipeline.  The
+adapter keeps a transcript for LangChain while letting you choose whether each
+message becomes retrievable memory, only updates affective state, or is ignored.
 
 ## Installation
 
@@ -18,10 +18,13 @@ LangChain provider package (e.g. `langchain-openai`, `langchain-anthropic`).
 
 ```python
 from emotional_memory import EmotionalMemory, InMemoryStore
-from emotional_memory.integrations import EmotionalMemoryChatHistory
+from emotional_memory.integrations import (
+    EmotionalMemoryChatHistory,
+    recommended_conversation_policy,
+)
 
 em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
-history = EmotionalMemoryChatHistory(em)
+history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
 
 history.add_user_message("Explain the concept of affective computing.")
 history.add_ai_message("Affective computing is the study of systems that can recognize, "
@@ -31,8 +34,9 @@ print(history.messages)   # [HumanMessage(...), AIMessage(...)]
 print(repr(history))      # EmotionalMemoryChatHistory(messages=2)
 ```
 
-Every call to `add_message()` internally calls `em.encode()`, which updates
-valence, arousal, momentum, and mood field in real time.
+With `recommended_conversation_policy`, normal user messages become retrievable
+memories, assistant replies call `em.observe()` so they still shape mood and
+momentum, and recall/control commands such as `recall happy moments` are ignored.
 
 ## Using with `RunnableWithMessageHistory`
 
@@ -52,7 +56,7 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="history"),
     ("human", "{input}"),
 ])
-llm = ChatOpenAI(model="gpt-4o-mini")
+llm = ChatOpenAI(model="gpt-5-mini")
 chain = prompt | llm
 
 # One EmotionalMemory per session — wire into a factory
@@ -61,7 +65,10 @@ sessions: dict[str, EmotionalMemoryChatHistory] = {}
 def get_session_history(session_id: str) -> EmotionalMemoryChatHistory:
     if session_id not in sessions:
         em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
-        sessions[session_id] = EmotionalMemoryChatHistory(em)
+        sessions[session_id] = EmotionalMemoryChatHistory(
+            em,
+            message_policy=recommended_conversation_policy,
+        )
     return sessions[session_id]
 
 chain_with_history = RunnableWithMessageHistory(
@@ -98,7 +105,10 @@ def get_session_history(session_id: str) -> EmotionalMemoryChatHistory:
     )
     if STATE_FILE.exists():
         em.load_state(json.loads(STATE_FILE.read_text()))
-    history = EmotionalMemoryChatHistory(em)
+    history = EmotionalMemoryChatHistory(
+        em,
+        message_policy=recommended_conversation_policy,
+    )
     return history
 ```
 
@@ -110,9 +120,9 @@ def get_session_history(session_id: str) -> EmotionalMemoryChatHistory:
 
 ## Mood-aware retrieval from history
 
-`EmotionalMemoryChatHistory.messages` reconstructs the conversation in
-chronological order from `em.list_all()`.  To query the emotional history
-directly (e.g. "what distressed the user most?"), use `em.retrieve()`:
+`EmotionalMemoryChatHistory.messages` returns the in-memory transcript kept by
+the adapter.  Stored memories remain queryable through the underlying engine
+(e.g. "what distressed the user most?"):
 
 ```python
 em = history._em   # access the underlying engine
@@ -125,12 +135,24 @@ for mem in results:
 
 | Method | Description |
 |---|---|
-| `add_message(msg)` | Encode any `BaseMessage` into emotional memory |
+| `add_message(msg)` | Append to transcript and apply the configured message policy |
 | `add_user_message(text)` | Shortcut — wraps in `HumanMessage` |
 | `add_ai_message(text)` | Shortcut — wraps in `AIMessage` |
-| `messages` (property) | All messages in timestamp order |
+| `messages` (property) | Transcript messages in timestamp order |
 | `messages` (setter) | Clear + re-encode from a list |
-| `clear()` | Delete all memories and reset affective state |
+| `clear()` | Clear transcript, delete stored memories, reset affective state |
+
+## Choosing a message policy
+
+Two helpers are exported from `emotional_memory.integrations`:
+
+- `store_all_messages` — backwards-compatible mode; every message is stored
+- `recommended_conversation_policy` — user memories only, assistant `state_only`,
+  recall/control commands ignored
+
+Use `store_all_messages` when you intentionally want conversation-as-memory.
+Use `recommended_conversation_policy` when you want episodic retrieval without
+assistant replies or operational commands polluting the corpus.
 
 ## See also
 

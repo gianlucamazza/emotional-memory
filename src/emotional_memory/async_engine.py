@@ -44,7 +44,7 @@ from emotional_memory.appraisal import AppraisalVector, consolidation_strength
 from emotional_memory.categorize import label_tag
 from emotional_memory.engine import EmotionalMemoryConfig
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
-from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
+from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodField
 from emotional_memory.resonance import (
     build_resonance_links,
@@ -103,6 +103,68 @@ class AsyncEmotionalMemory:
     # Public API
     # ------------------------------------------------------------------
 
+    async def _build_tag(
+        self,
+        content: str,
+        appraisal: AppraisalVector | None,
+        metadata: dict[str, Any] | None,
+        *,
+        now: datetime,
+        allow_fast_path: bool,
+    ) -> tuple[EmotionalTag, bool]:
+        """Advance affective state for *content* and return the resulting tag."""
+        use_fast_path = (
+            allow_fast_path
+            and self._config.dual_path_encoding
+            and appraisal is None
+            and self._appraisal_engine is not None
+        )
+
+        if not use_fast_path and appraisal is None and self._appraisal_engine is not None:
+            appraisal = await self._appraisal_engine.appraise(content, context=metadata)
+
+        new_affect = (
+            appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
+        )
+        async with self._state_lock:
+            self._state = self._state.update(
+                new_affect,
+                now=now,
+                mood_alpha=self._config.mood_alpha,
+                mood_decay=self._config.mood_decay,
+            )
+            state_snapshot = self._state
+
+        cs = consolidation_strength(new_affect.arousal, state_snapshot.mood.arousal)
+        tag = make_emotional_tag(
+            core_affect=state_snapshot.core_affect,
+            momentum=state_snapshot.momentum,
+            mood=state_snapshot.mood,
+            consolidation_strength=cs,
+            appraisal=appraisal,
+        )
+        if use_fast_path:
+            tag = tag.model_copy(update={"pending_appraisal": True})
+        if self._config.auto_categorize:
+            tag = label_tag(tag)
+        return tag, use_fast_path
+
+    async def observe(
+        self,
+        content: str,
+        appraisal: AppraisalVector | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> EmotionalTag:
+        """Update affective state from content without storing a retrievable memory."""
+        tag, _ = await self._build_tag(
+            content,
+            appraisal,
+            metadata,
+            now=datetime.now(tz=UTC),
+            allow_fast_path=False,
+        )
+        return tag
+
     async def encode(
         self,
         content: str,
@@ -116,49 +178,14 @@ class AsyncEmotionalMemory:
         now = datetime.now(tz=UTC)
         logger.debug("encode start: content_len=%d", len(content))
 
-        # Step 1: resolve affect
-        # Dual-path (LeDoux 1996): when dual_path_encoding is True and an explicit
-        # appraisal was NOT supplied, skip appraisal and mark tag as pending.
-        use_fast_path = (
-            self._config.dual_path_encoding
-            and appraisal is None
-            and self._appraisal_engine is not None
+        # Steps 1-3: resolve affect, update state, and build EmotionalTag.
+        tag, _ = await self._build_tag(
+            content,
+            appraisal,
+            metadata,
+            now=now,
+            allow_fast_path=True,
         )
-
-        if not use_fast_path and appraisal is None and self._appraisal_engine is not None:
-            appraisal = await self._appraisal_engine.appraise(content, context=metadata)
-
-        new_affect = (
-            appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
-        )
-
-        # Step 2: update affective state — lock protects against concurrent encodes
-        async with self._state_lock:
-            self._state = self._state.update(
-                new_affect,
-                now=now,
-                mood_alpha=self._config.mood_alpha,
-                mood_decay=self._config.mood_decay,
-            )
-            _state_snapshot = self._state
-
-        # Step 3: build EmotionalTag (sync) — use snapshot captured under lock
-        cs = consolidation_strength(new_affect.arousal, _state_snapshot.mood.arousal)
-        tag = make_emotional_tag(
-            core_affect=_state_snapshot.core_affect,
-            momentum=_state_snapshot.momentum,
-            mood=_state_snapshot.mood,
-            consolidation_strength=cs,
-            appraisal=appraisal,
-        )
-
-        # Mark pending_appraisal for fast-path memories
-        if use_fast_path:
-            tag = tag.model_copy(update={"pending_appraisal": True})
-
-        # Auto-categorize: attach Plutchik EmotionLabel
-        if self._config.auto_categorize:
-            tag = label_tag(tag)
 
         # Step 4: embed (async I/O)
         embedding = await self._embedder.embed(content)
@@ -197,7 +224,7 @@ class AsyncEmotionalMemory:
             memory.id,
             tag.core_affect.valence,
             tag.core_affect.arousal,
-            cs,
+            tag.consolidation_strength,
         )
         return memory
 
@@ -529,6 +556,10 @@ class AsyncEmotionalMemory:
             mood_alpha=self._config.mood_alpha,
             mood_decay=self._config.mood_decay,
         )
+
+    def reset_state(self) -> None:
+        """Reset the runtime affective state to its initial baseline."""
+        self._state = AffectiveState.initial()
 
     def save_state(self) -> dict[str, Any]:
         """Serialise the current affective state for persistence."""

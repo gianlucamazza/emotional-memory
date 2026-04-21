@@ -32,6 +32,8 @@ library, which implements **Affective Field Theory** — a 5-layer emotional mod
   dominant mood update with each exchange.
 - **Mood-congruent retrieval** — type "recall X" to retrieve memories filtered
   through the current emotional state.
+- **Best-practice memory policy** — assistant replies and recall commands stay
+  out of the retrievable corpus to avoid self-retrieval artifacts.
 - **Example prompts** — click any pre-filled example to see the pipeline in action.
 
 ## Architecture
@@ -54,8 +56,11 @@ User message → encode() → EmotionalTag snapshot
 
 To enable LLM appraisal when duplicating this Space, add a **Secret** named
 `EMOTIONAL_MEMORY_LLM_API_KEY` in the Space Settings.  Optionally set Variables
-`EMOTIONAL_MEMORY_LLM_MODEL` (default: `gpt-4o-mini`) and
+`EMOTIONAL_MEMORY_LLM_MODEL` (default: `gpt-5-mini`) and
 `EMOTIONAL_MEMORY_LLM_BASE_URL` (default: `https://api.openai.com/v1`).
+For OpenAI-compatible endpoints you can also set
+`EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` (default: `plain`) and
+`EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` (default: `30`).
 
 ## Local run
 
