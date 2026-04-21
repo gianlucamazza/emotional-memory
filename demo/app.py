@@ -278,7 +278,7 @@ Built with
 [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v{__version__} · \
 [PyPI](https://pypi.org/project/emotional-memory/) · \
 [GitHub](https://github.com/gianlucamazza/emotional-memory) · \
-[Zenodo DOI](https://doi.org/10.5281/zenodo.19636355)
+[Zenodo DOI](https://doi.org/10.5281/zenodo.19686077)
 """
 
 _EXAMPLES = [

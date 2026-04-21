@@ -15,10 +15,14 @@ authors:
     orcid: ""
 version: "0.6.1"
 date-released: "2026-04-21"
-doi: "10.5281/zenodo.19636355"
+doi: "10.5281/zenodo.19686078"
 repository-code: "https://github.com/gianlucamazza/emotional-memory"
 url: "https://gianlucamazza.github.io/emotional-memory"
 license: MIT
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.19686077"
+    description: "Zenodo concept DOI (all versions)"
 keywords:
   - llm
   - memory
