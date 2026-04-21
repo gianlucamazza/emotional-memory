@@ -168,6 +168,26 @@ def test_event_loop_cleanup_patch_runs_before_gradio_import() -> None:
     assert patch_call_index < gradio_import_index
 
 
+def test_demo_app_does_not_load_dotenv_directly() -> None:
+    tree = _load_demo_tree()
+
+    dotenv_imports = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module == "dotenv"
+    ]
+    dotenv_calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "load_dotenv"
+    ]
+
+    assert not dotenv_imports
+    assert not dotenv_calls
+
+
 def test_event_loop_cleanup_patch_is_narrow_and_idempotent() -> None:
     tree = _load_demo_tree()
     helpers = [

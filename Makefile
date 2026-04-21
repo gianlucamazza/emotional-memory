@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict docs-images docs docs-serve dist publish publish-pypi-manual zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -103,6 +103,13 @@ llm-config:
 llm-config-strict:
 	uv run python scripts/check_llm_config.py --strict --require-key
 
+demo-check:
+	uv run pytest tests/test_demo_ui_config.py -q
+	uv run pytest tests/test_demo_app.py -q
+
+demo-run:
+	uv run python demo/app.py
+
 docs-images:
 	uv run python scripts/generate_docs_images.py
 
@@ -191,6 +198,8 @@ help:
 	@echo "  test-llm                   Integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
 	@echo "  llm-config                 Print resolved LLM config without secrets"
 	@echo "  llm-config-strict          Fail fast on missing/unsupported LLM config"
+	@echo "  demo-check                 Demo wiring + runtime regression tests"
+	@echo "  demo-run                   Launch demo/app.py using current exported env"
 	@echo ""
 	@echo "Docs:"
 	@echo "  docs                       Build static site"

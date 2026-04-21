@@ -30,8 +30,8 @@ library, which implements **Affective Field Theory** — a 5-layer emotional mod
   assistant replies update affective state without polluting retrieval.
 - **PAD state plot** — valence (positive/negative), arousal (calm/excited), and
   dominant mood update with each exchange.
-- **Mood-congruent retrieval** — type "recall X" to retrieve memories filtered
-  through the current emotional state.
+- **Semantic + affect-aware retrieval** — type "recall X" to retrieve memories
+  ranked by semantic similarity and the current emotional state.
 - **Best-practice memory policy** — assistant replies and recall commands stay
   out of the retrievable corpus to avoid self-retrieval artifacts.
 - **Example prompts** — click any pre-filled example to see the pipeline in action.
@@ -54,6 +54,10 @@ User message → encode() → EmotionalTag snapshot
 | 🧠 LLM appraisal | `EMOTIONAL_MEMORY_LLM_API_KEY` secret is set | Multilingual |
 | 📝 Keyword fallback | No API key | English only |
 
+The Space is intended to run with real semantic embeddings via
+`sentence-transformers`. If that dependency is unavailable, the demo falls back
+to an internal hash embedder and marks retrieval as approximate in the UI.
+
 To enable LLM appraisal when duplicating this Space, add a **Secret** named
 `EMOTIONAL_MEMORY_LLM_API_KEY` in the Space Settings.  Optionally set Variables
 `EMOTIONAL_MEMORY_LLM_MODEL` (default: `gpt-5-mini`) and
@@ -65,20 +69,44 @@ For OpenAI-compatible endpoints you can also set
 ## Local run
 
 ```bash
-pip install emotional-memory httpx "gradio>=6.13,<7" matplotlib
-# Optional: set EMOTIONAL_MEMORY_LLM_API_KEY for LLM appraisal
-python demo/app.py
+uv pip install -r demo/requirements.txt
+make demo-run
+```
+
+`demo/app.py` reads configuration from the process environment only. It does
+not call `load_dotenv()` itself. For local `.env` convenience, `make demo-run`
+is the recommended path because the project `Makefile` already includes and
+exports `.env` when present.
+
+For a manual shell launch, export the file first:
+
+```bash
+set -a
+source .env
+set +a
+uv run python demo/app.py
+```
+
+Before validating the LLM-backed path locally, fail fast on config issues:
+
+```bash
+make llm-config-strict
+make demo-check
+make test-llm
 ```
 
 By default the demo runs with `ssr_mode=False` for a more stable local startup
 and shutdown path on Python 3.11. To opt into Gradio SSR explicitly:
 
 ```bash
-EMOTIONAL_MEMORY_DEMO_SSR=1 python demo/app.py
+EMOTIONAL_MEMORY_DEMO_SSR=1 make demo-run
 ```
 
 The demo intentionally ignores platform-managed `GRADIO_SSR_MODE` values so the
 Hugging Face Space keeps the stable non-SSR startup path unless we opt in.
+
+For the deployed Hugging Face Space, use Space Secrets/Variables rather than a
+local `.env` file.
 
 The bootstrap also applies a narrow Python 3.11 event-loop cleanup workaround
 for the Gradio runtime: it suppresses only the known

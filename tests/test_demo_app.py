@@ -48,9 +48,91 @@ def test_recall_does_not_store_query_or_assistant_reply() -> None:
     assert stored_contents == ["I got promoted and everyone celebrated with me."]
     assert "recall happy moments" not in stored_contents
     assert all(
-        "Top memories matching your current mood" not in content for content in stored_contents
+        "Top memories matching your query and current mood" not in content
+        and "Top memories matching your current mood" not in content
+        for content in stored_contents
     )
     assert "I got promoted and everyone celebrated with me." in chatbot[-1]["content"]
+
+
+def test_parse_recall_query_extracts_payload_and_handles_empty_command() -> None:
+    demo_app = _load_demo_module()
+
+    assert demo_app._parse_recall_query("recall project success") == "project success"
+    assert demo_app._parse_recall_query(" remember surprising news ") == "surprising news"
+    assert demo_app._parse_recall_query("recall") == ""
+    assert demo_app._parse_recall_query("tell me more") is None
+
+
+def test_recall_uses_only_payload_for_retrieval(monkeypatch: pytest.MonkeyPatch) -> None:
+    demo_app = _load_demo_module()
+
+    chatbot, em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "I got promoted and everyone celebrated with me.",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+
+    seen: dict[str, str | int] = {}
+
+    def _fake_retrieve(self, query: str, top_k: int = 5):  # type: ignore[no-untyped-def]
+        seen["query"] = query
+        seen["top_k"] = top_k
+        return self.list_all()[:top_k]
+
+    monkeypatch.setattr(demo_app.EmotionalMemory, "retrieve", _fake_retrieve)
+
+    chatbot, em_state, pad_history, _plot, _msg_box, _msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+
+    assert seen == {"query": "project success", "top_k": 3}
+    assert "Top memories matching your query and current mood" in chatbot[-1]["content"]
+
+
+def test_bare_recall_keeps_generic_mood_congruent_flow(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+
+    chatbot, em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "I got promoted and everyone celebrated with me.",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+
+    seen: dict[str, str | int] = {}
+
+    def _fake_retrieve(self, query: str, top_k: int = 5):  # type: ignore[no-untyped-def]
+        seen["query"] = query
+        seen["top_k"] = top_k
+        return self.list_all()[:top_k]
+
+    monkeypatch.setattr(demo_app.EmotionalMemory, "retrieve", _fake_retrieve)
+
+    chatbot, em_state, pad_history, _plot, _msg_box, _msg_count = demo_app.chat(
+        "recall",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+
+    stored_contents = [memory.content for memory in em_state.list_all()]
+
+    assert seen == {"query": "recall", "top_k": 3}
+    assert stored_contents == ["I got promoted and everyone celebrated with me."]
+    assert "Top memories matching your current mood" in chatbot[-1]["content"]
 
 
 def test_normal_chat_stores_only_user_messages() -> None:
@@ -88,6 +170,15 @@ def test_initial_em_state_factory_returns_runtime() -> None:
 
     assert em_state is not None
     assert em_state.get_state() is not None
+
+
+def test_runtime_badge_mentions_retrieval_mode() -> None:
+    demo_app = _load_demo_module()
+
+    badge = demo_app._runtime_mode_badge()
+
+    assert "retrieval active" in badge
+    assert "LLM appraisal active" in badge or "Keyword fallback active" in badge
 
 
 def test_chat_accepts_seeded_initial_state() -> None:

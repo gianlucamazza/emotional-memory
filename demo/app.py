@@ -2,13 +2,18 @@
 
 Runs as a Hugging Face Space (sdk: gradio) or locally::
 
-    pip install emotional-memory httpx "gradio>=6.13,<7" matplotlib
-    python demo/app.py
+    uv pip install -r demo/requirements.txt
+    make demo-run
 
 Set EMOTIONAL_MEMORY_LLM_API_KEY (+ optionally EMOTIONAL_MEMORY_LLM_MODEL and
 EMOTIONAL_MEMORY_LLM_BASE_URL) to enable LLM-backed appraisal (multilingual,
 full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
 (rule-based, English only).
+
+This module reads LLM configuration from the process environment only. It does
+not call ``load_dotenv()`` itself; use ``make demo-run`` or export variables in
+your shell before running ``uv run python demo/app.py`` for local `.env`
+convenience.
 """
 
 from __future__ import annotations
@@ -69,6 +74,17 @@ def _make_embedder():  # type: ignore[no-untyped-def]
         return _HashEmbedder()
 
 
+def _embedder_mode_badge() -> str:
+    try:
+        from emotional_memory.embedders import SentenceTransformerEmbedder as _unused
+    except ImportError:
+        return (
+            "🔎 Hash fallback retrieval active "
+            "(approximate semantic recall — install `sentence-transformers` for stronger results)"
+        )
+    return "🔎 SentenceTransformer retrieval active (`all-MiniLM-L6-v2`)"
+
+
 class _HashEmbedder:
     def embed(self, text: str) -> list[float]:
         d = hashlib.sha256(text.encode()).digest()
@@ -104,19 +120,24 @@ def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngin
     )
 
 
+def _runtime_mode_badge() -> str:
+    _, appraisal_mode = _make_appraisal_engine()
+    return f"{appraisal_mode}  \n{_embedder_mode_badge()}"
+
+
 # ---------------------------------------------------------------------------
 # Global state (one instance per Gradio session via State)
 # ---------------------------------------------------------------------------
 
 
 def _build_engine() -> tuple[EmotionalMemory, str]:
-    appraisal_engine, mode = _make_appraisal_engine()
+    appraisal_engine, appraisal_mode = _make_appraisal_engine()
     em = EmotionalMemory(
         store=InMemoryStore(),
         embedder=_make_embedder(),
         appraisal_engine=appraisal_engine,
     )
-    return em, mode
+    return em, f"{appraisal_mode}  \n{_embedder_mode_badge()}"
 
 
 def _env_flag(name: str) -> bool | None:
@@ -185,14 +206,17 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
 MAX_MSG_PER_SESSION = 20
 
 
+def _parse_recall_query(text: str) -> str | None:
+    parts = text.strip().split(maxsplit=1)
+    if not parts:
+        return None
+    if parts[0].lower() not in {"recall", "remember"}:
+        return None
+    return parts[1].strip() if len(parts) > 1 else ""
+
+
 def _is_recall_request(text: str) -> bool:
-    normalized = text.strip().lower()
-    return (
-        normalized == "recall"
-        or normalized.startswith("recall ")
-        or normalized == "remember"
-        or normalized.startswith("remember ")
-    )
+    return _parse_recall_query(text) is not None
 
 
 def chat(
@@ -227,7 +251,8 @@ def chat(
             msg_count,
         )
 
-    is_recall_request = _is_recall_request(user_msg)
+    recall_query = _parse_recall_query(user_msg)
+    is_recall_request = recall_query is not None
     if not is_recall_request:
         em_state.encode(user_msg, metadata={"role": "user"})
 
@@ -251,15 +276,19 @@ def chat(
         f"[{tone}] I heard you. "
         f"Current state — valence: {v:+.2f}, arousal: {a:.2f}. "
         f"I have {len(em_state.list_all())} memories stored. "
-        "Ask me to 'recall' something to see mood-congruent retrieval."
+        "Ask me to 'recall project success' to see semantic + mood-aware retrieval."
     )
 
     # Handle recall requests
     if is_recall_request:
-        results = em_state.retrieve(user_msg, top_k=3)
+        retrieval_query = recall_query if recall_query else user_msg
+        results = em_state.retrieve(retrieval_query, top_k=3)
         if results:
             excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
-            reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
+            if recall_query:
+                reply = f"[{tone}] Top memories matching your query and current mood: {excerpts}"
+            else:
+                reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
         else:
             reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
@@ -304,7 +333,7 @@ def _initial_em_state() -> EmotionalMemory:
 _INITIAL_CHAT_HISTORY: list[dict[str, str]] = []
 _INITIAL_PAD_HISTORY: list[tuple[float, float, float]] = [(0.0, 0.5, 0.0)]
 _INITIAL_PAD_PLOT = _pad_plot(_INITIAL_PAD_HISTORY)
-_INITIAL_APPRAISAL_BADGE = _make_appraisal_engine()[1]
+_INITIAL_RUNTIME_BADGE = _runtime_mode_badge()
 _INITIAL_MSG_COUNT = 0
 
 
@@ -317,7 +346,8 @@ _DESCRIPTION = f"""
 
 Every message you send is encoded with a full **affective fingerprint** (valence, arousal,
 appraisal, mood, resonance links). The PAD plot shows your conversation's emotional trajectory
-in real time. Type **"recall X"** to trigger mood-congruent retrieval.
+in real time. Type **"recall project success"** for semantic + mood-aware retrieval,
+or plain **"recall"** for a general mood-congruent pass.
 
 Built with
 [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v{__version__} · \
@@ -331,7 +361,7 @@ _EXAMPLES = [
     "I failed and made a terrible mistake — everything is broken.",
     "There is danger here — this crisis is a serious risk I cannot handle.",
     "How surprising and unexpected! I am completely amazed by this news.",
-    "recall happy moments",
+    "recall project success",
 ]
 
 _DEMO_THEME = gr.themes.Soft()
@@ -361,7 +391,7 @@ with gr.Blocks(title="Emotional Memory Demo") as demo:
                 send_btn = gr.Button("Send", variant="primary", scale=1)
             gr.Examples(examples=_EXAMPLES, inputs=msg_box)
             reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
-            appraisal_badge = gr.Markdown(_INITIAL_APPRAISAL_BADGE, elem_id="appraisal-badge")
+            appraisal_badge = gr.Markdown(_INITIAL_RUNTIME_BADGE, elem_id="appraisal-badge")
 
         with gr.Column(scale=2):
             pad_plot = gr.Image(value=_INITIAL_PAD_PLOT, label="PAD state trajectory", type="pil")

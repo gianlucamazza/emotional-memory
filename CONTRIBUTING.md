@@ -70,6 +70,7 @@ Copy `.env.example` (if present) or set these manually:
 Use `.env` only for local CLI secrets that need to be read by tools in this repo.
 
 - Good candidates for `.env`: `EMOTIONAL_MEMORY_LLM_*`, `ZENODO_TOKEN`, temporary `PYPI_TOKEN`
+- `demo/app.py` does not call `load_dotenv()`; use `make demo-run` or export values explicitly
 - Prefer shell-exported values for one-off publish commands so tokens do not linger on disk
 - Never store credentials in git remotes; use a credential helper, OS keychain, or `hf auth login`
 - The Hugging Face `space` remote should use a tokenless URL such as
@@ -85,6 +86,15 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | `make bench-perf` | Latency/throughput benchmarks | ~30s |
 | `make test-llm` | Real-LLM integration (requires API key) | ~30s |
 | `make bench-appraisal` | Scherer CPM prompt quality (requires API key) | ~60s |
+| `make demo-check` | Demo wiring + runtime regression tests | ~seconds to model-load |
+
+Recommended local demo validation flow:
+
+```bash
+make llm-config-strict
+make demo-check
+make test-llm
+```
 
 Run a single test:
 
