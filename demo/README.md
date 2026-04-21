@@ -72,7 +72,7 @@ python demo/app.py
 
 ## Links
 
-- **PyPI**: [`emotional-memory 0.6.0`](https://pypi.org/project/emotional-memory/0.6.0/)
+- **PyPI**: [`emotional-memory 0.6.1`](https://pypi.org/project/emotional-memory/0.6.1/)
 - **GitHub**: [gianlucamazza/emotional-memory](https://github.com/gianlucamazza/emotional-memory)
 - **Zenodo DOI**: [10.5281/zenodo.19636355](https://doi.org/10.5281/zenodo.19636355)
 
@@ -82,9 +82,9 @@ python demo/app.py
 @software{mazza_emotional_memory_2026,
   author  = {Mazza, Gianluca},
   title   = {emotional-memory: Affective Field Theory for LLM Memory},
-  version = {0.6.0},
+  version = {0.6.1},
   year    = {2026},
-  doi     = {10.5281/zenodo.19640250},
+  doi     = {10.5281/zenodo.19636355},
   url     = {https://github.com/gianlucamazza/emotional-memory}
 }
 ```

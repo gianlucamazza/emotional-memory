@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-04-21
+
+### Added
+
+- `observe()` / `reset_state()` on sync and async engines so integrations can update affective state
+  without storing retrievable memories and can fully reset runtime state.
+- Shared OpenAI-compatible HTTP LLM helper (`src/emotional_memory/llm_http.py`) plus
+  `make llm-config` / `make llm-config-strict` preflight targets.
+- Regression coverage for demo recall behavior, LangChain message policies, and shared LLM HTTP
+  config handling.
+
+### Changed
+
+- Real-LLM validation now uses the shared config path everywhere and standardizes the default model
+  on `gpt-5-mini`.
+- Project quality gates now run consistently through `uv run`, matching the managed local env used
+  for optional extras and release checks.
+
+### Fixed
+
+- Hugging Face / Gradio demo no longer stores recall commands or assistant replies as retrievable
+  memories, preventing self-retrieval artifacts and affect drift.
+- `EmotionalMemoryChatHistory` now keeps transcript order separate from episodic memory storage and
+  exposes typed `add_user_message()` / `add_ai_message()` helpers.
+- Real-LLM tests and benchmarks now fail fast on missing or incompatible provider config instead of
+  silently degrading to fallback behavior.
+- `visualization.py`, `scripts/reproduce_paper.py`, and related release paths no longer break
+  `ruff` / `mypy` during the standard release gate.
+
 ## [0.6.0] - 2026-04-18
 
 ### Added
@@ -451,7 +480,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.2...v0.6.0
+[0.5.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.4.0...v0.4.1

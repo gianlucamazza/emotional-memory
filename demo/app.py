@@ -30,6 +30,7 @@ from emotional_memory import (
     KeywordAppraisalEngine,
     LLMAppraisalConfig,
     LLMAppraisalEngine,
+    __version__,
 )
 from emotional_memory.integrations import (
     EmotionalMemoryChatHistory,
@@ -266,14 +267,15 @@ def reset_session() -> tuple[
 # Gradio UI
 # ---------------------------------------------------------------------------
 
-_DESCRIPTION = """
+_DESCRIPTION = f"""
 # 🧠 Emotional Memory — Affective Field Theory Demo
 
 Every message you send is encoded with a full **affective fingerprint** (valence, arousal,
 appraisal, mood, resonance links). The PAD plot shows your conversation's emotional trajectory
 in real time. Type **"recall X"** to trigger mood-congruent retrieval.
 
-Built with [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v0.6.0 · \
+Built with
+[`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v{__version__} · \
 [PyPI](https://pypi.org/project/emotional-memory/) · \
 [GitHub](https://github.com/gianlucamazza/emotional-memory) · \
 [Zenodo DOI](https://doi.org/10.5281/zenodo.19636355)

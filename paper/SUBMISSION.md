@@ -22,8 +22,8 @@ from source).
 - [ ] Contact email visible (or use arXiv author contact field)
 - [ ] All figures referenced in text (`\ref{fig:X}`) and present in bundle
 - [ ] All tables referenced in text and present in bundle
-- [ ] DOI for software artifact correct: `10.5281/zenodo.19640250`
-- [ ] PyPI version pinned: `emotional-memory==0.6.0`
+- [ ] DOI for software artifact correct: `10.5281/zenodo.19636355`
+- [ ] PyPI version pinned: `emotional-memory==0.6.1`
 - [ ] No `\todo{}` or `\note{}` macros remaining
 
 ### Bibliography
@@ -42,9 +42,9 @@ from source).
 | Secondary categories | cs.LG, stat.ML (optional) |
 | MSC class | 68T07, 68T50 (optional) |
 | ACM class | I.2.7 (optional) |
-| Comments | 10 pages, 4 figures, 3 tables. Software: emotional-memory v0.6.0 |
+| Comments | 10 pages, 4 figures, 3 tables. Software: emotional-memory v0.6.1 |
 | License | CC BY 4.0 (recommended) |
-| DOI | 10.5281/zenodo.19640250 (Zenodo software record) |
+| DOI | 10.5281/zenodo.19636355 (Zenodo concept DOI; latest release resolves here) |
 
 ---
 
