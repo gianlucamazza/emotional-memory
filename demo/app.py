@@ -106,12 +106,8 @@ def _env_flag(name: str) -> bool | None:
 
 
 def _should_enable_ssr() -> bool:
-    """Use stable CSR locally; allow explicit SSR opt-in via environment."""
-    for name in ("EMOTIONAL_MEMORY_DEMO_SSR", "GRADIO_SSR_MODE"):
-        resolved = _env_flag(name)
-        if resolved is not None:
-            return resolved
-    return False
+    """Ignore platform defaults; allow SSR only via project-owned opt-in."""
+    return _env_flag("EMOTIONAL_MEMORY_DEMO_SSR") is True
 
 
 def _launch_kwargs() -> dict[str, object]:

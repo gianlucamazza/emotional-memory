@@ -103,10 +103,10 @@ def test_launch_kwargs_allow_explicit_ssr_opt_in(monkeypatch: pytest.MonkeyPatch
     assert demo_app._launch_kwargs()["ssr_mode"] is True
 
 
-def test_launch_kwargs_fall_back_to_gradio_ssr_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_launch_kwargs_ignore_gradio_ssr_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("EMOTIONAL_MEMORY_DEMO_SSR", raising=False)
     monkeypatch.setenv("GRADIO_SSR_MODE", "true")
 
     demo_app = _load_demo_module()
 
-    assert demo_app._launch_kwargs()["ssr_mode"] is True
+    assert demo_app._launch_kwargs()["ssr_mode"] is False

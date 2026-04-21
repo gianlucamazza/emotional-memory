@@ -77,8 +77,8 @@ and shutdown path on Python 3.11. To opt into Gradio SSR explicitly:
 EMOTIONAL_MEMORY_DEMO_SSR=1 python demo/app.py
 ```
 
-`GRADIO_SSR_MODE=1` is also respected when you need to align with a deployment
-environment such as Hugging Face Spaces.
+The demo intentionally ignores platform-managed `GRADIO_SSR_MODE` values so the
+Hugging Face Space keeps the stable non-SSR startup path unless we opt in.
 
 ## Links
 

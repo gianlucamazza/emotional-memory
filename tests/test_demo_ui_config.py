@@ -79,6 +79,24 @@ def test_launch_receives_explicit_ssr_mode() -> None:
     assert key_values["ssr_mode"].func.id == "_should_enable_ssr"
 
 
+def test_should_enable_ssr_reads_only_demo_env_flag() -> None:
+    tree = _load_demo_tree()
+    ssr_helpers = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == "_should_enable_ssr"
+    ]
+
+    assert ssr_helpers
+    helper = ssr_helpers[0]
+    string_constants = {
+        node.value for node in ast.walk(helper) if isinstance(node, ast.Constant) and isinstance(node.value, str)
+    }
+
+    assert "EMOTIONAL_MEMORY_DEMO_SSR" in string_constants
+    assert "GRADIO_SSR_MODE" not in string_constants
+
+
 def test_chatbot_explicitly_disables_tags() -> None:
     tree = _load_demo_tree()
     chatbot_calls = [
