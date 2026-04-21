@@ -13,9 +13,30 @@ full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
 
 from __future__ import annotations
 
+import asyncio.base_events
 import hashlib
 import io
 import os
+
+
+def _patch_event_loop_cleanup() -> None:
+    """Suppress a known Gradio/Python 3.11 cleanup traceback on interpreter shutdown."""
+    current_del = asyncio.base_events.BaseEventLoop.__del__
+    if getattr(current_del, "__emotional_memory_patched__", False):
+        return
+
+    def _safe_del(self: object) -> None:
+        try:
+            current_del(self)
+        except ValueError as exc:
+            if "Invalid file descriptor" not in str(exc):
+                raise
+
+    _safe_del.__emotional_memory_patched__ = True
+    asyncio.base_events.BaseEventLoop.__del__ = _safe_del  # type: ignore[method-assign]
+
+
+_patch_event_loop_cleanup()
 
 import gradio as gr
 import matplotlib

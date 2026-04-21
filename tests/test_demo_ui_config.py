@@ -97,6 +97,46 @@ def test_should_enable_ssr_reads_only_demo_env_flag() -> None:
     assert "GRADIO_SSR_MODE" not in string_constants
 
 
+def test_event_loop_cleanup_patch_runs_before_gradio_import() -> None:
+    tree = _load_demo_tree()
+    body = tree.body
+
+    patch_call_index = next(
+        i
+        for i, node in enumerate(body)
+        if isinstance(node, ast.Expr)
+        and isinstance(node.value, ast.Call)
+        and isinstance(node.value.func, ast.Name)
+        and node.value.func.id == "_patch_event_loop_cleanup"
+    )
+    gradio_import_index = next(
+        i
+        for i, node in enumerate(body)
+        if isinstance(node, ast.Import)
+        and any(alias.name == "gradio" for alias in node.names)
+    )
+
+    assert patch_call_index < gradio_import_index
+
+
+def test_event_loop_cleanup_patch_is_narrow_and_idempotent() -> None:
+    tree = _load_demo_tree()
+    helpers = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == "_patch_event_loop_cleanup"
+    ]
+
+    assert helpers
+    helper = helpers[0]
+    source = ast.unparse(helper)
+
+    assert "BaseEventLoop.__del__" in source
+    assert "__emotional_memory_patched__" in source
+    assert "ValueError" in source
+    assert "Invalid file descriptor" in source
+
+
 def test_chatbot_explicitly_disables_tags() -> None:
     tree = _load_demo_tree()
     chatbot_calls = [

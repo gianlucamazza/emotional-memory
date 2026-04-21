@@ -110,3 +110,9 @@ def test_launch_kwargs_ignore_gradio_ssr_env(monkeypatch: pytest.MonkeyPatch) ->
     demo_app = _load_demo_module()
 
     assert demo_app._launch_kwargs()["ssr_mode"] is False
+
+
+def test_event_loop_cleanup_patch_is_import_safe() -> None:
+    demo_app = _load_demo_module()
+
+    demo_app._patch_event_loop_cleanup()

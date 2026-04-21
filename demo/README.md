@@ -80,6 +80,11 @@ EMOTIONAL_MEMORY_DEMO_SSR=1 python demo/app.py
 The demo intentionally ignores platform-managed `GRADIO_SSR_MODE` values so the
 Hugging Face Space keeps the stable non-SSR startup path unless we opt in.
 
+The bootstrap also applies a narrow Python 3.11 event-loop cleanup workaround
+for the Gradio runtime: it suppresses only the known
+`ValueError: Invalid file descriptor: -1` traceback seen at shutdown and leaves
+all other exceptions untouched.
+
 ## Links
 
 - **PyPI**: [`emotional-memory 0.6.1`](https://pypi.org/project/emotional-memory/0.6.1/)
