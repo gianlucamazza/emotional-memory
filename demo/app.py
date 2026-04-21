@@ -14,6 +14,7 @@ full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
 from __future__ import annotations
 
 import hashlib
+import inspect
 import io
 import os
 
@@ -284,7 +285,18 @@ _EXAMPLES = [
 _DEMO_THEME = gr.themes.Soft()
 
 
-with gr.Blocks(title="Emotional Memory Demo") as demo:
+def _launch_supports_theme() -> bool:
+    """Return True when the current Gradio runtime accepts theme= on launch()."""
+    return "theme" in inspect.signature(gr.Blocks.launch).parameters
+
+
+_LAUNCH_SUPPORTS_THEME = _launch_supports_theme()
+_BLOCKS_KWARGS = {"title": "Emotional Memory Demo"}
+if not _LAUNCH_SUPPORTS_THEME:
+    _BLOCKS_KWARGS["theme"] = _DEMO_THEME
+
+
+with gr.Blocks(**_BLOCKS_KWARGS) as demo:
     gr.Markdown(_DESCRIPTION)
 
     em_state = gr.State()
@@ -353,4 +365,7 @@ with gr.Blocks(title="Emotional Memory Demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(show_error=True, theme=_DEMO_THEME)
+    launch_kwargs = {"show_error": True}
+    if _LAUNCH_SUPPORTS_THEME:
+        launch_kwargs["theme"] = _DEMO_THEME
+    demo.launch(**launch_kwargs)
