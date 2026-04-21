@@ -6,11 +6,13 @@ Thank you for your interest. This guide covers everything from dev setup to gett
 
 - [Prerequisites](#prerequisites)
 - [Development setup](#development-setup)
+- [Local Secrets](#local-secrets)
 - [Test suites](#test-suites)
 - [Type checking](#type-checking)
 - [Code style](#code-style)
 - [Commit messages](#commit-messages)
 - [Pull request process](#pull-request-process)
+- [Maintainer Release](#maintainer-release)
 - [Adding a fidelity benchmark](#adding-a-fidelity-benchmark)
 - [Adding a store or embedder](#adding-a-store-or-embedder)
 - [Contributing research](#contributing-research)
@@ -37,6 +39,9 @@ uv pip install -e ".[dev,sqlite,sentence-transformers]"
 
 # All extras
 uv pip install -e ".[dev,sqlite,sentence-transformers,viz,llm-test,bench]"
+
+# Maintainer release toolchain + release gates
+make install-release
 ```
 
 Verify everything works:
@@ -56,6 +61,19 @@ Copy `.env.example` (if present) or set these manually:
 | `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-5-mini` | Model name |
 | `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | No | `plain` | Response mode: `plain` or `json_object` |
 | `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | No | `30` | HTTP timeout in seconds |
+| `PYPI_TOKEN` | No | — | Manual PyPI fallback token for `make publish-pypi-manual` |
+| `ZENODO_TOKEN` | No | — | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
+| `ZENODO_BASE` | No | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs |
+
+## Local Secrets
+
+Use `.env` only for local CLI secrets that need to be read by tools in this repo.
+
+- Good candidates for `.env`: `EMOTIONAL_MEMORY_LLM_*`, `ZENODO_TOKEN`, temporary `PYPI_TOKEN`
+- Prefer shell-exported values for one-off publish commands so tokens do not linger on disk
+- Never store credentials in git remotes; use a credential helper, OS keychain, or `hf auth login`
+- The Hugging Face `space` remote should use a tokenless URL such as
+  `https://huggingface.co/spaces/<user>/<space>` and rely on your credential manager
 
 ## Test suites
 
@@ -169,6 +187,67 @@ Always update `CHANGELOG.md` under `## [Unreleased]`.
 - Tests for every new behaviour
 - Theory reference for changes to retrieval, decay, or resonance logic
 - `make bench-fidelity` still passes
+
+## Maintainer Release
+
+Install the release toolchain first:
+
+```bash
+make install-release
+```
+
+Recommended release gate:
+
+```bash
+make release-check VERSION=0.6.1
+```
+
+That target runs:
+
+- `make check`
+- `make test-llm`
+- `make bench-appraisal`
+- `uv run python scripts/preflight.py 0.6.1`
+
+Publishing order:
+
+```bash
+git push origin main
+git tag -a v0.6.1 -m "v0.6.1"
+git push origin v0.6.1
+```
+
+Normal PyPI path:
+
+- GitHub Actions workflow `Release to PyPI` triggers from the pushed tag
+
+Manual PyPI fallback:
+
+```bash
+make publish-pypi-manual
+```
+
+Zenodo:
+
+```bash
+make zenodo-draft
+# inspect the draft ID in output, then:
+make zenodo-publish DEPOSIT_ID=123456
+```
+
+The Zenodo script prints both the version DOI and concept DOI. Use:
+
+- concept DOI for stable badges and generic project links
+- version DOI for release-specific citation blocks
+
+Hugging Face Space deployment:
+
+```bash
+make release-space
+```
+
+This pushes a `git subtree split --prefix=demo` snapshot to the configured `space` remote, which
+keeps the Space repo isolated from the rest of the project tree.
 
 ## Adding a fidelity benchmark
 

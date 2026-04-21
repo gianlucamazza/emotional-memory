@@ -50,6 +50,13 @@ mem0 = ["mem0ai>=2.0"]
 langmem = ["langmem>=0.0.30", "langgraph>=0.3"]
 viz = ["matplotlib>=3.7"]
 docs = ["mkdocs>=1.6", "mkdocs-material>=9.5", "mkdocstrings[python]>=0.25"]
+release = [
+  "build>=1.2",
+  "python-dotenv>=1.0",
+  "pyyaml>=6.0",
+  "requests>=2.32",
+  "twine>=6.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

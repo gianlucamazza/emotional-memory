@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict docs-images docs docs-serve dist publish clean help
+.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict docs-images docs docs-serve dist publish publish-pypi-manual zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -12,6 +12,9 @@ install-viz:
 
 install-docs:
 	uv pip install -e ".[docs]"
+
+install-release:
+	uv pip install -e ".[dev,release,llm-test,bench]"
 
 install-bench:
 	uv pip install -e ".[dev,bench]"
@@ -38,7 +41,7 @@ install-langmem:
 	uv pip install -e ".[dev,langmem]"
 
 install-all:
-	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain]"
+	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
 
 lint:
 	uv run ruff check .
@@ -121,6 +124,32 @@ preflight-fast:
 publish: preflight dist
 	uv publish
 
+publish-pypi-manual: dist
+	@test -n "$$PYPI_TOKEN" || (echo "PYPI_TOKEN not set"; exit 1)
+	uv run python -m twine upload dist/* -u __token__ -p "$$PYPI_TOKEN"
+
+zenodo-draft:
+	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
+	uv run python scripts/zenodo_deposit.py --draft-only
+
+zenodo-publish:
+	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
+	@test -n "$(DEPOSIT_ID)" || (echo "Usage: make zenodo-publish DEPOSIT_ID=123"; exit 1)
+	uv run python scripts/zenodo_deposit.py --publish-id "$(DEPOSIT_ID)"
+
+release-check:
+	@test -n "$(VERSION)" || (echo "Usage: make release-check VERSION=0.6.1"; exit 1)
+	$(MAKE) check
+	$(MAKE) test-llm
+	$(MAKE) bench-appraisal
+	uv run python scripts/preflight.py "$(VERSION)"
+
+release-space:
+	@git config --get remote.space.url >/dev/null || (echo "remote 'space' not configured"; exit 1)
+	@sha=$$(git subtree split --prefix=demo HEAD); \
+		echo "Pushing demo subtree $$sha to space/main"; \
+		git push space $$sha:main --force
+
 clean:
 	rm -rf dist/ build/ site/ htmlcov/ .coverage coverage.xml benchmark-results.json
 	find . -type d -name "*.egg-info" -exec rm -rf {} +
@@ -139,6 +168,7 @@ help:
 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"
 	@echo "  install-llm-test           + httpx (real-LLM tests)"
 	@echo "  install-docs               + mkdocs (documentation)"
+	@echo "  install-release            Maintainer release toolchain + release gates"
 	@echo "  install-all                All extras"
 	@echo ""
 	@echo "Quality:"
@@ -168,6 +198,11 @@ help:
 	@echo "  docs-images                Regenerate docs/images/ PNGs"
 	@echo ""
 	@echo "Release:"
+	@echo "  release-check VERSION=x.y.z  Full release gate incl. real-LLM checks"
+	@echo "  publish-pypi-manual       Manual PyPI upload via twine + PYPI_TOKEN"
+	@echo "  zenodo-draft              Create/upload a Zenodo draft deposition"
+	@echo "  zenodo-publish            Publish an existing Zenodo draft by DEPOSIT_ID"
+	@echo "  release-space             Push demo subtree to the Hugging Face Space remote"
 	@echo "  dist                       Build wheel + sdist"
 	@echo "  publish                    Build and publish to PyPI"
 	@echo "  clean                      Remove build artefacts"

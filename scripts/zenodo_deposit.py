@@ -9,8 +9,8 @@ Environment variables (loaded from .env automatically):
     ZENODO_BASE    — override base URL (e.g. https://sandbox.zenodo.org for testing)
 
 Outputs:
-    DOI and badge markdown printed to stdout.
-    DOI saved to .zenodo_doi (gitignored) for downstream use.
+    Version DOI, concept DOI, and badge markdown printed to stdout.
+    Version DOI saved to .zenodo_doi (gitignored) for downstream use.
 """
 
 from __future__ import annotations
@@ -96,6 +96,48 @@ def _build_source_archive(version: str) -> Path:
     return out
 
 
+def _print_record_info(record: dict[str, object], base_url: str, dep_id: int) -> None:
+    doi = str(record.get("doi", record.get("metadata", {}).get("doi", "")))
+    concept_doi = str(record.get("conceptdoi", ""))
+    record_url = str(record.get("links", {}).get("record_html", f"{base_url}/record/{dep_id}"))
+
+    print()
+    print(f"Version DOI: {doi}")
+    if concept_doi:
+        print(f"Concept DOI: {concept_doi}")
+    print(f"Record URL:   {record_url}")
+    print()
+
+    if doi:
+        badge_url = f"https://zenodo.org/badge/DOI/{doi}.svg"
+        doi_url = f"https://doi.org/{doi}"
+        print("Version badge:")
+        print(f"  [![DOI]({badge_url})]({doi_url})")
+    if concept_doi:
+        concept_badge_url = f"https://zenodo.org/badge/DOI/{concept_doi}.svg"
+        concept_doi_url = f"https://doi.org/{concept_doi}"
+        print("Concept badge:")
+        print(f"  [![DOI]({concept_badge_url})]({concept_doi_url})")
+
+    if doi:
+        doi_file = ROOT / ".zenodo_doi"
+        doi_file.write_text(doi)
+        print("\n[OK] DOI saved to .zenodo_doi")
+
+
+def publish_existing(base_url: str, token: str, dep_id: int) -> None:
+    headers = {"Authorization": f"Bearer {token}"}
+    response = requests.post(
+        f"{base_url}/api/deposit/depositions/{dep_id}/actions/publish",
+        headers=headers,
+        timeout=30,
+    )
+    if not response.ok:
+        print(f"[ERROR] publish: {response.status_code} {response.text}", file=sys.stderr)
+        sys.exit(1)
+    _print_record_info(response.json(), base_url, dep_id)
+
+
 def deposit(base_url: str, token: str, draft_only: bool) -> None:
     headers = {"Authorization": f"Bearer {token}"}
 
@@ -174,21 +216,7 @@ def deposit(base_url: str, token: str, draft_only: bool) -> None:
         sys.exit(1)
 
     record = r4.json()
-    doi = record.get("doi", record.get("metadata", {}).get("doi", ""))
-    record_url = record.get("links", {}).get("record_html", f"{base_url}/record/{dep_id}")
-
-    print()
-    print(f"DOI:        {doi}")
-    print(f"Record URL: {record_url}")
-    print()
-    badge_url = f"https://zenodo.org/badge/DOI/{doi}.svg"
-    doi_url = f"https://doi.org/{doi}"
-    print("README badge:")
-    print(f"  [![DOI]({badge_url})]({doi_url})")
-
-    doi_file = ROOT / ".zenodo_doi"
-    doi_file.write_text(doi)
-    print("\n[OK] DOI saved to .zenodo_doi")
+    _print_record_info(record, base_url, dep_id)
 
 
 def main() -> None:
@@ -197,6 +225,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Deposit emotional-memory to Zenodo.")
     parser.add_argument(
         "--draft-only", action="store_true", help="Upload files but do not publish"
+    )
+    parser.add_argument(
+        "--publish-id",
+        type=int,
+        help="Publish an existing Zenodo draft deposition by numeric ID",
     )
     parser.add_argument(
         "--base-url",
@@ -215,6 +248,10 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+
+    if args.publish_id is not None:
+        publish_existing(args.base_url, token, args.publish_id)
+        return
 
     deposit(args.base_url, token, args.draft_only)
 
