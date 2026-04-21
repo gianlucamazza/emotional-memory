@@ -60,5 +60,6 @@ def test_chatbot_explicitly_disables_tags() -> None:
     assert chatbot_calls
     chatbot_keywords = _keyword_map(chatbot_calls[0])
 
+    assert "type" not in chatbot_keywords
     assert isinstance(chatbot_keywords.get("allow_tags"), ast.Constant)
     assert chatbot_keywords["allow_tags"].value is False

@@ -293,9 +293,7 @@ with gr.Blocks(title="Emotional Memory Demo") as demo:
 
     with gr.Row():
         with gr.Column(scale=3):
-            chatbot = gr.Chatbot(
-                label="Conversation", height=420, type="messages", allow_tags=False
-            )
+            chatbot = gr.Chatbot(label="Conversation", height=420, allow_tags=False)
             with gr.Row():
                 msg_box = gr.Textbox(
                     placeholder="Type a message… try expressing joy, fear, sadness, or calm.",
