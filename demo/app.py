@@ -2,7 +2,7 @@
 
 Runs as a Hugging Face Space (sdk: gradio) or locally::
 
-    pip install "emotional-memory[langchain]" httpx gradio matplotlib
+    pip install emotional-memory httpx gradio matplotlib
     python demo/app.py
 
 Set EMOTIONAL_MEMORY_LLM_API_KEY (+ optionally EMOTIONAL_MEMORY_LLM_MODEL and
@@ -31,10 +31,6 @@ from emotional_memory import (
     LLMAppraisalConfig,
     LLMAppraisalEngine,
     __version__,
-)
-from emotional_memory.integrations import (
-    EmotionalMemoryChatHistory,
-    recommended_conversation_policy,
 )
 from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
 
@@ -92,15 +88,14 @@ def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngin
 # ---------------------------------------------------------------------------
 
 
-def _build_engine() -> tuple[EmotionalMemory, EmotionalMemoryChatHistory, str]:
+def _build_engine() -> tuple[EmotionalMemory, str]:
     appraisal_engine, mode = _make_appraisal_engine()
     em = EmotionalMemory(
         store=InMemoryStore(),
         embedder=_make_embedder(),
         appraisal_engine=appraisal_engine,
     )
-    history = EmotionalMemoryChatHistory(em, message_policy=recommended_conversation_policy)
-    return em, history, mode
+    return em, mode
 
 
 # ---------------------------------------------------------------------------
@@ -163,13 +158,11 @@ def chat(
     user_msg: str,
     chat_history: list[dict[str, str]],
     em_state: EmotionalMemory,
-    history_state: EmotionalMemoryChatHistory,
     pad_history: list[tuple[float, float, float]],
     msg_count: int,
 ) -> tuple[
     list[dict[str, str]],
     EmotionalMemory,
-    EmotionalMemoryChatHistory,
     list[tuple[float, float, float]],
     Image.Image,
     str,
@@ -177,7 +170,7 @@ def chat(
 ]:
     if not user_msg.strip():
         plot = _pad_plot(pad_history) if pad_history else _pad_plot([(0.0, 0.5, 0.0)])
-        return chat_history, em_state, history_state, pad_history, plot, "", msg_count
+        return chat_history, em_state, pad_history, plot, "", msg_count
 
     if msg_count >= MAX_MSG_PER_SESSION:
         gr.Info(
@@ -187,15 +180,15 @@ def chat(
         return (
             chat_history,
             em_state,
-            history_state,
             pad_history,
             _pad_plot(pad_history),
             "",
             msg_count,
         )
 
-    # encode via history adapter — calls em.encode() internally
-    history_state.add_user_message(user_msg)
+    is_recall_request = _is_recall_request(user_msg)
+    if not is_recall_request:
+        em_state.encode(user_msg, metadata={"role": "user"})
 
     state = em_state.get_state()
     v = state.core_affect.valence
@@ -221,7 +214,7 @@ def chat(
     )
 
     # Handle recall requests
-    if _is_recall_request(user_msg):
+    if is_recall_request:
         results = em_state.retrieve(user_msg, top_k=3)
         if results:
             excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
@@ -229,7 +222,7 @@ def chat(
         else:
             reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
-    history_state.add_ai_message(reply)
+    em_state.observe(reply, metadata={"role": "assistant"})
 
     state = em_state.get_state()
     mood = state.mood
@@ -246,21 +239,20 @@ def chat(
         {"role": "assistant", "content": reply},
     ]
     plot = _pad_plot(pad_history)
-    return chat_history, em_state, history_state, pad_history, plot, "", msg_count + 1
+    return chat_history, em_state, pad_history, plot, "", msg_count + 1
 
 
 def reset_session() -> tuple[
     list,
     EmotionalMemory,
-    EmotionalMemoryChatHistory,
     list,
     Image.Image,
     str,
     int,
 ]:
-    em, history, mode = _build_engine()
+    em, mode = _build_engine()
     plot = _pad_plot([(0.0, 0.5, 0.0)])
-    return [], em, history, [(0.0, 0.5, 0.0)], plot, mode, 0
+    return [], em, [(0.0, 0.5, 0.0)], plot, mode, 0
 
 
 # ---------------------------------------------------------------------------
@@ -293,7 +285,6 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     gr.Markdown(_DESCRIPTION)
 
     em_state = gr.State()
-    history_state = gr.State()
     pad_history = gr.State([])
     msg_count = gr.State(0)
 
@@ -327,7 +318,6 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
         outputs=[
             chatbot,
             em_state,
-            history_state,
             pad_history,
             pad_plot,
             appraisal_badge,
@@ -337,14 +327,14 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
 
     send_btn.click(
         fn=chat,
-        inputs=[msg_box, chatbot, em_state, history_state, pad_history, msg_count],
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box, msg_count],
+        inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+        outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
         concurrency_limit=2,
     )
     msg_box.submit(
         fn=chat,
-        inputs=[msg_box, chatbot, em_state, history_state, pad_history, msg_count],
-        outputs=[chatbot, em_state, history_state, pad_history, pad_plot, msg_box, msg_count],
+        inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+        outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
         concurrency_limit=2,
     )
     reset_btn.click(
@@ -352,7 +342,6 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
         outputs=[
             chatbot,
             em_state,
-            history_state,
             pad_history,
             pad_plot,
             appraisal_badge,

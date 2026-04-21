@@ -1,3 +1,3 @@
-emotional-memory[langchain]>=0.6.0
+emotional-memory==0.6.1
 httpx>=0.27
 matplotlib>=3.7

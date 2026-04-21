@@ -26,8 +26,8 @@ library, which implements **Affective Field Theory** — a 5-layer emotional mod
 
 ## What it shows
 
-- **Chat history** backed by `EmotionalMemoryChatHistory` — every message shapes
-  the agent's affective state in real time.
+- **Emotion-aware chat loop** — user messages become episodic memories, while
+  assistant replies update affective state without polluting retrieval.
 - **PAD state plot** — valence (positive/negative), arousal (calm/excited), and
   dominant mood update with each exchange.
 - **Mood-congruent retrieval** — type "recall X" to retrieve memories filtered
@@ -65,7 +65,7 @@ For OpenAI-compatible endpoints you can also set
 ## Local run
 
 ```bash
-pip install "emotional-memory[langchain]" httpx gradio matplotlib
+pip install emotional-memory httpx gradio matplotlib
 # Optional: set EMOTIONAL_MEMORY_LLM_API_KEY for LLM appraisal
 python demo/app.py
 ```

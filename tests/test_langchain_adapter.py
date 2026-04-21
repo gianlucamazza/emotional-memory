@@ -235,7 +235,9 @@ def test_clear_resets_affective_state() -> None:
     history.clear()
 
     assert history.messages == []
-    assert em.get_state() == baseline
+    assert em.get_state().model_dump(exclude={"mood": {"timestamp"}}) == baseline.model_dump(
+        exclude={"mood": {"timestamp"}}
+    )
 
 
 def test_recommended_policy_keeps_transcript_but_filters_retrieval_corpus() -> None:
