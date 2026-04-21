@@ -281,7 +281,10 @@ _EXAMPLES = [
     "recall happy moments",
 ]
 
-with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
+_DEMO_THEME = gr.themes.Soft()
+
+
+with gr.Blocks(title="Emotional Memory Demo") as demo:
     gr.Markdown(_DESCRIPTION)
 
     em_state = gr.State()
@@ -350,4 +353,4 @@ with gr.Blocks(theme=gr.themes.Soft(), title="Emotional Memory Demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(show_error=True)
+    demo.launch(show_error=True, theme=_DEMO_THEME)
