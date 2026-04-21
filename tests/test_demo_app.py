@@ -79,3 +79,34 @@ def test_reset_session_returns_demo_runtime_state_without_langchain_adapter() ->
     session = demo_app.reset_session()
 
     assert len(session) == 6
+
+
+def test_launch_kwargs_disable_ssr_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("EMOTIONAL_MEMORY_DEMO_SSR", raising=False)
+    monkeypatch.delenv("GRADIO_SSR_MODE", raising=False)
+
+    demo_app = _load_demo_module()
+
+    kwargs = demo_app._launch_kwargs()
+
+    assert kwargs["show_error"] is True
+    assert kwargs["theme"] is demo_app._DEMO_THEME
+    assert kwargs["ssr_mode"] is False
+
+
+def test_launch_kwargs_allow_explicit_ssr_opt_in(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("EMOTIONAL_MEMORY_DEMO_SSR", "1")
+    monkeypatch.delenv("GRADIO_SSR_MODE", raising=False)
+
+    demo_app = _load_demo_module()
+
+    assert demo_app._launch_kwargs()["ssr_mode"] is True
+
+
+def test_launch_kwargs_fall_back_to_gradio_ssr_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("EMOTIONAL_MEMORY_DEMO_SSR", raising=False)
+    monkeypatch.setenv("GRADIO_SSR_MODE", "true")
+
+    demo_app = _load_demo_module()
+
+    assert demo_app._launch_kwargs()["ssr_mode"] is True

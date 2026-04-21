@@ -70,6 +70,16 @@ pip install emotional-memory httpx "gradio>=6.13,<7" matplotlib
 python demo/app.py
 ```
 
+By default the demo runs with `ssr_mode=False` for a more stable local startup
+and shutdown path on Python 3.11. To opt into Gradio SSR explicitly:
+
+```bash
+EMOTIONAL_MEMORY_DEMO_SSR=1 python demo/app.py
+```
+
+`GRADIO_SSR_MODE=1` is also respected when you need to align with a deployment
+environment such as Hugging Face Spaces.
+
 ## Links
 
 - **PyPI**: [`emotional-memory 0.6.1`](https://pypi.org/project/emotional-memory/0.6.1/)

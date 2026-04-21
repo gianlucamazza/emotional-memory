@@ -30,7 +30,7 @@ def test_blocks_constructor_does_not_receive_theme() -> None:
         assert "theme" not in _keyword_map(call)
 
 
-def test_launch_receives_theme_explicitly() -> None:
+def test_launch_uses_explicit_launch_kwargs_helper() -> None:
     tree = _load_demo_tree()
     launch_calls = [
         node
@@ -41,10 +41,42 @@ def test_launch_receives_theme_explicitly() -> None:
     ]
 
     assert launch_calls
-    launch_keywords = _keyword_map(launch_calls[-1])
+    launch_call = launch_calls[-1]
 
-    assert isinstance(launch_keywords.get("theme"), ast.Name)
-    assert launch_keywords["theme"].id == "_DEMO_THEME"
+    assert not launch_call.args
+    assert len(launch_call.keywords) == 1
+    keyword = launch_call.keywords[0]
+    assert keyword.arg is None
+    assert isinstance(keyword.value, ast.Call)
+    assert isinstance(keyword.value.func, ast.Name)
+    assert keyword.value.func.id == "_launch_kwargs"
+
+
+def test_launch_receives_explicit_ssr_mode() -> None:
+    tree = _load_demo_tree()
+    launch_helpers = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == "_launch_kwargs"
+    ]
+
+    assert launch_helpers
+    helper = launch_helpers[0]
+    returns = [node for node in ast.walk(helper) if isinstance(node, ast.Return)]
+
+    assert returns
+    assert isinstance(returns[0].value, ast.Dict)
+
+    key_values = {
+        key.value: value
+        for key, value in zip(returns[0].value.keys, returns[0].value.values, strict=False)
+        if isinstance(key, ast.Constant) and isinstance(key.value, str)
+    }
+
+    assert "ssr_mode" in key_values
+    assert isinstance(key_values["ssr_mode"], ast.Call)
+    assert isinstance(key_values["ssr_mode"].func, ast.Name)
+    assert key_values["ssr_mode"].func.id == "_should_enable_ssr"
 
 
 def test_chatbot_explicitly_disables_tags() -> None:

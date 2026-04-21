@@ -98,6 +98,30 @@ def _build_engine() -> tuple[EmotionalMemory, str]:
     return em, mode
 
 
+def _env_flag(name: str) -> bool | None:
+    value = os.getenv(name)
+    if value is None:
+        return None
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _should_enable_ssr() -> bool:
+    """Use stable CSR locally; allow explicit SSR opt-in via environment."""
+    for name in ("EMOTIONAL_MEMORY_DEMO_SSR", "GRADIO_SSR_MODE"):
+        resolved = _env_flag(name)
+        if resolved is not None:
+            return resolved
+    return False
+
+
+def _launch_kwargs() -> dict[str, object]:
+    return {
+        "show_error": True,
+        "theme": _DEMO_THEME,
+        "ssr_mode": _should_enable_ssr(),
+    }
+
+
 # ---------------------------------------------------------------------------
 # PAD plot
 # ---------------------------------------------------------------------------
@@ -351,4 +375,4 @@ with gr.Blocks(title="Emotional Memory Demo") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(show_error=True, theme=_DEMO_THEME)
+    demo.launch(**_launch_kwargs())
