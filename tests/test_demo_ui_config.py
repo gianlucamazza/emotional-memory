@@ -97,6 +97,55 @@ def test_should_enable_ssr_reads_only_demo_env_flag() -> None:
     assert "GRADIO_SSR_MODE" not in string_constants
 
 
+def test_em_state_is_seeded_with_initial_factory() -> None:
+    tree = _load_demo_tree()
+    assignments = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "em_state" for target in node.targets)
+    ]
+
+    assert assignments
+    call = assignments[-1].value
+
+    assert isinstance(call, ast.Call)
+    assert isinstance(call.func, ast.Attribute)
+    assert call.func.attr == "State"
+
+    keywords = _keyword_map(call)
+    assert "value" in keywords
+    assert isinstance(keywords["value"], ast.Name)
+    assert keywords["value"].id == "_initial_em_state"
+
+
+def test_pad_and_count_state_are_seeded() -> None:
+    tree = _load_demo_tree()
+    expected = {
+        "pad_history": "_INITIAL_PAD_HISTORY",
+        "msg_count": "_INITIAL_MSG_COUNT",
+    }
+
+    for name, expected_value in expected.items():
+        assignments = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == name for target in node.targets)
+            and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Attribute)
+            and node.value.func.attr == "State"
+        ]
+
+        assert assignments
+        call = assignments[-1].value
+
+        keywords = _keyword_map(call)
+        assert "value" in keywords
+        assert isinstance(keywords["value"], ast.Name)
+        assert keywords["value"].id == expected_value
+
+
 def test_event_loop_cleanup_patch_runs_before_gradio_import() -> None:
     tree = _load_demo_tree()
     body = tree.body

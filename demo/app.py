@@ -296,6 +296,18 @@ def reset_session() -> tuple[
     return [], em, [(0.0, 0.5, 0.0)], plot, mode, 0
 
 
+def _initial_em_state() -> EmotionalMemory:
+    em, _mode = _build_engine()
+    return em
+
+
+_INITIAL_CHAT_HISTORY: list[dict[str, str]] = []
+_INITIAL_PAD_HISTORY: list[tuple[float, float, float]] = [(0.0, 0.5, 0.0)]
+_INITIAL_PAD_PLOT = _pad_plot(_INITIAL_PAD_HISTORY)
+_INITIAL_APPRAISAL_BADGE = _make_appraisal_engine()[1]
+_INITIAL_MSG_COUNT = 0
+
+
 # ---------------------------------------------------------------------------
 # Gradio UI
 # ---------------------------------------------------------------------------
@@ -328,13 +340,18 @@ _DEMO_THEME = gr.themes.Soft()
 with gr.Blocks(title="Emotional Memory Demo") as demo:
     gr.Markdown(_DESCRIPTION)
 
-    em_state = gr.State()
-    pad_history = gr.State([])
-    msg_count = gr.State(0)
+    em_state = gr.State(value=_initial_em_state)
+    pad_history = gr.State(value=_INITIAL_PAD_HISTORY)
+    msg_count = gr.State(value=_INITIAL_MSG_COUNT)
 
     with gr.Row():
         with gr.Column(scale=3):
-            chatbot = gr.Chatbot(label="Conversation", height=420, allow_tags=False)
+            chatbot = gr.Chatbot(
+                value=_INITIAL_CHAT_HISTORY,
+                label="Conversation",
+                height=420,
+                allow_tags=False,
+            )
             with gr.Row():
                 msg_box = gr.Textbox(
                     placeholder="Type a message… try expressing joy, fear, sadness, or calm.",
@@ -344,10 +361,10 @@ with gr.Blocks(title="Emotional Memory Demo") as demo:
                 send_btn = gr.Button("Send", variant="primary", scale=1)
             gr.Examples(examples=_EXAMPLES, inputs=msg_box)
             reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
-            appraisal_badge = gr.Markdown("", elem_id="appraisal-badge")
+            appraisal_badge = gr.Markdown(_INITIAL_APPRAISAL_BADGE, elem_id="appraisal-badge")
 
         with gr.Column(scale=2):
-            pad_plot = gr.Image(label="PAD state trajectory", type="pil")
+            pad_plot = gr.Image(value=_INITIAL_PAD_PLOT, label="PAD state trajectory", type="pil")
             gr.Markdown(
                 "**Valence** (blue): negative ↔ positive  \n"
                 "**Arousal** (orange): calm ↔ excited  \n"

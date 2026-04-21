@@ -81,6 +81,33 @@ def test_reset_session_returns_demo_runtime_state_without_langchain_adapter() ->
     assert len(session) == 6
 
 
+def test_initial_em_state_factory_returns_runtime() -> None:
+    demo_app = _load_demo_module()
+
+    em_state = demo_app._initial_em_state()
+
+    assert em_state is not None
+    assert em_state.get_state() is not None
+
+
+def test_chat_accepts_seeded_initial_state() -> None:
+    demo_app = _load_demo_module()
+
+    chatbot, em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
+
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "I feel calm and ready to start.",
+        demo_app._INITIAL_CHAT_HISTORY.copy(),
+        demo_app._initial_em_state(),
+        list(demo_app._INITIAL_PAD_HISTORY),
+        demo_app._INITIAL_MSG_COUNT,
+    )
+
+    assert msg_count == 1
+    assert len(chatbot) == 2
+    assert len(pad_history) >= 1
+
+
 def test_launch_kwargs_disable_ssr_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("EMOTIONAL_MEMORY_DEMO_SSR", raising=False)
     monkeypatch.delenv("GRADIO_SSR_MODE", raising=False)
