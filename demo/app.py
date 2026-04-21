@@ -2,7 +2,7 @@
 
 Runs as a Hugging Face Space (sdk: gradio) or locally::
 
-    pip install emotional-memory httpx gradio matplotlib
+    pip install emotional-memory httpx "gradio>=6.13,<7" matplotlib
     python demo/app.py
 
 Set EMOTIONAL_MEMORY_LLM_API_KEY (+ optionally EMOTIONAL_MEMORY_LLM_MODEL and
@@ -14,7 +14,6 @@ full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
 from __future__ import annotations
 
 import hashlib
-import inspect
 import io
 import os
 
@@ -285,18 +284,7 @@ _EXAMPLES = [
 _DEMO_THEME = gr.themes.Soft()
 
 
-def _launch_supports_theme() -> bool:
-    """Return True when the current Gradio runtime accepts theme= on launch()."""
-    return "theme" in inspect.signature(gr.Blocks.launch).parameters
-
-
-_LAUNCH_SUPPORTS_THEME = _launch_supports_theme()
-_BLOCKS_KWARGS = {"title": "Emotional Memory Demo"}
-if not _LAUNCH_SUPPORTS_THEME:
-    _BLOCKS_KWARGS["theme"] = _DEMO_THEME
-
-
-with gr.Blocks(**_BLOCKS_KWARGS) as demo:
+with gr.Blocks(title="Emotional Memory Demo") as demo:
     gr.Markdown(_DESCRIPTION)
 
     em_state = gr.State()
@@ -365,7 +353,4 @@ with gr.Blocks(**_BLOCKS_KWARGS) as demo:
     )
 
 if __name__ == "__main__":
-    launch_kwargs = {"show_error": True}
-    if _LAUNCH_SUPPORTS_THEME:
-        launch_kwargs["theme"] = _DEMO_THEME
-    demo.launch(**launch_kwargs)
+    demo.launch(show_error=True, theme=_DEMO_THEME)

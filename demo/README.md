@@ -4,7 +4,7 @@ emoji: 🧠
 colorFrom: purple
 colorTo: blue
 sdk: gradio
-sdk_version: "5.50.0"
+sdk_version: "6.13.0"
 python_version: "3.11"
 app_file: app.py
 pinned: false
@@ -65,7 +65,7 @@ For OpenAI-compatible endpoints you can also set
 ## Local run
 
 ```bash
-pip install emotional-memory httpx gradio matplotlib
+pip install emotional-memory httpx "gradio>=6.13,<7" matplotlib
 # Optional: set EMOTIONAL_MEMORY_LLM_API_KEY for LLM appraisal
 python demo/app.py
 ```
