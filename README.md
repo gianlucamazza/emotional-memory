@@ -11,11 +11,11 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 ## Installation
 
 ```bash
-pip install emotional-memory
-pip install emotional-memory[sentence-transformers]  # real semantic embeddings (recommended)
-pip install emotional-memory[sqlite]                 # SQLite persistence via sqlite-vec
-pip install emotional-memory[viz]                    # matplotlib visualization
-pip install emotional-memory[dotenv]                 # .env file loading via python-dotenv
+uv pip install emotional-memory
+uv pip install "emotional-memory[sentence-transformers]"  # real semantic embeddings (recommended)
+uv pip install "emotional-memory[sqlite]"                 # SQLite persistence via sqlite-vec
+uv pip install "emotional-memory[viz]"                    # matplotlib visualization
+uv pip install "emotional-memory[dotenv]"                 # .env file loading via python-dotenv
 ```
 
 For development:
@@ -23,13 +23,15 @@ For development:
 ```bash
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
-pip install -e ".[dev,sqlite,sentence-transformers]"
+make install
+# optional local demo stack:
+make install-demo
 ```
 
 ## Quickstart
 
 ```python
-pip install emotional-memory[sentence-transformers]
+uv pip install "emotional-memory[sentence-transformers]"
 ```
 
 ```python
@@ -52,6 +54,12 @@ em.encode("Team celebration in the office.", metadata={"source": "slack"})
 results = em.retrieve("difficult project success", top_k=3)
 for mem in results:
     print(mem.content, mem.tag.core_affect)
+
+# Or inspect why a memory ranked where it did
+explained = em.retrieve_with_explanations("difficult project success", top_k=1)
+top = explained[0]
+print(top.score)
+print(top.breakdown.raw_signals)
 ```
 
 **Bring your own embedder** — any object with `.embed(text) -> list[float]` works:
@@ -96,7 +104,7 @@ AFT models emotion as a **field** — distributed, dynamic, multi-layer — rath
 | **AppraisalVector** | Scherer/Lazarus/Stoics | Emotion derived from evaluation: novelty, goal-relevance, coping, norm-congruence, self-relevance |
 | **ResonanceLinks** | Aristotle/Hume/Bower/Collins & Loftus/Hebb | Associative bidirectional graph: semantic, emotional, temporal, causal, contrastive links; multi-hop spreading activation + Hebbian co-retrieval strengthening |
 
-Full theoretical foundations: [`docs/research/`](docs/research/)
+Full theoretical foundations: [`docs/research/`](docs/research/index.md)
 
 ## API Overview
 
@@ -117,6 +125,7 @@ em = EmotionalMemory(
 | `observe(content, appraisal=None, metadata=None) -> EmotionalTag` | Update affective state without storing a retrievable memory |
 | `encode_batch(contents, metadata=None) -> list[Memory]` | Batch encode with `embed_batch()`, per-item appraisal |
 | `retrieve(query, top_k=5) -> list[Memory]` | Emotionally-weighted retrieval + reconsolidation |
+| `retrieve_with_explanations(query, top_k=5) -> list[RetrievalExplanation]` | Same retrieval pipeline plus a structured score breakdown |
 | `elaborate(memory_id) -> Memory \| None` | Run full appraisal on a fast-path (`pending_appraisal=True`) memory and blend core_affect |
 | `elaborate_pending() -> list[Memory]` | Elaborate all pending fast-path memories in one call |
 | `delete(memory_id)` | Remove a memory from the store |
@@ -143,11 +152,15 @@ with EmotionalMemory(store=SQLiteStore("mem.db"), embedder=MyEmbedder()) as em:
 # SQLiteStore.close() called automatically
 ```
 
+Use `retrieve()` for normal recall paths. Use `retrieve_with_explanations()` when
+you need the ranking-time decomposition (`semantic`, `mood`, `affect`, `momentum`,
+`recency`, `resonance`) for debugging, evaluation, or UI inspection.
+
 ### `AsyncEmotionalMemory`
 
 Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `observe`, `encode_batch`, `retrieve`,
-`elaborate`, `elaborate_pending`, `delete`, `get`, `list_all`, `count`, `prune`,
-`export_memories`, `import_memories`, `close`.
+`retrieve_with_explanations`, `elaborate`, `elaborate_pending`, `delete`, `get`, `list_all`,
+`count`, `prune`, `export_memories`, `import_memories`, `close`.
 State accessors (`get_state`, `set_affect`, `reset_state`, `save_state`, `load_state`, `get_current_mood`)
 remain synchronous.
 
@@ -213,7 +226,7 @@ dunder methods cannot be coroutines.
 
 **Stores included:**
 - `InMemoryStore` — dict-backed, brute-force cosine search (no extra deps)
-- `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`pip install emotional-memory[sqlite]`)
+- `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`uv pip install "emotional-memory[sqlite]"`)
 
 ### Appraisal Engines
 
@@ -403,7 +416,7 @@ naturally as the conversation unfolds, while letting you control which messages 
 retrievable memories.
 
 ```bash
-pip install "emotional-memory[langchain,sentence-transformers]"
+uv pip install "emotional-memory[langchain,sentence-transformers]"
 ```
 
 ```python
@@ -473,7 +486,7 @@ any ML dependencies.
 | `resonance_network.py` | Resonance graph and link-type distribution | `[viz]` |
 | `retrieval_signals.py` | 6-signal decomposition, radar chart, weight heatmap | `[viz]` |
 
-Run any script: `python examples/<script>.py`
+Run any script: `uv run python examples/<script>.py`
 
 ## Development
 

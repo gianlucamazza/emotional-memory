@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-04-22
+
+### Added
+
+- `retrieve_with_explanations()` on sync and async engines, exposing the
+  ranking-time score decomposition through `RetrievalExplanation`,
+  `RetrievalBreakdown`, and `RetrievalSignals`.
+
+### Changed
+
+- Retrieval ranking is now built through a pure `build_retrieval_plan()`
+  pipeline in `retrieval.py`; sync and async engines apply persistence-side
+  effects afterward instead of duplicating ranking logic.
+- Repository configuration is now centered on `pyproject.toml` + `Makefile`:
+  Ruff moved into `pyproject.toml`, `pre-commit` now shells out through
+  `uv run`, and local demo setup has a canonical `make install-demo` path.
+- Demo and docs setup now distinguish between canonical local commands and
+  deployment overlays: `demo/requirements.txt` is Space-only, while repo docs
+  consistently point local contributors to `make install*` / `uv run`.
+
+### Fixed
+
+- `visualization.py` no longer breaks package-wide `mypy` due to matplotlib
+  figure/kwargs typing mismatches in the standard release gate.
+
 ## [0.6.1] - 2026-04-21
 
 ### Added
@@ -480,7 +505,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...HEAD
+[0.6.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.1...v0.5.2

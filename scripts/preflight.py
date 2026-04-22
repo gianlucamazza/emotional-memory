@@ -16,7 +16,7 @@ Gates checked:
     G7  no placeholder strings (XXXXXXX, TODO, FIXME-RELEASE) in README/CHANGELOG/CITATION
     G8  LICENSE present
     G9  CITATION.cff parseable as YAML
-    G10 python -m build succeeds (wheel + sdist)
+    G10 uv build succeeds (wheel + sdist)
     G11 twine check on built artefacts PASSED
     G12 smoke install into a fresh venv + import works
     G13 sdist does not contain secret-like patterns (.env, credentials)
@@ -239,11 +239,11 @@ def gate_citation_parseable() -> Gate:
 
 
 def gate_build(dist_dir: Path) -> Gate:
-    g = Gate("G10", "python -m build succeeds")
+    g = Gate("G10", "uv build succeeds")
     shutil.rmtree(dist_dir, ignore_errors=True)
     shutil.rmtree(ROOT / "build", ignore_errors=True)
     r = subprocess.run(
-        [sys.executable, "-m", "build", "--outdir", str(dist_dir)],
+        ["uv", "build", "--out-dir", str(dist_dir)],
         cwd=ROOT,
         capture_output=True,
         text=True,

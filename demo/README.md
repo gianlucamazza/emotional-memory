@@ -69,7 +69,7 @@ For OpenAI-compatible endpoints you can also set
 ## Local run
 
 ```bash
-uv pip install -r demo/requirements.txt
+make install-demo
 make demo-run
 ```
 
@@ -77,6 +77,9 @@ make demo-run
 not call `load_dotenv()` itself. For local `.env` convenience, `make demo-run`
 is the recommended path because the project `Makefile` already includes and
 exports `.env` when present.
+
+`demo/requirements.txt` is reserved for the Hugging Face Space runtime overlay.
+For contributor machines, `make install-demo` is the canonical local setup path.
 
 For a manual shell launch, export the file first:
 
@@ -115,9 +118,9 @@ all other exceptions untouched.
 
 ## Links
 
-- **PyPI**: [`emotional-memory 0.6.1`](https://pypi.org/project/emotional-memory/0.6.1/)
+- **PyPI**: [`emotional-memory 0.6.2`](https://pypi.org/project/emotional-memory/0.6.2/)
 - **GitHub**: [gianlucamazza/emotional-memory](https://github.com/gianlucamazza/emotional-memory)
-- **Zenodo DOI**: [10.5281/zenodo.19686077](https://doi.org/10.5281/zenodo.19686077)
+- **Zenodo Concept DOI**: [10.5281/zenodo.19686077](https://doi.org/10.5281/zenodo.19686077)
 
 ## Citation
 
@@ -125,9 +128,9 @@ all other exceptions untouched.
 @software{mazza_emotional_memory_2026,
   author  = {Mazza, Gianluca},
   title   = {emotional-memory: Affective Field Theory for LLM Memory},
-  version = {0.6.1},
+  version = {0.6.2},
   year    = {2026},
-  doi     = {10.5281/zenodo.19686078},
+  doi     = {10.5281/zenodo.19686077},
   url     = {https://github.com/gianlucamazza/emotional-memory}
 }
 ```

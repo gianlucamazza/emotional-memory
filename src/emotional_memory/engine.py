@@ -39,10 +39,10 @@ from emotional_memory.resonance import (
 )
 from emotional_memory.retrieval import (
     RetrievalConfig,
-    adaptive_weights,
+    RetrievalExplanation,
+    build_retrieval_plan,
     compute_ape,
     reconsolidate,
-    retrieval_score,
     update_prediction,
 )
 from emotional_memory.state import AffectiveState
@@ -276,45 +276,96 @@ class EmotionalMemory:
         if not candidates:
             return []
 
-        # Compute adaptive weights once — invariant across all candidates
-        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
-
-        def _score_all(activation_map: dict[str, float]) -> list[tuple[float, Memory]]:
-            scored = []
-            for mem in candidates:
-                score = retrieval_score(
-                    query_embedding=query_embedding,
-                    query_affect=self._state.core_affect,
-                    current_mood=self._state.mood,
-                    current_momentum=self._state.momentum,
-                    memory=mem,
-                    activation_map=activation_map,
-                    now=now,
-                    decay_config=self._config.decay,
-                    retrieval_config=rc,
-                    precomputed_weights=weights,
-                )
-                scored.append((score, mem))
-            scored.sort(key=lambda t: t[0], reverse=True)
-            return scored
-
-        # G1 — spreading activation (Collins & Loftus, 1975)
-        # Pass 1: score without resonance to identify seed memories
-        pass1 = _score_all({})
-        seed_ids = {mem.id for _, mem in pass1[:top_k]}
-
-        # Compute multi-hop activation map from seeds through the link graph
-        act_map = spreading_activation(
-            seed_ids, candidates, self._config.resonance.propagation_hops
+        plan = build_retrieval_plan(
+            query_embedding=query_embedding,
+            query_affect=self._state.core_affect,
+            current_mood=self._state.mood,
+            current_momentum=self._state.momentum,
+            candidates=candidates,
+            top_k=top_k,
+            now=now,
+            decay_config=self._config.decay,
+            retrieval_config=rc,
+            propagation_hops=self._config.resonance.propagation_hops,
+            spreading_activation_fn=spreading_activation,
         )
+        top = [item.memory for item in plan.pass2[:top_k]]
+        result = self._apply_retrieval_updates(top, now)
+        logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
+        return result
 
-        # Pass 2: re-score with activation map (skip when no activation spread)
-        pass2 = _score_all(act_map) if act_map else pass1
+    def retrieve_with_explanations(self, query: str, top_k: int = 5) -> list[RetrievalExplanation]:
+        """Retrieve memories plus a structured score decomposition.
 
-        top = [mem for _, mem in pass2[:top_k]]
+        Ranking is computed by the same two-pass retrieval pipeline used by
+        ``retrieve()``. The returned score and breakdown reflect the ranking
+        state before retrieval-side updates such as reconsolidation and Hebbian
+        strengthening; the returned ``memory`` objects reflect the post-
+        retrieval stored state.
+        """
+        if top_k < 1:
+            raise ValueError(f"top_k must be >= 1, got {top_k}")
+        now = datetime.now(tz=UTC)
+        logger.debug(
+            "retrieve_with_explanations start: query_len=%d top_k=%d store=%d",
+            len(query),
+            top_k,
+            len(self._store),
+        )
+        query_embedding = self._embedder.embed(query)
 
+        rc = self._config.retrieval
+        candidate_limit = top_k * rc.candidate_multiplier
+        if len(self._store) > candidate_limit:
+            candidates = self._store.search_by_embedding(query_embedding, candidate_limit)
+        else:
+            candidates = self._store.list_all()
+
+        if not candidates:
+            return []
+
+        plan = build_retrieval_plan(
+            query_embedding=query_embedding,
+            query_affect=self._state.core_affect,
+            current_mood=self._state.mood,
+            current_momentum=self._state.momentum,
+            candidates=candidates,
+            top_k=top_k,
+            now=now,
+            decay_config=self._config.decay,
+            retrieval_config=rc,
+            propagation_hops=self._config.resonance.propagation_hops,
+            spreading_activation_fn=spreading_activation,
+        )
+        top_ranked = plan.pass2[:top_k]
+        result = self._apply_retrieval_updates([item.memory for item in top_ranked], now)
+        updated_by_id = {mem.id: mem for mem in result}
+        pass1_ranks = {item.memory.id: index for index, item in enumerate(plan.pass1, start=1)}
+
+        explanations = [
+            RetrievalExplanation(
+                memory=updated_by_id[item.memory.id],
+                score=item.score,
+                breakdown=item.breakdown,
+                activation_level=plan.activation_map.get(item.memory.id, 0.0),
+                pass1_rank=pass1_ranks.get(item.memory.id),
+                pass2_rank=index,
+                selected_as_seed=item.memory.id in plan.seed_ids,
+                candidate_count=plan.candidate_count,
+            )
+            for index, item in enumerate(top_ranked, start=1)
+        ]
+        logger.debug(
+            "retrieve_with_explanations done: returned=%d candidates=%d",
+            len(explanations),
+            len(candidates),
+        )
+        return explanations
+
+    def _apply_retrieval_updates(self, top: list[Memory], now: datetime) -> list[Memory]:
+        """Apply retrieval side effects after ranking has been computed."""
         # Reconsolidation check and retrieval count update
-        cfg = rc
+        cfg = self._config.retrieval
         result = []
         for mem in top:
             tag = mem.tag.model_copy(
@@ -367,8 +418,6 @@ class EmotionalMemory:
                     self._store.update(strengthened)
                     result[i] = strengthened
                     logger.debug("hebbian: id=%s links_strengthened=%d", mem.id, len(new_links))
-
-        logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
 
     def encode_batch(

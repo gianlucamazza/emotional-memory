@@ -7,6 +7,6 @@
 ## SQLiteStore
 
 !!! note
-    Requires the `sqlite` extra: `pip install emotional-memory[sqlite]`
+    Requires the `sqlite` extra: `uv pip install "emotional-memory[sqlite]"`
 
 ::: emotional_memory.stores.sqlite.SQLiteStore

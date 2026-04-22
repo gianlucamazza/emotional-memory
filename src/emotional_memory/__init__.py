@@ -36,7 +36,10 @@ from emotional_memory.mood import MoodDecayConfig, MoodField
 from emotional_memory.resonance import ResonanceConfig, hebbian_strengthen, spreading_activation
 from emotional_memory.retrieval import (
     AdaptiveWeightsConfig,
+    RetrievalBreakdown,
     RetrievalConfig,
+    RetrievalExplanation,
+    RetrievalSignals,
     compute_ape,
     update_prediction,
 )
@@ -96,7 +99,10 @@ __all__ = [
     "MoodField",
     "ResonanceConfig",
     "ResonanceLink",
+    "RetrievalBreakdown",
     "RetrievalConfig",
+    "RetrievalExplanation",
+    "RetrievalSignals",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",

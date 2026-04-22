@@ -8,7 +8,7 @@ message becomes retrievable memory, only updates affective state, or is ignored.
 ## Installation
 
 ```bash
-pip install emotional-memory[langchain]
+uv pip install "emotional-memory[langchain]"
 ```
 
 This pulls in `langchain-core>=0.3`.  You will also need your preferred

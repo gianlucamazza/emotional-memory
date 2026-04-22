@@ -90,7 +90,9 @@ def test_should_enable_ssr_reads_only_demo_env_flag() -> None:
     assert ssr_helpers
     helper = ssr_helpers[0]
     string_constants = {
-        node.value for node in ast.walk(helper) if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        node.value
+        for node in ast.walk(helper)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
     }
 
     assert "EMOTIONAL_MEMORY_DEMO_SSR" in string_constants
@@ -103,7 +105,9 @@ def test_em_state_is_seeded_with_initial_factory() -> None:
         node
         for node in ast.walk(tree)
         if isinstance(node, ast.Assign)
-        and any(isinstance(target, ast.Name) and target.id == "em_state" for target in node.targets)
+        and any(
+            isinstance(target, ast.Name) and target.id == "em_state" for target in node.targets
+        )
     ]
 
     assert assignments
@@ -161,8 +165,7 @@ def test_event_loop_cleanup_patch_runs_before_gradio_import() -> None:
     gradio_import_index = next(
         i
         for i, node in enumerate(body)
-        if isinstance(node, ast.Import)
-        and any(alias.name == "gradio" for alias in node.names)
+        if isinstance(node, ast.Import) and any(alias.name == "gradio" for alias in node.names)
     )
 
     assert patch_call_index < gradio_import_index

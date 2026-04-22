@@ -88,6 +88,13 @@ spreading_activation(seeds)  ← multi-hop BFS on ResonanceGraph
 Pass 2 — re-score seeds with resonance boost (s6 = activation_map[id])
     │
     ▼
+Ranking plan available via retrieve_with_explanations()
+    │
+    │   breakdown.raw_signals      → ranking-time signal values
+    │   breakdown.weighted_signals → score contributions after adaptive weights
+    │   pass1_rank / pass2_rank    → how resonance changed ordering
+    │
+    ▼
 Per memory: compute_ape() — Affective Prediction Error
     │         "How surprising is this memory given the current context?"
     ▼
@@ -101,6 +108,16 @@ hebbian_strengthen() on co-retrieved ResonanceLinks
     ▼
 return top-k Memory objects
 ```
+
+There are now two retrieval entrypoints:
+
+- `retrieve()` returns the post-retrieval `Memory` objects and is the normal runtime path.
+- `retrieve_with_explanations()` runs the same ranking pipeline but also returns the
+  ranking-time decomposition for each result.
+
+This distinction matters: the explanation captures the score **before** retrieval-side
+updates such as reconsolidation and Hebbian strengthening, while the returned `memory`
+reflects the **post-retrieval** stored state.
 
 ---
 
@@ -143,7 +160,9 @@ from emotional_memory import (
 )
 ```
 
-`EmotionalMemory` is the façade. It orchestrates all 5 layers. You interact with it via three verbs: `set_affect`, `encode`, `retrieve`.
+`EmotionalMemory` is the façade. It orchestrates all 5 layers. The normal interaction
+path is `set_affect`, `encode`, `retrieve`; use `retrieve_with_explanations()` when you
+need the ranking plan and signal breakdown for debugging, evaluation, or UI inspection.
 
 ---
 
@@ -180,7 +199,7 @@ for m in results:
 
 ## Further reading
 
-- Full theoretical foundations: [`docs/research/`](research/)
+- Full theoretical foundations: [`docs/research/`](research/index.md)
 - Known limitations: [`docs/research/08_limitations.md`](research/08_limitations.md)
 - API reference: generated from docstrings (run `make docs-serve`)
 - Source of truth for retrieval scoring: [`src/emotional_memory/retrieval.py`](https://github.com/gianlucamazza/emotional-memory/blob/main/src/emotional_memory/retrieval.py)

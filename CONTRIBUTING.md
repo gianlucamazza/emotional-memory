@@ -31,17 +31,18 @@ Thank you for your interest. This guide covers everything from dev setup to gett
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
 
-# Core dev dependencies (tests, lint, typecheck)
-uv pip install -e ".[dev]"
+# Canonical local setup
+make install
 
-# Recommended: also install sqlite and real embeddings
-uv pip install -e ".[dev,sqlite,sentence-transformers]"
+# Optional local demo stack
+make install-demo
 
-# All extras
-uv pip install -e ".[dev,sqlite,sentence-transformers,viz,llm-test,bench]"
-
-# Maintainer release toolchain + release gates
+# Maintainer / full release toolchain
 make install-release
+
+# Additional targeted extras
+make install-sqlite
+make install-docs
 ```
 
 Verify everything works:
@@ -105,8 +106,8 @@ uv run pytest tests/test_engine.py::test_encode_stores_memory -v
 **SQLite and visualization tests** require their extras and run as separate CI jobs:
 
 ```bash
-uv pip install -e ".[dev,sqlite]" && pytest tests/test_sqlite_store.py -v
-uv pip install -e ".[dev,viz]"    && pytest tests/test_visualization.py -v
+uv pip install -e ".[dev,sqlite]" && uv run pytest tests/test_sqlite_store.py -v
+uv pip install -e ".[dev,viz]"    && uv run pytest tests/test_visualization.py -v
 ```
 
 Coverage must stay above 80%. Check with:
@@ -146,7 +147,7 @@ class MoodField:
 
 ## Code style
 
-Formatting and linting use [ruff](https://docs.astral.sh/ruff/) (config in `ruff.toml`):
+Formatting and linting use [ruff](https://docs.astral.sh/ruff/) (configured in `pyproject.toml`):
 
 ```bash
 make format   # auto-format in place
@@ -209,7 +210,7 @@ make install-release
 Recommended release gate:
 
 ```bash
-make release-check VERSION=0.6.1
+make release-check VERSION=0.6.2
 ```
 
 That target runs:
@@ -217,14 +218,14 @@ That target runs:
 - `make check`
 - `make test-llm`
 - `make bench-appraisal`
-- `uv run python scripts/preflight.py 0.6.1`
+- `uv run python scripts/preflight.py 0.6.2`
 
 Publishing order:
 
 ```bash
 git push origin main
-git tag -a v0.6.1 -m "v0.6.1"
-git push origin v0.6.1
+git tag -a v0.6.2 -m "v0.6.2"
+git push origin v0.6.2
 ```
 
 Normal PyPI path:
@@ -249,6 +250,9 @@ The Zenodo script prints both the version DOI and concept DOI. Use:
 
 - concept DOI for stable badges and generic project links
 - version DOI for release-specific citation blocks
+
+If Zenodo assigns a new version DOI for `0.6.2`, sync it back into `CITATION.cff`,
+`demo/README.md`, and any release-specific citation snippets after publish.
 
 Hugging Face Space deployment:
 

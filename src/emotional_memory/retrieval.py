@@ -21,6 +21,7 @@ a threshold.
 from __future__ import annotations
 
 import math
+from collections.abc import Callable, Sequence
 from datetime import datetime
 
 import numpy as np
@@ -103,6 +104,88 @@ class RetrievalConfig(BaseModel):
 
     adaptive_weights_config: AdaptiveWeightsConfig = AdaptiveWeightsConfig()
     """Parameters for smooth mood-modulated weight adjustment."""
+
+
+class RetrievalSignals(BaseModel):
+    """Named retrieval signal values for explainability.
+
+    The six fields map directly to the composite scorer:
+      semantic_similarity
+      mood_congruence
+      affect_proximity
+      momentum_alignment
+      recency
+      resonance
+    """
+
+    semantic_similarity: float = 0.0
+    mood_congruence: float = 0.0
+    affect_proximity: float = 0.0
+    momentum_alignment: float = 0.0
+    recency: float = 0.0
+    resonance: float = 0.0
+
+    def total(self) -> float:
+        """Return the sum of all six signals."""
+        return (
+            self.semantic_similarity
+            + self.mood_congruence
+            + self.affect_proximity
+            + self.momentum_alignment
+            + self.recency
+            + self.resonance
+        )
+
+
+class RetrievalBreakdown(BaseModel):
+    """Structured decomposition of one retrieval score."""
+
+    weights: RetrievalSignals
+    raw_signals: RetrievalSignals
+    weighted_signals: RetrievalSignals
+    total_score: float
+
+
+class RetrievalExplanation(BaseModel):
+    """One retrieved memory plus the score decomposition that ranked it.
+
+    ``score`` and ``breakdown`` describe the ranking-time score before any
+    side effects of retrieval (for example reconsolidation or Hebbian
+    strengthening) are applied. ``memory`` is the post-retrieval memory state.
+    """
+
+    memory: Memory
+    score: float
+    breakdown: RetrievalBreakdown
+    activation_level: float = 0.0
+    pass1_rank: int | None = None
+    pass2_rank: int | None = None
+    selected_as_seed: bool = False
+    candidate_count: int = 0
+
+
+class RankedMemory(BaseModel):
+    """A memory plus its retrieval-time score and breakdown."""
+
+    memory: Memory
+    score: float
+    breakdown: RetrievalBreakdown
+
+
+class RetrievalPlan(BaseModel):
+    """Pure retrieval ranking plan, independent from engine/store side effects.
+
+    This object captures the two-pass ranking result so sync and async engines
+    can share one retrieval pipeline and apply their own persistence logic
+    afterward.
+    """
+
+    weights: RetrievalSignals
+    pass1: list[RankedMemory]
+    pass2: list[RankedMemory]
+    activation_map: dict[str, float]
+    seed_ids: list[str]
+    candidate_count: int
 
 
 # ---------------------------------------------------------------------------
@@ -225,6 +308,156 @@ def _resonance_boost(memory_id: str, activation_map: dict[str, float]) -> float:
 
 
 # ---------------------------------------------------------------------------
+# Explainability helpers
+# ---------------------------------------------------------------------------
+
+
+def _signals_from_values(
+    values: Sequence[float],
+) -> RetrievalSignals:
+    return RetrievalSignals(
+        semantic_similarity=values[0],
+        mood_congruence=values[1],
+        affect_proximity=values[2],
+        momentum_alignment=values[3],
+        recency=values[4],
+        resonance=values[5],
+    )
+
+
+def _component_values(
+    query_embedding: list[float],
+    query_affect: CoreAffect,
+    current_mood: MoodField,
+    current_momentum: AffectiveMomentum,
+    memory: Memory,
+    activation_map: dict[str, float],
+    now: datetime,
+    decay_config: DecayConfig,
+) -> tuple[float, float, float, float, float, float]:
+    emb = memory.embedding or []
+    s1 = _cosine(query_embedding, emb) if (query_embedding and emb) else 0.0
+    s2 = _mood_congruence(current_mood, memory.tag.mood_snapshot)
+    s3 = _affect_proximity(query_affect, memory.tag.core_affect)
+    s4 = _momentum_alignment(current_momentum, memory.tag.momentum)
+    s5 = compute_effective_strength(memory.tag, now, decay_config)
+    s6 = _resonance_boost(memory.id, activation_map)
+    return (s1, s2, s3, s4, s5, s6)
+
+
+def retrieval_breakdown(
+    query_embedding: list[float],
+    query_affect: CoreAffect,
+    current_mood: MoodField,
+    current_momentum: AffectiveMomentum,
+    memory: Memory,
+    activation_map: dict[str, float],
+    now: datetime,
+    decay_config: DecayConfig,
+    retrieval_config: RetrievalConfig,
+    precomputed_weights: NDArray[np.float64] | None = None,
+) -> RetrievalBreakdown:
+    """Return the full score decomposition for one memory.
+
+    This is the explainable counterpart to ``retrieval_score()`` and uses the
+    exact same scoring path.
+    """
+    weight_arr = (
+        precomputed_weights
+        if precomputed_weights is not None
+        else adaptive_weights(
+            current_mood,
+            retrieval_config.base_weights,
+            retrieval_config.adaptive_weights_config,
+        )
+    )
+    raw_values = _component_values(
+        query_embedding=query_embedding,
+        query_affect=query_affect,
+        current_mood=current_mood,
+        current_momentum=current_momentum,
+        memory=memory,
+        activation_map=activation_map,
+        now=now,
+        decay_config=decay_config,
+    )
+    weight_values = tuple(float(v) for v in weight_arr.tolist())
+    weighted_values = tuple(w * s for w, s in zip(weight_values, raw_values, strict=True))
+
+    weighted = _signals_from_values(weighted_values)
+    return RetrievalBreakdown(
+        weights=_signals_from_values(weight_values),
+        raw_signals=_signals_from_values(raw_values),
+        weighted_signals=weighted,
+        total_score=weighted.total(),
+    )
+
+
+def build_retrieval_plan(
+    query_embedding: list[float],
+    query_affect: CoreAffect,
+    current_mood: MoodField,
+    current_momentum: AffectiveMomentum,
+    candidates: list[Memory],
+    top_k: int,
+    now: datetime,
+    decay_config: DecayConfig,
+    retrieval_config: RetrievalConfig,
+    propagation_hops: int,
+    spreading_activation_fn: Callable[[set[str], list[Memory], int], dict[str, float]],
+) -> RetrievalPlan:
+    """Build the two-pass retrieval ranking plan for a fixed candidate set.
+
+    This function is intentionally pure: it performs no store writes and no
+    state mutation. Engines remain responsible for side effects such as
+    reconsolidation, retrieval counters, and Hebbian strengthening.
+    """
+    weight_arr = adaptive_weights(
+        current_mood,
+        retrieval_config.base_weights,
+        retrieval_config.adaptive_weights_config,
+    )
+
+    def _score_all(activation_map: dict[str, float]) -> list[RankedMemory]:
+        scored: list[RankedMemory] = []
+        for mem in candidates:
+            breakdown = retrieval_breakdown(
+                query_embedding=query_embedding,
+                query_affect=query_affect,
+                current_mood=current_mood,
+                current_momentum=current_momentum,
+                memory=mem,
+                activation_map=activation_map,
+                now=now,
+                decay_config=decay_config,
+                retrieval_config=retrieval_config,
+                precomputed_weights=weight_arr,
+            )
+            scored.append(
+                RankedMemory(
+                    memory=mem,
+                    score=breakdown.total_score,
+                    breakdown=breakdown,
+                )
+            )
+        scored.sort(key=lambda item: item.score, reverse=True)
+        return scored
+
+    pass1 = _score_all({})
+    seed_ids = [item.memory.id for item in pass1[:top_k]]
+    activation_map = spreading_activation_fn(set(seed_ids), candidates, propagation_hops)
+    pass2 = _score_all(activation_map) if activation_map else pass1
+    return RetrievalPlan(
+        weights=_signals_from_values(tuple(float(v) for v in weight_arr.tolist())),
+        pass1=pass1,
+        pass2=pass2,
+        activation_map=activation_map,
+        seed_ids=seed_ids,
+        candidate_count=len(candidates),
+    )
+
+
+# ---------------------------------------------------------------------------
 # Main scoring function
 # ---------------------------------------------------------------------------
 
@@ -252,25 +485,18 @@ def retrieval_score(
             Pass this when scoring many memories with the same mood/config to avoid
             redundant computation. If None, weights are computed inline.
     """
-    w = (
-        precomputed_weights
-        if precomputed_weights is not None
-        else adaptive_weights(
-            current_mood,
-            retrieval_config.base_weights,
-            retrieval_config.adaptive_weights_config,
-        )
-    )
-
-    emb = memory.embedding or []
-    s1 = _cosine(query_embedding, emb) if (query_embedding and emb) else 0.0
-    s2 = _mood_congruence(current_mood, memory.tag.mood_snapshot)
-    s3 = _affect_proximity(query_affect, memory.tag.core_affect)
-    s4 = _momentum_alignment(current_momentum, memory.tag.momentum)
-    s5 = compute_effective_strength(memory.tag, now, decay_config)
-    s6 = _resonance_boost(memory.id, activation_map)
-
-    return float(w[0] * s1 + w[1] * s2 + w[2] * s3 + w[3] * s4 + w[4] * s5 + w[5] * s6)
+    return retrieval_breakdown(
+        query_embedding=query_embedding,
+        query_affect=query_affect,
+        current_mood=current_mood,
+        current_momentum=current_momentum,
+        memory=memory,
+        activation_map=activation_map,
+        now=now,
+        decay_config=decay_config,
+        retrieval_config=retrieval_config,
+        precomputed_weights=precomputed_weights,
+    ).total_score
 
 
 # ---------------------------------------------------------------------------

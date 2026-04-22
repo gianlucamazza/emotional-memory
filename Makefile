@@ -2,10 +2,13 @@
 -include .env
 export
 
-.PHONY: install install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck check bench-perf bench-fidelity bench bench-appraisal bench-comparative reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
+
+install-demo:
+	uv pip install -e ".[dev,demo,viz,sentence-transformers,llm-test]"
 
 install-viz:
 	uv pip install -e ".[dev,viz]"
@@ -41,7 +44,7 @@ install-langmem:
 	uv pip install -e ".[dev,langmem]"
 
 install-all:
-	uv pip install -e ".[dev,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
+	uv pip install -e ".[dev,demo,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
 
 lint:
 	uv run ruff check .
@@ -145,7 +148,7 @@ zenodo-publish:
 	uv run python scripts/zenodo_deposit.py --publish-id "$(DEPOSIT_ID)"
 
 release-check:
-	@test -n "$(VERSION)" || (echo "Usage: make release-check VERSION=0.6.1"; exit 1)
+	@test -n "$(VERSION)" || (echo "Usage: make release-check VERSION=0.6.2"; exit 1)
 	$(MAKE) check
 	$(MAKE) test-llm
 	$(MAKE) bench-appraisal
@@ -172,6 +175,7 @@ help:
 	@echo "  install-sentence-transformers  + sentence-transformers (real embeddings)"
 	@echo "  install-langchain              + langchain-core (LangChain adapter)"
 	@echo "  install-viz                + matplotlib (visualization)"
+	@echo "  install-demo               + Gradio demo runtime (local canonical demo setup)"
 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"
 	@echo "  install-llm-test           + httpx (real-LLM tests)"
 	@echo "  install-docs               + mkdocs (documentation)"

@@ -184,9 +184,9 @@ def test_runtime_badge_mentions_retrieval_mode() -> None:
 def test_chat_accepts_seeded_initial_state() -> None:
     demo_app = _load_demo_module()
 
-    chatbot, em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
+    chatbot, _em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
 
-    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+    chatbot, _em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
         "I feel calm and ready to start.",
         demo_app._INITIAL_CHAT_HISTORY.copy(),
         demo_app._initial_em_state(),

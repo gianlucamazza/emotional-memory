@@ -44,6 +44,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - Mental Model: mental_model.md
   - Migration Guide: migration.md
   - Tutorials:
     - Async usage: tutorials/async.md
@@ -71,7 +72,11 @@ nav:
     - Computational Models: research/03_computational_models.md
     - State of the Art: research/04_state_of_art.md
     - Design Principles: research/05_design_principles.md
+    - Related Work: research/07_related_work.md
+    - Limitations: research/08_limitations.md
     - Bibliography: research/06_bibliography.md
+  - Blog:
+    - April 2026 Kickoff: blog/2026-04-kickoff.md
 
 markdown_extensions:
   - admonition

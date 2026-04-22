@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "emotional_memory"
-version = "0.6.1"
+version = "0.6.2"
 description = "Emotional memory library for LLMs based on Affective Field Theory"
 requires-python = ">=3.11"
 license = "MIT"
@@ -42,6 +42,7 @@ dev = [
 ]
 bench = ["pytest-benchmark>=4.0", "psutil>=5.9"]
 llm-test = ["httpx>=0.27"]
+demo = ["gradio>=6.13,<7"]
 dotenv = ["python-dotenv>=1.0"]
 sentence-transformers = ["sentence-transformers>=2.2"]
 sqlite = ["sqlite-vec>=0.1.1"]
@@ -85,6 +86,39 @@ show_missing = true
 skip_empty = true
 exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "\\.\\.\\."]
 fail_under = 80
+
+[tool.ruff]
+line-length = 99
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "I",
+  "W",
+  "UP",
+  "B",
+  "SIM",
+  "RUF",
+  "C4",
+  "T20",
+  "TCH",
+  "PERF",
+  "S",
+  "PTH",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+"benchmarks/**" = ["S101", "T201", "S311", "TCH"]
+"examples/**" = ["T201"]
+"scripts/**" = ["T201", "S603", "S314", "S311", "S306", "S607"]
+"demo/**" = ["T201", "TCH"]
+"src/**" = ["TCH"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["emotional_memory"]
 
 [tool.mypy]
 python_version = "3.11"

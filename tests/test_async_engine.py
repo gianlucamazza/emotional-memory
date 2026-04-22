@@ -157,6 +157,39 @@ class TestAsyncRetrieve:
         results = await em.retrieve("something")
         assert results[0].tag.retrieval_count == 1
 
+    async def test_retrieve_with_explanations_exposes_score_breakdown(self):
+        class IndexEmbedder:
+            def __init__(self) -> None:
+                self._map = {
+                    "query": [1.0, 0.0, 0.0, 0.0],
+                    "relevant": [1.0, 0.0, 0.0, 0.0],
+                    "other": [0.0, 1.0, 0.0, 0.0],
+                }
+
+            def embed(self, text: str) -> list[float]:
+                return self._map.get(text, [0.0, 0.0, 0.0, 0.0])
+
+            def embed_batch(self, texts: list[str]) -> list[list[float]]:
+                return [self.embed(text) for text in texts]
+
+        em = _async_engine(embedder=IndexEmbedder())
+        await em.encode("relevant")
+        await em.encode("other")
+
+        explanations = await em.retrieve_with_explanations("query", top_k=1)
+
+        assert len(explanations) == 1
+        explanation = explanations[0]
+        assert explanation.memory.content == "relevant"
+        assert explanation.memory.tag.retrieval_count == 1
+        assert explanation.selected_as_seed is True
+        assert explanation.pass1_rank == 1
+        assert explanation.pass2_rank == 1
+        assert explanation.candidate_count == 2
+        assert explanation.breakdown.weights.total() == pytest.approx(1.0)
+        assert explanation.breakdown.total_score == pytest.approx(explanation.score)
+        assert explanation.breakdown.weighted_signals.total() == pytest.approx(explanation.score)
+
 
 # ---------------------------------------------------------------------------
 # AsyncEmotionalMemory — encode_batch

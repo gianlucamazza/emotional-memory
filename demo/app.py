@@ -2,7 +2,7 @@
 
 Runs as a Hugging Face Space (sdk: gradio) or locally::
 
-    uv pip install -r demo/requirements.txt
+    make install-demo
     make demo-run
 
 Set EMOTIONAL_MEMORY_LLM_API_KEY (+ optionally EMOTIONAL_MEMORY_LLM_MODEL and
@@ -13,13 +13,15 @@ full AFT pipeline).  Without it the demo falls back to KeywordAppraisalEngine
 This module reads LLM configuration from the process environment only. It does
 not call ``load_dotenv()`` itself; use ``make demo-run`` or export variables in
 your shell before running ``uv run python demo/app.py`` for local `.env`
-convenience.
+convenience. ``demo/requirements.txt`` is reserved for the deployed Space
+runtime overlay.
 """
 
 from __future__ import annotations
 
 import asyncio.base_events
 import hashlib
+import importlib.util
 import io
 import os
 
@@ -43,14 +45,14 @@ def _patch_event_loop_cleanup() -> None:
 
 _patch_event_loop_cleanup()
 
-import gradio as gr
-import matplotlib
-from PIL import Image
+import gradio as gr  # noqa: E402
+import matplotlib  # noqa: E402
+from PIL import Image  # noqa: E402
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # noqa: E402
 
-from emotional_memory import (
+from emotional_memory import (  # noqa: E402
     EmotionalMemory,
     InMemoryStore,
     KeywordAppraisalEngine,
@@ -58,7 +60,10 @@ from emotional_memory import (
     LLMAppraisalEngine,
     __version__,
 )
-from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
+from emotional_memory.llm_http import (  # noqa: E402
+    OpenAICompatibleLLMConfig,
+    make_httpx_llm,
+)
 
 # ---------------------------------------------------------------------------
 # Embedder — use SentenceTransformer if available, fall back to Hash
@@ -75,9 +80,7 @@ def _make_embedder():  # type: ignore[no-untyped-def]
 
 
 def _embedder_mode_badge() -> str:
-    try:
-        from emotional_memory.embedders import SentenceTransformerEmbedder as _unused
-    except ImportError:
+    if importlib.util.find_spec("sentence_transformers") is None:
         return (
             "🔎 Hash fallback retrieval active "
             "(approximate semantic recall — install `sentence-transformers` for stronger results)"

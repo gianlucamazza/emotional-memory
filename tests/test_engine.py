@@ -192,6 +192,32 @@ class TestRetrieve:
         assert results[0].tag.core_affect.valence > 0.0
         assert results[0].tag.reconsolidation_count == 1
 
+    def test_retrieve_with_explanations_exposes_score_breakdown(self):
+        embedder = IndexEmbedder(
+            {
+                "query": [1.0, 0.0, 0.0, 0.0],
+                "relevant": [1.0, 0.0, 0.0, 0.0],
+                "other": [0.0, 1.0, 0.0, 0.0],
+            }
+        )
+        em = _engine(embedder=embedder)
+        em.encode("relevant")
+        em.encode("other")
+
+        explanations = em.retrieve_with_explanations("query", top_k=1)
+
+        assert len(explanations) == 1
+        explanation = explanations[0]
+        assert explanation.memory.content == "relevant"
+        assert explanation.memory.tag.retrieval_count == 1
+        assert explanation.selected_as_seed is True
+        assert explanation.pass1_rank == 1
+        assert explanation.pass2_rank == 1
+        assert explanation.candidate_count == 2
+        assert explanation.breakdown.weights.total() == pytest.approx(1.0)
+        assert explanation.breakdown.total_score == pytest.approx(explanation.score)
+        assert explanation.breakdown.weighted_signals.total() == pytest.approx(explanation.score)
+
 
 class TestDelete:
     def test_delete_removes_memory(self):

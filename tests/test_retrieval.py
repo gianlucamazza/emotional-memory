@@ -13,6 +13,7 @@ from emotional_memory.retrieval import (
     RetrievalConfig,
     adaptive_weights,
     affective_prediction_error,
+    build_retrieval_plan,
     reconsolidate,
     retrieval_score,
 )
@@ -314,6 +315,41 @@ class TestRetrievalScore:
         from emotional_memory.retrieval import _resonance_boost
 
         assert _resonance_boost("abc", {"abc": 0.6}) == pytest.approx(0.6)
+
+
+class TestRetrievalPlan:
+    def test_build_retrieval_plan_separates_ranking_from_side_effects(self):
+        primary = make_test_memory(content="primary", embedding=[1.0, 0.0], valence=0.8)
+        secondary = make_test_memory(content="secondary", embedding=[0.0, 1.0], valence=-0.8)
+
+        def fake_spread(seed_ids: set[str], candidates: list, hops: int) -> dict[str, float]:
+            assert seed_ids == {primary.id}
+            assert hops == 2
+            assert len(candidates) == 2
+            return {secondary.id: 0.4}
+
+        plan = build_retrieval_plan(
+            query_embedding=[1.0, 0.0],
+            query_affect=CoreAffect(valence=0.8, arousal=0.5),
+            current_mood=_neutral_mood(),
+            current_momentum=AffectiveMomentum.zero(),
+            candidates=[primary, secondary],
+            top_k=1,
+            now=datetime.now(tz=UTC),
+            decay_config=DecayConfig(),
+            retrieval_config=RetrievalConfig(),
+            propagation_hops=2,
+            spreading_activation_fn=fake_spread,
+        )
+
+        assert plan.candidate_count == 2
+        assert plan.seed_ids == [primary.id]
+        assert len(plan.pass1) == 2
+        assert len(plan.pass2) == 2
+        assert plan.weights.total() == pytest.approx(1.0)
+        assert plan.pass1[0].memory.id == primary.id
+        assert plan.activation_map[secondary.id] == pytest.approx(0.4)
+        assert plan.pass2[1].breakdown.raw_signals.resonance == pytest.approx(0.4)
 
 
 class TestRetrievalConfig:

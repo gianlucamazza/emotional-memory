@@ -8,7 +8,7 @@ pipeline as the sync engine — the only difference is that `encode`,
 ## Installation
 
 ```bash
-pip install emotional-memory
+uv pip install emotional-memory
 ```
 
 No extra extras required for async — it is included in the base package.

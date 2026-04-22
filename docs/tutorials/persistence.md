@@ -12,7 +12,7 @@ restarts.  This tutorial covers:
 ## Installation
 
 ```bash
-pip install emotional-memory[sqlite]
+uv pip install "emotional-memory[sqlite]"
 ```
 
 `SQLiteStore` requires `sqlite-vec` for approximate-nearest-neighbour search.

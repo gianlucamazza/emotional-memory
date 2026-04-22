@@ -11,10 +11,18 @@ encodes not just *what* happened, but *how it felt*, *how that feeling was movin
 ## Installation
 
 ```bash
-pip install emotional-memory
-pip install emotional-memory[sqlite]   # SQLite persistence
-pip install emotional-memory[viz]      # matplotlib visualization
-pip install emotional-memory[docs]     # docs generation (dev)
+uv pip install emotional-memory
+uv pip install "emotional-memory[sqlite]"   # SQLite persistence
+uv pip install "emotional-memory[viz]"      # matplotlib visualization
+uv pip install "emotional-memory[docs]"     # docs generation (dev)
+```
+
+For local development, prefer the repo targets:
+
+```bash
+make install
+make install-demo   # optional local Gradio demo stack
+make install-docs   # docs toolchain
 ```
 
 ## Quickstart

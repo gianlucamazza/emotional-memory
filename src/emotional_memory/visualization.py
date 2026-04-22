@@ -16,8 +16,8 @@ Theory references preserved in individual function docstrings.
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
-from typing import TYPE_CHECKING
+from collections.abc import Mapping, Sequence
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes
@@ -95,6 +95,25 @@ def _make_figure(
     return parent, ax
 
 
+def _make_polar_figure(
+    ax: Axes | None,
+    figsize: tuple[float, float] = (6.0, 6.0),
+) -> tuple[Figure, Axes]:
+    """Return (fig, ax) for polar plots, validating reused axes."""
+    import matplotlib.pyplot as plt
+    from matplotlib.figure import Figure as MplFigure
+
+    if ax is None:
+        fig, new_ax = plt.subplots(figsize=figsize, subplot_kw={"polar": True})
+        if not isinstance(fig, MplFigure):
+            raise TypeError(f"plt.subplots returned unexpected type: {type(fig)}")
+        return fig, new_ax
+    parent = ax.get_figure()
+    if not isinstance(parent, MplFigure):
+        raise TypeError(f"ax.get_figure() returned unexpected type: {type(parent)}")
+    return parent, ax
+
+
 # ---------------------------------------------------------------------------
 # 1. Valence-Arousal Circumplex (Russell 1980)
 # ---------------------------------------------------------------------------
@@ -148,7 +167,7 @@ def plot_circumplex(
         cbar.set_label("Consolidation strength", fontsize=9)
 
     # Quadrant labels
-    label_kw: dict[str, object] = {
+    label_kw: Mapping[str, Any] = {
         "fontsize": 8,
         "color": "gray",
         "ha": "center",
@@ -222,7 +241,7 @@ def plot_decay_curves(
 
     t = np.linspace(1, 86_400, 600)  # 1 second → 24 hours
 
-    colors = plt.cm.plasma(np.linspace(0.15, 0.85, len(arousal_values)))
+    colors = plt.get_cmap("plasma")(np.linspace(0.15, 0.85, len(arousal_values)))
     linestyles = ["-", "--", ":"][: len(retrieval_counts)]
     if len(retrieval_counts) > 3:
         linestyles += ["-."] * (len(retrieval_counts) - 3)
@@ -353,7 +372,6 @@ def plot_retrieval_radar(
         The ``Figure``.
     """
     _require_matplotlib()
-    import matplotlib.pyplot as plt
     import numpy as np
 
     n = len(scores)
@@ -361,11 +379,7 @@ def plot_retrieval_radar(
     angles_closed = [*angles, angles[0]]
     values_closed = [*list(scores), scores[0]]
 
-    if ax is None:
-        fig, _ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw={"polar": True})
-    else:
-        fig = ax.get_figure()
-        _ax = ax
+    fig, _ax = _make_polar_figure(ax, figsize=(6.0, 6.0))
 
     _ax.plot(angles_closed, values_closed, color=color, linewidth=2.0)
     _ax.fill(angles_closed, values_closed, alpha=0.25, color=color)
@@ -635,7 +649,6 @@ def plot_appraisal_radar(
         The ``Figure``.
     """
     _require_matplotlib()
-    import matplotlib.pyplot as plt
     import numpy as np
 
     from emotional_memory.appraisal import AppraisalVector
@@ -668,11 +681,7 @@ def plot_appraisal_radar(
     angles_closed = [*angles, angles[0]]
     values_closed = [*values, values[0]]
 
-    if ax is None:
-        fig, _ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw={"polar": True})
-    else:
-        fig = ax.get_figure()
-        _ax = ax
+    fig, _ax = _make_polar_figure(ax, figsize=(6.0, 6.0))
 
     _ax.plot(angles_closed, values_closed, color=color, linewidth=2.0)
     _ax.fill(angles_closed, values_closed, alpha=0.25, color=color)

@@ -14,6 +14,7 @@ make format         # ruff format
 make bench-fidelity # Psychological invariant tests (123 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
 make bench          # fidelity + performance benchmarks (combined)
+make install-demo   # Install canonical local Gradio demo stack
 make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
 make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMORY_LLM_API_KEY)
 make install        # Install package in editable mode with dev deps
