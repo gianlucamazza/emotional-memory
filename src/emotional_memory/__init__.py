@@ -29,7 +29,12 @@ from emotional_memory.async_engine import AsyncEmotionalMemory
 from emotional_memory.categorize import EmotionLabel, categorize_affect, label_tag
 from emotional_memory.decay import DecayConfig
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
-from emotional_memory.interfaces import Embedder, MemoryStore, SequentialEmbedder
+from emotional_memory.interfaces import (
+    AffectiveStateStore,
+    Embedder,
+    MemoryStore,
+    SequentialEmbedder,
+)
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
@@ -44,6 +49,8 @@ from emotional_memory.retrieval import (
     update_prediction,
 )
 from emotional_memory.state import AffectiveState
+from emotional_memory.state_stores.in_memory import InMemoryAffectiveStateStore
+from emotional_memory.state_stores.redis import RedisAffectiveStateStore
 from emotional_memory.stores.in_memory import InMemoryStore
 
 _sqlite_available = False
@@ -51,6 +58,14 @@ with contextlib.suppress(ImportError):
     from emotional_memory.stores.sqlite import SQLiteStore as SQLiteStore
 
     _sqlite_available = True
+
+_sqlite_state_available = False
+with contextlib.suppress(ImportError):
+    from emotional_memory.state_stores.sqlite import (
+        SQLiteAffectiveStateStore as SQLiteAffectiveStateStore,
+    )
+
+    _sqlite_state_available = True
 
 _sentence_transformers_available = False
 with contextlib.suppress(ImportError):
@@ -74,6 +89,7 @@ __all__ = [
     "AdaptiveWeightsConfig",
     "AffectiveMomentum",
     "AffectiveState",
+    "AffectiveStateStore",
     "AppraisalEngine",
     "AppraisalVector",
     "AsyncAppraisalEngine",
@@ -87,6 +103,7 @@ __all__ = [
     "EmotionalMemory",
     "EmotionalMemoryConfig",
     "EmotionalTag",
+    "InMemoryAffectiveStateStore",
     "InMemoryStore",
     "KeywordAppraisalEngine",
     "KeywordRule",
@@ -97,6 +114,7 @@ __all__ = [
     "MemoryStore",
     "MoodDecayConfig",
     "MoodField",
+    "RedisAffectiveStateStore",
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalBreakdown",
@@ -122,6 +140,9 @@ __all__ = [
 
 if _sqlite_available:
     __all__ = [*__all__, "SQLiteStore"]
+
+if _sqlite_state_available:
+    __all__ = [*__all__, "SQLiteAffectiveStateStore"]
 
 if _sentence_transformers_available:
     __all__ = [*__all__, "SentenceTransformerEmbedder"]

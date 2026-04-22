@@ -11,6 +11,7 @@ from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.interfaces import Embedder, SequentialEmbedder
 from emotional_memory.retrieval import RetrievalConfig
+from emotional_memory.state_stores.in_memory import InMemoryAffectiveStateStore
 from emotional_memory.stores.in_memory import InMemoryStore
 
 
@@ -27,12 +28,13 @@ class IndexEmbedder:
         return [self.embed(t) for t in texts]
 
 
-def _engine(embedder=None, appraisal_engine=None, config=None):
+def _engine(embedder=None, appraisal_engine=None, config=None, state_store=None):
     return EmotionalMemory(
         store=InMemoryStore(),
         embedder=embedder or FixedEmbedder([1.0, 0.0]),
         appraisal_engine=appraisal_engine,
         config=config,
+        state_store=state_store,
     )
 
 
@@ -355,6 +357,26 @@ class TestSaveLoadState:
         em2.load_state(snapshot)
         # snapshot dict must be unmodified
         assert set(snapshot.keys()) == original_keys
+
+    def test_state_store_restores_state_on_new_engine(self):
+        state_store = InMemoryAffectiveStateStore()
+        em = _engine(state_store=state_store)
+        em.set_affect(CoreAffect(valence=0.7, arousal=0.4))
+
+        restored = _engine(state_store=state_store)
+
+        assert restored.get_state().core_affect.valence == pytest.approx(0.7)
+        assert restored.get_state().core_affect.arousal == pytest.approx(0.4)
+
+    def test_clear_persisted_state_removes_snapshot(self):
+        state_store = InMemoryAffectiveStateStore()
+        em = _engine(state_store=state_store)
+        em.set_affect(CoreAffect(valence=0.3, arousal=0.6))
+
+        em.clear_persisted_state()
+        restored = _engine(state_store=state_store)
+
+        assert restored.get_state().core_affect == CoreAffect.neutral()
 
 
 class TestGetCurrentMood:

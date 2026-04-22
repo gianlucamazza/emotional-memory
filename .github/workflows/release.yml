@@ -3,6 +3,7 @@ name: Release to PyPI
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -15,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -26,8 +29,63 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Install release dependencies
+        run: uv pip install -e ".[release]" --system
+
+      - name: Resolve release version
+        id: version
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$(uv run python - <<'PY'
+import re
+from pathlib import Path
+text = Path('pyproject.toml').read_text(encoding='utf-8')
+match = re.search(r'^version\\s*=\\s*"([^"]+)"', text, re.MULTILINE)
+assert match is not None
+print(match.group(1))
+PY
+)"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Fast release preflight
+        run: uv run python scripts/preflight.py --fast --ci "${{ steps.version.outputs.version }}"
+
       - name: Build package
         run: uv build
 
+      - name: Validate artefacts
+        run: uv run python -m twine check dist/*
+
+      - name: Upload release artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: emotional-memory-${{ steps.version.outputs.version }}-dist
+          path: dist/*
+
       - name: Publish to PyPI
+        if: github.event_name == 'push'
         uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Verify PyPI release
+        if: github.event_name == 'push'
+        run: uv run python scripts/verify_pypi_release.py "${{ steps.version.outputs.version }}"
+
+      - name: Release summary
+        if: always()
+        run: |
+          {
+            echo "## Release workflow"
+            echo "- Event: ${GITHUB_EVENT_NAME}"
+            echo "- Version: ${{ steps.version.outputs.version }}"
+            echo "- Job status: ${{ job.status }}"
+            echo "- Artefacts: uploaded to workflow artifacts"
+            if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+              echo "- PyPI path: trusted publishing workflow"
+              echo "- Manual fallback: \`make publish-pypi-manual\`"
+            else
+              echo "- Publish step skipped for workflow_dispatch"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -19,6 +19,8 @@ from emotional_memory.async_adapters import (
 from emotional_memory.async_engine import AsyncEmotionalMemory
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
 from emotional_memory.mood import MoodDecayConfig
+from emotional_memory.state_stores.in_memory import InMemoryAffectiveStateStore
+from emotional_memory.state_stores.redis import RedisAffectiveStateStore
 from emotional_memory.stores.in_memory import InMemoryStore
 
 pytestmark = pytest.mark.asyncio
@@ -33,13 +35,33 @@ def _sync_store() -> InMemoryStore:
     return InMemoryStore()
 
 
-def _async_engine(embedder=None, appraisal_engine=None, config=None) -> AsyncEmotionalMemory:
+def _async_engine(
+    embedder=None,
+    appraisal_engine=None,
+    config=None,
+    state_store=None,
+) -> AsyncEmotionalMemory:
     return AsyncEmotionalMemory(
         store=SyncToAsyncStore(_sync_store()),
         embedder=SyncToAsyncEmbedder(embedder or FixedEmbedder([1.0, 0.0])),
         appraisal_engine=appraisal_engine,
         config=config,
+        state_store=state_store,
     )
+
+
+class _FakeRedisClient:
+    def __init__(self) -> None:
+        self._store: dict[str, str] = {}
+
+    def set(self, key: str, value: str) -> None:
+        self._store[key] = value
+
+    def get(self, key: str) -> str | None:
+        return self._store.get(key)
+
+    def delete(self, key: str) -> None:
+        self._store.pop(key, None)
 
 
 # ---------------------------------------------------------------------------
@@ -269,6 +291,45 @@ class TestAsyncStatePersistence:
         assert reset.mood.dominance == baseline.mood.dominance
         assert reset.mood.inertia == baseline.mood.inertia
         assert reset.momentum == baseline.momentum
+
+    async def test_state_store_restores_state_on_new_engine(self):
+        state_store = InMemoryAffectiveStateStore()
+        em = _async_engine(state_store=state_store)
+        em.set_affect(CoreAffect(valence=0.6, arousal=0.4))
+
+        restored = _async_engine(state_store=state_store)
+
+        assert restored.get_state().core_affect.valence == pytest.approx(0.6)
+        assert restored.get_state().core_affect.arousal == pytest.approx(0.4)
+
+    async def test_persist_state_coroutine_round_trip(self):
+        state_store = InMemoryAffectiveStateStore()
+        em = _async_engine(state_store=state_store)
+        em.set_affect(CoreAffect(valence=0.4, arousal=0.5))
+
+        snapshot = await em.persist_state()
+        restored = _async_engine(state_store=state_store)
+
+        assert snapshot["core_affect"]["valence"] == pytest.approx(0.4)
+        assert restored.get_state().core_affect.valence == pytest.approx(0.4)
+
+    async def test_redis_state_store_restores_shared_state_for_new_async_engine(self):
+        client = _FakeRedisClient()
+        state_store = RedisAffectiveStateStore(client=client, key="shared-async-state")
+        em = _async_engine(state_store=state_store)
+        em.set_affect(CoreAffect(valence=0.6, arousal=0.4))
+        await em.observe("The late response made the conversation feel tense.")
+
+        restored = _async_engine(
+            state_store=RedisAffectiveStateStore(client=client, key="shared-async-state")
+        )
+
+        assert restored.get_state().core_affect.valence == pytest.approx(
+            em.get_state().core_affect.valence
+        )
+        assert restored.get_state().core_affect.arousal == pytest.approx(
+            em.get_state().core_affect.arousal
+        )
 
 
 # ---------------------------------------------------------------------------

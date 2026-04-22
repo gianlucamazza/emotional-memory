@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,7 @@ pytest.importorskip("matplotlib")
 pytest.importorskip("PIL")
 
 
+@lru_cache(maxsize=1)
 def _load_demo_module():
     app_path = Path(__file__).resolve().parents[1] / "demo" / "app.py"
     spec = importlib.util.spec_from_file_location("emotional_memory_demo_app", app_path)

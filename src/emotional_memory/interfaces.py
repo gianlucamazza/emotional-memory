@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Protocol, runtime_checkable
 
 from emotional_memory.models import Memory
+from emotional_memory.state import AffectiveState
 
 
 @runtime_checkable
@@ -66,3 +67,14 @@ class MemoryStore(Protocol):
     def search_by_embedding(self, embedding: list[float], top_k: int) -> list[Memory]: ...
 
     def __len__(self) -> int: ...
+
+
+@runtime_checkable
+class AffectiveStateStore(Protocol):
+    """Persistent storage for the current affective state snapshot."""
+
+    def save(self, state: AffectiveState) -> None: ...
+
+    def load(self) -> AffectiveState | None: ...
+
+    def clear(self) -> None: ...

@@ -24,6 +24,7 @@ import hashlib
 import importlib.util
 import io
 import os
+from functools import lru_cache
 
 
 def _patch_event_loop_cleanup() -> None:
@@ -70,6 +71,7 @@ from emotional_memory.llm_http import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
+@lru_cache(maxsize=1)
 def _make_embedder():  # type: ignore[no-untyped-def]
     try:
         from emotional_memory.embedders import SentenceTransformerEmbedder
@@ -102,6 +104,7 @@ class _HashEmbedder:
 # ---------------------------------------------------------------------------
 
 
+@lru_cache(maxsize=1)
 def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngine, str]:
     config = OpenAICompatibleLLMConfig.from_env(os.environ)
     if config is not None:
@@ -168,6 +171,9 @@ def _launch_kwargs() -> dict[str, object]:
 # ---------------------------------------------------------------------------
 
 _PAD_HISTORY_MAX = 40
+_INITIAL_PAD_HISTORY: list[tuple[float, float, float]] = [(0.0, 0.5, 0.0)]
+_INITIAL_CHAT_HISTORY: list[dict[str, str]] = []
+_INITIAL_MSG_COUNT = 0
 
 
 def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
@@ -200,6 +206,11 @@ def _pad_plot(pad_history: list[tuple[float, float, float]]) -> Image.Image:
     plt.close(fig)
     buf.seek(0)
     return Image.open(buf)
+
+
+@lru_cache(maxsize=1)
+def _initial_pad_plot() -> Image.Image:
+    return _pad_plot(_INITIAL_PAD_HISTORY)
 
 
 # ---------------------------------------------------------------------------
@@ -324,20 +335,13 @@ def reset_session() -> tuple[
     int,
 ]:
     em, mode = _build_engine()
-    plot = _pad_plot([(0.0, 0.5, 0.0)])
-    return [], em, [(0.0, 0.5, 0.0)], plot, mode, 0
+    plot = _initial_pad_plot().copy()
+    return [], em, list(_INITIAL_PAD_HISTORY), plot, mode, 0
 
 
 def _initial_em_state() -> EmotionalMemory:
     em, _mode = _build_engine()
     return em
-
-
-_INITIAL_CHAT_HISTORY: list[dict[str, str]] = []
-_INITIAL_PAD_HISTORY: list[tuple[float, float, float]] = [(0.0, 0.5, 0.0)]
-_INITIAL_PAD_PLOT = _pad_plot(_INITIAL_PAD_HISTORY)
-_INITIAL_RUNTIME_BADGE = _runtime_mode_badge()
-_INITIAL_MSG_COUNT = 0
 
 
 # ---------------------------------------------------------------------------
@@ -356,7 +360,7 @@ Built with
 [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v{__version__} · \
 [PyPI](https://pypi.org/project/emotional-memory/) · \
 [GitHub](https://github.com/gianlucamazza/emotional-memory) · \
-[Zenodo DOI](https://doi.org/10.5281/zenodo.19686077)
+[Zenodo DOI](https://doi.org/10.5281/zenodo.19695146)
 """
 
 _EXAMPLES = [
@@ -370,76 +374,86 @@ _EXAMPLES = [
 _DEMO_THEME = gr.themes.Soft()
 
 
-with gr.Blocks(title="Emotional Memory Demo") as demo:
-    gr.Markdown(_DESCRIPTION)
+def build_demo() -> gr.Blocks:
+    initial_runtime_badge = _runtime_mode_badge()
 
-    em_state = gr.State(value=_initial_em_state)
-    pad_history = gr.State(value=_INITIAL_PAD_HISTORY)
-    msg_count = gr.State(value=_INITIAL_MSG_COUNT)
+    with gr.Blocks(title="Emotional Memory Demo") as demo:
+        gr.Markdown(_DESCRIPTION)
 
-    with gr.Row():
-        with gr.Column(scale=3):
-            chatbot = gr.Chatbot(
-                value=_INITIAL_CHAT_HISTORY,
-                label="Conversation",
-                height=420,
-                allow_tags=False,
-            )
-            with gr.Row():
-                msg_box = gr.Textbox(
-                    placeholder="Type a message… try expressing joy, fear, sadness, or calm.",
-                    show_label=False,
-                    scale=4,
+        em_state = gr.State(value=_initial_em_state)
+        pad_history = gr.State(value=_INITIAL_PAD_HISTORY)
+        msg_count = gr.State(value=_INITIAL_MSG_COUNT)
+
+        with gr.Row():
+            with gr.Column(scale=3):
+                chatbot = gr.Chatbot(
+                    value=_INITIAL_CHAT_HISTORY,
+                    label="Conversation",
+                    height=420,
+                    allow_tags=False,
                 )
-                send_btn = gr.Button("Send", variant="primary", scale=1)
-            gr.Examples(examples=_EXAMPLES, inputs=msg_box)
-            reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
-            appraisal_badge = gr.Markdown(_INITIAL_RUNTIME_BADGE, elem_id="appraisal-badge")
+                with gr.Row():
+                    msg_box = gr.Textbox(
+                        placeholder="Type a message… try expressing joy, fear, sadness, or calm.",
+                        show_label=False,
+                        scale=4,
+                    )
+                    send_btn = gr.Button("Send", variant="primary", scale=1)
+                gr.Examples(examples=_EXAMPLES, inputs=msg_box)
+                reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
+                appraisal_badge = gr.Markdown(initial_runtime_badge, elem_id="appraisal-badge")
 
-        with gr.Column(scale=2):
-            pad_plot = gr.Image(value=_INITIAL_PAD_PLOT, label="PAD state trajectory", type="pil")
-            gr.Markdown(
-                "**Valence** (blue): negative ↔ positive  \n"
-                "**Arousal** (orange): calm ↔ excited  \n"
-                "**Dominance** (green): submissive ↔ dominant"
-            )
+            with gr.Column(scale=2):
+                pad_plot = gr.Image(
+                    value=_initial_pad_plot(),
+                    label="PAD state trajectory",
+                    type="pil",
+                )
+                gr.Markdown(
+                    "**Valence** (blue): negative ↔ positive  \n"
+                    "**Arousal** (orange): calm ↔ excited  \n"
+                    "**Dominance** (green): submissive ↔ dominant"
+                )
 
-    # Init on load
-    demo.load(
-        fn=reset_session,
-        outputs=[
-            chatbot,
-            em_state,
-            pad_history,
-            pad_plot,
-            appraisal_badge,
-            msg_count,
-        ],
-    )
+        # Init on load
+        demo.load(
+            fn=reset_session,
+            outputs=[
+                chatbot,
+                em_state,
+                pad_history,
+                pad_plot,
+                appraisal_badge,
+                msg_count,
+            ],
+        )
 
-    send_btn.click(
-        fn=chat,
-        inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
-        outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
-        concurrency_limit=2,
-    )
-    msg_box.submit(
-        fn=chat,
-        inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
-        outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
-        concurrency_limit=2,
-    )
-    reset_btn.click(
-        fn=reset_session,
-        outputs=[
-            chatbot,
-            em_state,
-            pad_history,
-            pad_plot,
-            appraisal_badge,
-            msg_count,
-        ],
-    )
+        send_btn.click(
+            fn=chat,
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
+            concurrency_limit=2,
+        )
+        msg_box.submit(
+            fn=chat,
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
+            concurrency_limit=2,
+        )
+        reset_btn.click(
+            fn=reset_session,
+            outputs=[
+                chatbot,
+                em_state,
+                pad_history,
+                pad_plot,
+                appraisal_badge,
+                msg_count,
+            ],
+        )
+
+    return demo
+
 
 if __name__ == "__main__":
-    demo.launch(**_launch_kwargs())
+    build_demo().launch(**_launch_kwargs())

@@ -89,6 +89,32 @@ jobs:
           'py.typed marker missing'
           "
 
+  meta-integrity:
+    name: Meta / release metadata integrity
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Install release dependencies
+        run: uv pip install -e ".[release]" --system
+
+      - name: Check release metadata
+        run: uv run python scripts/check_release_metadata.py
+
+      - name: Fast CI preflight
+        run: uv run python scripts/preflight.py --fast --ci
+
   security:
     name: Security (pip-audit)
     runs-on: ubuntu-latest

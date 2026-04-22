@@ -134,6 +134,7 @@ def as_async(engine: EmotionalMemory) -> AsyncEmotionalMemory:
         embedder=SyncToAsyncEmbedder(engine._embedder),
         appraisal_engine=appraisal_async,
         config=engine._config,
+        state_store=engine._state_store,
     )
     # Share the current AffectiveState reference as the async engine's starting
     # point.  AffectiveState is always *replaced* (never mutated) on every

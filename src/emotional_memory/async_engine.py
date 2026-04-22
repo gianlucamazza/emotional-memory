@@ -43,6 +43,7 @@ from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, consolidation_strength
 from emotional_memory.categorize import label_tag
 from emotional_memory.engine import EmotionalMemoryConfig
+from emotional_memory.interfaces import AffectiveStateStore
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodField
@@ -79,6 +80,7 @@ class AsyncEmotionalMemory:
         "_embedder",
         "_state",
         "_state_lock",
+        "_state_store",
         "_store",
     )
 
@@ -88,16 +90,32 @@ class AsyncEmotionalMemory:
         embedder: AsyncEmbedder,
         appraisal_engine: AsyncAppraisalEngine | None = None,
         config: EmotionalMemoryConfig | None = None,
+        state_store: AffectiveStateStore | None = None,
     ) -> None:
         self._store = store
         self._embedder = embedder
         self._appraisal_engine = appraisal_engine
         self._config = config or EmotionalMemoryConfig()
-        self._state = AffectiveState.initial()
+        self._state_store = state_store
+        self._state = self._load_initial_state()
         self._state_lock: asyncio.Lock = asyncio.Lock()
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(store={self._store!r})"
+
+    def _load_initial_state(self) -> AffectiveState:
+        if self._state_store is None:
+            return AffectiveState.initial()
+        persisted = self._state_store.load()
+        return AffectiveState.initial() if persisted is None else persisted.model_copy()
+
+    def _persist_state_sync(self) -> None:
+        if self._state_store is not None:
+            self._state_store.save(self._state)
+
+    async def _persist_state_async(self) -> None:
+        if self._state_store is not None:
+            await asyncio.to_thread(self._state_store.save, self._state)
 
     # ------------------------------------------------------------------
     # Public API
@@ -134,6 +152,7 @@ class AsyncEmotionalMemory:
                 mood_decay=self._config.mood_decay,
             )
             state_snapshot = self._state
+        await self._persist_state_async()
 
         cs = consolidation_strength(new_affect.arousal, state_snapshot.mood.arousal)
         tag = make_emotional_tag(
@@ -428,6 +447,7 @@ class AsyncEmotionalMemory:
                     mood_decay=self._config.mood_decay,
                 )
                 _state_snap = self._state
+            await self._persist_state_async()
 
             cs = consolidation_strength(new_affect.arousal, _state_snap.mood.arousal)
             tag = make_emotional_tag(
@@ -603,10 +623,12 @@ class AsyncEmotionalMemory:
             mood_alpha=self._config.mood_alpha,
             mood_decay=self._config.mood_decay,
         )
+        self._persist_state_sync()
 
     def reset_state(self) -> None:
         """Reset the runtime affective state to its initial baseline."""
         self._state = AffectiveState.initial()
+        self._persist_state_sync()
 
     def save_state(self) -> dict[str, Any]:
         """Serialise the current affective state for persistence."""
@@ -615,6 +637,27 @@ class AsyncEmotionalMemory:
     def load_state(self, data: dict[str, Any]) -> None:
         """Restore a previously saved affective state."""
         self._state = AffectiveState.restore(data)
+        self._persist_state_sync()
+
+    async def persist_state(self) -> dict[str, Any]:
+        """Return and, when configured, persist the current affective state."""
+        await self._persist_state_async()
+        return self.save_state()
+
+    async def restore_persisted_state(self) -> bool:
+        """Load the last persisted affective state from the configured state store."""
+        if self._state_store is None:
+            return False
+        persisted = await asyncio.to_thread(self._state_store.load)
+        if persisted is None:
+            return False
+        self._state = persisted.model_copy()
+        return True
+
+    async def clear_persisted_state(self) -> None:
+        """Remove the persisted affective-state snapshot, if configured."""
+        if self._state_store is not None:
+            await asyncio.to_thread(self._state_store.clear)
 
     async def prune(self, threshold: float = 0.05) -> int:
         """Remove memories whose effective strength has fallen below *threshold* (async).
@@ -681,14 +724,16 @@ class AsyncEmotionalMemory:
         via ``asyncio.to_thread``; silently skips stores without cleanup.
         """
         close = getattr(self._store, "close", None)
-        if close is None:
-            return
         import inspect
 
-        if inspect.iscoroutinefunction(close):
-            await close()
-        else:
-            await asyncio.to_thread(close)
+        if close is not None:
+            if inspect.iscoroutinefunction(close):
+                await close()
+            else:
+                await asyncio.to_thread(close)
+        state_close = getattr(self._state_store, "close", None)
+        if callable(state_close):
+            await asyncio.to_thread(state_close)
 
     async def __aenter__(self) -> AsyncEmotionalMemory:
         return self

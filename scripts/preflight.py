@@ -22,6 +22,7 @@ Gates checked:
     G13 sdist does not contain secret-like patterns (.env, credentials)
 
 Skip gates G10-G13 with --fast for a quick syntactic-only check.
+Use --ci to skip git-state gates that are not meaningful in detached CI contexts.
 """
 
 from __future__ import annotations
@@ -360,6 +361,11 @@ def main() -> None:
         action="store_true",
         help="Skip slow gates (build, twine, smoke install, sdist scan)",
     )
+    parser.add_argument(
+        "--ci",
+        action="store_true",
+        help="Skip git-state gates that are not meaningful in CI or tag workflows",
+    )
     args = parser.parse_args()
 
     version = args.version or _read_pyproject_version()
@@ -375,13 +381,24 @@ def main() -> None:
         gate_version_consistency(version),
         gate_citation_version(),
         gate_changelog_entry(version),
-        gate_tag_absent(version),
-        gate_clean_tree(),
-        gate_on_main(),
-        gate_no_placeholders(),
-        gate_license_present(),
-        gate_citation_parseable(),
     ]
+
+    if not args.ci:
+        gates.extend(
+            [
+                gate_tag_absent(version),
+                gate_clean_tree(),
+                gate_on_main(),
+            ]
+        )
+
+    gates.extend(
+        [
+            gate_no_placeholders(),
+            gate_license_present(),
+            gate_citation_parseable(),
+        ]
+    )
 
     if not args.fast:
         dist_dir = ROOT / "dist"

@@ -13,9 +13,9 @@ authors:
     given-names: Gianluca
     email: info@gianlucamazza.it
     orcid: ""
-version: "0.6.2"
+version: "0.6.3"
 date-released: "2026-04-22"
-doi: "10.5281/zenodo.19695147"
+doi: "10.5281/zenodo.19695146"
 repository-code: "https://github.com/gianlucamazza/emotional-memory"
 url: "https://gianlucamazza.github.io/emotional-memory"
 license: MIT

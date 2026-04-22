@@ -5,7 +5,7 @@ production use you want memories and affective state to survive process
 restarts.  This tutorial covers:
 
 1. **`SQLiteStore`** — durable on-disk storage with ANN search
-2. **`save_state` / `load_state`** — affective state continuity
+2. **`SQLiteAffectiveStateStore`** — canonical affective state continuity
 3. **`export_memories` / `import_memories`** — backup and migration
 4. **`prune()`** — removing decayed memories
 
@@ -17,17 +17,28 @@ uv pip install "emotional-memory[sqlite]"
 
 `SQLiteStore` requires `sqlite-vec` for approximate-nearest-neighbour search.
 
+For shared affective state across instances you can also use:
+
+```bash
+uv pip install "emotional-memory[redis]"
+```
+
 ## Session 1 — encode and close
 
 ```python
 from emotional_memory import (
     CoreAffect, EmotionalMemory, EmotionalMemoryConfig,
-    InMemoryStore, RetrievalConfig, SQLiteStore,
+    InMemoryStore, RetrievalConfig, SQLiteAffectiveStateStore, SQLiteStore,
 )
 
 DB_PATH = "my_agent.db"
+STATE_PATH = "my_agent.state.sqlite"
 
-with EmotionalMemory(store=SQLiteStore(DB_PATH), embedder=MyEmbedder()) as em:
+with EmotionalMemory(
+    store=SQLiteStore(DB_PATH),
+    embedder=MyEmbedder(),
+    state_store=SQLiteAffectiveStateStore(STATE_PATH),
+) as em:
     em.set_affect(CoreAffect(valence=0.9, arousal=0.8))
     em.encode("Landed a major client — six-figure contract signed.",
                metadata={"category": "sales"})
@@ -37,9 +48,6 @@ with EmotionalMemory(store=SQLiteStore(DB_PATH), embedder=MyEmbedder()) as em:
                metadata={"category": "ops"})
 
     print(f"Encoded {len(em)} memories.")
-
-    # Save mood trajectory so the next session resumes in-context
-    state_snapshot = em.save_state()
 
 # Context manager calls close() — SQLite connection is flushed and closed.
 ```
@@ -52,18 +60,13 @@ with EmotionalMemory(store=SQLiteStore(DB_PATH), embedder=MyEmbedder()) as em:
 ## Session 2 — reopen and restore
 
 ```python
-import json, pathlib
-
-# Persist the snapshot between sessions (file, Redis, database, etc.)
-pathlib.Path("state.json").write_text(json.dumps(state_snapshot))
-
-# --- next process start ---
-state_snapshot = json.loads(pathlib.Path("state.json").read_text())
-
-with EmotionalMemory(store=SQLiteStore(DB_PATH), embedder=MyEmbedder()) as em:
+with EmotionalMemory(
+    store=SQLiteStore(DB_PATH),
+    embedder=MyEmbedder(),
+    state_store=SQLiteAffectiveStateStore(STATE_PATH),
+) as em:
     print(f"Memories on disk: {len(em)}")
 
-    em.load_state(state_snapshot)          # resume mood + momentum history
     sm = em.get_state().mood
     print(f"Restored mood: valence={sm.valence:.3f}  arousal={sm.arousal:.3f}")
 
@@ -74,13 +77,45 @@ with EmotionalMemory(store=SQLiteStore(DB_PATH), embedder=MyEmbedder()) as em:
               f"retrieval_count={mem.tag.retrieval_count}")
 ```
 
-`load_state()` restores:
+The configured `state_store` restores:
 
 | Field | Description |
 |---|---|
 | `mood.valence` / `mood.arousal` | current PAD mood background |
 | `momentum._history` | last 3 `CoreAffect` snapshots (velocity/acceleration) |
 | `mood_decay` config | EMA parameters |
+
+## Manual snapshots still exist
+
+`save_state()` and `load_state()` are still available when you want to move the
+state snapshot yourself (for example, custom storage, fixtures, or migrations).
+
+```python
+snapshot = em.save_state()
+em.load_state(snapshot)
+```
+
+## Optional shared state with Redis
+
+When multiple engine instances need to share the same affective-state snapshot,
+configure a `RedisAffectiveStateStore`:
+
+```python
+from emotional_memory import EmotionalMemory, RedisAffectiveStateStore
+
+em = EmotionalMemory(
+    store=SQLiteStore(DB_PATH),
+    embedder=MyEmbedder(),
+    state_store=RedisAffectiveStateStore(
+        "redis://localhost:6379/0",
+        key="demo-user:affective-state",
+    ),
+)
+```
+
+This keeps the `state_store` contract separate from `MemoryStore`: shared mood
+state is supported, but memory storage and affective-state storage are still
+independent backends.
 
 ## Export and import — backup & migration
 
@@ -128,8 +163,9 @@ strength); typical production values are `0.01`–`0.10`.
 ## Async variant
 
 `AsyncEmotionalMemory.prune()` and `export_memories()` / `import_memories()`
-work identically; `save_state()` and `load_state()` are synchronous on both
-engines.  See [Async tutorial](async.md) for the full async API.
+work identically. Snapshot helpers remain available on both engines; the async
+engine also exposes `await persist_state()` and `await restore_persisted_state()`
+when a state store is configured. See [Async tutorial](async.md) for the full async API.
 
 ## See also
 

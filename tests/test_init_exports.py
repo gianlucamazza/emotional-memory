@@ -20,3 +20,10 @@ def test_explainable_retrieval_exports_are_stable() -> None:
     assert "RetrievalBreakdown" in emotional_memory.__all__
     assert "RetrievalExplanation" in emotional_memory.__all__
     assert "build_retrieval_plan" not in emotional_memory.__all__
+
+
+def test_state_store_exports_are_stable() -> None:
+    assert "AffectiveStateStore" in emotional_memory.__all__
+    assert "InMemoryAffectiveStateStore" in emotional_memory.__all__
+    assert hasattr(emotional_memory, "SQLiteAffectiveStateStore")
+    assert hasattr(emotional_memory, "RedisAffectiveStateStore")

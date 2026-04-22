@@ -28,7 +28,7 @@ from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalEngine, AppraisalVector, consolidation_strength
 from emotional_memory.categorize import label_tag
 from emotional_memory.decay import DecayConfig
-from emotional_memory.interfaces import Embedder, MemoryStore
+from emotional_memory.interfaces import AffectiveStateStore, Embedder, MemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
 from emotional_memory.resonance import (
@@ -86,7 +86,7 @@ class EmotionalMemory:
         results = engine.retrieve("challenging work accomplishment")
     """
 
-    __slots__ = ("_appraisal_engine", "_config", "_embedder", "_state", "_store")
+    __slots__ = ("_appraisal_engine", "_config", "_embedder", "_state", "_state_store", "_store")
 
     def __init__(
         self,
@@ -94,12 +94,14 @@ class EmotionalMemory:
         embedder: Embedder,
         appraisal_engine: AppraisalEngine | None = None,
         config: EmotionalMemoryConfig | None = None,
+        state_store: AffectiveStateStore | None = None,
     ) -> None:
         self._store = store
         self._embedder = embedder
         self._appraisal_engine = appraisal_engine
         self._config = config or EmotionalMemoryConfig()
-        self._state = AffectiveState.initial()
+        self._state_store = state_store
+        self._state = self._load_initial_state()
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(store={self._store!r}, memories={len(self._store)})"
@@ -139,6 +141,7 @@ class EmotionalMemory:
             mood_alpha=self._config.mood_alpha,
             mood_decay=self._config.mood_decay,
         )
+        self._persist_state()
 
         cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
         tag = make_emotional_tag(
@@ -153,6 +156,16 @@ class EmotionalMemory:
         if self._config.auto_categorize:
             tag = label_tag(tag)
         return tag, use_fast_path
+
+    def _load_initial_state(self) -> AffectiveState:
+        if self._state_store is None:
+            return AffectiveState.initial()
+        persisted = self._state_store.load()
+        return AffectiveState.initial() if persisted is None else persisted.model_copy()
+
+    def _persist_state(self) -> None:
+        if self._state_store is not None:
+            self._state_store.save(self._state)
 
     def observe(
         self,
@@ -460,6 +473,7 @@ class EmotionalMemory:
                 mood_alpha=self._config.mood_alpha,
                 mood_decay=self._config.mood_decay,
             )
+            self._persist_state()
 
             cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
             tag = make_emotional_tag(
@@ -647,10 +661,12 @@ class EmotionalMemory:
             mood_alpha=self._config.mood_alpha,
             mood_decay=self._config.mood_decay,
         )
+        self._persist_state()
 
     def reset_state(self) -> None:
         """Reset the runtime affective state to its initial baseline."""
         self._state = AffectiveState.initial()
+        self._persist_state()
 
     def save_state(self) -> dict[str, Any]:
         """Serialise the current affective state for persistence.
@@ -669,6 +685,27 @@ class EmotionalMemory:
             data: A dict produced by a previous ``save_state()`` call.
         """
         self._state = AffectiveState.restore(data)
+        self._persist_state()
+
+    def persist_state(self) -> dict[str, Any]:
+        """Return and, when configured, persist the current affective state."""
+        self._persist_state()
+        return self.save_state()
+
+    def restore_persisted_state(self) -> bool:
+        """Load the last persisted affective state from the configured state store."""
+        if self._state_store is None:
+            return False
+        persisted = self._state_store.load()
+        if persisted is None:
+            return False
+        self._state = persisted.model_copy()
+        return True
+
+    def clear_persisted_state(self) -> None:
+        """Remove the persisted affective-state snapshot, if configured."""
+        if self._state_store is not None:
+            self._state_store.clear()
 
     def prune(self, threshold: float = 0.05) -> int:
         """Remove memories whose effective consolidation strength has fallen below *threshold*.
@@ -746,6 +783,9 @@ class EmotionalMemory:
         close = getattr(self._store, "close", None)
         if callable(close):
             close()
+        state_close = getattr(self._state_store, "close", None)
+        if callable(state_close):
+            state_close()
 
     def __enter__(self) -> EmotionalMemory:
         return self

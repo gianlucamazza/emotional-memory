@@ -210,7 +210,7 @@ make install-release
 Recommended release gate:
 
 ```bash
-make release-check VERSION=0.6.2
+make release-check VERSION=0.6.3
 ```
 
 That target runs:
@@ -218,24 +218,28 @@ That target runs:
 - `make check`
 - `make test-llm`
 - `make bench-appraisal`
-- `uv run python scripts/preflight.py 0.6.2`
+- `uv run python scripts/preflight.py 0.6.3`
 
 Publishing order:
 
 ```bash
 git push origin main
-git tag -a v0.6.2 -m "v0.6.2"
-git push origin v0.6.2
+git tag -a v0.6.3 -m "v0.6.3"
+git push origin v0.6.3
 ```
 
 Normal PyPI path:
 
 - GitHub Actions workflow `Release to PyPI` triggers from the pushed tag
+- The workflow now runs fast preflight, validates artefacts with `twine check`,
+  uploads the built `dist/` files as workflow artefacts, and polls PyPI until the
+  tagged version is visible
 
 Manual PyPI fallback:
 
 ```bash
 make publish-pypi-manual
+make verify-pypi-release VERSION=0.6.3
 ```
 
 Zenodo:
@@ -251,8 +255,28 @@ The Zenodo script prints both the version DOI and concept DOI. Use:
 - concept DOI for stable badges and generic project links
 - version DOI for release-specific citation blocks
 
-If Zenodo assigns a new version DOI for `0.6.2`, sync it back into `CITATION.cff`,
-`demo/README.md`, and any release-specific citation snippets after publish.
+After Zenodo publish, sync metadata from `.zenodo_doi`:
+
+```bash
+make sync-release-metadata
+```
+
+This updates the public DOI surfaces with the policy used in this repo:
+
+- `README.md` badge -> concept DOI
+- `demo/app.py` and `paper/main.tex` -> concept DOI
+- `CITATION.cff` -> version DOI
+- release-specific citation snippets -> version DOI
+
+If you want to verify the local Zenodo sync against the gitignored `.zenodo_doi`
+file as a maintainer-only check:
+
+```bash
+make meta-check-local
+```
+
+`make sync-release-metadata` also respects `ZENODO_BASE`, so sandbox deposits can
+be synchronized without patching the script.
 
 Hugging Face Space deployment:
 
