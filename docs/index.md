@@ -63,3 +63,9 @@ See [Research](research/index.md) for full theoretical foundations.
 - [Async usage](tutorials/async.md) — `AsyncEmotionalMemory`, `as_async()`, `encode_batch()`
 - [Persistence](tutorials/persistence.md) — `SQLiteStore`, `save_state`, `export_memories`, `prune()`
 - [LangChain integration](tutorials/langchain.md) — `EmotionalMemoryChatHistory`, `RunnableWithMessageHistory`
+
+## Research status
+
+- [Current Evidence](research/09_current_evidence.md) — what is validated today,
+  what is only early controlled evidence, and what still needs stronger studies
+- [Limitations](research/08_limitations.md) — current empirical and architectural gaps

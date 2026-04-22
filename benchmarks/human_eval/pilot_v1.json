@@ -1,0 +1,52 @@
+{
+  "name": "human_eval_pilot_v1",
+  "description": "Ten-scenario pilot for first-pass human ratings of coherence and usefulness on AFT vs naive_cosine.",
+  "rating_dimensions": [
+    "affective_coherence",
+    "usefulness",
+    "continuity",
+    "plausibility"
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "customer_repair_arc",
+      "prompt": "Assess whether the recalled memory supports a coherent transition from incident panic to restored trust."
+    },
+    {
+      "scenario_id": "team_conflict_repair",
+      "prompt": "Assess whether the recalled memory fits the social-emotional repair after a tense planning conflict."
+    },
+    {
+      "scenario_id": "family_health_reassurance",
+      "prompt": "Assess whether the recalled memory captures the movement from medical panic to cautious relief."
+    },
+    {
+      "scenario_id": "creative_block_breakthrough",
+      "prompt": "Assess whether the recalled memory coherently links the early frustration to the later creative breakthrough."
+    },
+    {
+      "scenario_id": "founder_pitch_rebound",
+      "prompt": "Assess whether the recalled memory makes the investor story feel coherent from humiliation to a steadier second meeting."
+    },
+    {
+      "scenario_id": "mentorship_revision_arc",
+      "prompt": "Assess whether the recalled memory captures a believable transition from brutal critique to constructive revision."
+    },
+    {
+      "scenario_id": "housing_search_reversal",
+      "prompt": "Assess whether the recalled memory coherently tracks the apartment search from rejection to relief."
+    },
+    {
+      "scenario_id": "volunteer_burnout_reset",
+      "prompt": "Assess whether the recalled memory preserves the emotional shift from burnout to a calmer reset."
+    },
+    {
+      "scenario_id": "scholarship_reversal_arc",
+      "prompt": "Assess whether the recalled memory coherently captures the scholarship story from crushing rejection to genuine reversal."
+    },
+    {
+      "scenario_id": "choir_audition_rebound",
+      "prompt": "Assess whether the recalled memory makes the audition story feel emotionally continuous from embarrassment to recovery."
+    }
+  ]
+}

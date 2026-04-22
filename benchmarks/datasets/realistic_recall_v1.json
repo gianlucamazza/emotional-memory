@@ -1,0 +1,1058 @@
+{
+  "name": "realistic_recall_v1",
+  "version": "1.3",
+  "description": "Scripted multi-session retrieval scenarios for replayable affect-aware evaluation.",
+  "default_top_k": 2,
+  "scenarios": [
+    {
+      "scenario_id": "customer_repair_arc",
+      "description": "A client relationship moves from panic to repair across two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Initial outage and rescue work.",
+          "events": [
+            {
+              "memory_id": "northwind_outage",
+              "content": "Northwind's checkout system failed during the launch window and the support channel filled with alarmed messages.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "incident"
+              }
+            },
+            {
+              "memory_id": "shipping_vendor_confusion",
+              "content": "During the incident review, someone briefly blamed the shipping vendor, but that confusion turned out not to be the source of the panic.",
+              "valence": -0.4,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "misdiagnosis"
+              }
+            },
+            {
+              "memory_id": "late_night_rescue",
+              "content": "After a late-night rescue call, Mira from Northwind thanked us for staying calm and fixing the rollout.",
+              "valence": 0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "repair"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Follow-up discussion after the incident.",
+          "events": [
+            {
+              "memory_id": "renewal_discussion",
+              "content": "During the renewal discussion, Mira said the rescue call rebuilt her trust in the team.",
+              "valence": 0.8,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "follow_up"
+              }
+            },
+            {
+              "memory_id": "dashboard_walkthrough",
+              "content": "Later in the account review, Mira asked for a calmer walkthrough of the new monitoring dashboard before the next launch.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "planning"
+              }
+            },
+            {
+              "memory_id": "pricing_followup",
+              "content": "The final follow-up email focused on pricing details and contract timing, not on the outage itself.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "northwind",
+                "phase": "commercial"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_rebuilt_trust",
+              "query": "Which Northwind conversation was the one where Mira said the rescue call rebuilt her trust in us?",
+              "expected_memory_ids": [
+                "renewal_discussion"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "q_initial_panic",
+              "query": "What was the actual incident that caused the earlier panic before the rescue call and not just the later vendor confusion?",
+              "expected_memory_ids": [
+                "northwind_outage"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "team_conflict_repair",
+      "description": "A tense planning conflict is repaired in a later session.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Planning meeting conflict.",
+          "events": [
+            {
+              "memory_id": "timeline_challenge",
+              "content": "In the planning meeting, Marta challenged the timeline in front of everyone and the room went tense.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "planning",
+                "actor": "Marta"
+              }
+            },
+            {
+              "memory_id": "budget_detour",
+              "content": "A separate budget detour slowed the meeting, but it was not the moment that made the room turn tense.",
+              "valence": -0.2,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "planning",
+                "actor": "finance"
+              }
+            },
+            {
+              "memory_id": "private_checkin",
+              "content": "After the meeting, Leo checked in privately and helped calm the situation.",
+              "valence": 0.4,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "planning",
+                "actor": "Leo"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Repair and reflection.",
+          "events": [
+            {
+              "memory_id": "marta_apology",
+              "content": "The next morning Marta apologized for challenging the timeline publicly and proposed a calmer review.",
+              "valence": 0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "planning",
+                "actor": "Marta"
+              }
+            },
+            {
+              "memory_id": "calmer_review_plan",
+              "content": "Later that day, the team wrote down a calmer review plan for discussing schedule risks one by one.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "planning",
+                "actor": "team"
+              }
+            },
+            {
+              "memory_id": "stakeholder_note",
+              "content": "The final stakeholder note summarized next steps and meeting logistics without revisiting the apology.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "planning",
+                "actor": "ops"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_public_apology",
+              "query": "Who was the person who apologized the next morning for challenging the timeline publicly?",
+              "expected_memory_ids": [
+                "marta_apology"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.2,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_original_conflict",
+              "query": "Which earlier planning moment was the one where the room became tense after the timeline was challenged in front of everyone, not the later budget detour?",
+              "expected_memory_ids": [
+                "timeline_challenge"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.3,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "family_health_reassurance",
+      "description": "An alarming medical scare turns into cautious relief over two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Night of uncertainty.",
+          "events": [
+            {
+              "memory_id": "late_night_call",
+              "content": "At midnight, Elena called in tears because her father's test results looked frightening and everyone expected the worst.",
+              "valence": -0.9,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "panic"
+              }
+            },
+            {
+              "memory_id": "portal_confusion",
+              "content": "A confusing message in the lab portal mentioned missing data and briefly made the family think the situation was even worse.",
+              "valence": -0.6,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "waiting_room_support",
+              "content": "The next hours in the waiting room were calmer after Paolo brought coffee and stayed quietly beside Elena.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Follow-up with relief.",
+          "events": [
+            {
+              "memory_id": "false_alarm_update",
+              "content": "The specialist later confirmed it was a false alarm, and Elena said the news felt like finally breathing again.",
+              "valence": 0.8,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "relief"
+              }
+            },
+            {
+              "memory_id": "medication_plan",
+              "content": "A later call focused on a cautious medication plan and follow-up tests rather than the false alarm itself.",
+              "valence": 0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "care_plan"
+              }
+            },
+            {
+              "memory_id": "recovery_walk",
+              "content": "That evening Elena said a quiet walk helped her settle after the long day at the clinic.",
+              "valence": 0.4,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "family_health",
+                "phase": "aftercare"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_false_alarm",
+              "query": "What was the update that made Elena feel like she could finally breathe again, not just the later care-plan call?",
+              "expected_memory_ids": [
+                "false_alarm_update"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "q_midnight_fear",
+              "query": "Which earlier event triggered the worst fear that night before the specialist called back, rather than the confusing portal message?",
+              "expected_memory_ids": [
+                "late_night_call"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "creative_block_breakthrough",
+      "description": "A stalled creative project moves from frustration to breakthrough across sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Blocked drafting session.",
+          "events": [
+            {
+              "memory_id": "blank_page_frustration",
+              "content": "After three hours staring at the blank page, I left the studio angry and convinced the whole piece was failing.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "block"
+              }
+            },
+            {
+              "memory_id": "wrong_chorus_fix",
+              "content": "I tried forcing a louder chorus as a quick fix, but that idea only made the draft feel more confused.",
+              "valence": -0.4,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "false_start"
+              }
+            },
+            {
+              "memory_id": "walk_note",
+              "content": "During a quiet walk home, a stray melody idea finally arrived and I recorded it before it disappeared.",
+              "valence": 0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "spark"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Return to the work with more confidence.",
+          "events": [
+            {
+              "memory_id": "rehearsal_breakthrough",
+              "content": "At rehearsal the next day, the small melody from the walk unlocked the arrangement and the room finally felt energized.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "breakthrough"
+              }
+            },
+            {
+              "memory_id": "producer_mix_note",
+              "content": "After rehearsal, the producer mostly commented on mix balance and microphone placement rather than on the breakthrough itself.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "mix_notes"
+              }
+            },
+            {
+              "memory_id": "encore_confidence",
+              "content": "By the evening, the band was already joking about encores because the room finally felt lighter.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "creative_work",
+                "phase": "confidence"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_unlock_arrangement",
+              "query": "What was the rehearsal moment that unlocked the arrangement the next day, not the later producer note about mix balance?",
+              "expected_memory_ids": [
+                "rehearsal_breakthrough"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_original_block",
+              "query": "Which earlier moment made the whole piece feel like it was completely failing, rather than just the wrong chorus fix?",
+              "expected_memory_ids": [
+                "blank_page_frustration"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "founder_pitch_rebound",
+      "description": "A startup pitch swings from humiliation to a steadier second meeting.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The first investor meeting lands badly.",
+          "events": [
+            {
+              "memory_id": "harsh_demo_feedback",
+              "content": "After the demo, the investor said the pitch felt chaotic and everyone left the room shaken.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "crash"
+              }
+            },
+            {
+              "memory_id": "slide_rewrite",
+              "content": "That night the team rewrote the deck and kept circling the phrase clearer story in the margins.",
+              "valence": -0.1,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "revision"
+              }
+            },
+            {
+              "memory_id": "cofounder_reassurance",
+              "content": "Before dawn, Nora said the hard feedback did not mean the company was doomed.",
+              "valence": 0.4,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A steadier follow-up meeting.",
+          "events": [
+            {
+              "memory_id": "investor_reframe",
+              "content": "In the second meeting, the same investor said the calmer story finally made the company feel investable.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "recovery"
+              }
+            },
+            {
+              "memory_id": "diligence_checklist",
+              "content": "The follow-up email only covered diligence documents and calendar slots for the finance review.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "team_exhale",
+              "content": "When the call ended, the team laughed with relief because the room no longer felt hostile.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "founder_pitch",
+                "phase": "afterglow"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_harsher_pitch_arc",
+              "query": "Which version of the founder pitch story left the room more shaken afterward?",
+              "expected_memory_ids": [
+                "harsh_demo_feedback"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_relieved_pitch_followup",
+              "query": "Which follow-up was the one where the same investor finally sounded convinced rather than just asking for diligence files?",
+              "expected_memory_ids": [
+                "investor_reframe"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mentorship_revision_arc",
+      "description": "A brutal manuscript critique becomes a useful revision cycle.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The mentor's first response feels cutting.",
+          "events": [
+            {
+              "memory_id": "brutal_margin_note",
+              "content": "The mentor wrote in the margin that the chapter sounded hollow and the note left the whole draft feeling exposed.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "critique"
+              }
+            },
+            {
+              "memory_id": "reference_packet",
+              "content": "A later message attached reference essays and formatting examples for the revision.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "materials"
+              }
+            },
+            {
+              "memory_id": "hallway_encouragement",
+              "content": "In the hallway afterward, the mentor said the problem was the structure, not the student's ability.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The revised chapter gets a calmer response.",
+          "events": [
+            {
+              "memory_id": "revised_chapter_praise",
+              "content": "When the revised chapter arrived, the mentor said the argument finally felt grounded and persuasive.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "recovery"
+              }
+            },
+            {
+              "memory_id": "citation_cleanup",
+              "content": "The next email only listed citation cleanup items and page numbers to normalize before submission.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "cleanup"
+              }
+            },
+            {
+              "memory_id": "submission_portal",
+              "content": "A final portal reminder covered upload deadlines and file naming rules.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "mentorship",
+                "phase": "admin"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_harsher_revision_arc",
+              "query": "Which version of the same manuscript story left the work feeling more exposed afterward?",
+              "expected_memory_ids": [
+                "brutal_margin_note"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_revised_chapter_response",
+              "query": "Which follow-up was the one where the mentor finally sounded convinced by the revised chapter rather than just listing cleanup chores?",
+              "expected_memory_ids": [
+                "revised_chapter_praise"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "housing_search_reversal",
+      "description": "An exhausting apartment search turns from rejection to relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The search looks hopeless.",
+          "events": [
+            {
+              "memory_id": "landlord_rejection",
+              "content": "The landlord said another applicant was chosen, and the apartment hunt suddenly felt hopeless again.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "housing",
+                "phase": "rejection"
+              }
+            },
+            {
+              "memory_id": "brochure_mixup",
+              "content": "A brochure mixup sent the search toward the wrong building and wasted the afternoon.",
+              "valence": -0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "housing",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "friend_couch_offer",
+              "content": "That evening, a friend offered the couch for a week so the search would not feel so urgent.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "housing",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The search finally resolves.",
+          "events": [
+            {
+              "memory_id": "keys_handover",
+              "content": "At the second viewing, the agent handed over the keys and the whole story finally felt settled.",
+              "valence": 0.8,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "housing",
+                "phase": "resolution"
+              }
+            },
+            {
+              "memory_id": "lease_scanner",
+              "content": "The next step was only scanning the lease and sending the deposit receipt.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "housing",
+                "phase": "paperwork"
+              }
+            },
+            {
+              "memory_id": "utilities_email",
+              "content": "A later email listed utility account numbers and move-in timing details.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "housing",
+                "phase": "utilities"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_harsher_apartment_arc",
+              "query": "Which version of the same apartment story left the search feeling more hopeless afterward?",
+              "expected_memory_ids": [
+                "landlord_rejection"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_homecoming_turn",
+              "query": "Which follow-up was the one where the search finally felt settled rather than just turning into lease paperwork?",
+              "expected_memory_ids": [
+                "keys_handover"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "volunteer_burnout_reset",
+      "description": "A draining volunteer shift is reframed by a calmer debrief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The shift feels chaotic and depleted.",
+          "events": [
+            {
+              "memory_id": "chaotic_shift_exhaustion",
+              "content": "By the end of the chaotic shift, everyone felt wrung out and the work seemed impossible to sustain.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "burnout"
+              }
+            },
+            {
+              "memory_id": "roster_mixup",
+              "content": "A roster mixup sent volunteers to the wrong entrance and added another layer of stress.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "thank_you_tea",
+              "content": "After cleanup, an older volunteer made tea and thanked everyone for staying gentle with the visitors.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The team reframes the work.",
+          "events": [
+            {
+              "memory_id": "debrief_relief",
+              "content": "In the debrief the next day, the team agreed on a calmer rotation plan and the work suddenly felt sustainable again.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "reset"
+              }
+            },
+            {
+              "memory_id": "supply_sheet",
+              "content": "The coordinator later shared a supply sheet and a short checklist for the next opening shift.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "quiet_cleanup",
+              "content": "That evening, the room felt calmer while the last boxes were quietly stacked away.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "volunteer_shift",
+                "phase": "aftercare"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_harsher_shift_arc",
+              "query": "Which version of the same volunteer story left the work feeling impossible to sustain afterward?",
+              "expected_memory_ids": [
+                "chaotic_shift_exhaustion"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_relief_after_shift",
+              "query": "Which follow-up was the one where the team finally felt the work was sustainable rather than just receiving another checklist?",
+              "expected_memory_ids": [
+                "debrief_relief"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "scholarship_reversal_arc",
+      "description": "A scholarship decision swings from rejection to correction across two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The first decision lands as a rejection.",
+          "events": [
+            {
+              "memory_id": "rejection_notice",
+              "content": "The committee email said the application would not move forward, and the sentence replayed like a rejection all afternoon.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "rejection"
+              }
+            },
+            {
+              "memory_id": "summer_clarification",
+              "content": "A later clarification said the first message only described the summer cohort and not the final scholarship decision.",
+              "valence": -0.1,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "clarification"
+              }
+            },
+            {
+              "memory_id": "friend_reassurance",
+              "content": "That evening, a friend said the confusing email did not mean the whole application story was over.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The real decision is corrected.",
+          "events": [
+            {
+              "memory_id": "funding_reversal",
+              "content": "The corrected committee email said the application was fully funded after all, and the whole story finally loosened.",
+              "valence": 0.8,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "reversal"
+              }
+            },
+            {
+              "memory_id": "portal_forms",
+              "content": "The next portal step only listed banking forms and upload deadlines for the acceptance packet.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "housing_questionnaire",
+              "content": "A later questionnaire asked about campus housing and move-in timing rather than the decision itself.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "scholarship",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_crushing_decision",
+              "query": "Which committee message was the one that actually made the whole afternoon feel rejected, rather than just clarifying the summer cohort mix-up?",
+              "expected_memory_ids": [
+                "rejection_notice"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_true_reversal",
+              "query": "Which later committee message was the real reversal that made the story finally loosen, rather than just triggering portal paperwork?",
+              "expected_memory_ids": [
+                "funding_reversal"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "choir_audition_rebound",
+      "description": "An audition story turns from embarrassment to steadier confidence.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The first audition goes badly.",
+          "events": [
+            {
+              "memory_id": "cracked_high_note",
+              "content": "When the high note cracked in the audition, the room went stiff and the whole performance suddenly felt humiliating.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "embarrassment"
+              }
+            },
+            {
+              "memory_id": "schedule_change_note",
+              "content": "A follow-up note explained that rehearsal times might still change before the final seating was announced.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "schedule"
+              }
+            },
+            {
+              "memory_id": "friend_pep_talk",
+              "content": "Afterward, a friend said one cracked phrase did not define the whole voice.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The callback goes better.",
+          "events": [
+            {
+              "memory_id": "confident_callback",
+              "content": "At the callback, the same passage landed cleanly and the conductor said the whole performance finally sounded settled.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "rebound"
+              }
+            },
+            {
+              "memory_id": "section_assignment",
+              "content": "The next email only confirmed section assignment and the first rehearsal location.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "music_folder_pickup",
+              "content": "A later reminder just listed folder pickup times and parking details for the hall.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "choir_audition",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_embarrassing_audition",
+              "query": "Which audition moment was the one that actually made the performance feel humiliating, rather than just creating a scheduling note afterward?",
+              "expected_memory_ids": [
+                "cracked_high_note"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_settled_callback",
+              "query": "Which later audition moment was the one where the whole performance finally sounded settled, rather than just assigning the section afterward?",
+              "expected_memory_ids": [
+                "confident_callback"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

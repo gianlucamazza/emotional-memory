@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Nothing yet.
+
+## [0.6.3] - 2026-04-22
+
+### Added
+
+- `RedisAffectiveStateStore`, extending the new `AffectiveStateStore` boundary
+  to a shared-state backend without changing the engine API.
+- Comparative realistic replay benchmark infrastructure under
+  `benchmarks/realistic/`, with AFT vs semantic-only and recency-only controls.
+- Human-eval pilot pipeline under `benchmarks/human_eval/` to generate packet
+  files, rating templates, and aggregated summaries.
+
+### Changed
+
+- Public docs now distinguish more clearly between theory-fidelity validation,
+  early controlled comparative evidence, and still-open ecological / human
+  validation gaps.
+- Comparative benchmark docs and generated Markdown outputs now describe the
+  current protocol as a controlled synthetic affect-aware retrieval probe,
+  rather than implying general cross-system superiority.
+- Persistence docs and limitations now distinguish local persisted state,
+  optional shared state, and the still-missing distributed memory-store layer.
+- The realistic replay benchmark now validates non-trivial candidate pools,
+  promotes `top1_accuracy` to the headline metric, reports challenge-type
+  aggregates, and exposes query-level recency triviality instead of relying on
+  easy `hit@k` settings.
+- The realistic replay dataset now spans 10 scenarios / 20 queries, with a
+  larger `semantic_confound` subset and challenge-typed reporting that makes
+  localized AFT gains visible instead of hiding weak subsets behind a single
+  aggregate.
+- The human-eval pipeline no longer treats blank rating templates as analyzable
+  data: packet generation writes only the template, summary now fails fast when
+  no completed ratings are present, and placeholder summary artifacts are no
+  longer kept in the checked-in evidence surface.
+- Human-eval v1 is now locked to a 10-scenario `aft` vs `naive_cosine` pilot
+  with explicit rater instructions and an operational maintainer runbook.
+
 ## [0.6.2] - 2026-04-22
 
 ### Added
@@ -505,7 +545,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.3...HEAD
+[0.6.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.2...v0.6.0

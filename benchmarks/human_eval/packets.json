@@ -1,0 +1,857 @@
+{
+  "name": "human_eval_pilot_v1",
+  "description": "Ten-scenario pilot for first-pass human ratings of coherence and usefulness on AFT vs naive_cosine.",
+  "rating_dimensions": [
+    "affective_coherence",
+    "usefulness",
+    "continuity",
+    "plausibility"
+  ],
+  "conditions": [
+    "aft",
+    "naive_cosine"
+  ],
+  "packet_count": 10,
+  "packets": [
+    {
+      "scenario_id": "customer_repair_arc",
+      "prompt": "Assess whether the recalled memory supports a coherent transition from incident panic to restored trust.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.5,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_rebuilt_trust",
+              "query": "Which Northwind conversation was the one where Mira said the rescue call rebuilt her trust in us?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "renewal_discussion",
+              "top_result_content": "During the renewal discussion, Mira said the rescue call rebuilt her trust in the team.",
+              "retrieved_memory_aliases": [
+                "renewal_discussion",
+                "late_night_rescue"
+              ]
+            },
+            {
+              "query_id": "q_initial_panic",
+              "query": "What was the actual incident that caused the earlier panic before the rescue call and not just the later vendor confusion?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "shipping_vendor_confusion",
+              "top_result_content": "During the incident review, someone briefly blamed the shipping vendor, but that confusion turned out not to be the source of the panic.",
+              "retrieved_memory_aliases": [
+                "shipping_vendor_confusion",
+                "late_night_rescue"
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_rebuilt_trust",
+              "query": "Which Northwind conversation was the one where Mira said the rescue call rebuilt her trust in us?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "renewal_discussion",
+              "top_result_content": "During the renewal discussion, Mira said the rescue call rebuilt her trust in the team.",
+              "retrieved_memory_aliases": [
+                "renewal_discussion",
+                "late_night_rescue"
+              ]
+            },
+            {
+              "query_id": "q_initial_panic",
+              "query": "What was the actual incident that caused the earlier panic before the rescue call and not just the later vendor confusion?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "shipping_vendor_confusion",
+              "top_result_content": "During the incident review, someone briefly blamed the shipping vendor, but that confusion turned out not to be the source of the panic.",
+              "retrieved_memory_aliases": [
+                "shipping_vendor_confusion",
+                "renewal_discussion"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "team_conflict_repair",
+      "prompt": "Assess whether the recalled memory fits the social-emotional repair after a tense planning conflict.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_public_apology",
+              "query": "Who was the person who apologized the next morning for challenging the timeline publicly?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "marta_apology",
+              "top_result_content": "The next morning Marta apologized for challenging the timeline publicly and proposed a calmer review.",
+              "retrieved_memory_aliases": [
+                "marta_apology",
+                "budget_detour"
+              ]
+            },
+            {
+              "query_id": "q_original_conflict",
+              "query": "Which earlier planning moment was the one where the room became tense after the timeline was challenged in front of everyone, not the later budget detour?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "timeline_challenge",
+              "top_result_content": "In the planning meeting, Marta challenged the timeline in front of everyone and the room went tense.",
+              "retrieved_memory_aliases": [
+                "timeline_challenge",
+                "budget_detour"
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_public_apology",
+              "query": "Who was the person who apologized the next morning for challenging the timeline publicly?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "marta_apology",
+              "top_result_content": "The next morning Marta apologized for challenging the timeline publicly and proposed a calmer review.",
+              "retrieved_memory_aliases": [
+                "marta_apology",
+                "budget_detour"
+              ]
+            },
+            {
+              "query_id": "q_original_conflict",
+              "query": "Which earlier planning moment was the one where the room became tense after the timeline was challenged in front of everyone, not the later budget detour?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "timeline_challenge",
+              "top_result_content": "In the planning meeting, Marta challenged the timeline in front of everyone and the room went tense.",
+              "retrieved_memory_aliases": [
+                "timeline_challenge",
+                "budget_detour"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "family_health_reassurance",
+      "prompt": "Assess whether the recalled memory captures the movement from medical panic to cautious relief.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_false_alarm",
+              "query": "What was the update that made Elena feel like she could finally breathe again, not just the later care-plan call?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "false_alarm_update",
+              "top_result_content": "The specialist later confirmed it was a false alarm, and Elena said the news felt like finally breathing again.",
+              "retrieved_memory_aliases": [
+                "false_alarm_update",
+                null
+              ]
+            },
+            {
+              "query_id": "q_midnight_fear",
+              "query": "Which earlier event triggered the worst fear that night before the specialist called back, rather than the confusing portal message?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "In the planning meeting, Marta challenged the timeline in front of everyone and the room went tense.",
+              "retrieved_memory_aliases": [
+                null,
+                "waiting_room_support"
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_false_alarm",
+              "query": "What was the update that made Elena feel like she could finally breathe again, not just the later care-plan call?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "false_alarm_update",
+              "top_result_content": "The specialist later confirmed it was a false alarm, and Elena said the news felt like finally breathing again.",
+              "retrieved_memory_aliases": [
+                "false_alarm_update",
+                null
+              ]
+            },
+            {
+              "query_id": "q_midnight_fear",
+              "query": "Which earlier event triggered the worst fear that night before the specialist called back, rather than the confusing portal message?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "After the meeting, Leo checked in privately and helped calm the situation.",
+              "retrieved_memory_aliases": [
+                null,
+                "recovery_walk"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "creative_block_breakthrough",
+      "prompt": "Assess whether the recalled memory coherently links the early frustration to the later creative breakthrough.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_unlock_arrangement",
+              "query": "What was the rehearsal moment that unlocked the arrangement the next day, not the later producer note about mix balance?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "rehearsal_breakthrough",
+              "top_result_content": "At rehearsal the next day, the small melody from the walk unlocked the arrangement and the room finally felt energized.",
+              "retrieved_memory_aliases": [
+                "rehearsal_breakthrough",
+                "encore_confidence"
+              ]
+            },
+            {
+              "query_id": "q_original_block",
+              "query": "Which earlier moment made the whole piece feel like it was completely failing, rather than just the wrong chorus fix?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "A confusing message in the lab portal mentioned missing data and briefly made the family think the situation was even worse.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_unlock_arrangement",
+              "query": "What was the rehearsal moment that unlocked the arrangement the next day, not the later producer note about mix balance?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "rehearsal_breakthrough",
+              "top_result_content": "At rehearsal the next day, the small melody from the walk unlocked the arrangement and the room finally felt energized.",
+              "retrieved_memory_aliases": [
+                "rehearsal_breakthrough",
+                "encore_confidence"
+              ]
+            },
+            {
+              "query_id": "q_original_block",
+              "query": "Which earlier moment made the whole piece feel like it was completely failing, rather than just the wrong chorus fix?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "encore_confidence",
+              "top_result_content": "By the evening, the band was already joking about encores because the room finally felt lighter.",
+              "retrieved_memory_aliases": [
+                "encore_confidence",
+                "rehearsal_breakthrough"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "founder_pitch_rebound",
+      "prompt": "Assess whether the recalled memory makes the investor story feel coherent from humiliation to a steadier second meeting.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_pitch_arc",
+              "query": "Which version of the founder pitch story left the room more shaken afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "harsh_demo_feedback",
+              "top_result_content": "After the demo, the investor said the pitch felt chaotic and everyone left the room shaken.",
+              "retrieved_memory_aliases": [
+                "harsh_demo_feedback",
+                null
+              ]
+            },
+            {
+              "query_id": "q_relieved_pitch_followup",
+              "query": "Which follow-up was the one where the same investor finally sounded convinced rather than just asking for diligence files?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "investor_reframe",
+              "top_result_content": "In the second meeting, the same investor said the calmer story finally made the company feel investable.",
+              "retrieved_memory_aliases": [
+                "investor_reframe",
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_pitch_arc",
+              "query": "Which version of the founder pitch story left the room more shaken afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "harsh_demo_feedback",
+              "top_result_content": "After the demo, the investor said the pitch felt chaotic and everyone left the room shaken.",
+              "retrieved_memory_aliases": [
+                "harsh_demo_feedback",
+                "team_exhale"
+              ]
+            },
+            {
+              "query_id": "q_relieved_pitch_followup",
+              "query": "Which follow-up was the one where the same investor finally sounded convinced rather than just asking for diligence files?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "diligence_checklist",
+              "top_result_content": "The follow-up email only covered diligence documents and calendar slots for the finance review.",
+              "retrieved_memory_aliases": [
+                "diligence_checklist",
+                null
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mentorship_revision_arc",
+      "prompt": "Assess whether the recalled memory captures a believable transition from brutal critique to constructive revision.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_revision_arc",
+              "query": "Which version of the same manuscript story left the work feeling more exposed afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "brutal_margin_note",
+              "top_result_content": "The mentor wrote in the margin that the chapter sounded hollow and the note left the whole draft feeling exposed.",
+              "retrieved_memory_aliases": [
+                "brutal_margin_note",
+                null
+              ]
+            },
+            {
+              "query_id": "q_revised_chapter_response",
+              "query": "Which follow-up was the one where the mentor finally sounded convinced by the revised chapter rather than just listing cleanup chores?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "revised_chapter_praise",
+              "top_result_content": "When the revised chapter arrived, the mentor said the argument finally felt grounded and persuasive.",
+              "retrieved_memory_aliases": [
+                "revised_chapter_praise",
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_revision_arc",
+              "query": "Which version of the same manuscript story left the work feeling more exposed afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "brutal_margin_note",
+              "top_result_content": "The mentor wrote in the margin that the chapter sounded hollow and the note left the whole draft feeling exposed.",
+              "retrieved_memory_aliases": [
+                "brutal_margin_note",
+                "hallway_encouragement"
+              ]
+            },
+            {
+              "query_id": "q_revised_chapter_response",
+              "query": "Which follow-up was the one where the mentor finally sounded convinced by the revised chapter rather than just listing cleanup chores?",
+              "challenge_type": "same_topic_distractor",
+              "top_result_memory_alias": "revised_chapter_praise",
+              "top_result_content": "When the revised chapter arrived, the mentor said the argument finally felt grounded and persuasive.",
+              "retrieved_memory_aliases": [
+                "revised_chapter_praise",
+                "hallway_encouragement"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "housing_search_reversal",
+      "prompt": "Assess whether the recalled memory coherently tracks the apartment search from rejection to relief.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 1.0,
+            "hit_at_k": 1.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_apartment_arc",
+              "query": "Which version of the same apartment story left the search feeling more hopeless afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "landlord_rejection",
+              "top_result_content": "The landlord said another applicant was chosen, and the apartment hunt suddenly felt hopeless again.",
+              "retrieved_memory_aliases": [
+                "landlord_rejection",
+                null
+              ]
+            },
+            {
+              "query_id": "q_homecoming_turn",
+              "query": "Which follow-up was the one where the search finally felt settled rather than just turning into lease paperwork?",
+              "challenge_type": "recency_confound",
+              "top_result_memory_alias": "keys_handover",
+              "top_result_content": "At the second viewing, the agent handed over the keys and the whole story finally felt settled.",
+              "retrieved_memory_aliases": [
+                "keys_handover",
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_apartment_arc",
+              "query": "Which version of the same apartment story left the search feeling more hopeless afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": null,
+              "top_result_content": "The mentor wrote in the margin that the chapter sounded hollow and the note left the whole draft feeling exposed.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            },
+            {
+              "query_id": "q_homecoming_turn",
+              "query": "Which follow-up was the one where the search finally felt settled rather than just turning into lease paperwork?",
+              "challenge_type": "recency_confound",
+              "top_result_memory_alias": "keys_handover",
+              "top_result_content": "At the second viewing, the agent handed over the keys and the whole story finally felt settled.",
+              "retrieved_memory_aliases": [
+                "keys_handover",
+                null
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "volunteer_burnout_reset",
+      "prompt": "Assess whether the recalled memory preserves the emotional shift from burnout to a calmer reset.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_shift_arc",
+              "query": "Which version of the same volunteer story left the work feeling impossible to sustain afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "chaotic_shift_exhaustion",
+              "top_result_content": "By the end of the chaotic shift, everyone felt wrung out and the work seemed impossible to sustain.",
+              "retrieved_memory_aliases": [
+                "chaotic_shift_exhaustion",
+                null
+              ]
+            },
+            {
+              "query_id": "q_relief_after_shift",
+              "query": "Which follow-up was the one where the team finally felt the work was sustainable rather than just receiving another checklist?",
+              "challenge_type": "recency_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "When the revised chapter arrived, the mentor said the argument finally felt grounded and persuasive.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_harsher_shift_arc",
+              "query": "Which version of the same volunteer story left the work feeling impossible to sustain afterward?",
+              "challenge_type": "affective_arc",
+              "top_result_memory_alias": "chaotic_shift_exhaustion",
+              "top_result_content": "By the end of the chaotic shift, everyone felt wrung out and the work seemed impossible to sustain.",
+              "retrieved_memory_aliases": [
+                "chaotic_shift_exhaustion",
+                null
+              ]
+            },
+            {
+              "query_id": "q_relief_after_shift",
+              "query": "Which follow-up was the one where the team finally felt the work was sustainable rather than just receiving another checklist?",
+              "challenge_type": "recency_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "At rehearsal the next day, the small melody from the walk unlocked the arrangement and the room finally felt energized.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "scholarship_reversal_arc",
+      "prompt": "Assess whether the recalled memory coherently captures the scholarship story from crushing rejection to genuine reversal.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.0,
+            "hit_at_k": 0.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_crushing_decision",
+              "query": "Which committee message was the one that actually made the whole afternoon feel rejected, rather than just clarifying the summer cohort mix-up?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "After the demo, the investor said the pitch felt chaotic and everyone left the room shaken.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            },
+            {
+              "query_id": "q_true_reversal",
+              "query": "Which later committee message was the real reversal that made the story finally loosen, rather than just triggering portal paperwork?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "In the second meeting, the same investor said the calmer story finally made the company feel investable.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.0,
+            "hit_at_k": 0.0,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_crushing_decision",
+              "query": "Which committee message was the one that actually made the whole afternoon feel rejected, rather than just clarifying the summer cohort mix-up?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "In the second meeting, the same investor said the calmer story finally made the company feel investable.",
+              "retrieved_memory_aliases": [
+                null,
+                "summer_clarification"
+              ]
+            },
+            {
+              "query_id": "q_true_reversal",
+              "query": "Which later committee message was the real reversal that made the story finally loosen, rather than just triggering portal paperwork?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "In the second meeting, the same investor said the calmer story finally made the company feel investable.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "choir_audition_rebound",
+      "prompt": "Assess whether the recalled memory makes the audition story feel emotionally continuous from embarrassment to recovery.",
+      "rating_dimensions": [
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility"
+      ],
+      "conditions": [
+        {
+          "condition": "aft",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.0,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 1.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_embarrassing_audition",
+              "query": "Which audition moment was the one that actually made the performance feel humiliating, rather than just creating a scheduling note afterward?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "A later clarification said the first message only described the summer cohort and not the final scholarship decision.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            },
+            {
+              "query_id": "q_settled_callback",
+              "query": "Which later audition moment was the one where the whole performance finally sounded settled, rather than just assigning the section afterward?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "At the second viewing, the agent handed over the keys and the whole story finally felt settled.",
+              "retrieved_memory_aliases": [
+                null,
+                "confident_callback"
+              ]
+            }
+          ]
+        },
+        {
+          "condition": "naive_cosine",
+          "aggregate_metrics": {
+            "query_count": 2,
+            "top1_accuracy": 0.5,
+            "hit_at_k": 0.5,
+            "minimum_candidate_count": 6,
+            "nontrivial_query_rate": 1.0,
+            "stateful_session_rate": 0.0,
+            "memory_count_growth": 3
+          },
+          "query_cards": [
+            {
+              "query_id": "q_embarrassing_audition",
+              "query": "Which audition moment was the one that actually made the performance feel humiliating, rather than just creating a scheduling note afterward?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": null,
+              "top_result_content": "A later clarification said the first message only described the summer cohort and not the final scholarship decision.",
+              "retrieved_memory_aliases": [
+                null,
+                null
+              ]
+            },
+            {
+              "query_id": "q_settled_callback",
+              "query": "Which later audition moment was the one where the whole performance finally sounded settled, rather than just assigning the section afterward?",
+              "challenge_type": "semantic_confound",
+              "top_result_memory_alias": "confident_callback",
+              "top_result_content": "At the callback, the same passage landed cleanly and the conductor said the whole performance finally sounded settled.",
+              "retrieved_memory_aliases": [
+                "confident_callback",
+                null
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

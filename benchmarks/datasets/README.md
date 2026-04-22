@@ -1,4 +1,14 @@
-# affect_reference_v1 — Affect-Labeled Benchmark Dataset
+# Benchmark Datasets
+
+This directory currently contains two dataset families:
+
+- `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe
+- `realistic_recall_v1.json`: scripted multi-session replay scenarios
+
+The first is strongest for controlled retrieval behavior. The second is a
+small but more realistic bridge toward multi-session evaluation.
+
+## affect_reference_v1
 
 ## Overview
 
@@ -63,3 +73,19 @@ Texts are original synthetic compositions. Dataset is released under **CC0 1.0**
 | Version | Examples | Notes |
 |---|---|---|
 | v1 | 258 | Initial release — synthetic, 12 buckets, 2 samples/text |
+
+## realistic_recall_v1
+
+`realistic_recall_v1.json` contains replayable multi-session scenarios used by
+`benchmarks/realistic/runner.py`.
+
+Schema highlights:
+
+- scenario identifier and description
+- multiple sessions per scenario
+- per-session affect-tagged events
+- natural-language retrieval queries with expected target memories
+- optional query-time affective state
+
+This dataset is intentionally small. Its role is to support realistic replay
+studies, not to act as a broad leaderboard.

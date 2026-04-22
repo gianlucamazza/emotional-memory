@@ -2,10 +2,18 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 from benchmarks.comparative.adapters.aft import AFTAdapter
 from benchmarks.comparative.adapters.naive_cosine import NaiveCosineAdapter
 from benchmarks.comparative.adapters.recency import RecencyAdapter
-from benchmarks.comparative.runner import QUERIES, _is_congruent, run_adapter
+from benchmarks.comparative.runner import (
+    QUERIES,
+    _is_congruent,
+    build_protocol_metadata,
+    run_adapter,
+)
 
 
 def _mini_dataset() -> list[dict]:  # type: ignore[type-arg]
@@ -133,3 +141,33 @@ def test_queries_have_affect_centroids() -> None:
         assert "query_arousal" in q
         assert -1.0 <= q["query_valence"] <= 1.0
         assert 0.0 <= q["query_arousal"] <= 1.0
+
+
+def test_protocol_metadata_includes_interpretation_guardrails() -> None:
+    protocol = build_protocol_metadata(
+        system_names=["aft", "naive_cosine", "recency"],
+        top_k=5,
+        embedder_type="hash",
+        n_examples=258,
+    )
+
+    assert protocol["dataset"]["name"] == "affect_reference_v1"
+    assert protocol["top_k"] == 5
+    assert protocol["affect_aware_adapters_receive_query_affect"] == ["aft"]
+    assert any(
+        "controlled synthetic benchmark" in item for item in protocol["interpretation_guardrails"]
+    )
+
+
+def test_tracked_protocol_artifact_matches_contract() -> None:
+    protocol_path = (
+        Path(__file__).resolve().parents[1]
+        / "benchmarks"
+        / "comparative"
+        / "results.protocol.json"
+    )
+    payload = json.loads(protocol_path.read_text(encoding="utf-8"))
+
+    assert payload["dataset"]["name"] == "affect_reference_v1"
+    assert payload["query_labels"] == [q["label"] for q in QUERIES]
+    assert payload["top_k"] == 5

@@ -14,6 +14,7 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 uv pip install emotional-memory
 uv pip install "emotional-memory[sentence-transformers]"  # real semantic embeddings (recommended)
 uv pip install "emotional-memory[sqlite]"                 # SQLite persistence via sqlite-vec
+uv pip install "emotional-memory[redis]"                  # shared affective-state persistence via Redis
 uv pip install "emotional-memory[viz]"                    # matplotlib visualization
 uv pip install "emotional-memory[dotenv]"                 # .env file loading via python-dotenv
 ```
@@ -116,6 +117,7 @@ em = EmotionalMemory(
     embedder: Embedder,
     appraisal_engine: AppraisalEngine | None = None,  # optional: auto-appraise via LLM
     config: EmotionalMemoryConfig | None = None,
+    state_store: AffectiveStateStore | None = None,   # optional: persist affective state
 )
 ```
 
@@ -140,6 +142,9 @@ em = EmotionalMemory(
 | `reset_state()` | Reset runtime affective state to the initial baseline |
 | `save_state() -> dict` | Serialise affective state for persistence |
 | `load_state(data)` | Restore previously saved affective state |
+| `persist_state() -> dict` | Persist the current affective state to the configured state store |
+| `restore_persisted_state() -> bool` | Restore the last persisted affective state from the configured state store |
+| `clear_persisted_state()` | Clear the configured persisted affective-state snapshot |
 | `get_current_mood(now=None) -> MoodField` | Read-only mood with time regression |
 | `close()` | Release store resources (e.g. SQLite connection); also via `with` |
 
@@ -160,9 +165,9 @@ you need the ranking-time decomposition (`semantic`, `mood`, `affect`, `momentum
 
 Same method signatures as `EmotionalMemory`. Coroutines: `encode`, `observe`, `encode_batch`, `retrieve`,
 `retrieve_with_explanations`, `elaborate`, `elaborate_pending`, `delete`, `get`, `list_all`,
-`count`, `prune`, `export_memories`, `import_memories`, `close`.
-State accessors (`get_state`, `set_affect`, `reset_state`, `save_state`, `load_state`, `get_current_mood`)
-remain synchronous.
+`count`, `prune`, `export_memories`, `import_memories`, `persist_state`, `restore_persisted_state`,
+`clear_persisted_state`, `close`. State accessors (`get_state`, `set_affect`, `reset_state`,
+`save_state`, `load_state`, `get_current_mood`) remain synchronous.
 
 Supports `async with` for automatic resource cleanup:
 
@@ -218,6 +223,11 @@ class MemoryStore(Protocol):
     def list_all(self) -> list[Memory]: ...
     def search_by_embedding(self, embedding: list[float], top_k: int) -> list[Memory]: ...
     def __len__(self) -> int: ...
+
+class AffectiveStateStore(Protocol):
+    def save(self, state: AffectiveState) -> None: ...
+    def load(self) -> AffectiveState | None: ...
+    def clear(self) -> None: ...
 ```
 
 Async variants (`AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine`) are defined in
@@ -335,9 +345,32 @@ make docs-images   # regenerate all PNGs in docs/images/
 | **Public benchmark** | ✅ 126 fidelity test cases (intra-theory) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
 | **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
-**Key differentiator**: emotional-memory is the only system with an explicit multi-layer emotional model. Every other system treats memory as semantically-indexed text with no affective state — no mood congruence in retrieval, no reconsolidation triggered by affective prediction error, no momentum or appraisal.
+**Key differentiator**: emotional-memory makes affect a first-class, multi-layer part
+of encoding and retrieval. Compared with the general-purpose memory systems in this
+table, it emphasizes mood-congruent retrieval, appraisal-conditioned tagging, and
+APE-gated reconsolidation rather than generic conversational recall alone.
 
-**Benchmark caveat**: AFT fidelity tests validate psychological invariants (intra-theory); Mem0/Letta/Zep benchmarks measure QA recall on dialog datasets (inter-system). A cross-system comparison on affect-labeled retrieval tasks is in progress (v0.6).
+**Benchmark caveat**: AFT fidelity tests validate psychological invariants
+(intra-theory). The comparative benchmark in this repo is a controlled synthetic
+retrieval probe, not a general downstream evaluation of production memory systems.
+
+## Current validation status
+
+- **Strongest evidence today**: 126 fidelity test cases across 20 phenomena show that
+  the implementation behaves coherently with the theories it operationalizes.
+- **Comparative evidence today**: the repo includes a small, public, synthetic
+  affect-aware retrieval benchmark (`affect_reference_v1`) that tests whether AFT
+  changes ranking behavior in the intended direction, plus an early comparative
+  replay benchmark for multi-session scenarios with non-trivial candidate pools
+  and explicit challenge types. The clearest current gains are on
+  `affective_arc`; `semantic_confound` remains difficult.
+- **Not yet established**: general superiority over systems such as Mem0 or LangMem
+  on realistic agent tasks; robustness beyond the current small replay dataset;
+  completed human evaluation results; or ecological correspondence to human
+  emotional memory.
+
+See [Current Evidence](docs/research/09_current_evidence.md) for the study ladder
+and the current claim-to-evidence matrix.
 
 ## Benchmarks
 
@@ -369,6 +402,9 @@ The library validates 20 phenomena from the affective science literature via 126
 | APE-gated reconsolidation window | Nader & Schiller 2000 | 3 | [test_reconsolidation_window.py](benchmarks/fidelity/test_reconsolidation_window.py) |
 
 Run with: `make bench-fidelity`
+
+For the comparative protocol and interpretation rules, see
+[benchmarks/comparative/protocol.md](benchmarks/comparative/protocol.md).
 
 ### Performance (hash-based embedder, InMemoryStore)
 

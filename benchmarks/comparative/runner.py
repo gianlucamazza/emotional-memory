@@ -14,6 +14,10 @@ results belong to the correct quadrant (same valence sign x arousal level).
 
 For affect-aware adapters (AFT) the query's affective centroid is passed to
 ``retrieve()`` so the mood-congruent scorer operates on the correct quadrant.
+
+This is a controlled synthetic retrieval probe. It is useful for testing
+affect-aware ranking behavior, but it does not establish general downstream
+superiority across production memory systems.
 """
 
 from __future__ import annotations
@@ -87,6 +91,41 @@ QUERIES: list[dict[str, Any]] = [
         "label": "Q4_calm",
     },
 ]
+
+
+def build_protocol_metadata(
+    *,
+    system_names: list[str],
+    top_k: int,
+    embedder_type: str,
+    n_examples: int,
+) -> dict[str, Any]:
+    return {
+        "benchmark": "comparative_affect_reference_v1",
+        "question": (
+            "Does the system surface memories from the intended affective region "
+            "under a controlled query-state setup?"
+        ),
+        "dataset": {
+            "name": "affect_reference_v1",
+            "path": str(DATASET.relative_to(ROOT)),
+            "examples": n_examples,
+            "type": "synthetic affect-labeled retrieval probe",
+        },
+        "query_labels": [q["label"] for q in QUERIES],
+        "top_k": top_k,
+        "embedder": embedder_type,
+        "systems": system_names,
+        "primary_metric": "recall@k quadrant-level affect congruence",
+        "secondary_metrics": ["encode_ms_avg", "retrieve_p50_ms", "retrieve_p95_ms"],
+        "affect_aware_adapters_receive_query_affect": ["aft"],
+        "interpretation_guardrails": [
+            "This is a controlled synthetic benchmark, not a general downstream evaluation.",
+            "AFT receives explicit query affect (valence, arousal) in this protocol.",
+            "General-purpose systems may ignore query-affect fields entirely.",
+            "The results do not establish production superiority or human-like emotional memory.",
+        ],
+    }
 
 
 def _is_congruent(ex: dict, q: dict) -> bool:  # type: ignore[type-arg]
@@ -305,6 +344,12 @@ def main() -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if rows:
         fieldnames = list(rows[0].keys())
+        protocol_metadata = build_protocol_metadata(
+            system_names=system_names,
+            top_k=args.top_k,
+            embedder_type=args.embedder,
+            n_examples=len(examples),
+        )
         with out_path.open("w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -315,6 +360,18 @@ def main() -> None:
         md_path = out_path.with_suffix(".md")
         lines = [
             "# Comparative benchmark results",
+            "",
+            "These numbers come from a **controlled synthetic benchmark** on",
+            "`affect_reference_v1`. They measure mood-congruent retrieval behavior under a",
+            "small public probe, not general downstream answer quality or production",
+            "superiority across memory systems.",
+            "",
+            "Interpretation guardrails:",
+            "",
+            "- `Recall@k` here means quadrant-level affect congruence, not QA accuracy.",
+            "- AFT receives explicit query affect (`valence`, `arousal`) in this protocol.",
+            "- General-purpose systems such as Mem0 and LangMem are being evaluated on a task",
+            "  narrower than their intended product surface.",
             "",
             "| System | Recall@k | Encode ms/item | Retrieve p50 ms | Retrieve p95 ms | Status |",
             "| --- | ---: | ---: | ---: | ---: | --- |",
@@ -328,6 +385,10 @@ def main() -> None:
             )
         md_path.write_text("\n".join(lines) + "\n")
         print(f"Markdown  written → {md_path}")
+
+        protocol_path = out_path.with_suffix(".protocol.json")
+        protocol_path.write_text(json.dumps(protocol_metadata, indent=2) + "\n")
+        print(f"Protocol  written → {protocol_path}")
 
 
 if __name__ == "__main__":

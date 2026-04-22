@@ -31,11 +31,67 @@ Questa è la distinzione critica tra **validazione intra-teorica** (testata) e *
 
 ### 2.2 Benchmark comparativi sintetici
 
-I benchmark di performance usano embedder hash-based e store in-memory. I numeri di latenza (es. retrieve top-5 su 10.000 memorie) non riflettono performance su embedder reali (sentence-transformers, OpenAI) né su hardware eterogeneo.
+Il repository include oggi un benchmark comparativo controllato
+(`benchmarks/comparative/`) su `affect_reference_v1`, un dataset sintetico di 258
+esempi affect-labeled con 4 query di retrieval mood-congruente. Questo benchmark
+e' utile per misurare se AFT modifica il ranking nella direzione teoricamente
+attesa, ma ha limiti importanti:
 
-### 2.3 Assenza di dataset di riferimento pubblico
+- **Setup piccolo e sintetico**: non rappresenta conversazioni multi-sessione o task agentici realistici.
+- **Protocollo orientato al retrieval affect-aware**: misura recall@k per quadranti affettivi, non answer quality downstream.
+- **Affect esplicito per adapter affect-aware**: AFT riceve il contesto affettivo della query tramite `valence/arousal`; i baseline generalisti possono ignorarlo del tutto.
+- **Latenze non omogenee**: i numeri mescolano store locali, dipendenze opzionali e sistemi progettati per scopi diversi.
 
-Non esiste un dataset affect-labeled standardizzato incluso nel repository per riprodurre i confronti cross-system. Ogni comparazione con Mem0, Letta, Zep è attualmente ipotetica.
+Di conseguenza, i risultati comparativi attuali vanno letti come **evidenza
+controllata precoce**, non come prova di superiorita' generale su sistemi di
+memoria production-grade.
+
+### 2.3 Dataset pubblici ancora piccoli
+
+Il repository include ora due famiglie di dataset pubblici:
+
+- `affect_reference_v1.jsonl`: benchmark sintetico e mirato al retrieval mood-congruente
+- `realistic_recall_v1.json`: benchmark replay multi-sessione, ancora piccolo e scripted
+
+Questo migliora la riproducibilita' rispetto alle versioni precedenti. Il
+benchmark realistico ora rifiuta query triviali (`candidate_count <= top_k`) e
+usa `top1_accuracy` come metrica primaria invece di affidarsi solo a `hit@k`.
+Tuttavia non equivale ancora a un dataset standardizzato, ampio e
+realisticamente multi-turno capace di sostenere confronti forti tra sistemi su
+memoria emotiva.
+
+Le comparazioni con `Mem0` e `LangMem` non sono piu' ipotetiche: il repository
+include adapter e risultati riproducibili nel benchmark controllato. Tuttavia
+queste comparazioni restano limitate dal protocollo sintetico, dalla diversa
+superficie funzionale dei sistemi, e dall'assenza di human eval o task
+downstream realistici. `Letta` resta non valutato senza accesso al servizio
+cloud/API key.
+
+Nel benchmark replay multi-sessione attuale, AFT si separa in modo chiaro da un
+baseline puramente `recency` e mantiene un vantaggio aggregato rispetto a
+`naive_cosine` nel piccolo dataset replay corrente. Tuttavia questo vantaggio e'
+ancora concentrato soprattutto nei query subset di tipo `affective_arc`; il
+subset `semantic_confound`, ora ampliato, resta un'area debole e non mostra
+ancora un vantaggio AFT rispetto al baseline semantic-only. Quindi non sostiene
+ancora claim forti di superiorita' generale su retrieval semantic-only in
+scenari realistici piu' ampi.
+
+### 2.4 Pipeline human-eval ancora non eseguita con rating reali
+
+Il repository include ora una pipeline eseguibile in `benchmarks/human_eval/`
+per generare packet, template di rating e summary aggregati, con un pilot v1
+bloccato su `aft` vs `naive_cosine` e 10 scenari. Questo risolve il gap
+procedurale, ma non il gap empirico:
+
+- **Nessun rater reale incluso nel repository**: il pilot non e' ancora stato
+  eseguito con partecipanti umani.
+- **I template vuoti non contano come evidenza**: la pipeline ora rifiuta
+  `ratings.jsonl` lasciati nello stato placeholder.
+- **Nessun summary checked-in conta come risultato**: `summary.json` e
+  `summary.md` non fanno parte della surface di evidenza finche' il pilot non
+  viene eseguito con rating completati.
+- **Nessuna misura di accordo inter-rater**: finche' non esistono rating
+  completati, non e' possibile stimare affidabilita' o stabilita' del protocollo.
 
 ---
 
@@ -52,9 +108,23 @@ Non esiste un dataset affect-labeled standardizzato incluso nel repository per r
 
 Il `KeywordAppraisalEngine` è un fallback rule-based con copertura limitata (~50 keyword classi). Non generalizza a dominio libero.
 
-### 3.2 Stato affettivo in-process
+### 3.2 Stato affettivo: persistenza locale si', condivisione distribuita ancora limitata
 
-`AffectiveState` è un oggetto Python in-memory, non persistito implicitamente tra sessioni. Deve essere serializzato/ripristinato manualmente via `save_state()` / `load_state()`. In deployment multi-istanza (più agenti che condividono lo stesso "utente emotivo"), non c'è sincronizzazione dello stato affettivo.
+`AffectiveState` non e' piu' soltanto uno stato in-process. Il repository
+supporta oggi `AffectiveStateStore` dedicati, con backend locali come
+`InMemoryAffectiveStateStore` e `SQLiteAffectiveStateStore`, piu' un backend
+`RedisAffectiveStateStore` opzionale per stato condiviso.
+
+Restano pero' limiti architetturali importanti:
+
+- **Nessuna validazione production-grade del backend condiviso**: Redis e'
+  disponibile come backend opzionale, ma manca ancora una validazione estesa su
+  deployment multi-worker reali.
+- **Nessuna transazione congiunta memoria+stato**: `MemoryStore` e
+  `AffectiveStateStore` restano separati per design; non esiste ancora una
+  semantica atomica cross-store.
+- **Sincronizzazione distribuita limitata**: il backend Redis copre la
+  persistenza dello stato affettivo, non la memoria vettoriale distribuita.
 
 ### 3.3 Thread-safety limitata a connessione singola
 
@@ -80,15 +150,16 @@ Al momento della release v0.5.x, Affective Field Theory non è stata formalmente
 
 ## 5. Lavori Futuri
 
-I seguenti limiti sono esplicitamente pianificati per versioni future:
+I seguenti limiti sono esplicitamente pianificati, ma non sono vincolati a una
+versione precisa:
 
-| Limite | Versione target |
+| Limite | Orizzonte indicativo |
 |---|---|
-| Dataset affect-labeled pubblico per benchmark cross-system | v0.6 |
-| Adapter Qdrant / Chroma | v0.7 |
-| Validazione ecologica leggera (human eval) | v0.8 |
-| Dimensione di dominanza come dimensione primaria | v0.8 |
-| Stato affettivo distribuito (Redis backend) | v0.9 |
+| Benchmark affect-aware realistico piu' ampio e comparativo | post-0.6 |
+| Adapter Qdrant / Chroma | track architettura |
+| Esecuzione del pilot human-eval con rating reali | track ricerca |
+| Dimensione di dominanza come dimensione primaria | track ricerca |
+| Memory-store distribuito / enterprise (Qdrant, Chroma, ...) | track prodotto |
 
 ---
 

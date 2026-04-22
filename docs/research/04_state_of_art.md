@@ -153,7 +153,9 @@ Supera RAG standard su InCharacter, CharacterEval, Character-LLM datasets.
 
 **Sistemi testati**: Tutti i principali sistemi (Mem0, Zep, MemGPT/Letta, altri) falliscono sistematicamente, specialmente nell'aggiornamento e nel reasoning sulla memoria emotiva.
 
-Questo paper è la **motivazione definitiva** per la nostra libreria.
+Questo paper fornisce una forte motivazione per una libreria che tratti
+l'emozione come parte strutturale della memoria, ma non costituisce da solo una
+validazione della nostra implementazione.
 
 ---
 
@@ -234,7 +236,12 @@ l'emozione nel sistema)  │                      │
                          └─────────────────────┘
 ```
 
-Siamo gli unici con **alta profondità** (emozione come dimensione pervasiva) **e** **alta ampiezza** (multi-layer: core affect + momentum + mood field + appraisal + resonance).
+Nel panorama qui analizzato, AFT occupa un punto relativamente raro: **alta
+profondita' di integrazione affettiva** (l'emozione pesa su encoding e retrieval)
+e **copertura multi-layer** (core affect + momentum + mood field + appraisal +
+resonance). Questa mappa e' interpretativa, non una prova di esclusivita': sistemi
+come Memory Bear AI e OpenMemory coprono sottoinsiemi importanti dello stesso
+spazio progettuale con astrazioni diverse.
 
 ---
 

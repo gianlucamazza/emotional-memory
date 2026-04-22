@@ -1,0 +1,2 @@
+{"scenario_id":"customer_repair_arc","condition":"aft","rater_id":"r1","ratings":{"affective_coherence":5,"usefulness":4,"continuity":5,"plausibility":4},"note":"Strong arc continuity."}
+{"scenario_id":"customer_repair_arc","condition":"naive_cosine","rater_id":"r1","ratings":{"affective_coherence":3,"usefulness":3,"continuity":2,"plausibility":3},"note":""}
