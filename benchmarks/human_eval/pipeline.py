@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 from collections import defaultdict
+from collections.abc import Sequence
 from pathlib import Path
 from statistics import mean
-from typing import Any
+from typing import Any, Literal
+
+logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PILOT = ROOT / "benchmarks" / "human_eval" / "pilot_v1.json"
@@ -21,7 +25,8 @@ DEFAULT_CONDITIONS = ["aft", "naive_cosine"]
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def build_packets(
@@ -119,14 +124,91 @@ def write_packets(
     template_path.write_text(template_payload, encoding="utf-8")
 
 
+def krippendorff_alpha(
+    reliability_data: Sequence[Sequence[float | None]],
+    *,
+    level: Literal["nominal", "ordinal"] = "ordinal",
+) -> float | None:
+    """Krippendorff's alpha inter-rater reliability coefficient.
+
+    Uses the coincidence-matrix formulation (Krippendorff 2011).
+
+    Parameters
+    ----------
+    reliability_data:
+        Matrix[unit][observer] = rating value, or None for missing.
+    level:
+        Measurement level: "ordinal" (default, Likert) or "nominal".
+
+    Returns
+    -------
+    float | None
+        Alpha, or None when undetermined (< 2 units with ≥ 2 observers,
+        or all observations are identical).
+    """
+    units: list[list[float]] = [[v for v in unit if v is not None] for unit in reliability_data]
+    pairable = [u for u in units if len(u) >= 2]
+    if not pairable:
+        return None
+
+    all_vals = sorted({v for u in pairable for v in u})
+    if len(all_vals) < 2:
+        return 1.0  # all observations identical — perfect agreement
+
+    val_to_idx = {v: i for i, v in enumerate(all_vals)}
+    n_vals = len(all_vals)
+
+    # Build coincidence matrix C[v][w] via ordered pairs within each unit
+    C = [[0.0] * n_vals for _ in range(n_vals)]
+    for unit in pairable:
+        m = len(unit)
+        w = 1.0 / (m - 1)
+        for o_idx in range(m):
+            for p_idx in range(m):
+                if o_idx != p_idx:
+                    v = val_to_idx[unit[o_idx]]
+                    u_val = val_to_idx[unit[p_idx]]
+                    C[v][u_val] += w
+
+    # Marginal counts (equal to raw observation counts per value)
+    nc = [sum(C[v][w] for w in range(n_vals)) for v in range(n_vals)]
+    N = sum(nc)
+    if N < 2:
+        return None
+
+    def _delta_sq(v: int, w: int) -> float:
+        if level == "ordinal":
+            lo, hi = min(v, w), max(v, w)
+            inner = sum(nc[g] for g in range(lo, hi + 1))
+            gap = inner - (nc[lo] + nc[hi]) / 2.0
+            return gap * gap
+        return 0.0 if v == w else 1.0  # nominal
+
+    D_o = sum(C[v][w] * _delta_sq(v, w) for v in range(n_vals) for w in range(n_vals) if v != w)
+    D_e_numerator = sum(
+        nc[v] * nc[w] * _delta_sq(v, w) for v in range(n_vals) for w in range(n_vals) if v != w
+    )
+    D_e = D_e_numerator / (N - 1)
+
+    if D_e < 1e-10:
+        return 1.0
+    return 1.0 - D_o / D_e
+
+
 def load_ratings(path: Path = DEFAULT_RATINGS) -> list[dict[str, Any]]:
     if not path.exists():
         raise FileNotFoundError(
             f"ratings file not found: {path}. Copy and fill {DEFAULT_TEMPLATE.name} first."
         )
-    return [
-        json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()
-    ]
+    records = []
+    for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        try:
+            records.append(json.loads(line))
+        except json.JSONDecodeError as exc:
+            logger.warning("Skipping malformed line %d in %s: %s", i, path.name, exc)
+    return records
 
 
 def _classify_rating_record(record: dict[str, Any]) -> tuple[str, dict[str, Any]]:
@@ -139,12 +221,12 @@ def _classify_rating_record(record: dict[str, Any]) -> tuple[str, dict[str, Any]
     numeric_ratings = {
         dimension: float(value)
         for dimension, value in ratings_map.items()
-        if isinstance(value, (int, float))
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
     }
     missing_dimensions = [
         dimension
         for dimension, value in ratings_map.items()
-        if not isinstance(value, (int, float))
+        if not isinstance(value, (int, float)) or isinstance(value, bool)
     ]
     is_template = not rater_id and not note and not numeric_ratings
 
@@ -182,6 +264,11 @@ def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
     template_record_count = 0
     unique_raters: set[str] = set()
 
+    # Tracks per-dimension, per-(scenario, condition), per-rater ratings for Krippendorff alpha
+    _dim_item_rater: dict[str, dict[tuple[str, str], dict[str, float]]] = defaultdict(
+        lambda: defaultdict(dict)
+    )
+
     for record in ratings:
         status, payload = _classify_rating_record(record)
         if status == "template":
@@ -197,11 +284,13 @@ def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
         complete_count += 1
         scenario_id = payload["scenario_id"]
         condition = payload["condition"]
-        unique_raters.add(payload["rater_id"])
+        rater_id = payload["rater_id"]
+        unique_raters.add(rater_id)
         condition_counts[condition] += 1
         scenario_counts[(scenario_id, condition)] += 1
         for dimension, value in payload["ratings"].items():
             condition_dimension_scores[condition][dimension].append(value)
+            _dim_item_rater[dimension][(scenario_id, condition)][rater_id] = value
         note = payload["note"]
         if note:
             notes.append(
@@ -233,6 +322,15 @@ def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
             "running the summary."
         )
 
+    # Compute Krippendorff's alpha per dimension (ordinal, Likert scale)
+    krippendorff_by_dim: dict[str, float | None] = {}
+    for dim, item_rater in _dim_item_rater.items():
+        all_raters = sorted({r for rv in item_rater.values() for r in rv})
+        matrix: list[list[float | None]] = [
+            [item_rater[item].get(rater) for rater in all_raters] for item in sorted(item_rater)
+        ]
+        krippendorff_by_dim[dim] = krippendorff_alpha(matrix)
+
     return {
         "status": "complete",
         "completed_ratings_count": complete_count,
@@ -250,6 +348,7 @@ def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
             for (scenario_id, condition), count in sorted(scenario_counts.items())
         ],
         "notes": notes,
+        "krippendorff_alpha_by_dimension": krippendorff_by_dim,
     }
 
 
@@ -282,6 +381,20 @@ def write_summary(
         lines.append(
             f"| `{condition['condition']}` | {condition['ratings_count']} | {formatted} |"
         )
+
+    alpha_by_dim = summary.get("krippendorff_alpha_by_dimension", {})
+    if alpha_by_dim:
+        lines += [
+            "",
+            "## Inter-Rater Agreement (Krippendorff's alpha, ordinal)",
+            "",
+            "| Dimension | alpha |",
+            "|---|---:|",
+        ]
+        for dim, alpha_val in sorted(alpha_by_dim.items()):
+            val_str = f"{alpha_val:.3f}" if alpha_val is not None else "—"
+            lines.append(f"| `{dim}` | {val_str} |")
+
     if summary["incomplete_records"]:
         lines.extend(["", "## Incomplete Records", ""])
         lines.extend(

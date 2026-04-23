@@ -7,6 +7,7 @@ import pytest
 
 from benchmarks.human_eval.pipeline import (
     build_packets,
+    krippendorff_alpha,
     load_ratings,
     summarize_ratings,
     write_packets,
@@ -141,3 +142,80 @@ def test_summarize_ratings_and_write_summary(tmp_path: Path) -> None:
     assert "# Human Evaluation Pilot Summary" in out_md.read_text(encoding="utf-8")
     assert "Unique raters: 1" in out_md.read_text(encoding="utf-8")
     assert "Incomplete records: 1" in out_md.read_text(encoding="utf-8")
+    # Single rater → alpha should be None for all dims
+    assert all(v is None for v in payload["krippendorff_alpha_by_dimension"].values())
+
+
+# ---------------------------------------------------------------------------
+# Krippendorff's alpha
+# ---------------------------------------------------------------------------
+
+
+def test_krippendorff_alpha_perfect_agreement() -> None:
+    # 3 raters, 3 units, all identical → alpha = 1.0
+    data: list[list[float | None]] = [
+        [1.0, 1.0, 1.0],
+        [3.0, 3.0, 3.0],
+        [5.0, 5.0, 5.0],
+    ]
+    assert krippendorff_alpha(data) == pytest.approx(1.0)
+
+
+def test_krippendorff_alpha_known_value() -> None:
+    # 3 raters, 3 units, ordinal {1,2,3}
+    # Item 1: [1,2,3] (all different); Items 2,3: perfect agreement
+    # Hand-computed: alpha = 2/3 ≈ 0.6667 (Krippendorff coincidence-matrix)
+    data: list[list[float | None]] = [
+        [1.0, 2.0, 3.0],
+        [1.0, 1.0, 1.0],
+        [3.0, 3.0, 3.0],
+    ]
+    result = krippendorff_alpha(data, level="ordinal")
+    assert result == pytest.approx(2 / 3, abs=1e-6)
+
+
+def test_krippendorff_alpha_handles_missing_values() -> None:
+    # Mix of missing and present values; should return a finite float
+    data: list[list[float | None]] = [
+        [4.0, None, 5.0],
+        [2.0, 3.0, None],
+        [None, 1.0, 2.0],
+        [5.0, 4.0, 5.0],
+    ]
+    result = krippendorff_alpha(data)
+    assert result is not None
+    assert -1.5 < result <= 1.0
+
+
+def test_krippendorff_alpha_single_rater_returns_none() -> None:
+    data: list[list[float | None]] = [[3.0], [4.0], [5.0]]
+    assert krippendorff_alpha(data) is None
+
+
+def test_summarize_ratings_emits_alpha_per_dimension(tmp_path: Path) -> None:
+    fixture_path = FIXTURES / "human_eval_three_raters.jsonl"
+    ratings = load_ratings(fixture_path)
+    summary = summarize_ratings(ratings)
+
+    out_json = tmp_path / "summary.json"
+    out_md = tmp_path / "summary.md"
+    write_summary(summary, out_json=out_json, out_md=out_md)
+
+    payload = json.loads(out_json.read_text(encoding="utf-8"))
+    alpha_map = payload["krippendorff_alpha_by_dimension"]
+
+    assert set(alpha_map.keys()) == {
+        "affective_coherence",
+        "usefulness",
+        "continuity",
+        "plausibility",
+    }
+    # With 3 raters, alpha should be defined (not None) for all dims
+    assert all(v is not None for v in alpha_map.values())
+    # Values must be in a reasonable range
+    assert all(-1.5 < v <= 1.0 for v in alpha_map.values())
+
+    md = out_md.read_text(encoding="utf-8")
+    assert "## Inter-Rater Agreement" in md
+    assert "| Dimension | alpha |" in md
+    assert "affective_coherence" in md

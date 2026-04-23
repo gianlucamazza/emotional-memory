@@ -7,9 +7,10 @@
 
 ## Pilot scope
 
-- 10–20 scenarios in the first live run
+- 10–20 scenarios in the first live run (minimum 50 for publication-grade α)
 - two or more system conditions if available
 - blind or lightly blinded presentation where possible
+- **minimum 3 raters** required for inter-rater agreement (Krippendorff's alpha)
 
 ## Rating dimensions
 
@@ -19,6 +20,15 @@
 - **Plausibility**: does the behavior feel like a coherent memory process?
 
 Use a 1–5 Likert scale for each dimension.
+
+## Inter-rater agreement target
+
+`make human-eval-summary` computes Krippendorff's alpha (ordinal) per dimension
+from completed multi-rater rating files.
+
+- Acceptable agreement: alpha ≥ 0.67 (Krippendorff 2004)
+- Strong agreement: alpha ≥ 0.80
+- Minimum raters: 3 (alpha is undefined with fewer than 2 raters)
 
 ## Minimum reporting
 

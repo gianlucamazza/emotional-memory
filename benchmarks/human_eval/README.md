@@ -53,3 +53,16 @@ completed numeric ratings for all dimensions.
 
 No checked-in `summary.json` / `summary.md` artifacts are treated as evidence
 until the pilot is run with real completed ratings.
+
+## Agreement metric (Krippendorff's alpha)
+
+When `ratings.jsonl` contains ratings from **≥ 2 raters**, `make human-eval-summary`
+automatically computes Krippendorff's alpha (ordinal) per dimension and includes
+it in `summary.md` under "## Inter-Rater Agreement".
+
+Acceptance thresholds per Krippendorff (2004):
+- alpha ≥ 0.67: acceptable for tentative conclusions
+- alpha ≥ 0.80: strong agreement, suitable for publication
+
+For three raters and the current 10-scenario packet, the 95% CI on alpha is wide.
+Expand to ≥ 50 scenarios before reporting headline alpha in a paper.

@@ -1,0 +1,12 @@
+{"scenario_id":"customer_repair_arc","condition":"aft","rater_id":"r1","ratings":{"affective_coherence":5,"usefulness":4,"continuity":5,"plausibility":4},"note":""}
+{"scenario_id":"customer_repair_arc","condition":"aft","rater_id":"r2","ratings":{"affective_coherence":4,"usefulness":4,"continuity":4,"plausibility":5},"note":""}
+{"scenario_id":"customer_repair_arc","condition":"aft","rater_id":"r3","ratings":{"affective_coherence":5,"usefulness":3,"continuity":5,"plausibility":4},"note":""}
+{"scenario_id":"customer_repair_arc","condition":"naive_cosine","rater_id":"r1","ratings":{"affective_coherence":3,"usefulness":3,"continuity":2,"plausibility":3},"note":""}
+{"scenario_id":"customer_repair_arc","condition":"naive_cosine","rater_id":"r2","ratings":{"affective_coherence":2,"usefulness":3,"continuity":3,"plausibility":2},"note":""}
+{"scenario_id":"customer_repair_arc","condition":"naive_cosine","rater_id":"r3","ratings":{"affective_coherence":3,"usefulness":2,"continuity":2,"plausibility":3},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"aft","rater_id":"r1","ratings":{"affective_coherence":4,"usefulness":4,"continuity":3,"plausibility":4},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"aft","rater_id":"r2","ratings":{"affective_coherence":4,"usefulness":5,"continuity":4,"plausibility":4},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"aft","rater_id":"r3","ratings":{"affective_coherence":3,"usefulness":4,"continuity":3,"plausibility":5},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"naive_cosine","rater_id":"r1","ratings":{"affective_coherence":2,"usefulness":2,"continuity":2,"plausibility":2},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"naive_cosine","rater_id":"r2","ratings":{"affective_coherence":3,"usefulness":2,"continuity":3,"plausibility":2},"note":""}
+{"scenario_id":"family_health_reassurance","condition":"naive_cosine","rater_id":"r3","ratings":{"affective_coherence":2,"usefulness":3,"continuity":2,"plausibility":3},"note":""}
