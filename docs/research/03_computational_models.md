@@ -1,18 +1,21 @@
-# Modelli Computazionali dell'Emozione
+# Computational Models of Emotion
 
-> Panoramica dei principali modelli computazionali dell'emozione, con analisi critica dei loro punti di forza, limiti, e rilevanza per il nostro approccio "Affective Field Theory".
+> Overview of the main computational models of emotion, with a critical analysis of their
+> strengths, limitations, and relevance to our "Affective Field Theory" approach.
 
 ---
 
-## 1. Modelli Dimensionali
+## 1. Dimensional Models
 
 ### Russell — Circumplex Model of Affect (1980)
 
-James Russell ha proposto che tutti gli stati affettivi possano essere mappati su uno spazio circolare bidimensionale:
-- **Asse X**: Valenza (piacere — dispiacere)
-- **Asse Y**: Arousal (attivazione — deattivazione)
+James Russell proposed that all affective states can be mapped onto a two-dimensional circular
+space:
+- **X axis**: Valence (pleasure — displeasure)
+- **Y axis**: Arousal (activation — deactivation)
 
-Le etichette di emozioni discrete (felice, triste, arrabbiato, calmo, ecc.) sono distribuite intorno a questo cerchio come **regioni** nello spazio continuo, non come punti discreti.
+Labels for discrete emotions (happy, sad, angry, calm, etc.) are distributed around this circle
+as **regions** in continuous space, not as discrete points.
 
 ```
                     HIGH AROUSAL
@@ -27,50 +30,59 @@ Le etichette di emozioni discrete (felice, triste, arrabbiato, calmo, ecc.) sono
                     LOW AROUSAL
 ```
 
-**Punti di forza**:
-- Continuo: nessuna discretizzazione artificiale
-- Ben validato empiricamente attraverso culture
-- Computazionalmente efficiente (2 coordinate)
-- Cattura la struttura fondamentale dell'affetto
+**Strengths**:
+- Continuous: no artificial discretization
+- Well validated empirically across cultures
+- Computationally efficient (2 coordinates)
+- Captures the fundamental structure of affect
 
-**Limiti**:
-- Manca la dimensione Dominance (anger e fear hanno valenza/arousal simili ma dominance opposta)
-- Non cattura la dinamica (è un modello di stato, non di processo)
-- Alcune emozioni complesse difficili da posizionare
+**Limitations**:
+- Lacks the Dominance dimension (anger and fear have similar valence/arousal but opposite
+  dominance)
+- Does not capture dynamics (it is a state model, not a process model)
+- Some complex emotions are difficult to position
 
-**Rilevanza per la libreria**: Il circumplex fornisce il substrato del **Layer 1 — Core Affect**. Ogni stato affettivo del sistema ha coordinate (valence, arousal) che lo posizionano nel circumplex.
+**Relevance to the library**: The circumplex provides the substrate for **Layer 1 — Core Affect**.
+Every affective state of the system has coordinates (valence, arousal) that position it in the
+circumplex.
 
 ---
 
 ### Mehrabian & Russell — PAD Model (1974)
 
-Estende il circumplex a tre dimensioni:
-- **Pleasure** (piacevole — spiacevole): ≈ valenza
-- **Arousal** (eccitato — calmo): ≈ arousal
-- **Dominance** (dominante/in-controllo — sottomesso/controllato)
+Extends the circumplex to three dimensions:
+- **Pleasure** (pleasant — unpleasant): ≈ valence
+- **Arousal** (excited — calm): ≈ arousal
+- **Dominance** (dominant/in-control — submissive/controlled)
 
-La terza dimensione **Dominance** distingue emozioni che nel circumplex 2D sono confuse:
-- **Anger**: alta arousal, bassa valenza, **alta dominance**
-- **Fear**: alta arousal, bassa valenza, **bassa dominance**
+The third dimension **Dominance** distinguishes emotions that are conflated in the 2D circumplex:
+- **Anger**: high arousal, low valence, **high dominance**
+- **Fear**: high arousal, low valence, **low dominance**
 
-Il PAD model afferma che queste tre dimensioni sono necessarie e sufficienti per caratterizzare qualsiasi stato emotivo.
+The PAD model claims these three dimensions are necessary and sufficient to characterize any
+emotional state.
 
-**Validazione empirica**: Mappatura di centinaia di termini emotivi in 50+ lingue su questi tre assi mostra consistenza cross-culturale significativa.
+**Empirical validation**: Mapping hundreds of emotion terms from 50+ languages onto these three
+axes shows significant cross-cultural consistency.
 
-**Rilevanza**: Il PAD è il candidato naturale per la rappresentazione del **Core Affect** nella nostra architettura — tre assi continui che coprono lo spazio affettivo con sufficiente granularità senza over-engineering.
+**Relevance**: The PAD model is the natural candidate for **Core Affect** representation in our
+architecture — three continuous axes covering the affective space with sufficient granularity
+without over-engineering.
 
 ---
 
-## 2. Modelli Discreti Evolutivi
+## 2. Evolutionary Discrete Models
 
 ### Plutchik — Wheel of Emotions (1980)
 
-Robert Plutchik ha proposto un modello evolutivo-dimensionale ibrido.
+Robert Plutchik proposed a hybrid evolutionary-dimensional model.
 
-**Struttura**:
-- **8 emozioni primarie** in coppie opposte: Joy/Sadness, Trust/Disgust, Fear/Anger, Surprise/Anticipation
-- Disposte in un **cono 3D** con l'**intensità** sull'asse verticale (es. annoyance → anger → rage)
-- **Dyadi** (blending): le emozioni adiacenti si combinano (es. joy + trust = love; fear + surprise = awe)
+**Structure**:
+- **8 primary emotions** in opposing pairs: Joy/Sadness, Trust/Disgust, Fear/Anger,
+  Surprise/Anticipation
+- Arranged in a **3D cone** with **intensity** on the vertical axis (e.g. annoyance → anger →
+  rage)
+- **Dyads** (blending): adjacent emotions combine (e.g. joy + trust = love; fear + surprise = awe)
 
 ```
                     Ecstasy
@@ -86,59 +98,66 @@ Robert Plutchik ha proposto un modello evolutivo-dimensionale ibrido.
                           Pensiveness
 ```
 
-**Funzione evolutiva di ciascuna emozione**:
-- Fear → Protezione
-- Anger → Distruzione di barriere
-- Joy → Riproduzione
-- Sadness → Reintegrazione
-- Trust → Affiliazione
-- Disgust → Rifiuto
-- Surprise → Orientamento
-- Anticipation → Esplorazione
+**Evolutionary function of each emotion**:
+- Fear → Protection
+- Anger → Destruction of barriers
+- Joy → Reproduction
+- Sadness → Reintegration
+- Trust → Affiliation
+- Disgust → Rejection
+- Surprise → Orientation
+- Anticipation → Exploration
 
-**Punti di forza**:
-- Supporta il blending emotivo
-- Dimensione di intensità
-- Fondamento evolutivo
-- Intuitivo e visivamente comunicabile
+**Strengths**:
+- Supports emotional blending
+- Intensity dimension
+- Evolutionary grounding
+- Intuitive and visually communicable
 
-**Limiti**:
-- La scelta degli 8 primitivi è arbitraria
-- Il blending è additivo, non cattura la complessità dell'emergenza emotiva
+**Limitations**:
+- The choice of 8 primitives is arbitrary
+- Blending is additive; it does not capture the complexity of emotional emergence
 
-**Rilevanza**: Il Wheel offre una tassonomia naturale per le **categorie emotive discrete** che emergono dallo spazio continuo PAD. Le regioni del cono di Plutchik possono essere mappate sullo spazio PAD, fornendo etichette human-readable per coordinate numeriche.
-
----
-
-### Panksepp — 7 Sistemi Affettivi Primari (1998)
-
-I sette sistemi di comando emotivo identificati da Panksepp attraverso la neurobiologia sperimentale (vedi doc 02_neuroscience.md per dettagli):
-
-| Sistema | PAD appross. | Comportamento |
-|---------|-------------|--------------|
-| SEEKING | P+, A+, D+ | Esplorazione, curiosità |
-| RAGE | P-, A+, D+ | Aggressione, frustrazione |
-| FEAR | P-, A+, D- | Evitamento, freeze/fuga |
-| LUST | P+, A+, D+ | Comportamento sessuale |
-| CARE | P+, A-, D+ | Nutrimento, attaccamento |
-| PANIC/GRIEF | P-, A-, D- | Isolamento, pianto |
-| PLAY | P+, A+, D- | Legame sociale, gioco |
-
-**Rilevanza**: Questi 7 sistemi possono funzionare come **cluster primari** nello spazio PAD — regioni attorno alle quali si organizzano le risposte emotive di base. Più robusti biologicamente rispetto al Wheel di Plutchik, ma meno granulari per usi linguistici.
+**Relevance**: The Wheel provides a natural taxonomy for the **discrete emotion categories** that
+emerge from the continuous PAD space. The regions of Plutchik's cone can be mapped onto PAD space,
+providing human-readable labels for numerical coordinates.
 
 ---
 
-## 3. Modelli Cognitivi e di Appraisal
+### Panksepp — 7 Primary Affective Systems (1998)
+
+The seven emotional command systems identified by Panksepp through experimental neurobiology
+(see `02_neuroscience.md` for details):
+
+| System | Approx. PAD | Behavior |
+|--------|-------------|----------|
+| SEEKING | P+, A+, D+ | Exploration, curiosity |
+| RAGE | P-, A+, D+ | Aggression, frustration |
+| FEAR | P-, A+, D- | Avoidance, freeze/flight |
+| LUST | P+, A+, D+ | Sexual behavior |
+| CARE | P+, A-, D+ | Nurturance, attachment |
+| PANIC/GRIEF | P-, A-, D- | Isolation, crying |
+| PLAY | P+, A+, D- | Social bonding, play |
+
+**Relevance**: These 7 systems can function as **primary clusters** in PAD space — regions around
+which basic emotional responses organize. Biologically more robust than Plutchik's Wheel, but less
+granular for linguistic use.
+
+---
+
+## 3. Cognitive and Appraisal Models
 
 ### OCC Model — Ortony, Clore & Collins (1988)
 
-Il modello computazionale dell'emozione più influente nell'AI simbolica. Genera 22 tipi di emozione da valutazioni (appraisal) di tre categorie:
+The most influential computational model of emotion in symbolic AI. Generates 22 emotion types
+from appraisals of three categories:
 
-- **Eventi** → pleased/displeased (es. joy, distress, hope, fear, satisfaction, disappointment)
-- **Agenti** (azioni) → approving/disapproving (es. pride, shame, admiration, reproach)
-- **Oggetti** → liking/disliking (es. love, hate)
+- **Events** → pleased/displeased (e.g. joy, distress, hope, fear, satisfaction, disappointment)
+- **Agents** (actions) → approving/disapproving (e.g. pride, shame, admiration, reproach)
+- **Objects** → liking/disliking (e.g. love, hate)
 
-Le emozioni composte emergono dalle combinazioni (es. gratification = joy + pride; remorse = distress + shame).
+Compound emotions emerge from combinations (e.g. gratification = joy + pride; remorse = distress +
+shame).
 
 ```
                           EMOTIONS
@@ -150,164 +169,188 @@ Le emozioni composte emergono dalle combinazioni (es. gratification = joy + prid
            hope distress joy fear ...
 ```
 
-**Punti di forza**:
-- Rule-based → interpretabile e trasparente
-- Struttura compositiva
-- Standard de facto per agenti virtuali (NPC nei videogiochi, chatbot sociali)
+**Strengths**:
+- Rule-based → interpretable and transparent
+- Compositional structure
+- De facto standard for virtual agents (NPCs in video games, social chatbots)
 
-**Limiti**:
-- Discreto → perde la continuità dell'esperienza emotiva
-- Rule-based → rigido, non apprende
-- Non modella la dinamica temporale
-- Difficile scalare a scenari aperti
+**Limitations**:
+- Discrete → loses the continuity of emotional experience
+- Rule-based → rigid, does not learn
+- Does not model temporal dynamics
+- Difficult to scale to open-ended scenarios
 
-**Rilevanza**: L'OCC fornisce un **vocabolario di etichette emotive** strutturato che può essere usato come layer semantico sopra le coordinate PAD. Un evento con (valence=+0.7, arousal=0.4) in risposta a un goal-furthering event → etichetta OCC "joy" o "satisfaction".
+**Relevance**: OCC provides a structured **vocabulary of emotion labels** that can be used as a
+semantic layer on top of PAD coordinates. An event with (valence=+0.7, arousal=0.4) in response
+to a goal-furthering event → OCC label "joy" or "satisfaction".
 
 ---
 
 ### Scherer — Component Process Model (CPM)
 
-(Dettagliato in doc 02_neuroscience.md — sezione 5)
+(Detailed in `02_neuroscience.md` — section 5)
 
-Il CPM è il più ricco tra i modelli di appraisal. La sequenza dei 5 SECs (Stimulus Evaluation Checks) genera stati emotivi in modo processuale.
+The CPM is the richest among appraisal models. The sequence of 5 SECs (Stimulus Evaluation
+Checks) generates emotional states in a processual way.
 
-**Formato computazionale** (CPM originale di Scherer):
+**Computational format** (original Scherer CPM):
 ```
 appraisal_result = {
-    novelty_check: float,          # 0=completamente previsto, 1=totalmente nuovo
-    intrinsic_pleasantness: float, # -1=spiacevole, +1=piacevole
-    goal_significance: float,      # -1=ostacola, +1=favorisce
-    coping_potential: float,       # 0=nessuna coping, 1=pieno controllo
-    norm_compatibility: float      # -1=viola norme, +1=conforme
+    novelty_check: float,          # 0=completely expected, 1=entirely novel
+    intrinsic_pleasantness: float, # -1=unpleasant, +1=pleasant
+    goal_significance: float,      # -1=obstructs, +1=furthers
+    coping_potential: float,       # 0=no coping, 1=full control
+    norm_compatibility: float      # -1=violates norms, +1=conforms
 }
 ```
 
-Questi 5 valori determinano lo stato emotivo risultante attraverso regole compositive.
+These 5 values determine the resulting emotional state through compositional rules.
 
-**Rilevanza**: Il CPM è il modello che più direttamente informa il **Layer 4 — Appraisal Vector** della nostra architettura.
+**Relevance**: The CPM is the model that most directly informs **Layer 4 — Appraisal Vector**
+in our architecture.
 
-**Nota di implementazione**: nella libreria `intrinsic_pleasantness` è sostituita da `self_relevance` (quanto l'evento riguarda il "sé" del sistema, `[0.0, 1.0]`). Questa deviazione rispetto al CPM originale è intenzionale: `self_relevance` è più operazionalizzabile in un agente LLM e contribuisce all'arousal (non alla valence), preservando i 5 SEC ma ridistribuendo i ruoli.
+**Implementation note**: In the library, `intrinsic_pleasantness` is replaced by `self_relevance`
+(how much the event concerns the system's "self", `[0.0, 1.0]`). This deviation from the original
+CPM is intentional: `self_relevance` is more operationalizable in an LLM agent and contributes to
+arousal (not to valence), preserving the 5 SECs while redistributing their roles.
 
 ---
 
-## 4. Modelli Cognitivi Architetturali
+## 4. Architectural Cognitive Models
 
 ### ACT-R — Adaptive Control of Thought—Rational (Anderson, 1983+)
 
-ACT-R è un'architettura cognitiva unificata. Il retrieval è governato da livelli di attivazione:
+ACT-R is a unified cognitive architecture. Retrieval is governed by activation levels:
 
 ```
 Ai = Bi + Σ(Wj * Sji) + εi
 ```
 
-Dove:
-- `Bi` = attivazione di base (recency e frequenza con decadimento a legge di potenza)
-- `Σ(Wj * Sji)` = attivazione per spreading context
-- `εi` = rumore gaussiano
+Where:
+- `Bi` = base-level activation (recency and frequency with power-law decay)
+- `Σ(Wj * Sji)` = spreading context activation
+- `εi` = Gaussian noise
 
-**Decadimento base-level**:
+**Base-level decay**:
 ```
 Bi = ln(Σ(t_j^(-d)))
 ```
-Dove `t_j` sono i tempi trascorsi da ogni accesso e `d` è il parametro di decadimento.
+Where `t_j` are the elapsed times since each access and `d` is the decay parameter.
 
-**Estensioni emotive di ACT-R**: Ricercatori hanno proposto estensioni dove:
-- L'emozione modifica il parametro `d` (decadimento) — memorie emotivamente intense decadono più lentamente
-- L'emozione modifica `Wj` — il contesto emotivo corrente pesa maggiormente i ricordi emotivamente congruenti
+**Emotional extensions of ACT-R**: Researchers have proposed extensions where:
+- Emotion modifies the `d` parameter (decay) — emotionally intense memories decay more slowly
+- Emotion modifies `Wj` — the current emotional context gives greater weight to emotionally
+  congruent memories
 
-**Rilevanza**: Il meccanismo di base-level activation di ACT-R è il fondamento del nostro sistema di decay differenziato. Adottiamo la legge di potenza ma aggiungiamo la modulazione per arousal.
+**Relevance**: ACT-R's base-level activation mechanism is the foundation for our differentiated
+decay system. We adopt the power law but add modulation by arousal.
 
 ---
 
-### SOAR con Emozione (Marinier, Laird & Lewis, 2009)
+### SOAR with Emotion (Marinier, Laird & Lewis, 2009)
 
-"A Computational Unification of Cognitive Behavior and Emotion" integra la teoria dell'appraisal in SOAR. Le valutazioni emotive servono come **ricompense intrinseche per il reinforcement learning**.
+"A Computational Unification of Cognitive Behavior and Emotion" integrates appraisal theory into
+SOAR. Emotional evaluations serve as **intrinsic rewards for reinforcement learning**.
 
-Fasi:
-- Appraisal di rilevanza durante Perceive/Encode
-- Appraisal di valutazione durante Comprehend
-- Probabilità di esito durante Intend
+Phases:
+- Relevance appraisal during Perceive/Encode
+- Evaluative appraisal during Comprehend
+- Outcome probability during Intend
 
-**Rilevanza**: Il principio di **emotion-as-intrinsic-reward** è applicabile alla nostra architettura: le emozioni non solo taggano le memorie ma modulano il reinforcement del comportamento del sistema.
+**Relevance**: The **emotion-as-intrinsic-reward** principle is applicable to our architecture:
+emotions not only tag memories but also modulate the reinforcement of system behavior.
 
 ---
 
 ### CLARION — Motivational Subsystem (Sun, 2016)
 
-CLARION include un sottosistema motivazionale esplicito con:
-- **Drive di basso livello** (sopravvivenza, curiosità)
-- **Drive di alto livello** (scopo, focalizzazione, adattamento)
+CLARION includes an explicit motivational subsystem with:
+- **Low-level drives** (survival, curiosity)
+- **High-level drives** (purpose, focus, adaptation)
 
-L'emozione è generata dalle attivazioni dei drive e dai potenziali d'azione, con appraisal e metacognizione come fattori secondari.
+Emotion is generated by drive activations and action potentials, with appraisal and metacognition
+as secondary factors.
 
-**Rilevanza**: Il **conatus spinoziano** nella nostra architettura corrisponde ai drive di CLARION — i goal del sistema che generano il piano valutativo dell'appraisal.
+**Relevance**: The **Spinozian conatus** in our architecture corresponds to CLARION's drives —
+the system's goals that generate the evaluative plane of appraisal.
 
 ---
 
-## 5. Modelli Neural-Simbolici Recenti (2023-2026)
+## 5. Recent Neural-Symbolic Models (2023–2026)
 
 ### Chain-of-Emotion Architecture (2024)
 
-Architettura per agenti LLM affettivi nei videogiochi. Usa una chiamata LLM separata per l'appraisal emotivo prima di ogni risposta:
+Architecture for affective LLM agents in video games. Uses a separate LLM call for emotional
+appraisal before every response:
 ```
 prompt = system_instruction + message_history + emotion_history + user_input
 ```
-Valutato come significativamente più naturale ed emotivamente sensibile dei controlli (PLOS One, 2024).
+Evaluated as significantly more natural and emotionally sensitive than controls (PLOS One, 2024).
 
-**Rilevanza**: La struttura a **two-pass** (prima appraisal, poi risposta) è il pattern che adottiamo nel nostro appraisal engine.
+**Relevance**: The **two-pass** structure (first appraisal, then response) is the pattern we
+adopt in our appraisal engine.
 
 ### Emotional RAG (Huang et al., 2024)
 
-Due strategie di retrieval mood-dependent:
-1. **Combination**: peso congiunto semantica + stato emotivo
-2. **Sequential**: filtraggio per emozione poi ranking semantico (o viceversa)
+Two mood-dependent retrieval strategies:
+1. **Combination**: joint weighting of semantics + emotional state
+2. **Sequential**: filtering by emotion then semantic ranking (or vice versa)
 
-Supera RAG standard su dataset di role-playing.
+Outperforms standard RAG on role-playing datasets.
 
-**Rilevanza**: Conferma l'utilità del segnale `emotional_congruence` nel retrieval scoring. Il nostro approccio estende questo con il momentum, il Mood field e la spreading activation.
+**Relevance**: Confirms the utility of the `emotional_congruence` signal in retrieval scoring.
+Our approach extends this with momentum, the Mood field, and spreading activation.
 
 ### Dynamic Affective Memory Management (2025)
 
-Aggiornamento Bayesiano della memoria con minimizzazione dell'entropia. Usa la **memoria entropy** come metrica di qualità — il sistema minimizza l'entropia globale attraverso aggiornamenti Bayesiani al vettore di memoria affettiva.
+Bayesian memory updating with entropy minimization. Uses **memory entropy** as a quality metric —
+the system minimizes global entropy through Bayesian updates to the affective memory vector.
 
-**Rilevanza**: Il principio di **entropia come qualità della memoria** è promettente per il nostro sistema di consolidamento. Memorie più precise (bassa entropia) dovrebbero avere consolidation_strength maggiore.
-
----
-
-## 6. Analisi Comparativa: Perché Nessun Modello Esistente è Sufficiente
-
-| Modello | Statico/Dinamico | Continuo/Discreto | Appraisal | Temporale | Globale |
-|---------|-----------------|-------------------|-----------|-----------|---------|
-| Russell Circumplex | Statico | Continuo | No | No | No |
-| PAD | Statico | Continuo | No | No | No |
-| OCC | Process | Discreto | Si' | No | No |
-| Plutchik Wheel | Statico | Ibrido | No | Si' (intensita') | No |
-| Panksepp 7 | Statico | Discreto | No | No | No |
-| Barrett Core Affect | Statico | Continuo | Parziale | No | No |
-| CPM (Scherer) | Process | Continuo | Si' | Parziale | No |
-| ACT-R ext. | Dinamico | Continuo | No | Si' | No |
-| Emotional RAG | Process | Ibrido | No | No | No |
-
-**Gap sistematici identificati**:
-1. **Nessun modello** cattura la **dinamica temporale** dell'affetto (dove stai andando, non solo dove sei)
-2. **Nessun modello** ha un **campo globale** (mood field) che colori tutte le operazioni
-3. **Nessun modello** integra **appraisal + memoria + retrieval** in un framework unificato
-4. **Nessun modello** implementa il **riconsolidamento** come operazione nativa
-
-Questi quattro gap motivano la nostra **Affective Field Theory**.
+**Relevance**: The **entropy-as-memory-quality** principle is promising for our consolidation
+system. More precise memories (low entropy) should have higher `consolidation_strength`.
 
 ---
 
-## Note Bibliografiche
+## 6. Comparative Analysis: Why No Existing Model Is Sufficient
 
-- Russell, J.A. (1980). "A circumplex model of affect." *Journal of Personality and Social Psychology*, 39, 1161-1178.
+| Model | Static/Dynamic | Continuous/Discrete | Appraisal | Temporal | Global |
+|-------|----------------|---------------------|-----------|----------|--------|
+| Russell Circumplex | Static | Continuous | No | No | No |
+| PAD | Static | Continuous | No | No | No |
+| OCC | Process | Discrete | Yes | No | No |
+| Plutchik Wheel | Static | Hybrid | No | Yes (intensity) | No |
+| Panksepp 7 | Static | Discrete | No | No | No |
+| Barrett Core Affect | Static | Continuous | Partial | No | No |
+| CPM (Scherer) | Process | Continuous | Yes | Partial | No |
+| ACT-R ext. | Dynamic | Continuous | No | Yes | No |
+| Emotional RAG | Process | Hybrid | No | No | No |
+
+**Systematic gaps identified**:
+1. **No model** captures the **temporal dynamics** of affect (where you are going, not just where
+   you are)
+2. **No model** has a **global field** (mood field) that colors all operations
+3. **No model** integrates **appraisal + memory + retrieval** in a unified framework
+4. **No model** implements **reconsolidation** as a native operation
+
+These four gaps motivate our **Affective Field Theory**.
+
+---
+
+## Bibliographic Notes
+
+- Russell, J.A. (1980). "A circumplex model of affect." *Journal of Personality and Social
+  Psychology*, 39, 1161-1178.
 - Mehrabian, A. & Russell, J.A. (1974). *An Approach to Environmental Psychology*. MIT Press.
 - Plutchik, R. (1980). *Emotion: A Psychoevolutionary Synthesis*. Harper & Row.
 - Panksepp, J. (1998). *Affective Neuroscience*. Oxford University Press.
-- Ortony, A., Clore, G.L. & Collins, A. (1988). *The Cognitive Structure of Emotions*. Cambridge University Press.
-- Anderson, J.R. et al. (2004). "An integrated theory of the mind." *Psychological Review*, 111(4), 1036-1060.
-- Marinier, R.P., Laird, J.E. & Lewis, R.L. (2009). "A computational unification of cognitive behavior and emotion." *Cognitive Systems Research*.
+- Ortony, A., Clore, G.L. & Collins, A. (1988). *The Cognitive Structure of Emotions*. Cambridge
+  University Press.
+- Anderson, J.R. et al. (2004). "An integrated theory of the mind." *Psychological Review*,
+  111(4), 1036-1060.
+- Marinier, R.P., Laird, J.E. & Lewis, R.L. (2009). "A computational unification of cognitive
+  behavior and emotion." *Cognitive Systems Research*.
 - Sun, R. (2016). *Anatomy of the Mind*. Oxford University Press.
-- Huang, et al. (2024). "Emotional RAG: Enhancing Role-Playing Agents through Emotional Retrieval." arXiv:2410.23041.
+- Huang et al. (2024). "Emotional RAG: Enhancing Role-Playing Agents through Emotional
+  Retrieval." arXiv:2410.23041.
 - Zhang & Zhong (2025). "Decoding Emotion in the Deep." arXiv:2510.04064.
 - Dynamic Affective Memory Management (2025). arXiv:2510.27418.

@@ -342,7 +342,8 @@ make docs-images   # regenerate all PNGs in docs/images/
 | **Persistent mood state** | ✅ MoodField (Heidegger EMA) | ❌ | ❌ | ❌ | ❌ |
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
-| **Public benchmark** | ✅ 126 fidelity test cases (intra-theory) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
+| **Internal fidelity tests** | ✅ 126 cases, 20 phenomena ([bench-fidelity](benchmarks/fidelity/)) | — | — | — | — |
+| **External benchmark** | ❌ not yet evaluated | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
 | **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
 **Key differentiator**: emotional-memory makes affect a first-class, multi-layer part
@@ -362,8 +363,11 @@ retrieval probe, not a general downstream evaluation of production memory system
   affect-aware retrieval benchmark (`affect_reference_v1`) that tests whether AFT
   changes ranking behavior in the intended direction, plus an early comparative
   replay benchmark for multi-session scenarios with non-trivial candidate pools
-  and explicit challenge types. The clearest current gains are on
-  `affective_arc`; `semantic_confound` remains difficult.
+  and explicit challenge types. With the `BAAI/bge-small-en-v1.5` embedder (default),
+  AFT leads `naive_cosine` on aggregate top1 (0.85 vs 0.75) and hit@k (0.95 vs 0.85);
+  across per-challenge subsets AFT is best-or-tied on every subset, with the largest
+  gains on `affective_arc`. N = 20 aggregate queries keep these results directional
+  pending expansion.
 - **Not yet established**: general superiority over systems such as Mem0 or LangMem
   on realistic agent tasks; robustness beyond the current small replay dataset;
   completed human evaluation results; or ecological correspondence to human

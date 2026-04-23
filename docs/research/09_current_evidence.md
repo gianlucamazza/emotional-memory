@@ -51,10 +51,16 @@ remains open research work.
 - **Useful but narrow evidence**: appraisal-quality checks and demo-level
   product behavior.
 - **Emerging step-4 evidence**: the realistic replay benchmark now rules out
-  trivial recency wins and currently edges `naive_cosine`, with the clearest
-  gains concentrated in `affective_arc` queries. The enlarged
-  `semantic_confound` slice remains weak, so the benchmark is still not
-  decisive as a general realistic benchmark.
+  trivial recency wins and edges `naive_cosine` under the default `sbert-bge`
+  embedder (aggregate top1 0.85 vs 0.75, N = 20). With sbert-bge the
+  `semantic_confound` subset no longer regresses — AFT ties `naive_cosine`
+  on top1 (both 0.62) and leads on hit@k (0.88 vs 0.62). The earlier
+  regression on this subset under the hash embedder (AFT 0.12 vs naive 0.25)
+  is confirmed as a hash-embedder artefact in
+  `benchmarks/realistic/challenge_subset_pairwise.json`. N = 8 on this subset
+  is underpowered and no per-challenge result is individually significant
+  after Holm correction, so the benchmark is still not decisive as a general
+  realistic benchmark.
 - **Study-readiness improvement**: the human-eval pilot is now operationally
   specified as a 10-scenario, 2-condition (`aft` vs `naive_cosine`) protocol,
   but still awaits real completed ratings.
@@ -68,12 +74,16 @@ The next recommended studies, in order:
 1. **Protocol upgrade for comparative retrieval**
    Standardize metadata, assumptions, and reporting for the existing benchmark.
 2. **Expand the realistic replay benchmark**
-   Increase scenario diversity and improve the weak `semantic_confound` slice.
+   Increase scenario diversity from 10 to at least 50 scenarios to tighten
+   per-challenge confidence intervals (the current N = 8 on `semantic_confound`
+   after the sbert-bge upgrade is underpowered for definitive conclusions).
 3. **Execute the human-eval pilot with completed ratings**
-   Collect ratings on coherence, usefulness, continuity, and plausibility.
-4. **Expand multi-session evaluation harness**
-   Increase scenario diversity beyond the current 10 scenarios and tighten the
-   semantic-confound subset further.
+   Collect ratings on coherence, usefulness, continuity, and plausibility from
+   at least 3 raters (Krippendorff's alpha is wired and reported automatically
+   when `ratings.jsonl` is filled).
+4. **Run LoCoMo end-to-end for external benchmark validation**
+   The adapter is ready (`make bench-locomo`); execution needs an LLM API key
+   and a modest budget for the judge pass.
 
 ---
 

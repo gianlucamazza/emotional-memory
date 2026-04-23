@@ -1,6 +1,6 @@
 # Research Foundations
 
-The library's theoretical basis is documented in six papers (in Italian):
+The library's theoretical basis is documented in the following research papers:
 
 - [Philosophical Foundations](01_foundations.md) — From Greek origins to enactivism
 - [Neuroscience](02_neuroscience.md) — Emotional memory from a cognitive neuroscience perspective

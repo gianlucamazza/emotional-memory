@@ -1,219 +1,365 @@
-# Fondazioni Filosofiche: Emozione e Memoria
+# Philosophical Foundations: Emotion and Memory
 
-> Questo documento traccia il percorso filosofico che conduce alla nostra concezione di memoria emotiva, dalle origini greche fino all'enattivismo contemporaneo. Ogni sezione evidenzia i concetti operativamente rilevanti per l'architettura della libreria.
-
----
-
-## 1. Antichità: Le Prime Teorie della Memoria Affettiva
-
-### Aristotele — *De Anima*, *De Memoria et Reminiscentia*
-
-Aristotele scrive il primo trattato sistematico sulla memoria nella tradizione occidentale. La sua analisi rimane straordinariamente moderna.
-
-**Memoria come stato affettivo**: La memoria non è né pura percezione né puro pensiero, ma un "stato o affezione" (*hexis* / *pathos*) che preserva un'impressione sensoriale condizionata dal trascorrere del tempo. L'oggetto della memoria è sempre il passato.
-
-**Emozioni come oggetti di memoria di primo livello**: Quando ricordiamo di aver avuto paura, ricordiamo la paura stessa come oggetto — non solo la causa esterna. Le emozioni non sono metadati del ricordo: sono contenuto del ricordo.
-
-**Phantasmata**: Le immagini mnemoniche (*phantasmata*) sono residui di impressioni sensoriali e portano colorazione affettiva. Non esistono ricordi affettivamente neutri.
-
-**Associazionismo**: Aristotele distingue *mneme* (richiamo spontaneo, passivo) da *anamnesis* (ricerca attiva e deliberata). L'*anamnesis* procede per tre leggi associative:
-- **Somiglianza** (*homoion*)
-- **Contiguità** spazio-temporale (*synecheia*)
-- **Contrasto** (*enantion*)
-
-Queste tre leggi sono la prima formulazione di ciò che nella moderna psicologia cognitiva chiamiamo retrieval associativo.
-
-**Rilevanza per la libreria**: Il retrieval multi-segnale deve includere somiglianza emotiva come asse associativo autonomo. Le emozioni non sono metadati — sono contenuto ricercabile.
+> This document traces the philosophical arc that leads to our conception of
+> emotional memory, from Greek origins to contemporary enactivism. Each section
+> highlights the concepts that are operationally relevant to the library's
+> architecture.
 
 ---
 
-### Platone — *Menone*, *Fedone*, *Fedro*
+## 1. Antiquity: Early Theories of Affective Memory
 
-**Anamnesi**: L'apprendimento come ri-conoscimento — la conoscenza era già presente nell'anima prima dell'incarnazione. La reminiscenza è il processo di recuperare ciò che si sapeva ma si è dimenticato.
+### Aristotle — *De Anima*, *De Memoria et Reminiscentia*
 
-**Eros come trigger di memoria**: Nel *Fedro*, l'emozione più potente — il desiderio amoroso — è epistemicamente produttiva: un'emozione intensa innesca l'anamnesi. La bellezza fisica scuote l'anima e la mette in moto verso il ricordo delle Forme.
+Aristotle writes the first systematic treatise on memory in the Western
+tradition. His analysis remains strikingly modern.
 
-**Implicazione**: Le emozioni di alta intensità hanno accesso privilegiato alle strutture mnemoniche profonde. L'arousal emotivo non disturba la memoria — la catalizza.
+**Memory as an affective state**: memory is neither pure perception nor pure
+thought, but a "state or affection" (*hexis* / *pathos*) that preserves a
+sensory impression conditioned by the passage of time. The object of memory
+is always the past.
+
+**Emotions as first-class memory objects**: when we remember that we were
+afraid, we remember fear itself as an object — not merely its external cause.
+Emotions are not memory metadata: they are memory content.
+
+**Phantasmata**: mnemonic images (*phantasmata*) are residues of sensory
+impressions and carry affective coloring. There are no affectively neutral
+memories.
+
+**Associationism**: Aristotle distinguishes *mneme* (spontaneous, passive
+recall) from *anamnesis* (active, deliberate search). *Anamnesis* proceeds
+through three associative laws:
+
+- **Similarity** (*homoion*)
+- **Spatio-temporal contiguity** (*synecheia*)
+- **Contrast** (*enantion*)
+
+These three laws are the first formulation of what modern cognitive
+psychology calls associative retrieval.
+
+**Relevance to the library**: multi-signal retrieval must include emotional
+similarity as an autonomous associative axis. Emotions are not metadata —
+they are searchable content.
 
 ---
 
-### Stoici — Crisippo, Zenone, Epitteto
+### Plato — *Meno*, *Phaedo*, *Phaedrus*
 
-**Passioni come giudizi cognitivi**: Gli Stoici rifiutano la divisione platonica dell'anima in parti razionali e irrazionali. L'anima è unitaria e razionale. Le passioni (*pathē*) non sono eruzioni irrazionali ma **errori di giudizio** riguardo al bene e al male.
+**Anamnesis**: learning as re-cognition — knowledge was already present in
+the soul before embodiment. Reminiscence is the process of recovering what
+one knew but has forgotten.
 
-**Il modello phantasia-assenso**:
-1. Un'impressione (*phantasia*) si presenta alla mente
-2. La mente dà o nega *assenso* (*synkatathesis*)
-3. Se l'assenso è precipitoso o errato → emerge una passione
+**Eros as a memory trigger**: in the *Phaedrus*, the most powerful emotion —
+amorous desire — is epistemically productive: an intense emotion triggers
+anamnesis. Physical beauty shakes the soul and sets it in motion toward the
+memory of the Forms.
 
-Le quattro passioni generiche: *lupe* (dispiacere), *phobos* (paura), *epithumia* (brama), *hedone* (piacere).
-
-**Impressioni catalettiche**: Le impressioni affidabili (*phantasiai kataleptikai*) portano il marchio chiaro della loro origine. Le impressioni inaffidabili producono risposte emotive false.
-
-**Implicazione per l'appraisal**: Il modello Stoico anticipa direttamente la teoria dell'appraisal cognitivo (Lazarus, Scherer). L'emozione emerge dalla valutazione, non dall'evento. Un engine di appraisal che valuta il contenuto di un evento rispetto ai goal del sistema è operativamente Stoico.
+**Implication**: high-intensity emotions have privileged access to deep
+mnemonic structures. Emotional arousal does not disturb memory — it
+catalyzes it.
 
 ---
 
-## 2. Età Moderna: Il Problema Mente-Corpo e la Dinamica degli Affetti
+### Stoics — Chrysippus, Zeno, Epictetus
+
+**Passions as cognitive judgments**: the Stoics reject the Platonic division
+of the soul into rational and irrational parts. The soul is unitary and
+rational. Passions (*pathē*) are not irrational eruptions but **errors of
+judgment** about good and evil.
+
+**The phantasia–assent model**:
+
+1. An impression (*phantasia*) presents itself to the mind
+2. The mind gives or withholds *assent* (*synkatathesis*)
+3. If assent is hasty or erroneous → a passion emerges
+
+The four generic passions: *lupe* (distress), *phobos* (fear), *epithumia*
+(craving), *hedone* (pleasure).
+
+**Cataleptic impressions**: reliable impressions (*phantasiai kataleptikai*)
+bear the clear mark of their origin. Unreliable impressions produce false
+emotional responses.
+
+**Implication for appraisal**: the Stoic model directly anticipates cognitive
+appraisal theory (Lazarus, Scherer). Emotion emerges from evaluation, not
+from the event. An appraisal engine that evaluates the content of an event
+against the system's goals is operationally Stoic.
+
+---
+
+## 2. Modern Age: The Mind–Body Problem and the Dynamics of Affects
 
 ### René Descartes — *Les Passions de l'âme* (1649)
 
-**Le sei passioni primitive**: meraviglia, amore, odio, desiderio, gioia, tristezza. Tutte le altre emozioni sono composizioni o specie di queste sei.
+**The six primitive passions**: wonder, love, hatred, desire, joy, sadness.
+All other emotions are compositions or species of these six.
 
-**Funzione adattiva**: Le passioni "muovono e dispongono l'anima a volere le cose per cui preparano il corpo." Sono orientative — non rumore ma segnale di navigazione.
+**Adaptive function**: the passions "move and dispose the soul to will the
+things for which they prepare the body." They are orientational — not noise,
+but a navigation signal.
 
-**Memoria abitudinaria**: La ripetizione crea tracce nei *spiriti animali* (particelle materiali sottili). Il corpo "ricorda" associazioni emotive indipendentemente dalla cognizione cosciente — un precursore del condizionamento classico e della memoria procedurale.
+**Habitual memory**: repetition creates traces in the *animal spirits*
+(subtle material particles). The body "remembers" emotional associations
+independently of conscious cognition — a precursor to classical conditioning
+and procedural memory.
 
-**Il problema irrisolto**: Come due sostanze ontologicamente distinte (mente e corpo) interagiscono causalmente nell'emozione? Il dualismo cartesiano pone il problema che tutto il pensiero successivo cerca di risolvere.
+**The unresolved problem**: how do two ontologically distinct substances
+(mind and body) causally interact in emotion? Cartesian dualism poses the
+problem that all subsequent thought tries to solve.
 
 ---
 
 ### Baruch Spinoza — *Ethica Ordine Geometrico Demonstrata* (1677)
 
-Spinoza è il filosofo più direttamente rilevante per la nostra architettura.
+Spinoza is the philosopher most directly relevant to our architecture.
 
-**Monismo**: Mente e corpo non sono sostanze distinte ma due attributi (pensiero ed estensione) di un'unica sostanza. Non esiste problema di interazione causale — sono espressioni parallele della stessa realtà.
+**Monism**: mind and body are not distinct substances but two attributes
+(thought and extension) of a single substance. There is no causal
+interaction problem — they are parallel expressions of the same reality.
 
-**Conatus**: Ogni essere tende a perseverare nella propria esistenza. È la spinta fondamentale sottostante a tutti gli affetti. Computazionalmente: il sistema ha un goal-set implicito di auto-preservazione che genera il piano valutativo degli affetti.
+**Conatus**: every being tends to persevere in its own existence. It is the
+fundamental drive underlying all affects. Computationally: the system has
+an implicit goal-set of self-preservation that generates the evaluative
+plane of affects.
 
-**I tre affetti primari**:
-- **Desiderio** (*cupiditas*): l'essenza del conatus stesso — l'impulso a persistere e agire
-- **Gioia** (*laetitia*): transizione verso maggiore potenza/perfezione
-- **Tristezza** (*tristitia*): transizione verso minore potenza/perfezione
+**The three primary affects**:
 
-**L'insight fondamentale**: Gli affetti non sono stati ma **transizioni**. "Laetitia est transitio hominis a minore ad maiorem perfectionem" — la gioia *è* il passaggio, non la destinazione. Spinoza definisce gli affetti in termini di direzione e velocità del cambiamento, non di posizione assoluta.
+- **Desire** (*cupiditas*): the essence of conatus itself — the impulse to
+  persist and act
+- **Joy** (*laetitia*): transition toward greater power / perfection
+- **Sadness** (*tristitia*): transition toward lesser power / perfection
 
-Questo è l'insight che genera il **Layer 2 — Affective Momentum** della nostra architettura.
+**The fundamental insight**: affects are not states but **transitions**.
+"Laetitia est transitio hominis a minore ad maiorem perfectionem" — joy
+*is* the passage, not the destination. Spinoza defines affects in terms of
+direction and velocity of change, not absolute position.
 
-**Affetti attivi vs passivi**: Quando la mente agisce da idee adeguate, genera affetti attivi (aumentano la potenza d'azione). Quando è causata da esterno attraverso idee inadeguate, subisce affetti passivi (passioni). La libertà è la progressiva sostituzione degli affetti passivi con quelli attivi.
+This is the insight that generates **Layer 2 — Affective Momentum** in our
+architecture.
 
-**Memoria associativa**: "Se il corpo umano è stato simultaneamente affetto da due corpi, quando la mente immagina uno dei due, si ricorderà subito degli altri" (*Ethica* II, Prop. 18). Condizionamento emotivo avant la lettre.
+**Active vs passive affects**: when the mind acts from adequate ideas, it
+generates active affects (which increase the power of action). When it is
+caused by something external through inadequate ideas, it undergoes passive
+affects (passions). Freedom is the progressive substitution of passive
+affects with active ones.
 
----
-
-### David Hume — *Trattato della Natura Umana* (1739-40)
-
-**Impressioni e idee**: Tutto il contenuto mentale sono "percezioni", divise in impressioni (vivide, intense — sensazioni, passioni) e idee (copie sbiadite delle impressioni, usate nel pensiero e nel ricordo).
-
-**Memoria vs. immaginazione**: Entrambe usano idee, ma le idee di memoria conservano più forza e vivacità e preservano l'ordine originale delle impressioni.
-
-**Associazionismo**: Tre principi di associazione — somiglianza, contiguità, causa-effetto — le "forze gentili" che organizzano la vita mentale.
-
-**La tesi radicale**: "La ragione è, e non può che essere, schiava delle passioni." Le emozioni hanno primazia cognitiva — non distorcono la ragione, la guidano.
-
-**Simpatia come contagio emotivo**: Le impressioni delle emozioni altrui generano idee che, per vivacità, diventano impressioni — emozioni realmente sentite. La base di un modello di risonanza emotiva interpersonale.
-
----
-
-## 3. Fenomenologia: La Struttura Esperienziale dell'Emozione
-
-### Edmund Husserl — Lezioni sulla Coscienza Interna del Tempo (1893-1917)
-
-**La struttura triadica del "presente vivente"**:
-- **Impressione primaria**: il punto-ora
-- **Ritenzione**: coscienza della fase appena trascorsa — la "coda della cometa" del presente
-- **Protenzione**: anticipazione di ciò che sta per venire
-
-Queste non sono tre atti separati ma momenti inseparabili di un unico flusso temporale.
-
-**Ritenzione vs. ricordo**: La ritenzione non è memoria — è la nota appena suonata ancora "tenuta" nella coscienza come appena-passata. La memoria (*Wiedererinnerung*) è un atto separato che ri-presenta un'esperienza passata.
-
-**Sintesi passiva**: Prima di ogni giudizio attivo, la coscienza organizza già l'esperienza attraverso associazioni temporali, prominenze affettive e pattern abituali. La salienza emotiva determina pre-riflessivamente ciò che emerge nel campo dell'attenzione.
-
-**Protenzione e sorpresa**: Se attendi una nota e ne suona un'altra, il mismatch tra protenzione e impressione primaria genera una risposta affettiva. Le emozioni sono parzialmente costituite da strutture di aspettativa temporale.
-
-**Rilevanza**: Il nostro sistema deve modellare la dimensione temporale non solo come timestamp ma come struttura di aspettativa-ritenzione. Le emozioni "sorpresa" emergono dal confronto tra memoria di aspettativa (protenzione) e evento attuale.
+**Associative memory**: "If the human body has been simultaneously affected
+by two bodies, when the mind imagines one of them it will immediately
+remember the others as well" (*Ethica* II, Prop. 18). Emotional conditioning
+avant la lettre.
 
 ---
 
-### Martin Heidegger — *Essere e Tempo* (1927)
+### David Hume — *A Treatise of Human Nature* (1739–40)
 
-**Befindlichkeit** (attunement/trovarsi): Una struttura esistenziale (*Existenzial*) del Dasein (essere umano). Non siamo mai senza umore — non esiste accesso neutro al mondo.
+**Impressions and ideas**: all mental content consists of "perceptions",
+divided into impressions (vivid, intense — sensations, passions) and ideas
+(faded copies of impressions, used in thought and memory).
 
-**Stimmung** (tono emotivo/accordatura): Non è una colorazione soggettiva aggiunta a una percezione neutra. È un modo fondamentale di disclosure. I mood rivelano il mondo — sono "le lenti attraverso cui le cose, le persone, gli eventi ci riguardano."
+**Memory vs imagination**: both use ideas, but ideas of memory retain more
+force and vivacity and preserve the original order of impressions.
 
-La Stimmung ha una struttura triadica di disclosure:
-1. Rivela la nostra **gettatezza** (*Geworfenheit*) — la fatticità di essere già situati
-2. Rivela l'**essere-nel-mondo nel suo complesso** — il mood colora la totalità della nostra situazione
-3. Abilita l'**incontro** — solo attraverso il mood le entità nel mondo ci riguardano
+**Associationism**: three principles of association — resemblance,
+contiguity, cause–effect — the "gentle forces" that organize mental life.
 
-**Angoscia**: Il mood fondamentale che rivela l'essere-verso-la-morte e la nullità dell'esistenza. Stripping via il senso familiare del mondo. Il mood più rivelatorio proprio perché rivela la struttura della cura (*Sorge*) stessa.
+**The radical thesis**: "Reason is, and can only be, the slave of the
+passions." Emotions have cognitive primacy — they do not distort reason,
+they guide it.
 
-**L'insight fondamentale per la libreria**: Il mood non è un attributo dei singoli ricordi — è lo stato globale del sistema che colora tutte le operazioni cognitive. Non si può "togliere" il mood dall'esperienza e avere ancora esperienza.
-
-Questo è il fondamento del **Layer 3 — MoodField** della nostra architettura: un campo a variazione lenta che non cambia per singoli eventi ma per accumulo, e che agisce come bias gravitazionale su ogni operazione di encoding e retrieval.
-
----
-
-### Maurice Merleau-Ponty — *Fenomenologia della Percezione* (1945)
-
-**Il corpo vissuto**: Non "abbiamo" un corpo — "siamo" un corpo. Il corpo non è un oggetto tra oggetti ma il punto-zero di ogni orientamento e esperienza.
-
-**Intentionalità motoria**: Il corpo-soggetto "comprende" situazioni praticamente prima della cognizione riflessiva. Un pianista le cui dita "sanno" la tastiera.
-
-**Memoria corporea**: Il corpo conserva abilità, abitudini, posture e pattern emotivi. L'abitudine è "conoscenza nelle mani." La memoria non è solo rappresentazionale (dati archiviati) ma **motorio-affettiva** (disposizioni corporee, schemi posturali, risposte emotive abituali).
-
-**Memoria intercorporea**: Le nostre interazioni incarnate sono modellate dall'esperienza precedente a tal punto da poter parlare di una memoria implicita, inconscia, che opera in ogni incontro sociale. La risonanza emotiva con gli altri è corporea prima di essere cognitiva.
-
-**Implicazione per la libreria**: La "memoria corporea" del sistema è il Layer 3 (MoodField) — l'accumulo di pattern affettivi che non si ricordano esplicitamente ma che colorano ogni nuova esperienza. Le disposizioni emotive abituali sono il nostro equivalente computazionale della memoria corporea.
+**Sympathy as emotional contagion**: impressions of others' emotions produce
+ideas that, through their vivacity, become impressions — emotions that are
+actually felt. The basis of a model of interpersonal emotional resonance.
 
 ---
 
-## 4. Contemporaneo: Enattivismo e Mente Estesa
+## 3. Phenomenology: The Experiential Structure of Emotion
+
+### Edmund Husserl — Lectures on Inner Time-Consciousness (1893–1917)
+
+**The triadic structure of the "living present"**:
+
+- **Primal impression**: the now-point
+- **Retention**: consciousness of the just-past phase — the "comet's tail"
+  of the present
+- **Protention**: anticipation of what is about to come
+
+These are not three separate acts but inseparable moments of a single
+temporal flow.
+
+**Retention vs recollection**: retention is not memory — it is the note
+just played, still "held" in consciousness as just-past. Memory
+(*Wiedererinnerung*) is a separate act that re-presents a past experience.
+
+**Passive synthesis**: before any active judgment, consciousness already
+organizes experience through temporal associations, affective saliences,
+and habitual patterns. Emotional salience pre-reflectively determines what
+emerges in the field of attention.
+
+**Protention and surprise**: if you await one note and a different one
+plays, the mismatch between protention and primal impression generates an
+affective response. Emotions are partly constituted by structures of
+temporal expectation.
+
+**Relevance**: our system must model the temporal dimension not only as
+timestamps but as a structure of expectation–retention. "Surprise" emotions
+emerge from the comparison between expectation memory (protention) and
+actual event.
+
+---
+
+### Martin Heidegger — *Being and Time* (1927)
+
+**Befindlichkeit** (attunement / finding oneself): an existential structure
+(*Existenzial*) of Dasein (human being). We are never without mood — there
+is no neutral access to the world.
+
+**Stimmung** (emotional tonality / attunement): not a subjective coloring
+added to a neutral perception. It is a fundamental mode of disclosure.
+Moods reveal the world — they are "the lenses through which things,
+persons, and events come to matter to us."
+
+Stimmung has a triadic structure of disclosure:
+
+1. It reveals our **thrownness** (*Geworfenheit*) — the facticity of being
+   already situated
+2. It reveals **being-in-the-world as a whole** — mood colors the totality
+   of our situation
+3. It enables **encounter** — only through mood do entities in the world
+   come to matter to us
+
+**Anxiety**: the fundamental mood that reveals being-toward-death and the
+nullity of existence, stripping away the familiar sense of the world. The
+most disclosive mood precisely because it reveals the structure of care
+(*Sorge*) itself.
+
+**The fundamental insight for the library**: mood is not an attribute of
+individual memories — it is the global state of the system that colors all
+cognitive operations. You cannot "remove" mood from experience and still
+have experience.
+
+This is the foundation of **Layer 3 — MoodField** in our architecture: a
+slowly-varying field that does not change per individual event but by
+accumulation, and which acts as a gravitational bias on every encoding and
+retrieval operation.
+
+---
+
+### Maurice Merleau-Ponty — *Phenomenology of Perception* (1945)
+
+**The lived body**: we do not "have" a body — we "are" a body. The body is
+not an object among objects but the zero-point of all orientation and
+experience.
+
+**Motor intentionality**: the body-subject "understands" situations
+practically before reflective cognition. A pianist whose fingers "know"
+the keyboard.
+
+**Bodily memory**: the body preserves skills, habits, postures, and
+emotional patterns. Habit is "knowledge in the hands." Memory is not only
+representational (archived data) but **motor-affective** (bodily
+dispositions, postural schemas, habitual emotional responses).
+
+**Intercorporeal memory**: our embodied interactions are shaped by prior
+experience to such an extent that we can speak of an implicit, unconscious
+memory that operates in every social encounter. Emotional resonance with
+others is bodily before it is cognitive.
+
+**Implication for the library**: the system's "bodily memory" is Layer 3
+(MoodField) — the accumulation of affective patterns that are not
+explicitly recalled but color every new experience. Habitual emotional
+dispositions are our computational equivalent of bodily memory.
+
+---
+
+## 4. Contemporary: Enactivism and the Extended Mind
 
 ### Giovanna Colombetti — *The Feeling Body* (2014)
 
-**Enattivismo e cognizione intrinsecamente affettiva**: L'enattivismo sostiene che la cognizione è "enazione" — il "portare avanti" domini di significato attraverso l'attività dell'organismo nel suo ambiente. Colombetti argomenta che questo implica che la cognizione sia intrinsecamente affettiva.
+**Enactivism and intrinsically affective cognition**: enactivism holds that
+cognition is "enaction" — the "bringing forth" of domains of meaning
+through the activity of the organism in its environment. Colombetti argues
+that this implies cognition is intrinsically affective.
 
-**Affettività primordiale**: Persino organismi semplici esibiscono una forma di affetto — la capacità di essere "toccati" dall'ambiente. L'emozione non richiede cognizione superiore.
+**Primordial affectivity**: even simple organisms exhibit a form of affect
+— the capacity to be "touched" by the environment. Emotion does not
+require higher cognition.
 
-**Autonomia e sense-making**: Un sistema vivente si mantiene attraverso auto-organizzazione (autopoiesi). Questa attività auto-mantenente genera una prospettiva — un punto di vista da cui le cose contano. L'emozione è una manifestazione di questo fondamentale sense-making organico.
+**Autonomy and sense-making**: a living system maintains itself through
+self-organization (autopoiesis). This self-maintaining activity generates
+a perspective — a point of view from which things matter. Emotion is a
+manifestation of this fundamental organic sense-making.
 
-**Critica alle teorie standard**: Colombetti critica sia la teoria delle emozioni di base (Ekman) che la teoria dell'appraisal (Lazarus) per essere troppo cognitiviste — non riescono a cogliere il carattere corporeo, dinamico e relazionale dell'emozione.
+**Critique of standard theories**: Colombetti criticizes both basic emotion
+theory (Ekman) and appraisal theory (Lazarus) for being overly cognitivist
+— they fail to capture the embodied, dynamic, relational character of
+emotion.
 
-**Implicazione**: L'affetto non è un modulo aggiunto al sistema cognitivo. Ogni operazione cognitiva — ogni allocazione di attenzione, ogni inferenza, ogni encoding — ha una dimensione affettiva. Questo giustifica il nostro approccio di emotional tagging pervasivo piuttosto che un settore emotivo isolato.
+**Implication**: affect is not a module added to the cognitive system.
+Every cognitive operation — every attentional allocation, every inference,
+every encoding — has an affective dimension. This justifies our approach
+of pervasive emotional tagging rather than an isolated emotional sector.
 
 ---
 
 ### Andy Clark & David Chalmers — *The Extended Mind* (1998)
 
-**Il Principio di Parità**: Se un processo esterno funziona in modo che, se fosse nel cervello, lo chiameremmo cognitivo, allora quel processo esterno è parte del sistema cognitivo.
+**The Parity Principle**: if an external process functions in a way that,
+were it in the brain, we would call cognitive, then that external process
+is part of the cognitive system.
 
-**Il thought experiment Otto/Inga**: Otto (paziente Alzheimer) si affida a un taccuino per i percorsi; Inga usa la memoria biologica. Se il taccuino svolge il ruolo funzionale della memoria, è parte della mente di Otto.
+**The Otto / Inga thought experiment**: Otto (an Alzheimer's patient)
+relies on a notebook for routes; Inga uses biological memory. If the
+notebook plays the functional role of memory, it is part of Otto's mind.
 
-**Oggetti evocativi** (Sherry Turkle): Gli artefatti portano significato emotivo e partecipano ai processi di memoria. Ponti tra mente estesa e scienza affettiva.
+**Evocative objects** (Sherry Turkle): artifacts carry emotional meaning
+and participate in memory processes. Bridges between the extended mind and
+affective science.
 
-**Implicazione per la libreria**: I database di memoria esterni (vector stores, file) non sono repository passivi ma **estensioni attive** del sistema di memoria emotiva. Devono essere trattati come parte del sistema affettivo, non come storage esterno neutro.
-
----
-
-## 5. Sintesi: Cosa la Filosofia Dice all'Architettura
-
-| Filosofo | Insight chiave | Corrispondenza nella libreria |
-|----------|---------------|-------------------------------|
-| Aristotele | Emozioni come oggetti di memoria; retrieval associativo | Layer 5: Associative Resonance; retrieval per somiglianza emotiva |
-| Platone | Alta intensità emotiva catalizza il ricordo | Consolidation strength ∝ arousal |
-| Stoici | Emozione nasce dalla valutazione | Layer 4: Appraisal Vector |
-| Spinoza | Affetto come transizione, non stato; conatus | Layer 2: Affective Momentum; goal-relevance nell'appraisal |
-| Hume | Primato delle passioni; associazionismo | Retrieval bias verso contenuto emotivamente congruente |
-| Husserl | Struttura temporale dell'esperienza; prominenza affettiva | Temporal structure nell'encoding; sorpresa come evento affettivo |
-| Heidegger | Stimmung come campo globale | Layer 3: MoodField; pesi di retrieval mood-dependent |
-| Merleau-Ponty | Memoria corporea come disposizione | Pattern emotivi abituali; decay floor per memorie consolidate |
-| Colombetti | Cognizione intrinsecamente affettiva | Emotional tagging pervasivo — ogni memoria ha metadata affettivo |
-| Clark & Chalmers | Mente estesa | Storage esterno come estensione del sistema affettivo |
+**Implication for the library**: external memory databases (vector stores,
+files) are not passive repositories but **active extensions** of the
+emotional memory system. They should be treated as part of the affective
+system, not as neutral external storage.
 
 ---
 
-## Note Bibliografiche
+## 5. Synthesis: What Philosophy Tells the Architecture
 
-- Aristotele. *De Memoria et Reminiscentia*. In *Parva Naturalia*. Trad. J.I. Beare. MIT Classics Archive.
-- Aristotele. *De Anima*. Trad. D.W. Hamlyn. Oxford: Clarendon Press, 1968.
-- Platone. *Menone*, *Fedone*, *Fedro*. In *Opere Complete*. Bari: Laterza.
-- Spinoza, B. *Ethica Ordine Geometrico Demonstrata* (1677). Trad. E. Curley. Princeton: Princeton University Press, 1994.
-- Hume, D. *A Treatise of Human Nature* (1739-40). Ed. L.A. Selby-Bigge. Oxford: Clarendon Press.
-- Husserl, E. *Vorlesungen zur Phänomenologie des inneren Zeitbewusstseins* (1905-1917). Ed. M. Heidegger. Halle: Niemeyer, 1928.
-- Heidegger, M. *Sein und Zeit* (1927). Trad. it. *Essere e Tempo*. Milano: Longanesi.
-- Merleau-Ponty, M. *Phénoménologie de la perception* (1945). Trad. it. *Fenomenologia della Percezione*. Milano: Bompiani.
-- Colombetti, G. *The Feeling Body: Affective Science Meets the Enactive Mind*. Cambridge: MIT Press, 2014.
-- Clark, A. & Chalmers, D. "The Extended Mind." *Analysis* 58(1), 7-19, 1998.
-- Turkle, S. (ed.) *Evocative Objects: Things We Think With*. Cambridge: MIT Press, 2007.
+| Philosopher | Key insight | Correspondence in the library |
+|-------------|-------------|-------------------------------|
+| Aristotle | Emotions as memory objects; associative retrieval | Layer 5: Associative Resonance; retrieval by emotional similarity |
+| Plato | High emotional intensity catalyzes recall | Consolidation strength ∝ arousal |
+| Stoics | Emotion arises from evaluation | Layer 4: Appraisal Vector |
+| Spinoza | Affect as transition, not state; conatus | Layer 2: Affective Momentum; goal-relevance in appraisal |
+| Hume | Primacy of passions; associationism | Retrieval bias toward emotionally congruent content |
+| Husserl | Temporal structure of experience; affective salience | Temporal structure in encoding; surprise as an affective event |
+| Heidegger | Stimmung as a global field | Layer 3: MoodField; mood-dependent retrieval weights |
+| Merleau-Ponty | Bodily memory as disposition | Habitual emotional patterns; decay floor for consolidated memories |
+| Colombetti | Intrinsically affective cognition | Pervasive emotional tagging — every memory has affective metadata |
+| Clark & Chalmers | Extended mind | External storage as an extension of the affective system |
+
+---
+
+## Bibliographic Notes
+
+- Aristotle. *De Memoria et Reminiscentia*. In *Parva Naturalia*. Trans.
+  J.I. Beare. MIT Classics Archive.
+- Aristotle. *De Anima*. Trans. D.W. Hamlyn. Oxford: Clarendon Press, 1968.
+- Plato. *Meno*, *Phaedo*, *Phaedrus*. In *Complete Works*. Indianapolis:
+  Hackett.
+- Spinoza, B. *Ethica Ordine Geometrico Demonstrata* (1677). Trans. E.
+  Curley. Princeton: Princeton University Press, 1994.
+- Hume, D. *A Treatise of Human Nature* (1739–40). Ed. L.A. Selby-Bigge.
+  Oxford: Clarendon Press.
+- Husserl, E. *Vorlesungen zur Phänomenologie des inneren
+  Zeitbewusstseins* (1905–1917). Ed. M. Heidegger. Halle: Niemeyer, 1928.
+- Heidegger, M. *Sein und Zeit* (1927). Trans. *Being and Time*. New York:
+  Harper & Row.
+- Merleau-Ponty, M. *Phénoménologie de la perception* (1945). Trans.
+  *Phenomenology of Perception*. London: Routledge.
+- Colombetti, G. *The Feeling Body: Affective Science Meets the Enactive
+  Mind*. Cambridge: MIT Press, 2014.
+- Clark, A. & Chalmers, D. "The Extended Mind." *Analysis* 58(1), 7–19,
+  1998.
+- Turkle, S. (ed.) *Evocative Objects: Things We Think With*. Cambridge:
+  MIT Press, 2007.
