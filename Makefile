@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-realistic bench-realistic-hash bench-ablation bench-ablation-hash human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-realistic bench-realistic-hash bench-ablation bench-ablation-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -95,6 +95,12 @@ bench-ablation:
 
 bench-ablation-hash:
 	uv run python -m benchmarks.ablation.runner --embedder hash
+
+bench-locomo:
+	uv run python -m benchmarks.locomo.runner
+
+bench-locomo-dry:
+	uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 5 --no-judge
 
 human-eval-packets:
 	uv run python -m benchmarks.human_eval.pipeline packets
@@ -234,6 +240,8 @@ help:
 	@echo "  bench-appraisal            LLM appraisal quality (requires API key)"
 	@echo "  bench-comparative          Cross-system comparison (v0.6)"
 	@echo "  bench-realistic            Replayable multi-session benchmark with persisted state"
+	@echo "  bench-locomo               LoCoMo benchmark (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
+	@echo "  bench-locomo-dry           LoCoMo dry run: 2 conversations, 5 QA each, no judge"
 	@echo "  human-eval-packets         Build human-eval packet + ratings template from replay results"
 	@echo "  human-eval-summary         Summarize filled human-eval ratings"
 	@echo "  reproduce-paper            Regenerate all paper tables"
