@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import tempfile
 from pathlib import Path
@@ -15,6 +16,7 @@ from benchmarks.common.statistics import (
     DEFAULT_N_BOOTSTRAP,
     bootstrap_ci,
     ci_payload,
+    cohens_d_paired,
     format_point_ci,
     mcnemar_exact,
     paired_bootstrap_diff,
@@ -26,7 +28,7 @@ from benchmarks.realistic.adapters import (
     ReplayAdapter,
     ReplayRetrievedItem,
 )
-from emotional_memory import EmotionalMemoryConfig
+from emotional_memory import Embedder, EmotionalMemoryConfig
 
 
 def _seed_everything(seed: int) -> None:
@@ -374,16 +376,35 @@ def _aggregate_by_challenge_type(
     return aggregates
 
 
+def _build_embedder(embedder_name: str | None) -> Embedder | None:
+    """Resolve embedder name to an Embedder instance. Returns None for hash (adapter default)."""
+    if embedder_name is None or embedder_name == "hash":
+        return None
+    try:
+        from emotional_memory.embedders import SentenceTransformerEmbedder
+    except ImportError as exc:
+        raise ImportError(
+            "sentence-transformers is required for sbert embedders.\n"
+            "Install with: pip install 'emotional-memory[sentence-transformers]'"
+        ) from exc
+    if embedder_name == "sbert-bge":
+        return SentenceTransformerEmbedder.make_bge_small()
+    if embedder_name == "sbert-mini":
+        return SentenceTransformerEmbedder("all-MiniLM-L6-v2")
+    raise ValueError(f"Unknown embedder: {embedder_name!r}. Choices: hash, sbert-bge, sbert-mini")
+
+
 def _make_adapter(
     system_name: str,
     *,
     workdir: Path,
     aft_config: EmotionalMemoryConfig | None = None,
+    embedder: Embedder | None = None,
 ) -> ReplayAdapter:
     if system_name == "aft":
-        return AFTReplayAdapter(workdir / system_name, config=aft_config)
+        return AFTReplayAdapter(workdir / system_name, config=aft_config, embedder=embedder)
     if system_name == "naive_cosine":
-        return NaiveCosineReplayAdapter()
+        return NaiveCosineReplayAdapter(embedder=embedder)
     if system_name == "recency":
         return RecencyReplayAdapter()
     raise ValueError(f"Unknown system: {system_name}")
@@ -557,6 +578,7 @@ def _build_pairwise_comparisons(
             only_a = sum(1 for av, bv in zip(a, b, strict=True) if av > bv)
             only_b = sum(1 for av, bv in zip(a, b, strict=True) if bv > av)
             p_mc = mcnemar_exact(only_a, only_b)
+            d = cohens_d_paired(a, b, hedges_correction=True)
             rows.append(
                 {
                     "system": sys["system"],
@@ -567,6 +589,7 @@ def _build_pairwise_comparisons(
                     "ci_upper": round(hi, 4),
                     "p_bootstrap": round(p_boot, 4),
                     "p_mcnemar": round(p_mc, 4),
+                    "effect_size_d": round(d, 4) if not math.isnan(d) else None,
                     "n_queries": len(common_ids),
                     "n_discordant": only_a + only_b,
                 }
@@ -583,6 +606,7 @@ def run_benchmark(
     n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
     seed: int = 0,
     aft_config: EmotionalMemoryConfig | None = None,
+    embedder: Embedder | None = None,
 ) -> dict[str, Any]:
     selected_systems = DEFAULT_SYSTEMS if systems is None else systems
     effective_top_k = dataset.default_top_k if top_k is None else top_k
@@ -592,7 +616,9 @@ def run_benchmark(
     with tempfile.TemporaryDirectory(prefix="emotional-memory-realistic-") as tmp_dir:
         base_workdir = Path(tmp_dir)
         for system_name in selected_systems:
-            adapter = _make_adapter(system_name, workdir=base_workdir, aft_config=aft_config)
+            adapter = _make_adapter(
+                system_name, workdir=base_workdir, aft_config=aft_config, embedder=embedder
+            )
             adapter.reset()
             try:
                 scenario_results = [
@@ -749,16 +775,19 @@ def _render_markdown(results: dict[str, Any]) -> str:
                 "Two-sided tests: paired bootstrap p-value and exact McNemar p-value.",
                 "H0: no difference. CI excludes 0 ↔ difference is credible at 95% level.",
                 "",
-                "| System | Metric | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
-                "|---|---|---:|---:|---:|---:|---:|",
+                "| System | Metric | Δ [95% CI] | p (bootstrap)"
+                " | p (McNemar) | d (Hedges g) | N | Discordant |",
+                "|---|---|---:|---:|---:|---:|---:|---:|",
             ]
         )
         for row in pairwise:
             diff_str = format_point_ci(row["diff"], row["ci_lower"], row["ci_upper"])
+            d_val = row.get("effect_size_d")
+            d_str = f"{d_val:.4f}" if d_val is not None else "—"
             lines.append(
                 f"| `{row['system']}` | {row['metric']} | {diff_str} | "
                 f"{row['p_bootstrap']:.4f} | {row['p_mcnemar']:.4f} | "
-                f"{row['n_queries']} | {row['n_discordant']} |"
+                f"{d_str} | {row['n_queries']} | {row['n_discordant']} |"
             )
         lines.append("")
     return "\n".join(lines)
@@ -798,10 +827,23 @@ def main() -> None:
         default=DEFAULT_N_BOOTSTRAP,
         help="Number of bootstrap resamples for CI computation.",
     )
+    parser.add_argument(
+        "--embedder",
+        type=str,
+        default="sbert-bge",
+        choices=["hash", "sbert-bge", "sbert-mini"],
+        help=(
+            "Embedder backend for AFT and naive_cosine. "
+            "'hash' = TokenHashEmbedder (fast, no semantics). "
+            "'sbert-bge' = BAAI/bge-small-en-v1.5 (recommended). "
+            "'sbert-mini' = all-MiniLM-L6-v2 (legacy)."
+        ),
+    )
     args = parser.parse_args()
 
     _seed_everything(args.seed)
     dataset = load_dataset(args.dataset)
+    emb = _build_embedder(args.embedder)
     results = run_benchmark(
         dataset,
         systems=args.systems,
@@ -809,6 +851,7 @@ def main() -> None:
         dataset_path=args.dataset,
         n_bootstrap=args.n_bootstrap,
         seed=args.seed,
+        embedder=emb,
     )
     write_results(
         results,

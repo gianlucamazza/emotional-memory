@@ -1,0 +1,933 @@
+{
+  "benchmark": "ablation_realistic_v1",
+  "base_benchmark": "realistic_recall_v1",
+  "variants": [
+    {
+      "variant": "full",
+      "flags": {},
+      "aggregate_metrics": {
+        "query_count": 20,
+        "top1_accuracy": 0.85,
+        "hit_at_k": 1.0,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 1.0,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.85,
+            "ci_lower": 0.7,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "hit_at_k": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "nontrivial_query_rate": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          }
+        },
+        "stateful_session_rate": 0.95
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 4,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 2,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 6,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 8,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.5,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_appraisal",
+      "flags": {
+        "enable_appraisal": false
+      },
+      "aggregate_metrics": {
+        "query_count": 20,
+        "top1_accuracy": 0.85,
+        "hit_at_k": 1.0,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 1.0,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.85,
+            "ci_lower": 0.7,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "hit_at_k": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "nontrivial_query_rate": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          }
+        },
+        "stateful_session_rate": 0.95
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 4,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 2,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 6,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 8,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.5,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_mood",
+      "flags": {
+        "enable_mood_signal": false
+      },
+      "aggregate_metrics": {
+        "query_count": 20,
+        "top1_accuracy": 0.75,
+        "hit_at_k": 1.0,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 1.0,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.75,
+            "ci_lower": 0.55,
+            "ci_upper": 0.95,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "hit_at_k": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "nontrivial_query_rate": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          }
+        },
+        "stateful_session_rate": 0.95
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 4,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.25,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 2,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 6,
+          "top1_accuracy": 0.8333,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.8333333333333334,
+              "ci_lower": 0.5,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 8,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.5,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_momentum",
+      "flags": {
+        "enable_momentum": false
+      },
+      "aggregate_metrics": {
+        "query_count": 20,
+        "top1_accuracy": 0.85,
+        "hit_at_k": 1.0,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 1.0,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.85,
+            "ci_lower": 0.7,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "hit_at_k": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "nontrivial_query_rate": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          }
+        },
+        "stateful_session_rate": 0.95
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 4,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 2,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 6,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 8,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.5,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_resonance",
+      "flags": {
+        "enable_resonance": false
+      },
+      "aggregate_metrics": {
+        "query_count": 20,
+        "top1_accuracy": 0.85,
+        "hit_at_k": 0.95,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 1.0,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.85,
+            "ci_lower": 0.7,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "hit_at_k": {
+            "point": 0.95,
+            "ci_lower": 0.85,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          },
+          "nontrivial_query_rate": {
+            "point": 1.0,
+            "ci_lower": 1.0,
+            "ci_upper": 1.0,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 2000
+          }
+        },
+        "stateful_session_rate": 0.95
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 4,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 2,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 6,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 8,
+          "top1_accuracy": 0.625,
+          "hit_at_k": 0.875,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.625,
+              "ci_lower": 0.25,
+              "ci_upper": 0.875,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "hit_at_k": {
+              "point": 0.875,
+              "ci_lower": 0.625,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 2000
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "pairwise_vs_full": [
+    {
+      "variant": "no_appraisal",
+      "baseline": "full",
+      "top1": {
+        "diff": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": null,
+        "n_queries": 20,
+        "n_discordant": 0,
+        "p_bootstrap_adj_holm": 1.0
+      },
+      "hit_at_k": {
+        "diff": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": null,
+        "n_queries": 20,
+        "n_discordant": 0,
+        "p_bootstrap_adj_holm": 1.0
+      }
+    },
+    {
+      "variant": "no_mood",
+      "baseline": "full",
+      "top1": {
+        "diff": -0.1,
+        "ci_lower": -0.25,
+        "ci_upper": 0.0,
+        "p_bootstrap": 0.2525,
+        "p_mcnemar": 0.5,
+        "effect_size_d": -0.3119,
+        "n_queries": 20,
+        "n_discordant": 2,
+        "p_bootstrap_adj_holm": 1.0
+      },
+      "hit_at_k": {
+        "diff": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": null,
+        "n_queries": 20,
+        "n_discordant": 0,
+        "p_bootstrap_adj_holm": 1.0
+      }
+    },
+    {
+      "variant": "no_momentum",
+      "baseline": "full",
+      "top1": {
+        "diff": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": null,
+        "n_queries": 20,
+        "n_discordant": 0,
+        "p_bootstrap_adj_holm": 1.0
+      },
+      "hit_at_k": {
+        "diff": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": null,
+        "n_queries": 20,
+        "n_discordant": 0,
+        "p_bootstrap_adj_holm": 1.0
+      }
+    },
+    {
+      "variant": "no_resonance",
+      "baseline": "full",
+      "top1": {
+        "diff": 0.0,
+        "ci_lower": -0.15,
+        "ci_upper": 0.15,
+        "p_bootstrap": 1.0,
+        "p_mcnemar": 1.0,
+        "effect_size_d": 0.0,
+        "n_queries": 20,
+        "n_discordant": 2,
+        "p_bootstrap_adj_holm": 1.0
+      },
+      "hit_at_k": {
+        "diff": -0.05,
+        "ci_lower": -0.15,
+        "ci_upper": 0.0,
+        "p_bootstrap": 0.6355,
+        "p_mcnemar": 1.0,
+        "effect_size_d": -0.2147,
+        "n_queries": 20,
+        "n_discordant": 1,
+        "p_bootstrap_adj_holm": 1.0
+      }
+    }
+  ],
+  "statistics": {
+    "n_bootstrap": 2000,
+    "confidence": 0.95,
+    "ci_method": "bootstrap_percentile",
+    "seed": 0,
+    "multiple_comparisons_correction": "holm_bonferroni",
+    "effect_size": "cohens_d_paired_hedges_corrected"
+  }
+}

@@ -5,6 +5,8 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
+from emotional_memory import Embedder
+
 from .base import (
     ReplayAdapter,
     ReplayRetrievedItem,
@@ -18,8 +20,8 @@ from .base import (
 class NaiveCosineReplayAdapter(ReplayAdapter):
     name = "naive_cosine"
 
-    def __init__(self) -> None:
-        self._embedder = TokenHashEmbedder()
+    def __init__(self, *, embedder: Embedder | None = None) -> None:
+        self._embedder: Embedder = embedder if embedder is not None else TokenHashEmbedder()
         self._store: list[tuple[str, str, list[float]]] = []
 
     def reset(self) -> None:

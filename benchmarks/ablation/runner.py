@@ -20,17 +20,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 from typing import Any
 
 from benchmarks.common.statistics import (
     DEFAULT_N_BOOTSTRAP,
+    cohens_d_paired,
     format_point_ci,
+    holm_bonferroni,
     mcnemar_exact,
     paired_bootstrap_diff,
 )
-from benchmarks.realistic.runner import load_dataset, run_benchmark
-from emotional_memory import EmotionalMemoryConfig
+from benchmarks.realistic.runner import _build_embedder, load_dataset, run_benchmark
+from emotional_memory import Embedder, EmotionalMemoryConfig
 
 ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("full", {}),
@@ -66,6 +69,7 @@ def run_ablation_study(
     n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
     seed: int = 0,
     top_k: int | None = None,
+    embedder: Embedder | None = None,
 ) -> dict[str, Any]:
     """Run the full ablation study and return the results dict."""
     if dataset is None:
@@ -83,6 +87,7 @@ def run_ablation_study(
             n_bootstrap=n_bootstrap,
             seed=seed,
             aft_config=cfg,
+            embedder=embedder,
         )
         aft_sys = next(s for s in bench["systems"] if s["system"] == "aft")
         query_flags_by_variant[variant_name] = _extract_query_flags(bench)
@@ -101,7 +106,8 @@ def run_ablation_study(
     full_top1 = [full_flags[qid]["top1_hit"] for qid in query_ids]
     full_hit = [full_flags[qid]["hit"] for qid in query_ids]
 
-    pairwise: list[dict[str, Any]] = []
+    # First pass: compute raw stats for each ablation
+    raw_rows: list[dict[str, Any]] = []
     for variant_name, _ in ABLATIONS:
         if variant_name == "full":
             continue
@@ -115,6 +121,7 @@ def run_ablation_study(
         only_abl_top1 = sum(a and not f for a, f in zip(abl_top1, full_top1, strict=True))
         only_full_top1 = sum(f and not a for a, f in zip(abl_top1, full_top1, strict=True))
         p_mc_top1 = mcnemar_exact(only_abl_top1, only_full_top1)
+        d_top1 = cohens_d_paired(abl_top1, full_top1, hedges_correction=True)
 
         diff_hit, lo_hit, hi_hit, p_boot_hit = paired_bootstrap_diff(
             abl_hit, full_hit, n_bootstrap=n_bootstrap, seed=seed
@@ -122,8 +129,9 @@ def run_ablation_study(
         only_abl_hit = sum(a and not f for a, f in zip(abl_hit, full_hit, strict=True))
         only_full_hit = sum(f and not a for a, f in zip(abl_hit, full_hit, strict=True))
         p_mc_hit = mcnemar_exact(only_abl_hit, only_full_hit)
+        d_hit = cohens_d_paired(abl_hit, full_hit, hedges_correction=True)
 
-        pairwise.append(
+        raw_rows.append(
             {
                 "variant": variant_name,
                 "baseline": "full",
@@ -133,6 +141,7 @@ def run_ablation_study(
                     "ci_upper": round(hi_top1, 4),
                     "p_bootstrap": round(p_boot_top1, 4),
                     "p_mcnemar": round(p_mc_top1, 4),
+                    "effect_size_d": round(d_top1, 4) if not math.isnan(d_top1) else None,
                     "n_queries": len(query_ids),
                     "n_discordant": only_abl_top1 + only_full_top1,
                 },
@@ -142,11 +151,24 @@ def run_ablation_study(
                     "ci_upper": round(hi_hit, 4),
                     "p_bootstrap": round(p_boot_hit, 4),
                     "p_mcnemar": round(p_mc_hit, 4),
+                    "effect_size_d": round(d_hit, 4) if not math.isnan(d_hit) else None,
                     "n_queries": len(query_ids),
                     "n_discordant": only_abl_hit + only_full_hit,
                 },
             }
         )
+
+    # Second pass: apply Holm-Bonferroni on the 4 bootstrap p-values (top1)
+    p_boots_top1 = [r["top1"]["p_bootstrap"] for r in raw_rows]
+    p_adj_top1 = holm_bonferroni(p_boots_top1)
+    p_boots_hit = [r["hit_at_k"]["p_bootstrap"] for r in raw_rows]
+    p_adj_hit = holm_bonferroni(p_boots_hit)
+
+    pairwise: list[dict[str, Any]] = []
+    for row, p_adj_t, p_adj_h in zip(raw_rows, p_adj_top1, p_adj_hit, strict=True):
+        row["top1"]["p_bootstrap_adj_holm"] = round(p_adj_t, 4)
+        row["hit_at_k"]["p_bootstrap_adj_holm"] = round(p_adj_h, 4)
+        pairwise.append(row)
 
     return {
         "benchmark": "ablation_realistic_v1",
@@ -158,6 +180,8 @@ def run_ablation_study(
             "confidence": 0.95,
             "ci_method": "bootstrap_percentile",
             "seed": seed,
+            "multiple_comparisons_correction": "holm_bonferroni",
+            "effect_size": "cohens_d_paired_hedges_corrected",
         },
     }
 
@@ -219,40 +243,51 @@ def _render_markdown(results: dict[str, Any]) -> str:
     lines += [
         "## Pairwise vs Full (top1_accuracy)",
         "",
-        "| Variant | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
-        "| ------- | ---------- | ------------- | ----------- | - | ---------- |",
+        "| Variant | Δ [95% CI] | p (bootstrap) | p_adj (Holm)"
+        " | p (McNemar) | d (Hedges g) | N | Discordant |",
+        "| ------- | ---------- | ------------- | ------------"
+        " | ----------- | ------------ | - | ---------- |",
     ]
     for row in results["pairwise_vs_full"]:
         t = row["top1"]
         delta_str = format_point_ci(t["diff"], t["ci_lower"], t["ci_upper"])
+        d_str = f"{t['effect_size_d']:.3f}" if t.get("effect_size_d") is not None else "—"
+        p_adj = t.get("p_bootstrap_adj_holm", t["p_bootstrap"])
         lines.append(
             f"| `{row['variant']}` | {delta_str} | {t['p_bootstrap']:.3f} "
-            f"| {t['p_mcnemar']:.3f} | {t['n_queries']} | {t['n_discordant']} |"
+            f"| {p_adj:.3f} | {t['p_mcnemar']:.3f} | {d_str} "
+            f"| {t['n_queries']} | {t['n_discordant']} |"
         )
     lines += [""]
 
     lines += [
         "## Pairwise vs Full (hit@k)",
         "",
-        "| Variant | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
-        "| ------- | ---------- | ------------- | ----------- | - | ---------- |",
+        "| Variant | Δ [95% CI] | p (bootstrap) | p_adj (Holm)"
+        " | p (McNemar) | d (Hedges g) | N | Discordant |",
+        "| ------- | ---------- | ------------- | ------------"
+        " | ----------- | ------------ | - | ---------- |",
     ]
     for row in results["pairwise_vs_full"]:
         h = row["hit_at_k"]
         delta_str = format_point_ci(h["diff"], h["ci_lower"], h["ci_upper"])
+        d_str = f"{h['effect_size_d']:.3f}" if h.get("effect_size_d") is not None else "—"
+        p_adj = h.get("p_bootstrap_adj_holm", h["p_bootstrap"])
         lines.append(
             f"| `{row['variant']}` | {delta_str} | {h['p_bootstrap']:.3f} "
-            f"| {h['p_mcnemar']:.3f} | {h['n_queries']} | {h['n_discordant']} |"
+            f"| {p_adj:.3f} | {h['p_mcnemar']:.3f} | {d_str} "
+            f"| {h['n_queries']} | {h['n_discordant']} |"
         )
     lines += [""]
 
     lines += [
         "## Interpretation",
         "",
-        "A variant with Δ significantly negative (CI entirely below 0, p < 0.05) indicates "
-        "that layer **contributes** to retrieval quality: removing it hurts performance. "
-        "A variant with Δ ≈ 0 indicates the layer has no measurable impact on this benchmark — "
-        "either the signal is redundant or the dataset is too small to detect the effect.",
+        "A variant with Δ significantly negative (CI entirely below 0, p_adj < 0.05 after "
+        "Holm-Bonferroni correction) indicates that layer **contributes** to retrieval quality: "
+        "removing it hurts performance. A variant with Δ ≈ 0 and small |d| indicates the layer "
+        "has no measurable impact on this benchmark — either the signal is redundant or the "
+        "dataset is too small to detect the effect (N=20 queries has limited power).",
         "",
     ]
 
@@ -298,8 +333,16 @@ def main() -> None:
         default=_HERE,
         help="Directory for results files (default: benchmarks/ablation/)",
     )
+    parser.add_argument(
+        "--embedder",
+        type=str,
+        default="sbert-bge",
+        choices=["hash", "sbert-bge", "sbert-mini"],
+        help="Embedder backend (hash = TokenHashEmbedder, sbert-bge = BAAI/bge-small-en-v1.5).",
+    )
     args = parser.parse_args()
 
+    emb = _build_embedder(args.embedder)
     dataset = load_dataset()
     print(f"Running ablation study on {dataset.name} ({len(dataset.scenarios)} scenarios)...")
     results = run_ablation_study(
@@ -307,6 +350,7 @@ def main() -> None:
         n_bootstrap=args.n_bootstrap,
         seed=args.seed,
         top_k=args.top_k,
+        embedder=emb,
     )
 
     out_json = args.output_dir / "results.json"

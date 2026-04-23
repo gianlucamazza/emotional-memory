@@ -32,6 +32,12 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
         Any model id accepted by :class:`sentence_transformers.SentenceTransformer`.
         Default is ``"all-MiniLM-L6-v2"`` — 384 dims, fast, multilingual-friendly
         enough for demos. Pick a larger model for production retrieval quality.
+
+    Class methods
+    -------------
+    :meth:`make_bge_small` — ``BAAI/bge-small-en-v1.5``, 384 dims, recommended for
+        benchmark and paper runs (2026 MTEB Retrieval tier-2 open-weights baseline).
+    :meth:`make_mpnet` — ``all-mpnet-base-v2``, 768 dims, legacy strong baseline.
     """
 
     __slots__ = ("_model", "_model_name")
@@ -58,3 +64,21 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(model={self._model_name!r})"
+
+    @classmethod
+    def make_bge_small(cls) -> SentenceTransformerEmbedder:
+        """Return an instance using ``BAAI/bge-small-en-v1.5`` (384 dims).
+
+        Recommended default for benchmark and paper runs: strong MTEB Retrieval
+        baseline, fast inference, Apache-2.0 licence.
+        """
+        return cls("BAAI/bge-small-en-v1.5")
+
+    @classmethod
+    def make_mpnet(cls) -> SentenceTransformerEmbedder:
+        """Return an instance using ``all-mpnet-base-v2`` (768 dims).
+
+        Legacy strong baseline; heavier than bge-small but useful for
+        comparison.
+        """
+        return cls("all-mpnet-base-v2")

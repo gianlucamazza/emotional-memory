@@ -172,3 +172,20 @@ def test_run_benchmark_respects_aft_config() -> None:
                 for retrieved in q.get("retrieved", []):
                     links = retrieved.get("explanation", {})
                     _ = links  # just confirm query structure is intact
+
+
+def test_run_benchmark_respects_embedder_choice() -> None:
+    from benchmarks.realistic.adapters.base import TokenHashEmbedder
+
+    dataset = load_dataset()
+    hash_emb = TokenHashEmbedder()
+    results_hash = run_benchmark(
+        dataset, systems=["aft"], embedder=hash_emb, n_bootstrap=100, seed=0
+    )
+    results_default = run_benchmark(
+        dataset, systems=["aft"], embedder=None, n_bootstrap=100, seed=0
+    )
+    # Both runs complete without error and return valid float metrics
+    for results in (results_hash, results_default):
+        aft = next(s for s in results["systems"] if s["system"] == "aft")
+        assert isinstance(aft["aggregate_metrics"]["top1_accuracy"], float)

@@ -113,6 +113,80 @@ def format_point_ci(point: float, lo: float, hi: float, *, dp: int = 2) -> str:
     return f"{fmt.format(point)} [{fmt.format(lo)}, {fmt.format(hi)}]"
 
 
+def holm_bonferroni(p_values: Sequence[float]) -> list[float]:
+    """Holm-Bonferroni step-down correction for multiple comparisons.
+
+    More powerful than Bonferroni while controlling family-wise error rate.
+    Returns adjusted p-values in the same order as the input.
+
+    Parameters
+    ----------
+    p_values:
+        Unadjusted p-values, one per test.
+
+    Returns
+    -------
+    list[float]
+        Adjusted p-values, same order as *p_values*, each clamped to [0, 1].
+    """
+    m = len(p_values)
+    if m == 0:
+        return []
+    if m == 1:
+        return [min(float(p_values[0]), 1.0)]
+
+    # Sort indices by ascending p-value
+    indexed = sorted(enumerate(p_values), key=lambda x: x[1])
+    adjusted: list[float] = [0.0] * m
+    running_max = 0.0
+    for rank, (orig_idx, p) in enumerate(indexed):
+        adj = min(float(p) * (m - rank), 1.0)
+        # Enforce monotonic non-decreasing (Holm step-down requirement)
+        running_max = max(running_max, adj)
+        adjusted[orig_idx] = running_max
+    return adjusted
+
+
+def cohens_d_paired(
+    a: Sequence[float],
+    b: Sequence[float],
+    *,
+    hedges_correction: bool = False,
+) -> float:
+    """Cohen's d for paired observations: ``mean(a - b) / std(a - b, ddof=1)``.
+
+    Parameters
+    ----------
+    a, b:
+        Paired sequences of equal length.
+    hedges_correction:
+        Apply Hedges g small-sample correction factor.  Useful when N < 20.
+
+    Returns
+    -------
+    float
+        Effect size (signed; positive means a > b on average). Returns NaN
+        when the standard deviation of differences is zero or N < 2.
+    """
+    if len(a) != len(b):
+        raise ValueError(f"Sequences must have equal length: {len(a)} != {len(b)}")
+    arr_a = np.asarray(a, dtype=np.float64)
+    arr_b = np.asarray(b, dtype=np.float64)
+    d = arr_a - arr_b
+    n = len(d)
+    if n < 2:
+        return float("nan")
+    mean_d = float(np.mean(d))
+    std_d = float(np.std(d, ddof=1))
+    if std_d == 0.0:
+        return float("nan")
+    cohen_d = mean_d / std_d
+    if hedges_correction and n >= 3:
+        # Hedges g correction factor: J = 1 - 3 / (4*(n-1) - 1)
+        cohen_d *= 1.0 - 3.0 / (4.0 * (n - 1) - 1)
+    return cohen_d
+
+
 def ci_payload(
     point: float,
     lo: float,
