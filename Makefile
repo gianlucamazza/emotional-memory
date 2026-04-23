@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-realistic human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-realistic bench-ablation human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -86,6 +86,9 @@ bench-comparative:
 
 bench-realistic:
 	uv run python -m benchmarks.realistic.runner
+
+bench-ablation:
+	uv run python -m benchmarks.ablation.runner
 
 human-eval-packets:
 	uv run python -m benchmarks.human_eval.pipeline packets

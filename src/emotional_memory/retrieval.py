@@ -405,17 +405,27 @@ def build_retrieval_plan(
     retrieval_config: RetrievalConfig,
     propagation_hops: int,
     spreading_activation_fn: Callable[[set[str], list[Memory], int], dict[str, float]],
+    precomputed_weights: NDArray[np.float64] | None = None,
 ) -> RetrievalPlan:
     """Build the two-pass retrieval ranking plan for a fixed candidate set.
 
     This function is intentionally pure: it performs no store writes and no
     state mutation. Engines remain responsible for side effects such as
     reconsolidation, retrieval counters, and Hebbian strengthening.
+
+    Args:
+        precomputed_weights: When provided, use these weights instead of calling
+            ``adaptive_weights()`` — allows the engine to apply an ablation mask
+            or any other pre-processing before passing weights to the planner.
     """
-    weight_arr = adaptive_weights(
-        current_mood,
-        retrieval_config.base_weights,
-        retrieval_config.adaptive_weights_config,
+    weight_arr = (
+        precomputed_weights
+        if precomputed_weights is not None
+        else adaptive_weights(
+            current_mood,
+            retrieval_config.base_weights,
+            retrieval_config.adaptive_weights_config,
+        )
     )
 
     def _score_all(activation_map: dict[str, float]) -> list[RankedMemory]:

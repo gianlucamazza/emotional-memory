@@ -32,12 +32,14 @@ Or wrap an existing sync engine::
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import warnings
 from datetime import UTC, datetime
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, consolidation_strength
@@ -54,6 +56,7 @@ from emotional_memory.resonance import (
 )
 from emotional_memory.retrieval import (
     RetrievalExplanation,
+    adaptive_weights,
     build_retrieval_plan,
     compute_ape,
     reconsolidate,
@@ -70,8 +73,15 @@ class AsyncEmotionalMemory:
     All public methods are coroutines.  An internal ``asyncio.Lock`` protects
     the affective state from interleaved mutations across concurrent
     ``encode`` / ``encode_batch`` calls.  Synchronous helpers
-    (``set_affect``, ``load_state``) are intended for setup before concurrent
-    work begins and are **not** lock-protected.
+    (``set_affect``, ``reset_state``, ``load_state``) are intended for setup
+    **before** concurrent work begins and are **not** lock-protected — do not
+    call them while ``encode`` or ``observe`` coroutines may be running.
+
+    When using a ``state_store`` backed by network I/O (e.g.
+    ``RedisAffectiveStateStore``), constructing the engine will briefly block
+    the event loop to load the persisted snapshot.  For fully non-blocking
+    initialisation, pass ``state_store=None`` and explicitly call
+    ``await engine.restore_persisted_state()`` after construction.
     """
 
     __slots__ = (
@@ -109,6 +119,33 @@ class AsyncEmotionalMemory:
         persisted = self._state_store.load()
         return AffectiveState.initial() if persisted is None else persisted.model_copy()
 
+    def _effective_retrieval_weights(self) -> NDArray[np.float64]:
+        """Return adaptive retrieval weights with ablation mask applied."""
+        rc = self._config.retrieval
+        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
+        mask = np.array(
+            [
+                True,
+                self._config.enable_mood_signal,
+                True,
+                self._config.enable_momentum,
+                True,
+                self._config.enable_resonance,
+            ],
+            dtype=bool,
+        )
+        if mask.all():
+            return weights
+        weights = weights * mask.astype(np.float64)
+        total = float(weights.sum())
+        if total > 0.0:
+            return weights / total
+        active = mask.astype(np.float64)
+        active_total = float(active.sum())
+        if active_total > 0.0:
+            return active / active_total
+        return np.full(6, 1.0 / 6.0, dtype=np.float64)
+
     def _persist_state_sync(self) -> None:
         if self._state_store is not None:
             self._state_store.save(self._state)
@@ -138,7 +175,12 @@ class AsyncEmotionalMemory:
             and self._appraisal_engine is not None
         )
 
-        if not use_fast_path and appraisal is None and self._appraisal_engine is not None:
+        if (
+            not use_fast_path
+            and appraisal is None
+            and self._appraisal_engine is not None
+            and self._config.enable_appraisal
+        ):
             appraisal = await self._appraisal_engine.appraise(content, context=metadata)
 
         new_affect = (
@@ -220,23 +262,26 @@ class AsyncEmotionalMemory:
         await self._store.save(memory)
 
         # Step 6: resonance links — pre-filter when store is large (async I/O)
-        resonance_limit = (
-            self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-        )
-        store_size = await self._store.count()
-        if store_size > resonance_limit and memory.embedding is not None:
-            candidates = await self._store.search_by_embedding(memory.embedding, resonance_limit)
-        else:
-            candidates = await self._store.list_all()
+        if self._config.enable_resonance:
+            resonance_limit = (
+                self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+            )
+            store_size = await self._store.count()
+            if store_size > resonance_limit and memory.embedding is not None:
+                candidates = await self._store.search_by_embedding(
+                    memory.embedding, resonance_limit
+                )
+            else:
+                candidates = await self._store.list_all()
 
-        links = build_resonance_links(memory, candidates, self._config.resonance)
-        if links:
-            updated_tag = tag.model_copy(update={"resonance_links": links})
-            memory = memory.model_copy(update={"tag": updated_tag})
-            await self._store.update(memory)
-            logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
+            links = build_resonance_links(memory, candidates, self._config.resonance)
+            if links:
+                updated_tag = tag.model_copy(update={"resonance_links": links})
+                memory = memory.model_copy(update={"tag": updated_tag})
+                await self._store.update(memory)
+                logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
-            await self._add_bidirectional_links(memory, links)
+                await self._add_bidirectional_links(memory, links)
 
         logger.debug(
             "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
@@ -273,6 +318,9 @@ class AsyncEmotionalMemory:
         if not candidates:
             return []
 
+        _spreading_fn = (
+            (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
+        )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
             query_affect=self._state.core_affect,
@@ -284,7 +332,8 @@ class AsyncEmotionalMemory:
             decay_config=self._config.decay,
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
-            spreading_activation_fn=spreading_activation,
+            spreading_activation_fn=_spreading_fn,
+            precomputed_weights=self._effective_retrieval_weights(),
         )
         top = [item.memory for item in plan.pass2[:top_k]]
         result = await self._apply_retrieval_updates(top, now)
@@ -319,6 +368,9 @@ class AsyncEmotionalMemory:
         if not candidates:
             return []
 
+        _spreading_fn = (
+            (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
+        )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
             query_affect=self._state.core_affect,
@@ -330,7 +382,8 @@ class AsyncEmotionalMemory:
             decay_config=self._config.decay,
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
-            spreading_activation_fn=spreading_activation,
+            spreading_activation_fn=_spreading_fn,
+            precomputed_weights=self._effective_retrieval_weights(),
         )
         top_ranked = plan.pass2[:top_k]
         result = await self._apply_retrieval_updates([item.memory for item in top_ranked], now)
@@ -724,8 +777,6 @@ class AsyncEmotionalMemory:
         via ``asyncio.to_thread``; silently skips stores without cleanup.
         """
         close = getattr(self._store, "close", None)
-        import inspect
-
         if close is not None:
             if inspect.iscoroutinefunction(close):
                 await close()

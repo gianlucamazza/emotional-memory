@@ -4,12 +4,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import tempfile
 from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field
 
+from benchmarks.common.statistics import (
+    DEFAULT_N_BOOTSTRAP,
+    bootstrap_ci,
+    ci_payload,
+    format_point_ci,
+    mcnemar_exact,
+    paired_bootstrap_diff,
+)
 from benchmarks.realistic.adapters import (
     AFTReplayAdapter,
     NaiveCosineReplayAdapter,
@@ -17,6 +26,18 @@ from benchmarks.realistic.adapters import (
     ReplayAdapter,
     ReplayRetrievedItem,
 )
+from emotional_memory import EmotionalMemoryConfig
+
+
+def _seed_everything(seed: int) -> None:
+    random.seed(seed)
+    try:
+        import numpy as np
+
+        np.random.seed(seed)
+    except ImportError:
+        pass
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DATASET = ROOT / "benchmarks" / "datasets" / "realistic_recall_v1.json"
@@ -300,30 +321,43 @@ def build_protocol_metadata(
     }
 
 
-def _aggregate_query_metrics(query_reports: list[dict[str, Any]]) -> dict[str, Any]:
+def _aggregate_query_metrics(
+    query_reports: list[dict[str, Any]],
+    *,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+) -> dict[str, Any]:
+    top1_flags = [1.0 if query["top1_hit"] else 0.0 for query in query_reports]
+    hit_flags = [1.0 if query["hit"] else 0.0 for query in query_reports]
+    nontrivial_flags = [
+        1.0 if not query["recency_would_hit_at_k"] else 0.0 for query in query_reports
+    ]
+    top1_ci = bootstrap_ci(top1_flags, n_bootstrap=n_bootstrap, seed=seed)
+    hit_ci = bootstrap_ci(hit_flags, n_bootstrap=n_bootstrap, seed=seed)
+    nontrivial_ci = bootstrap_ci(nontrivial_flags, n_bootstrap=n_bootstrap, seed=seed)
     return {
         "query_count": len(query_reports),
-        "top1_accuracy": round(
-            sum(1 for query in query_reports if query["top1_hit"]) / max(len(query_reports), 1),
-            4,
-        ),
-        "hit_at_k": round(
-            sum(1 for query in query_reports if query["hit"]) / max(len(query_reports), 1),
-            4,
-        ),
+        "top1_accuracy": round(top1_ci[0], 4),
+        "hit_at_k": round(hit_ci[0], 4),
         "minimum_candidate_count": min(
             (query["candidate_count"] for query in query_reports),
             default=0,
         ),
-        "nontrivial_query_rate": round(
-            sum(1 for query in query_reports if not query["recency_would_hit_at_k"])
-            / max(len(query_reports), 1),
-            4,
-        ),
+        "nontrivial_query_rate": round(nontrivial_ci[0], 4),
+        "ci": {
+            "top1_accuracy": ci_payload(*top1_ci, n_bootstrap=n_bootstrap),
+            "hit_at_k": ci_payload(*hit_ci, n_bootstrap=n_bootstrap),
+            "nontrivial_query_rate": ci_payload(*nontrivial_ci, n_bootstrap=n_bootstrap),
+        },
     }
 
 
-def _aggregate_by_challenge_type(query_reports: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _aggregate_by_challenge_type(
+    query_reports: list[dict[str, Any]],
+    *,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+) -> list[dict[str, Any]]:
     aggregates: list[dict[str, Any]] = []
     for challenge_type in sorted(CHALLENGE_TYPES):
         typed_queries = [
@@ -334,15 +368,20 @@ def _aggregate_by_challenge_type(query_reports: list[dict[str, Any]]) -> list[di
         aggregates.append(
             {
                 "challenge_type": challenge_type,
-                **_aggregate_query_metrics(typed_queries),
+                **_aggregate_query_metrics(typed_queries, n_bootstrap=n_bootstrap, seed=seed),
             }
         )
     return aggregates
 
 
-def _make_adapter(system_name: str, *, workdir: Path) -> ReplayAdapter:
+def _make_adapter(
+    system_name: str,
+    *,
+    workdir: Path,
+    aft_config: EmotionalMemoryConfig | None = None,
+) -> ReplayAdapter:
     if system_name == "aft":
-        return AFTReplayAdapter(workdir / system_name)
+        return AFTReplayAdapter(workdir / system_name, config=aft_config)
     if system_name == "naive_cosine":
         return NaiveCosineReplayAdapter()
     if system_name == "recency":
@@ -355,7 +394,7 @@ def _serialize_result(
     *,
     alias_by_actual: dict[str, str],
 ) -> dict[str, Any]:
-    payload = {
+    payload: dict[str, Any] = {
         "memory_id": item.id,
         "memory_alias": alias_by_actual.get(item.id),
         "content": item.text,
@@ -372,6 +411,8 @@ def run_system_on_scenario(
     scenario: ReplayScenario,
     *,
     default_top_k: int,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
 ) -> dict[str, Any]:
     alias_to_actual: dict[str, str] = {}
     actual_to_alias: dict[str, str] = {}
@@ -461,7 +502,7 @@ def run_system_on_scenario(
         "description": scenario.description,
         "sessions": session_reports,
         "metrics": {
-            **_aggregate_query_metrics(query_reports),
+            **_aggregate_query_metrics(query_reports, n_bootstrap=n_bootstrap, seed=seed),
             "stateful_session_rate": round(
                 sum(1 for session in session_reports if session["state_loaded_from_store"])
                 / max(len(session_reports), 1),
@@ -469,8 +510,68 @@ def run_system_on_scenario(
             ),
             "memory_count_growth": memory_counts[-1] - memory_counts[0] if memory_counts else 0,
         },
-        "challenge_type_metrics": _aggregate_by_challenge_type(query_reports),
+        "challenge_type_metrics": _aggregate_by_challenge_type(
+            query_reports, n_bootstrap=n_bootstrap, seed=seed
+        ),
     }
+
+
+def _build_pairwise_comparisons(
+    system_results: list[dict[str, Any]],
+    *,
+    baseline: str = "naive_cosine",
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+) -> list[dict[str, Any]]:
+    """Paired bootstrap + McNemar comparisons for each system vs *baseline*."""
+    baseline_queries: dict[str, dict[str, Any]] = {}
+    for sys in system_results:
+        if sys["system"] == baseline:
+            for scenario in sys["scenarios"]:
+                for session in scenario["sessions"]:
+                    for q in session["queries"]:
+                        baseline_queries[q["query_id"]] = q
+            break
+
+    if not baseline_queries:
+        return []
+
+    rows: list[dict[str, Any]] = []
+    for sys in system_results:
+        if sys["system"] == baseline:
+            continue
+        sys_queries: dict[str, dict[str, Any]] = {}
+        for scenario in sys["scenarios"]:
+            for session in scenario["sessions"]:
+                for q in session["queries"]:
+                    sys_queries[q["query_id"]] = q
+
+        common_ids = sorted(set(sys_queries) & set(baseline_queries))
+        if not common_ids:
+            continue
+
+        for metric_key, metric_label in [("top1_hit", "top1"), ("hit", "hit@k")]:
+            a = [float(sys_queries[qid][metric_key]) for qid in common_ids]
+            b = [float(baseline_queries[qid][metric_key]) for qid in common_ids]
+            diff, lo, hi, p_boot = paired_bootstrap_diff(a, b, n_bootstrap=n_bootstrap, seed=seed)
+            only_a = sum(1 for av, bv in zip(a, b, strict=True) if av > bv)
+            only_b = sum(1 for av, bv in zip(a, b, strict=True) if bv > av)
+            p_mc = mcnemar_exact(only_a, only_b)
+            rows.append(
+                {
+                    "system": sys["system"],
+                    "baseline": baseline,
+                    "metric": metric_label,
+                    "diff": round(diff, 4),
+                    "ci_lower": round(lo, 4),
+                    "ci_upper": round(hi, 4),
+                    "p_bootstrap": round(p_boot, 4),
+                    "p_mcnemar": round(p_mc, 4),
+                    "n_queries": len(common_ids),
+                    "n_discordant": only_a + only_b,
+                }
+            )
+    return rows
 
 
 def run_benchmark(
@@ -479,6 +580,9 @@ def run_benchmark(
     systems: list[str] | None = None,
     top_k: int | None = None,
     dataset_path: Path = DATASET,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+    aft_config: EmotionalMemoryConfig | None = None,
 ) -> dict[str, Any]:
     selected_systems = DEFAULT_SYSTEMS if systems is None else systems
     effective_top_k = dataset.default_top_k if top_k is None else top_k
@@ -488,11 +592,17 @@ def run_benchmark(
     with tempfile.TemporaryDirectory(prefix="emotional-memory-realistic-") as tmp_dir:
         base_workdir = Path(tmp_dir)
         for system_name in selected_systems:
-            adapter = _make_adapter(system_name, workdir=base_workdir)
+            adapter = _make_adapter(system_name, workdir=base_workdir, aft_config=aft_config)
             adapter.reset()
             try:
                 scenario_results = [
-                    run_system_on_scenario(adapter, scenario, default_top_k=effective_top_k)
+                    run_system_on_scenario(
+                        adapter,
+                        scenario,
+                        default_top_k=effective_top_k,
+                        n_bootstrap=n_bootstrap,
+                        seed=seed,
+                    )
                     for scenario in dataset.scenarios
                 ]
             finally:
@@ -513,7 +623,9 @@ def run_benchmark(
                     "supports_persisted_state": adapter.supports_persisted_state,
                     "scenarios": scenario_results,
                     "aggregate_metrics": {
-                        **_aggregate_query_metrics(all_queries),
+                        **_aggregate_query_metrics(
+                            all_queries, n_bootstrap=n_bootstrap, seed=seed
+                        ),
                         "stateful_session_rate": round(
                             sum(
                                 1 for session in all_sessions if session["state_loaded_from_store"]
@@ -522,10 +634,13 @@ def run_benchmark(
                             4,
                         ),
                     },
-                    "challenge_type_metrics": _aggregate_by_challenge_type(all_queries),
+                    "challenge_type_metrics": _aggregate_by_challenge_type(
+                        all_queries, n_bootstrap=n_bootstrap, seed=seed
+                    ),
                 }
             )
 
+    pairwise = _build_pairwise_comparisons(system_results, n_bootstrap=n_bootstrap, seed=seed)
     return {
         "benchmark": dataset.name,
         "version": dataset.version,
@@ -537,22 +652,41 @@ def run_benchmark(
             difficulty_profile=difficulty_profile,
             dataset_path=dataset_path,
         ),
+        "statistics": {
+            "n_bootstrap": n_bootstrap,
+            "confidence": 0.95,
+            "ci_method": "bootstrap_percentile",
+            "seed": seed,
+        },
         "systems": system_results,
+        "pairwise_comparisons": pairwise,
     }
 
 
+def _fmt_ci_cell(metrics: dict[str, Any], key: str) -> str:
+    ci = metrics.get("ci", {}).get(key)
+    if ci is None:
+        return f"{metrics[key]:.2f}"
+    return format_point_ci(ci["point"], ci["ci_lower"], ci["ci_upper"])
+
+
 def _render_markdown(results: dict[str, Any]) -> str:
+    stats = results.get("statistics", {})
+    ci_note = (
+        f"95% CI via percentile bootstrap (n={stats.get('n_bootstrap', '?')}, "
+        f"seed={stats.get('seed', '?')})."
+    )
     lines = [
         "# Realistic Replay Benchmark",
         "",
         "This report summarizes the comparative multi-session benchmark that uses",
         "persisted affective state and memory carry-over across scripted sessions.",
         "",
-        "Headline metric: `top1_accuracy`. `hit@k` remains secondary support.",
+        f"Headline metric: `top1_accuracy`. `hit@k` remains secondary support. {ci_note}",
         "",
         (
-            "| System | Queries | top1 | hit@k | Min candidates | "
-            "Non-trivial queries | Stateful sessions |"
+            "| System | Queries | top1 [95% CI] | hit@k [95% CI] | Min candidates | "
+            "Non-trivial queries [95% CI] | Stateful sessions |"
         ),
         "|---|---:|---:|---:|---:|---:|---:|",
     ]
@@ -560,8 +694,10 @@ def _render_markdown(results: dict[str, Any]) -> str:
         metrics = system["aggregate_metrics"]
         lines.append(
             f"| `{system['system']}` | {metrics['query_count']} | "
-            f"{metrics['top1_accuracy']:.2f} | {metrics['hit_at_k']:.2f} | "
-            f"{metrics['minimum_candidate_count']} | {metrics['nontrivial_query_rate']:.2f} | "
+            f"{_fmt_ci_cell(metrics, 'top1_accuracy')} | "
+            f"{_fmt_ci_cell(metrics, 'hit_at_k')} | "
+            f"{metrics['minimum_candidate_count']} | "
+            f"{_fmt_ci_cell(metrics, 'nontrivial_query_rate')} | "
             f"{metrics['stateful_session_rate']:.2f} |"
         )
     lines.extend(["", "## Per Scenario", ""])
@@ -569,16 +705,18 @@ def _render_markdown(results: dict[str, Any]) -> str:
         lines.append(f"### `{system['system']}`")
         lines.append("")
         lines.append(
-            "| Scenario | Queries | top1 | hit@k | Min candidates | "
-            "Non-trivial queries | Stateful sessions |"
+            "| Scenario | Queries | top1 [95% CI] | hit@k [95% CI] | Min candidates | "
+            "Non-trivial queries [95% CI] | Stateful sessions |"
         )
         lines.append("|---|---:|---:|---:|---:|---:|---:|")
         for scenario in system["scenarios"]:
             metrics = scenario["metrics"]
             lines.append(
                 f"| `{scenario['scenario_id']}` | {metrics['query_count']} | "
-                f"{metrics['top1_accuracy']:.2f} | {metrics['hit_at_k']:.2f} | "
-                f"{metrics['minimum_candidate_count']} | {metrics['nontrivial_query_rate']:.2f} | "
+                f"{_fmt_ci_cell(metrics, 'top1_accuracy')} | "
+                f"{_fmt_ci_cell(metrics, 'hit_at_k')} | "
+                f"{metrics['minimum_candidate_count']} | "
+                f"{_fmt_ci_cell(metrics, 'nontrivial_query_rate')} | "
                 f"{metrics['stateful_session_rate']:.2f} |"
             )
         lines.append("")
@@ -587,17 +725,41 @@ def _render_markdown(results: dict[str, Any]) -> str:
         lines.append(f"### `{system['system']}`")
         lines.append("")
         lines.append(
-            "| Challenge Type | Queries | top1 | hit@k | Min candidates | Non-trivial queries |"
+            "| Challenge Type | Queries | top1 [95% CI] | hit@k [95% CI] | "
+            "Min candidates | Non-trivial queries [95% CI] |"
         )
         lines.append("|---|---:|---:|---:|---:|---:|")
         lines.extend(
             [
-                f"| `{metrics['challenge_type']}` | {metrics['query_count']} | "
-                f"{metrics['top1_accuracy']:.2f} | {metrics['hit_at_k']:.2f} | "
-                f"{metrics['minimum_candidate_count']} | {metrics['nontrivial_query_rate']:.2f} |"
-                for metrics in system["challenge_type_metrics"]
+                f"| `{m['challenge_type']}` | {m['query_count']} | "
+                f"{_fmt_ci_cell(m, 'top1_accuracy')} | "
+                f"{_fmt_ci_cell(m, 'hit_at_k')} | "
+                f"{m['minimum_candidate_count']} | "
+                f"{_fmt_ci_cell(m, 'nontrivial_query_rate')} |"
+                for m in system["challenge_type_metrics"]
             ]
         )
+        lines.append("")
+    pairwise = results.get("pairwise_comparisons", [])
+    if pairwise:
+        lines.extend(
+            [
+                "## Pairwise vs naive_cosine",
+                "",
+                "Two-sided tests: paired bootstrap p-value and exact McNemar p-value.",
+                "H0: no difference. CI excludes 0 ↔ difference is credible at 95% level.",
+                "",
+                "| System | Metric | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
+                "|---|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in pairwise:
+            diff_str = format_point_ci(row["diff"], row["ci_lower"], row["ci_upper"])
+            lines.append(
+                f"| `{row['system']}` | {row['metric']} | {diff_str} | "
+                f"{row['p_bootstrap']:.4f} | {row['p_mcnemar']:.4f} | "
+                f"{row['n_queries']} | {row['n_discordant']} |"
+            )
         lines.append("")
     return "\n".join(lines)
 
@@ -629,14 +791,24 @@ def main() -> None:
         type=lambda value: [item.strip() for item in value.split(",") if item.strip()],
         default=DEFAULT_SYSTEMS,
     )
+    parser.add_argument("--seed", type=int, default=0, help="Global RNG seed for reproducibility.")
+    parser.add_argument(
+        "--n-bootstrap",
+        type=int,
+        default=DEFAULT_N_BOOTSTRAP,
+        help="Number of bootstrap resamples for CI computation.",
+    )
     args = parser.parse_args()
 
+    _seed_everything(args.seed)
     dataset = load_dataset(args.dataset)
     results = run_benchmark(
         dataset,
         systems=args.systems,
         top_k=args.top_k,
         dataset_path=args.dataset,
+        n_bootstrap=args.n_bootstrap,
+        seed=args.seed,
     )
     write_results(
         results,

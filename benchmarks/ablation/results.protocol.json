@@ -1,0 +1,45 @@
+{
+  "benchmark": "ablation_realistic_v1",
+  "base_benchmark": "realistic_recall_v1",
+  "ablations": [
+    {
+      "variant": "full",
+      "flags": {}
+    },
+    {
+      "variant": "no_appraisal",
+      "flags": {
+        "enable_appraisal": false
+      }
+    },
+    {
+      "variant": "no_mood",
+      "flags": {
+        "enable_mood_signal": false
+      }
+    },
+    {
+      "variant": "no_momentum",
+      "flags": {
+        "enable_momentum": false
+      }
+    },
+    {
+      "variant": "no_resonance",
+      "flags": {
+        "enable_resonance": false
+      }
+    }
+  ],
+  "statistics": {
+    "n_bootstrap": 2000,
+    "confidence": 0.95,
+    "ci_method": "bootstrap_percentile",
+    "seed": 0
+  },
+  "interpretation_notes": [
+    "delta = ablated - full: negative means layer helps.",
+    "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
+    "N=20 queries; power is limited \u2014 directional trends are informative even if not significant."
+  ]
+}

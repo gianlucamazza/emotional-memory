@@ -9,6 +9,7 @@ from typing import Any
 from emotional_memory import (
     CoreAffect,
     EmotionalMemory,
+    EmotionalMemoryConfig,
     InMemoryStore,
     SQLiteAffectiveStateStore,
 )
@@ -27,12 +28,13 @@ class AFTReplayAdapter(ReplayAdapter):
     supports_explanations = True
     supports_persisted_state = True
 
-    def __init__(self, workdir: Path) -> None:
+    def __init__(self, workdir: Path, *, config: EmotionalMemoryConfig | None = None) -> None:
         self._workdir = workdir
         self._workdir.mkdir(parents=True, exist_ok=True)
         self._embedder = TokenHashEmbedder()
         self._state_path = workdir / "aft_state.sqlite"
         self._memories_path = workdir / "aft_memories.json"
+        self._config = config
         self._engine: EmotionalMemory | None = None
 
     def reset(self) -> None:
@@ -49,6 +51,7 @@ class AFTReplayAdapter(ReplayAdapter):
             store=InMemoryStore(),
             embedder=self._embedder,
             state_store=state_store,
+            config=self._config,
         )
         if self._memories_path.exists():
             payload = json.loads(self._memories_path.read_text(encoding="utf-8"))

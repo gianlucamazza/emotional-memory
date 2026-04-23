@@ -1,0 +1,342 @@
+"""Ablation study runner for the 4 AFT layers.
+
+Runs the realistic replay benchmark 5 times — one full run and one per ablated
+layer — then compares each ablation to the full configuration via paired
+bootstrap + exact McNemar test.
+
+Ablations defined:
+  full          All layers active (baseline AFT)
+  no_appraisal  enable_appraisal=False  — skip Scherer CPM call at encode time
+  no_mood       enable_mood_signal=False — zero s1 (mood-congruence) at retrieval
+  no_momentum   enable_momentum=False   — zero s3 (momentum-alignment) at retrieval
+  no_resonance  enable_resonance=False  — skip link building + spreading activation
+
+Note: no_appraisal is a no-op on this benchmark because AFTReplayAdapter does
+not configure an appraisal engine (it uses explicit valence/arousal injection).
+The flag is still exercised to confirm correct hook-up.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Any
+
+from benchmarks.common.statistics import (
+    DEFAULT_N_BOOTSTRAP,
+    format_point_ci,
+    mcnemar_exact,
+    paired_bootstrap_diff,
+)
+from benchmarks.realistic.runner import load_dataset, run_benchmark
+from emotional_memory import EmotionalMemoryConfig
+
+ABLATIONS: list[tuple[str, dict[str, bool]]] = [
+    ("full", {}),
+    ("no_appraisal", {"enable_appraisal": False}),
+    ("no_mood", {"enable_mood_signal": False}),
+    ("no_momentum", {"enable_momentum": False}),
+    ("no_resonance", {"enable_resonance": False}),
+]
+
+_HERE = Path(__file__).parent
+RESULTS_JSON = _HERE / "results.json"
+RESULTS_MD = _HERE / "results.md"
+RESULTS_PROTOCOL = _HERE / "results.protocol.json"
+
+
+def _extract_query_flags(bench_result: dict[str, Any]) -> dict[str, dict[str, bool]]:
+    """Return {query_id: {"top1_hit": bool, "hit": bool}} for the aft system."""
+    aft = next(s for s in bench_result["systems"] if s["system"] == "aft")
+    flags: dict[str, dict[str, bool]] = {}
+    for scenario in aft["scenarios"]:
+        for session in scenario["sessions"]:
+            for q in session["queries"]:
+                flags[q["query_id"]] = {
+                    "top1_hit": bool(q["top1_hit"]),
+                    "hit": bool(q["hit"]),
+                }
+    return flags
+
+
+def run_ablation_study(
+    dataset: Any | None = None,
+    *,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+    top_k: int | None = None,
+) -> dict[str, Any]:
+    """Run the full ablation study and return the results dict."""
+    if dataset is None:
+        dataset = load_dataset()
+
+    variant_results: list[dict[str, Any]] = []
+    query_flags_by_variant: dict[str, dict[str, dict[str, bool]]] = {}
+
+    for variant_name, flag_kwargs in ABLATIONS:
+        cfg = EmotionalMemoryConfig(**flag_kwargs)
+        bench = run_benchmark(
+            dataset,
+            systems=["aft"],
+            top_k=top_k,
+            n_bootstrap=n_bootstrap,
+            seed=seed,
+            aft_config=cfg,
+        )
+        aft_sys = next(s for s in bench["systems"] if s["system"] == "aft")
+        query_flags_by_variant[variant_name] = _extract_query_flags(bench)
+        variant_results.append(
+            {
+                "variant": variant_name,
+                "flags": flag_kwargs,
+                "aggregate_metrics": aft_sys["aggregate_metrics"],
+                "challenge_type_metrics": aft_sys["challenge_type_metrics"],
+            }
+        )
+
+    # Pairwise vs full
+    full_flags = query_flags_by_variant["full"]
+    query_ids = sorted(full_flags.keys())
+    full_top1 = [full_flags[qid]["top1_hit"] for qid in query_ids]
+    full_hit = [full_flags[qid]["hit"] for qid in query_ids]
+
+    pairwise: list[dict[str, Any]] = []
+    for variant_name, _ in ABLATIONS:
+        if variant_name == "full":
+            continue
+        abl_flags = query_flags_by_variant[variant_name]
+        abl_top1 = [abl_flags.get(qid, {"top1_hit": False})["top1_hit"] for qid in query_ids]
+        abl_hit = [abl_flags.get(qid, {"hit": False})["hit"] for qid in query_ids]
+
+        diff_top1, lo_top1, hi_top1, p_boot_top1 = paired_bootstrap_diff(
+            abl_top1, full_top1, n_bootstrap=n_bootstrap, seed=seed
+        )
+        only_abl_top1 = sum(a and not f for a, f in zip(abl_top1, full_top1, strict=True))
+        only_full_top1 = sum(f and not a for a, f in zip(abl_top1, full_top1, strict=True))
+        p_mc_top1 = mcnemar_exact(only_abl_top1, only_full_top1)
+
+        diff_hit, lo_hit, hi_hit, p_boot_hit = paired_bootstrap_diff(
+            abl_hit, full_hit, n_bootstrap=n_bootstrap, seed=seed
+        )
+        only_abl_hit = sum(a and not f for a, f in zip(abl_hit, full_hit, strict=True))
+        only_full_hit = sum(f and not a for a, f in zip(abl_hit, full_hit, strict=True))
+        p_mc_hit = mcnemar_exact(only_abl_hit, only_full_hit)
+
+        pairwise.append(
+            {
+                "variant": variant_name,
+                "baseline": "full",
+                "top1": {
+                    "diff": round(diff_top1, 4),
+                    "ci_lower": round(lo_top1, 4),
+                    "ci_upper": round(hi_top1, 4),
+                    "p_bootstrap": round(p_boot_top1, 4),
+                    "p_mcnemar": round(p_mc_top1, 4),
+                    "n_queries": len(query_ids),
+                    "n_discordant": only_abl_top1 + only_full_top1,
+                },
+                "hit_at_k": {
+                    "diff": round(diff_hit, 4),
+                    "ci_lower": round(lo_hit, 4),
+                    "ci_upper": round(hi_hit, 4),
+                    "p_bootstrap": round(p_boot_hit, 4),
+                    "p_mcnemar": round(p_mc_hit, 4),
+                    "n_queries": len(query_ids),
+                    "n_discordant": only_abl_hit + only_full_hit,
+                },
+            }
+        )
+
+    return {
+        "benchmark": "ablation_realistic_v1",
+        "base_benchmark": dataset.name,
+        "variants": variant_results,
+        "pairwise_vs_full": pairwise,
+        "statistics": {
+            "n_bootstrap": n_bootstrap,
+            "confidence": 0.95,
+            "ci_method": "bootstrap_percentile",
+            "seed": seed,
+        },
+    }
+
+
+def _render_markdown(results: dict[str, Any]) -> str:
+    stats = results["statistics"]
+    ci_note = (
+        f"95% CI via percentile bootstrap (n={stats['n_bootstrap']}, seed={stats['seed']}). "
+        "Pairwise delta = ablated - full (negative = layer helps)."
+    )
+    lines = [
+        "# AFT Layer Ablation Study",
+        "",
+        "Measures the isolated contribution of each AFT layer to `top1_accuracy` "
+        "on the realistic replay benchmark.",
+        "",
+        f"{ci_note}",
+        "",
+        "**Note on `no_appraisal`**: the realistic benchmark injects affect directly via "
+        "`set_affect()`, so no appraisal engine is configured. This ablation is a no-op "
+        "on this benchmark and confirms correct flag hook-up only.",
+        "",
+    ]
+
+    # Per-variant summary table
+    lines += [
+        "## Results by Variant",
+        "",
+        "| Variant | top1 [95% CI] | hit@k [95% CI] | N queries |",
+        "| ------- | ------------- | -------------- | --------- |",
+    ]
+    for v in results["variants"]:
+        agg = v["aggregate_metrics"]
+        ci = agg.get("ci", {})
+        top1_str = (
+            format_point_ci(
+                ci["top1_accuracy"]["point"],
+                ci["top1_accuracy"]["ci_lower"],
+                ci["top1_accuracy"]["ci_upper"],
+            )
+            if "top1_accuracy" in ci
+            else f"{agg['top1_accuracy']:.2f}"
+        )
+        hit_str = (
+            format_point_ci(
+                ci["hit_at_k"]["point"],
+                ci["hit_at_k"]["ci_lower"],
+                ci["hit_at_k"]["ci_upper"],
+            )
+            if "hit_at_k" in ci
+            else f"{agg['hit_at_k']:.2f}"
+        )
+        n = agg.get("query_count", "?")
+        lines.append(f"| `{v['variant']}` | {top1_str} | {hit_str} | {n} |")
+
+    lines += [""]
+
+    # Pairwise table
+    lines += [
+        "## Pairwise vs Full (top1_accuracy)",
+        "",
+        "| Variant | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
+        "| ------- | ---------- | ------------- | ----------- | - | ---------- |",
+    ]
+    for row in results["pairwise_vs_full"]:
+        t = row["top1"]
+        delta_str = format_point_ci(t["diff"], t["ci_lower"], t["ci_upper"])
+        lines.append(
+            f"| `{row['variant']}` | {delta_str} | {t['p_bootstrap']:.3f} "
+            f"| {t['p_mcnemar']:.3f} | {t['n_queries']} | {t['n_discordant']} |"
+        )
+    lines += [""]
+
+    lines += [
+        "## Pairwise vs Full (hit@k)",
+        "",
+        "| Variant | Δ [95% CI] | p (bootstrap) | p (McNemar) | N | Discordant |",
+        "| ------- | ---------- | ------------- | ----------- | - | ---------- |",
+    ]
+    for row in results["pairwise_vs_full"]:
+        h = row["hit_at_k"]
+        delta_str = format_point_ci(h["diff"], h["ci_lower"], h["ci_upper"])
+        lines.append(
+            f"| `{row['variant']}` | {delta_str} | {h['p_bootstrap']:.3f} "
+            f"| {h['p_mcnemar']:.3f} | {h['n_queries']} | {h['n_discordant']} |"
+        )
+    lines += [""]
+
+    lines += [
+        "## Interpretation",
+        "",
+        "A variant with Δ significantly negative (CI entirely below 0, p < 0.05) indicates "
+        "that layer **contributes** to retrieval quality: removing it hurts performance. "
+        "A variant with Δ ≈ 0 indicates the layer has no measurable impact on this benchmark — "
+        "either the signal is redundant or the dataset is too small to detect the effect.",
+        "",
+    ]
+
+    return "\n".join(lines)
+
+
+def _build_protocol(results: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "benchmark": results["benchmark"],
+        "base_benchmark": results["base_benchmark"],
+        "ablations": [{"variant": v["variant"], "flags": v["flags"]} for v in results["variants"]],
+        "statistics": results["statistics"],
+        "interpretation_notes": [
+            "delta = ablated - full: negative means layer helps.",
+            "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
+            "N=20 queries; power is limited — directional trends are informative even if not "
+            "significant.",
+        ],
+    }
+
+
+def write_results(
+    results: dict[str, Any],
+    *,
+    out_json: Path = RESULTS_JSON,
+    out_md: Path = RESULTS_MD,
+    out_protocol: Path = RESULTS_PROTOCOL,
+) -> None:
+    out_json.parent.mkdir(parents=True, exist_ok=True)
+    out_json.write_text(json.dumps(results, indent=2), encoding="utf-8")
+    out_md.write_text(_render_markdown(results), encoding="utf-8")
+    out_protocol.write_text(json.dumps(_build_protocol(results), indent=2), encoding="utf-8")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="AFT layer ablation study")
+    parser.add_argument("--n-bootstrap", type=int, default=DEFAULT_N_BOOTSTRAP)
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--top-k", type=int, default=None)
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=_HERE,
+        help="Directory for results files (default: benchmarks/ablation/)",
+    )
+    args = parser.parse_args()
+
+    dataset = load_dataset()
+    print(f"Running ablation study on {dataset.name} ({len(dataset.scenarios)} scenarios)...")
+    results = run_ablation_study(
+        dataset,
+        n_bootstrap=args.n_bootstrap,
+        seed=args.seed,
+        top_k=args.top_k,
+    )
+
+    out_json = args.output_dir / "results.json"
+    out_md = args.output_dir / "results.md"
+    out_protocol = args.output_dir / "results.protocol.json"
+    write_results(results, out_json=out_json, out_md=out_md, out_protocol=out_protocol)
+    print(f"Results written to {args.output_dir}")
+
+    # Print summary
+    print("\n=== Ablation Results (top1_accuracy) ===")
+    for v in results["variants"]:
+        agg = v["aggregate_metrics"]
+        ci = agg.get("ci", {})
+        if "top1_accuracy" in ci:
+            c = ci["top1_accuracy"]
+            print(
+                f"  {v['variant']:20s} {format_point_ci(c['point'], c['ci_lower'], c['ci_upper'])}"
+            )
+        else:
+            print(f"  {v['variant']:20s} {agg['top1_accuracy']:.2f}")
+
+    print("\n=== Pairwise vs full (top1_accuracy) ===")
+    for row in results["pairwise_vs_full"]:
+        t = row["top1"]
+        delta_str = format_point_ci(t["diff"], t["ci_lower"], t["ci_upper"])
+        print(
+            f"  {row['variant']:20s} Δ={delta_str}  "
+            f"p_boot={t['p_bootstrap']:.3f}  p_mc={t['p_mcnemar']:.3f}"
+        )
+
+
+if __name__ == "__main__":
+    main()

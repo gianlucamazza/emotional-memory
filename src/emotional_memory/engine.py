@@ -22,6 +22,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 from pydantic import BaseModel
 
 from emotional_memory.affect import CoreAffect
@@ -40,6 +41,7 @@ from emotional_memory.resonance import (
 from emotional_memory.retrieval import (
     RetrievalConfig,
     RetrievalExplanation,
+    adaptive_weights,
     build_retrieval_plan,
     compute_ape,
     reconsolidate,
@@ -67,6 +69,18 @@ class EmotionalMemoryConfig(BaseModel):
 
     auto_categorize: bool = False
     """When True, run Plutchik categorization on encode and store EmotionLabel."""
+
+    enable_appraisal: bool = True
+    """When False, skip the appraisal engine call in _build_tag (ablation)."""
+
+    enable_mood_signal: bool = True
+    """When False, zero the mood-congruence retrieval weight (ablation of Layer 3)."""
+
+    enable_momentum: bool = True
+    """When False, zero the momentum-alignment retrieval weight (ablation of Layer 2)."""
+
+    enable_resonance: bool = True
+    """When False, skip resonance link building and spreading activation (ablation of Layer 5)."""
 
 
 class EmotionalMemory:
@@ -127,7 +141,12 @@ class EmotionalMemory:
             and self._appraisal_engine is not None
         )
 
-        if not use_fast_path and appraisal is None and self._appraisal_engine is not None:
+        if (
+            not use_fast_path
+            and appraisal is None
+            and self._appraisal_engine is not None
+            and self._config.enable_appraisal
+        ):
             appraisal = self._appraisal_engine.appraise(content, context=metadata)
 
         if appraisal is not None:
@@ -166,6 +185,37 @@ class EmotionalMemory:
     def _persist_state(self) -> None:
         if self._state_store is not None:
             self._state_store.save(self._state)
+
+    def _effective_retrieval_weights(self) -> NDArray[np.float64]:
+        """Return adaptive retrieval weights with ablation mask applied.
+
+        Computes mood-modulated weights, then zeroes disabled signal slots and
+        renormalises so the active signals absorb the freed mass.
+        """
+        rc = self._config.retrieval
+        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
+        mask = np.array(
+            [
+                True,  # s0 semantic — always active
+                self._config.enable_mood_signal,  # s1 mood congruence (Bower 1981)
+                True,  # s2 affect_proximity — always active
+                self._config.enable_momentum,  # s3 momentum alignment
+                True,  # s4 recency — always active
+                self._config.enable_resonance,  # s5 resonance boost
+            ],
+            dtype=bool,
+        )
+        if mask.all():
+            return weights
+        weights = weights * mask.astype(np.float64)
+        total = float(weights.sum())
+        if total > 0.0:
+            return weights / total
+        active = mask.astype(np.float64)
+        active_total = float(active.sum())
+        if active_total > 0.0:
+            return active / active_total
+        return np.full(6, 1.0 / 6.0, dtype=np.float64)
 
     def observe(
         self,
@@ -234,22 +284,23 @@ class EmotionalMemory:
         )
 
         # Step 6: build resonance links — pre-filter when store is large (G2)
-        resonance_limit = (
-            self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-        )
-        if len(self._store) > resonance_limit and memory.embedding is not None:
-            candidates = self._store.search_by_embedding(memory.embedding, resonance_limit)
-        else:
-            candidates = self._store.list_all()
-        links = build_resonance_links(memory, candidates, self._config.resonance)
+        if self._config.enable_resonance:
+            resonance_limit = (
+                self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+            )
+            if len(self._store) > resonance_limit and memory.embedding is not None:
+                candidates = self._store.search_by_embedding(memory.embedding, resonance_limit)
+            else:
+                candidates = self._store.list_all()
+            links = build_resonance_links(memory, candidates, self._config.resonance)
 
-        if links:
-            updated_tag = tag.model_copy(update={"resonance_links": links})
-            memory = memory.model_copy(update={"tag": updated_tag})
-            self._store.update(memory)
-            logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
+            if links:
+                updated_tag = tag.model_copy(update={"resonance_links": links})
+                memory = memory.model_copy(update={"tag": updated_tag})
+                self._store.update(memory)
+                logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
-            self._add_bidirectional_links(memory, links)
+                self._add_bidirectional_links(memory, links)
 
         return memory
 
@@ -289,6 +340,9 @@ class EmotionalMemory:
         if not candidates:
             return []
 
+        _spreading_fn = (
+            (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
+        )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
             query_affect=self._state.core_affect,
@@ -300,7 +354,8 @@ class EmotionalMemory:
             decay_config=self._config.decay,
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
-            spreading_activation_fn=spreading_activation,
+            spreading_activation_fn=_spreading_fn,
+            precomputed_weights=self._effective_retrieval_weights(),
         )
         top = [item.memory for item in plan.pass2[:top_k]]
         result = self._apply_retrieval_updates(top, now)
@@ -337,6 +392,9 @@ class EmotionalMemory:
         if not candidates:
             return []
 
+        _spreading_fn = (
+            (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
+        )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
             query_affect=self._state.core_affect,
@@ -348,7 +406,8 @@ class EmotionalMemory:
             decay_config=self._config.decay,
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
-            spreading_activation_fn=spreading_activation,
+            spreading_activation_fn=_spreading_fn,
+            precomputed_weights=self._effective_retrieval_weights(),
         )
         top_ranked = plan.pass2[:top_k]
         result = self._apply_retrieval_updates([item.memory for item in top_ranked], now)

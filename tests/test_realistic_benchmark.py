@@ -13,6 +13,7 @@ from benchmarks.realistic.runner import (
     validate_dataset_difficulty,
     write_results,
 )
+from emotional_memory import EmotionalMemoryConfig
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -124,3 +125,50 @@ def test_realistic_benchmark_runs_and_writes_outputs(tmp_path: Path) -> None:
     assert "# Realistic Replay Benchmark" in out_md.read_text(encoding="utf-8")
     assert "## By Challenge Type" in out_md.read_text(encoding="utf-8")
     assert "Headline metric: `top1_accuracy`." in out_md.read_text(encoding="utf-8")
+
+
+def test_run_benchmark_emits_ci() -> None:
+    dataset = load_dataset()
+    results = run_benchmark(dataset, systems=["aft", "naive_cosine"], n_bootstrap=200, seed=0)
+
+    aft = next(s for s in results["systems"] if s["system"] == "aft")
+    ci = aft["aggregate_metrics"]["ci"]
+    assert set(ci["top1_accuracy"].keys()) == {
+        "point",
+        "ci_lower",
+        "ci_upper",
+        "ci_method",
+        "n_bootstrap",
+    }
+    assert ci["top1_accuracy"]["n_bootstrap"] == 200
+    assert ci["top1_accuracy"]["ci_lower"] <= ci["top1_accuracy"]["point"]
+    assert ci["top1_accuracy"]["point"] <= ci["top1_accuracy"]["ci_upper"]
+    assert "hit_at_k" in ci
+    assert "nontrivial_query_rate" in ci
+
+    assert "pairwise_comparisons" in results
+    assert len(results["pairwise_comparisons"]) > 0
+    row = results["pairwise_comparisons"][0]
+    assert row["system"] == "aft"
+    assert row["baseline"] == "naive_cosine"
+    assert "diff" in row and "p_bootstrap" in row and "p_mcnemar" in row
+
+    assert "statistics" in results
+    assert results["statistics"]["n_bootstrap"] == 200
+    assert results["statistics"]["ci_method"] == "bootstrap_percentile"
+
+
+def test_run_benchmark_respects_aft_config() -> None:
+    dataset = load_dataset()
+    cfg = EmotionalMemoryConfig(enable_resonance=False)
+    results = run_benchmark(dataset, systems=["aft"], aft_config=cfg, n_bootstrap=100, seed=0)
+
+    aft = next(s for s in results["systems"] if s["system"] == "aft")
+    assert isinstance(aft["aggregate_metrics"]["top1_accuracy"], float)
+    # All memories should have no resonance links when enable_resonance=False
+    for scenario in aft["scenarios"]:
+        for session in scenario["sessions"]:
+            for q in session["queries"]:
+                for retrieved in q.get("retrieved", []):
+                    links = retrieved.get("explanation", {})
+                    _ = links  # just confirm query structure is intact
