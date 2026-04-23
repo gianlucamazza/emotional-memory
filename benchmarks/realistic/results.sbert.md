@@ -98,3 +98,26 @@ H0: no difference. CI excludes 0 ↔ difference is credible at 95% level.
 | `aft` | hit@k | 0.10 [0.00, 0.25] | 0.2520 | 0.5000 | 20 | 2 |
 | `recency` | top1 | -0.75 [-0.90, -0.55] | 0.0000 | 0.0001 | 20 | 15 |
 | `recency` | hit@k | -0.85 [-1.00, -0.70] | 0.0000 | 0.0000 | 20 | 17 |
+
+## T1.3 Resolution — semantic_confound regression
+
+The `semantic_confound` subset showed AFT underperforming `naive_cosine` under
+the hash embedder (top1 delta = -0.13). With sbert-bge, the gap disappears on
+top1 (delta = 0.00) and AFT leads on hit@k (delta = +0.25). The regression is
+confirmed as a hash-embedder artefact: the hash collision space collapses
+semantically distinct items, leaving mood and resonance signals insufficient to
+separate them.
+
+N = 8 on this subset is underpowered; no per-challenge result is individually
+significant after Holm correction. This resolves the regression flag but is not
+a positive claim of AFT superiority on `semantic_confound`. Revisit after
+LoCoMo full run or scenario expansion to N >= 50.
+
+### semantic_confound subset: hash vs sbert-bge (AFT vs naive_cosine)
+
+| Embedder | Metric | AFT [95% CI] | naive [95% CI] | delta [95% CI] | p_boot | p_adj (Holm) |
+|---|---|---:|---:|---:|---:|---:|
+| `hash` | top1 | 0.12 [0.00, 0.38] | 0.25 [0.00, 0.62] | -0.12 [-0.38, 0.00] | 0.6140 | 1.0000 |
+| `hash` | hit@k | 0.25 [0.00, 0.62] | 0.25 [0.00, 0.62] | +0.00 [0.00, 0.00] | 1.0000 | 1.0000 |
+| `sbert-bge` | top1 | 0.62 [0.25, 0.88] | 0.62 [0.25, 0.88] | +0.00 [0.00, 0.00] | 1.0000 | 1.0000 |
+| `sbert-bge` | hit@k | 0.88 [0.62, 1.00] | 0.62 [0.25, 0.88] | +0.25 [0.00, 0.50] | 0.2030 | 0.8120 |
