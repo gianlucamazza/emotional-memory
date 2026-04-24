@@ -50,17 +50,15 @@ remains open research work.
   `affect_reference_v1`, especially against semantic-only and recency baselines.
 - **Useful but narrow evidence**: appraisal-quality checks and demo-level
   product behavior.
-- **Emerging step-4 evidence**: the realistic replay benchmark now rules out
-  trivial recency wins and edges `naive_cosine` under the default `sbert-bge`
-  embedder (aggregate top1 0.85 vs 0.75, N = 20). With sbert-bge the
-  `semantic_confound` subset no longer regresses — AFT ties `naive_cosine`
-  on top1 (both 0.62) and leads on hit@k (0.88 vs 0.62). The earlier
-  regression on this subset under the hash embedder (AFT 0.12 vs naive 0.25)
-  is confirmed as a hash-embedder artefact in
-  `benchmarks/realistic/challenge_subset_pairwise.json`. N = 8 on this subset
-  is underpowered and no per-challenge result is individually significant
-  after Holm correction, so the benchmark is still not decisive as a general
-  realistic benchmark.
+- **Emerging step-4 evidence**: the realistic replay benchmark (v1.4, expanded
+  to 50 scenarios / 100 queries) rules out trivial recency wins and edges
+  `naive_cosine` under the default `sbert-bge` embedder (aggregate top1 0.70
+  vs 0.50, N = 100). On the `semantic_confound` subset (N = 30), AFT top1
+  reaches 0.73 vs naive 0.47, Δ = +0.27 [0.10, 0.43], p_adj = 0.006 after
+  Holm correction — the first per-challenge result to survive correction. The
+  earlier regression on this subset under the hash embedder (AFT 0.12 vs
+  naive 0.25) is confirmed as a hash-embedder artefact in
+  `benchmarks/realistic/challenge_subset_pairwise.json`.
 - **Study-readiness improvement**: the human-eval pilot is now operationally
   specified as a 10-scenario, 2-condition (`aft` vs `naive_cosine`) protocol,
   but still awaits real completed ratings.
@@ -73,10 +71,9 @@ The next recommended studies, in order:
 
 1. **Protocol upgrade for comparative retrieval**
    Standardize metadata, assumptions, and reporting for the existing benchmark.
-2. **Expand the realistic replay benchmark**
-   Increase scenario diversity from 10 to at least 50 scenarios to tighten
-   per-challenge confidence intervals (the current N = 8 on `semantic_confound`
-   after the sbert-bge upgrade is underpowered for definitive conclusions).
+2. ~~**Expand the realistic replay benchmark**~~
+   *Completed (v1.4): 50 scenarios / 100 queries; `semantic_confound` N = 30
+   now yields p_adj = 0.006 after Holm correction.*
 3. **Execute the human-eval pilot with completed ratings**
    Collect ratings on coherence, usefulness, continuity, and plausibility from
    at least 3 raters (Krippendorff's alpha is wired and reported automatically

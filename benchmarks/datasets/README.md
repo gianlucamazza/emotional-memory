@@ -87,5 +87,8 @@ Schema highlights:
 - natural-language retrieval queries with expected target memories
 - optional query-time affective state
 
-This dataset is intentionally small. Its role is to support realistic replay
-studies, not to act as a broad leaderboard.
+**v1.4**: 50 scenarios, 100 queries — challenge-type distribution: 30
+`semantic_confound`, 25 `affective_arc`, 25 `same_topic_distractor`, 20
+`recency_confound`. Rebalanced to tighten per-challenge confidence intervals.
+Its role is to support realistic replay studies, not to act as a broad
+leaderboard.

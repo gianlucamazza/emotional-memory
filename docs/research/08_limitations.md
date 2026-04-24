@@ -95,17 +95,17 @@ protocol, by the different functional surfaces of the systems, and by the
 absence of human eval or realistic downstream tasks. `Letta` remains
 unevaluated without access to the cloud service / API key.
 
-In the current multi-session replay benchmark, AFT separates clearly from a
-pure `recency` baseline and maintains an aggregate advantage over
-`naive_cosine` on the small replay dataset (top1 0.85 vs 0.75 under the
-default `sbert-bge` embedder, N = 20). With sbert-bge the `semantic_confound`
-subset no longer regresses: AFT ties `naive_cosine` on top1 (both 0.62) and
-leads on hit@k (0.88 vs 0.62). The earlier regression observed with the hash
-embedder (AFT 0.12 vs naive 0.25) is confirmed as an embedder artefact in
-`benchmarks/realistic/challenge_subset_pairwise.json`. Per-subset numbers
-remain at N = 8 (no individual result significant after Holm correction),
-so they do not yet support strong claims of general superiority over
-semantic-only retrieval in broader realistic scenarios.
+The multi-session replay benchmark (v1.4) has been expanded to 50 scenarios /
+100 queries with a rebalanced challenge-type distribution. AFT separates
+clearly from a pure `recency` baseline and leads `naive_cosine` on aggregate
+top1 (0.70 vs 0.50, N = 100, `sbert-bge`). On the `semantic_confound` subset
+(N = 30), AFT top1 = 0.73 vs naive 0.47, Δ = +0.27 [0.10, 0.43], p_adj =
+0.006 — the first per-challenge result to survive Holm correction. Other
+per-subset results remain below the significance threshold. The earlier hash
+embedder regression (AFT 0.12 vs naive 0.25) is confirmed as an embedder
+artefact in `benchmarks/realistic/challenge_subset_pairwise.json`. The
+benchmark still does not support strong claims of general superiority over
+semantic-only retrieval in fully naturalistic multi-turn scenarios.
 
 ### 2.4 Human-eval pipeline not yet run with real ratings
 

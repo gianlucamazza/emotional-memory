@@ -76,9 +76,11 @@ Current interpretation:
 
 - this benchmark now separates AFT from recency-only controls under non-trivial
   candidate pools
-- the current small dataset also shows an AFT edge over `naive_cosine`, with the
-  strongest gains concentrated in `affective_arc` queries
-- the stressed `semantic_confound` subset remains difficult and does **not**
-  currently show an AFT advantage over `naive_cosine`
+- **v1.4 (50 scenarios / 100 queries)**: aggregate top1 0.70 vs 0.50
+  (`sbert-bge`, N = 100)
+- `semantic_confound` (N = 30): AFT top1 0.73 vs naive 0.47, Δ = +0.27
+  [0.10, 0.43], p_adj = 0.006 — **first per-challenge result to survive Holm
+  correction**
+- other per-subset results remain below the significance threshold
 - it still does **not** establish a robust general advantage over semantic-only
-  baselines or production memory systems
+  baselines or production memory systems in fully naturalistic scenarios
