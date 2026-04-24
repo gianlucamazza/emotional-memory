@@ -69,7 +69,10 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `async_engine.py` | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory` |
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
-| `interfaces.py` | `Embedder`, `MemoryStore` protocols + `SequentialEmbedder` base class |
+| `interfaces.py` | `Embedder`, `MemoryStore`, `AffectiveStateStore` protocols + `SequentialEmbedder` base class |
+| `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions |
+| `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal |
+| `integrations/langchain.py` | LangChain memory integration (optional) |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
@@ -79,11 +82,13 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 **encode (dual-path, LeDoux 1996)**: When `dual_path_encoding=True` and an appraisal engine is configured — fast path: skip appraisal, use raw `state.core_affect`, set `pending_appraisal=True`. Slow path: call `elaborate(memory_id)` later to run full appraisal and blend core_affect (70% appraised / 30% raw).
 
-**retrieve**: `embed query → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (BFS multi-hop) → Pass 2 (activation_map boost) → per-memory: compute_ape() + update_prediction() → APE-gated reconsolidation (high APE opens window_opened_at; any retrieval within open window reconsolidates) → hebbian_strengthen() on co-retrieved links → return top-k`
+**retrieve**: `embed query → build_retrieval_plan() (pure, no side-effects) → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (BFS multi-hop) → Pass 2 (activation_map boost) → per-memory: compute_ape() + update_prediction() → APE-gated reconsolidation → hebbian_strengthen() on co-retrieved links → return top-k`. Use `retrieve_with_explanations()` to expose `RetrievalExplanation` / `RetrievalBreakdown` / `RetrievalSignals` per result.
+
+**observe**: update affective state from content without storing a retrievable memory. Useful for assistant turns or system events.
 
 **async encode/retrieve**: Same pipeline as sync. Embed/store/appraise calls are awaited. CPU-bound scoring (retrieval_score, decay, resonance) runs synchronously inline.
 
-**state persistence**: `save_state()` → `AffectiveState.snapshot()` → JSON-safe dict (includes private `_history`). `load_state(data)` → `AffectiveState.restore()`. Round-trip preserves momentum history.
+**state persistence**: `save_state()` → `AffectiveState.snapshot()` → JSON-safe dict (includes private `_history`). `load_state(data)` → `AffectiveState.restore()`. Round-trip preserves momentum history. `persist_state()` / `restore_persisted_state()` / `clear_persisted_state()` delegate to the configured `AffectiveStateStore`. `reset_state()` resets runtime state to baseline without touching the store.
 
 **prune**: `prune(threshold=0.05)` → iterate all memories, call `compute_effective_strength()`, delete those below threshold. Returns count removed. Async variant awaits each store call.
 
@@ -109,6 +114,8 @@ ACT-R power-law: `strength(t) = initial * elapsed^(-effective_decay)`, modulated
 
 `Embedder` and `MemoryStore` are `typing.Protocol` in `interfaces.py` — duck-typed, no inheritance required. `MemoryStore` requires `__len__`. `InMemoryStore` is the reference implementation.
 
+`AffectiveStateStore` protocol is also in `interfaces.py`: `save(state)`, `load() → AffectiveState | None`, `clear()`. Implementations live in `state_stores/`.
+
 `SequentialEmbedder` in `interfaces.py` is a concrete base class: subclass it and implement `embed()`; `embed_batch()` is provided as a sequential fallback.
 
 Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStore` (uses `count() -> int` instead of `__len__`), `AsyncAppraisalEngine`.
@@ -118,6 +125,8 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 `get_current_mood(now)` on both engines reads the `MoodField` regressed via `MoodDecayConfig` without mutating state. Configured via `EmotionalMemoryConfig.mood_decay`.
 
 `SQLiteStore` is exported from the top-level `__init__.py` and from `stores/__init__.py` when `sqlite-vec` is installed (guarded by `contextlib.suppress(ImportError)`).
+
+`SQLiteAffectiveStateStore` and `InMemoryAffectiveStateStore` are exported from `state_stores/__init__.py`. `RedisAffectiveStateStore` requires the `redis` extra.
 
 ## Conventions
 
