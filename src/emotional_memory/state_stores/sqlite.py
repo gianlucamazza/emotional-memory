@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import sqlite3
 import threading
@@ -59,6 +60,10 @@ class SQLiteAffectiveStateStore:
 
     def close(self) -> None:
         self._conn.close()
+
+    def __del__(self) -> None:
+        with contextlib.suppress(Exception):
+            self._conn.close()
 
     def __enter__(self) -> SQLiteAffectiveStateStore:
         return self

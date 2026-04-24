@@ -203,14 +203,26 @@ class LLMAppraisalEngine:
         prompt = self._build_prompt(event_text, context)
         try:
             raw = self._llm(prompt, _APPRAISAL_JSON_SCHEMA)
-            data = self._extract_json(raw)
-            vector = AppraisalVector(**data)
-        except Exception:
+        except Exception as exc:
             if self._config.fallback_on_error:
-                logger.debug("appraise fallback: text_len=%d", len(event_text))
+                logger.warning("appraise: LLM call failed, using fallback: %s", exc)
                 vector = self._fallback
             else:
                 raise
+        else:
+            try:
+                data = self._extract_json(raw)
+                vector = AppraisalVector(**data)
+            except Exception:
+                if self._config.fallback_on_error:
+                    logger.debug(
+                        "appraise: parse/validation error, using fallback (text_len=%d)",
+                        len(event_text),
+                        exc_info=True,
+                    )
+                    vector = self._fallback
+                else:
+                    raise
 
         if self._config.cache_size > 0:
             with self._cache_lock:

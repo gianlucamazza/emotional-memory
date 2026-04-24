@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import importlib
 import json
+import logging
 from typing import Any
 
 from emotional_memory.state import AffectiveState
+
+logger = logging.getLogger(__name__)
 
 
 class RedisAffectiveStateStore:
@@ -43,21 +46,34 @@ class RedisAffectiveStateStore:
         return redis_module.Redis.from_url(url, decode_responses=True)
 
     def save(self, state: AffectiveState) -> None:
-        self._client.set(self._key, json.dumps(state.snapshot()))
+        try:
+            self._client.set(self._key, json.dumps(state.snapshot()))
+        except Exception as exc:
+            logger.warning("RedisAffectiveStateStore.save failed: %s", exc)
 
     def load(self) -> AffectiveState | None:
-        raw = self._client.get(self._key)
+        try:
+            raw = self._client.get(self._key)
+        except Exception as exc:
+            logger.warning("RedisAffectiveStateStore.load failed, returning None: %s", exc)
+            return None
         if raw is None:
             return None
         return AffectiveState.restore(json.loads(raw))
 
     def clear(self) -> None:
-        self._client.delete(self._key)
+        try:
+            self._client.delete(self._key)
+        except Exception as exc:
+            logger.warning("RedisAffectiveStateStore.clear failed: %s", exc)
 
     def close(self) -> None:
         close = getattr(self._client, "close", None)
         if callable(close):
-            close()
+            try:
+                close()
+            except Exception as exc:
+                logger.warning("RedisAffectiveStateStore.close failed: %s", exc)
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(url={self._url!r}, key={self._key!r})"
