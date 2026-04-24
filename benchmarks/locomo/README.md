@@ -49,6 +49,12 @@ Set these in your `.env` file (loaded automatically by `make`).
 | `benchmarks/locomo/results.json` | Slim aggregate + per-category scores (no raw predictions) |
 | `benchmarks/locomo/results.md` | Human-readable Markdown table |
 
+**Convention:** Only full-scale runs (10 conversations, ≥ 1 986 QA pairs with LLM judge)
+should produce `results.{json,md}`. Dry runs (`make bench-locomo-dry`) and
+partial runs should be saved as `results.dryrun.json` / `results.dryrun.md` to
+prevent unpublishable partial data from being cited as evidence. The `*.dryrun.*`
+pattern is gitignored.
+
 ## Systems / adapters
 
 | Adapter | Description |
