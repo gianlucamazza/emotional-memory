@@ -23,12 +23,22 @@ import asyncio.base_events
 import hashlib
 import importlib.util
 import io
+import logging
 import os
 from functools import lru_cache
 
+logger = logging.getLogger(__name__)
+
 
 def _patch_event_loop_cleanup() -> None:
-    """Suppress a known Gradio/Python 3.11 cleanup traceback on interpreter shutdown."""
+    """Suppress a known Gradio/Python 3.11 cleanup traceback on interpreter shutdown.
+
+    Gradio's async server leaves the event loop in a state where the default
+    ``BaseEventLoop.__del__`` raises ``ValueError: Invalid file descriptor``
+    during interpreter teardown.  This patch silently swallows only that specific
+    error; all other exceptions are still propagated.  Applied once at import time
+    via a sentinel attribute so re-imports are no-ops.
+    """
     current_del = asyncio.base_events.BaseEventLoop.__del__
     if getattr(current_del, "__emotional_memory_patched__", False):
         return
@@ -78,6 +88,7 @@ def _make_embedder():  # type: ignore[no-untyped-def]
 
         return SentenceTransformerEmbedder()
     except ImportError:
+        logger.info("sentence_transformers not available — using hash embedder fallback")
         return _HashEmbedder()
 
 
@@ -118,6 +129,7 @@ def _make_appraisal_engine() -> tuple[KeywordAppraisalEngine | LLMAppraisalEngin
                 config=LLMAppraisalConfig(cache_size=64, fallback_on_error=True),
             )
             return engine, f"🧠 LLM appraisal active (`{config.model}`)"
+        logger.info("httpx not available — falling back to keyword appraisal engine")
     engine = KeywordAppraisalEngine()
     return (
         engine,
@@ -268,7 +280,17 @@ def chat(
     recall_query = _parse_recall_query(user_msg)
     is_recall_request = recall_query is not None
     if not is_recall_request:
-        em_state.encode(user_msg, metadata={"role": "user"})
+        try:
+            em_state.encode(user_msg, metadata={"role": "user"})
+        except Exception as exc:
+            logger.exception("encode failed: %s", exc)
+            error_reply = f"⚠️ Could not encode memory: {exc}"
+            chat_history = [
+                *chat_history,
+                {"role": "user", "content": user_msg},
+                {"role": "assistant", "content": error_reply},
+            ]
+            return chat_history, em_state, pad_history, _pad_plot(pad_history), "", msg_count + 1
 
     state = em_state.get_state()
     v = state.core_affect.valence
@@ -306,7 +328,10 @@ def chat(
         else:
             reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
-    em_state.observe(reply, metadata={"role": "assistant"})
+    try:
+        em_state.observe(reply, metadata={"role": "assistant"})
+    except Exception as exc:
+        logger.warning("observe failed (non-fatal): %s", exc)
 
     state = em_state.get_state()
     mood = state.mood
