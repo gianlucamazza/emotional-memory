@@ -1,0 +1,38 @@
+{
+  "benchmark": "comparative_affect_reference_v1",
+  "question": "Does the system surface memories from the intended affective region under a controlled query-state setup?",
+  "dataset": {
+    "name": "affect_reference_v1",
+    "path": "benchmarks/datasets/affect_reference_v1.jsonl",
+    "examples": 258,
+    "type": "synthetic affect-labeled retrieval probe"
+  },
+  "query_labels": [
+    "Q1_joy",
+    "Q2_fear",
+    "Q3_sadness",
+    "Q4_calm"
+  ],
+  "top_k": 5,
+  "embedder": "sbert",
+  "systems": [
+    "aft",
+    "naive_cosine",
+    "recency"
+  ],
+  "primary_metric": "recall@k quadrant-level affect congruence",
+  "secondary_metrics": [
+    "encode_ms_avg",
+    "retrieve_p50_ms",
+    "retrieve_p95_ms"
+  ],
+  "affect_aware_adapters_receive_query_affect": [
+    "aft"
+  ],
+  "interpretation_guardrails": [
+    "This is a controlled synthetic benchmark, not a general downstream evaluation.",
+    "AFT receives explicit query affect (valence, arousal) in this protocol.",
+    "General-purpose systems may ignore query-affect fields entirely.",
+    "The results do not establish production superiority or human-like emotional memory."
+  ]
+}

@@ -12,8 +12,9 @@ paper/tables/table3_comparative.md — comparative recall@k vs baselines (if ava
 
 The script is designed to be tolerant of missing artefacts:
 - If benchmark-results.json does not exist, Table 2 is skipped with a warning.
-- If benchmarks/comparative/results.csv does not exist, Table 3 is marked
-  "not evaluated" — run `make bench-comparative` to generate it.
+- If benchmarks/comparative/results.sbert.csv exists it is used for Table 3
+  (SBERT embedder = paper-canonical run); otherwise results.csv is used as
+  fallback. Run `make bench-comparative-sbert` to generate the SBERT results.
 """
 
 from __future__ import annotations
@@ -29,8 +30,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 BENCH_RESULTS = ROOT / "benchmark-results.json"
-COMPARATIVE_CSV = ROOT / "benchmarks" / "comparative" / "results.csv"
+_COMP_DIR = ROOT / "benchmarks" / "comparative"
+COMPARATIVE_CSV_SBERT = _COMP_DIR / "results.sbert.csv"
+COMPARATIVE_CSV = _COMP_DIR / "results.csv"
 FIDELITY_DIR = ROOT / "benchmarks" / "fidelity"
+
+
+def _resolve_comparative_csv() -> tuple[Path, str]:
+    """Return (path, label) for Table 3: prefer SBERT run, fall back to hash."""
+    if COMPARATIVE_CSV_SBERT.exists():
+        return COMPARATIVE_CSV_SBERT, "sbert"
+    return COMPARATIVE_CSV, "hash"
 
 
 # ---------------------------------------------------------------------------
@@ -201,22 +211,25 @@ def _write_perf_table(out_dir: Path) -> None:
 
 
 def _write_comparative_table(out_dir: Path) -> None:
-    if not COMPARATIVE_CSV.exists():
+    csv_path, embedder_label = _resolve_comparative_csv()
+
+    if not csv_path.exists():
         placeholder = textwrap.dedent("""\
             # Table 3 — Comparative benchmark
 
-            _Not evaluated: `benchmarks/comparative/results.csv` not found._
-            _Run `make bench-comparative` to generate it._
+            _Not evaluated: no comparative results found._
+            _Run `make bench-comparative-sbert` to generate the paper-canonical SBERT results._
         """)
         (out_dir / "table3_comparative.md").write_text(placeholder)
         (out_dir / "table3_comparative.tex").write_text(
-            "% Table 3 — not evaluated (run make bench-comparative)\n"
+            "% Table 3 — not evaluated (run make bench-comparative-sbert)\n"
             "% \\input{tables/table3_comparative.tex}\n"
         )
-        print("[WARN] Table 3: comparative results.csv missing — placeholder written")
+        print("[WARN] Table 3: no comparative results found — placeholder written")
         return
 
-    with COMPARATIVE_CSV.open(newline="") as f:
+    print(f"[INFO] Table 3: using {csv_path.name} (embedder={embedder_label})")
+    with csv_path.open(newline="") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
 

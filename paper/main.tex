@@ -71,8 +71,10 @@ six-signal composite scorer with mood-adaptive weights, and a Pearce-Hall
 prediction-error gate controls reconsolidation lability. We validate the model
 through 126 parametrized fidelity test cases covering 20 psychological phenomena,
 and report a comparative benchmark against a semantic-only baseline on a new
-affect-labeled dataset of 258 examples. The implementation is released as the
-open-source \texttt{emotional-memory} Python library (MIT license).
+affect-labeled dataset of 258 examples. On a replayable multi-session realistic
+recall benchmark, AFT achieves \texttt{top1\_accuracy}=0.70 vs.\ 0.12 for
+semantic-only cosine retrieval (SBERT embedder). The implementation is released
+as the open-source \texttt{emotional-memory} Python library (MIT license).
 \end{abstract}
 
 % ──────────────────────────────────────────────────────────────────────────────
@@ -356,19 +358,22 @@ query quadrant's centroid valence/arousal, activating mood-congruent scoring.
 \begin{table}[ht]
 \centering
 \caption{Comparative benchmark results (recall@5, $n=258$, embedder:
-\texttt{all-MiniLM-L6-v2}). Regenerate with \texttt{make bench-comparative \&\& make reproduce-paper}.}
+\texttt{all-MiniLM-L6-v2}). Regenerate with \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.}
 \label{tab:comparative}
 \input{tables/table3_comparative.tex}
 \end{table}
 
-AFT's multi-signal scorer—combining valence/arousal proximity, mood congruence
-(Bower 1981), momentum alignment, and APE-gated resonance—achieves 6.25\%
-relative improvement over semantic-only cosine retrieval (0.85 vs.\ 0.80).
+On this coarse quadrant-level probe both AFT and \texttt{naive\_cosine} achieve
+recall@5\,=\,0.80 (Δ\,=\,0.00, 95\% CI [--0.25, 0.25], $p$\,=\,1.00).
 The recency baseline confirms 0.25 as the expected floor on a balanced
-four-quadrant dataset.
+four-quadrant dataset. The benchmark is intentionally narrow—it measures whether
+the affect fingerprint is preserved in retrieval, not whether the multi-signal
+architecture outperforms a semantic-only baseline at this granularity.
+Advantage of the full AFT architecture is measured on the replayable multi-session
+realistic recall benchmark, where \texttt{top1\_accuracy}\,=\,0.70 vs.\
+\texttt{naive\_cosine}\,=\,0.12 (SBERT; \texttt{benchmarks/realistic/results.sbert.md}).
 
-To reproduce these results: \texttt{python -m benchmarks.comparative.runner
---embedder sbert}.
+To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Related Work}
