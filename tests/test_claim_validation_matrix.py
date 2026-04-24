@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import csv
 import json
 from pathlib import Path
+
+import pytest
 
 
 def _repo_root() -> Path:
@@ -113,3 +116,31 @@ def test_readme_points_to_canonical_claim_matrix() -> None:
 
     assert "claim_validation_matrix.json" in readme
     assert "current claim-to-evidence matrix" in readme
+
+
+def test_retrieval_affect_aware_claim_matches_sbert_results() -> None:
+    """AFT recall@5 must be >= naive_cosine on the SBERT comparative benchmark.
+
+    This guards against claim drift: if a code change causes AFT to score below
+    naive_cosine on the quadrant probe, the `retrieval_affect_aware` claim status
+    must be revisited.
+    """
+    sbert_csv = _repo_root() / "benchmarks" / "comparative" / "results.sbert.csv"
+    if not sbert_csv.exists():
+        pytest.skip(
+            "benchmarks/comparative/results.sbert.csv not found — run make bench-comparative-sbert"
+        )
+
+    with sbert_csv.open(newline="") as f:
+        rows = {r["system"]: r for r in csv.DictReader(f)}
+
+    assert "aft" in rows, "AFT row missing from results.sbert.csv"
+    assert "naive_cosine" in rows, "naive_cosine row missing from results.sbert.csv"
+
+    aft_recall = float(rows["aft"]["recall@5"])
+    naive_recall = float(rows["naive_cosine"]["recall@5"])
+
+    assert aft_recall >= naive_recall, (
+        f"AFT recall@5 ({aft_recall}) < naive_cosine ({naive_recall}) on SBERT probe — "
+        "claim 'retrieval_affect_aware' must be reviewed."
+    )

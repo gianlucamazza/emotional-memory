@@ -8,7 +8,7 @@ allowed-tools: Bash(make bench-*) Bash(make llm-config*) Read
 
 # Benchmark Study Runner
 
-Argument: `$study` — one of: `realistic`, `ablation`, `appraisal`, `comparative`.
+Argument: `$study` — one of: `realistic`, `ablation`, `appraisal`, `comparative`, `comparative-sbert`, `appraisal-confound`.
 
 Stop immediately if the argument is not in the list above and ask the user to pick.
 
@@ -19,7 +19,9 @@ Stop immediately if the argument is not in the list above and ask the user to pi
 | `realistic` | `make bench-realistic` | S2 | No |
 | `ablation` | `make bench-ablation` | S3 | No |
 | `appraisal` | `make bench-appraisal` | M1.3 | Yes (`EMOTIONAL_MEMORY_LLM_API_KEY`) |
-| `comparative` | `make bench-comparative` | — | No |
+| `comparative` | `make bench-comparative` | — | No (hash embedder, quick) |
+| `comparative-sbert` | `make bench-comparative-sbert` | — | No (SBERT embedder, paper-canonical) |
+| `appraisal-confound` | `make bench-appraisal-confound` | Addendum A | No |
 
 ## Steps
 
@@ -37,7 +39,7 @@ make llm-config-strict
 make bench-$study
 ```
 
-For `realistic` and `ablation` the Makefile already uses `--embedder sbert-bge`.
+For `realistic`, `ablation`, and `comparative-sbert` the Makefile already uses the SBERT embedder.
 
 ### 3. Interpret results
 
