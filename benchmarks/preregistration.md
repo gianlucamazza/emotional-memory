@@ -1,0 +1,257 @@
+# Pre-Registration: AFT Scientific Validation Studies
+
+**Date:** 2026-04-24
+**Status:** OPEN — no benchmark data has been collected under this pre-registration.
+
+This document freezes hypotheses, metrics, statistical analysis plans, and exclusion
+criteria **before** any study data is collected. Once data collection begins for a
+study, its section must not be modified. New sections may be appended for future
+studies, provided they are added before data collection for those studies begins.
+
+Commit hash at time of pre-registration: see `git log --follow benchmarks/preregistration.md`
+
+---
+
+## Study S1 — LoCoMo External Benchmark
+
+### Background
+
+LoCoMo (Maharana et al. 2024) is a long-context multi-session conversational memory
+benchmark: 10 conversations of 35–60 turns each, ~1540 QA pairs, covering single-hop,
+multi-hop, temporal, open-domain, and adversarial question types.
+
+**This will be the first execution of LoCoMo under this pre-registration.** No LoCoMo
+results exist in the repository at time of writing.
+
+### Systems
+
+- `aft` — `AFTLoCoMoAdapter` with `bge-small-en-v1.5` embedder +
+  `KeywordAppraisalEngine` (no LLM at encode time). Defined in
+  `benchmarks/locomo/adapters/aft.py`.
+- `naive_rag` — `NaiveRAGLoCoMoAdapter` with `bge-small-en-v1.5`, pure cosine
+  retrieval, no affective state. Defined in `benchmarks/locomo/adapters/naive_rag.py`.
+
+### Hypotheses
+
+**H1 (confirmatory, one-tailed):** AFT token-F1 > NaiveRAG token-F1 on the full
+LoCoMo10 dataset.
+- Direction: `aft_F1 − naive_F1 > 0`
+- Metric: mean token-overlap F1 as defined in `benchmarks/locomo/scoring.py:25-37`
+- Test: paired bootstrap (n_bootstrap=2000, seed=0); one-tailed p < 0.05
+- Theoretical basis: affective weighting (mood congruence + resonance) should
+  preferentially surface emotionally coherent conversational context, increasing
+  the proportion of correct tokens in answer spans.
+
+**H2 (confirmatory, one-tailed):** AFT LLM-judge accuracy > NaiveRAG LLM-judge
+accuracy on the full LoCoMo10 dataset.
+- Direction: `aft_judge_acc − naive_judge_acc > 0`
+- Metric: proportion of QA pairs judged CORRECT by `gpt-5-mini` (temp=0) per
+  `benchmarks/locomo/scoring.py:94-122`. Same model is used for both answer
+  generation (per-system adapter) and judging, as configured by
+  `EMOTIONAL_MEMORY_LLM_MODEL` at run time.
+- Test: paired bootstrap (n_bootstrap=2000, seed=0) + McNemar two-sided;
+  one-tailed bootstrap p < 0.05
+- Holm-Bonferroni correction applied across H1 and H2 jointly.
+
+**H2-exploratory (non-confirmatory):** AFT outperforms NaiveRAG more on multi-hop
+and temporal question types than on single-hop types. This analysis will be conducted
+after primary results and labeled as exploratory; it does not contribute to
+confirmatory claims.
+
+### Primary metric
+
+Token-overlap F1 (H1). LLM judge accuracy (H2) is co-primary but secondary if
+results diverge.
+
+### Exclusion criteria
+
+Excluded from scoring (not from analysis set; flagged in output):
+1. QA pairs where the gold answer string is empty or None.
+2. QA pairs where the LLM judge response does not parse to a valid JSON object with
+   a `"label"` field. These are excluded from H2 judge_acc calculation only; they
+   still contribute to H1 F1.
+3. No conversation-level exclusions are pre-specified; all 10 conversations are
+   included.
+
+Do NOT exclude QA pairs post-hoc based on system performance (e.g., both systems
+wrong, F1 outliers). All non-excluded pairs are used.
+
+### Statistical analysis
+
+- Paired bootstrap: n=2000, seed=0, percentile method, two-tailed CI, one-tailed p.
+- McNemar exact two-tailed for binary outcomes (judge_acc).
+- Holm-Bonferroni correction across H1 and H2 using the two-tailed p-values from
+  bootstrap (even though directional tests are primary) for conservative reporting.
+- Report: mean score, 95% CI, Δ (aft − naive), 95% CI of Δ, p (bootstrap one-tailed),
+  p_adj (Holm), discordant pairs (McNemar).
+
+### Execution
+
+```bash
+# .env provides: EMOTIONAL_MEMORY_LLM_API_KEY, EMOTIONAL_MEMORY_LLM_MODEL=gpt-5-mini,
+#                EMOTIONAL_MEMORY_LLM_BASE_URL=https://api.openai.com/v1
+set -a && source .env && set +a
+make bench-locomo
+```
+
+**Frozen model:** `gpt-5-mini` (OpenAI) is used for both answer generation and LLM
+judging under this pre-registration. Any change to this model invalidates H1/H2 for
+comparability with other LoCoMo published evals. If re-runs with a different model
+are needed for robustness, they are reported as *exploratory*.
+
+Results written to `benchmarks/locomo/results.{json,md,protocol.json}`.
+
+---
+
+## Study S2 — Realistic Recall v2 (Expanded Dataset)
+
+### Background
+
+`realistic_recall_v1` has been expanded to v1.4: 50 scenarios, 100 queries,
+sbert-bge embedder. Current aggregate: AFT top1=0.70 vs naive 0.50 (N=100).
+`semantic_confound` subset (N=30): AFT top1=0.73 vs naive 0.47, Δ=+0.27
+[0.10, 0.43], p_adj=0.006 — first per-challenge result to survive Holm correction.
+S2 targets `realistic_recall_v2` for the pre-registered confirmatory run
+at N≥200 (see dataset construction rules below).
+
+**Power analysis:** to detect Δ=0.10 at α=0.05 (one-tailed), β=0.80 with McNemar
+on binary paired outcomes, the required discordant pairs is approximately 43. With
+an expected discordance rate of ~20%, this requires N≈215 queries. To be conservative
+and account for per-challenge-type sub-analyses, target **N=200 queries across ≥50
+scenarios** (4 queries/scenario average).
+
+### Dataset construction rules (pre-specified)
+
+Scenarios for `realistic_recall_v2.json` must satisfy all of:
+1. Each scenario has exactly 1 target memory and ≥5 distractor memories.
+2. Each scenario is labeled with exactly one challenge type (see list below).
+3. Scenarios are stratified across challenge types with no type accounting for
+   more than 35% of the total (prevents a single type from dominating overall
+   results).
+4. Scenarios are constructed before running any benchmark; no scenario is added
+   or modified after the first benchmark run on the v2 dataset.
+
+**Challenge types** (5 types, each must have N≥20 queries in v2):
+- `semantic_confound` — distractors share topic/keywords with target but differ
+  in affect
+- `affective_arc` — correct memory is earlier in time but more emotionally salient
+- `recency_confound` — most recent memory is NOT the correct answer; requires
+  affective weighting to bypass recency bias
+- `same_topic_distractor` — distractors share high cosine similarity to query
+- `momentum_alignment` — query affect matches the affective momentum built across
+  prior turns; naive cosine lacks this signal
+
+### Hypotheses
+
+**H3 (confirmatory, one-tailed):** AFT top1_accuracy > naive_cosine top1_accuracy
+on the full v2 query set.
+- Direction: `aft_top1 − naive_top1 > 0`
+- Metric: top1_accuracy (proportion where rank-1 retrieved memory = target)
+- Test: paired bootstrap (n=2000, seed=0) one-tailed p < 0.05 + McNemar two-tailed
+  p < 0.05; both must be significant for confirmation.
+- Theoretical basis: multi-signal scoring (mood congruence, momentum, resonance)
+  should outperform pure cosine when emotional context discriminates memories.
+
+**H4 (confirmatory, one-tailed, Holm-corrected):** AFT top1 > naive_cosine on
+`affective_arc` challenge type. Theory: mood field privileges emotionally charged
+older memories over neutral recent ones.
+
+**H5 (confirmatory, one-tailed, Holm-corrected):** AFT top1 > naive_cosine on
+`recency_confound` challenge type. Theory: recency weight is one of 6 signals;
+affective salience can override it when mood/resonance signal is strong.
+
+**H6 (confirmatory, one-tailed, Holm-corrected):** AFT top1 > naive_cosine on
+`momentum_alignment` challenge type. Theory: `AffectiveMomentum` provides a unique
+signal absent from naive cosine; should yield largest advantage on this type.
+
+**H7–H8 (exploratory):** per-type results for `semantic_confound` and
+`same_topic_distractor` are analyzed but not pre-registered as confirmatory. They
+inform paper discussion.
+
+**Holm family for S2:** H3, H4, H5, H6 are corrected jointly (4 tests).
+
+### Exclusion criteria
+
+Same as S1: no post-hoc scenario exclusions. Scenarios constructed before running.
+Flag (do not exclude) scenarios where both systems score 0 (trivially hard) or both
+score 1 (trivially easy) — report these counts separately.
+
+### Statistical analysis
+
+Same bootstrap/McNemar/Holm plan as S1. Additionally: report Hedges g (paired) for
+each confirmatory comparison. Report N, discordant pairs per sub-analysis.
+
+### Execution
+
+```bash
+make bench-realistic  # after realistic_recall_v2.json is committed
+make bench-realistic-ablation  # for M2.2
+```
+
+---
+
+## Study S3 — Layer Ablation v2 (Powered)
+
+### Background
+
+Ablation v1 on N=20 queries found no individually significant layer contribution after
+Holm correction (`benchmarks/ablation/results.sbert.md`). The study was explicitly
+underpowered. S3 re-runs on `realistic_recall_v2` (N≥200 queries).
+
+### Hypotheses
+
+**Ha (confirmatory, one-tailed):** Removing the MoodField layer (`no_mood`) reduces
+top1_accuracy vs full AFT.
+- Direction: Δ = `no_mood_top1 − full_top1 < 0`
+- Theory: mood congruence is one of 6 retrieval signals; `no_mood` zeroes it out,
+  degrading mood-dependent retrievals.
+- Expectation: this is the most likely layer to show significance given v1 Hedges
+  g = −0.312 even at N=20.
+
+**Hb (confirmatory, one-tailed):** Removing the ResonanceLink layer (`no_resonance`)
+reduces top1_accuracy vs full AFT.
+- Direction: Δ = `no_resonance_top1 − full_top1 < 0`
+- Theory: spreading activation over associative links enriches the retrieval set;
+  without it, episodic associations are lost.
+- Expectation: effect may be smaller than Mood; labeled confirmatory because the
+  theory is unambiguous.
+
+**Hc (invariant check):** Removing `no_appraisal` produces Δ ≈ 0. This is a
+methodological invariant: the realistic benchmark injects affect directly via
+`set_affect()` and does not configure an appraisal engine; the flag should be a
+no-op. Failure here indicates a bug.
+
+**Hd (exploratory):** `no_momentum` effect direction and magnitude. Theory predicts
+small contribution (momentum is a 3-point velocity signal; smooth scenarios may not
+stress it). Not pre-registered as confirmatory; result informs future design.
+
+**Holm family for S3:** Ha and Hb are corrected jointly (2 tests, one-tailed
+bootstrap p-values).
+
+### Execution
+
+```bash
+make bench-ablation  # after realistic_recall_v2.json is committed
+```
+
+Results written to `benchmarks/ablation/results.v2.{json,md}`.
+
+---
+
+## Reporting rules (all studies)
+
+1. **Confirmatory/exploratory labeling:** every result table must be labeled as
+   (confirmatory) or (exploratory). Results labeled exploratory cannot be promoted
+   to confirmatory claims post-hoc.
+2. **No selective reporting:** all pre-registered hypotheses are reported regardless
+   of outcome. Non-significant confirmatory results are reported as such, not omitted.
+3. **No re-seeding:** seed=0 throughout. No alternative seeds are tested after
+   results are known.
+4. **No post-hoc subsetting:** results are not reported only for a subset of data
+   found to be significant unless the subset was pre-specified here.
+5. **Negative results are results:** if Ha or Hb are not confirmed, the interpretation
+   is "insufficient evidence that [mood/resonance] contributes at N=200, Δ_min=0.10"
+   — this is a publishable finding, reported as such.
+6. **Paper claims:** the arXiv paper and any workshop submission will use only
+   confirmatory results for primary claims. Exploratory results are presented as
+   "preliminary" or in supplementary material.

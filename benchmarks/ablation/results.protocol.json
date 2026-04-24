@@ -35,11 +35,13 @@
     "n_bootstrap": 2000,
     "confidence": 0.95,
     "ci_method": "bootstrap_percentile",
-    "seed": 0
+    "seed": 0,
+    "multiple_comparisons_correction": "holm_bonferroni",
+    "effect_size": "cohens_d_paired_hedges_corrected"
   },
   "interpretation_notes": [
     "delta = ablated - full: negative means layer helps.",
     "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
-    "N=20 queries; power is limited \u2014 directional trends are informative even if not significant."
+    "N=100 queries (v1.4 expansion); directional trends are informative even if not all results survive correction."
   ]
 }

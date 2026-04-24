@@ -1,7 +1,7 @@
 {
   "name": "realistic_recall_v1",
-  "version": "1.3",
-  "description": "Scripted multi-session retrieval scenarios for replayable affect-aware evaluation.",
+  "version": "1.4",
+  "description": "Scripted multi-session retrieval scenarios for replayable affect-aware evaluation (50 scenarios, 100 queries, rebalanced for per-challenge statistical power).",
   "default_top_k": 2,
   "scenarios": [
     {
@@ -1048,6 +1048,4206 @@
               "state": {
                 "valence": 0.7,
                 "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "performance_review_reversal",
+      "description": "A harsh mid-year review is followed by a strong final review.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Mid-year review lands badly.",
+          "events": [
+            {
+              "memory_id": "prr_harsh_midyear",
+              "content": "The manager said the mid-year output was below expectations and left the review feeling exposed.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "critique"
+              }
+            },
+            {
+              "memory_id": "prr_attendance_note",
+              "content": "A side comment about attendance policy was added to the notes without much emphasis.",
+              "valence": -0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "side_note"
+              }
+            },
+            {
+              "memory_id": "prr_peer_message",
+              "content": "A colleague mentioned they also received a tough mid-year round, which helped somewhat.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Final review is strong.",
+          "events": [
+            {
+              "memory_id": "prr_strong_final",
+              "content": "The final review was strong; the manager said the growth over the second half had been substantial.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "resolution"
+              }
+            },
+            {
+              "memory_id": "prr_promo_email",
+              "content": "A follow-up email listed promotion process steps and timeline for next quarter.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "prr_team_meeting",
+              "content": "The team meeting that week covered Q3 planning goals rather than review outcomes.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "performance_review",
+                "phase": "other"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_prr_1",
+              "query": "Which review moment left the work feeling exposed, rather than just adding a side comment about attendance policy?",
+              "expected_memory_ids": [
+                "prr_harsh_midyear"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_prr_2",
+              "query": "Which version of the same performance story left the work feeling more questioned — the harsh mid-year or the strong final review?",
+              "expected_memory_ids": [
+                "prr_harsh_midyear"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "burnout_balance",
+      "description": "Months of overwork hit a wall; a week of shorter days restores rhythm.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Exhaustion peaks.",
+          "events": [
+            {
+              "memory_id": "bb_hitting_wall",
+              "content": "After months of overwork, hitting a wall of exhaustion made even simple tasks feel impossible.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "crisis"
+              }
+            },
+            {
+              "memory_id": "bb_team_complaint",
+              "content": "A post in the team channel vented about workload, but it was a group feeling rather than a personal breaking point.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "group"
+              }
+            },
+            {
+              "memory_id": "bb_friend_notice",
+              "content": "A friend mentioned noticing a change in energy and asked if everything was okay.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Shorter days restore rhythm.",
+          "events": [
+            {
+              "memory_id": "bb_rhythm_restored",
+              "content": "After a week of shorter days, the work finally felt manageable and the exhaustion lifted.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "recovery"
+              }
+            },
+            {
+              "memory_id": "bb_schedule_email",
+              "content": "The manager sent a calendar restructuring email with new meeting boundaries.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "bb_coffee_chat",
+              "content": "A casual coffee chat later covered industry news and had nothing to do with the recovery.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "burnout",
+                "phase": "other"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_bb_1",
+              "query": "Which burnout moment left everything feeling impossible — the personal breaking point rather than the group channel venting?",
+              "expected_memory_ids": [
+                "bb_hitting_wall"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.9
+              }
+            },
+            {
+              "query_id": "q_bb_2",
+              "query": "Which earlier event was the personal crisis — not the recent coffee chat or schedule restructuring email?",
+              "expected_memory_ids": [
+                "bb_hitting_wall"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "role_change_anxiety",
+      "description": "An unexpected promotion offer triggers anxiety; calm reflection leads to acceptance.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Offer lands with anxiety.",
+          "events": [
+            {
+              "memory_id": "rca_offer_anxiety",
+              "content": "Being offered the senior role felt immediately overwhelming — the scope seemed too large and the anxiety was hard to hide.",
+              "valence": -0.6,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "anxiety"
+              }
+            },
+            {
+              "memory_id": "rca_title_note",
+              "content": "An HR note detailed the new job title and adjusted reporting structure.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "rca_mentor_calmed",
+              "content": "A mentor said feeling anxious about a stretch role was a sign of caring, not a sign of failure.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Acceptance brings steadiness.",
+          "events": [
+            {
+              "memory_id": "rca_acceptance_confidence",
+              "content": "After a week of reflection, accepting the role felt like a steady decision rather than a leap.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "acceptance"
+              }
+            },
+            {
+              "memory_id": "rca_onboarding_email",
+              "content": "An onboarding schedule and laptop setup instructions arrived in the inbox.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "rca_first_standup",
+              "content": "The first standup as a senior was quieter and calmer than expected.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "role_change",
+                "phase": "start"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_rca_1",
+              "query": "Which role-related event triggered the anxiety about scope — not just receiving the HR note about the title change?",
+              "expected_memory_ids": [
+                "rca_offer_anxiety"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_rca_2",
+              "query": "Which event made the scope of the new role feel too large, rather than just listing the new title in an HR document?",
+              "expected_memory_ids": [
+                "rca_offer_anxiety"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "peer_feedback_loop",
+      "description": "Public criticism in a code review lingers; a private apology closes it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Public criticism lands hard.",
+          "events": [
+            {
+              "memory_id": "pfl_public_criticism",
+              "content": "A peer criticized the work publicly in a code review thread and the shame lingered for hours afterward.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "shame"
+              }
+            },
+            {
+              "memory_id": "pfl_thread_continue",
+              "content": "The thread continued with logistical comments about merge timing but the emotional charge had already landed.",
+              "valence": -0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "thread"
+              }
+            },
+            {
+              "memory_id": "pfl_manager_note",
+              "content": "The manager sent a separate message suggesting moving on and focusing on the next sprint.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "manager"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Private apology closes the loop.",
+          "events": [
+            {
+              "memory_id": "pfl_private_apology",
+              "content": "The peer sent a private message apologizing for the public tone and acknowledged it had been too harsh.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "repair"
+              }
+            },
+            {
+              "memory_id": "pfl_process_update",
+              "content": "The team updated the code review guidelines to encourage inline suggestions over public thread comments.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "process"
+              }
+            },
+            {
+              "memory_id": "pfl_pairing_session",
+              "content": "A later pairing session was calm and focused entirely on the technical implementation.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "peer_feedback",
+                "phase": "collaboration"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_pfl_1",
+              "query": "Which peer feedback moment left the shame lingering — the public criticism rather than the follow-up logistics thread?",
+              "expected_memory_ids": [
+                "pfl_public_criticism"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_pfl_2",
+              "query": "Which earlier event was the source of the lingering shame — not the recent pairing session or guidelines update?",
+              "expected_memory_ids": [
+                "pfl_public_criticism"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "junior_mentoring",
+      "description": "A junior engineer feels lost after the first sprint; a solo bug fix marks the turning point.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Junior struggles to find footing.",
+          "events": [
+            {
+              "memory_id": "jm_first_struggle",
+              "content": "After the first sprint, the junior engineer said they felt completely lost and unsure whether they belonged on the team.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "struggle"
+              }
+            },
+            {
+              "memory_id": "jm_ticket_confusion",
+              "content": "A specific ticket with unclear acceptance criteria confused the junior but was a side issue, not the core feeling.",
+              "valence": -0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "jm_pair_session",
+              "content": "A pairing session with a senior helped move one task forward and lightened the mood slightly.",
+              "valence": 0.4,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Solo breakthrough marks recovery.",
+          "events": [
+            {
+              "memory_id": "jm_growth_moment",
+              "content": "A week later the junior solved a tricky bug entirely on their own and reported feeling genuinely capable for the first time.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "growth"
+              }
+            },
+            {
+              "memory_id": "jm_status_update",
+              "content": "The weekly status update email tracked sprint metrics and velocity numbers.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "jm_team_lunch",
+              "content": "Team lunch that Friday was cheerful and mostly off-topic from work.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "junior_mentoring",
+                "phase": "social"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_jm_1",
+              "query": "Which junior team event showed genuine capability returning — the solo bug fix rather than just the weekly status email?",
+              "expected_memory_ids": [
+                "jm_growth_moment"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_jm_2",
+              "query": "Which version of this mentoring story carried the heavier emotional weight — the early struggle or the later growth moment?",
+              "expected_memory_ids": [
+                "jm_first_struggle"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "interview_rebound",
+      "description": "A technical interview freeze is followed by a confident second-round performance.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First round ends in a freeze.",
+          "events": [
+            {
+              "memory_id": "ir_blank_freeze",
+              "content": "During the technical round, blanking on a core algorithm question caused a visible freeze and the panel went quiet.",
+              "valence": -0.9,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "interview",
+                "phase": "freeze"
+              }
+            },
+            {
+              "memory_id": "ir_wrong_signal",
+              "content": "Misreading a whiteboard prompt as simpler than it was added another wrong answer to the round.",
+              "valence": -0.5,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "interview",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "ir_recruiter_message",
+              "content": "The recruiter sent a generic next-steps message after the round without comment on performance.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "interview",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Second round lands cleanly.",
+          "events": [
+            {
+              "memory_id": "ir_second_round_win",
+              "content": "The second round went cleanly; the interviewer said the solutions were exactly what they were looking for.",
+              "valence": 0.9,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "interview",
+                "phase": "win"
+              }
+            },
+            {
+              "memory_id": "ir_offer_logistics",
+              "content": "An email listed salary range, start date options, and benefits overview.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "interview",
+                "phase": "offer"
+              }
+            },
+            {
+              "memory_id": "ir_team_intro",
+              "content": "A brief intro call with the future team was warm and low-stakes.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "interview",
+                "phase": "intro"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ir_1",
+              "query": "Which interview event was the core freeze moment — not just misreading the whiteboard prompt on a side question?",
+              "expected_memory_ids": [
+                "ir_blank_freeze"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_ir_2",
+              "query": "Which version of the same interview story left the candidate more shaken — the freeze or the clean win?",
+              "expected_memory_ids": [
+                "ir_blank_freeze"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.9
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "layoff_reframing",
+      "description": "A layoff announcement lands as shock; a quiet week reframes it as an overdue exit.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Layoff announcement numbs the day.",
+          "events": [
+            {
+              "memory_id": "lr_news_shock",
+              "content": "The layoff announcement landed in the morning and the rest of the day passed in a kind of numb fog.",
+              "valence": -0.9,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "shock"
+              }
+            },
+            {
+              "memory_id": "lr_severance_review",
+              "content": "An HR document explained severance terms, COBRA options, and the timeline for equipment return.",
+              "valence": -0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "lr_colleague_support",
+              "content": "A colleague reached out to share contact info and offered a reference letter.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A quiet week brings reframing.",
+          "events": [
+            {
+              "memory_id": "lr_new_clarity",
+              "content": "After a quiet week, the situation reframed itself as a long-overdue exit and the relief was genuine.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "reframe"
+              }
+            },
+            {
+              "memory_id": "lr_job_alert_setup",
+              "content": "Job search alerts were set up and the LinkedIn profile was refreshed.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "search"
+              }
+            },
+            {
+              "memory_id": "lr_networking_coffee",
+              "content": "A networking coffee with a former colleague felt genuinely hopeful for the first time.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "layoff",
+                "phase": "momentum"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_lr_1",
+              "query": "Which layoff moment carried the heaviest emotional weight — the initial numb shock or the later reframing into clarity?",
+              "expected_memory_ids": [
+                "lr_news_shock"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_lr_2",
+              "query": "Which earlier event was the moment the day went numb — not the recent networking coffee or job alert setup?",
+              "expected_memory_ids": [
+                "lr_news_shock"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "promotion_decision",
+      "description": "Ambiguous signals about a promotion create uncertainty; a confirmation ends it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Signals are mixed and uncertain.",
+          "events": [
+            {
+              "memory_id": "pd_ambiguous_signal",
+              "content": "The manager gave an encouraging conversation but added that the promotion depended on bandwidth, leaving real uncertainty.",
+              "valence": -0.4,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "uncertainty"
+              }
+            },
+            {
+              "memory_id": "pd_budget_comment",
+              "content": "A finance memo mentioned a promotion freeze in some departments, adding a second layer of worry.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "rumor"
+              }
+            },
+            {
+              "memory_id": "pd_peer_congrats",
+              "content": "A peer was congratulated for their promotion in the same cycle, which amplified the uncertainty.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "comparison"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Confirmation arrives.",
+          "events": [
+            {
+              "memory_id": "pd_positive_confirmation",
+              "content": "The manager confirmed the promotion had been approved after all and the relief was immediate.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "confirmation"
+              }
+            },
+            {
+              "memory_id": "pd_title_change_email",
+              "content": "An email listed the new title, adjusted salary band, and effective start date.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "pd_team_celebration",
+              "content": "The team sent a group message with congratulations and a brief celebratory note.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "promotion",
+                "phase": "celebration"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_pd_1",
+              "query": "Which promotion event was the one that created real uncertainty about the outcome — rather than the budget memo circulating about other departments?",
+              "expected_memory_ids": [
+                "pd_ambiguous_signal"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_pd_2",
+              "query": "Which message was the actual confirmation that the promotion was approved, rather than just listing the new title and salary band?",
+              "expected_memory_ids": [
+                "pd_positive_confirmation"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "remote_work_adjustment",
+      "description": "Weeks of remote isolation hit a productivity wall; a coworking day resets the rhythm.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Isolation becomes suffocating.",
+          "events": [
+            {
+              "memory_id": "rwa_isolation_peak",
+              "content": "After weeks of remote work, the isolation felt suffocating and productivity collapsed entirely.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "isolation"
+              }
+            },
+            {
+              "memory_id": "rwa_vpn_issue",
+              "content": "A persistent VPN issue added logistical friction but was not the core problem.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "tech"
+              }
+            },
+            {
+              "memory_id": "rwa_manager_checkin",
+              "content": "A routine manager check-in acknowledged the productivity dip and suggested a schedule change.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Coworking day resets everything.",
+          "events": [
+            {
+              "memory_id": "rwa_cowork_day",
+              "content": "A day at a coworking space reset the rhythm and the afternoon actually felt productive and lighter.",
+              "valence": 0.7,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "reset"
+              }
+            },
+            {
+              "memory_id": "rwa_calendar_block",
+              "content": "Two focus-work days per week were blocked on the calendar and the update was sent to the team.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "rwa_async_note",
+              "content": "An async update summarizing the week's output was posted to the team channel.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "remote_work",
+                "phase": "comms"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_rwa_1",
+              "query": "Which earlier event was the point where isolation felt most suffocating — not the recent focus-block calendar update or async post?",
+              "expected_memory_ids": [
+                "rwa_isolation_peak"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_rwa_2",
+              "query": "Which remote-work event was the reset that actually improved mood, rather than just adding a focus block to the calendar?",
+              "expected_memory_ids": [
+                "rwa_cowork_day"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "compensation_talk",
+      "description": "A salary ask is rejected curtly; a second negotiation produces a revised offer.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Initial ask is rejected.",
+          "events": [
+            {
+              "memory_id": "ct_rejection_first",
+              "content": "The initial salary ask was rejected with a clipped budget-constraints reply that felt dismissive.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "rejection"
+              }
+            },
+            {
+              "memory_id": "ct_hr_form",
+              "content": "HR sent an administrative form about the current pay band range and review cycle.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "ct_peer_comparison",
+              "content": "A peer mentioned their own recent raise in passing, which added to the frustration.",
+              "valence": -0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "comparison"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Second negotiation produces revised offer.",
+          "events": [
+            {
+              "memory_id": "ct_revised_offer",
+              "content": "A second negotiation call produced a revised offer that felt closer to fair and the tension finally released.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "resolution"
+              }
+            },
+            {
+              "memory_id": "ct_contract_update",
+              "content": "An updated contract arrived with the adjusted numbers and signing instructions.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "paperwork"
+              }
+            },
+            {
+              "memory_id": "ct_celebration_dinner",
+              "content": "A quiet celebration dinner felt like a real close to the whole ordeal.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "compensation",
+                "phase": "celebration"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ct_1",
+              "query": "Which earlier compensation event was the dismissive rejection — not the recent contract update or celebration dinner?",
+              "expected_memory_ids": [
+                "ct_rejection_first"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_ct_2",
+              "query": "Which negotiation event was the actual revised offer that released the tension, rather than just the follow-up contract with the adjusted numbers?",
+              "expected_memory_ids": [
+                "ct_revised_offer"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "breakup_grief",
+      "description": "A breakup leaves echoing emptiness; weeks later a quiet calm brings release.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The goodbye lands hard.",
+          "events": [
+            {
+              "memory_id": "bg_final_goodbye",
+              "content": "The final goodbye conversation left an echoing emptiness that lasted for days and was hard to describe to anyone.",
+              "valence": -0.9,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "grief"
+              }
+            },
+            {
+              "memory_id": "bg_mutual_friend_word",
+              "content": "A mutual friend passed along a neutral message about coordinating the pickup of belongings.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "bg_roommate_comfort",
+              "content": "A roommate quietly stayed nearby that first evening without needing to say anything.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Quiet calm arrives weeks later.",
+          "events": [
+            {
+              "memory_id": "bg_quiet_acceptance",
+              "content": "A quiet morning weeks later brought a strange calm — the weight had finally shifted into something that felt like release.",
+              "valence": 0.5,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "acceptance"
+              }
+            },
+            {
+              "memory_id": "bg_belongings_pickup",
+              "content": "A neutral arrangement for picking up belongings was completed without incident.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "closure"
+              }
+            },
+            {
+              "memory_id": "bg_solo_trip_plan",
+              "content": "Planning a solo weekend trip felt like the first genuine initiative after the breakup.",
+              "valence": 0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "breakup",
+                "phase": "growth"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_bg_1",
+              "query": "Which breakup moment carried the heavier grief — the final goodbye that left the echoing emptiness or the later quiet acceptance?",
+              "expected_memory_ids": [
+                "bg_final_goodbye"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_bg_2",
+              "query": "Which event left the echoing emptiness rather than just passing along a neutral logistics message about belongings?",
+              "expected_memory_ids": [
+                "bg_final_goodbye"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "new_friendship",
+      "description": "An awkward introduction eventually gives way to a genuine first real conversation.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Introduction feels stilted.",
+          "events": [
+            {
+              "memory_id": "nf_awkward_intro",
+              "content": "The introduction at the event felt stilted and both people left without exchanging contact details.",
+              "valence": -0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "awkward_start"
+              }
+            },
+            {
+              "memory_id": "nf_group_event",
+              "content": "A group event the following week filled the gap but the dynamic between them stayed distant.",
+              "valence": 0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "distance"
+              }
+            },
+            {
+              "memory_id": "nf_text_exchange",
+              "content": "A text exchange about logistics started warming the connection slightly.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "warming"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "First real conversation clicks.",
+          "events": [
+            {
+              "memory_id": "nf_first_real_talk",
+              "content": "The first genuine one-on-one conversation clicked completely and left both people energized and wanting more.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "connection"
+              }
+            },
+            {
+              "memory_id": "nf_coffee_logistics",
+              "content": "A follow-up text only covered scheduling the next coffee meetup.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "nf_shared_playlist",
+              "content": "Sharing a playlist became a small recurring ritual that kept the connection warm.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "friendship",
+                "phase": "ritual"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_nf_1",
+              "query": "Which event was the first genuine connection rather than just the coffee scheduling text?",
+              "expected_memory_ids": [
+                "nf_first_real_talk"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_nf_2",
+              "query": "Which friendship moment carried the stronger emotional charge — the awkward intro or the first real conversation that clicked?",
+              "expected_memory_ids": [
+                "nf_first_real_talk"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.8,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "inlaw_conflict",
+      "description": "A stinging comment at a family dinner is followed by a cautious phone-call truce.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Comment lands as a quiet accusation.",
+          "events": [
+            {
+              "memory_id": "ic_stinging_comment",
+              "content": "An in-law made a comment at the family dinner that landed like a quiet accusation and cast a shadow over the evening.",
+              "valence": -0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "sting"
+              }
+            },
+            {
+              "memory_id": "ic_dinner_logistics",
+              "content": "The rest of the dinner covered the weekend itinerary and food preferences without revisiting the comment.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "ic_partner_debrief",
+              "content": "A late-night debrief with the partner helped put the comment in context without fully resolving it.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "debrief"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Phone call reaches a cautious truce.",
+          "events": [
+            {
+              "memory_id": "ic_private_repair",
+              "content": "A private phone call with the in-law reached a cautious truce and both sides acknowledged the misfire.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "repair"
+              }
+            },
+            {
+              "memory_id": "ic_group_chat_plan",
+              "content": "The family group chat moved on to holiday planning details.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "ic_partner_update",
+              "content": "An update to the partner after the call felt like the chapter was finally closed.",
+              "valence": 0.5,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "inlaw",
+                "phase": "closure"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ic_1",
+              "query": "Which in-law event was the one that landed as a quiet accusation rather than just covering dinner logistics?",
+              "expected_memory_ids": [
+                "ic_stinging_comment"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_ic_2",
+              "query": "Which earlier event was the original sting — not the recent partner update or the holiday planning chat?",
+              "expected_memory_ids": [
+                "ic_stinging_comment"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "long_distance",
+      "description": "A missed call during a difficult stretch deepens silence; a long reassurance call repairs it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Missed call makes silence feel intentional.",
+          "events": [
+            {
+              "memory_id": "ld_missed_call",
+              "content": "A missed call during the hardest stretch of the distance left the silence feeling intentional and the worry grew.",
+              "valence": -0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "silence"
+              }
+            },
+            {
+              "memory_id": "ld_timezone_confusion",
+              "content": "A scheduling mix-up caused a call to be shorter than planned due to time zone confusion.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "ld_voice_note",
+              "content": "A voice note that evening tried to bridge the gap and softened the mood slightly.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "repair_attempt"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Long call makes distance survivable.",
+          "events": [
+            {
+              "memory_id": "ld_reassurance_call",
+              "content": "The long reassurance call the following weekend made the distance feel survivable again and both voices were warmer.",
+              "valence": 0.8,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "repair"
+              }
+            },
+            {
+              "memory_id": "ld_visit_booking",
+              "content": "Flights were booked for the next in-person visit.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "planning"
+              }
+            },
+            {
+              "memory_id": "ld_care_package",
+              "content": "A care package arrived with a brief handwritten note.",
+              "valence": 0.6,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "long_distance",
+                "phase": "gesture"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ld_1",
+              "query": "Which long-distance event made the silence feel intentional rather than just causing a shorter call from a time zone mix-up?",
+              "expected_memory_ids": [
+                "ld_missed_call"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_ld_2",
+              "query": "Which communication event deepened the silence and worry rather than just shortening a call due to time zones?",
+              "expected_memory_ids": [
+                "ld_missed_call"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "reunion_reframing",
+      "description": "A dreaded reunion arrives with anxiety; one unexpected conversation rewrites the evening.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The drive in is tense.",
+          "events": [
+            {
+              "memory_id": "rr_dread_drive",
+              "content": "The drive to the reunion was tense and the dread built with every mile closer to the venue.",
+              "valence": -0.6,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "dread"
+              }
+            },
+            {
+              "memory_id": "rr_parking_fumble",
+              "content": "A parking fumble at the venue added small logistical stress on arrival.",
+              "valence": -0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "rr_first_handshake",
+              "content": "The first handshake with the most difficult person went neutrally, which was neither good nor bad.",
+              "valence": 0.0,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "arrival"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "An unexpected conversation warms the evening.",
+          "events": [
+            {
+              "memory_id": "rr_unexpected_warmth",
+              "content": "A conversation later in the evening was unexpectedly warm and reframed the entire event into something worth having attended.",
+              "valence": 0.7,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "reframe"
+              }
+            },
+            {
+              "memory_id": "rr_group_photo",
+              "content": "Group photo logistics took up the final thirty minutes of the event.",
+              "valence": 0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "rr_drive_home",
+              "content": "The drive home felt lighter and quieter than the drive in.",
+              "valence": 0.5,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "reunion",
+                "phase": "afterglow"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_rr_1",
+              "query": "Which reunion moment carried the stronger emotional charge — the anxious drive in or the unexpected warmth that reframed the evening?",
+              "expected_memory_ids": [
+                "rr_unexpected_warmth"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_rr_2",
+              "query": "Which event reframed the reunion emotionally rather than just wrapping it up with group photo logistics?",
+              "expected_memory_ids": [
+                "rr_unexpected_warmth"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "group_chat_misunderstanding",
+      "description": "A joking message in a group chat is read as critical; a follow-up clarification repairs the tone.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Message is misread as criticism.",
+          "events": [
+            {
+              "memory_id": "gcm_misread_message",
+              "content": "A joking message in the group chat was read as criticism and the sender did not realize until the thread went quiet.",
+              "valence": -0.5,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "misread"
+              }
+            },
+            {
+              "memory_id": "gcm_reaction_emojis",
+              "content": "Others added ambiguous reaction emojis that made it impossible to read the room clearly.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "ambiguity"
+              }
+            },
+            {
+              "memory_id": "gcm_private_ping",
+              "content": "A private ping from one member said not to overthink the reaction.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Public clarification repairs the tone.",
+          "events": [
+            {
+              "memory_id": "gcm_public_clarification",
+              "content": "A follow-up public message clarified the joking tone and the thread warmed back up immediately.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "repair"
+              }
+            },
+            {
+              "memory_id": "gcm_topic_change",
+              "content": "The group moved on to planning weekend logistics.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "recovery"
+              }
+            },
+            {
+              "memory_id": "gcm_meme_exchange",
+              "content": "A meme exchange later that evening confirmed the tone had fully recovered.",
+              "valence": 0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "group_chat",
+                "phase": "normal"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_gcm_1",
+              "query": "Which chat event was the one that created the misread moment rather than just generating ambiguous reaction emojis?",
+              "expected_memory_ids": [
+                "gcm_misread_message"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_gcm_2",
+              "query": "Which earlier chat event was the source of worry — not the recent meme exchange or weekend logistics planning?",
+              "expected_memory_ids": [
+                "gcm_misread_message"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.3,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "neighbor_dispute",
+      "description": "A doorstep confrontation over noise leaves both parties tense; a follow-up knock resolves it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Confrontation leaves tension.",
+          "events": [
+            {
+              "memory_id": "nd_confrontation",
+              "content": "A direct doorstep confrontation about the noise left both parties tense and the hallway awkward afterward.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "conflict"
+              }
+            },
+            {
+              "memory_id": "nd_building_note",
+              "content": "Building management posted a general noise reminder note that addressed no one in particular.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "nd_hallway_nod",
+              "content": "A brief nod in the hallway the next day was politely ignored by both parties.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "avoidance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A second knock produces a civil agreement.",
+          "events": [
+            {
+              "memory_id": "nd_civil_agreement",
+              "content": "A follow-up knock produced a short civil agreement and both sides offered a brief apology.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "resolution"
+              }
+            },
+            {
+              "memory_id": "nd_management_reply",
+              "content": "Building management sent a standard acknowledgment of the earlier noise report.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "nd_shared_elevator",
+              "content": "The next shared elevator ride was quiet but not hostile.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "neighbor",
+                "phase": "normalizing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_nd_1",
+              "query": "Which neighbor event marked the actual resolution rather than just receiving building management's standard acknowledgment?",
+              "expected_memory_ids": [
+                "nd_civil_agreement"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.4,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "q_nd_2",
+              "query": "Which neighbor moment carried the more charged emotional weight — the initial confrontation or the later civil agreement?",
+              "expected_memory_ids": [
+                "nd_confrontation"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "dating_app_fatigue",
+      "description": "A run of empty matches triggers hopelessness; one genuine conversation changes the tone.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Empty matches produce a slump.",
+          "events": [
+            {
+              "memory_id": "daf_app_despair",
+              "content": "A run of empty small-talk matches triggered a real slump of hopelessness about the whole enterprise.",
+              "valence": -0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "dating",
+                "phase": "despair"
+              }
+            },
+            {
+              "memory_id": "daf_app_unmatched",
+              "content": "An unexpected unmatch on a promising conversation added a second layer of discouragement.",
+              "valence": -0.5,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "dating",
+                "phase": "unmatch"
+              }
+            },
+            {
+              "memory_id": "daf_friend_advice",
+              "content": "A friend gave enthusiastic advice that felt entirely out of touch with the actual fatigue.",
+              "valence": -0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "dating",
+                "phase": "advice"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A genuine conversation lightens the evening.",
+          "events": [
+            {
+              "memory_id": "daf_genuine_conversation",
+              "content": "A longer conversation with a new match felt genuinely different and left the evening noticeably lighter.",
+              "valence": 0.7,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "dating",
+                "phase": "connection"
+              }
+            },
+            {
+              "memory_id": "daf_logistics_text",
+              "content": "A follow-up text exchanged availability and the first meetup location.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "dating",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "daf_profile_update",
+              "content": "The profile was updated with a better photo after the good conversation.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "dating",
+                "phase": "admin"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_daf_1",
+              "query": "Which dating-app event triggered the real hopelessness rather than just adding another unmatch on a promising thread?",
+              "expected_memory_ids": [
+                "daf_app_despair"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_daf_2",
+              "query": "Which earlier event was the low point of the fatigue — not the recent profile update or logistics text?",
+              "expected_memory_ids": [
+                "daf_app_despair"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "wedding_planning",
+      "description": "A heated venue argument exhausts both partners; a quiet morning realigns them.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Venue argument leaves both exhausted.",
+          "events": [
+            {
+              "memory_id": "wp_venue_argument",
+              "content": "A heated argument over the venue choice left both partners exhausted and the planning felt impossible to enjoy.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "conflict"
+              }
+            },
+            {
+              "memory_id": "wp_caterer_email",
+              "content": "A caterer follow-up email listed menu options and pricing tiers.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "wp_planner_call",
+              "content": "A wedding planner call reduced the logistics friction somewhat but did not address the emotional tension.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Morning conversation realigns priorities.",
+          "events": [
+            {
+              "memory_id": "wp_realignment_talk",
+              "content": "A quiet conversation the next morning realigned both partners on what actually mattered and left them calmer.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "repair"
+              }
+            },
+            {
+              "memory_id": "wp_guest_list_update",
+              "content": "The guest list spreadsheet was updated with final RSVPs.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "wp_venue_booking",
+              "content": "The venue was booked and the deposit confirmed.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "wedding",
+                "phase": "milestone"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_wp_1",
+              "query": "Which wedding story moment was more emotionally charged — the heated venue argument or the calmer morning realignment?",
+              "expected_memory_ids": [
+                "wp_venue_argument"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.9
+              }
+            },
+            {
+              "query_id": "q_wp_2",
+              "query": "Which planning event was the core argument that exhausted both partners rather than just receiving the caterer's pricing follow-up?",
+              "expected_memory_ids": [
+                "wp_venue_argument"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "estranged_sibling",
+      "description": "A first text after years of silence is followed by an awkward but warmer-than-expected video call.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First message arrives unexpectedly.",
+          "events": [
+            {
+              "memory_id": "es_first_text",
+              "content": "The first message after years of silence was short and arrived at an unexpected hour, leaving a strange mix of relief and anxiety.",
+              "valence": 0.2,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "first_contact"
+              }
+            },
+            {
+              "memory_id": "es_family_prompt",
+              "content": "A family member had apparently prompted the outreach after the holidays.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "context"
+              }
+            },
+            {
+              "memory_id": "es_reply_delay",
+              "content": "A two-day delay before the reply made the silence between messages feel weighted.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "waiting"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Video call ends on a warmer note.",
+          "events": [
+            {
+              "memory_id": "es_video_call",
+              "content": "The first video call was awkward and short but ended on a noticeably warmer note than either had expected.",
+              "valence": 0.5,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "reconnection"
+              }
+            },
+            {
+              "memory_id": "es_date_coordination",
+              "content": "A follow-up text coordinated a tentative date for an in-person visit.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "es_shared_memory",
+              "content": "A childhood photo was shared in the chat toward the end of the week.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "sibling",
+                "phase": "warmth"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_es_1",
+              "query": "Which earlier event was the initial unexpected contact — not the recent shared photo or date coordination text?",
+              "expected_memory_ids": [
+                "es_first_text"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.1,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_es_2",
+              "query": "Which sibling event was the cautious reconnection moment rather than just exchanging dates for a visit?",
+              "expected_memory_ids": [
+                "es_video_call"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.4,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "chronic_pain_reframing",
+      "description": "A two-day flare leaves a person depleted; a quiet afternoon brings the body back.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Flare collapses everything.",
+          "events": [
+            {
+              "memory_id": "cpr_flare_collapse",
+              "content": "A two-day pain flare left the whole body depleted and every plan for the week had to be cancelled.",
+              "valence": -0.9,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "flare"
+              }
+            },
+            {
+              "memory_id": "cpr_medication_adjustment",
+              "content": "The doctor adjusted the prescription dose as a precautionary step during the flare.",
+              "valence": -0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "med_change"
+              }
+            },
+            {
+              "memory_id": "cpr_friend_solidarity",
+              "content": "A friend who also lives with chronic pain called and simply listened for an hour without offering advice.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Quiet afternoon brings a shift.",
+          "events": [
+            {
+              "memory_id": "cpr_reframe_moment",
+              "content": "A quiet afternoon after the flare brought a strange shift — the body finally felt like its own again and the depletion had passed.",
+              "valence": 0.6,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "reframe"
+              }
+            },
+            {
+              "memory_id": "cpr_physio_session",
+              "content": "A physiotherapy session covered range-of-motion exercises and posture adjustments.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "physio"
+              }
+            },
+            {
+              "memory_id": "cpr_journal_entry",
+              "content": "Writing in the journal about the flare felt like closing a difficult chapter.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "chronic_pain",
+                "phase": "reflection"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_cpr_1",
+              "query": "Which chronic-pain moment carried the heavier weight — the two-day collapse or the later quiet reframe?",
+              "expected_memory_ids": [
+                "cpr_flare_collapse"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_cpr_2",
+              "query": "Which health event was the core depletion moment rather than just prompting a precautionary medication adjustment?",
+              "expected_memory_ids": [
+                "cpr_flare_collapse"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "diagnosis_reassurance",
+      "description": "An abnormal lab result triggers alarm; a specialist follow-up clears everything.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Lab result flags an abnormal value.",
+          "events": [
+            {
+              "memory_id": "dr_alarming_result",
+              "content": "The lab result flagged an abnormal value and the specialist asked for a follow-up scan, which triggered immediate alarm.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "alarm"
+              }
+            },
+            {
+              "memory_id": "dr_google_spiral",
+              "content": "An evening of searching symptoms online deepened the worry considerably without adding clarity.",
+              "valence": -0.6,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "spiral"
+              }
+            },
+            {
+              "memory_id": "dr_partner_reassurance",
+              "content": "A partner stayed awake and reminded that specialists order follow-ups out of caution, not certainty.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Specialist clears the result.",
+          "events": [
+            {
+              "memory_id": "dr_specialist_clearance",
+              "content": "The specialist said the follow-up scan showed nothing serious and the relief was immediate and physical.",
+              "valence": 0.9,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "clearance"
+              }
+            },
+            {
+              "memory_id": "dr_lifestyle_note",
+              "content": "A nurse follow-up covered dietary suggestions and scheduled the next routine appointment.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "dr_workout_return",
+              "content": "Returning to a normal workout two days later felt like a signal that the worry was truly over.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "diagnosis",
+                "phase": "normalizing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_dr_1",
+              "query": "Which event first created real alarm rather than just leading to an evening of symptom searching?",
+              "expected_memory_ids": [
+                "dr_alarming_result"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_dr_2",
+              "query": "Which health event was the actual clearance that brought immediate relief rather than just covering lifestyle notes and appointments?",
+              "expected_memory_ids": [
+                "dr_specialist_clearance"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "exercise_plateau",
+      "description": "Three weeks of flat training progress feel pointless; a deload week leads to a new personal best.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Plateau makes effort feel wasted.",
+          "events": [
+            {
+              "memory_id": "ep_frustration",
+              "content": "Three weeks of flat progress left the training sessions feeling pointless and the effort wasted.",
+              "valence": -0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "plateau"
+              }
+            },
+            {
+              "memory_id": "ep_wrong_tip",
+              "content": "A well-meaning gym acquaintance added a new variable to the routine that did not help.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "bad_advice"
+              }
+            },
+            {
+              "memory_id": "ep_coach_note",
+              "content": "The coach said plateaus were normal and suggested a deload week before pushing again.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "guidance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Deload leads to a breakthrough session.",
+          "events": [
+            {
+              "memory_id": "ep_breakthrough_session",
+              "content": "After the deload week, a session hit a new personal best and the frustration dissolved completely.",
+              "valence": 0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "breakthrough"
+              }
+            },
+            {
+              "memory_id": "ep_log_update",
+              "content": "The training log was updated with the new numbers and session notes.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "ep_nutrition_tweak",
+              "content": "A small nutrition adjustment was made based on the coach's recommendation.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "exercise",
+                "phase": "optimization"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ep_1",
+              "query": "Which training event was the core frustration that made effort feel wasted rather than just adding an unhelpful tip from an acquaintance?",
+              "expected_memory_ids": [
+                "ep_frustration"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_ep_2",
+              "query": "Which earlier training event was the point where progress felt most pointless — not the recent log update or nutrition tweak?",
+              "expected_memory_ids": [
+                "ep_frustration"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "sleep_issue",
+      "description": "Weeks of insomnia reach a breaking point; a new routine produces the first full night's sleep.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Insomnia reaches a breaking point.",
+          "events": [
+            {
+              "memory_id": "si_breaking_point",
+              "content": "Three nights with under four hours left everything foggy and the person finally snapped at a colleague in a meeting.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "breaking_point"
+              }
+            },
+            {
+              "memory_id": "si_caffeine_attempt",
+              "content": "Adding extra caffeine helped for the morning but made the next night significantly worse.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "bad_fix"
+              }
+            },
+            {
+              "memory_id": "si_doctor_visit",
+              "content": "A doctor visit resulted in a recommendation for a structured sleep hygiene routine.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "medical"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "First full night resets everything.",
+          "events": [
+            {
+              "memory_id": "si_first_full_night",
+              "content": "The first full night under the new sleep routine felt like a physical reset — everything felt lighter the next morning.",
+              "valence": 0.8,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "reset"
+              }
+            },
+            {
+              "memory_id": "si_routine_checklist",
+              "content": "The sleep hygiene checklist was printed and put on the nightstand.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "si_energy_return",
+              "content": "A midday check-in noticed energy levels had returned to a normal baseline.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "sleep",
+                "phase": "recovery"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_si_1",
+              "query": "Which sleep event was the actual physical reset rather than just reviewing the hygiene checklist?",
+              "expected_memory_ids": [
+                "si_first_full_night"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "q_si_2",
+              "query": "Which sleep story moment carried the heavier emotional weight — the breaking point or the first full night?",
+              "expected_memory_ids": [
+                "si_breaking_point"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "therapy_milestone",
+      "description": "A hard session exposes a long-avoided pattern; the next session names it and brings relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Difficult session leaves the person raw.",
+          "events": [
+            {
+              "memory_id": "tm_hard_session",
+              "content": "A difficult session uncovered a pattern the person had avoided for years and left them raw and unsettled for the rest of the day.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "exposure"
+              }
+            },
+            {
+              "memory_id": "tm_journaling_attempt",
+              "content": "A journaling attempt that evening did not get far and was put away after a few lines.",
+              "valence": -0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "processing"
+              }
+            },
+            {
+              "memory_id": "tm_walk_afterward",
+              "content": "A slow walk after the session was the only thing that felt manageable.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "grounding"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Next session names the pattern and brings relief.",
+          "events": [
+            {
+              "memory_id": "tm_breakthrough_session",
+              "content": "The next session named the pattern directly and the relief of being understood was palpable and immediate.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "breakthrough"
+              }
+            },
+            {
+              "memory_id": "tm_homework_assignment",
+              "content": "The therapist assigned a short daily reflection exercise to build on the session.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "homework"
+              }
+            },
+            {
+              "memory_id": "tm_friend_update",
+              "content": "Telling a trusted friend about the progress was met with genuine warmth.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "therapy",
+                "phase": "sharing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_tm_1",
+              "query": "Which therapy moment carried the deeper emotional charge — the hard session that left things raw or the breakthrough that brought relief?",
+              "expected_memory_ids": [
+                "tm_breakthrough_session"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.8,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_tm_2",
+              "query": "Which therapy event was the actual breakthrough rather than just receiving a homework assignment?",
+              "expected_memory_ids": [
+                "tm_breakthrough_session"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "nutrition_goal",
+      "description": "A relapse into old eating habits triggers guilt; a Monday recommitment turns the page.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Weekend relapse triggers guilt.",
+          "events": [
+            {
+              "memory_id": "ng_relapse_guilt",
+              "content": "A weekend of eating out of old habits left a wash of guilt and a feeling that all the progress had been erased.",
+              "valence": -0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "guilt"
+              }
+            },
+            {
+              "memory_id": "ng_label_reading",
+              "content": "Reading nutrition labels that morning had started well, making the relapse feel even more confusing.",
+              "valence": -0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "contrast"
+              }
+            },
+            {
+              "memory_id": "ng_support_message",
+              "content": "A nutritionist's message reminded that one relapse does not erase prior progress.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Monday recommitment turns the page.",
+          "events": [
+            {
+              "memory_id": "ng_recommitment_day",
+              "content": "The Monday recommitment to the plan felt like turning a page rather than starting over from scratch.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "recommitment"
+              }
+            },
+            {
+              "memory_id": "ng_meal_prep",
+              "content": "Meal prep for the week filled the afternoon with purpose and kept things practical.",
+              "valence": 0.4,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "action"
+              }
+            },
+            {
+              "memory_id": "ng_tracker_update",
+              "content": "The app tracker was updated and the streak was reset from zero.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "nutrition",
+                "phase": "admin"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ng_1",
+              "query": "Which nutrition event was the core guilt trigger rather than the confusing contrast of reading labels correctly that same morning?",
+              "expected_memory_ids": [
+                "ng_relapse_guilt"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_ng_2",
+              "query": "Which earlier event left the heaviest guilt — not the recent tracker reset or meal prep session?",
+              "expected_memory_ids": [
+                "ng_relapse_guilt"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "dentist_fear",
+      "description": "The night before a procedure is defined by visceral dread; the recovery is milder than expected.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Pre-procedure dread makes sleep impossible.",
+          "events": [
+            {
+              "memory_id": "df_dread_night",
+              "content": "The night before the procedure, the dread became visceral and sleep was impossible despite trying everything.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "dread"
+              }
+            },
+            {
+              "memory_id": "df_reminder_text",
+              "content": "A reminder text with appointment time and parking directions arrived that afternoon.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "logistics"
+              }
+            },
+            {
+              "memory_id": "df_friend_calm",
+              "content": "A friend who had the same procedure messaged that it was much easier than the buildup suggested.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "reassurance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Recovery is genuinely milder than feared.",
+          "events": [
+            {
+              "memory_id": "df_recovery_surprise",
+              "content": "The procedure was over quickly and the recovery was genuinely milder than the dread had suggested.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "relief"
+              }
+            },
+            {
+              "memory_id": "df_aftercare_instructions",
+              "content": "Aftercare instructions listed foods to avoid and an icing schedule for the first day.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "df_first_normal_meal",
+              "content": "The first normal meal after the recovery period felt like a small private celebration.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "dentist",
+                "phase": "normalizing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_df_1",
+              "query": "Which dentist story moment carried the heavier emotional weight — the night of visceral dread or the milder-than-expected recovery?",
+              "expected_memory_ids": [
+                "df_dread_night"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.9
+              }
+            },
+            {
+              "query_id": "q_df_2",
+              "query": "Which event was the dread reaching its peak rather than just receiving the appointment reminder text?",
+              "expected_memory_ids": [
+                "df_dread_night"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "injury_recovery",
+      "description": "An acute sports injury triggers a season-ending fear; the return to training proves the body intact.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Injury moment triggers season-ending fear.",
+          "events": [
+            {
+              "memory_id": "irec_acute_moment",
+              "content": "The moment of injury was sharp and the immediate thought was that this would end the whole season.",
+              "valence": -0.9,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "injury",
+                "phase": "acute"
+              }
+            },
+            {
+              "memory_id": "irec_mri_wait",
+              "content": "Waiting three days for the MRI results extended the uncertainty and the anxiety grew.",
+              "valence": -0.6,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "injury",
+                "phase": "uncertainty"
+              }
+            },
+            {
+              "memory_id": "irec_physio_intake",
+              "content": "The first physiotherapy intake session mapped out a six-week recovery plan.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "injury",
+                "phase": "plan"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "First training session proves the body intact.",
+          "events": [
+            {
+              "memory_id": "irec_return_session",
+              "content": "The first light training session back felt like proof that the body could still do it and the fear finally dissolved.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "injury",
+                "phase": "return"
+              }
+            },
+            {
+              "memory_id": "irec_clearance_form",
+              "content": "A medical clearance form was signed and submitted to the team before the session.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "injury",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "irec_teammate_welcome",
+              "content": "Teammates welcomed the return with a brief cheer during warmups.",
+              "valence": 0.7,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "injury",
+                "phase": "welcome"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_irec_1",
+              "query": "Which earlier injury event was the acute emotional moment — not the recent clearance form or teammate welcome?",
+              "expected_memory_ids": [
+                "irec_acute_moment"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_irec_2",
+              "query": "Which event was the real return milestone rather than just completing the clearance paperwork?",
+              "expected_memory_ids": [
+                "irec_return_session"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "medication_adjustment",
+      "description": "A new medication causes a distressing side effect; a dosage adjustment resolves it quickly.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Side effect makes concentration impossible.",
+          "events": [
+            {
+              "memory_id": "ma_side_effect_distress",
+              "content": "Three days into the new dosage, a side effect made concentration impossible and the distress was real and disorienting.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "medication",
+                "phase": "distress"
+              }
+            },
+            {
+              "memory_id": "ma_pharmacy_note",
+              "content": "The pharmacy had sent a standard note listing possible side effects at the time of dispensing.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "medication",
+                "phase": "info"
+              }
+            },
+            {
+              "memory_id": "ma_doctor_callback",
+              "content": "A callback from the doctor explained the effect was common and temporary.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "medication",
+                "phase": "reassurance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Adjusted dose ends the side effect.",
+          "events": [
+            {
+              "memory_id": "ma_adjusted_dose_relief",
+              "content": "The adjusted dose ended the side effect within two days and mental clarity returned fully.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "medication",
+                "phase": "relief"
+              }
+            },
+            {
+              "memory_id": "ma_follow_up_appointment",
+              "content": "A follow-up appointment covered the monitoring schedule and ordered standard lab work.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "medication",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "ma_pharmacist_update",
+              "content": "The pharmacist updated the prescription record and confirmed the refill timing.",
+              "valence": 0.0,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "medication",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ma_1",
+              "query": "Which medication event was the actual distress point rather than just listing possible side effects in a standard pharmacy note?",
+              "expected_memory_ids": [
+                "ma_side_effect_distress"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_ma_2",
+              "query": "Which event was the real relief — the dose working — rather than just the follow-up appointment scheduling?",
+              "expected_memory_ids": [
+                "ma_adjusted_dose_relief"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mental_health_checkup",
+      "description": "A routine checkup returns an unexpectedly low score; follow-up sessions show measurable improvement.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Checkup result is lower than expected.",
+          "events": [
+            {
+              "memory_id": "mhc_checkup_surprise",
+              "content": "The routine checkup score was lower than expected and the clinician recommended starting weekly sessions immediately.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "surprise"
+              }
+            },
+            {
+              "memory_id": "mhc_waiting_room_anxiety",
+              "content": "The anxiety in the waiting room the following week was already more visible than usual.",
+              "valence": -0.4,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "anticipation"
+              }
+            },
+            {
+              "memory_id": "mhc_partner_support",
+              "content": "A partner offered to come to the next session and the offer was quietly accepted.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Clinician notes measurable progress.",
+          "events": [
+            {
+              "memory_id": "mhc_session_progress",
+              "content": "The clinician noted measurable progress at the review session and said the downswing had clearly reversed.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "progress"
+              }
+            },
+            {
+              "memory_id": "mhc_homework_exercise",
+              "content": "A homework exercise about sleep and mood tracking was assigned for the next two weeks.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "homework"
+              }
+            },
+            {
+              "memory_id": "mhc_quiet_evening",
+              "content": "A quiet evening that week felt genuinely restful for the first time in a while.",
+              "valence": 0.6,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "mental_health",
+                "phase": "recovery"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_mhc_1",
+              "query": "Which mental health moment carried the heavier emotional weight — the surprise checkup result or the noted progress?",
+              "expected_memory_ids": [
+                "mhc_checkup_surprise"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_mhc_2",
+              "query": "Which earlier event surfaced the unexpected finding — not the recent homework assignment or quiet restful evening?",
+              "expected_memory_ids": [
+                "mhc_checkup_surprise"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "coding_project_block",
+      "description": "Three days on a failing test feel intractable; an overnight insight finally clears it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Problem feels intractable.",
+          "events": [
+            {
+              "memory_id": "cpb_block_wall",
+              "content": "Three days on the same failing test left the screen blurring and the problem feeling completely intractable.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "coding",
+                "phase": "block"
+              }
+            },
+            {
+              "memory_id": "cpb_wrong_library",
+              "content": "Trying a different library added complexity and indirection without touching the core issue.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "coding",
+                "phase": "false_start"
+              }
+            },
+            {
+              "memory_id": "cpb_rubber_duck",
+              "content": "Talking through the problem out loud revealed where the real bottleneck was hiding.",
+              "valence": 0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "coding",
+                "phase": "insight_seed"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Overnight insight clears the block.",
+          "events": [
+            {
+              "memory_id": "cpb_breakthrough_moment",
+              "content": "The right abstraction clicked overnight and the tests finally passed cleanly on the first run.",
+              "valence": 0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "coding",
+                "phase": "breakthrough"
+              }
+            },
+            {
+              "memory_id": "cpb_pr_review",
+              "content": "A PR review covered style issues and function naming conventions.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "coding",
+                "phase": "review"
+              }
+            },
+            {
+              "memory_id": "cpb_standup_share",
+              "content": "Sharing the solution in standup got a brief nod of appreciation from the team.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "coding",
+                "phase": "sharing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_cpb_1",
+              "query": "Which coding event made the problem feel intractable rather than the separate complexity added by trying the wrong library?",
+              "expected_memory_ids": [
+                "cpb_block_wall"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_cpb_2",
+              "query": "Which coding story moment carried the heavier emotional weight — the three-day block or the overnight breakthrough?",
+              "expected_memory_ids": [
+                "cpb_block_wall"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "language_learning_plateau",
+      "description": "Four months of daily practice hit a plateau; an immersive day breaks it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Plateau makes practice feel like spinning wheels.",
+          "events": [
+            {
+              "memory_id": "llp_plateau_wall",
+              "content": "After four months of daily practice, a plateau made every session feel like spinning wheels with no forward motion.",
+              "valence": -0.6,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "language",
+                "phase": "plateau"
+              }
+            },
+            {
+              "memory_id": "llp_grammar_drill",
+              "content": "A new grammar drill was added to the routine without improving conversational fluency at all.",
+              "valence": -0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "language",
+                "phase": "wrong_fix"
+              }
+            },
+            {
+              "memory_id": "llp_tutor_feedback",
+              "content": "The tutor said plateaus were a known phase and suggested prioritizing listening input over drilling.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "language",
+                "phase": "guidance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Immersive day breaks the plateau.",
+          "events": [
+            {
+              "memory_id": "llp_immersive_day",
+              "content": "A day spent consuming only media in the target language broke the plateau noticeably and the language felt alive again.",
+              "valence": 0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "language",
+                "phase": "breakthrough"
+              }
+            },
+            {
+              "memory_id": "llp_vocab_log_update",
+              "content": "The vocabulary log was updated with new words encountered during the immersive session.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "language",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "llp_app_streak_reset",
+              "content": "The app streak was reset after missing a day but it felt minor compared to the plateau breaking.",
+              "valence": -0.1,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "language",
+                "phase": "setback"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_llp_1",
+              "query": "Which earlier event was the moment the plateau felt most discouraging — not the recent vocab log or app streak reset?",
+              "expected_memory_ids": [
+                "llp_plateau_wall"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "q_llp_2",
+              "query": "Which language learning event was the wall itself rather than just adding a grammar drill that did not move fluency?",
+              "expected_memory_ids": [
+                "llp_plateau_wall"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "music_practice_rebound",
+      "description": "A mechanical, frustrating practice day is followed by a flow state that brings music back.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Every phrase feels mechanical.",
+          "events": [
+            {
+              "memory_id": "mpr_demotivation_day",
+              "content": "A day when every phrase felt mechanical and hollow ended with the instrument put down early in frustration.",
+              "valence": -0.6,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "block"
+              }
+            },
+            {
+              "memory_id": "mpr_wrong_metronome",
+              "content": "Forcing the metronome at an unrealistic tempo made the phrases sound worse rather than better.",
+              "valence": -0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "wrong_approach"
+              }
+            },
+            {
+              "memory_id": "mpr_teacher_email",
+              "content": "The teacher emailed practice suggestions and a few backing track links.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "guidance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Flow state brings music back to life.",
+          "events": [
+            {
+              "memory_id": "mpr_flow_session",
+              "content": "The next session entered a flow state for the first time in weeks and the music came back alive and felt genuine.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "flow"
+              }
+            },
+            {
+              "memory_id": "mpr_recording_notes",
+              "content": "A quick recording playback revealed good dynamics worth keeping in the next performance.",
+              "valence": 0.4,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "review"
+              }
+            },
+            {
+              "memory_id": "mpr_setlist_draft",
+              "content": "Drafting the next performance setlist after the session kept the momentum going.",
+              "valence": 0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "music_practice",
+                "phase": "planning"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_mpr_1",
+              "query": "Which practice moment carried the deeper emotional weight — the mechanical frustration day or the flow state that brought music back?",
+              "expected_memory_ids": [
+                "mpr_flow_session"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.8,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_mpr_2",
+              "query": "Which practice event was the real re-ignition rather than just reviewing the recording notes?",
+              "expected_memory_ids": [
+                "mpr_flow_session"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.5
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "novel_writing_arc",
+      "description": "Deleting an entire chapter in despair is followed by a replacement that comes out better.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Deletion leaves the project feeling shaky.",
+          "events": [
+            {
+              "memory_id": "nwa_deletion_despair",
+              "content": "Deleting an entire chapter after reading it cold left the whole project feeling shaky and the confidence draining away.",
+              "valence": -0.7,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "despair"
+              }
+            },
+            {
+              "memory_id": "nwa_outline_revision",
+              "content": "Revising the chapter outline filled the afternoon with structural questions but no clear answers.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "revision"
+              }
+            },
+            {
+              "memory_id": "nwa_writer_friend_call",
+              "content": "A writer friend said deletion was a completely normal part of the draft process.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Replacement chapter comes out better.",
+          "events": [
+            {
+              "memory_id": "nwa_replacement_triumph",
+              "content": "The replacement chapter came out faster and significantly better than the deleted one, and the relief was immediate.",
+              "valence": 0.8,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "triumph"
+              }
+            },
+            {
+              "memory_id": "nwa_word_count_log",
+              "content": "The word count log was updated and the total crossed a project milestone.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "milestone"
+              }
+            },
+            {
+              "memory_id": "nwa_beta_reader_email",
+              "content": "An email to the beta reader group scheduled the next reading window.",
+              "valence": 0.2,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "novel_writing",
+                "phase": "logistics"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_nwa_1",
+              "query": "Which writing event was the moment the project felt most shaky rather than just generating an afternoon of structural outline questions?",
+              "expected_memory_ids": [
+                "nwa_deletion_despair"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.6
+              }
+            },
+            {
+              "query_id": "q_nwa_2",
+              "query": "Which earlier event caused the despair — not the recent beta reader email or word count milestone?",
+              "expected_memory_ids": [
+                "nwa_deletion_despair"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "art_class_critique",
+      "description": "A public critique singles out a piece as underdeveloped; a private conversation reframes it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Public critique leaves the student shaken.",
+          "events": [
+            {
+              "memory_id": "acc_harsh_critique",
+              "content": "The public critique singled out the piece as underdeveloped and the student went quiet and stayed that way for the rest of class.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "critique"
+              }
+            },
+            {
+              "memory_id": "acc_materials_note",
+              "content": "A note about materials and framing techniques was passed around after the critique.",
+              "valence": 0.0,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "technical"
+              }
+            },
+            {
+              "memory_id": "acc_peer_sympathy",
+              "content": "A fellow student offered quiet sympathy after class and walked out together.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "support"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Private conversation reframes the critique.",
+          "events": [
+            {
+              "memory_id": "acc_private_followup",
+              "content": "A private conversation with the instructor reframed the public critique as investment rather than dismissal.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "reframe"
+              }
+            },
+            {
+              "memory_id": "acc_studio_booking",
+              "content": "An extra studio session was booked to start revising the piece.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "action"
+              }
+            },
+            {
+              "memory_id": "acc_sketchbook_work",
+              "content": "The sketchbook work that evening felt lighter and more exploratory than before.",
+              "valence": 0.6,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "art_class",
+                "phase": "creative_flow"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_acc_1",
+              "query": "Which art class moment carried the deeper emotional weight — the public critique that left the student quiet or the private reframing?",
+              "expected_memory_ids": [
+                "acc_harsh_critique"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_acc_2",
+              "query": "Which event was the constructive reframing of the critique rather than just booking extra studio time?",
+              "expected_memory_ids": [
+                "acc_private_followup"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "budget_overrun_recovery",
+      "description": "A month-end statement reveals a significant budget overrun; a revised plan restores calm.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Statement triggers anxious evening.",
+          "events": [
+            {
+              "memory_id": "bor_overrun_panic",
+              "content": "Reviewing the month-end statement revealed a significant overrun and the rest of the evening became anxious.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "budget",
+                "phase": "panic"
+              }
+            },
+            {
+              "memory_id": "bor_subscription_audit",
+              "content": "An audit of subscriptions found three forgotten charges but they were not the main driver of the overrun.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "budget",
+                "phase": "audit"
+              }
+            },
+            {
+              "memory_id": "bor_partner_review",
+              "content": "A shared spreadsheet review with the partner surfaced the full picture and reduced some of the anxiety.",
+              "valence": 0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "budget",
+                "phase": "review"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Revised plan distributes the overrun.",
+          "events": [
+            {
+              "memory_id": "bor_revised_plan_relief",
+              "content": "A revised monthly plan distributed the overrun across three months and the anxiety lifted almost immediately.",
+              "valence": 0.6,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "budget",
+                "phase": "relief"
+              }
+            },
+            {
+              "memory_id": "bor_app_sync",
+              "content": "The budgeting app was synced with the new plan categories.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "budget",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "bor_coffee_reduction",
+              "content": "A small habit change — fewer coffee shop stops — was added to the plan.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "budget",
+                "phase": "habit"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_bor_1",
+              "query": "Which budget event was the core anxiety trigger rather than just surfacing forgotten subscriptions in an audit?",
+              "expected_memory_ids": [
+                "bor_overrun_panic"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_bor_2",
+              "query": "Which earlier event was the original anxious discovery — not the recent app sync or coffee habit change?",
+              "expected_memory_ids": [
+                "bor_overrun_panic"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.5,
+                "arousal": 0.6
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "investment_loss_reframe",
+      "description": "A market drop triggers immediate distress; a week's longer-view replaces it with steady resolve.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Portfolio drop triggers distress.",
+          "events": [
+            {
+              "memory_id": "ilr_loss_drop",
+              "content": "A market drop erased a significant portion of the portfolio and the distress was immediate and hard to set aside.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "investment",
+                "phase": "loss"
+              }
+            },
+            {
+              "memory_id": "ilr_news_spiral",
+              "content": "A news spiral about the broader market made the feeling worse without adding useful information.",
+              "valence": -0.5,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "investment",
+                "phase": "spiral"
+              }
+            },
+            {
+              "memory_id": "ilr_advisor_call",
+              "content": "A financial advisor call explained the historical context and the likely temporary nature of the move.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "investment",
+                "phase": "perspective"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Longer view replaces distress with resolve.",
+          "events": [
+            {
+              "memory_id": "ilr_long_view_acceptance",
+              "content": "A week later the longer view settled in and the distress was replaced by a steady resolve to stay the course.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "investment",
+                "phase": "acceptance"
+              }
+            },
+            {
+              "memory_id": "ilr_rebalance_note",
+              "content": "A rebalancing note from the advisor listed minor allocation adjustments.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "investment",
+                "phase": "admin"
+              }
+            },
+            {
+              "memory_id": "ilr_journal_reflection",
+              "content": "A journal entry noted the difference between present-moment panic and actual long-term risk.",
+              "valence": 0.4,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "investment",
+                "phase": "reflection"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_ilr_1",
+              "query": "Which investment moment carried the heavier emotional charge — the portfolio drop or the longer-view acceptance?",
+              "expected_memory_ids": [
+                "ilr_loss_drop"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_ilr_2",
+              "query": "Which event was the core distress moment rather than just leading to a news spiral about the broader market?",
+              "expected_memory_ids": [
+                "ilr_loss_drop"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "student_loan_anxiety",
+      "description": "A confusing statement shows an unexpected balance increase; customer service confirms it was a display error.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Statement triggers immediate panic.",
+          "events": [
+            {
+              "memory_id": "sla_confusing_statement",
+              "content": "A statement arrived showing an unexpected balance increase that triggered immediate panic about debt growing unnoticed.",
+              "valence": -0.8,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "panic"
+              }
+            },
+            {
+              "memory_id": "sla_payment_calendar",
+              "content": "The payment calendar was checked and the dates looked fine, which added to the confusion.",
+              "valence": -0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "sla_parent_reassurance",
+              "content": "A parent said the same thing had happened to them years ago and it turned out to be an error.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "reassurance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Customer service confirms a display error.",
+          "events": [
+            {
+              "memory_id": "sla_customer_service_clarity",
+              "content": "Customer service confirmed the balance increase was a display error and the actual debt had not changed.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "clarity"
+              }
+            },
+            {
+              "memory_id": "sla_portal_update",
+              "content": "The portal was updated with the corrected balance the following day.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "correction"
+              }
+            },
+            {
+              "memory_id": "sla_payment_confirmation",
+              "content": "The next payment confirmation arrived on schedule without any issues.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "student_loan",
+                "phase": "normalizing"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_sla_1",
+              "query": "Which loan event was the actual clarification that resolved the panic rather than just showing a corrected portal balance?",
+              "expected_memory_ids": [
+                "sla_customer_service_clarity"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "q_sla_2",
+              "query": "Which earlier event was the panic trigger — not the recent payment confirmation or portal correction?",
+              "expected_memory_ids": [
+                "sla_confusing_statement"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "tax_season_rebound",
+      "description": "Discovering a calculation error in a filed return creates dread; an amended return ends it.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Calculation error triggers dread of penalties.",
+          "events": [
+            {
+              "memory_id": "tsr_error_discovery",
+              "content": "Finding a calculation error in the filed return created a wave of dread about penalties and the IRS.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "tax",
+                "phase": "dread"
+              }
+            },
+            {
+              "memory_id": "tsr_software_glitch",
+              "content": "A software glitch had also flagged an unrelated field, causing a second confused look at the wrong item.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "tax",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "tsr_accountant_email",
+              "content": "The accountant replied that calculation errors were correctable and any penalties would be minor.",
+              "valence": 0.3,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "tax",
+                "phase": "reassurance"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Amended return ends the dread.",
+          "events": [
+            {
+              "memory_id": "tsr_amendment_filed",
+              "content": "The amended return was filed and the confirmation email ended the dread completely.",
+              "valence": 0.7,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "tax",
+                "phase": "resolution"
+              }
+            },
+            {
+              "memory_id": "tsr_penalty_estimate",
+              "content": "A penalty estimate arrived confirming it was small and easily manageable.",
+              "valence": 0.3,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "tax",
+                "phase": "estimate"
+              }
+            },
+            {
+              "memory_id": "tsr_refund_update",
+              "content": "The refund timeline was updated in the portal after the amendment processed.",
+              "valence": 0.2,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "tax",
+                "phase": "admin"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_tsr_1",
+              "query": "Which tax event was the core dread trigger rather than the separate confusion from the software glitch on an unrelated field?",
+              "expected_memory_ids": [
+                "tsr_error_discovery"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            },
+            {
+              "query_id": "q_tsr_2",
+              "query": "Which event was the resolution that ended the dread rather than just showing the penalty estimate?",
+              "expected_memory_ids": [
+                "tsr_amendment_filed"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.5,
+                "arousal": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "side_project_launch",
+      "description": "A side project launches to silence; a mention from a larger account changes everything three days later.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Launch day goes almost silent.",
+          "events": [
+            {
+              "memory_id": "spl_quiet_launch",
+              "content": "Launch day went almost completely silent — zero shares and a handful of pageviews left the whole project feeling invisible.",
+              "valence": -0.6,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "launch"
+              }
+            },
+            {
+              "memory_id": "spl_analytics_check",
+              "content": "Checking analytics every hour added dread rather than information and made the silence worse.",
+              "valence": -0.4,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "anxiety"
+              }
+            },
+            {
+              "memory_id": "spl_founder_post",
+              "content": "Posting a candid reflection about building in public felt vulnerable but honest.",
+              "valence": 0.2,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "transparency"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A late mention sends a surge of traffic.",
+          "events": [
+            {
+              "memory_id": "spl_late_surge",
+              "content": "Three days later a mention from a larger account sent a surge of traffic and the project suddenly felt real and alive.",
+              "valence": 0.9,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "surge"
+              }
+            },
+            {
+              "memory_id": "spl_email_list_growth",
+              "content": "The email list grew by forty subscribers in the same day.",
+              "valence": 0.6,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "growth"
+              }
+            },
+            {
+              "memory_id": "spl_feature_request",
+              "content": "A first feature request arrived, confirming real users had found the project.",
+              "valence": 0.7,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "side_project",
+                "phase": "validation"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_spl_1",
+              "query": "Which side-project moment carried the deeper emotional weight — the silent launch or the late surge that made the project feel real?",
+              "expected_memory_ids": [
+                "spl_late_surge"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.8
+              }
+            },
+            {
+              "query_id": "q_spl_2",
+              "query": "Which earlier event was the low point of the launch — not the recent feature request or email list growth?",
+              "expected_memory_ids": [
+                "spl_quiet_launch"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.4,
+                "arousal": 0.5
               }
             }
           ]

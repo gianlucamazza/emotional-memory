@@ -24,7 +24,7 @@ def test_realistic_dataset_loads() -> None:
 
     assert dataset.name == "realistic_recall_v1"
     assert dataset.default_top_k == 2
-    assert dataset.version == "1.3"
+    assert dataset.version == "1.4"
     assert dataset.scenarios
     assert len(dataset.scenarios) >= 10
     assert all(

@@ -287,7 +287,7 @@ def _render_markdown(results: dict[str, Any]) -> str:
         "Holm-Bonferroni correction) indicates that layer **contributes** to retrieval quality: "
         "removing it hurts performance. A variant with Δ ≈ 0 and small |d| indicates the layer "
         "has no measurable impact on this benchmark — either the signal is redundant or the "
-        "dataset is too small to detect the effect (N=20 queries has limited power).",
+        "dataset is too small to detect the effect (limited power at N=100 queries).",
         "",
     ]
 
@@ -303,8 +303,8 @@ def _build_protocol(results: dict[str, Any]) -> dict[str, Any]:
         "interpretation_notes": [
             "delta = ablated - full: negative means layer helps.",
             "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
-            "N=20 queries; power is limited — directional trends are informative even if not "
-            "significant.",
+            "N=100 queries (v1.4 expansion); directional trends are informative even if not "
+            "all results survive correction.",
         ],
     }
 
