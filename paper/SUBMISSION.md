@@ -3,7 +3,10 @@
 Build the submission bundle first:
 
 ```bash
-make paper-arxiv          # produces paper/arxiv-submission.tar.gz
+make bench-comparative-sbert  # regenerate SBERT comparative results (Table 3 source)
+make reproduce-paper          # regenerate paper/tables/*.tex from committed results
+make paper                    # rebuild PDF (checks LaTeX + bibliography)
+make paper-arxiv              # produces paper/arxiv-submission.tar.gz
 tar -tzf paper/arxiv-submission.tar.gz   # verify contents
 ```
 

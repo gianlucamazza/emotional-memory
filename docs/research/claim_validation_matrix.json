@@ -45,7 +45,7 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
-      "current_evidence": "Fidelity tests plus the controlled quadrant benchmark show affect-aware ranking shifts in the intended direction.",
+      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100).",
       "not_yet_shown": "General downstream superiority over production memory systems.",
       "next_study": "Expand external and realistic retrieval evaluations.",
       "evidence_refs": [
@@ -53,7 +53,8 @@
         "benchmarks/fidelity/test_mood_congruent.py"
       ],
       "benchmark_refs": [
-        "benchmarks/comparative/results.md"
+        "benchmarks/comparative/results.sbert.md",
+        "benchmarks/realistic/results.sbert.md"
       ],
       "protocol_refs": [
         "benchmarks/comparative/protocol.md"

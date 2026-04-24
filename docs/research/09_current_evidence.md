@@ -50,7 +50,7 @@ evidence level, and still-open gaps.
 | ID | Claim area | Status | Evidence level | Allowed public wording | Current evidence | Not yet shown | Next study |
 |---|---|---|---|---|---|---|---|
 | `aft_multilayer_engine` | Architecture | Implemented | `1_theory_fidelity` | AFT is implemented as a coherent multi-layer memory engine. | Public API, engine/retrieval/state modules, sync/async parity tests. | External validation of architectural value. | Keep API/docs aligned while external evaluations grow. |
-| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | Fidelity tests plus the controlled quadrant benchmark show affect-aware ranking shifts in the intended direction. | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
+| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items), while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100). | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
 | `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. | Ecological correspondence to human emotional memory. | Human and behavioral validation. |
 | `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
 | `replayable_multi_session_help` | Realistic tasks | Early controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks. | The realistic replay benchmark shows early gains with persisted state, non-trivial candidate pools, and challenge-typed reporting. | Broad downstream or production superiority, or robustness beyond the current small replay set. | Expand scenario coverage and run larger external evaluations. |
@@ -62,8 +62,10 @@ evidence level, and still-open gaps.
 
 - **Strongest evidence**: theory-fidelity benchmarks. These are the clearest
   proof that the code behaves as designed.
-- **Second-best evidence**: controlled comparative retrieval results on
-  `affect_reference_v1`, especially against semantic-only and recency baselines.
+- **Second-best evidence**: realistic replay benchmark (SBERT, N = 100):
+  AFT top1 = 0.70 vs naive_cosine = 0.50. The controlled quadrant probe
+  (`affect_reference_v1`) ties AFT and naive_cosine at SBERT ceiling (both 0.80)
+  but confirms the benchmark discriminates clearly against the recency baseline.
 - **Useful but narrow evidence**: appraisal-quality checks and demo-level
   product behavior.
 - **Emerging step-4 evidence**: the realistic replay benchmark (v1.4, expanded

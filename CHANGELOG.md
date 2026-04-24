@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `paper-bundle`, `release-gate`.
 - `docs/research/claim_validation_matrix.json` — canonical machine-readable
   matrix for public scientific claims, evidence levels, and allowed wording.
+- `make bench-comparative-sbert` — paper-canonical SBERT comparative benchmark
+  target; outputs to `benchmarks/comparative/results.sbert.{csv,md,protocol.json}`.
+- `benchmarks/comparative/results.sbert.{csv,md,protocol.json}` — committed SBERT
+  run: AFT = 0.80 = naive_cosine (ceiling effect, N = 20 items; recency = 0.25).
+- `benchmarks/appraisal_confound/` — pre-registered appraisal confound study
+  runner (Ha2: `aft_keyword > naive_cosine`; Hb2: equivalence test). No LLM key required.
+- `benchmarks/preregistration_addendum_v2.md` — pre-registers appraisal confound,
+  realistic_recall_v2 cross-embedder/multilingual, and human-eval publishability criteria.
+- `docs/research/10_scientific_quality_bar.md` — formalises 3 mandatory claim gates
+  and claim upgrade path.
 
 ### Changed
 
@@ -42,6 +52,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   validation matrix and documents allowed public wording for each major claim.
 - `README.md` now points to the canonical claim-validation matrix so public
   validation wording is anchored to a versioned source of truth.
+- `paper/main.tex` Table 3 and surrounding text realigned to current SBERT results:
+  quadrant probe ties AFT and naive_cosine at 0.80 (ceiling); realistic benchmark
+  (AFT 0.70 vs naive_cosine 0.50, SBERT, N = 100) is cited as ranking-shift evidence.
+- `scripts/reproduce_paper.py`: `_resolve_comparative_csv` prefers
+  `results.sbert.csv` over `results.csv` for paper-canonical Table 3 generation.
 
 ## [0.6.3] - 2026-04-22
 

@@ -72,7 +72,7 @@ prediction-error gate controls reconsolidation lability. We validate the model
 through 126 parametrized fidelity test cases covering 20 psychological phenomena,
 and report a comparative benchmark against a semantic-only baseline on a new
 affect-labeled dataset of 258 examples. On a replayable multi-session realistic
-recall benchmark, AFT achieves \texttt{top1\_accuracy}=0.70 vs.\ 0.12 for
+recall benchmark, AFT achieves \texttt{top1\_accuracy}=0.70 vs.\ 0.50 for
 semantic-only cosine retrieval (SBERT embedder). The implementation is released
 as the open-source \texttt{emotional-memory} Python library (MIT license).
 \end{abstract}
@@ -364,14 +364,14 @@ query quadrant's centroid valence/arousal, activating mood-congruent scoring.
 \end{table}
 
 On this coarse quadrant-level probe both AFT and \texttt{naive\_cosine} achieve
-recall@5\,=\,0.80 (Δ\,=\,0.00, 95\% CI [--0.25, 0.25], $p$\,=\,1.00).
+recall@5\,=\,0.80 ($\Delta$\,=\,0.00, 95\% CI [--0.25, 0.25], $p$\,=\,1.00).
 The recency baseline confirms 0.25 as the expected floor on a balanced
 four-quadrant dataset. The benchmark is intentionally narrow—it measures whether
 the affect fingerprint is preserved in retrieval, not whether the multi-signal
 architecture outperforms a semantic-only baseline at this granularity.
 Advantage of the full AFT architecture is measured on the replayable multi-session
 realistic recall benchmark, where \texttt{top1\_accuracy}\,=\,0.70 vs.\
-\texttt{naive\_cosine}\,=\,0.12 (SBERT; \texttt{benchmarks/realistic/results.sbert.md}).
+\texttt{naive\_cosine}\,=\,0.50 (SBERT; \texttt{benchmarks/realistic/results.sbert.md}).
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 

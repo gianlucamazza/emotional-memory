@@ -364,10 +364,13 @@ retrieval probe, not a general downstream evaluation of production memory system
   changes ranking behavior in the intended direction, plus an early comparative
   replay benchmark for multi-session scenarios with non-trivial candidate pools
   and explicit challenge types. With the `BAAI/bge-small-en-v1.5` embedder (default),
-  AFT leads `naive_cosine` on aggregate top1 (0.85 vs 0.75) and hit@k (0.95 vs 0.85);
-  across per-challenge subsets AFT is best-or-tied on every subset, with the largest
-  gains on `affective_arc`. N = 20 aggregate queries keep these results directional
-  pending expansion.
+  AFT leads `naive_cosine` on aggregate top1 (0.70 vs 0.50) and hit@k (0.79 vs 0.63)
+  with the `BAAI/bge-small-en-v1.5` embedder (N = 100 queries); on the
+  `semantic_confound` subset (N = 30) AFT top1 = 0.73 vs naive 0.47, Δ = +0.27
+  [0.10, 0.43], p_adj = 0.006 after Holm correction.
+  On the controlled quadrant probe (`affect_reference_v1`, SBERT embedder),
+  AFT and naive_cosine both reach recall@5 = 0.80 (ceiling effect at N = 20
+  items; both well above recency baseline 0.25).
 - **Not yet established**: general superiority over systems such as Mem0 or LangMem
   on realistic agent tasks; robustness beyond the current small replay dataset;
   completed human evaluation results; or ecological correspondence to human

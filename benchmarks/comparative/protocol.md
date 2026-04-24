@@ -29,9 +29,15 @@ memory quality.
 
 ## What the benchmark supports claiming
 
-- AFT changes retrieval behavior in the intended affect-aware direction.
+- AFT changes retrieval behavior in the intended affect-aware direction (validated
+  by fidelity tests and the recency-baseline delta on this probe).
 - AFT can be compared to semantic-only and recency-only controls on a shared
   synthetic retrieval probe.
+- **Ceiling-effect caveat**: with a high-quality SBERT embedder (all-MiniLM-L6-v2)
+  and only N = 4 queries × top_k items, both AFT and naive_cosine saturate near
+  the same recall level. The probe has insufficient statistical power to detect
+  AFT's architecture benefit at this scale; see the realistic replay benchmark
+  for per-session ranking-shift evidence.
 - Optional systems such as Mem0 and LangMem can be inspected as exploratory
   reference points under this specific protocol.
 

@@ -55,8 +55,11 @@ across all 4 queries.
 
 A system that retrieves purely by semantic cosine similarity will score ~0.25
 on a balanced dataset (random quadrant hit rate). AFT's multi-signal scorer
-is expected to score higher on this benchmark because it explicitly uses mood
-congruence, affect proximity, and momentum alignment.
+is expected to score **at least as high as** cosine on this benchmark because it
+explicitly uses mood congruence, affect proximity, and momentum alignment.
+With the SBERT embedder both AFT and naive_cosine reach recall@5 = 0.80
+(ceiling effect at N = 4 queries × top_k = 5 items); the benchmark primarily
+discriminates against the recency-only baseline (Δ = −0.55, p < 0.001).
 
 ## Systems
 
@@ -91,4 +94,5 @@ document `status="not_evaluated"` with `reason` in the CSV and continue.
 | `results.md` | Human-readable Markdown table |
 | `results.protocol.json` | Machine-readable protocol metadata and caveats |
 
-Run `make bench-comparative` to regenerate the results and protocol metadata.
+Run `make bench-comparative` to regenerate with the hash embedder (quick, no deps).
+Run `make bench-comparative-sbert` to regenerate with the SBERT embedder (paper-canonical).
