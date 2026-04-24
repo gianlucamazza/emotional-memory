@@ -18,10 +18,7 @@
   "systems": [
     "aft",
     "naive_cosine",
-    "recency",
-    "mem0",
-    "letta",
-    "langmem"
+    "recency"
   ],
   "primary_metric": "recall@k quadrant-level affect congruence",
   "secondary_metrics": [

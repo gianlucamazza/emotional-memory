@@ -42,6 +42,14 @@ except ImportError:
 if "OPENAI_API_KEY" not in os.environ and "EMOTIONAL_MEMORY_LLM_API_KEY" in os.environ:
     os.environ["OPENAI_API_KEY"] = os.environ["EMOTIONAL_MEMORY_LLM_API_KEY"]
 
+from benchmarks.common.statistics import (
+    DEFAULT_N_BOOTSTRAP,
+    bootstrap_ci,
+    ci_payload,
+    format_point_ci,
+    mcnemar_exact,
+    paired_bootstrap_diff,
+)
 from benchmarks.comparative.adapters.aft import AFTAdapter
 from benchmarks.comparative.adapters.base import MemoryAdapter
 from benchmarks.comparative.adapters.naive_cosine import NaiveCosineAdapter
@@ -157,23 +165,26 @@ def _recall_at_k(
     id_map: dict,  # type: ignore[type-arg]
     query_spec: dict,  # type: ignore[type-arg]
     k: int,
-) -> float:
-    """Fraction of top-k results that are mood-congruent with the query."""
+) -> list[bool]:
+    """Per-item congruence flags for the top-k results (True = mood-congruent)."""
     if not retrieved:
-        return 0.0
+        return []
     top = retrieved[:k]
-    congruent = sum(
-        1 for item in top if item.id in id_map and _is_congruent(id_map[item.id], query_spec)
-    )
-    return congruent / min(k, len(top))
+    return [item.id in id_map and _is_congruent(id_map[item.id], query_spec) for item in top]
 
 
 def run_adapter(
     adapter: MemoryAdapter,
     examples: list[dict],  # type: ignore[type-arg]
     top_k: int = 5,
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
 ) -> dict:  # type: ignore[type-arg]
-    """Run one full benchmark pass for *adapter*. Returns metrics dict."""
+    """Run one full benchmark pass for *adapter*. Returns metrics dict.
+
+    ``_item_flags`` (list[bool]) is included for pairwise comparison in the
+    caller; strip it before writing to CSV.
+    """
     adapter.reset()
 
     # Encode
@@ -183,7 +194,8 @@ def run_adapter(
     encode_ms = (encode_total / len(examples)) * 1000
 
     # Retrieve — one query per quadrant, pass affective centroid for mood-aware adapters
-    recall_scores: list[float] = []
+    all_item_flags: list[bool] = []
+    per_query_scores: list[float] = []
     latencies_ms: list[float] = []
 
     for q in QUERIES:
@@ -196,15 +208,22 @@ def run_adapter(
         )
         latency = (time.perf_counter() - t1) * 1000
         latencies_ms.append(latency)
-        recall_scores.append(_recall_at_k(retrieved, id_map, q, top_k))
+        flags = _recall_at_k(retrieved, id_map, q, top_k)
+        all_item_flags.extend(flags)
+        per_query_scores.append(sum(flags) / max(len(flags), 1) if flags else 0.0)
 
     lat_sorted = sorted(latencies_ms)
     p50 = statistics.median(lat_sorted)
     p95 = lat_sorted[int(len(lat_sorted) * 0.95)] if len(lat_sorted) > 1 else lat_sorted[0]
 
+    item_floats = [float(f) for f in all_item_flags]
+    ci = ci_payload(
+        *bootstrap_ci(item_floats, n_bootstrap=n_bootstrap, seed=seed),
+        n_bootstrap=n_bootstrap,
+    )
     return {
         "system": adapter.name,
-        f"recall@{top_k}": round(statistics.mean(recall_scores), 4),
+        f"recall@{top_k}": round(statistics.mean(per_query_scores), 4),
         "encode_ms_avg": round(encode_ms, 2),
         "retrieve_p50_ms": round(p50, 2),
         "retrieve_p95_ms": round(p95, 2),
@@ -212,6 +231,9 @@ def run_adapter(
         "top_k": top_k,
         "status": "ok",
         "reason": "",
+        "ci": ci,
+        "ci_note": f"Item-level CI over top_k * n_queries items (N={len(QUERIES)} queries)",
+        "_item_flags": all_item_flags,
     }
 
 
@@ -282,6 +304,13 @@ def main() -> None:
         ),
     )
     parser.add_argument("--out", default=str(DEFAULT_OUT))
+    parser.add_argument("--seed", type=int, default=0, help="RNG seed for CI bootstrap.")
+    parser.add_argument(
+        "--n-bootstrap",
+        type=int,
+        default=DEFAULT_N_BOOTSTRAP,
+        help="Number of bootstrap resamples for CI computation.",
+    )
     args = parser.parse_args()
 
     examples = _load_dataset()
@@ -316,7 +345,9 @@ def main() -> None:
 
         print(f"Running {adapter.name}...")
         try:
-            metrics = run_adapter(adapter, examples, top_k=args.top_k)
+            metrics = run_adapter(
+                adapter, examples, top_k=args.top_k, n_bootstrap=args.n_bootstrap, seed=args.seed
+            )
             rows.append(metrics)
             print(
                 f"  recall@{args.top_k}={metrics[f'recall@{args.top_k}']}"
@@ -339,11 +370,54 @@ def main() -> None:
                 }
             )
 
+    # Compute pairwise comparisons vs naive_cosine (only rows with _item_flags present)
+    pairwise_rows: list[dict[str, Any]] = []
+    baseline_flags: list[bool] | None = None
+    for r in rows:
+        if r.get("system") == "naive_cosine" and "_item_flags" in r:
+            baseline_flags = r["_item_flags"]
+            break
+    if baseline_flags is not None:
+        for r in rows:
+            if r.get("system") == "naive_cosine" or "_item_flags" not in r:
+                continue
+            sys_flags = r["_item_flags"]
+            n_pad = max(0, len(baseline_flags) - len(sys_flags))
+            a_padded = sys_flags + [False] * n_pad
+            b_padded = baseline_flags + [False] * max(0, len(sys_flags) - len(baseline_flags))
+            n = min(len(a_padded), len(b_padded))
+            a_f = [float(v) for v in a_padded[:n]]
+            b_f = [float(v) for v in b_padded[:n]]
+            diff, lo, hi, p_boot = paired_bootstrap_diff(
+                a_f, b_f, n_bootstrap=args.n_bootstrap, seed=args.seed
+            )
+            only_a = sum(1 for av, bv in zip(a_f, b_f, strict=True) if av > bv)
+            only_b = sum(1 for av, bv in zip(a_f, b_f, strict=True) if bv > av)
+            p_mc = mcnemar_exact(only_a, only_b)
+            pairwise_rows.append(
+                {
+                    "system": r["system"],
+                    "baseline": "naive_cosine",
+                    "diff": round(diff, 4),
+                    "ci_lower": round(lo, 4),
+                    "ci_upper": round(hi, 4),
+                    "p_bootstrap": round(p_boot, 4),
+                    "p_mcnemar": round(p_mc, 4),
+                    "n_items": n,
+                    "n_discordant": only_a + only_b,
+                    "n_padded": n_pad,
+                }
+            )
+
+    # Strip internal keys before CSV
+    _internal_keys = {"ci", "ci_note", "_item_flags"}
+    csv_rows = [{k: v for k, v in r.items() if k not in _internal_keys} for r in rows]
+
     # Write CSV
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    if rows:
-        fieldnames = list(rows[0].keys())
+    if csv_rows:
+        fieldnames = list(csv_rows[0].keys())
         protocol_metadata = build_protocol_metadata(
             system_names=system_names,
             top_k=args.top_k,
@@ -353,10 +427,15 @@ def main() -> None:
         with out_path.open("w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(rows)
+            writer.writerows(csv_rows)
         print(f"\nResults written → {out_path}")
 
-        # Also write a Markdown table
+        # Markdown table with CI
+        ci_note = (
+            f"Item-level CI over top_k x N_queries items "
+            f"(N={len(QUERIES)} queries x top_k items). "
+            f"Bootstrap percentile, n={args.n_bootstrap}, seed={args.seed}."
+        )
         md_path = out_path.with_suffix(".md")
         lines = [
             "# Comparative benchmark results",
@@ -372,17 +451,52 @@ def main() -> None:
             "- AFT receives explicit query affect (`valence`, `arousal`) in this protocol.",
             "- General-purpose systems such as Mem0 and LangMem are being evaluated on a task",
             "  narrower than their intended product surface.",
+            f"- CI note: {ci_note}",
             "",
-            "| System | Recall@k | Encode ms/item | Retrieve p50 ms | Retrieve p95 ms | Status |",
+            (
+                "| System | Recall@k [95% CI] | Encode ms/item "
+                "| Retrieve p50 ms | Retrieve p95 ms | Status |"
+            ),
             "| --- | ---: | ---: | ---: | ---: | --- |",
         ]
         for r in rows:
-            k = r["top_k"]
+            k = r.get("top_k", args.top_k)
+            recall_val = r.get(f"recall@{k}", "—")
+            ci_data = r.get("ci")
+            if ci_data and isinstance(recall_val, (int, float)):
+                recall_str = format_point_ci(
+                    ci_data["point"], ci_data["ci_lower"], ci_data["ci_upper"]
+                )
+            else:
+                recall_str = str(recall_val)
             lines.append(
-                f"| {r['system']} | {r.get(f'recall@{k}', '—')} "
+                f"| {r['system']} | {recall_str} "
                 f"| {r['encode_ms_avg']} | {r['retrieve_p50_ms']} "
                 f"| {r['retrieve_p95_ms']} | {r['status']} |"
             )
+        if pairwise_rows:
+            lines.extend(
+                [
+                    "",
+                    "## Pairwise vs naive_cosine",
+                    "",
+                    "Two-sided tests: paired bootstrap p-value and exact McNemar p-value.",
+                    "H0: no difference. CI excludes 0 ↔ difference is credible at 95% level.",
+                    "",
+                    (
+                        "| System | Δ [95% CI] | p (bootstrap) | p (McNemar) "
+                        "| N items | Discordant | Padded |"
+                    ),
+                    "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+                ]
+            )
+            for pr in pairwise_rows:
+                diff_str = format_point_ci(pr["diff"], pr["ci_lower"], pr["ci_upper"])
+                lines.append(
+                    f"| {pr['system']} | {diff_str} | "
+                    f"{pr['p_bootstrap']:.4f} | {pr['p_mcnemar']:.4f} | "
+                    f"{pr['n_items']} | {pr['n_discordant']} | {pr['n_padded']} |"
+                )
         md_path.write_text("\n".join(lines) + "\n")
         print(f"Markdown  written → {md_path}")
 

@@ -1,7 +1,4 @@
 system,recall@5,encode_ms_avg,retrieve_p50_ms,retrieve_p95_ms,n_examples,top_k,status,reason
-aft,0.85,41.26,51.28,58.29,258,5,ok,
-naive_cosine,0.8,31.71,69.05,82.18,258,5,ok,
-recency,0.25,0.01,0.02,0.04,258,5,ok,
-mem0,0.95,1363.53,161.25,178.06,258,5,ok,
-letta,—,—,—,—,0,5,not_evaluated,LETTA_API_KEY not set (cloud-only service — see https://letta.ai)
-langmem,0.9,143.24,170.37,183.59,258,5,ok,
+aft,0.45,0.92,3.37,3.81,258,5,ok,
+naive_cosine,0.45,0.02,2.82,2.98,258,5,ok,
+recency,0.25,0.01,0.01,0.02,258,5,ok,
