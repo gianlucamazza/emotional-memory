@@ -32,6 +32,7 @@ class AFTLoCoMoAdapter(LoCoMoAdapter):
     ) -> None:
         self._config = config
         self._top_k = top_k
+        self._embedder = SentenceTransformerEmbedder.make_bge_small()
         self._engine: EmotionalMemory | None = None
 
     def reset(self) -> None:
@@ -39,7 +40,7 @@ class AFTLoCoMoAdapter(LoCoMoAdapter):
             self._engine.close()
         self._engine = EmotionalMemory(
             store=InMemoryStore(),
-            embedder=SentenceTransformerEmbedder.make_bge_small(),
+            embedder=self._embedder,
             appraisal_engine=KeywordAppraisalEngine(),
             config=self._config,
         )

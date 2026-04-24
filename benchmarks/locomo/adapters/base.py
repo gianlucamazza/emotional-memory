@@ -22,6 +22,7 @@ def _get_llm_config() -> dict[str, str]:
         "api_key": os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", ""),
         "base_url": os.environ.get("EMOTIONAL_MEMORY_LLM_BASE_URL", _DEFAULT_BASE_URL),
         "model": os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", _DEFAULT_MODEL),
+        "reasoning_effort": os.environ.get("EMOTIONAL_MEMORY_LLM_REASONING_EFFORT", ""),
     }
 
 
@@ -50,12 +51,41 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
         messages.append({"role": "system", "content": system})
     messages.append({"role": "user", "content": prompt})
 
-    response = httpx.post(
-        f"{cfg['base_url'].rstrip('/')}/chat/completions",
-        headers={"Authorization": f"Bearer {cfg['api_key']}"},
-        json={"model": cfg["model"], "messages": messages, "temperature": temperature},
-        timeout=float(os.environ.get("EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS", _DEFAULT_TIMEOUT)),
-    )
+    url = f"{cfg['base_url'].rstrip('/')}/chat/completions"
+    headers = {"Authorization": f"Bearer {cfg['api_key']}"}
+    timeout = float(os.environ.get("EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS", _DEFAULT_TIMEOUT))
+
+    payload: dict[str, object] = {
+        "model": cfg["model"],
+        "messages": messages,
+        "temperature": temperature,
+    }
+    if cfg["reasoning_effort"]:
+        payload["reasoning_effort"] = cfg["reasoning_effort"]
+
+    response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+
+    # Some OpenAI reasoning models (e.g. gpt-5-mini) reject custom temperature
+    # and/or unrecognized parameters. Strip the offending key and retry once.
+    while response.status_code == 400:
+        body = response.json()
+        err = body.get("error", {})
+        bad_param = err.get("param")
+        err_msg = err.get("message", "")
+        removed = False
+        if bad_param and bad_param in payload:
+            payload.pop(bad_param, None)
+            removed = True
+        elif "temperature" in err_msg and "temperature" in payload:
+            payload.pop("temperature", None)
+            removed = True
+        elif "reasoning_effort" in err_msg and "reasoning_effort" in payload:
+            payload.pop("reasoning_effort", None)
+            removed = True
+        if not removed:
+            break
+        response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+
     response.raise_for_status()
     return str(response.json()["choices"][0]["message"]["content"])
 

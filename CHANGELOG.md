@@ -9,7 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Nothing yet.
+- `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` env var for reasoning-budget control on
+  o-series / gpt-5 models (empty ⇒ param omitted; consumed by
+  `benchmarks/locomo/adapters/base.py::call_llm`).
+- `benchmarks/locomo/README.md` — execution contract, env vars, operational notes
+  for gpt-5-mini quirks, pre-reg cross-reference.
+- `.claude/skills/` — 6 project-scoped Claude Code skills encoding the scientific
+  workflow: `bench-locomo`, `bench-study`, `prereg-guard`, `evidence-update`,
+  `paper-bundle`, `release-gate`.
+- `docs/research/claim_validation_matrix.json` — canonical machine-readable
+  matrix for public scientific claims, evidence levels, and allowed wording.
+
+### Changed
+
+- `benchmarks/locomo/adapters/base.py::call_llm` now retries generically on HTTP 400
+  by stripping the `bad_param` reported by the API, instead of hardcoded model-name
+  sniffing.
+- `benchmarks/locomo/adapters/aft.py`: `SentenceTransformerEmbedder` instantiated
+  once in `__init__` and reused across `reset()` calls, eliminating redundant model
+  reloads between conversations.
+- `benchmarks/locomo/{runner,scoring}.py` coerce gold/prediction to `str` before
+  scoring (some LoCoMo gold answers are integers).
+- `benchmarks/locomo/dataset.py`: corrected QA pair count in module docstring
+  (~1986 total including cat-5 adversarial, not ~1540).
+- `benchmarks/locomo/scoring.py`: module docstring now model-agnostic (judge model
+  is resolved from `EMOTIONAL_MEMORY_LLM_MODEL` at runtime).
+- `.gitignore`: refined `.claude/` exclusion to `!.claude/skills/` so project-scoped
+  skills are version-controlled while local settings remain ignored.
+- `Makefile`: `bench-locomo` and `bench-locomo-dry` prepend `PYTHONUNBUFFERED=1`
+  so subprocess progress streams in real time.
+- `docs/research/09_current_evidence.md` is now backed by a canonical claim
+  validation matrix and documents allowed public wording for each major claim.
+- `README.md` now points to the canonical claim-validation matrix so public
+  validation wording is anchored to a versioned source of truth.
 
 ## [0.6.3] - 2026-04-22
 

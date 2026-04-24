@@ -18,8 +18,9 @@ env/
 .coverage
 htmlcov/
 
-# Local config
-.claude/
+# Local config — ignore everything under .claude/ except project-scoped skills
+.claude/*
+!.claude/skills/
 .env
 
 # IDE

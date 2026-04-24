@@ -1,6 +1,7 @@
 """LoCoMo dataset loader with on-demand local caching.
 
-Dataset: Maharana et al., ACL 2024 — 10 long multi-session conversations, ~1540 QA pairs.
+Dataset: Maharana et al., ACL 2024 — 10 long multi-session conversations, ~1986 QA pairs
+         (includes adversarial cat-5; ~1540 if cat-5 excluded, as in the original paper tables).
 Repo:    https://github.com/snap-research/locomo  (CC BY-NC 4.0)
 File:    locomo10.json (~2.7 MB)
 

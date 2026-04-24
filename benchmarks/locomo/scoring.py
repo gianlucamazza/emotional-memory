@@ -3,7 +3,8 @@
 Metrics (per the original LoCoMo paper + mem0 eval harness):
   F1        token-overlap F1 after normalization (lowercase, strip articles/punct)
   BLEU-1    unigram BLEU (clipped precision)
-  LLM judge GPT-4o-mini binary CORRECT / WRONG (temperature 0)
+  LLM judge binary CORRECT / WRONG via the model resolved from
+  EMOTIONAL_MEMORY_LLM_MODEL (the pre-registration pins this to gpt-5-mini).
 """
 
 from __future__ import annotations
@@ -149,8 +150,10 @@ def score_predictions(
         from benchmarks.locomo.dataset import QA_CATEGORY_NAMES
 
         cat_name = QA_CATEGORY_NAMES.get(cat, f"category_{cat}")
-        f1 = token_f1(pred["prediction"], pred["gold"])
-        b1 = bleu1(pred["prediction"], pred["gold"])
+        gold = str(pred["gold"])
+        prediction = str(pred["prediction"])
+        f1 = token_f1(prediction, gold)
+        b1 = bleu1(prediction, gold)
         row: dict[str, float] = {"f1": f1, "bleu1": b1}
         jc = pred.get("judge_correct")
         if jc is not None:

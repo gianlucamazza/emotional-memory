@@ -96,11 +96,17 @@ bench-ablation:
 bench-ablation-hash:
 	uv run python -m benchmarks.ablation.runner --embedder hash
 
+bench-appraisal-confound:
+	uv run python -m benchmarks.appraisal_confound.runner --embedder sbert-bge
+
+bench-appraisal-confound-hash:
+	uv run python -m benchmarks.appraisal_confound.runner --embedder hash
+
 bench-locomo:
-	uv run python -m benchmarks.locomo.runner
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner
 
 bench-locomo-dry:
-	uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 5 --no-judge
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 5 --no-judge
 
 human-eval-packets:
 	uv run python -m benchmarks.human_eval.pipeline packets

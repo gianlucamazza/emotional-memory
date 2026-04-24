@@ -6,9 +6,14 @@ Usage::
     uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 10  # dry run
 
 Environment variables (same as LLM test suite):
-  EMOTIONAL_MEMORY_LLM_API_KEY   required for answer generation + judge
-  EMOTIONAL_MEMORY_LLM_BASE_URL  default https://api.openai.com/v1
-  EMOTIONAL_MEMORY_LLM_MODEL     default gpt-4o-mini
+  EMOTIONAL_MEMORY_LLM_API_KEY         required for answer generation + judge
+  EMOTIONAL_MEMORY_LLM_BASE_URL        default https://api.openai.com/v1
+  EMOTIONAL_MEMORY_LLM_MODEL           default gpt-4o-mini (project .env pins gpt-5-mini)
+  EMOTIONAL_MEMORY_LLM_REASONING_EFFORT  reasoning budget for o-series / gpt-5 models
+                                         (minimal / low / medium / high); omitted if empty
+
+Prefer `make bench-locomo` over calling this module directly — it exports the .env
+and sets PYTHONUNBUFFERED=1 for real-time progress output.
 """
 
 from __future__ import annotations
@@ -50,7 +55,9 @@ def _run_judge(predictions: list[dict[str, Any]], *, verbose: bool = False) -> N
         if pred.get("is_adversarial"):
             pred["judge_correct"] = is_adversarial_correct(pred["prediction"])
             continue
-        prompt = build_judge_prompt(pred["question"], pred["gold"], pred["prediction"])
+        prompt = build_judge_prompt(
+            str(pred["question"]), str(pred["gold"]), str(pred["prediction"])
+        )
         try:
             response = call_llm(prompt, temperature=0.0)
             pred["judge_correct"] = parse_judge_response(response)

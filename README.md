@@ -374,7 +374,9 @@ retrieval probe, not a general downstream evaluation of production memory system
   emotional memory.
 
 See [Current Evidence](docs/research/09_current_evidence.md) for the study ladder
-and the current claim-to-evidence matrix.
+and the current claim-to-evidence matrix. The canonical machine-readable source
+for those public scientific claims lives in
+[`docs/research/claim_validation_matrix.json`](docs/research/claim_validation_matrix.json).
 
 ## Benchmarks
 
@@ -548,6 +550,7 @@ make bench-appraisal          # Scherer CPM prompt quality benchmarks
 | `EMOTIONAL_MEMORY_LLM_API_KEY` | — | API key (required) |
 | `EMOTIONAL_MEMORY_LLM_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
 | `EMOTIONAL_MEMORY_LLM_MODEL` | `gpt-5-mini` | Model |
+| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | `""` | Reasoning budget for o-series / gpt-5 models (`minimal` / `low` / `medium` / `high`); omitted when empty |
 | `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | `plain` | LLM response mode: `plain` or `json_object` |
 | `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | `30` | HTTP timeout for OpenAI-compatible calls |
 | `EMOTIONAL_MEMORY_LLM_REPEATS` | `3` | Repeats per phrase in quality benchmarks |

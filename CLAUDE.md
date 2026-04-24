@@ -45,6 +45,7 @@ uv run pytest tests/test_engine.py::test_name -v
 | `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | No | `plain` | Response mode: `plain` or `json_object` |
 | `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | No | `30` | HTTP timeout in seconds |
 | `EMOTIONAL_MEMORY_LLM_REPEATS` | No | `3` | Repeats per phrase in quality benchmarks |
+| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | No | `""` | `reasoning_effort` for o-series/gpt-5 models (`minimal`/`low`/`medium`/`high`); omitted if empty |
 
 ## Architecture
 
