@@ -10,3 +10,4 @@ The library's theoretical basis is documented in the following research papers:
 - [Bibliography](06_bibliography.md) — Full reference list
 - [Limitations](08_limitations.md) — What is validated today, and what is not
 - [Current Evidence](09_current_evidence.md) — Study ladder and claim/evidence matrix
+- `claim_validation_matrix.json` — Canonical machine-readable source for public scientific claims

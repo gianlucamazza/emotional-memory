@@ -1,0 +1,159 @@
+{
+  "matrix_version": "1.0",
+  "purpose": "Canonical scientific-claims matrix for public project wording.",
+  "status_legend": {
+    "implemented": "Implemented in the codebase, but not externally validated as valuable.",
+    "controlled_evidence": "Supported by controlled benchmark evidence under a narrow protocol.",
+    "strong_intra_theory_evidence": "Strongly supported inside the theory the implementation operationalizes.",
+    "early_controlled_evidence": "Initial comparative or task evidence exists, but remains narrow or early.",
+    "not_established": "Not supported by current public evidence."
+  },
+  "evidence_level_legend": {
+    "1_theory_fidelity": "Theory fidelity",
+    "2_controlled_retrieval": "Controlled retrieval behavior",
+    "3_appraisal_quality": "Appraisal quality",
+    "4_realistic_tasks": "Realistic memory tasks",
+    "5_human_ecological": "Human / ecological validation"
+  },
+  "claims": [
+    {
+      "claim_id": "aft_multilayer_engine",
+      "claim_text": "AFT is implemented as a coherent multi-layer memory engine.",
+      "claim_area": "Architecture",
+      "status": "implemented",
+      "evidence_level": "1_theory_fidelity",
+      "allowed_public_wording": "AFT is implemented as a coherent multi-layer memory engine.",
+      "current_evidence": "Public API, engine/retrieval/state modules, sync/async parity tests.",
+      "not_yet_shown": "External validation of architectural value.",
+      "next_study": "Keep API/docs aligned while external evaluations grow.",
+      "evidence_refs": [
+        "src/emotional_memory/engine.py",
+        "src/emotional_memory/async_engine.py",
+        "tests/test_async_engine.py",
+        "tests/test_engine.py"
+      ],
+      "benchmark_refs": [],
+      "protocol_refs": [],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "retrieval_affect_aware",
+      "claim_text": "Retrieval is affect-aware, not semantic-only.",
+      "claim_area": "Retrieval behavior",
+      "status": "controlled_evidence",
+      "evidence_level": "2_controlled_retrieval",
+      "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
+      "current_evidence": "Fidelity tests plus the controlled quadrant benchmark show affect-aware ranking shifts in the intended direction.",
+      "not_yet_shown": "General downstream superiority over production memory systems.",
+      "next_study": "Expand external and realistic retrieval evaluations.",
+      "evidence_refs": [
+        "benchmarks/fidelity/test_emotional_vs_cosine.py",
+        "benchmarks/fidelity/test_mood_congruent.py"
+      ],
+      "benchmark_refs": [
+        "benchmarks/comparative/results.md"
+      ],
+      "protocol_refs": [
+        "benchmarks/comparative/protocol.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "theory_faithful_operationalization",
+      "claim_text": "The implementation is faithful to the theories it operationalizes.",
+      "claim_area": "Theory fidelity",
+      "status": "strong_intra_theory_evidence",
+      "evidence_level": "1_theory_fidelity",
+      "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
+      "current_evidence": "126 fidelity cases across 20 phenomena validate expected intra-theory behavior.",
+      "not_yet_shown": "Ecological correspondence to human emotional memory.",
+      "next_study": "Human and behavioral validation.",
+      "evidence_refs": [
+        "benchmarks/fidelity/test_appraisal_affect.py",
+        "benchmarks/fidelity/test_mood_adaptive.py",
+        "benchmarks/fidelity/test_spacing_effect.py",
+        "benchmarks/fidelity/test_state_dependent.py"
+      ],
+      "benchmark_refs": [
+        "README.md"
+      ],
+      "protocol_refs": [],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "appraisal_directionally_useful",
+      "claim_text": "Appraisal is directionally useful.",
+      "claim_area": "Appraisal quality",
+      "status": "early_controlled_evidence",
+      "evidence_level": "3_appraisal_quality",
+      "allowed_public_wording": "Appraisal is directionally useful.",
+      "current_evidence": "The appraisal-quality benchmark provides early controlled evidence on natural-language inputs.",
+      "not_yet_shown": "Calibration across models, domains, and languages.",
+      "next_study": "Appraisal robustness study across models, domains, and languages.",
+      "evidence_refs": [
+        "benchmarks/appraisal_quality/test_appraisal_quality.py"
+      ],
+      "benchmark_refs": [
+        "benchmarks/appraisal_quality/test_appraisal_quality.py"
+      ],
+      "protocol_refs": [],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "replayable_multi_session_help",
+      "claim_text": "AFT helps on replayable multi-session memory tasks.",
+      "claim_area": "Realistic tasks",
+      "status": "early_controlled_evidence",
+      "evidence_level": "4_realistic_tasks",
+      "allowed_public_wording": "AFT helps on replayable multi-session memory tasks.",
+      "current_evidence": "The realistic replay benchmark shows early gains with persisted state, non-trivial candidate pools, and challenge-typed reporting.",
+      "not_yet_shown": "Architecture attribution (advantage may partly come from appraisal engine); broad downstream or production superiority; robustness beyond the current small replay set.",
+      "next_study": "Run appraisal confound study (aft_keyword vs naive_cosine) to attribute the advantage to architecture vs appraisal engine. Then expand to realistic_recall_v2 with cross-embedder and multilingual slices.",
+      "evidence_refs": [
+        "benchmarks/realistic/runner.py",
+        "tests/test_realistic_benchmark.py"
+      ],
+      "benchmark_refs": [
+        "benchmarks/realistic/results.md"
+      ],
+      "protocol_refs": [
+        "benchmarks/realistic/protocol.md",
+        "benchmarks/appraisal_confound/README.md",
+        "benchmarks/preregistration_addendum_v2.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "models_human_emotional_memory",
+      "claim_text": "The system models human emotional memory.",
+      "claim_area": "Ecological validity",
+      "status": "not_established",
+      "evidence_level": "5_human_ecological",
+      "allowed_public_wording": "The system is theory-inspired, but does not yet have human or ecological validation.",
+      "current_evidence": "Theory-inspired design only.",
+      "not_yet_shown": "Human behavioral correspondence.",
+      "next_study": "Pilot human evaluation with completed ratings and external benchmarks.",
+      "evidence_refs": [
+        "benchmarks/human_eval/README.md"
+      ],
+      "benchmark_refs": [],
+      "protocol_refs": [
+        "benchmarks/human_eval/README.md",
+        "benchmarks/human_eval/protocol.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    }
+  ]
+}

@@ -31,14 +31,30 @@ remains open research work.
 
 ## Claim matrix
 
-| Claim area | Status | Current evidence | Not yet shown | Next study |
-|---|---|---|---|---|
-| AFT is implemented as a coherent multi-layer memory engine | Implemented | Public API, engine/retrieval/state modules, sync/async parity tests | External validation of architectural value | Keep API/docs aligned |
-| Retrieval is affect-aware, not semantic-only | Controlled evidence | Fidelity tests + comparative quadrant benchmark | General downstream superiority | More realistic retrieval dataset |
-| The implementation is faithful to the theories it operationalizes | Strong intra-theory evidence | 126 fidelity cases across 20 phenomena | Ecological correspondence to human memory | Human / behavioral validation |
-| Appraisal is directionally useful | Early controlled evidence | `benchmarks/appraisal_quality` | Calibration across models/domains/languages | Appraisal robustness study |
-| AFT helps on replayable multi-session memory tasks | Early controlled evidence | `benchmarks/realistic` comparative replay benchmark with persisted state, non-trivial candidate pools, and challenge-typed queries | Broad downstream or production superiority; robustness beyond the current small replay set | Expand scenario coverage + run larger evaluation |
-| The system models human emotional memory | Not established | Theory-inspired design only | Human behavioral correspondence | Pilot human evaluation |
+Canonical source: [`claim_validation_matrix.json`](claim_validation_matrix.json).
+This JSON file is the repo's versioned source of truth for claim wording,
+evidence level, and still-open gaps.
+
+**Status legend**
+
+- `Implemented`: present in the codebase, but not externally validated as
+  valuable.
+- `Controlled evidence`: supported under a narrow, documented benchmark
+  protocol.
+- `Strong intra-theory evidence`: strongly supported inside the theory the
+  implementation operationalizes.
+- `Early controlled evidence`: initial task or appraisal evidence exists, but
+  remains narrow.
+- `Not established`: not supported by current public evidence.
+
+| ID | Claim area | Status | Evidence level | Allowed public wording | Current evidence | Not yet shown | Next study |
+|---|---|---|---|---|---|---|---|
+| `aft_multilayer_engine` | Architecture | Implemented | `1_theory_fidelity` | AFT is implemented as a coherent multi-layer memory engine. | Public API, engine/retrieval/state modules, sync/async parity tests. | External validation of architectural value. | Keep API/docs aligned while external evaluations grow. |
+| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | Fidelity tests plus the controlled quadrant benchmark show affect-aware ranking shifts in the intended direction. | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
+| `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. | Ecological correspondence to human emotional memory. | Human and behavioral validation. |
+| `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
+| `replayable_multi_session_help` | Realistic tasks | Early controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks. | The realistic replay benchmark shows early gains with persisted state, non-trivial candidate pools, and challenge-typed reporting. | Broad downstream or production superiority, or robustness beyond the current small replay set. | Expand scenario coverage and run larger external evaluations. |
+| `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
 
 ---
 
