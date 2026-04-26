@@ -11,7 +11,7 @@ make cov            # Tests with branch coverage (80% minimum enforced)
 make typecheck      # mypy strict mode
 make lint           # ruff check
 make format         # ruff format
-make bench-fidelity # Psychological invariant tests (123 tests in benchmarks/)
+make bench-fidelity # Psychological invariant tests (126 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
 make bench          # fidelity + performance benchmarks (combined)
 make install-demo   # Install canonical local Gradio demo stack
