@@ -17,7 +17,7 @@ from benchmarks.locomo.dataset import Conversation, QAPair, Session
 
 _DEFAULT_BASE_URL = "https://api.openai.com/v1"
 _DEFAULT_MODEL = "gpt-4o-mini"
-_DEFAULT_TIMEOUT = 30
+_DEFAULT_TIMEOUT = 120
 
 # Transient HTTP status codes that warrant an automatic retry.
 _RETRYABLE_STATUS: frozenset[int] = frozenset({429, 500, 502, 503, 520, 522, 524, 529})
@@ -39,6 +39,7 @@ def _get_llm_config() -> dict[str, str]:
 def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
     """Call an OpenAI-compatible LLM and return the text content.
 
+    Retries on transient HTTP 429/5xx with exponential back-off.
     Raises ``RuntimeError`` if no API key is set.
     """
     try:
