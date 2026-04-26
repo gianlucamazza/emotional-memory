@@ -73,7 +73,9 @@ Without this, the claim "AFT improves retrieval" could be explained away as
 "LLM appraisal creates better embeddings". The gate makes that explanation
 testable and either falsifies or confirms it.
 
-**Status:** Study designed; runner to be implemented. Does not require LLM API key.
+**Status:** Runner ready; awaiting execution. Implemented at
+`benchmarks/appraisal_confound/runner.py`; `results.json` not yet committed.
+Does not require LLM API key.
 
 ---
 
