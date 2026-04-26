@@ -288,6 +288,82 @@ def test_aft_adapter_runs() -> None:
     assert all(p["sample_id"] == "test_conv_0" for p in preds)
 
 
+# ---------------------------------------------------------------------------
+# call_llm retry behaviour
+# ---------------------------------------------------------------------------
+
+
+def _ok_response() -> MagicMock:
+    r = MagicMock()
+    r.status_code = 200
+    r.raise_for_status.return_value = None
+    r.json.return_value = {"choices": [{"message": {"content": "hiking"}}]}
+    return r
+
+
+def _err_response(status: int) -> MagicMock:
+    import httpx
+
+    r = MagicMock()
+    r.status_code = status
+    req = httpx.Request("POST", "https://api.openai.com/v1/chat/completions")
+    r.raise_for_status.side_effect = httpx.HTTPStatusError(
+        f"{status} error", request=req, response=r
+    )
+    return r
+
+
+def test_call_llm_retries_on_transient_5xx(monkeypatch: pytest.MonkeyPatch) -> None:
+    """call_llm should retry on 520 and return the response when a later attempt succeeds."""
+    from benchmarks.locomo.adapters.base import call_llm
+
+    responses = [_err_response(520), _err_response(520), _ok_response()]
+    call_count = 0
+
+    def fake_post(*_args: object, **_kwargs: object) -> MagicMock:
+        nonlocal call_count
+        resp = responses[min(call_count, len(responses) - 1)]
+        call_count += 1
+        return resp
+
+    monkeypatch.setenv("EMOTIONAL_MEMORY_LLM_API_KEY", "test-key")
+    with (
+        patch("httpx.post", side_effect=fake_post),
+        patch("benchmarks.locomo.adapters.base.time.sleep"),
+    ):
+        result = call_llm("hello")
+
+    assert result == "hiking"
+    assert call_count == 3  # 1 initial + 2 retries
+
+
+def test_call_llm_raises_after_all_retries_exhausted(monkeypatch: pytest.MonkeyPatch) -> None:
+    """call_llm should raise HTTPStatusError once _MAX_RETRIES are exhausted."""
+    import httpx
+
+    from benchmarks.locomo.adapters import base as base_mod
+    from benchmarks.locomo.adapters.base import _MAX_RETRIES, call_llm
+
+    call_count = 0
+
+    def fake_post(*_args: object, **_kwargs: object) -> MagicMock:
+        nonlocal call_count
+        call_count += 1
+        return _err_response(520)
+
+    monkeypatch.setenv("EMOTIONAL_MEMORY_LLM_API_KEY", "test-key")
+    with (
+        patch("httpx.post", side_effect=fake_post),
+        patch.object(base_mod, "time", wraps=base_mod.time) as mock_time,
+    ):
+        mock_time.sleep = MagicMock()
+        with pytest.raises(httpx.HTTPStatusError):
+            call_llm("hello")
+
+    # 1 initial + _MAX_RETRIES retries
+    assert call_count == 1 + _MAX_RETRIES
+
+
 def test_run_benchmark_end_to_end(tmp_path: Path) -> None:
     from benchmarks.locomo.runner import run_benchmark, write_results
 
