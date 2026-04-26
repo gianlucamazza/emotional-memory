@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `docs/research/audit_2026-04.md` — critical self-review of the AFT research
+  corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
+  theory–evidence coherence check, gate priority order, reviewer Q&A.
 - `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` env var for reasoning-budget control on
   o-series / gpt-5 models (empty ⇒ param omitted; consumed by
   `benchmarks/locomo/adapters/base.py::call_llm`).
@@ -32,6 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `docs/research/10_scientific_quality_bar.md` — Gate 3 status refreshed:
+  appraisal-confound runner is implemented and awaiting execution (was
+  "to be implemented").
+- `docs/research/index.md`, `mkdocs.yml` — research nav now exposes
+  `07_related_work.md`, `10_scientific_quality_bar.md`, and `audit_2026-04.md`.
 - `benchmarks/locomo/adapters/base.py::call_llm` now retries generically on HTTP 400
   by stripping the `bad_param` reported by the API, instead of hardcoded model-name
   sniffing.
