@@ -21,6 +21,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--n-bootstrap` and `--seed` CLI flags on
   `benchmarks/appraisal_confound/runner.py` for reproducibility and sensitivity
   runs; added Hd1 hypothesis test (aft_noAppraisal > naive_cosine, Δ > 0.10).
+- `benchmarks/preregistration_addendum_v3.md` — pre-registers Addendum D
+  (Hd1: architecture attribution re-framing after Ha2 FAIL, Δ > 0.10 threshold)
+  and Addendum E (He1/He2: dedicated ablations for dual-path encoding and
+  APE-gated reconsolidation). Committed before execution for CONFIRMATORY status.
+- `EmotionalMemoryConfig.enable_reconsolidation: bool = True` — new ablation
+  flag; when False, skips the APE-gated reconsolidation window at retrieval time.
+  Predictive-learning (`update_prediction`) still runs. Both sync and async
+  engines gate the reconsolidation block on this flag.
+- `benchmarks/ablation/results.sbert.{json,md,protocol.json}` — G9 confirmatory
+  ablation results (SBERT, N=100, seed=0, 7 variants):
+  - He2 (`no_reconsolidation`): Δ=0.00, p_adj=1.000 — **FAIL** (null result;
+    benchmark doesn't exercise reconsolidation triggers).
+  - He1 (`dual_path`): Δ=−0.35, p_adj≈0 — **FAIL** (expected: keyword
+    appraisal degrades affect, same destructive-override as G3/Addendum A).
+- `benchmarks/ablation/results.{json,md,protocol.json}` — re-generated hash
+  sensitivity check with 7 variants (Holm denominator updated to 6).
+- `make bench-ablation-sbert` — new Makefile target for paper-canonical SBERT
+  ablation run; writes to `results.sbert.{json,md,protocol.json}`.
+  `bench-ablation` now explicitly runs the hash embedder (sensitivity only).
+- `AFTDualPathReplayAdapter` in `benchmarks/ablation/runner.py` — subclass of
+  `AFTReplayAdapter` that injects `KeywordAppraisalEngine` and calls
+  `engine.elaborate()` after encoding (slow-path dual-path encoding, He1).
 
 ### Fixed
 
@@ -44,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replaced with `n_bootstrap=1` per scenario call; single bootstrap pass
   runs on full flag lists.
 
-### Changed (docs — G3)
+### Changed (docs — G3/G9)
 
 - `docs/research/audit_2026-04.md` G3 — replaced "unresolved" with actual
   results and honest interpretation: Ha2/Hb2 FAIL; architecture attribution
@@ -60,6 +82,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   evidence note to `retrieval_affect_aware`; updated `not_yet_shown` and
   `next_study` for `replayable_multi_session_help`.
 
+### Changed
+
+- `benchmarks/ablation/runner.py`: added `no_reconsolidation` and `dual_path`
+  variants; ablation runner now supports per-variant adapter overrides via
+  `_ADAPTER_OVERRIDES`; CLI gains `--out-json`, `--out-md`, `--out-protocol`
+  flags for explicit output paths (consistent with realistic runner).
+- `benchmarks/realistic/runner.py`: `run_benchmark` and `_make_adapter` now
+  accept `aft_adapter_cls: type[AFTReplayAdapter] | None = None` for per-call
+  adapter overrides without modifying the realistic runner's default behavior.
+- `docs/research/audit_2026-04.md`: G9 gap closed 2026-04-26 with results table
+  and honest interpretation of He1 FAIL caveat and He2 null result.
+- `docs/research/claim_validation_matrix.json`: `theory_faithful_operationalization`
+  evidence note extended to cover dual-path and reconsolidation ablations.
+- `tests/test_ablation_runner.py`: updated assertions for 7 variants / 6 pairwise rows.
 - `docs/research/audit_2026-04.md` — critical self-review of the AFT research
   corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
   theory–evidence coherence check, gate priority order, reviewer Q&A.

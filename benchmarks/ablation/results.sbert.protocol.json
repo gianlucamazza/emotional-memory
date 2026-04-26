@@ -29,6 +29,18 @@
       "flags": {
         "enable_resonance": false
       }
+    },
+    {
+      "variant": "no_reconsolidation",
+      "flags": {
+        "enable_reconsolidation": false
+      }
+    },
+    {
+      "variant": "dual_path",
+      "flags": {
+        "dual_path_encoding": true
+      }
     }
   ],
   "statistics": {
@@ -42,6 +54,9 @@
   "interpretation_notes": [
     "delta = ablated - full: negative means layer helps.",
     "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
-    "N=20 queries; power is limited \u2014 directional trends are informative even if not significant."
+    "dual_path uses KeywordAppraisalEngine + elaborate(); He1 FAIL expected (keyword appraisal degrades affect on this dataset, same as G3/Addendum A).",
+    "no_reconsolidation disables APE-gated reconsolidation window; update_prediction (predictive learning) still runs.",
+    "Holm denominator = 6 (all non-full variants); adding two variants slightly increases p_adj for existing variants.",
+    "N=100 queries (v1.4 expansion); directional trends are informative even if not all results survive correction."
   ]
 }

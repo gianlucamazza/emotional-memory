@@ -399,10 +399,12 @@ def _make_adapter(
     *,
     workdir: Path,
     aft_config: EmotionalMemoryConfig | None = None,
+    aft_adapter_cls: type[AFTReplayAdapter] | None = None,
     embedder: Embedder | None = None,
 ) -> ReplayAdapter:
     if system_name == "aft":
-        return AFTReplayAdapter(workdir / system_name, config=aft_config, embedder=embedder)
+        cls = aft_adapter_cls if aft_adapter_cls is not None else AFTReplayAdapter
+        return cls(workdir / system_name, config=aft_config, embedder=embedder)
     if system_name == "naive_cosine":
         return NaiveCosineReplayAdapter(embedder=embedder)
     if system_name == "recency":
@@ -606,6 +608,7 @@ def run_benchmark(
     n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
     seed: int = 0,
     aft_config: EmotionalMemoryConfig | None = None,
+    aft_adapter_cls: type[AFTReplayAdapter] | None = None,
     embedder: Embedder | None = None,
 ) -> dict[str, Any]:
     selected_systems = DEFAULT_SYSTEMS if systems is None else systems
@@ -617,7 +620,11 @@ def run_benchmark(
         base_workdir = Path(tmp_dir)
         for system_name in selected_systems:
             adapter = _make_adapter(
-                system_name, workdir=base_workdir, aft_config=aft_config, embedder=embedder
+                system_name,
+                workdir=base_workdir,
+                aft_config=aft_config,
+                aft_adapter_cls=aft_adapter_cls,
+                embedder=embedder,
             )
             adapter.reset()
             try:
