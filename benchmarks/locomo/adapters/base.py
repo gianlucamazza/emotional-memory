@@ -14,7 +14,9 @@ from benchmarks.locomo.dataset import Conversation, QAPair, Session
 
 _DEFAULT_BASE_URL = "https://api.openai.com/v1"
 _DEFAULT_MODEL = "gpt-4o-mini"
-_DEFAULT_TIMEOUT = 30
+_DEFAULT_TIMEOUT = 120
+_RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 520, 522, 524, 529})
+_MAX_RETRIES = 5
 
 
 def _get_llm_config() -> dict[str, str]:
@@ -29,8 +31,11 @@ def _get_llm_config() -> dict[str, str]:
 def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
     """Call an OpenAI-compatible LLM and return the text content.
 
-    Raises ``RuntimeError`` if no API key is set.
+    Retries on transient network errors (ReadTimeout) and HTTP 429/5xx with
+    exponential backoff. Raises ``RuntimeError`` if no API key is set.
     """
+    import time
+
     try:
         import httpx
     except ImportError as exc:
@@ -63,29 +68,59 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
     if cfg["reasoning_effort"]:
         payload["reasoning_effort"] = cfg["reasoning_effort"]
 
-    response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+    def _post() -> httpx.Response:
+        return httpx.post(url, headers=headers, json=payload, timeout=timeout)
 
-    # Some OpenAI reasoning models (e.g. gpt-5-mini) reject custom temperature
-    # and/or unrecognized parameters. Strip the offending key and retry once.
-    while response.status_code == 400:
-        body = response.json()
-        err = body.get("error", {})
-        bad_param = err.get("param")
-        err_msg = err.get("message", "")
-        removed = False
-        if bad_param and bad_param in payload:
-            payload.pop(bad_param, None)
-            removed = True
-        elif "temperature" in err_msg and "temperature" in payload:
-            payload.pop("temperature", None)
-            removed = True
-        elif "reasoning_effort" in err_msg and "reasoning_effort" in payload:
-            payload.pop("reasoning_effort", None)
-            removed = True
-        if not removed:
-            break
-        response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+    # Retry on ReadTimeout and transient HTTP errors with exponential backoff.
+    response: httpx.Response | None = None
+    for attempt in range(_MAX_RETRIES):
+        try:
+            response = _post()
+        except httpx.ReadTimeout:
+            if attempt >= _MAX_RETRIES - 1:
+                raise
+            wait = 2.0**attempt
+            print(
+                f"  ReadTimeout (attempt {attempt + 1}/{_MAX_RETRIES}), retrying in {wait:.0f}s …"
+            )
+            time.sleep(wait)
+            continue
 
+        if response.status_code in _RETRYABLE_STATUS:
+            if attempt >= _MAX_RETRIES - 1:
+                response.raise_for_status()
+            wait = 2.0**attempt
+            print(
+                f"  HTTP {response.status_code} (attempt {attempt + 1}/{_MAX_RETRIES}),"
+                f" retrying in {wait:.0f}s …"
+            )
+            time.sleep(wait)
+            continue
+
+        # Some OpenAI reasoning models (e.g. gpt-5-mini) reject custom temperature
+        # and/or unrecognized parameters. Strip the offending key and retry once.
+        while response.status_code == 400:
+            body = response.json()
+            err = body.get("error", {})
+            bad_param = err.get("param")
+            err_msg = err.get("message", "")
+            removed = False
+            if bad_param and bad_param in payload:
+                payload.pop(bad_param, None)
+                removed = True
+            elif "temperature" in err_msg and "temperature" in payload:
+                payload.pop("temperature", None)
+                removed = True
+            elif "reasoning_effort" in err_msg and "reasoning_effort" in payload:
+                payload.pop("reasoning_effort", None)
+                removed = True
+            if not removed:
+                break
+            response = _post()
+
+        break
+
+    assert response is not None
     response.raise_for_status()
     return str(response.json()["choices"][0]["message"]["content"])
 
