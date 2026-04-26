@@ -82,6 +82,10 @@ class EmotionalMemoryConfig(BaseModel):
     enable_resonance: bool = True
     """When False, skip resonance link building and spreading activation (ablation of Layer 5)."""
 
+    enable_reconsolidation: bool = True
+    """When False, skip the APE-gated reconsolidation window at retrieval time (ablation of
+    Pearce-Hall 1980 APE gate). Predictive-learning (update_prediction) still runs."""
+
 
 class EmotionalMemory:
     """Emotional memory system for LLMs based on Affective Field Theory.
@@ -448,26 +452,27 @@ class EmotionalMemory:
             )
             ape = compute_ape(tag, self._state.core_affect)
 
-            # APE-gated reconsolidation window (Nader & Schiller, 2000)
-            # HIGH APE: open window + reconsolidate
-            if ape > cfg.ape_threshold and tag.window_opened_at is None:
-                tag = reconsolidate(
-                    tag, self._state.core_affect, ape, cfg.reconsolidation_learning_rate
-                )
-                tag = tag.model_copy(update={"window_opened_at": now})
-                logger.debug("reconsolidate: id=%s ape=%.3f (window opened)", mem.id, ape)
-
-            # WITHIN OPEN WINDOW: reconsolidate regardless of APE
-            elif tag.window_opened_at is not None:
-                elapsed = (now - tag.window_opened_at).total_seconds()
-                if elapsed <= cfg.reconsolidation_window_seconds:
+            if self._config.enable_reconsolidation:
+                # APE-gated reconsolidation window (Nader & Schiller, 2000)
+                # HIGH APE: open window + reconsolidate
+                if ape > cfg.ape_threshold and tag.window_opened_at is None:
                     tag = reconsolidate(
                         tag, self._state.core_affect, ape, cfg.reconsolidation_learning_rate
                     )
-                    logger.debug("reconsolidate: id=%s ape=%.3f (within window)", mem.id, ape)
-                else:
-                    # Window expired — close it
-                    tag = tag.model_copy(update={"window_opened_at": None})
+                    tag = tag.model_copy(update={"window_opened_at": now})
+                    logger.debug("reconsolidate: id=%s ape=%.3f (window opened)", mem.id, ape)
+
+                # WITHIN OPEN WINDOW: reconsolidate regardless of APE
+                elif tag.window_opened_at is not None:
+                    elapsed = (now - tag.window_opened_at).total_seconds()
+                    if elapsed <= cfg.reconsolidation_window_seconds:
+                        tag = reconsolidate(
+                            tag, self._state.core_affect, ape, cfg.reconsolidation_learning_rate
+                        )
+                        logger.debug("reconsolidate: id=%s ape=%.3f (within window)", mem.id, ape)
+                    else:
+                        # Window expired — close it
+                        tag = tag.model_copy(update={"window_opened_at": None})
 
             # Pearce-Hall predictive learning: always update prediction
             tag = update_prediction(tag, self._state.core_affect, ape)

@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-ablation bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -94,7 +94,13 @@ bench-realistic-hash:
 	uv run python -m benchmarks.realistic.runner --embedder hash
 
 bench-ablation:
-	uv run python -m benchmarks.ablation.runner --embedder sbert-bge
+	uv run python -m benchmarks.ablation.runner --embedder hash
+
+bench-ablation-sbert:
+	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
+		--out-json benchmarks/ablation/results.sbert.json \
+		--out-md benchmarks/ablation/results.sbert.md \
+		--out-protocol benchmarks/ablation/results.sbert.protocol.json
 
 bench-ablation-hash:
 	uv run python -m benchmarks.ablation.runner --embedder hash
