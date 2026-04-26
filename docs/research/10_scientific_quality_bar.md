@@ -73,9 +73,24 @@ Without this, the claim "AFT improves retrieval" could be explained away as
 "LLM appraisal creates better embeddings". The gate makes that explanation
 testable and either falsifies or confirms it.
 
-**Status:** Runner ready; awaiting execution. Implemented at
-`benchmarks/appraisal_confound/runner.py`; `results.json` not yet committed.
-Does not require LLM API key.
+**Status:** Executed 2026-04-26. Results in
+`benchmarks/appraisal_confound/results.json` (SBERT, N=100, n\_bootstrap=10 000,
+seed=42, one-tailed alpha=0.05).
+
+**Finding:** Pre-registered Ha2 (aft\_keyword > naive\_cosine) **FAILS** —
+Δ = −0.39, p ≈ 0. Keyword appraisal overrides hand-curated preset
+valence/arousal and degrades retrieval. Hb2 also fails (Δ = −0.62).
+
+**Architecture attribution (descriptive):** aft\_noAppraisal (no appraisal
+engine) vs naive\_cosine — Δ ≈ +0.23, CI [+0.12, +0.33]. Combined with S2
+(which also used no appraisal engine), this is the cleanest evidence that
+the architecture drives the retrieval advantage, not appraisal signal
+injection. Gate 3 is **partially closed**: the architecture-only advantage
+is confirmed descriptively; the pre-registered formal test did not pass
+because the hypothesis was framed around the wrong comparison.
+
+**Next step to fully close Gate 3:** a new confirmatory pre-registration
+framing `aft_noAppraisal > naive_cosine` as the primary hypothesis.
 
 ---
 

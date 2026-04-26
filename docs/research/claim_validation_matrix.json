@@ -45,7 +45,7 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
-      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100).",
+      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100). Appraisal confound study (2026-04-26): aft_noAppraisal (architecture only, no appraisal) = 0.78 vs naive_cosine = 0.55, Δ ≈ +0.23 — descriptive architecture-attribution evidence consistent with S2.",
       "not_yet_shown": "General downstream superiority over production memory systems.",
       "next_study": "Expand external and realistic retrieval evaluations.",
       "evidence_refs": [
@@ -54,7 +54,8 @@
       ],
       "benchmark_refs": [
         "benchmarks/comparative/results.sbert.md",
-        "benchmarks/realistic/results.sbert.md"
+        "benchmarks/realistic/results.sbert.md",
+        "benchmarks/appraisal_confound/results.md"
       ],
       "protocol_refs": [
         "benchmarks/comparative/protocol.md"
@@ -116,8 +117,8 @@
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "AFT helps on replayable multi-session memory tasks.",
       "current_evidence": "The realistic replay benchmark shows early gains with persisted state, non-trivial candidate pools, and challenge-typed reporting.",
-      "not_yet_shown": "Architecture attribution (advantage may partly come from appraisal engine); broad downstream or production superiority; robustness beyond the current small replay set.",
-      "next_study": "Run appraisal confound study (aft_keyword vs naive_cosine) to attribute the advantage to architecture vs appraisal engine. Then expand to realistic_recall_v2 with cross-embedder and multilingual slices.",
+      "not_yet_shown": "Formal confirmatory architecture-attribution hypothesis (pre-registered Ha2 failed — keyword appraisal overrides preset affect destructively); broad downstream or production superiority; robustness beyond the current small replay set.",
+      "next_study": "Re-pre-register architecture-attribution study framing aft_noAppraisal > naive_cosine as the primary hypothesis (descriptive Δ ≈ +0.23 already observed). Then expand to realistic_recall_v2 with cross-embedder and multilingual slices.",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
         "tests/test_realistic_benchmark.py"

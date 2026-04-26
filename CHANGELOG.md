@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `benchmarks/appraisal_confound/results.{json,md,protocol.json}` — G3
+  evidence committed (2026-04-26, SBERT, N=100, n\_bootstrap=10 000, seed=42):
+  aft\_noAppraisal = 0.78 vs naive\_cosine = 0.55 (Δ ≈ +0.23, architecture
+  attribution descriptive); Ha2 (aft\_keyword vs naive\_cosine) FAIL Δ = −0.39
+  (keyword appraisal destructively overrides preset affect); Hb2 FAIL Δ = −0.62.
+- `--n-bootstrap` and `--seed` CLI flags on
+  `benchmarks/appraisal_confound/runner.py` for reproducibility and sensitivity
+  runs.
+
+### Fixed
+
+- `benchmarks/appraisal_confound/runner.py`: `paired_bootstrap_diff` returns
+  4 values `(diff, lo, hi, p_two_sided)`; runner unpacked 3 → ValueError.
+- `benchmarks/appraisal_confound/runner.py`: `ci_payload` keys are
+  `ci_lower`/`ci_upper`; markdown renderer used `lo`/`hi` → KeyError.
+- `benchmarks/appraisal_confound/runner.py`: Ha2 pass criterion upgraded to
+  pre-reg Addendum A spec (Δ > 0.05 practical threshold + one-tailed
+  alpha=0.05 via `p_two_sided / 2`) from the previous `delta > 0.0` check.
+- `benchmarks/appraisal_confound/runner.py`: `n_bootstrap` defaulted to 2000;
+  now 10 000 per pre-reg Addendum A. Threaded through results dict and
+  `_build_protocol` (eliminating drift from hard-coded constant).
+- `benchmarks/appraisal_confound/runner.py`: `seed` hard-coded 42 in
+  `_build_protocol`; now read from actual run value.
+- `benchmarks/appraisal_confound/runner.py`: `_seed_everything` added to
+  `run_study` (mirrors `benchmarks/realistic/runner.py`) for deterministic
+  global RNG state.
+- `benchmarks/appraisal_confound/runner.py`: `n_bootstrap` passed to
+  `run_system_on_scenario` was dead compute (per-scenario CIs discarded);
+  replaced with `n_bootstrap=1` per scenario call; single bootstrap pass
+  runs on full flag lists.
+
+### Changed (docs — G3)
+
+- `docs/research/audit_2026-04.md` G3 — replaced "unresolved" with actual
+  results and honest interpretation: Ha2/Hb2 FAIL; architecture attribution
+  holds descriptively via aft\_noAppraisal comparison and S2.
+- `docs/research/audit_2026-04.md` Q1 — updated reviewer-anticipation answer
+  to "partially resolved" with the descriptive architecture-attribution result.
+- `docs/research/10_scientific_quality_bar.md` Gate 3 — status updated to
+  "Partially closed": architecture-only advantage confirmed descriptively;
+  pre-registered Ha2 failed; next step is a re-pre-registered confirmatory
+  hypothesis.
+- `docs/research/claim_validation_matrix.json` — added appraisal confound
+  evidence note to `retrieval_affect_aware`; updated `not_yet_shown` and
+  `next_study` for `replayable_multi_session_help`.
+
 - `docs/research/audit_2026-04.md` — critical self-review of the AFT research
   corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
   theory–evidence coherence check, gate priority order, reviewer Q&A.
