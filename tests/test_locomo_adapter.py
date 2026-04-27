@@ -438,3 +438,62 @@ def test_run_benchmark_end_to_end(tmp_path: Path) -> None:
     md = out_md.read_text(encoding="utf-8")
     assert "# LoCoMo Benchmark Results" in md
     assert "## Aggregate Scores" in md
+
+
+def test_compute_hypothesis_tests_requires_judge() -> None:
+    """With run_judge=False no hypothesis_tests key is added."""
+    from benchmarks.locomo.runner import run_benchmark
+
+    dataset = _make_synthetic_dataset()
+    with (
+        patch(
+            "benchmarks.locomo.adapters.aft.SentenceTransformerEmbedder.make_bge_small",
+            return_value=_stub_embedder(),
+        ),
+        patch(
+            "benchmarks.locomo.adapters.naive_rag.SentenceTransformerEmbedder.make_bge_small",
+            return_value=_stub_embedder(),
+        ),
+        patch("benchmarks.locomo.adapters.aft.call_llm", return_value="hiking"),
+        patch("benchmarks.locomo.adapters.naive_rag.call_llm", return_value="hiking"),
+    ):
+        results = run_benchmark(dataset, systems=["aft", "naive_rag"], run_judge=False)
+
+    assert "hypothesis_tests" not in results
+
+
+def test_compute_hypothesis_tests_structure() -> None:
+    """With two systems + judge, hypothesis_tests contains H1, H2, and gate1_label."""
+    from benchmarks.locomo.runner import run_benchmark
+
+    dataset = _make_synthetic_dataset()
+    with (
+        patch(
+            "benchmarks.locomo.adapters.aft.SentenceTransformerEmbedder.make_bge_small",
+            return_value=_stub_embedder(),
+        ),
+        patch(
+            "benchmarks.locomo.adapters.naive_rag.SentenceTransformerEmbedder.make_bge_small",
+            return_value=_stub_embedder(),
+        ),
+        patch("benchmarks.locomo.adapters.aft.call_llm", return_value="hiking"),
+        patch("benchmarks.locomo.adapters.naive_rag.call_llm", return_value="hiking"),
+        patch(
+            "benchmarks.locomo.runner._run_judge",
+            side_effect=lambda preds, **_: [
+                p.update({"judge_correct": True}) for p in preds if not p.get("is_adversarial")
+            ],
+        ),
+    ):
+        results = run_benchmark(dataset, systems=["aft", "naive_rag"], run_judge=True)
+
+    ht = results.get("hypothesis_tests")
+    assert ht is not None
+    assert "H1" in ht
+    assert "H2" in ht
+    assert "gate1_label" in ht
+    assert ht["gate1_label"] in ("PASS", "FAIL")
+    h1 = ht["H1"]
+    assert "diff" in h1
+    assert "p_adj_holm" in h1
+    assert "pass" in h1

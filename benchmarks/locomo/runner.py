@@ -23,6 +23,14 @@ import json
 from pathlib import Path
 from typing import Any
 
+from benchmarks.common.statistics import (
+    bootstrap_ci,
+    ci_payload,
+    cohens_d_paired,
+    holm_bonferroni,
+    mcnemar_exact,
+    paired_bootstrap_diff,
+)
 from benchmarks.locomo.adapters.aft import AFTLoCoMoAdapter
 from benchmarks.locomo.adapters.base import LoCoMoAdapter, call_llm
 from benchmarks.locomo.adapters.naive_rag import NaiveRAGLoCoMoAdapter
@@ -32,7 +40,10 @@ from benchmarks.locomo.scoring import (
     is_adversarial_correct,
     parse_judge_response,
     score_predictions,
+    token_f1,
 )
+
+DEFAULT_N_BOOTSTRAP = 2000
 
 _HERE = Path(__file__).parent
 DEFAULT_OUT_JSON = _HERE / "results.json"
@@ -160,12 +171,151 @@ def run_benchmark(
             }
         )
 
-    return {
+    out = {
         "benchmark": "locomo_v1",
         "dataset": "locomo10",
         "n_conversations": len(dataset.conversations),
         "n_qa_total": dataset.total_qa,
         "systems": system_results,
+    }
+    if len(system_results) >= 2 and run_judge:
+        out["hypothesis_tests"] = _compute_hypothesis_tests(
+            out, n_bootstrap=DEFAULT_N_BOOTSTRAP, seed=0
+        )
+    return out
+
+
+def _compute_hypothesis_tests(
+    results: dict[str, Any],
+    *,
+    baseline: str = "naive_rag",
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """Compute H1 (F1) and H2 (judge_acc) hypothesis tests vs. *baseline*.
+
+    Pairs predictions by (sample_id, question) — requires both systems ran
+    on the same conversations.  Returns a dict with per-hypothesis bootstrap
+    diff, McNemar (H2 only), Holm-adjusted p-values, and an overall gate
+    assessment.
+    """
+    sys_by_name = {s["system"]: s for s in results["systems"]}
+    if baseline not in sys_by_name:
+        return {}
+
+    if "aft" not in sys_by_name:
+        return {}
+    aft_preds_indexed: dict[tuple[str, str], dict[str, Any]] = {}
+    base_preds_indexed: dict[tuple[str, str], dict[str, Any]] = {}
+
+    for sys_data in [sys_by_name.get("aft"), sys_by_name.get(baseline)]:
+        if sys_data is None:
+            continue
+        target_dict = aft_preds_indexed if sys_data["system"] == "aft" else base_preds_indexed
+        for pred in sys_data.get("predictions", []):
+            key = (str(pred.get("sample_id", "")), str(pred.get("question", "")))
+            target_dict[key] = pred
+
+    if not aft_preds_indexed or not base_preds_indexed:
+        return {}
+
+    # Align paired predictions on the same QA items
+    common_keys = sorted(set(aft_preds_indexed) & set(base_preds_indexed))
+    if not common_keys:
+        return {}
+
+    aft_f1, base_f1 = [], []
+    aft_judge: list[float] = []
+    base_judge: list[float] = []
+    only_aft, only_base = 0, 0
+
+    for key in common_keys:
+        ap = aft_preds_indexed[key]
+        bp = base_preds_indexed[key]
+        if ap.get("is_adversarial") or bp.get("is_adversarial"):
+            continue
+        aft_f1.append(token_f1(str(ap.get("prediction", "")), str(ap.get("gold", ""))))
+        base_f1.append(token_f1(str(bp.get("prediction", "")), str(bp.get("gold", ""))))
+        aj = ap.get("judge_correct")
+        bj = bp.get("judge_correct")
+        if aj is not None and bj is not None:
+            aft_judge.append(float(aj))
+            base_judge.append(float(bj))
+            if aj and not bj:
+                only_aft += 1
+            elif bj and not aj:
+                only_base += 1
+
+    raw_p_values: list[float] = []
+    h1: dict[str, Any] = {}
+    h2: dict[str, Any] = {}
+
+    if aft_f1:
+        diff, lo, hi, p_two = paired_bootstrap_diff(
+            aft_f1, base_f1, n_bootstrap=n_bootstrap, seed=seed
+        )
+        p_one = p_two / 2.0 if diff > 0 else 1.0
+        d = cohens_d_paired(aft_f1, base_f1)
+        aft_ci = bootstrap_ci(aft_f1, n_bootstrap=n_bootstrap, seed=seed)
+        base_ci_val = bootstrap_ci(base_f1, n_bootstrap=n_bootstrap, seed=seed)
+        h1 = {
+            "metric": "f1",
+            "aft": ci_payload(*aft_ci, n_bootstrap=n_bootstrap),
+            "baseline": ci_payload(*base_ci_val, n_bootstrap=n_bootstrap),
+            "diff": round(diff, 4),
+            "diff_ci_lower": round(lo, 4),
+            "diff_ci_upper": round(hi, 4),
+            "p_bootstrap_onetailed": round(p_one, 4),
+            "cohens_d": round(d, 4),
+            "n_pairs": len(aft_f1),
+        }
+        raw_p_values.append(p_two)
+
+    if aft_judge:
+        diff2, lo2, hi2, p_two2 = paired_bootstrap_diff(
+            aft_judge, base_judge, n_bootstrap=n_bootstrap, seed=seed
+        )
+        p_one2 = p_two2 / 2.0 if diff2 > 0 else 1.0
+        d2 = cohens_d_paired(aft_judge, base_judge)
+        aft_j_ci = bootstrap_ci(aft_judge, n_bootstrap=n_bootstrap, seed=seed)
+        base_j_ci = bootstrap_ci(base_judge, n_bootstrap=n_bootstrap, seed=seed)
+        p_mc = mcnemar_exact(only_aft, only_base)
+        h2 = {
+            "metric": "judge_accuracy",
+            "aft": ci_payload(*aft_j_ci, n_bootstrap=n_bootstrap),
+            "baseline": ci_payload(*base_j_ci, n_bootstrap=n_bootstrap),
+            "diff": round(diff2, 4),
+            "diff_ci_lower": round(lo2, 4),
+            "diff_ci_upper": round(hi2, 4),
+            "p_bootstrap_onetailed": round(p_one2, 4),
+            "p_mcnemar_twotailed": round(p_mc, 4),
+            "cohens_d": round(d2, 4),
+            "n_pairs": len(aft_judge),
+            "discordant_only_aft": only_aft,
+            "discordant_only_baseline": only_base,
+        }
+        raw_p_values.append(p_two2)
+
+    # Holm correction across H1 and H2 using two-tailed p-values
+    adj = holm_bonferroni(raw_p_values)
+    idx = 0
+    if h1:
+        h1["p_adj_holm"] = round(adj[idx], 4)
+        h1["pass"] = h1["diff"] > 0 and h1["p_adj_holm"] < 0.05
+        idx += 1
+    if h2:
+        h2["p_adj_holm"] = round(adj[idx], 4)
+        h2["pass"] = h2["diff"] > 0 and h2["p_adj_holm"] < 0.05
+
+    gate1 = h1.get("pass", False) or h2.get("pass", False)
+
+    return {
+        "baseline": baseline,
+        "n_bootstrap": n_bootstrap,
+        "H1": h1,
+        "H2": h2,
+        "gate1_pass": gate1,
+        "gate1_label": "PASS" if gate1 else "FAIL",
     }
 
 
@@ -211,6 +361,37 @@ def _render_markdown(results: dict[str, Any]) -> str:
             lines.append(
                 f"| `{sys['system']}` | {cat_scores['n']} "
                 f"| {cat_scores['f1']:.3f} | {cat_scores['bleu1']:.3f} | {judge} |"
+            )
+        lines.append("")
+
+    ht = results.get("hypothesis_tests")
+    if ht:
+        lines += [
+            "## Hypothesis Tests (pre-registration S1)",
+            "",
+            f"Gate 1: **{ht['gate1_label']}**  ",
+            f"(n_bootstrap={ht['n_bootstrap']}, Holm-Bonferroni correction across H1+H2)",
+            "",
+            "| Hypothesis | Metric | AFT | Baseline | Δ [95%CI] | p_one | p_adj | Result |",
+            "|---|---|---:|---:|---|---:|---:|---:|",
+        ]
+        for hyp_key in ("H1", "H2"):
+            h = ht.get(hyp_key)
+            if not h:
+                continue
+            aft_pt = h["aft"]["point"]
+            base_pt = h["baseline"]["point"]
+            diff = h["diff"]
+            ci_lo = h["diff_ci_lower"]
+            ci_hi = h["diff_ci_upper"]
+            p_one = h["p_bootstrap_onetailed"]
+            p_adj = h["p_adj_holm"]
+            verdict = "✓ PASS" if h["pass"] else "✗ FAIL"
+            lines.append(
+                f"| **{hyp_key}** | {h['metric']} "
+                f"| {aft_pt:.3f} | {base_pt:.3f} "
+                f"| {diff:+.3f} [{ci_lo:+.3f}, {ci_hi:+.3f}] "
+                f"| {p_one:.4f} | {p_adj:.4f} | **{verdict}** |"
             )
         lines.append("")
 
@@ -296,6 +477,19 @@ def main() -> None:
         agg = sys["scores"]["aggregate"]
         judge_str = f"  judge={agg['judge_accuracy']:.3f}" if "judge_accuracy" in agg else ""
         print(f"  {sys['system']:12s}  F1={agg['f1']:.3f}  BLEU-1={agg['bleu1']:.3f}{judge_str}")
+
+    ht = results.get("hypothesis_tests")
+    if ht:
+        print(f"\n=== Gate 1: {ht['gate1_label']} ===")
+        for hyp in ("H1", "H2"):
+            h = ht.get(hyp)
+            if not h:
+                continue
+            verdict = "PASS" if h["pass"] else "FAIL"
+            print(
+                f"  {hyp} ({h['metric']}): Δ={h['diff']:+.4f} "
+                f"p_adj={h['p_adj_holm']:.4f}  → {verdict}"
+            )
 
 
 if __name__ == "__main__":
