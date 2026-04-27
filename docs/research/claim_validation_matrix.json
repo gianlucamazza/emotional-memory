@@ -138,6 +138,28 @@
       ]
     },
     {
+      "claim_id": "locomo_external_qa_negative",
+      "claim_text": "AFT does not outperform naive RAG on external open-domain conversational QA (LoCoMo).",
+      "claim_area": "External benchmarks",
+      "status": "controlled_evidence",
+      "evidence_level": "4_realistic_tasks",
+      "allowed_public_wording": "On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA.",
+      "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0). Holm-corrected one-tailed p=1.0 for both hypotheses.",
+      "not_yet_shown": "Whether a task-specific configuration of AFT (lower mood weight, affect-neutral retrieval) could match baseline on factual QA.",
+      "next_study": "Investigate per-task retrieval weight tuning; document as scope limitation in paper.",
+      "evidence_refs": [],
+      "benchmark_refs": [
+        "benchmarks/locomo/results.json",
+        "benchmarks/locomo/results.md"
+      ],
+      "protocol_refs": [
+        "benchmarks/preregistration.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
       "claim_id": "models_human_emotional_memory",
       "claim_text": "The system models human emotional memory.",
       "claim_area": "Ecological validity",
