@@ -37,6 +37,7 @@ from benchmarks.locomo.scoring import (
 _HERE = Path(__file__).parent
 DEFAULT_OUT_JSON = _HERE / "results.json"
 DEFAULT_OUT_MD = _HERE / "results.md"
+DEFAULT_CHECKPOINT = _HERE / "results.checkpoint.jsonl"
 
 DEFAULT_SYSTEMS = ["aft", "naive_rag"]
 
@@ -67,17 +68,59 @@ def _run_judge(predictions: list[dict[str, Any]], *, verbose: bool = False) -> N
             pred["judge_correct"] = None
 
 
+def _load_checkpoint(
+    checkpoint_path: Path,
+) -> dict[tuple[str, str], list[dict[str, Any]]]:
+    """Return {(system, sample_id): judged_predictions} from a JSONL checkpoint."""
+    result: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    if not checkpoint_path.exists():
+        return result
+    for line in checkpoint_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line:
+            entry: dict[str, Any] = json.loads(line)
+            result[(entry["system"], entry["sample_id"])] = entry["predictions"]
+    return result
+
+
+def _append_checkpoint(
+    checkpoint_path: Path,
+    system: str,
+    sample_id: str,
+    predictions: list[dict[str, Any]],
+) -> None:
+    """Append one completed (system, conversation) record to the checkpoint."""
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    with checkpoint_path.open("a", encoding="utf-8") as f:
+        f.write(
+            json.dumps({"system": system, "sample_id": sample_id, "predictions": predictions})
+            + "\n"
+        )
+
+
 def run_benchmark(
     dataset: LoCoMoDataset,
     *,
     systems: list[str] = DEFAULT_SYSTEMS,
     run_judge: bool = True,
     verbose: bool = True,
+    checkpoint: Path | None = None,
 ) -> dict[str, Any]:
     """Run all *systems* on every conversation in *dataset*.
 
+    When *checkpoint* is set, completed (system, conversation) pairs are saved to
+    a JSONL file after each conversation finishes (including the judge step).  On
+    restart the file is read and those pairs are skipped, so a failed run resumes
+    from where it left off rather than starting over.
+
     Returns a results dict with per-system predictions + aggregate scores.
     """
+    done: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    if checkpoint is not None:
+        done = _load_checkpoint(checkpoint)
+        if done and verbose:
+            print(f"  Resuming: {len(done)} conversation(s) already in checkpoint.")
+
     system_results: list[dict[str, Any]] = []
 
     for system_name in systems:
@@ -85,15 +128,27 @@ def run_benchmark(
         all_predictions: list[dict[str, Any]] = []
 
         for conv in dataset.conversations:
+            key = (system_name, conv.sample_id)
+            if key in done:
+                if verbose:
+                    print(f"  [{system_name}] {conv.sample_id} — skipped (checkpoint)")
+                all_predictions.extend(done[key])
+                continue
+
             if verbose:
                 print(f"  [{system_name}] {conv.sample_id} — {len(conv.qa_pairs)} QA pairs …")
             preds = adapter.run_conversation(conv)
+
+            if run_judge:
+                if verbose:
+                    n_non_adv = sum(1 for p in preds if not p.get("is_adversarial"))
+                    print(f"  [{system_name}] {conv.sample_id} — judging {n_non_adv} items …")
+                _run_judge(preds, verbose=verbose)
+
             all_predictions.extend(preds)
 
-        if run_judge:
-            if verbose:
-                print(f"  [{system_name}] Running LLM judge on {len(all_predictions)} items …")
-            _run_judge(all_predictions, verbose=verbose)
+            if checkpoint is not None:
+                _append_checkpoint(checkpoint, system_name, conv.sample_id, preds)
 
         scores = score_predictions(all_predictions)
         system_results.append(
@@ -207,6 +262,11 @@ def main() -> None:
         action="store_true",
         help="Skip the LLM-as-judge step (compute F1/BLEU only).",
     )
+    parser.add_argument(
+        "--no-checkpoint",
+        action="store_true",
+        help="Disable checkpoint/resume (start fresh every run).",
+    )
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     args = parser.parse_args()
@@ -218,11 +278,14 @@ def main() -> None:
     )
     print(f"Loaded {len(dataset.conversations)} conversations, {dataset.total_qa} QA pairs.")
 
+    checkpoint = None if args.no_checkpoint else DEFAULT_CHECKPOINT
+
     results = run_benchmark(
         dataset,
         systems=args.systems,
         run_judge=not args.no_judge,
         verbose=True,
+        checkpoint=checkpoint,
     )
 
     write_results(results, out_json=args.out_json, out_md=args.out_md)

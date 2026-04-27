@@ -21,7 +21,7 @@ _DEFAULT_TIMEOUT = 120
 
 # Transient HTTP status codes that warrant an automatic retry.
 _RETRYABLE_STATUS: frozenset[int] = frozenset({429, 500, 502, 503, 520, 522, 524, 529})
-_MAX_RETRIES = 5
+_MAX_RETRIES = 8
 _BACKOFF_BASE = 1.0  # seconds; wait = base * 2^attempt + uniform(0, 0.5) jitter
 
 logger = logging.getLogger(__name__)
