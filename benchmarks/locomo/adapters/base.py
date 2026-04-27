@@ -16,7 +16,7 @@ _DEFAULT_BASE_URL = "https://api.openai.com/v1"
 _DEFAULT_MODEL = "gpt-4o-mini"
 _DEFAULT_TIMEOUT = 120
 _RETRYABLE_STATUS = frozenset({429, 500, 502, 503, 520, 522, 524, 529})
-_MAX_RETRIES = 5
+_MAX_RETRIES = 8
 
 
 def _get_llm_config() -> dict[str, str]:
@@ -79,7 +79,7 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
         except httpx.ReadTimeout:
             if attempt >= _MAX_RETRIES - 1:
                 raise
-            wait = 2.0**attempt
+            wait = min(2.0**attempt, 60.0)
             print(
                 f"  ReadTimeout (attempt {attempt + 1}/{_MAX_RETRIES}), retrying in {wait:.0f}s …"
             )
@@ -89,7 +89,7 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
         if response.status_code in _RETRYABLE_STATUS:
             if attempt >= _MAX_RETRIES - 1:
                 response.raise_for_status()
-            wait = 2.0**attempt
+            wait = min(2.0**attempt, 60.0)
             print(
                 f"  HTTP {response.status_code} (attempt {attempt + 1}/{_MAX_RETRIES}),"
                 f" retrying in {wait:.0f}s …"

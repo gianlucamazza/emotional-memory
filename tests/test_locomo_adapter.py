@@ -288,6 +288,44 @@ def test_aft_adapter_runs() -> None:
     assert all(p["sample_id"] == "test_conv_0" for p in preds)
 
 
+def test_run_benchmark_checkpoint_resume(tmp_path: Path) -> None:
+    """Conversations already in checkpoint are skipped without calling the LLM."""
+    from benchmarks.locomo.runner import run_benchmark
+
+    dataset = _make_synthetic_dataset()
+    conv = dataset.conversations[0]
+
+    pre_done = [
+        {
+            "sample_id": conv.sample_id,
+            "question": "What does Alice love to do?",
+            "gold": "hiking",
+            "prediction": "hiking",
+            "category": 4,
+            "category_name": "single_hop",
+            "is_adversarial": False,
+            "judge_correct": True,
+        }
+    ]
+    checkpoint = tmp_path / "checkpoint.jsonl"
+    checkpoint.write_text(
+        json.dumps({"system": "aft", "sample_id": conv.sample_id, "predictions": pre_done}) + "\n",
+        encoding="utf-8",
+    )
+
+    with (
+        patch(
+            "benchmarks.locomo.adapters.aft.SentenceTransformerEmbedder.make_bge_small",
+            return_value=_stub_embedder(),
+        ),
+        patch("benchmarks.locomo.adapters.aft.call_llm", return_value="hiking") as mock_llm,
+    ):
+        results = run_benchmark(dataset, systems=["aft"], run_judge=False, checkpoint=checkpoint)
+
+    mock_llm.assert_not_called()
+    assert results["systems"][0]["n_predictions"] == 1
+
+
 def test_run_benchmark_end_to_end(tmp_path: Path) -> None:
     from benchmarks.locomo.runner import run_benchmark, write_results
 
