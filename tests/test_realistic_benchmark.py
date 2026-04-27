@@ -207,3 +207,45 @@ def test_run_benchmark_respects_embedder_choice() -> None:
     for results in (results_hash, results_default):
         aft = next(s for s in results["systems"] if s["system"] == "aft")
         assert isinstance(aft["aggregate_metrics"]["top1_accuracy"], float)
+
+
+# ---------------------------------------------------------------------------
+# Italian slice (G6)
+# ---------------------------------------------------------------------------
+
+_IT_DATASET = (
+    __import__("pathlib").Path(__file__).parent.parent
+    / "benchmarks"
+    / "datasets"
+    / "realistic_recall_v2_it.json"
+)
+
+
+@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
+def test_italian_dataset_loads() -> None:
+    dataset = load_dataset(_IT_DATASET)
+    assert dataset.name == "realistic_recall_v2_it"
+    assert len(dataset.scenarios) >= 20
+    assert dataset.default_top_k == 2
+
+
+@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
+def test_italian_dataset_has_valid_challenge_types() -> None:
+    from benchmarks.realistic.runner import CHALLENGE_TYPES
+
+    dataset = load_dataset(_IT_DATASET)
+    for scenario in dataset.scenarios:
+        for session in scenario.sessions:
+            for query in session.queries:
+                assert query.challenge_type in CHALLENGE_TYPES, (
+                    f"Unknown challenge_type {query.challenge_type!r} in {scenario.scenario_id}"
+                )
+
+
+@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
+def test_italian_dataset_total_queries() -> None:
+    dataset = load_dataset(_IT_DATASET)
+    total = sum(
+        len(session.queries) for scenario in dataset.scenarios for session in scenario.sessions
+    )
+    assert total >= 80, f"Expected ≥80 Italian queries, got {total}"

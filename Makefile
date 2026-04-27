@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -104,6 +104,18 @@ bench-realistic-v2-e5:
 		--dataset benchmarks/datasets/realistic_recall_v2.json \
 		--out-json benchmarks/realistic/results.v2.e5.json \
 		--out-md benchmarks/realistic/results.v2.e5.md
+
+bench-realistic-it-sbert:
+	uv run python -m benchmarks.realistic.runner --embedder sbert-bge \
+		--dataset benchmarks/datasets/realistic_recall_v2_it.json \
+		--out-json benchmarks/realistic/results.v2_it.sbert.json \
+		--out-md benchmarks/realistic/results.v2_it.sbert.md
+
+bench-realistic-it-e5:
+	uv run python -m benchmarks.realistic.runner --embedder e5-small-v2 \
+		--dataset benchmarks/datasets/realistic_recall_v2_it.json \
+		--out-json benchmarks/realistic/results.v2_it.e5.json \
+		--out-md benchmarks/realistic/results.v2_it.e5.md
 
 bench-ablation:
 	uv run python -m benchmarks.ablation.runner --embedder hash
