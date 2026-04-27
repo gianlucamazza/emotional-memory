@@ -1,0 +1,87 @@
+{
+  "study": "appraisal_confound",
+  "dataset": "realistic_recall_v1",
+  "dataset_version": "1.4",
+  "embedder": "sbert-bge",
+  "n_scenarios": 50,
+  "n_queries": 100,
+  "systems": {
+    "aft_noAppraisal": {
+      "n_queries": 100,
+      "top1_accuracy": 0.78,
+      "ci_95": {
+        "point": 0.78,
+        "ci_lower": 0.6997500000000004,
+        "ci_upper": 0.86,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      }
+    },
+    "aft_keyword": {
+      "n_queries": 100,
+      "top1_accuracy": 0.16,
+      "ci_95": {
+        "point": 0.16,
+        "ci_lower": 0.09,
+        "ci_upper": 0.23,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      }
+    },
+    "naive_cosine": {
+      "n_queries": 100,
+      "top1_accuracy": 0.55,
+      "ci_95": {
+        "point": 0.55,
+        "ci_lower": 0.46,
+        "ci_upper": 0.65,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      }
+    }
+  },
+  "hypotheses": {
+    "Hd1": {
+      "description": "aft_noAppraisal.top1 > naive_cosine.top1, \u0394 > 0.10 (Addendum D confirmatory)",
+      "result": "PASS",
+      "delta": 0.23,
+      "ci_95": {
+        "point": 0.23,
+        "ci_lower": 0.14,
+        "ci_upper": 0.32,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "cohens_d": 0.5155,
+      "interpretation": "AFT architecture (no appraisal, preset affect) reliably outperforms naive cosine."
+    },
+    "Ha2": {
+      "description": "aft_keyword.top1 > naive_cosine.top1 (\u0394 > 0, CI excludes 0)",
+      "result": "FAIL",
+      "delta": -0.39,
+      "ci_95": {
+        "point": -0.39,
+        "ci_lower": -0.5,
+        "ci_upper": -0.29,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "cohens_d": -0.7361,
+      "interpretation": "No significant advantage of AFT+keyword over naive cosine. Architecture benefit not confirmed on this dataset."
+    },
+    "Hb2": {
+      "description": "|aft_keyword - aft_noAppraisal| < 0.05 (equivalence)",
+      "result": "FAIL",
+      "delta": -0.62,
+      "ci_95": {
+        "point": -0.62,
+        "ci_lower": -0.72,
+        "ci_upper": -0.52,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "cohens_d": -1.2709,
+      "interpretation": "Keyword appraisal meaningfully changes retrieval vs preset affect. Appraisal inference is not neutral."
+    }
+  }
+}
