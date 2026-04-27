@@ -71,9 +71,9 @@
       "status": "strong_intra_theory_evidence",
       "evidence_level": "1_theory_fidelity",
       "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
-      "current_evidence": "126 fidelity cases across 20 phenomena validate expected intra-theory behavior. Ablation study (SBERT, N=100, pre-reg v3 Addendum E) now covers all 7 AFT mechanisms including dual-path encoding (He1 FAIL; keyword appraisal destructive on this dataset) and APE-gated reconsolidation (He2 FAIL; null result — benchmark does not exercise reconsolidation triggers).",
-      "not_yet_shown": "Ecological correspondence to human emotional memory. Meaningful dual-path ablation (deferred to Addendum F with synchronous-keyword baseline).",
-      "next_study": "Human and behavioral validation. Addendum F: dual-path ablation vs synchronous-keyword baseline.",
+      "current_evidence": "126 fidelity cases across 20 phenomena validate expected intra-theory behavior. Ablation study (SBERT, N=100, pre-reg v3 Addendum E + Addendum F) now covers all 7 AFT mechanisms: dual-path encoding (He1 FAIL expected; Hf1 PASS — dual_path 0.35 > aft_keyword_synchronous 0.07; deferral mitigates synchronous keyword destruction), APE-gated reconsolidation (He2 FAIL; null result — benchmark does not exercise reconsolidation triggers). 8-variant ablation run 2026-04-27.",
+      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future).",
+      "next_study": "Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection.",
       "evidence_refs": [
         "benchmarks/fidelity/test_appraisal_affect.py",
         "benchmarks/fidelity/test_mood_adaptive.py",

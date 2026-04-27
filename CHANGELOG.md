@@ -21,6 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--n-bootstrap` and `--seed` CLI flags on
   `benchmarks/appraisal_confound/runner.py` for reproducibility and sensitivity
   runs; added Hd1 hypothesis test (aft_noAppraisal > naive_cosine, Δ > 0.10).
+- `benchmarks/preregistration_addendum_f.md` — pre-registers Hf1 (Addendum F):
+  `dual_path.top1 > aft_keyword_synchronous.top1`; tests whether deferring
+  keyword appraisal to the slow path mitigates synchronous destructive override.
+  Committed before implementation for CONFIRMATORY status.
+- `AFTKeywordSynchronousReplayAdapter` in `benchmarks/ablation/runner.py` —
+  new ablation adapter that injects `KeywordAppraisalEngine` synchronously at
+  `begin_session` (no `elaborate()` call); contrasts with `AFTDualPathReplayAdapter`
+  which uses the slow-path `elaborate()`. Closes He1 caveat.
+- `benchmarks/ablation/results.sbert.{json,md,protocol.json}` updated to 8
+  variants (Addendum F); Hf1 result: dual_path=0.35 > aft_keyword_synchronous=0.07,
+  Δ=+0.28, **Hf1 PASS** — deferral partially mitigates synchronous keyword
+  destruction. Holm family extended from 6 to 7 comparisons.
+- `docs/research/audit_2026-04.md` — Addendum F closed section added with Hf1
+  interpretation and updated theory–evidence coherence table.
 - `benchmarks/preregistration_addendum_v3.md` — pre-registers Addendum D
   (Hd1: architecture attribution re-framing after Ha2 FAIL, Δ > 0.10 threshold)
   and Addendum E (He1/He2: dedicated ablations for dual-path encoding and
