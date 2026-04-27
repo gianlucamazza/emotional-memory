@@ -98,8 +98,10 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
             continue
 
         # Some OpenAI reasoning models (e.g. gpt-5-mini) reject custom temperature
-        # and/or unrecognized parameters. Strip the offending key and retry once.
-        while response.status_code == 400:
+        # and/or unrecognized parameters. Strip the offending key and re-enter the
+        # outer retry loop so transient 429/5xx on the reissued request still gets
+        # exponential backoff, and ReadTimeout is still caught.
+        if response.status_code == 400:
             body = response.json()
             err = body.get("error", {})
             bad_param = err.get("param")
@@ -114,9 +116,9 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
             elif "reasoning_effort" in err_msg and "reasoning_effort" in payload:
                 payload.pop("reasoning_effort", None)
                 removed = True
-            if not removed:
-                break
-            response = _post()
+            if removed:
+                continue  # re-enter outer loop to retry with corrected payload
+            # Unrecoverable 400 — fall through to raise_for_status below.
 
         break
 
