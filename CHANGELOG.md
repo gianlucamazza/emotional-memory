@@ -31,22 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AFTDualPathReplayAdapter` in `benchmarks/ablation/runner.py` — subclass of
   `AFTReplayAdapter` that injects `KeywordAppraisalEngine` and calls
   `engine.elaborate()` after encoding (slow-path dual-path encoding, He1).
-
-### Changed
-
-- `benchmarks/ablation/runner.py`: added `no_reconsolidation` and `dual_path`
-  variants; ablation runner now supports per-variant adapter overrides via
-  `_ADAPTER_OVERRIDES`; CLI gains `--out-json`, `--out-md`, `--out-protocol`
-  flags for explicit output paths (consistent with realistic runner).
-- `benchmarks/realistic/runner.py`: `run_benchmark` and `_make_adapter` now
-  accept `aft_adapter_cls: type[AFTReplayAdapter] | None = None` for per-call
-  adapter overrides without modifying the realistic runner's default behavior.
-- `docs/research/audit_2026-04.md`: G9 gap closed 2026-04-26 with results table
-  and honest interpretation of He1 FAIL caveat and He2 null result.
-- `docs/research/claim_validation_matrix.json`: `theory_faithful_operationalization`
-  evidence note extended to cover dual-path and reconsolidation ablations.
-- `tests/test_ablation_runner.py`: updated assertions for 7 variants / 6 pairwise rows.
-
 - `docs/research/audit_2026-04.md` — critical self-review of the AFT research
   corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
   theory–evidence coherence check, gate priority order, reviewer Q&A.
