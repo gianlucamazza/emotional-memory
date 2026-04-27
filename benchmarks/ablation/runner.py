@@ -1,16 +1,17 @@
-"""Ablation study runner for the AFT layers (Addendum E, pre-reg v3).
+"""Ablation study runner for the AFT layers (Addenda E + F, pre-reg v3 + f).
 
 Runs the realistic replay benchmark once per variant and compares each ablation
 to the full configuration via paired bootstrap + exact McNemar test.
 
 Ablations defined:
-  full               All layers active (baseline AFT)
-  no_appraisal       enable_appraisal=False  — skip Scherer CPM call at encode time
-  no_mood            enable_mood_signal=False — zero s1 (mood-congruence) at retrieval
-  no_momentum        enable_momentum=False   — zero s3 (momentum-alignment) at retrieval
-  no_resonance       enable_resonance=False  — skip link building + spreading activation
-  no_reconsolidation enable_reconsolidation=False — skip APE-gated reconsolidation (He2)
-  dual_path          dual_path_encoding=True + KeywordAppraisalEngine (He1); see caveat
+  full                   All layers active (baseline AFT)
+  no_appraisal           enable_appraisal=False  — skip Scherer CPM call at encode time
+  no_mood                enable_mood_signal=False — zero s1 (mood-congruence) at retrieval
+  no_momentum            enable_momentum=False   — zero s3 (momentum-alignment) at retrieval
+  no_resonance           enable_resonance=False  — skip link building + spreading activation
+  no_reconsolidation     enable_reconsolidation=False — skip APE-gated reconsolidation (He2)
+  dual_path              dual_path_encoding=True + KeywordAppraisalEngine (He1); see caveat
+  aft_keyword_synchronous KeywordAppraisalEngine synchronous at encode time (Hf1 baseline)
 
 Note: no_appraisal is a no-op on this benchmark because AFTReplayAdapter does
 not configure an appraisal engine (it uses explicit valence/arousal injection).
@@ -18,10 +19,12 @@ The flag is still exercised to confirm correct hook-up.
 
 Note on dual_path (He1): KeywordAppraisalEngine overrides preset affect on this
 dataset (same finding as G3/Addendum A). He1 compares dual_path vs full_aft
-(no appraisal), so He1 FAIL is expected. The result answers "does deferring
-keyword appraisal to the slow path help vs full_aft (pure preset)?" — not the
-more interesting "does deferral mitigate synchronous keyword destruction?" which
-requires a synchronous-keyword baseline (Addendum F).
+(no appraisal), so He1 FAIL is expected. See also Addendum F (Hf1).
+
+Note on aft_keyword_synchronous (Hf1, Addendum F): synchronous keyword appraisal
+baseline. Hf1 tests whether deferral (dual_path) mitigates the destructive
+override vs synchronous (aft_keyword_synchronous). Expected: Hf1 PASS
+(dual_path=0.35 > aft_keyword_synchronous≈0.16 based on Addendum A G3 data).
 """
 
 from __future__ import annotations
@@ -80,6 +83,25 @@ class AFTDualPathReplayAdapter(AFTReplayAdapter):
         return memory_id
 
 
+class AFTKeywordSynchronousReplayAdapter(AFTReplayAdapter):
+    """AFTReplayAdapter with KeywordAppraisalEngine running synchronously at encode time (Hf1).
+
+    Synchronous path: appraisal runs during engine.encode() via the standard pipeline.
+    No elaborate() call. Compare against dual_path (deferred) to test whether
+    deferral mitigates the destructive override (Addendum F).
+    """
+
+    name = "aft_keyword_synchronous"
+
+    def begin_session(self, session_id: str) -> Any:
+        from emotional_memory.appraisal_llm import KeywordAppraisalEngine
+
+        result = super().begin_session(session_id)
+        if self._engine is not None:
+            self._engine._appraisal_engine = KeywordAppraisalEngine()
+        return result
+
+
 ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("full", {}),
     ("no_appraisal", {"enable_appraisal": False}),
@@ -88,11 +110,13 @@ ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("no_resonance", {"enable_resonance": False}),
     ("no_reconsolidation", {"enable_reconsolidation": False}),
     ("dual_path", {"dual_path_encoding": True}),
+    ("aft_keyword_synchronous", {}),
 ]
 
 # Variants requiring a custom adapter class (keyed by variant name)
 _ADAPTER_OVERRIDES: dict[str, type[AFTReplayAdapter]] = {
     "dual_path": AFTDualPathReplayAdapter,
+    "aft_keyword_synchronous": AFTKeywordSynchronousReplayAdapter,
 }
 
 _HERE = Path(__file__).parent
@@ -262,10 +286,15 @@ def _render_markdown(results: dict[str, Any]) -> str:
         "`elaborate()`. He1 compares dual_path vs `full_aft` (pure preset affect). "
         "KeywordAppraisalEngine degrades affect on this dataset (G3/Addendum A: "
         "aft_keyword=0.16 vs aft_noAppraisal=0.78), so He1 FAIL is the expected outcome. "
-        "The discriminative comparison (dual_path vs synchronous-keyword) is Addendum F.",
+        "The discriminative Hf1 comparison (dual_path vs aft_keyword_synchronous) is below.",
         "",
         "**Note on `no_reconsolidation` (He2 pre-reg v3)**: disables the APE-gated "
         "reconsolidation window; predictive-learning (`update_prediction`) still runs.",
+        "",
+        "**Note on `aft_keyword_synchronous` (Hf1 pre-reg Addendum F)**: synchronous "
+        "keyword appraisal baseline. Compare vs `dual_path` (deferred) to test whether "
+        "deferral mitigates the destructive override observed in G3/Addendum A. "
+        "Hf1 PASS expected: dual_path=0.35 > aft_keyword_synchronous≈0.16.",
         "",
     ]
 
@@ -354,6 +383,38 @@ def _render_markdown(results: dict[str, Any]) -> str:
         "",
     ]
 
+    # Hf1 supplementary: dual_path vs aft_keyword_synchronous
+    pw = {r["variant"]: r for r in results["pairwise_vs_full"]}
+    if "dual_path" in pw and "aft_keyword_synchronous" in pw:
+        lines += [
+            "## Supplementary: Hf1 — dual_path vs aft_keyword_synchronous (Addendum F)",
+            "",
+            "Hf1 tests whether deferring keyword appraisal (slow-path `elaborate()`) partially "
+            "mitigates the destructive override of synchronous keyword appraisal.",
+            "",
+        ]
+        # Compute direct Hf1 comparison from the stored variant results
+        dp_row = next((v for v in results["variants"] if v["variant"] == "dual_path"), None)
+        ks_row = next(
+            (v for v in results["variants"] if v["variant"] == "aft_keyword_synchronous"), None
+        )
+        if dp_row and ks_row:
+            dp_top1 = dp_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            ks_top1 = ks_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            delta_hf1 = round(dp_top1 - ks_top1, 4)
+            verdict = "**Hf1 PASS**" if delta_hf1 > 0 else "**Hf1 FAIL**"
+            lines += [
+                "| Metric | dual_path | aft_keyword_synchronous | Δ (Hf1) | Verdict |",
+                "|--------|-----------|------------------------|---------|---------|",
+                f"| top1   | {dp_top1:.3f} | {ks_top1:.3f} | {delta_hf1:+.4f} | {verdict} |",
+                "",
+                "Note: paired bootstrap and Holm-corrected p-values for each variant "
+                "vs full_aft are in the pairwise tables above. Direct Hf1 statistical "
+                "significance requires a separate pairwise bootstrap not computed here; "
+                "the delta direction is the pre-registered criterion.",
+                "",
+            ]
+
     return "\n".join(lines)
 
 
@@ -370,8 +431,10 @@ def _build_protocol(results: dict[str, Any]) -> dict[str, Any]:
             "appraisal degrades affect on this dataset, same as G3/Addendum A).",
             "no_reconsolidation disables APE-gated reconsolidation window; update_prediction "
             "(predictive learning) still runs.",
-            "Holm denominator = 6 (all non-full variants); adding two variants slightly "
-            "increases p_adj for existing variants.",
+            "aft_keyword_synchronous: synchronous keyword appraisal (Addendum F baseline); "
+            "compare vs dual_path for Hf1 — does deferral mitigate destructive override?",
+            "Holm denominator = 7 (all non-full variants); adding aft_keyword_synchronous "
+            "slightly increases p_adj for existing variants.",
             "N=100 queries (v1.4 expansion); directional trends are informative even if not "
             "all results survive correction.",
         ],
