@@ -22,10 +22,10 @@ The project now uses a five-step evidence ladder:
    coherence or utility, and does the behavior track human-like emotional memory
    in realistic settings?
 
-Current repo strength is concentrated in steps **1–3**. Step **4** now has
-initial infrastructure in the repo (persistent affective state plus a replayable
-multi-session benchmark), but the evidence there is still early. Step **5**
-remains open research work.
+Current repo strength is concentrated in steps **1–4**. Step **4** now has
+controlled evidence: the v2 realistic replay benchmark (N=200, 5 challenge
+types × 40) shows a decisive advantage over `naive_cosine` on both SBERT and
+e5-small-v2 embedders. Step **5** remains open research work.
 
 ---
 
@@ -53,7 +53,7 @@ evidence level, and still-open gaps.
 | `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items), while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100). | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
 | `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. | Ecological correspondence to human emotional memory. | Human and behavioral validation. |
 | `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
-| `replayable_multi_session_help` | Realistic tasks | Early controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks. | Realistic replay (SBERT, N=100): AFT top1=0.70 vs naive_cosine=0.50. Appraisal confound (Hd1 PASS, seed=1): aft_noAppraisal=0.78 > naive_cosine=0.55, Δ=+0.23 — advantage confirmed as architectural (Gate 3 CLOSED 2026-04-27). | Broad downstream or production superiority; cross-embedder generalization; N≥200 power. | realistic_recall_v2 (N≥200, 5 challenge types, cross-embedder slice). |
+| `replayable_multi_session_help` | Realistic tasks | Controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001). | Realistic replay v2 (50 scenarios, 200 queries). SBERT: AFT 0.53 vs naive 0.33, Δ=+0.21 p<0.001 d=0.49. e5-small-v2: AFT 0.50 vs naive 0.34, Δ=+0.16 p<0.001 d=0.31. | Architecture attribution (appraisal confound pending); multilingual; external open-domain QA (LoCoMo Gate 1 FAIL). | Run appraisal confound. Add Italian slice (PR-F). |
 | `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
 
 ---
@@ -62,21 +62,23 @@ evidence level, and still-open gaps.
 
 - **Strongest evidence**: theory-fidelity benchmarks. These are the clearest
   proof that the code behaves as designed.
-- **Second-best evidence**: realistic replay benchmark (SBERT, N = 100):
-  AFT top1 = 0.70 vs naive_cosine = 0.50. The controlled quadrant probe
+- **Second-best evidence**: realistic replay v2 benchmark (N=200, 5 challenge
+  types × 40). SBERT bge-small: AFT top1=0.53 vs naive_cosine=0.33,
+  Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT
+  top1=0.50 vs 0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31.
+  The advantage holds on both SBERT and e5-small-v2 (two distinct
+  embedder classes), addressing G5. The controlled quadrant probe
   (`affect_reference_v1`) ties AFT and naive_cosine at SBERT ceiling (both 0.80)
   but confirms the benchmark discriminates clearly against the recency baseline.
 - **Useful but narrow evidence**: appraisal-quality checks and demo-level
   product behavior.
-- **Emerging step-4 evidence**: the realistic replay benchmark (v1.4, expanded
-  to 50 scenarios / 100 queries) rules out trivial recency wins and edges
-  `naive_cosine` under the default `sbert-bge` embedder (aggregate top1 0.70
-  vs 0.50, N = 100). On the `semantic_confound` subset (N = 30), AFT top1
-  reaches 0.73 vs naive 0.47, Δ = +0.27 [0.10, 0.43], p_adj = 0.006 after
-  Holm correction — the first per-challenge result to survive correction. The
-  earlier regression on this subset under the hash embedder (AFT 0.12 vs
-  naive 0.25) is confirmed as a hash-embedder artefact in
-  `benchmarks/realistic/challenge_subset_pairwise.json`.
+- **Step-4 evidence upgraded to controlled**: v2 (50 scenarios, 200 queries)
+  shows decisive aggregate advantage on both embedder classes. Per-challenge
+  breakdown (SBERT): semantic_confound 0.72 vs 0.47, affective_arc 0.42 vs 0.15,
+  momentum_alignment 0.60 vs 0.33, same_topic_distractor 0.75 vs 0.62,
+  recency_confound 0.15 vs 0.05. Architecture attribution still pending
+  (appraisal confound unresolved).
+- **Negative external result (Gate 1, 2026-04-27)**: On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA. See `locomo_external_qa_negative` in `claim_validation_matrix.json`.
 - **Study-readiness improvement**: the human-eval pilot is now operationally
   specified as a 10-scenario, 2-condition (`aft` vs `naive_cosine`) protocol,
   but still awaits real completed ratings.
@@ -90,15 +92,15 @@ The next recommended studies, in order:
 1. **Protocol upgrade for comparative retrieval**
    Standardize metadata, assumptions, and reporting for the existing benchmark.
 2. ~~**Expand the realistic replay benchmark**~~
-   *Completed (v1.4): 50 scenarios / 100 queries; `semantic_confound` N = 30
-   now yields p_adj = 0.006 after Holm correction.*
+   *Completed (v2.0): 50 scenarios / 200 queries; decisive advantage on SBERT
+   and e5-small-v2 (both p_bootstrap<0.001). G4 + G5 addressed.*
 3. **Execute the human-eval pilot with completed ratings**
    Collect ratings on coherence, usefulness, continuity, and plausibility from
    at least 3 raters (Krippendorff's alpha is wired and reported automatically
    when `ratings.jsonl` is filled).
-4. **Run LoCoMo end-to-end for external benchmark validation**
-   The adapter is ready (`make bench-locomo`); execution needs an LLM API key
-   and a modest budget for the judge pass.
+4. ~~**Run LoCoMo end-to-end for external benchmark validation**~~
+   *Completed 2026-04-27. Gate 1 NOT passed. AFT F1=0.168 vs naive_rag F1=0.271
+   on 1986 QA pairs. Negative result committed in `benchmarks/locomo/results.json`.*
 
 ---
 

@@ -110,6 +110,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/research/claim_validation_matrix.json`: `theory_faithful_operationalization`
   evidence note extended to cover dual-path and reconsolidation ablations.
 - `tests/test_ablation_runner.py`: updated assertions for 7 variants / 6 pairwise rows.
+- `benchmarks/datasets/realistic_recall_v2.json` — pre-registered S2 dataset
+  (v2.0): 50 scenarios, 200 queries, 5 challenge types × 40
+  (semantic_confound, affective_arc, recency_confound, same_topic_distractor,
+  momentum_alignment). Committed before benchmark execution per construction rules.
+- `benchmarks/realistic/results.v2.sbert.{json,md}` — SBERT bge-small-en v2
+  benchmark results: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265],
+  p_bootstrap<0.001, d=0.49. **G4 closed.**
+- `benchmarks/realistic/results.v2.e5.{json,md}` — e5-small-v2 cross-embedder
+  benchmark results: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225],
+  p_bootstrap<0.001, d=0.31. **G5 closed** (advantage holds on both embedder classes).
 - `docs/research/audit_2026-04.md` — critical self-review of the AFT research
   corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
   theory–evidence coherence check, gate priority order, reviewer Q&A.

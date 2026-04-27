@@ -3,24 +3,25 @@
   "question": "Do persisted affective state and AFT-style retrieval improve recall on scripted multi-session scenarios compared with simpler baselines?",
   "dataset": {
     "name": "realistic_recall_v1",
-    "version": "1.4",
-    "path": "benchmarks/datasets/realistic_recall_v1.json",
+    "version": "2.0",
+    "path": "benchmarks/datasets/realistic_recall_v2.json",
     "scenario_count": 50,
     "session_count": 100,
-    "query_count": 100,
+    "query_count": 200,
     "type": "scripted multi-session replay benchmark"
   },
   "difficulty_profile": {
     "top_k": 2,
     "minimum_candidate_count": 6,
-    "nontrivial_query_count": 100,
-    "nontrivial_query_rate": 1.0,
+    "nontrivial_query_count": 177,
+    "nontrivial_query_rate": 0.885,
     "trivial_candidate_window_count": 0,
     "challenge_type_counts": {
-      "affective_arc": 25,
-      "recency_confound": 20,
-      "same_topic_distractor": 25,
-      "semantic_confound": 30
+      "affective_arc": 40,
+      "momentum_alignment": 40,
+      "recency_confound": 40,
+      "same_topic_distractor": 40,
+      "semantic_confound": 40
     }
   },
   "systems": [

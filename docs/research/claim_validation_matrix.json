@@ -113,18 +113,20 @@
       "claim_id": "replayable_multi_session_help",
       "claim_text": "AFT helps on replayable multi-session memory tasks.",
       "claim_area": "Realistic tasks",
-      "status": "early_controlled_evidence",
+      "status": "controlled_evidence",
       "evidence_level": "4_realistic_tasks",
-      "allowed_public_wording": "AFT helps on replayable multi-session memory tasks.",
-      "current_evidence": "The realistic replay benchmark shows AFT top1=0.70 vs naive_cosine=0.50 (SBERT, N=100). Appraisal confound study (Addendum D Hd1, seed=1 confirmatory, 2026-04-27) shows aft_noAppraisal=0.78 > naive_cosine=0.55, Δ=+0.23, d=0.52 — advantage is architectural, not from LLM appraisal. Gate 3 CLOSED.",
-      "not_yet_shown": "Broad downstream or production superiority; robustness beyond current N=100 replay set; cross-embedder generalization.",
-      "next_study": "Expand to realistic_recall_v2 (N≥200, 5 challenge types) with cross-embedder slice (Addendum B/E). LoCoMo S1 for external benchmark.",
+      "allowed_public_wording": "AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001).",
+      "current_evidence": "Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED.",
+      "not_yet_shown": "Performance on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271). Multilingual generalization.",
+      "next_study": "Add Italian multilingual slice (G6). Architecture attribution confirmed via Hd1 (Gate 3 CLOSED).",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
         "tests/test_realistic_benchmark.py"
       ],
       "benchmark_refs": [
-        "benchmarks/realistic/results.md"
+        "benchmarks/realistic/results.md",
+        "benchmarks/realistic/results.v2.sbert.md",
+        "benchmarks/realistic/results.v2.e5.md"
       ],
       "protocol_refs": [
         "benchmarks/realistic/protocol.md",
