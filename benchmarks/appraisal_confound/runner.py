@@ -162,19 +162,38 @@ def run_study(
     cos_flags = _collect_top1_flags(system_scenario_reports["naive_cosine"])
     no_flags = _collect_top1_flags(system_scenario_reports["aft_noAppraisal"])
 
-    ha2_delta, ha2_lo, ha2_hi = paired_bootstrap_diff(
+    ha2_delta, ha2_lo, ha2_hi, _ = paired_bootstrap_diff(
         kw_flags, cos_flags, n_bootstrap=n_bootstrap, seed=seed
     )
-    hb2_delta, hb2_lo, hb2_hi = paired_bootstrap_diff(
+    hb2_delta, hb2_lo, hb2_hi, _ = paired_bootstrap_diff(
         kw_flags, no_flags, n_bootstrap=n_bootstrap, seed=seed
+    )
+    # Hd1 (Addendum D): aft_noAppraisal > naive_cosine, Δ > 0.10
+    hd1_delta, hd1_lo, hd1_hi, _ = paired_bootstrap_diff(
+        no_flags, cos_flags, n_bootstrap=n_bootstrap, seed=seed
     )
     d_ha2 = cohens_d_paired(kw_flags, cos_flags)
     d_hb2 = cohens_d_paired(kw_flags, no_flags)
+    d_hd1 = cohens_d_paired(no_flags, cos_flags)
 
     ha2_pass = ha2_delta > 0.0 and ha2_lo > 0.0
     hb2_pass = abs(hb2_delta) < 0.05 and hb2_lo > -0.05 and hb2_hi < 0.05
+    hd1_pass = hd1_delta > 0.10 and hd1_lo > 0.0
 
     hypotheses = {
+        "Hd1": {
+            "description": "aft_noAppraisal.top1 > naive_cosine.top1, Δ > 0.10 (Addendum D)",
+            "result": "PASS" if hd1_pass else "FAIL",
+            "delta": round(hd1_delta, 4),
+            "ci_95": ci_payload(hd1_delta, hd1_lo, hd1_hi, n_bootstrap=n_bootstrap),
+            "cohens_d": round(d_hd1, 4),
+            "interpretation": (
+                "AFT architecture (no appraisal, preset affect) reliably outperforms naive cosine."
+                if hd1_pass
+                else "AFT without appraisal does not show a practically significant advantage "
+                "over naive cosine at Δ > 0.10 threshold."
+            ),
+        },
         "Ha2": {
             "description": "aft_keyword.top1 > naive_cosine.top1 (Δ > 0, CI excludes 0)",
             "result": "PASS" if ha2_pass else "FAIL",
@@ -233,7 +252,7 @@ def _render_markdown(results: dict[str, Any]) -> str:
         lines.append(
             f"| `{sys_name}` | {sys['n_queries']} "
             f"| {sys['top1_accuracy']:.3f} "
-            f"| [{ci['lo']:.3f}, {ci['hi']:.3f}] |"
+            f"| [{ci['ci_lower']:.3f}, {ci['ci_upper']:.3f}] |"
         )
     lines += ["", "## Hypothesis Tests", ""]
     for hyp_name, hyp in results["hypotheses"].items():
@@ -244,7 +263,7 @@ def _render_markdown(results: dict[str, Any]) -> str:
             "",
             f"**{hyp['description']}**",
             "",
-            f"Δ = {format_point_ci(hyp['delta'], ci['lo'], ci['hi'])}  "
+            f"Δ = {format_point_ci(hyp['delta'], ci['ci_lower'], ci['ci_upper'])}  "
             f"Cohen's d = {hyp['cohens_d']:.3f}",
             "",
             f"*{hyp['interpretation']}*",
@@ -256,12 +275,13 @@ def _render_markdown(results: dict[str, Any]) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Appraisal confound study.")
     parser.add_argument("--embedder", default="sbert-bge", choices=["hash", "sbert-bge"])
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     args = parser.parse_args()
 
-    print(f"Running appraisal confound study (embedder={args.embedder}) …")
-    results = run_study(embedder_name=args.embedder)
+    print(f"Running appraisal confound study (embedder={args.embedder}, seed={args.seed}) …")
+    results = run_study(embedder_name=args.embedder, seed=args.seed)
 
     args.out_json.parent.mkdir(parents=True, exist_ok=True)
     args.out_json.write_text(json.dumps(results, indent=2), encoding="utf-8")

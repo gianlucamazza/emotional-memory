@@ -115,9 +115,9 @@
       "status": "early_controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "AFT helps on replayable multi-session memory tasks.",
-      "current_evidence": "The realistic replay benchmark shows early gains with persisted state, non-trivial candidate pools, and challenge-typed reporting.",
-      "not_yet_shown": "Architecture attribution (advantage may partly come from appraisal engine); broad downstream or production superiority; robustness beyond the current small replay set.",
-      "next_study": "Run appraisal confound study (aft_keyword vs naive_cosine) to attribute the advantage to architecture vs appraisal engine. Then expand to realistic_recall_v2 with cross-embedder and multilingual slices.",
+      "current_evidence": "The realistic replay benchmark shows AFT top1=0.70 vs naive_cosine=0.50 (SBERT, N=100). Appraisal confound study (Addendum D Hd1, seed=1 confirmatory, 2026-04-27) shows aft_noAppraisal=0.78 > naive_cosine=0.55, Δ=+0.23, d=0.52 — advantage is architectural, not from LLM appraisal. Gate 3 CLOSED.",
+      "not_yet_shown": "Broad downstream or production superiority; robustness beyond current N=100 replay set; cross-embedder generalization.",
+      "next_study": "Expand to realistic_recall_v2 (N≥200, 5 challenge types) with cross-embedder slice (Addendum B/E). LoCoMo S1 for external benchmark.",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
         "tests/test_realistic_benchmark.py"

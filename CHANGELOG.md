@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `benchmarks/appraisal_confound/results.confirmatory.{json,md}` — Hd1
+  confirmatory run (Addendum D, SBERT, seed=1): aft_noAppraisal=0.78 >
+  naive_cosine=0.55, Δ=+0.23, d=0.52. **Hd1 PASS** — AFT architecture advantage
+  replicates with new seed. Gate 3 CLOSED.
+- `benchmarks/appraisal_confound/runner.py`: added `--seed` CLI arg; added Hd1
+  hypothesis test (aft_noAppraisal > naive_cosine, Δ > 0.10); fixed
+  `ci_payload` key names in markdown renderer; fixed 4-value unpack for
+  `paired_bootstrap_diff`.
+- `docs/research/audit_2026-04.md` — G3 section updated: Gate 3 CLOSED.
+  Reviewer Q1 updated with closed status and Hd1 result.
+
 - `docs/research/audit_2026-04.md` — critical self-review of the AFT research
   corpus: snapshot, corpus-at-a-glance, strengths, nine ranked gaps (G1–G9),
   theory–evidence coherence check, gate priority order, reviewer Q&A.
