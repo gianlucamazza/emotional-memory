@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `benchmarks/datasets/realistic_recall_v2_it.json` — Italian multilingual slice
+  (G6, 20 scenarios, 80 queries, 4 challenge types). SBERT bge-small-en-v1.5
+  results: AFT top1=0.24 vs naive_cosine=0.15 (Δ=+0.09, p=0.082, not significant);
+  hit@k=0.34 vs 0.19 (Δ=+0.15, p=0.0005, **significant**). Architecture advantage
+  generalizes partially to Italian under an EN-centric embedder; a multilingual
+  embedder is required for a fairer absolute comparison.
+- `benchmarks/realistic/results.v2_it.sbert.{json,md,protocol.json}` — G6
+  Italian SBERT benchmark results (committed with separate protocol file to avoid
+  overwriting English v1 canonical protocol).
+- `make_multilingual()` factory in appraisal layer + Italian keyword rules,
+  `make bench-realistic-it-sbert` / `make bench-realistic-it-e5` Makefile targets.
+  `--out-protocol` flag on IT targets writes to dedicated `results.protocol.v2_it.*.json`
+  files (prevents canonical English v1 protocol from being overwritten).
 - `benchmarks/appraisal_confound/results.{json,md,protocol.json}` — G3
   evidence committed (2026-04-26, SBERT, N=100, n\_bootstrap=10 000, seed=42):
   aft\_noAppraisal = 0.78 vs naive\_cosine = 0.55 (Δ ≈ +0.23, architecture
@@ -187,9 +200,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   validation matrix and documents allowed public wording for each major claim.
 - `README.md` now points to the canonical claim-validation matrix so public
   validation wording is anchored to a versioned source of truth.
-- `paper/main.tex` Table 3 and surrounding text realigned to current SBERT results:
-  quadrant probe ties AFT and naive_cosine at 0.80 (ceiling); realistic benchmark
-  (AFT 0.70 vs naive_cosine 0.50, SBERT, N = 100) is cited as ranking-shift evidence.
+- `paper/main.tex` abstract, results section, and conclusion updated to v2 numbers:
+  realistic benchmark now cited as v2 (N=200, SBERT Δ=+0.21 p<0.001 d=0.49;
+  e5-small-v2 Δ=+0.16 p<0.001); LoCoMo Gate 1 FAIL documented in conclusion;
+  G6 Italian multilingual caveat added to limitations.
 - `scripts/reproduce_paper.py`: `_resolve_comparative_csv` prefers
   `results.sbert.csv` over `results.csv` for paper-canonical Table 3 generation.
 

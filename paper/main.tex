@@ -72,8 +72,11 @@ prediction-error gate controls reconsolidation lability. We validate the model
 through 126 parametrized fidelity test cases covering 20 psychological phenomena,
 and report a comparative benchmark against a semantic-only baseline on a new
 affect-labeled dataset of 258 examples. On a replayable multi-session realistic
-recall benchmark, AFT achieves \texttt{top1\_accuracy}=0.70 vs.\ 0.50 for
-semantic-only cosine retrieval (SBERT embedder). The implementation is released
+recall benchmark (v2, $N=200$, 5 challenge types), AFT achieves
+\texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only cosine retrieval
+($\Delta=+0.21$, 95\,\% CI [0.15,\,0.27], $p<0.001$, $d=0.49$; SBERT
+bge-small-en-v1.5), with the advantage replicated on a second embedder class
+(e5-small-v2: $\Delta=+0.16$, $p<0.001$). The implementation is released
 as the open-source \texttt{emotional-memory} Python library (MIT license).
 \end{abstract}
 
@@ -373,9 +376,13 @@ The tie at $N=20$ reflects a \textbf{dense-embedder ceiling effect}: with only
 four quadrant centroids and recall@5 over a 20-item pool, any embedder that
 correctly places memories in quadrant space saturates the metric.
 Advantage of the full AFT architecture is measured on the replayable multi-session
-realistic recall benchmark ($N=100$, top-1 retrieval over a non-trivial
-candidate pool), where \texttt{top1\_accuracy}\,=\,0.70 vs.\
-\texttt{naive\_cosine}\,=\,0.50 (SBERT; \texttt{benchmarks/realistic/results.sbert.md}).
+realistic recall benchmark (v2, $N=200$, 5 challenge types $\times$ 40 scenarios),
+where \texttt{top1\_accuracy}\,=\,0.53 vs.\ \texttt{naive\_cosine}\,=\,0.33
+($\Delta=+0.21$ [0.15,\,0.27], $p_{\text{bootstrap}}<0.001$, $d=0.49$; SBERT
+bge-small-en-v1.5). The advantage replicates on e5-small-v2
+($\Delta=+0.16$ [0.09,\,0.22], $p<0.001$, $d=0.31$).
+See \texttt{benchmarks/realistic/results.v2.sbert.md} and
+\texttt{benchmarks/realistic/results.v2.e5.md}.
 The larger, harder probe discriminates where the coarse quadrant probe cannot.
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
@@ -468,9 +475,12 @@ external validity.
 \paragraph{Language and embedding scope.}
 All benchmarks, appraisal prompts, and scenario corpora are English-only.
 Performance on other languages is untested.
-The realistic-recall advantage ($\Delta=+0.20$, SBERT) is conditional on a
-dense sentence embedder; under a non-semantic (hash) embedder the gap reduces
-to $\Delta\approx+0.06$ and does not reach significance.
+The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
+$N=200$) is conditional on a dense sentence embedder; under a non-semantic
+(hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
+significance. A multilingual Italian slice (G6, $N=80$) shows a significant
+hit@k advantage ($\Delta=+0.15$, $p=0.0005$) but lower absolute accuracy,
+consistent with the English-centric SBERT embedder.
 Any claim about AFT's retrieval advantage should therefore be scoped to
 \emph{English conversational text with dense embeddings}.
 
@@ -505,12 +515,19 @@ phenomena, and benchmarked against a semantic-only baseline on a new affect-labe
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
 
-Pre-registered future work follows a staged evidence programme: an external
-multi-session conversational QA benchmark (LoCoMo, Study S1), an expanded
-realistic-recall dataset at $N\geq200$ with cross-embedder replication
-(Study S2, Addendum B), and a human-evaluation pilot to ground-truth affective
-coherence ratings (Addendum C). A dominance dimension is scoped for v0.8.0
-following the design constraints in \texttt{docs/research/11\_dominance\_design.md}.
+A staged evidence programme has produced four pre-registered results since
+initial submission. The expanded realistic-recall benchmark ($N=200$, five
+challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
+$\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
+Gate 3 CLOSED via appraisal-confound ablation). The external LoCoMo conversational
+QA benchmark (1986 QA pairs, Study S1) produced a negative result: AFT
+underperforms naive RAG (F1 0.168 vs.\ 0.271; Gate 1 not met), revealing that
+affective weighting does not help on factual open-domain QA.
+Open work: a human-evaluation pilot to ground-truth affective coherence ratings
+(protocol in \texttt{benchmarks/human\_eval/}); multilingual coverage beyond
+the Italian proof-of-concept (G6); and per-task retrieval weight tuning to
+investigate the LoCoMo scope limitation. A dominance dimension is scoped for
+v0.8.0 following \texttt{docs/research/11\_dominance\_design.md}.
 Integration with vector stores (Qdrant, Chroma) and expanded baselines
 (Mem0, MemGPT) are engineering milestones independent of the evidence programme.
 
