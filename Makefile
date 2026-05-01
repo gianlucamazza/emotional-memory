@@ -114,12 +114,6 @@ bench-ablation-sbert:
 		--out-md benchmarks/ablation/results.sbert.md \
 		--out-protocol benchmarks/ablation/results.sbert.protocol.json
 
-bench-ablation-sbert:
-	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
-		--out-json benchmarks/ablation/results.sbert.json \
-		--out-md benchmarks/ablation/results.sbert.md \
-		--out-protocol benchmarks/ablation/results.sbert.protocol.json
-
 bench-ablation-hash:
 	uv run python -m benchmarks.ablation.runner --embedder hash
 
