@@ -1,19 +1,30 @@
-"""Ablation study runner for the 4 AFT layers.
+"""Ablation study runner for the AFT layers (Addenda E + F, pre-reg v3 + f).
 
-Runs the realistic replay benchmark 5 times — one full run and one per ablated
-layer — then compares each ablation to the full configuration via paired
-bootstrap + exact McNemar test.
+Runs the realistic replay benchmark once per variant and compares each ablation
+to the full configuration via paired bootstrap + exact McNemar test.
 
 Ablations defined:
-  full          All layers active (baseline AFT)
-  no_appraisal  enable_appraisal=False  — skip Scherer CPM call at encode time
-  no_mood       enable_mood_signal=False — zero s1 (mood-congruence) at retrieval
-  no_momentum   enable_momentum=False   — zero s3 (momentum-alignment) at retrieval
-  no_resonance  enable_resonance=False  — skip link building + spreading activation
+  full                   All layers active (baseline AFT)
+  no_appraisal           enable_appraisal=False  — skip Scherer CPM call at encode time
+  no_mood                enable_mood_signal=False — zero s1 (mood-congruence) at retrieval
+  no_momentum            enable_momentum=False   — zero s3 (momentum-alignment) at retrieval
+  no_resonance           enable_resonance=False  — skip link building + spreading activation
+  no_reconsolidation     enable_reconsolidation=False — skip APE-gated reconsolidation (He2)
+  dual_path              dual_path_encoding=True + KeywordAppraisalEngine (He1); see caveat
+  aft_keyword_synchronous KeywordAppraisalEngine synchronous at encode time (Hf1 baseline)
 
 Note: no_appraisal is a no-op on this benchmark because AFTReplayAdapter does
 not configure an appraisal engine (it uses explicit valence/arousal injection).
 The flag is still exercised to confirm correct hook-up.
+
+Note on dual_path (He1): KeywordAppraisalEngine overrides preset affect on this
+dataset (same finding as G3/Addendum A). He1 compares dual_path vs full_aft
+(no appraisal), so He1 FAIL is expected. See also Addendum F (Hf1).
+
+Note on aft_keyword_synchronous (Hf1, Addendum F): synchronous keyword appraisal
+baseline. Hf1 tests whether deferral (dual_path) mitigates the destructive
+override vs synchronous (aft_keyword_synchronous). Expected: Hf1 PASS
+(dual_path=0.35 > aft_keyword_synchronous≈0.16 based on Addendum A G3 data).
 """
 
 from __future__ import annotations
@@ -32,8 +43,64 @@ from benchmarks.common.statistics import (
     mcnemar_exact,
     paired_bootstrap_diff,
 )
+from benchmarks.realistic.adapters import AFTReplayAdapter
 from benchmarks.realistic.runner import _build_embedder, load_dataset, run_benchmark
 from emotional_memory import Embedder, EmotionalMemoryConfig
+
+
+class AFTDualPathReplayAdapter(AFTReplayAdapter):
+    """AFTReplayAdapter with KeywordAppraisalEngine + explicit slow-path elaboration (He1)."""
+
+    name = "dual_path"
+
+    def begin_session(self, session_id: str) -> Any:
+        from emotional_memory.appraisal_llm import KeywordAppraisalEngine
+
+        result = super().begin_session(session_id)
+        if self._engine is not None:
+            self._engine._appraisal_engine = KeywordAppraisalEngine()
+        return result
+
+    def encode(
+        self,
+        *,
+        memory_alias: str,
+        content: str,
+        valence: float,
+        arousal: float,
+        metadata: dict[str, Any] | None = None,
+    ) -> str:
+        memory_id = super().encode(
+            memory_alias=memory_alias,
+            content=content,
+            valence=valence,
+            arousal=arousal,
+            metadata=metadata,
+        )
+        # Slow path: blend 70% keyword-appraised + 30% raw preset affect (LeDoux, 1996)
+        engine = self._require_engine()
+        engine.elaborate(memory_id)
+        return memory_id
+
+
+class AFTKeywordSynchronousReplayAdapter(AFTReplayAdapter):
+    """AFTReplayAdapter with KeywordAppraisalEngine running synchronously at encode time (Hf1).
+
+    Synchronous path: appraisal runs during engine.encode() via the standard pipeline.
+    No elaborate() call. Compare against dual_path (deferred) to test whether
+    deferral mitigates the destructive override (Addendum F).
+    """
+
+    name = "aft_keyword_synchronous"
+
+    def begin_session(self, session_id: str) -> Any:
+        from emotional_memory.appraisal_llm import KeywordAppraisalEngine
+
+        result = super().begin_session(session_id)
+        if self._engine is not None:
+            self._engine._appraisal_engine = KeywordAppraisalEngine()
+        return result
+
 
 ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("full", {}),
@@ -41,7 +108,16 @@ ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("no_mood", {"enable_mood_signal": False}),
     ("no_momentum", {"enable_momentum": False}),
     ("no_resonance", {"enable_resonance": False}),
+    ("no_reconsolidation", {"enable_reconsolidation": False}),
+    ("dual_path", {"dual_path_encoding": True}),
+    ("aft_keyword_synchronous", {}),
 ]
+
+# Variants requiring a custom adapter class (keyed by variant name)
+_ADAPTER_OVERRIDES: dict[str, type[AFTReplayAdapter]] = {
+    "dual_path": AFTDualPathReplayAdapter,
+    "aft_keyword_synchronous": AFTKeywordSynchronousReplayAdapter,
+}
 
 _HERE = Path(__file__).parent
 RESULTS_JSON = _HERE / "results.json"
@@ -80,6 +156,7 @@ def run_ablation_study(
 
     for variant_name, flag_kwargs in ABLATIONS:
         cfg = EmotionalMemoryConfig(**flag_kwargs)
+        adapter_cls = _ADAPTER_OVERRIDES.get(variant_name)
         bench = run_benchmark(
             dataset,
             systems=["aft"],
@@ -87,6 +164,7 @@ def run_ablation_study(
             n_bootstrap=n_bootstrap,
             seed=seed,
             aft_config=cfg,
+            aft_adapter_cls=adapter_cls,
             embedder=embedder,
         )
         aft_sys = next(s for s in bench["systems"] if s["system"] == "aft")
@@ -108,7 +186,7 @@ def run_ablation_study(
 
     # First pass: compute raw stats for each ablation
     raw_rows: list[dict[str, Any]] = []
-    for variant_name, _ in ABLATIONS:
+    for variant_name, *_ in ABLATIONS:
         if variant_name == "full":
             continue
         abl_flags = query_flags_by_variant[variant_name]
@@ -204,6 +282,20 @@ def _render_markdown(results: dict[str, Any]) -> str:
         "`set_affect()`, so no appraisal engine is configured. This ablation is a no-op "
         "on this benchmark and confirms correct flag hook-up only.",
         "",
+        "**Note on `dual_path` (He1 pre-reg v3)**: uses `KeywordAppraisalEngine` + slow-path "
+        "`elaborate()`. He1 compares dual_path vs `full_aft` (pure preset affect). "
+        "KeywordAppraisalEngine degrades affect on this dataset (G3/Addendum A: "
+        "aft_keyword=0.16 vs aft_noAppraisal=0.78), so He1 FAIL is the expected outcome. "
+        "The discriminative Hf1 comparison (dual_path vs aft_keyword_synchronous) is below.",
+        "",
+        "**Note on `no_reconsolidation` (He2 pre-reg v3)**: disables the APE-gated "
+        "reconsolidation window; predictive-learning (`update_prediction`) still runs.",
+        "",
+        "**Note on `aft_keyword_synchronous` (Hf1 pre-reg Addendum F)**: synchronous "
+        "keyword appraisal baseline. Compare vs `dual_path` (deferred) to test whether "
+        "deferral mitigates the destructive override observed in G3/Addendum A. "
+        "Hf1 PASS expected: dual_path=0.35 > aft_keyword_synchronous≈0.16.",
+        "",
     ]
 
     # Per-variant summary table
@@ -291,6 +383,38 @@ def _render_markdown(results: dict[str, Any]) -> str:
         "",
     ]
 
+    # Hf1 supplementary: dual_path vs aft_keyword_synchronous
+    pw = {r["variant"]: r for r in results["pairwise_vs_full"]}
+    if "dual_path" in pw and "aft_keyword_synchronous" in pw:
+        lines += [
+            "## Supplementary: Hf1 — dual_path vs aft_keyword_synchronous (Addendum F)",
+            "",
+            "Hf1 tests whether deferring keyword appraisal (slow-path `elaborate()`) partially "
+            "mitigates the destructive override of synchronous keyword appraisal.",
+            "",
+        ]
+        # Compute direct Hf1 comparison from the stored variant results
+        dp_row = next((v for v in results["variants"] if v["variant"] == "dual_path"), None)
+        ks_row = next(
+            (v for v in results["variants"] if v["variant"] == "aft_keyword_synchronous"), None
+        )
+        if dp_row and ks_row:
+            dp_top1 = dp_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            ks_top1 = ks_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            delta_hf1 = round(dp_top1 - ks_top1, 4)
+            verdict = "**Hf1 PASS**" if delta_hf1 > 0 else "**Hf1 FAIL**"
+            lines += [
+                "| Metric | dual_path | aft_keyword_synchronous | Δ (Hf1) | Verdict |",
+                "|--------|-----------|------------------------|---------|---------|",
+                f"| top1   | {dp_top1:.3f} | {ks_top1:.3f} | {delta_hf1:+.4f} | {verdict} |",
+                "",
+                "Note: paired bootstrap and Holm-corrected p-values for each variant "
+                "vs full_aft are in the pairwise tables above. Direct Hf1 statistical "
+                "significance requires a separate pairwise bootstrap not computed here; "
+                "the delta direction is the pre-registered criterion.",
+                "",
+            ]
+
     return "\n".join(lines)
 
 
@@ -303,6 +427,14 @@ def _build_protocol(results: dict[str, Any]) -> dict[str, Any]:
         "interpretation_notes": [
             "delta = ablated - full: negative means layer helps.",
             "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
+            "dual_path uses KeywordAppraisalEngine + elaborate(); He1 FAIL expected (keyword "
+            "appraisal degrades affect on this dataset, same as G3/Addendum A).",
+            "no_reconsolidation disables APE-gated reconsolidation window; update_prediction "
+            "(predictive learning) still runs.",
+            "aft_keyword_synchronous: synchronous keyword appraisal (Addendum F baseline); "
+            "compare vs dual_path for Hf1 — does deferral mitigate destructive override?",
+            "Holm denominator = 7 (all non-full variants); adding aft_keyword_synchronous "
+            "slightly increases p_adj for existing variants.",
             "N=100 queries (v1.4 expansion); directional trends are informative even if not "
             "all results survive correction.",
         ],
@@ -333,6 +465,13 @@ def main() -> None:
         default=_HERE,
         help="Directory for results files (default: benchmarks/ablation/)",
     )
+    parser.add_argument("--out-json", type=Path, default=None, help="Override results JSON path.")
+    parser.add_argument(
+        "--out-md", type=Path, default=None, help="Override results Markdown path."
+    )
+    parser.add_argument(
+        "--out-protocol", type=Path, default=None, help="Override results protocol JSON path."
+    )
     parser.add_argument(
         "--embedder",
         type=str,
@@ -353,11 +492,15 @@ def main() -> None:
         embedder=emb,
     )
 
-    out_json = args.output_dir / "results.json"
-    out_md = args.output_dir / "results.md"
-    out_protocol = args.output_dir / "results.protocol.json"
+    out_json = args.out_json if args.out_json is not None else args.output_dir / "results.json"
+    out_md = args.out_md if args.out_md is not None else args.output_dir / "results.md"
+    out_protocol = (
+        args.out_protocol
+        if args.out_protocol is not None
+        else args.output_dir / "results.protocol.json"
+    )
     write_results(results, out_json=out_json, out_md=out_md, out_protocol=out_protocol)
-    print(f"Results written to {args.output_dir}")
+    print(f"Results written to {out_json.parent}")
 
     # Print summary
     print("\n=== Ablation Results (top1_accuracy) ===")

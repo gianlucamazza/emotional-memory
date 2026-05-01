@@ -11,20 +11,32 @@ def test_ablation_study_structure() -> None:
     results = run_ablation_study(dataset, n_bootstrap=100, seed=0)
 
     assert results["benchmark"] == "ablation_realistic_v1"
-    assert len(results["variants"]) == 5
+    assert len(results["variants"]) == 8
 
     variant_names = [v["variant"] for v in results["variants"]]
-    assert variant_names == ["full", "no_appraisal", "no_mood", "no_momentum", "no_resonance"]
+    assert variant_names == [
+        "full",
+        "no_appraisal",
+        "no_mood",
+        "no_momentum",
+        "no_resonance",
+        "no_reconsolidation",
+        "dual_path",
+        "aft_keyword_synchronous",
+    ]
 
     for v in results["variants"]:
         assert "aggregate_metrics" in v
         assert "challenge_type_metrics" in v
         assert isinstance(v["aggregate_metrics"]["top1_accuracy"], float)
 
-    assert len(results["pairwise_vs_full"]) == 4
+    assert len(results["pairwise_vs_full"]) == 7
     pairwise_names = [r["variant"] for r in results["pairwise_vs_full"]]
     assert "no_appraisal" in pairwise_names
     assert "no_resonance" in pairwise_names
+    assert "no_reconsolidation" in pairwise_names
+    assert "dual_path" in pairwise_names
+    assert "aft_keyword_synchronous" in pairwise_names
 
     for row in results["pairwise_vs_full"]:
         assert row["baseline"] == "full"
