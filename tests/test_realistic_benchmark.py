@@ -158,6 +158,24 @@ def test_run_benchmark_emits_ci() -> None:
     assert results["statistics"]["ci_method"] == "bootstrap_percentile"
 
 
+def test_challenge_types_include_momentum_alignment() -> None:
+    from benchmarks.realistic.runner import CHALLENGE_TYPES
+
+    assert "momentum_alignment" in CHALLENGE_TYPES
+    assert len(CHALLENGE_TYPES) == 5
+
+
+def test_e5_small_v2_embedder_accepted() -> None:
+    from benchmarks.realistic.runner import _build_embedder
+
+    # Must not raise ValueError for unknown embedder; succeeds or raises ImportError
+    try:
+        emb = _build_embedder("e5-small-v2")
+        assert emb is not None
+    except ImportError:
+        pass  # sentence-transformers not installed — still accepted by the dispatcher
+
+
 def test_run_benchmark_respects_aft_config() -> None:
     dataset = load_dataset()
     cfg = EmotionalMemoryConfig(enable_resonance=False)

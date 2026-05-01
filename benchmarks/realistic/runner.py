@@ -52,6 +52,7 @@ CHALLENGE_TYPES = {
     "semantic_confound",
     "affective_arc",
     "same_topic_distractor",
+    "momentum_alignment",
 }
 
 
@@ -391,7 +392,11 @@ def _build_embedder(embedder_name: str | None) -> Embedder | None:
         return SentenceTransformerEmbedder.make_bge_small()
     if embedder_name == "sbert-mini":
         return SentenceTransformerEmbedder("all-MiniLM-L6-v2")
-    raise ValueError(f"Unknown embedder: {embedder_name!r}. Choices: hash, sbert-bge, sbert-mini")
+    if embedder_name == "e5-small-v2":
+        return SentenceTransformerEmbedder("intfloat/e5-small-v2")
+    raise ValueError(
+        f"Unknown embedder: {embedder_name!r}. Choices: hash, sbert-bge, sbert-mini, e5-small-v2"
+    )
 
 
 def _make_adapter(
@@ -838,11 +843,12 @@ def main() -> None:
         "--embedder",
         type=str,
         default="sbert-bge",
-        choices=["hash", "sbert-bge", "sbert-mini"],
+        choices=["hash", "sbert-bge", "sbert-mini", "e5-small-v2"],
         help=(
             "Embedder backend for AFT and naive_cosine. "
             "'hash' = TokenHashEmbedder (fast, no semantics). "
-            "'sbert-bge' = BAAI/bge-small-en-v1.5 (recommended). "
+            "'sbert-bge' = BAAI/bge-small-en-v1.5 (paper-canonical). "
+            "'e5-small-v2' = intfloat/e5-small-v2 (Class B cross-embedder). "
             "'sbert-mini' = all-MiniLM-L6-v2 (legacy)."
         ),
     )
