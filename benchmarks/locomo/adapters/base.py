@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import logging
 import os
+import random
+import time
 from abc import ABC, abstractmethod
 from typing import Any
 
@@ -15,6 +18,13 @@ from benchmarks.locomo.dataset import Conversation, QAPair, Session
 _DEFAULT_BASE_URL = "https://api.openai.com/v1"
 _DEFAULT_MODEL = "gpt-4o-mini"
 _DEFAULT_TIMEOUT = 30
+
+# Transient HTTP status codes that warrant an automatic retry.
+_RETRYABLE_STATUS: frozenset[int] = frozenset({429, 500, 502, 503, 520, 522, 524, 529})
+_MAX_RETRIES = 5
+_BACKOFF_BASE = 1.0  # seconds; wait = base * 2^attempt + uniform(0, 0.5) jitter
+
+logger = logging.getLogger(__name__)
 
 
 def _get_llm_config() -> dict[str, str]:
@@ -67,6 +77,7 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
 
     # Some OpenAI reasoning models (e.g. gpt-5-mini) reject custom temperature
     # and/or unrecognized parameters. Strip the offending key and retry once.
+    # Payload mutations are idempotent — later retry iterations reuse the fixed payload.
     while response.status_code == 400:
         body = response.json()
         err = body.get("error", {})
@@ -84,6 +95,21 @@ def call_llm(prompt: str, *, system: str = "", temperature: float = 0.0) -> str:
             removed = True
         if not removed:
             break
+        response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
+
+    # Retry on transient server errors and rate limits with exponential back-off.
+    for _attempt in range(_MAX_RETRIES):
+        if response.status_code not in _RETRYABLE_STATUS:
+            break
+        wait = _BACKOFF_BASE * (2**_attempt) + random.uniform(0.0, 0.5)
+        logger.warning(
+            "LLM API %s (attempt %d/%d) — retrying in %.1f s",
+            response.status_code,
+            _attempt + 1,
+            _MAX_RETRIES,
+            wait,
+        )
+        time.sleep(wait)
         response = httpx.post(url, headers=headers, json=payload, timeout=timeout)
 
     response.raise_for_status()
