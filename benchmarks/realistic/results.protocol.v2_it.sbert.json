@@ -1,0 +1,69 @@
+{
+  "benchmark": "realistic_recall_v1",
+  "question": "Do persisted affective state and AFT-style retrieval improve recall on scripted multi-session scenarios compared with simpler baselines?",
+  "dataset": {
+    "name": "realistic_recall_v2_it",
+    "version": "1.0",
+    "path": "benchmarks/datasets/realistic_recall_v2_it.json",
+    "scenario_count": 20,
+    "session_count": 40,
+    "query_count": 80,
+    "type": "scripted multi-session replay benchmark"
+  },
+  "difficulty_profile": {
+    "top_k": 2,
+    "minimum_candidate_count": 7,
+    "nontrivial_query_count": 69,
+    "nontrivial_query_rate": 0.8625,
+    "trivial_candidate_window_count": 0,
+    "challenge_type_counts": {
+      "affective_arc": 16,
+      "momentum_alignment": 16,
+      "recency_confound": 16,
+      "same_topic_distractor": 16,
+      "semantic_confound": 16
+    }
+  },
+  "systems": [
+    "aft",
+    "naive_cosine",
+    "recency"
+  ],
+  "primary_metrics": [
+    "top1_accuracy",
+    "hit@k"
+  ],
+  "secondary_metrics": [
+    "stateful_session_rate",
+    "memory_count_growth",
+    "candidate_count",
+    "recency_triviality",
+    "challenge_type"
+  ],
+  "system_capabilities": {
+    "aft": {
+      "persisted_state": true,
+      "explanations": true,
+      "notes": "Uses EmotionalMemory + SQLiteAffectiveStateStore across sessions."
+    },
+    "naive_cosine": {
+      "persisted_state": false,
+      "explanations": false,
+      "notes": "Semantic-only cosine retrieval with the same deterministic embedder."
+    },
+    "recency": {
+      "persisted_state": false,
+      "explanations": false,
+      "notes": "Recency-only control with no semantic or affective ranking."
+    }
+  },
+  "interpretation_guardrails": [
+    "This is a controlled replay benchmark, not a production agent evaluation.",
+    "top1_accuracy is the headline metric; hit@k is secondary support.",
+    "Queries with candidate_count <= top_k are rejected as trivial by dataset validation.",
+    "Challenge-type aggregates are reported so localized AFT gains or failures are visible.",
+    "Only AFT models persisted affective state in this protocol.",
+    "Baselines remain useful controls for memory carry-over without affective state.",
+    "Results do not establish general downstream superiority or human-like memory."
+  ]
+}
