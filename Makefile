@@ -109,13 +109,15 @@ bench-realistic-it-sbert:
 	uv run python -m benchmarks.realistic.runner --embedder sbert-bge \
 		--dataset benchmarks/datasets/realistic_recall_v2_it.json \
 		--out-json benchmarks/realistic/results.v2_it.sbert.json \
-		--out-md benchmarks/realistic/results.v2_it.sbert.md
+		--out-md benchmarks/realistic/results.v2_it.sbert.md \
+		--out-protocol benchmarks/realistic/results.protocol.v2_it.sbert.json
 
 bench-realistic-it-e5:
 	uv run python -m benchmarks.realistic.runner --embedder e5-small-v2 \
 		--dataset benchmarks/datasets/realistic_recall_v2_it.json \
 		--out-json benchmarks/realistic/results.v2_it.e5.json \
-		--out-md benchmarks/realistic/results.v2_it.e5.md
+		--out-md benchmarks/realistic/results.v2_it.e5.md \
+		--out-protocol benchmarks/realistic/results.protocol.v2_it.e5.json
 
 bench-ablation:
 	uv run python -m benchmarks.ablation.runner --embedder hash
