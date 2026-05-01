@@ -369,9 +369,14 @@ The recency baseline confirms 0.25 as the expected floor on a balanced
 four-quadrant dataset. The benchmark is intentionally narrow—it measures whether
 the affect fingerprint is preserved in retrieval, not whether the multi-signal
 architecture outperforms a semantic-only baseline at this granularity.
+The tie at $N=20$ reflects a \textbf{dense-embedder ceiling effect}: with only
+four quadrant centroids and recall@5 over a 20-item pool, any embedder that
+correctly places memories in quadrant space saturates the metric.
 Advantage of the full AFT architecture is measured on the replayable multi-session
-realistic recall benchmark, where \texttt{top1\_accuracy}\,=\,0.70 vs.\
+realistic recall benchmark ($N=100$, top-1 retrieval over a non-trivial
+candidate pool), where \texttt{top1\_accuracy}\,=\,0.70 vs.\
 \texttt{naive\_cosine}\,=\,0.50 (SBERT; \texttt{benchmarks/realistic/results.sbert.md}).
+The larger, harder probe discriminates where the coarse quadrant probe cannot.
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
@@ -460,6 +465,15 @@ affect\_reference\_v1 was generated synthetically. A benchmark derived from
 real emotional corpora (EmpatheticDialogues, GoEmotions) would provide stronger
 external validity.
 
+\paragraph{Language and embedding scope.}
+All benchmarks, appraisal prompts, and scenario corpora are English-only.
+Performance on other languages is untested.
+The realistic-recall advantage ($\Delta=+0.20$, SBERT) is conditional on a
+dense sentence embedder; under a non-semantic (hash) embedder the gap reduces
+to $\Delta\approx+0.06$ and does not reach significance.
+Any claim about AFT's retrieval advantage should therefore be scoped to
+\emph{English conversational text with dense embeddings}.
+
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
 \label{sec:reproducibility}
@@ -491,9 +505,14 @@ phenomena, and benchmarked against a semantic-only baseline on a new affect-labe
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
 
-Future work includes expanding the baseline set to include Mem0, MemGPT, and
-Letta on the mood-congruent recall benchmark, integration with Qdrant/Chroma
-for large-scale deployment, and formal human evaluation of appraisal accuracy.
+Pre-registered future work follows a staged evidence programme: an external
+multi-session conversational QA benchmark (LoCoMo, Study S1), an expanded
+realistic-recall dataset at $N\geq200$ with cross-embedder replication
+(Study S2, Addendum B), and a human-evaluation pilot to ground-truth affective
+coherence ratings (Addendum C). A dominance dimension is scoped for v0.8.0
+following the design constraints in \texttt{docs/research/11\_dominance\_design.md}.
+Integration with vector stores (Qdrant, Chroma) and expanded baselines
+(Mem0, MemGPT) are engineering milestones independent of the evidence programme.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}
