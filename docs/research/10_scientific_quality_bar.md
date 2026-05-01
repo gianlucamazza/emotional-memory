@@ -35,7 +35,10 @@ QA pairs.
 **What it proves:** AFT is useful on real human conversational data — not just
 a synthetic benchmark designed around the model's assumptions.
 
-**Status:** Running (as of 2026-04-24). Results pending.
+**Status:** Completed 2026-04-27. Gate 1 **NOT passed** (negative result).
+AFT F1=0.168 vs naive_rag F1=0.271 (Δ=−0.101); judge_acc 0.279 vs 0.441.
+Both H1 and H2 one-tailed p=1.0 after Holm correction.
+See `benchmarks/locomo/results.json` for full hypothesis test record.
 
 ---
 

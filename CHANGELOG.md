@@ -144,6 +144,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/research/10_scientific_quality_bar.md` — formalises 3 mandatory claim gates
   and claim upgrade path.
 
+- `benchmarks/locomo/results.{json,md}` — committed G2 LoCoMo benchmark results
+  (pre-registered S1, 10 conversations, 1986 QA pairs). Gate 1: **FAIL**.
+  AFT F1=0.168 vs naive_rag F1=0.271; judge_acc 0.279 vs 0.441. Both H1 and H2
+  one-tailed p=1.0 after Holm correction. Affective weighting does not help on
+  open-domain factual QA; claim ceiling unchanged.
+- `benchmarks/locomo/runner.py` — `_compute_hypothesis_tests()` added: paired
+  bootstrap H1 (token-F1), McNemar+bootstrap H2 (judge_accuracy), Holm–Bonferroni
+  correction, Cohen's d, Gate 1 verdict in JSON and Markdown output.
+- `docs/research/audit_2026-04.md` — G2 section updated with negative result;
+  Q2 answer updated to reflect Gate 1 FAIL.
+- `docs/research/10_scientific_quality_bar.md` — Gate 1 status updated:
+  completed with negative result (2026-04-27).
+- `docs/research/claim_validation_matrix.json` — new entry
+  `locomo_external_qa_negative` documents the negative result and restricts
+  allowed wording.
+
 ### Changed
 
 - `docs/research/10_scientific_quality_bar.md` — Gate 3 status refreshed:

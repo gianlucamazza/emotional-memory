@@ -54,6 +54,7 @@ evidence level, and still-open gaps.
 | `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. | Ecological correspondence to human emotional memory. | Human and behavioral validation. |
 | `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
 | `replayable_multi_session_help` | Realistic tasks | Controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001). | Realistic replay v2 (50 scenarios, 200 queries). SBERT: AFT 0.53 vs naive 0.33, Δ=+0.21 p<0.001 d=0.49. e5-small-v2: AFT 0.50 vs naive 0.34, Δ=+0.16 p<0.001 d=0.31. | Architecture attribution (appraisal confound pending); multilingual; external open-domain QA (LoCoMo Gate 1 FAIL). | Run appraisal confound. Add Italian slice (PR-F). |
+| `locomo_external_qa_negative` | External benchmarks | Controlled evidence | `4_realistic_tasks` | On the LoCoMo conversational QA benchmark (1986 QA pairs), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 not met). | Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0, p_one=1.0). | Whether task-specific retrieval weight tuning could close the gap. | Investigate per-task configuration; document as scope limitation in paper. |
 | `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
 
 ---
@@ -99,8 +100,11 @@ The next recommended studies, in order:
    at least 3 raters (Krippendorff's alpha is wired and reported automatically
    when `ratings.jsonl` is filled).
 4. ~~**Run LoCoMo end-to-end for external benchmark validation**~~
-   *Completed 2026-04-27. Gate 1 NOT passed. AFT F1=0.168 vs naive_rag F1=0.271
-   on 1986 QA pairs. Negative result committed in `benchmarks/locomo/results.json`.*
+   *Completed 2026-04-27 (Gate 1 FAIL): `benchmarks/locomo/results.json` committed.
+   AFT F1=0.168 vs naive_rag F1=0.271 on 1986 QA pairs; both H1 and H2 fail
+   Holm correction. Negative result — affective weighting does not improve
+   open-domain factual QA. Claim ceiling unchanged; see `locomo_external_qa_negative`
+   in `claim_validation_matrix.json`.*
 
 ---
 
