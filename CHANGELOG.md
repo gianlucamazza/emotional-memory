@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-05-02
+
 ### Added
 
 - `benchmarks/datasets/realistic_recall_v2_it.json` — Italian multilingual slice
@@ -213,9 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/reproduce_paper.py`: `_resolve_comparative_csv` prefers
   `results.sbert.csv` over `results.csv` for paper-canonical Table 3 generation.
 
-## [0.6.3] - 2026-04-22
-
-### Added
+### Added (from 0.6.3 prep, never tagged)
 
 - `RedisAffectiveStateStore`, extending the new `AffectiveStateStore` boundary
   to a shared-state backend without changing the engine API.
@@ -747,8 +747,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.3...HEAD
-[0.6.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.6.3
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.5.2...v0.6.0

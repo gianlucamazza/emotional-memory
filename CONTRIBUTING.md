@@ -211,7 +211,7 @@ make install-release
 Recommended release gate:
 
 ```bash
-make release-check VERSION=0.6.3
+make release-check VERSION=0.7.0
 ```
 
 That target runs:
@@ -219,14 +219,14 @@ That target runs:
 - `make check`
 - `make test-llm`
 - `make bench-appraisal`
-- `uv run python scripts/preflight.py 0.6.3`
+- `uv run python scripts/preflight.py 0.7.0`
 
 Publishing order:
 
 ```bash
 git push origin main
-git tag -a v0.6.3 -m "v0.6.3"
-git push origin v0.6.3
+git tag -a v0.7.0 -m "v0.7.0"
+git push origin v0.7.0
 ```
 
 Normal PyPI path:
@@ -240,7 +240,7 @@ Manual PyPI fallback:
 
 ```bash
 make publish-pypi-manual
-make verify-pypi-release VERSION=0.6.3
+make verify-pypi-release VERSION=0.7.0
 ```
 
 Zenodo:
