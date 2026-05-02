@@ -369,6 +369,13 @@ retrieval probe, not a general downstream evaluation of production memory system
   Gate 3 CLOSED). On the controlled quadrant probe (`affect_reference_v1`,
   SBERT embedder), AFT and naive_cosine both reach recall@5 = 0.80 (ceiling
   effect at N = 20 items; both well above recency baseline 0.25).
+- **Italian multilingual slice (G6, SBERT bge-small-en-v1.5, 20 scenarios / 80
+  queries)**: AFT top1=0.24 [0.14,0.33], hit@k=0.34 [0.24,0.44]; naive_cosine
+  top1=0.15 [0.07,0.24], hit@k=0.19 [0.11,0.28]. Δ hit@k=+0.15 [0.07,0.24],
+  p=0.0005 (signal holds); top1 Δ not significant. Absolute accuracy is
+  substantially below the English v2 baseline — English-trained embedders
+  transfer imperfectly; a multilingual embedder is required for a fair
+  absolute comparison.
 - **Negative external result (LoCoMo, Gate 1 FAIL)**: on the LoCoMo
   conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
