@@ -261,7 +261,7 @@ def build_protocol_metadata(
         else str(dataset_path)
     )
     return {
-        "benchmark": "realistic_recall_v1",
+        "benchmark": dataset.name,
         "question": (
             "Do persisted affective state and AFT-style retrieval improve recall "
             "on scripted multi-session scenarios compared with simpler baselines?"

@@ -359,22 +359,30 @@ retrieval probe, not a general downstream evaluation of production memory system
 
 - **Strongest evidence today**: 126 fidelity test cases across 20 phenomena show that
   the implementation behaves coherently with the theories it operationalizes.
-- **Comparative evidence today**: the repo includes a small, public, synthetic
-  affect-aware retrieval benchmark (`affect_reference_v1`) that tests whether AFT
-  changes ranking behavior in the intended direction, plus an early comparative
-  replay benchmark for multi-session scenarios with non-trivial candidate pools
-  and explicit challenge types. With the `BAAI/bge-small-en-v1.5` embedder (default),
-  AFT leads `naive_cosine` on aggregate top1 (0.70 vs 0.50) and hit@k (0.79 vs 0.63)
-  with the `BAAI/bge-small-en-v1.5` embedder (N = 100 queries); on the
-  `semantic_confound` subset (N = 30) AFT top1 = 0.73 vs naive 0.47, Δ = +0.27
-  [0.10, 0.43], p_adj = 0.006 after Holm correction.
-  On the controlled quadrant probe (`affect_reference_v1`, SBERT embedder),
-  AFT and naive_cosine both reach recall@5 = 0.80 (ceiling effect at N = 20
-  items; both well above recency baseline 0.25).
-- **Not yet established**: general superiority over systems such as Mem0 or LangMem
-  on realistic agent tasks; robustness beyond the current small replay dataset;
-  completed human evaluation results; or ecological correspondence to human
-  emotional memory.
+- **Comparative evidence today**: the repo includes a synthetic affect-aware
+  retrieval benchmark (`affect_reference_v1`) and a realistic multi-session
+  replay benchmark (v2, 50 scenarios, 200 queries, 5 challenge types × 40).
+  On the v2 benchmark, AFT outperforms `naive_cosine` on both embedder classes:
+  SBERT bge-small-en-v1.5 — top1 0.53 vs 0.33, Δ=+0.21 [0.15,0.27], p<0.001,
+  d=0.49; e5-small-v2 — top1 0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001,
+  d=0.31. Architecture attribution is confirmed (appraisal confound ruled out,
+  Gate 3 CLOSED). On the controlled quadrant probe (`affect_reference_v1`,
+  SBERT embedder), AFT and naive_cosine both reach recall@5 = 0.80 (ceiling
+  effect at N = 20 items; both well above recency baseline 0.25).
+- **Italian multilingual slice (G6, SBERT bge-small-en-v1.5, 20 scenarios / 80
+  queries)**: AFT top1=0.24 [0.14,0.33], hit@k=0.34 [0.24,0.44]; naive_cosine
+  top1=0.15 [0.07,0.24], hit@k=0.19 [0.11,0.28]. Δ hit@k=+0.15 [0.07,0.24],
+  p=0.0005 (signal holds); top1 Δ not significant. Absolute accuracy is
+  substantially below the English v2 baseline — English-trained embedders
+  transfer imperfectly; a multilingual embedder is required for a fair
+  absolute comparison.
+- **Negative external result (LoCoMo, Gate 1 FAIL)**: on the LoCoMo
+  conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
+  underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
+  does not help on factual open-domain QA.
+- **Not yet established**: general superiority over systems such as Mem0 or
+  LangMem on realistic agent tasks; completed human evaluation results; or
+  ecological correspondence to human emotional memory.
 
 See [Current Evidence](docs/research/09_current_evidence.md) for the study ladder
 and the current claim-to-evidence matrix. The canonical machine-readable source

@@ -251,6 +251,21 @@ class TestKeywordAppraisalEngine:
         v2 = engine.appraise("hello", context={"irrelevant": True})
         assert v1 == v2
 
+    def test_italian_rules_fire_on_italian_text(self):
+        engine = KeywordAppraisalEngine.make_multilingual()
+        v = engine.appraise("Ho raggiunto il successo nel progetto")
+        assert v.goal_relevance > 0.0
+
+    def test_italian_failure_keywords(self):
+        engine = KeywordAppraisalEngine.make_multilingual()
+        v = engine.appraise("Ho commesso un errore e ho fallito l'esame")
+        assert v.goal_relevance < 0.0
+
+    def test_make_multilingual_has_more_rules(self):
+        default = KeywordAppraisalEngine()
+        multi = KeywordAppraisalEngine.make_multilingual()
+        assert len(multi._rules) > len(default._rules)
+
 
 # ---------------------------------------------------------------------------
 # KeywordRule (public API)

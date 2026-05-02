@@ -371,6 +371,59 @@ _DEFAULT_RULES: list[KeywordRule] = [
 ]
 
 
+# Italian keyword rules — same delta semantics as _DEFAULT_RULES.
+_ITALIAN_RULES: list[KeywordRule] = [
+    KeywordRule(
+        r"\b(success(?:so|o)|riusc(?:ito|ita|iti)|complet(?:ato|ata)|raggiunt(?:o|a)|vint(?:o|a)|vittoria)\b",
+        goal_relevance=0.7,
+        coping_potential=+0.3,
+        norm_congruence=0.5,
+        self_relevance=0.6,
+    ),
+    KeywordRule(
+        r"\b(fallim(?:ento|ento)|fallito|errore|sbaglio|rotto|guasto)\b",
+        goal_relevance=-0.6,
+        coping_potential=-0.3,
+        norm_congruence=-0.3,
+        self_relevance=0.5,
+    ),
+    KeywordRule(
+        r"\b(sorpres[ao]|inaspettat[ao]|improvvis[ao]|shock|stupito|meravigliat[ao])\b",
+        novelty=0.8,
+        self_relevance=0.3,
+    ),
+    KeywordRule(
+        r"\b(noioso|routine|solito|come sempre|prevedibile)\b",
+        novelty=-0.7,
+        self_relevance=0.1,
+    ),
+    KeywordRule(
+        r"\b(pericolo|minaccia|rischio|danno|attacco|crisi|emergenza)\b",
+        goal_relevance=-0.5,
+        coping_potential=-0.4,
+        norm_congruence=-0.2,
+        self_relevance=0.7,
+    ),
+    KeywordRule(
+        r"\b(aiuto|supporto|gentile|generoso|premuroso|compassionevole)\b",
+        goal_relevance=0.4,
+        norm_congruence=0.6,
+        self_relevance=0.3,
+    ),
+    KeywordRule(
+        r"\b(ingiusto|ingiustizia|imbroglio|menzogna|tradimento|abuso)\b",
+        goal_relevance=-0.4,
+        coping_potential=-0.3,
+        norm_congruence=-0.8,
+        self_relevance=0.6,
+    ),
+    KeywordRule(
+        r"\b(io|me|mio|mia|miei|mie|stesso|stessa|personalmente)\b",
+        self_relevance=0.4,
+    ),
+]
+
+
 class KeywordAppraisalEngine:
     """Rule-based AppraisalEngine using keyword pattern matching.
 
@@ -383,6 +436,11 @@ class KeywordAppraisalEngine:
 
     def __init__(self, rules: list[KeywordRule] | None = None) -> None:
         self._rules = rules if rules is not None else _DEFAULT_RULES
+
+    @classmethod
+    def make_multilingual(cls) -> KeywordAppraisalEngine:
+        """Return an engine with English + Italian rules combined."""
+        return cls(rules=_DEFAULT_RULES + _ITALIAN_RULES)
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(rules={len(self._rules)})"
