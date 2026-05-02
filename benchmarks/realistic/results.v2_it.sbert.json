@@ -1482,7 +1482,7 @@
     ]
   },
   "protocol": {
-    "benchmark": "realistic_recall_v1",
+    "benchmark": "realistic_recall_v2_it",
     "question": "Do persisted affective state and AFT-style retrieval improve recall on scripted multi-session scenarios compared with simpler baselines?",
     "dataset": {
       "name": "realistic_recall_v2_it",

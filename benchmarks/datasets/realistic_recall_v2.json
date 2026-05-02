@@ -1,5 +1,5 @@
 {
-  "name": "realistic_recall_v1",
+  "name": "realistic_recall_v2",
   "version": "2.0",
   "description": "Scripted multi-session retrieval scenarios v2 (50 scenarios, 200 queries, 5 challenge types × 40).",
   "default_top_k": 2,
