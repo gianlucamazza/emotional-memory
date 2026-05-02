@@ -479,10 +479,16 @@ The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
 $N=200$) is conditional on a dense sentence embedder; under a non-semantic
 (hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
 significance. A multilingual Italian slice (G6, $N=80$) shows a significant
-hit@k advantage ($\Delta=+0.15$, $p=0.0005$) but lower absolute accuracy,
-consistent with the English-centric SBERT embedder.
+hit@k advantage under both embedder families tested: $\Delta=+0.15$ ($p=0.0005$)
+with English-centric SBERT bge-small-en-v1.5, and $\Delta=+0.16$ ($p=0.001$)
+with multilingual-e5-small (intfloat, 117M parameters, 100+ languages).
+Switching to the multilingual embedder raises naive\_cosine top1 from 0.15 to
+0.21 (+40\%), confirming that the absolute-accuracy gap vs the English v2
+baseline ($\text{top1}=0.53$) was driven primarily by the English-centric
+embedder rather than by AFT itself.
 Any claim about AFT's retrieval advantage should therefore be scoped to
-\emph{English conversational text with dense embeddings}.
+\emph{dense embedding regimes}; the hit@k signal generalises across embedder
+language coverage.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}

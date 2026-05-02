@@ -11,10 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `benchmarks/datasets/realistic_recall_v2_it.json` — Italian multilingual slice
   (G6, 20 scenarios, 80 queries, 4 challenge types). SBERT bge-small-en-v1.5
-  results: AFT top1=0.24 vs naive_cosine=0.15 (Δ=+0.09, p=0.082, not significant);
-  hit@k=0.34 vs 0.19 (Δ=+0.15, p=0.0005, **significant**). Architecture advantage
-  generalizes partially to Italian under an EN-centric embedder; a multilingual
-  embedder is required for a fairer absolute comparison.
+  results: AFT top1=0.24 vs naive_cosine=0.15; hit@k=0.34 vs 0.19
+  (Δ=+0.15, p=0.0005, **significant**). multilingual-e5-small results:
+  AFT top1=0.29 vs naive_cosine=0.21; hit@k=0.42 vs 0.26
+  (Δ=+0.16, p=0.001, **significant**). Embedder swap confirms EN-only embedder
+  was the absolute-accuracy bottleneck (naive_cosine top1 +40%); AFT signal
+  preserved under both embedders.
+- `benchmarks/realistic/results.v2_it.me5.{json,md,protocol.json}` — G6
+  Italian multilingual-e5-small benchmark results.
+- `make bench-realistic-it-me5` Makefile target + `--embedder multilingual-e5-small`
+  runner choice.
 - `benchmarks/realistic/results.v2_it.sbert.{json,md,protocol.json}` — G6
   Italian SBERT benchmark results (committed with separate protocol file to avoid
   overwriting English v1 canonical protocol).

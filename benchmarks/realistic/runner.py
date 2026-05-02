@@ -394,8 +394,11 @@ def _build_embedder(embedder_name: str | None) -> Embedder | None:
         return SentenceTransformerEmbedder("all-MiniLM-L6-v2")
     if embedder_name == "e5-small-v2":
         return SentenceTransformerEmbedder("intfloat/e5-small-v2")
+    if embedder_name == "multilingual-e5-small":
+        return SentenceTransformerEmbedder("intfloat/multilingual-e5-small")
     raise ValueError(
-        f"Unknown embedder: {embedder_name!r}. Choices: hash, sbert-bge, sbert-mini, e5-small-v2"
+        f"Unknown embedder: {embedder_name!r}. "
+        "Choices: hash, sbert-bge, sbert-mini, e5-small-v2, multilingual-e5-small"
     )
 
 
@@ -843,12 +846,13 @@ def main() -> None:
         "--embedder",
         type=str,
         default="sbert-bge",
-        choices=["hash", "sbert-bge", "sbert-mini", "e5-small-v2"],
+        choices=["hash", "sbert-bge", "sbert-mini", "e5-small-v2", "multilingual-e5-small"],
         help=(
             "Embedder backend for AFT and naive_cosine. "
             "'hash' = TokenHashEmbedder (fast, no semantics). "
             "'sbert-bge' = BAAI/bge-small-en-v1.5 (paper-canonical). "
             "'e5-small-v2' = intfloat/e5-small-v2 (Class B cross-embedder). "
+            "'multilingual-e5-small' = intfloat/multilingual-e5-small (multilingual, 100+ langs). "
             "'sbert-mini' = all-MiniLM-L6-v2 (legacy)."
         ),
     )

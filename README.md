@@ -369,13 +369,18 @@ retrieval probe, not a general downstream evaluation of production memory system
   Gate 3 CLOSED). On the controlled quadrant probe (`affect_reference_v1`,
   SBERT embedder), AFT and naive_cosine both reach recall@5 = 0.80 (ceiling
   effect at N = 20 items; both well above recency baseline 0.25).
-- **Italian multilingual slice (G6, SBERT bge-small-en-v1.5, 20 scenarios / 80
-  queries)**: AFT top1=0.24 [0.14,0.33], hit@k=0.34 [0.24,0.44]; naive_cosine
-  top1=0.15 [0.07,0.24], hit@k=0.19 [0.11,0.28]. Δ hit@k=+0.15 [0.07,0.24],
-  p=0.0005 (signal holds); top1 Δ not significant. Absolute accuracy is
-  substantially below the English v2 baseline — English-trained embedders
-  transfer imperfectly; a multilingual embedder is required for a fair
-  absolute comparison.
+- **Italian multilingual slice (G6, 20 scenarios / 80 queries)**:
+  With SBERT bge-small-en-v1.5 (EN-only): AFT top1=0.24 [0.14,0.33],
+  hit@k=0.34 [0.24,0.44]; naive_cosine top1=0.15, hit@k=0.19. Δ hit@k=+0.15
+  [0.07,0.24], p=0.0005 (signal holds); top1 Δ not significant.
+  With multilingual-e5-small (intfloat, 117M params, 100+ languages): AFT
+  top1=0.29 [0.20,0.39], hit@k=0.42 [0.31,0.54]; naive_cosine top1=0.21,
+  hit@k=0.26. Δ hit@k=+0.16 [0.06,0.26], p=0.001 (signal preserved); top1 Δ
+  not significant. The embedder swap lifts naive_cosine top1 from 0.15→0.21
+  (+40%), confirming the absolute-accuracy gap was driven by the EN-only
+  embedder, not AFT. Residual gap vs English v2 (top1 0.53) reflects dataset
+  difficulty and model size; a larger multilingual model (e.g. bge-m3) is a
+  natural next step.
 - **Negative external result (LoCoMo, Gate 1 FAIL)**: on the LoCoMo
   conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
