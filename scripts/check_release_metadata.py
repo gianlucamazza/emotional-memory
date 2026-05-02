@@ -96,6 +96,14 @@ def main(argv: list[str] | None = None) -> int:
         if version_doi not in paper_submission:
             errors.append("paper/SUBMISSION.md is not aligned to the CITATION version DOI")
 
+    expected_paper_pin = f"- [ ] PyPI version pinned: `emotional-memory=={version}`"
+    if expected_paper_pin not in paper_submission:
+        errors.append("paper/SUBMISSION.md PyPI version pin does not match pyproject.toml")
+
+    expected_paper_comments = f"Software: emotional-memory v{version}"
+    if expected_paper_comments not in paper_submission:
+        errors.append("paper/SUBMISSION.md Comments row version does not match pyproject.toml")
+
     if concept_doi is not None:
         concept_url = f"https://doi.org/{concept_doi}"
         if concept_url not in demo_readme:

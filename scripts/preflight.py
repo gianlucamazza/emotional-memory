@@ -10,6 +10,7 @@ Gates checked:
     G1  pyproject.toml version matches VERSION (or is consistent across files)
     G2  CITATION.cff version == pyproject version
     G3  CHANGELOG.md has "## [VERSION] - YYYY-MM-DD" entry
+    G3b release metadata consistency (version pins, DOIs across files)
     G4  git tag vVERSION does not already exist (local or remote)
     G5  working tree clean (no uncommitted changes)
     G6  on main branch, up-to-date with origin
@@ -106,6 +107,23 @@ def gate_changelog_entry(version: str) -> Gate:
         g.ok()
     else:
         g.fail(f"no '## [{version}] - YYYY-MM-DD' heading found")
+    return g
+
+
+def gate_metadata_consistency() -> Gate:
+    g = Gate("G3b", "release metadata consistency (check_release_metadata)")
+    r = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "check_release_metadata.py")],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if r.returncode != 0:
+        summary = (r.stderr or r.stdout).strip().splitlines()
+        g.fail("; ".join(summary[:3]))
+    else:
+        g.ok((r.stdout or r.stderr).strip())
     return g
 
 
@@ -381,6 +399,7 @@ def main() -> None:
         gate_version_consistency(version),
         gate_citation_version(),
         gate_changelog_entry(version),
+        gate_metadata_consistency(),
     ]
 
     if not args.ci:

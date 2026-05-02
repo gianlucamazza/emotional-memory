@@ -132,8 +132,31 @@ def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> 
         updated_paper,
         "paper submission DOI table row",
     )
+    updated_paper = _replace(
+        r"^- \[ \] PyPI version pinned: `emotional-memory==[0-9][\w.\-+]*`$",
+        f"- [ ] PyPI version pinned: `emotional-memory=={version}`",
+        updated_paper,
+        "paper submission PyPI version pin",
+    )
+    updated_paper = _replace(
+        r"Software: emotional-memory v[0-9][\w.\-+]*",
+        f"Software: emotional-memory v{version}",
+        updated_paper,
+        "paper submission Comments row version",
+    )
     if updated_paper != paper_text:
         changes.append((paper_submission, updated_paper))
+
+    demo_requirements = ROOT / "demo" / "requirements.txt"
+    demo_req_text = demo_requirements.read_text(encoding="utf-8")
+    updated_demo_req = _replace(
+        r"^emotional-memory==[0-9][\w.\-+]*$",
+        f"emotional-memory=={version}",
+        demo_req_text,
+        "demo requirements pin",
+    )
+    if updated_demo_req != demo_req_text:
+        changes.append((demo_requirements, updated_demo_req))
 
     paper_main = ROOT / "paper" / "main.tex"
     paper_main_text = paper_main.read_text(encoding="utf-8")
