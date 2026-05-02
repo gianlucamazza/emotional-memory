@@ -221,15 +221,13 @@ _IT_DATASET = (
 )
 
 
-@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
 def test_italian_dataset_loads() -> None:
     dataset = load_dataset(_IT_DATASET)
     assert dataset.name == "realistic_recall_v2_it"
-    assert len(dataset.scenarios) >= 20
+    assert len(dataset.scenarios) == 20
     assert dataset.default_top_k == 2
 
 
-@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
 def test_italian_dataset_has_valid_challenge_types() -> None:
     from benchmarks.realistic.runner import CHALLENGE_TYPES
 
@@ -242,10 +240,9 @@ def test_italian_dataset_has_valid_challenge_types() -> None:
                 )
 
 
-@pytest.mark.skipif(not _IT_DATASET.exists(), reason="Italian dataset not yet committed")
 def test_italian_dataset_total_queries() -> None:
     dataset = load_dataset(_IT_DATASET)
     total = sum(
         len(session.queries) for scenario in dataset.scenarios for session in scenario.sessions
     )
-    assert total >= 80, f"Expected ≥80 Italian queries, got {total}"
+    assert total == 80, f"Expected 80 Italian queries, got {total}"
