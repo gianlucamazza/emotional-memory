@@ -40,7 +40,7 @@ from source).
 |---|---|
 | Title | Emotional Memory for LLMs: Affective Field Theory |
 | Authors | Gianluca Mazza |
-| Affiliation | (your affiliation or leave blank) |
+| Affiliation | Independent Researcher |
 | Primary category | see below |
 | Secondary categories | cs.LG, stat.ML (optional) |
 | MSC class | 68T07, 68T50 (optional) |

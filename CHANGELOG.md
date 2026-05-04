@@ -44,6 +44,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/research/audit_2026-04.md` — Snapshot section updated with explicit
   per-gate status (Gate 1 CLOSED-NEG, Gate 2 OPEN, Gate 3 CLOSED-PASS) and
   pre-registration addenda count (5: B/D/E/F/H).
+- `paper/main.tex` — §Limitations extended with two honest disclosure paragraphs:
+  (1) "External-benchmark scope" reporting the LoCoMo FAIL (Gate 1 not met,
+  F1 0.168 vs 0.271), previously only in the Conclusion; (2) "Component ablations"
+  reporting Addendum E pre-registered results (He2 null: removing reconsolidation
+  has no effect; He1 rejected: dual-path encoding is destructive at 0.35 vs 0.70).
+  Overfull hbox at L177-183 (170 pt, link-types formula) fixed by rewriting
+  inline math as `\emph{}` prose.
+- `CITATION.cff` — removed empty `orcid: ""` field (no ORCID registered).
+- `paper/SUBMISSION.md` — affiliation clarified to "Independent Researcher".
 
 ## [0.7.0] - 2026-05-02
 
