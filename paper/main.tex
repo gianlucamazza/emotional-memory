@@ -51,7 +51,7 @@
   \small\textit{Independent Researcher}
 }
 
-\date{April 2026}
+\date{May 2026}
 
 % ── Release metadata (managed by scripts/sync_release_metadata.py) ─────────────
 % Edit release.toml, then run: make sync-metadata
@@ -492,7 +492,9 @@ Performance on other languages is untested.
 The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
 $N=200$) is conditional on a dense sentence embedder; under a non-semantic
 (hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
-significance. A multilingual Italian slice (G6, $N=80$)\footnote{Addendum~H companion writeup:
+significance\footnote{v1.4 hash-embedder pilot; full results:
+\href{\repourl/blob/main/benchmarks/realistic/results.md}{\texttt{benchmarks/realistic/results.md}}.}.
+A multilingual Italian slice (G6, $N=80$)\footnote{Addendum~H companion writeup:
 \href{\repourl/blob/main/docs/research/12\_multilingual\_followup.md}{\texttt{12\_multilingual\_followup.md}};
 pre-registration:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_h.md}{\texttt{preregistration\_addendum\_h.md}}.}
@@ -509,23 +511,40 @@ Any claim about AFT's retrieval advantage should therefore be scoped to
 language coverage.
 
 \paragraph{External-benchmark scope.}
-On the LoCoMo conversational QA benchmark (Study~S1, 1986 QA pairs) AFT
-underperforms naive RAG (F1~$0.168$ vs.~$0.271$; Gate~1 not met).
-Affective weighting does not help on factual open-domain QA where the optimal
-answer is determined by literal content recall rather than affective coherence.
-Per-task retrieval-weight tuning remains open work.
+On the LoCoMo conversational QA benchmark (Study~S1, 1986 QA pairs, scored
+$N=1540$) AFT underperforms naive RAG on both pre-registered co-primary
+metrics: F1 $0.168$ vs.\ $0.271$ ($H_1$ FAIL, $\Delta=-0.101$) and
+judge-accuracy $0.279$ vs.\ $0.441$ ($H_2$ FAIL, $\Delta=-0.159$);
+Gate~1 not met. Affective weighting does not help on factual open-domain
+QA where the optimal answer is determined by literal content recall
+rather than affective coherence. Per-task retrieval-weight tuning
+remains open work.
 
 \paragraph{Component ablations.}
 A pre-registered ablation programme (Addendum~E)\footnote{Pre-registration:
-\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_v3.md}{\texttt{preregistration\_addendum\_v3.md}}.}
-tested the load-bearing contribution of two AFT components on the
-realistic-recall benchmark ($N=200$, SBERT). Removing APE-gated reconsolidation
-produces no measurable change in hit@k (\textit{full}~$=0.70$,
-\textit{no\_reconsolidation}~$=0.70$; $H_{e2}$ null), indicating that the
-current benchmark does not exercise the reconsolidation pathway under test
-conditions. A symmetric dual-path encoding variant (70/30 blend of appraised and
-raw core affect) is destructive (\textit{dual\_path}~$=0.35$; $H_{e1}$
-rejected): dual-path encoding is accordingly an opt-in feature only.
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_v3.md}{\texttt{preregistration\_addendum\_v3.md}};
+Addendum~F:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_f.md}{\texttt{preregistration\_addendum\_f.md}};
+results:
+\href{\repourl/blob/main/benchmarks/ablation/results.sbert.md}{\texttt{ablation/results.sbert.md}}.}
+tested the load-bearing contribution of each AFT component on the
+realistic-recall benchmark ($N=100$ queries, v1.4, SBERT bge-small-en-v1.5).
+Removing individual layers (mood, resonance, appraisal, momentum, and
+APE-gated reconsolidation) produces no measurable change in
+top1\_accuracy ($|\Delta|\leq 0.01$, $p_{\mathrm{adj}}=1.000$ under
+Holm-Bonferroni across the five comparisons): on this benchmark the
+layers are jointly sufficient but not individually load-bearing, and
+$H_{e2}$ (reconsolidation) is null. A symmetric dual-path encoding variant
+(70/30 blend of appraised and raw core affect, with the
+\texttt{KeywordAppraisalEngine}) is destructive
+($\textit{top1}=0.35$, $\Delta=-0.35$, $p_{\mathrm{adj}}<0.001$;
+$H_{e1}$ rejected). The destructive component is the keyword appraisal
+itself: synchronous keyword appraisal collapses retrieval further
+($\textit{top1}=0.07$), whereas deferring it via the dual-path slow
+elaboration partially recovers signal ($H_{f1}$ PASS,
+$\Delta_{\mathrm{dual\,vs\,sync}}=+0.28$). Dual-path encoding is therefore
+retained as an opt-in feature only; semantically-grounded LLM appraisal
+(non-keyword) is recommended when an appraisal engine is configured.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
@@ -564,7 +583,11 @@ A staged evidence programme has produced four pre-registered results since
 initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
-Gate 3 CLOSED via appraisal-confound ablation). The external LoCoMo conversational
+Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
+\textit{aft\_noAppraisal}~$=0.78$ vs.\ \textit{naive\_cosine}~$=0.55$,
+$\Delta=+0.23$ [+0.12, +0.34], $d=0.52$, $N=100$, v1.4, seed=1 (Addendum~D;
+\href{\repourl/blob/main/docs/research/audit\_2026-04.md}{\texttt{audit\_2026-04.md}}, \S{}G3).}).
+The external LoCoMo conversational
 QA benchmark (1986 QA pairs, Study S1) produced a negative result: AFT
 underperforms naive RAG (F1 0.168 vs.\ 0.271; Gate 1 not met), revealing that
 affective weighting does not help on factual open-domain QA.

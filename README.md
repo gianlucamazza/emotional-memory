@@ -343,7 +343,7 @@ make docs-images   # regenerate all PNGs in docs/images/
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
 | **Internal fidelity tests** | ✅ 126 cases, 20 phenomena ([bench-fidelity](benchmarks/fidelity/)) | — | — | — | — |
-| **External benchmark** | ❌ not yet evaluated | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
+| **External benchmark** | ✅ LoCoMo (FAIL: F1 0.168 vs 0.271) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
 | **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
 **Key differentiator**: emotional-memory makes affect a first-class, multi-layer part

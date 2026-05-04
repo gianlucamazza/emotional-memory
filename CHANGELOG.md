@@ -53,6 +53,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   inline math as `\emph{}` prose.
 - `CITATION.cff` — removed empty `orcid: ""` field (no ORCID registered).
 - `paper/SUBMISSION.md` — affiliation clarified to "Independent Researcher".
+- `paper/main.tex` — §Limitations "Component ablations" rewritten to fix two
+  BLOCKER errors introduced in the previous pass: (1) metric label corrected
+  from "hit@k" to "top1\_accuracy" (0.70/0.35 are top1, not hit@k); (2) N
+  corrected from 200 to 100 (ablation runs on v1.4, not v2). Disclosure
+  expanded to cover all pre-registered S3 ablations: Ha (no\_mood), Hb
+  (no\_resonance), Hc (no\_appraisal), Hd (no\_momentum) — all null
+  (|Δ|≤0.01, p\_adj=1.000) — previously omitted. Addendum F (Hf1: deferring
+  keyword appraisal partially recovers signal, Δ=+0.28, PASS) added as the
+  nuance that makes He1 honest.
+- `paper/main.tex` — §Limitations "External-benchmark scope" expanded to
+  report LoCoMo H2 (judge-accuracy 0.279 vs 0.441, FAIL, Δ=−0.159), the
+  co-primary hypothesis omitted from the previous pass; N=1540 scored pairs
+  added for transparency.
+- `paper/main.tex` — §Conclusion Hd1 numbers added as footnote (Addendum D:
+  aft\_noAppraisal=0.78 vs naive\_cosine=0.55, Δ=+0.23 [+0.12,+0.34],
+  d=0.52, N=100, v1.4, seed=1) — previously Gate 3 was cited as "CLOSED"
+  without verifiable numbers.
+- `paper/main.tex` — date updated from April 2026 to May 2026 (release
+  2026-05-02, consistent with CHANGELOG and CITATION.cff).
+- `paper/main.tex` — hash-embedder Δ≈+0.06 claim now cites provenance
+  (v1.4 pilot; benchmarks/realistic/results.md).
+- `README.md` — "External benchmark" comparison table cell updated from
+  "❌ not yet evaluated" to "✅ LoCoMo (FAIL: F1 0.168 vs 0.271)", consistent
+  with §Limitations and audit\_2026-04.md.
 
 ## [0.7.0] - 2026-05-02
 
