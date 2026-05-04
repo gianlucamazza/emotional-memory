@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `release.toml` — single source of truth for release-facing metadata
+  (`concept_doi`, `version_doi`, `repo_url`). Edit here, propagate with
+  `make sync-metadata`.
+- `make sync-metadata` / `make sync-metadata-dry` — propagate `release.toml`
+  values to all dependent files offline (`--from-toml`).
+- `demo/app.py` — `_ZENODO_CONCEPT_DOI` and `_REPO_URL` module-level
+  constants (managed by sync script) replace inline hardcoded strings in
+  `_DESCRIPTION` f-string.
+- `paper/main.tex` — `\zenodoconceptdoi`, `\zenodoversiondoi`, `\repourl`
+  LaTeX commands (managed by sync script) centralise release metadata;
+  used in body via `\href` and in the new Addendum H footnote.
+
+### Changed
+
+- `scripts/sync_release_metadata.py` — extended with `--from-toml` flag
+  (reads `release.toml` offline); updated patterns for `paper/main.tex`
+  `\newcommand` block and `demo/app.py` constants; added `CITATION.cff`
+  `version:` field sync.
+- `scripts/check_release_metadata.py` — ground truth moved from README
+  badge / CITATION.cff to `release.toml`; added `repo_url`, `paper/main.tex`
+  macro, and `demo/app.py` constant checks; removed fragile derived-value
+  extraction.
+- `paper/main.tex` — §Limitations footnote links Addendum H companion
+  (`docs/research/12_multilingual_followup.md`) via `\href`; body DOI uses
+  `\href{\zenodoconcepturl}{\texttt{\zenodoconceptdoi}}` (macro-based, concept
+  DOI corrected from v0.7.0 version DOI back to perpetual concept DOI per
+  SSOT contract).
+- `ROADMAP.md` — rewritten to reflect actual v0.7.0 contents (scientific
+  evidence push: Gate 1 LoCoMo FAIL, Gate 3 Hd1 PASS, G4/G5/G6/G9 closed,
+  pre-reg corpus). Production-readiness items (Qdrant, Chroma, OTel, BYO
+  appraisal) deferred to v0.9.0. v0.8.0 retargeted to open gates (Gate 2
+  human eval, S3@N=200, G7 dominance, multilingual breadth).
+- `docs/research/audit_2026-04.md` — Snapshot section updated with explicit
+  per-gate status (Gate 1 CLOSED-NEG, Gate 2 OPEN, Gate 3 CLOSED-PASS) and
+  pre-registration addenda count (5: B/D/E/F/H).
+
 ## [0.7.0] - 2026-05-02
 
 ### Added

@@ -1,0 +1,12 @@
+# Single source of truth for release-facing metadata.
+# Edit values here, then run: make sync-metadata
+# Do NOT edit the corresponding values in individual files directly.
+#
+# concept_doi: perpetual umbrella DOI for the project (never changes between releases)
+# version_doi: per-release Zenodo DOI; update here after each new Zenodo record
+# repo_url:    canonical GitHub repository URL
+
+[release]
+concept_doi = "10.5281/zenodo.19972284"
+version_doi = "10.5281/zenodo.19972285"
+repo_url = "https://github.com/gianlucamazza/emotional-memory"

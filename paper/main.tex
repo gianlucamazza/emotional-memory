@@ -53,6 +53,14 @@
 
 \date{April 2026}
 
+% ── Release metadata (managed by scripts/sync_release_metadata.py) ─────────────
+% Edit release.toml, then run: make sync-metadata
+\newcommand{\zenodoconceptdoi}{10.5281/zenodo.19972284}% [ssot:concept_doi]
+\newcommand{\zenodoversiondoi}{10.5281/zenodo.19972285}% [ssot:version_doi]
+\newcommand{\repourl}{https://github.com/gianlucamazza/emotional-memory}% [ssot:repo_url]
+\newcommand{\zenodoconcepturl}{https://doi.org/\zenodoconceptdoi}
+\newcommand{\zenodoversionurl}{https://doi.org/\zenodoversiondoi}
+
 % ──────────────────────────────────────────────────────────────────────────────
 \begin{document}
 \maketitle
@@ -478,10 +486,14 @@ Performance on other languages is untested.
 The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
 $N=200$) is conditional on a dense sentence embedder; under a non-semantic
 (hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
-significance. A multilingual Italian slice (G6, $N=80$) shows a significant
-hit@k advantage under both embedder families tested: $\Delta=+0.15$ ($p=0.0005$)
-with English-centric SBERT bge-small-en-v1.5, and $\Delta=+0.16$ ($p=0.001$)
-with multilingual-e5-small (intfloat, 117M parameters, 100+ languages).
+significance. A multilingual Italian slice (G6, $N=80$)\footnote{Addendum~H companion writeup:
+\href{\repourl/blob/main/docs/research/12\_multilingual\_followup.md}{\texttt{12\_multilingual\_followup.md}};
+pre-registration:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_h.md}{\texttt{preregistration\_addendum\_h.md}}.}
+shows a significant hit@k advantage under both embedder families tested:
+$\Delta=+0.15$ ($p=0.0005$) with English-centric SBERT bge-small-en-v1.5,
+and $\Delta=+0.16$ ($p=0.001$) with multilingual-e5-small (intfloat,
+117M parameters, 100+ languages).
 Switching to the multilingual embedder raises naive\_cosine top1 from 0.15 to
 0.21 (+40\%), confirming that the absolute-accuracy gap vs the English v2
 baseline ($\text{top1}=0.53$) was driven primarily by the English-centric
@@ -504,7 +516,7 @@ make bench-comparative      # recall@k benchmark
 \end{lstlisting}
 
 The repository includes a \texttt{CITATION.cff} file.
-A persistent DOI is available at \url{https://doi.org/10.5281/zenodo.19972285}.
+A persistent DOI is available at \href{\zenodoconcepturl}{\texttt{\zenodoconceptdoi}}.
 \texttt{make reproduce-paper} regenerates Tables~\ref{tab:perf} and~\ref{tab:comparative}
 from live benchmark runs; Table~\ref{tab:fidelity} is a curated overview
 (auto-generated module-level results at \texttt{paper/tables/table1\_fidelity.tex}).

@@ -12,7 +12,7 @@ Patch releases fixing regressions and improving developer experience. No new API
 
 - [x] Fix SQLiteStore cross-thread safety (`threading.RLock`)
 - [x] `SentenceTransformerEmbedder` — first-class embedder, `[sentence-transformers]` extra
-- [x] README quickstart: `pip install emotional-memory[sentence-transformers]` works out-of-the-box
+- [x] README quickstart with `pip install emotional-memory[sentence-transformers]`
 - [x] `CITATION.cff` — Zenodo-ready, GitHub "Cite this repository" button
 - [x] Fidelity benchmark table links to source test files
 - [x] `docs/research/08_limitations.md` — documented known limits
@@ -22,83 +22,108 @@ Patch releases fixing regressions and improving developer experience. No new API
 
 ---
 
-## v0.6.0 — Discovery & Integration (current, target: 2026 Q2)
+## v0.6.0 — Discovery & Integration (shipped ✓)
 
-Goal: make the library discoverable and integrable into existing LLM workflows.
-
-### LangChain adapter ✓
-- [x] `EmotionalMemoryChatHistory` in `src/emotional_memory/integrations/langchain.py`
-- [x] Implements `BaseChatMessageHistory` — drop-in replacement in LangChain chains
-- [x] `[langchain]` optional extra + CI job
-
-### Comparative benchmark ✓
-- [x] Dataset: 258 affect-labeled examples in `benchmarks/datasets/affect_reference_v1.jsonl`
-- [x] Harness in `benchmarks/comparative/` — AFT vs `naive_cosine` vs `recency` baselines
-- [x] `make bench-comparative` and `make reproduce-paper` targets
-- [x] Additional baselines: Mem0 (recall@5=0.95) and LangMem (recall@5=0.90) adapters; Letta availability-guarded (cloud-only, `not_evaluated` without `LETTA_API_KEY`)
-
-### arXiv technical report ✓
-- [x] 10-page paper (`paper/main.tex`) — AFT, fidelity validation, comparative benchmark
-- [x] Zenodo DOI `10.5281/zenodo.19640250`, PyPI `emotional-memory==0.6.0`
-- [x] `paper/arxiv-submission.tar.gz` target (`make paper-arxiv`) + `paper/SUBMISSION.md` checklist
-- [ ] arXiv submission (cs.AI / cs.LG) — bundle ready, pending endorsement choice
-
-### Docs site
-- [x] mkdocs-material source in `docs/`
-- [x] Tutorials: async (`docs/tutorials/async.md`), LangChain (`docs/tutorials/langchain.md`), persistence (`docs/tutorials/persistence.md`)
-- [ ] Deploy to GitHub Pages (`gianlucamazza.github.io/emotional-memory`) — blocked: GitHub billing
-
-### Classifier bump ✓
-- [x] `Development Status :: 4 - Beta` in `pyproject.toml`
-
-### HuggingFace Spaces demo
-- [x] `demo/app.py` Gradio app ready
-- [x] `demo/README.md` HF Space metadata complete (`python_version: "3.11"` pinned)
-- [x] Deploy to `homen3/emotional-memory-demo` — live at https://huggingface.co/spaces/homen3/emotional-memory-demo
+- [x] LangChain adapter (`EmotionalMemoryChatHistory`, `[langchain]` extra + CI job)
+- [x] Comparative benchmark vs `naive_cosine`, `recency`, Mem0, LangMem (Letta cloud-only, availability-guarded)
+- [x] Dataset `affect_reference_v1` (258 examples)
+- [x] arXiv-style paper updated (Zenodo DOI `10.5281/zenodo.19640250`, PyPI `0.6.0`)
+- [x] mkdocs-material site source (`docs/`) with async, LangChain, persistence tutorials
+- [x] HuggingFace Space `homen3/emotional-memory-demo` live
+- [x] `Development Status :: 4 - Beta`
 
 ---
 
-## v0.7.0 — Production Readiness (target: 2026 Q3)
+## v0.7.0 — Scientific Evidence Push (shipped ✓ 2026-05-02)
 
-Goal: make the library production-grade for teams running agents at scale.
+The originally-scoped "production readiness" items (Qdrant, Chroma, OpenTelemetry, BYO appraisal) **did not ship in v0.7.0** — they have been moved to v0.9.0. v0.7.0 instead consolidated empirical evidence and architecture attribution.
+
+### Pre-registered evidence programme
+- [x] **Gate 1 (external benchmark, LoCoMo)** — runner, hypothesis tests, full N=1986 QA results. **Honest negative**: H1/H2 FAIL (`benchmarks/locomo/`). Claim `locomo_external_qa_negative` added to claim matrix.
+- [x] **Gate 3 (architecture attribution)** — Hd1 PASS (Addendum D, seed=1): `aft_noAppraisal` Δ=+0.23 vs `naive_cosine`. Closes the appraisal-confound objection.
+- [x] **G4/G5 cross-embedder at N=200** — `realistic_recall_v2` (50 scenarios × 4 challenge types). SBERT Δ=+0.205 (d=0.49), e5-small-v2 Δ=+0.155 (d=0.31). CLOSED.
+- [x] **G6 multilingual (Italian)** — `realistic_recall_v2_it.json` on SBERT and `multilingual-e5-small`. hit@k significant on both (p=0.0005 / p=0.001). EN-centric SBERT confirmed as IT accuracy bottleneck.
+- [x] **G9 ablations** — `no_reconsolidation` (He2: null), `dual_path` (He1: destructive — keyword-driven), `aft_keyword_synchronous` (Hf1: deferral mitigates synchronous override).
+- [x] **`EmotionalMemoryConfig.enable_reconsolidation: bool = True`** — new public flag (sync + async engines).
+- [x] **Pre-registration corpus** — addenda v2 (B), v3 (D/E), F (Hf1), H (G6 cross-embedder).
+- [x] **`docs/research/audit_2026-04.md`** — running tracker; gates table, gap inventory, claim coherence.
+
+### Paper / artefacts
+- [x] arXiv submission bundle ready (`paper/arxiv-submission.tar.gz`, cs.LG)
+- [x] Zenodo DOI `10.5281/zenodo.19972285`
+- [x] PyPI `emotional-memory==0.7.0`
+- [x] Six project-scoped Claude Code skills (`.claude/skills/`)
+
+### Production-readiness items NOT in v0.7.0
+Moved to **v0.9.0** below. The dot-release window remains open for paper polish only.
+
+---
+
+## v0.7.x — Paper polish (open)
+
+Dot release(s) for the paper bundle, no API changes:
+
+- [x] Footnote linking Addendum H from §Limitations of `paper/main.tex`
+- [ ] arXiv submission executed (cs.LG, no endorsement) — bundle is shipped, upload pending
+- [ ] Post-acceptance: update `CITATION.cff` with arXiv URL, refresh README badges
+
+---
+
+## v0.8.0 — Closing the open gates (target: 2026 Q3)
+
+Goal: lift the public-claim ceiling by closing Gate 2 and adding the missing intra-theory dimension.
+
+### Gate 2 — Human evaluation (kit shipped, execution pending)
+- [ ] Distribute the existing `benchmarks/human_eval/` packets to 20–30 raters (Prolific or MTurk)
+- [ ] Collect `ratings.jsonl`, run pre-registered analysis pipeline (`benchmarks/human_eval/pipeline.py`)
+- [ ] Update `claim_validation_matrix.json` and audit doc
+
+### S3 ablation @ N=200 + Hd2 generalisation
+- [ ] Re-point `benchmarks/ablation/runner.py` at `realistic_recall_v2` (and `v2_it` for Hd2) — currently bound to v1
+- [ ] Execute confirmatory ablation at full power
+- [ ] Update Addendum E / preregistration_addendum_v3 closure status
+
+### G7 — PAD dominance as first-class CoreAffect
+- [ ] Promote `dominance` from `MoodField`-only to `CoreAffect` 3D field
+- [ ] Migration path for serialised `AffectiveState` (back-compat read for v0.7-era snapshots)
+- [ ] Re-enable `benchmarks/fidelity/test_dominance_retrieval_gap.py` (currently `xfail strict`)
+- [ ] Design note `docs/research/11_dominance_design.md` already shipped — implements that design
+
+### Multilingual breadth (beyond Italian)
+- [ ] One additional non-English slice (Spanish or French) using the existing `make_multilingual()` factory
+- [ ] Extends G6 cross-embedder claim to ≥3 language families
+
+---
+
+## v0.9.0 — Production Readiness (target: 2026 Q4)
+
+Goal: make the library production-grade for teams running agents at scale. (These are the items originally scoped for v0.7.0; deferred while the evidence programme took priority.)
 
 ### Enterprise vector stores
-- `QdrantStore` — adapter for Qdrant (distributed, production-proven)
-- `ChromaStore` — adapter for Chroma (local and managed)
-- `[qdrant]` and `[chroma]` optional extras
+- [ ] `QdrantStore` adapter + `[qdrant]` optional extra
+- [ ] `ChromaStore` adapter + `[chroma]` optional extra
+- [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
 
 ### Observability
-- Optional OpenTelemetry spans on `encode`, `retrieve`, `elaborate`
-- Structured logging on all pipeline events (already uses `logging.DEBUG`)
-- `[otel]` optional extra
+- [ ] Optional OpenTelemetry spans on `encode`, `retrieve`, `elaborate`, `observe`
+- [ ] `[otel]` optional extra; spans no-op when extra is absent
+- [ ] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
 
 ### BYO appraisal schema
-- Parameterize the Scherer CPM prompt so custom appraisal taxonomies (OCC, GRID) can be injected without forking
-- `AppraisalSchema` config class
+- [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking
+- [ ] Schema-validated `AppraisalVector` (Pydantic) for non-Scherer outputs
+
+### LoCoMo per-task tuning (Pareto study)
+- [ ] Pre-register a per-task-type weight search (Gate 1 follow-up to the negative result) — explicit confirmatory design before any tuning runs
+- [ ] Sweep harness extending `benchmarks/locomo/runner.py`
+- [ ] Pareto-frontier analysis: AFT-favourable categories vs naive-favourable categories
 
 ---
 
-## v0.8.0 — Scientific Validation (target: 2026 Q4)
+## v1.0.0 — Stability commitment (target: when above is closed)
 
-Goal: close the gap between intra-theory validation (current) and ecological validation.
-
-### Human evaluation
-- 5-10 conversational scenarios, 20-30 annotators (Prolific/MTurk)
-- Metric: "Is this retrieved memory relevant?" (binary + free text)
-- Results published alongside the arXiv paper or as a follow-up
-
-### Distributed affective state
-- `AffectiveStateBackend` protocol for shared state across agent instances
-- Reference implementation: `RedisAffectiveStateBackend`
-- Configurable conflict resolution (last-write-wins vs. merge)
-
-### PAD dominance as primary dimension
-- Promote `dominance` from optional appraisal output to first-class `CoreAffect` field
-- Migration path for serialized states
-
-### Multilingual validation
-- Fidelity benchmark coverage for at least one non-English language (Spanish or French)
-- Document language-specific limitations
+- [ ] Public-API freeze; semver-stability commitment for `EmotionalMemory`, `AsyncEmotionalMemory`, all `interfaces.py` protocols, the `EmotionalMemoryConfig` tree, and the persistence formats (`AffectiveState.snapshot`, `Memory.model_dump`).
+- [ ] Migration guide for v0.x → v1.0.
 
 ---
 

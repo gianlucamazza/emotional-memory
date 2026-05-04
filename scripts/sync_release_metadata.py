@@ -1,4 +1,15 @@
-"""Sync public Zenodo metadata files from a version DOI and concept DOI."""
+"""Sync release-facing metadata from release.toml to all dependent files.
+
+Preferred usage (offline, reads release.toml as SSOT):
+    uv run python scripts/sync_release_metadata.py --from-toml [--dry-run]
+
+Legacy usage (resolves concept DOI from Zenodo API):
+    uv run python scripts/sync_release_metadata.py [--version-doi DOI] [--dry-run]
+
+Managed files:
+    README.md, CITATION.cff, demo/README.md, demo/requirements.txt,
+    demo/app.py, paper/main.tex, paper/SUBMISSION.md
+"""
 
 from __future__ import annotations
 
@@ -6,6 +17,7 @@ import argparse
 import json
 import os
 import re
+import tomllib
 import urllib.request
 from pathlib import Path
 
@@ -21,6 +33,12 @@ def _project_version() -> str:
     if match is None:
         raise SystemExit("Could not determine project version from pyproject.toml")
     return match.group(1)
+
+
+def _load_from_toml() -> tuple[str, str, str]:
+    """Return (concept_doi, version_doi, repo_url) from release.toml."""
+    data = tomllib.loads((ROOT / "release.toml").read_text(encoding="utf-8"))["release"]
+    return data["concept_doi"], data["version_doi"], data["repo_url"]
 
 
 def _load_version_doi(explicit: str | None) -> str:
@@ -59,7 +77,12 @@ def _replace(pattern: str, repl: str, text: str, description: str) -> str:
     return updated
 
 
-def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> list[Path]:
+def sync_release_metadata(
+    version_doi: str,
+    concept_doi: str,
+    dry_run: bool,
+    repo_url: str = "https://github.com/gianlucamazza/emotional-memory",
+) -> list[Path]:
     version = _project_version()
     changes: list[tuple[Path, str]] = []
     paper_doi_label = (
@@ -82,9 +105,15 @@ def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> 
     citation = ROOT / "CITATION.cff"
     citation_text = citation.read_text(encoding="utf-8")
     updated_citation = _replace(
+        r'^version:\s*"[^"]+"$',
+        f'version: "{version}"',
+        citation_text,
+        "CITATION version",
+    )
+    updated_citation = _replace(
         r'^doi:\s*"[^"]+"$',
         f'doi: "{version_doi}"',
-        citation_text,
+        updated_citation,
         "CITATION DOI",
     )
     if updated_citation != citation_text:
@@ -110,10 +139,16 @@ def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> 
     demo_app = ROOT / "demo" / "app.py"
     demo_app_text = demo_app.read_text(encoding="utf-8")
     updated_demo_app = _replace(
-        r"\[Zenodo DOI\]\(https://doi\.org/[^\)]+\)",
-        f"[Zenodo DOI](https://doi.org/{concept_doi})",
+        r'(_ZENODO_CONCEPT_DOI\s*=\s*")[^"]*("  # \[ssot:concept_doi\])',
+        rf"\g<1>{concept_doi}\g<2>",
         demo_app_text,
-        "demo app concept DOI",
+        "demo app _ZENODO_CONCEPT_DOI constant",
+    )
+    updated_demo_app = _replace(
+        r'(_REPO_URL\s*=\s*")[^"]*("  # \[ssot:repo_url\])',
+        rf"\g<1>{repo_url}\g<2>",
+        updated_demo_app,
+        "demo app _REPO_URL constant",
     )
     if updated_demo_app != demo_app_text:
         changes.append((demo_app, updated_demo_app))
@@ -161,10 +196,22 @@ def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> 
     paper_main = ROOT / "paper" / "main.tex"
     paper_main_text = paper_main.read_text(encoding="utf-8")
     updated_paper_main = _replace(
-        r"\\url\{https://doi\.org/10\.5281/zenodo\.[0-9]+\}",
-        f"\\\\url{{https://doi.org/{concept_doi}}}",
+        r"(\\newcommand\{\\zenodoconceptdoi\}\{)[^}]*(}% \[ssot:concept_doi\])",
+        rf"\g<1>{concept_doi}\g<2>",
         paper_main_text,
-        "paper main concept DOI",
+        r"paper main \zenodoconceptdoi newcommand",
+    )
+    updated_paper_main = _replace(
+        r"(\\newcommand\{\\zenodoversiondoi\}\{)[^}]*(}% \[ssot:version_doi\])",
+        rf"\g<1>{version_doi}\g<2>",
+        updated_paper_main,
+        r"paper main \zenodoversiondoi newcommand",
+    )
+    updated_paper_main = _replace(
+        r"(\\newcommand\{\\repourl\}\{)[^}]*(}% \[ssot:repo_url\])",
+        rf"\g<1>{repo_url}\g<2>",
+        updated_paper_main,
+        r"paper main \repourl newcommand",
     )
     if updated_paper_main != paper_main_text:
         changes.append((paper_main, updated_paper_main))
@@ -181,12 +228,17 @@ def sync_release_metadata(version_doi: str, concept_doi: str, dry_run: bool) -> 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--from-toml",
+        action="store_true",
+        help="Read concept_doi, version_doi, repo_url from release.toml (offline; recommended)",
+    )
+    parser.add_argument(
         "--version-doi",
-        help="Version DOI to sync; defaults to .zenodo_doi",
+        help="Version DOI to sync; defaults to .zenodo_doi (ignored when --from-toml)",
     )
     parser.add_argument(
         "--concept-doi",
-        help="Concept DOI to sync; defaults to resolving the Zenodo record for the version DOI",
+        help="Concept DOI; defaults to resolving from Zenodo API (ignored when --from-toml)",
     )
     parser.add_argument(
         "--base-url",
@@ -200,9 +252,16 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    version_doi = _load_version_doi(args.version_doi)
-    concept_doi = args.concept_doi or _fetch_concept_doi(args.base_url, version_doi)
-    changed = sync_release_metadata(version_doi, concept_doi, dry_run=args.dry_run)
+    if args.from_toml:
+        concept_doi, version_doi, repo_url = _load_from_toml()
+    else:
+        version_doi = _load_version_doi(args.version_doi)
+        concept_doi = args.concept_doi or _fetch_concept_doi(args.base_url, version_doi)
+        repo_url = "https://github.com/gianlucamazza/emotional-memory"
+
+    changed = sync_release_metadata(
+        version_doi, concept_doi, dry_run=args.dry_run, repo_url=repo_url
+    )
 
     if changed:
         verb = "Would update" if args.dry_run else "Updated"

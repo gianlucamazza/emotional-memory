@@ -65,6 +65,12 @@ cov:
 typecheck:
 	uv run mypy src/emotional_memory/
 
+sync-metadata:
+	uv run python scripts/sync_release_metadata.py --from-toml
+
+sync-metadata-dry:
+	uv run python scripts/sync_release_metadata.py --from-toml --dry-run
+
 meta-check:
 	uv run python scripts/check_release_metadata.py
 

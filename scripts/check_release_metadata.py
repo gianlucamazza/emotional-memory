@@ -41,9 +41,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--require-local-doi",
         action="store_true",
-        help="Also require local .zenodo_doi to match the version DOI in CITATION.cff",
+        help="Also require local .zenodo_doi to match the version DOI in release.toml",
     )
     args = parser.parse_args(argv)
+
+    # ── SSOT: release.toml ────────────────────────────────────────────────────
+    release = tomllib.loads((ROOT / "release.toml").read_text(encoding="utf-8"))["release"]
+    concept_doi: str = release["concept_doi"]
+    version_doi: str = release["version_doi"]
+    repo_url: str = release["repo_url"]
+    concept_url = f"https://doi.org/{concept_doi}"
 
     version = _pyproject_version()
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
@@ -55,72 +62,77 @@ def main(argv: list[str] | None = None) -> int:
     paper_submission = (ROOT / "paper" / "SUBMISSION.md").read_text(encoding="utf-8")
 
     errors: list[str] = []
-    version_doi = _extract(r'^doi:\s*"([^"]+)"$', citation)
-    concept_doi = _extract(r"\[!\[DOI\].*?\]\(https://doi\.org/([^)]+)\)", readme)
 
+    # ── CITATION.cff ──────────────────────────────────────────────────────────
     if f'version: "{version}"' not in citation:
         errors.append("CITATION.cff version does not match pyproject.toml")
+    if f'doi: "{version_doi}"' not in citation:
+        errors.append("CITATION.cff doi does not match release.toml version_doi")
 
+    # ── demo/requirements.txt ─────────────────────────────────────────────────
     demo_requirements = _effective_lines(ROOT / "demo" / "requirements.txt")
     expected_pin = f"emotional-memory=={version}"
     if not demo_requirements or demo_requirements[0] != expected_pin:
         errors.append("demo/requirements.txt does not pin the current package version")
 
+    # ── CHANGELOG.md ──────────────────────────────────────────────────────────
     if "## [Unreleased]" not in changelog:
         errors.append("CHANGELOG.md is missing the Unreleased heading")
-
     if not _check_current_version_heading(changelog, version):
         errors.append("CHANGELOG.md is missing the current release heading")
-
-    unreleased_link = f"[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v{version}...HEAD"
+    unreleased_link = f"[Unreleased]: {repo_url}/compare/v{version}...HEAD"
     if unreleased_link not in changelog:
         errors.append(
             "CHANGELOG.md Unreleased compare link is not anchored to the current version"
         )
 
-    if "https://pypi.org/project/emotional-memory/" not in demo_readme:
-        errors.append("demo/README.md is missing the PyPI project link")
-
+    # ── README.md ─────────────────────────────────────────────────────────────
     if "[![DOI](" not in readme:
         errors.append("README.md is missing the Zenodo DOI badge")
+    if concept_doi not in readme:
+        errors.append("README.md Zenodo badge does not match release.toml concept_doi")
 
-    if version_doi is None:
-        errors.append("CITATION.cff is missing the version DOI")
+    # ── demo/README.md ────────────────────────────────────────────────────────
+    if "https://pypi.org/project/emotional-memory/" not in demo_readme:
+        errors.append("demo/README.md is missing the PyPI project link")
+    if concept_url not in demo_readme:
+        errors.append("demo/README.md is not aligned to release.toml concept_doi")
+    if version_doi not in demo_readme:
+        errors.append("demo/README.md is not aligned to release.toml version_doi")
 
-    if concept_doi is None:
-        errors.append("README.md DOI badge does not expose a concept DOI")
+    # ── demo/app.py ───────────────────────────────────────────────────────────
+    if concept_doi not in demo_app:
+        errors.append("demo/app.py _ZENODO_CONCEPT_DOI does not match release.toml concept_doi")
+    if repo_url not in demo_app:
+        errors.append("demo/app.py _REPO_URL does not match release.toml repo_url")
 
-    if version_doi is not None:
-        if version_doi not in demo_readme:
-            errors.append("demo/README.md is not aligned to the CITATION version DOI")
-        if version_doi not in paper_submission:
-            errors.append("paper/SUBMISSION.md is not aligned to the CITATION version DOI")
+    # ── paper/main.tex ────────────────────────────────────────────────────────
+    if concept_doi not in paper_main:
+        errors.append(r"paper/main.tex \zenodoconceptdoi does not match release.toml concept_doi")
+    if version_doi not in paper_main:
+        errors.append(r"paper/main.tex \zenodoversiondoi does not match release.toml version_doi")
+    if repo_url not in paper_main:
+        errors.append(r"paper/main.tex \repourl does not match release.toml repo_url")
 
+    # ── paper/SUBMISSION.md ───────────────────────────────────────────────────
+    if version_doi not in paper_submission:
+        errors.append("paper/SUBMISSION.md is not aligned to release.toml version_doi")
     expected_paper_pin = f"- [ ] PyPI version pinned: `emotional-memory=={version}`"
     if expected_paper_pin not in paper_submission:
         errors.append("paper/SUBMISSION.md PyPI version pin does not match pyproject.toml")
-
     expected_paper_comments = f"Software: emotional-memory v{version}"
     if expected_paper_comments not in paper_submission:
         errors.append("paper/SUBMISSION.md Comments row version does not match pyproject.toml")
 
-    if concept_doi is not None:
-        concept_url = f"https://doi.org/{concept_doi}"
-        if concept_url not in demo_readme:
-            errors.append("demo/README.md is not aligned to the README concept DOI")
-        if concept_url not in demo_app:
-            errors.append("demo/app.py is not aligned to the README concept DOI")
-        if concept_url not in paper_main:
-            errors.append("paper/main.tex is not aligned to the README concept DOI")
-
+    # ── optional: .zenodo_doi ─────────────────────────────────────────────────
     if args.require_local_doi:
         local_doi = ROOT / ".zenodo_doi"
         if not local_doi.exists():
             errors.append(".zenodo_doi is required but missing")
         else:
             local_version_doi = local_doi.read_text(encoding="utf-8").strip()
-            if version_doi is not None and local_version_doi != version_doi:
-                errors.append("CITATION.cff does not match the local .zenodo_doi version DOI")
+            if local_version_doi != version_doi:
+                errors.append(".zenodo_doi does not match release.toml version_doi")
 
     if errors:
         print("release metadata check failed:", file=sys.stderr)

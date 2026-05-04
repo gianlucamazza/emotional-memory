@@ -373,6 +373,11 @@ def _initial_em_state() -> EmotionalMemory:
 # Gradio UI
 # ---------------------------------------------------------------------------
 
+# Release metadata — managed by scripts/sync_release_metadata.py
+# Edit release.toml, then run: make sync-metadata
+_ZENODO_CONCEPT_DOI = "10.5281/zenodo.19972284"  # [ssot:concept_doi]
+_REPO_URL = "https://github.com/gianlucamazza/emotional-memory"  # [ssot:repo_url]
+
 _DESCRIPTION = f"""
 # 🧠 Emotional Memory — Affective Field Theory Demo
 
@@ -382,10 +387,10 @@ in real time. Type **"recall project success"** for semantic + mood-aware retrie
 or plain **"recall"** for a general mood-congruent pass.
 
 Built with
-[`emotional-memory`](https://github.com/gianlucamazza/emotional-memory) v{__version__} · \
+[`emotional-memory`]({_REPO_URL}) v{__version__} · \
 [PyPI](https://pypi.org/project/emotional-memory/) · \
-[GitHub](https://github.com/gianlucamazza/emotional-memory) · \
-[Zenodo DOI](https://doi.org/10.5281/zenodo.19972284)
+[GitHub]({_REPO_URL}) · \
+[Zenodo DOI](https://doi.org/{_ZENODO_CONCEPT_DOI})
 """
 
 _EXAMPLES = [
