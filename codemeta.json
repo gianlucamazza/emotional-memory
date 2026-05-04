@@ -1,0 +1,62 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "emotional-memory: Affective Field Theory for LLM Memory",
+  "description": "A Python library implementing Affective Field Theory (AFT) — a 5-layer emotional model for LLM memory that integrates valence-arousal affect (Russell 1980), affective momentum (Spinoza), mood fields (Heidegger), appraisal vectors (Scherer CPM), and resonance links with spreading activation (Collins & Loftus 1975) and Hebbian strengthening (Hebb 1949).",
+  "identifier": "https://doi.org/10.5281/zenodo.19972284",
+  "version": "0.8.0",
+  "dateCreated": "2025-01-01",
+  "datePublished": "2026-05-04",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Python",
+    "version": ">=3.11",
+    "url": "https://www.python.org"
+  },
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Gianluca",
+      "familyName": "Mazza",
+      "email": "info@gianlucamazza.it"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Gianluca",
+      "familyName": "Mazza",
+      "email": "info@gianlucamazza.it"
+    }
+  ],
+  "codeRepository": "https://github.com/gianlucamazza/emotional-memory",
+  "issueTracker": "https://github.com/gianlucamazza/emotional-memory/issues",
+  "downloadUrl": "https://pypi.org/project/emotional-memory/0.8.0/",
+  "installUrl": "https://pypi.org/project/emotional-memory/0.8.0/",
+  "releaseNotes": "https://github.com/gianlucamazza/emotional-memory/blob/main/CHANGELOG.md",
+  "readme": "https://github.com/gianlucamazza/emotional-memory/blob/main/README.md",
+  "softwareVersion": "0.8.0",
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": [
+    "llm",
+    "memory",
+    "emotion",
+    "affective-computing",
+    "artificial-intelligence",
+    "affective-field-theory",
+    "mood-congruent-retrieval",
+    "reconsolidation"
+  ],
+  "operatingSystem": [
+    "Linux",
+    "macOS",
+    "Windows"
+  ],
+  "runtimePlatform": "Python 3.11+",
+  "applicationCategory": "Scientific/Engineering :: Artificial Intelligence",
+  "relatedLink": [
+    "https://gianlucamazza.github.io/emotional-memory",
+    "https://doi.org/10.5281/zenodo.19972284"
+  ]
+}

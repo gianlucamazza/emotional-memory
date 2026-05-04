@@ -187,6 +187,7 @@ def phase3_commit_tag(state: dict[str, object], version: str) -> None:
         "release.toml",
         "CITATION.cff",
         ".zenodo.json",
+        "codemeta.json",
         "paper/main.tex",
         "paper/SUBMISSION.md",
         "demo/README.md",

@@ -7,8 +7,8 @@ Legacy usage (resolves concept DOI from Zenodo API):
     uv run python scripts/sync_release_metadata.py [--version-doi DOI] [--dry-run]
 
 Managed files:
-    README.md, CITATION.cff, .zenodo.json, demo/README.md, demo/requirements.txt,
-    demo/app.py, paper/main.tex, paper/SUBMISSION.md
+    README.md, CITATION.cff, .zenodo.json, codemeta.json, demo/README.md,
+    demo/requirements.txt, demo/app.py, paper/main.tex, paper/SUBMISSION.md
 """
 
 from __future__ import annotations
@@ -238,6 +238,25 @@ def sync_release_metadata(
     )
     if updated_paper_main != paper_main_text:
         changes.append((paper_main, updated_paper_main))
+
+    # codemeta.json: sync version, doi, datePublished, identifier
+    codemeta_path = ROOT / "codemeta.json"
+    if codemeta_path.exists():
+        codemeta_text = codemeta_path.read_text(encoding="utf-8")
+        codemeta_data = json.loads(codemeta_text)
+        codemeta_data["version"] = version
+        codemeta_data["softwareVersion"] = version
+        codemeta_data["identifier"] = f"https://doi.org/{concept_doi}"
+        codemeta_data["datePublished"] = _citation_date(
+            next((t for p, t in changes if p == ROOT / "CITATION.cff"), None)
+            or (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+        )
+        pypi_url = f"https://pypi.org/project/emotional-memory/{version}/"
+        codemeta_data["downloadUrl"] = pypi_url
+        codemeta_data["installUrl"] = pypi_url
+        updated_codemeta = json.dumps(codemeta_data, indent=2, ensure_ascii=False) + "\n"
+        if updated_codemeta != codemeta_text:
+            changes.append((codemeta_path, updated_codemeta))
 
     # arxiv_id → CITATION.cff identifiers + .zenodo.json related_identifiers
     if arxiv_id:

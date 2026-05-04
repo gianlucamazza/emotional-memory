@@ -140,6 +140,15 @@ def main(argv: list[str] | None = None) -> int:
     if citation_date and zenodo_json.get("publication_date") != citation_date:
         errors.append(".zenodo.json publication_date does not match CITATION.cff date-released")
 
+    # ── codemeta.json ─────────────────────────────────────────────────────────
+    codemeta_path = ROOT / "codemeta.json"
+    if codemeta_path.exists():
+        codemeta = json.loads(codemeta_path.read_text(encoding="utf-8"))
+        if codemeta.get("version") != version:
+            errors.append("codemeta.json version does not match pyproject.toml")
+        if concept_doi not in codemeta.get("identifier", ""):
+            errors.append("codemeta.json identifier does not contain release.toml concept_doi")
+
     # ── optional: .zenodo_doi ─────────────────────────────────────────────────
     if args.require_local_doi:
         local_doi = ROOT / ".zenodo_doi"
