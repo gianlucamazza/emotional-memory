@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 import tomllib
@@ -123,6 +124,14 @@ def main(argv: list[str] | None = None) -> int:
     expected_paper_comments = f"Software: emotional-memory v{version}"
     if expected_paper_comments not in paper_submission:
         errors.append("paper/SUBMISSION.md Comments row version does not match pyproject.toml")
+
+    # ── .zenodo.json ──────────────────────────────────────────────────────────
+    zenodo_json = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    if zenodo_json.get("version") != version:
+        errors.append(".zenodo.json version does not match pyproject.toml")
+    citation_date = _extract(r'^date-released:\s*"([^"]+)"', citation)
+    if citation_date and zenodo_json.get("publication_date") != citation_date:
+        errors.append(".zenodo.json publication_date does not match CITATION.cff date-released")
 
     # ── optional: .zenodo_doi ─────────────────────────────────────────────────
     if args.require_local_doi:

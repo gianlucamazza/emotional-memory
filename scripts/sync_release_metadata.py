@@ -7,7 +7,7 @@ Legacy usage (resolves concept DOI from Zenodo API):
     uv run python scripts/sync_release_metadata.py [--version-doi DOI] [--dry-run]
 
 Managed files:
-    README.md, CITATION.cff, demo/README.md, demo/requirements.txt,
+    README.md, CITATION.cff, .zenodo.json, demo/README.md, demo/requirements.txt,
     demo/app.py, paper/main.tex, paper/SUBMISSION.md
 """
 
@@ -70,6 +70,13 @@ def _fetch_concept_doi(base_url: str, version_doi: str) -> str:
     return concept_doi
 
 
+def _citation_date(citation_text: str) -> str:
+    match = re.search(r'^date-released:\s*"([^"]+)"', citation_text, re.MULTILINE)
+    if match is None:
+        raise SystemExit("Could not extract date-released from CITATION.cff")
+    return match.group(1)
+
+
 def _replace(pattern: str, repl: str, text: str, description: str) -> str:
     updated, count = re.subn(pattern, repl, text, count=1, flags=re.MULTILINE)
     if count != 1:
@@ -118,6 +125,15 @@ def sync_release_metadata(
     )
     if updated_citation != citation_text:
         changes.append((citation, updated_citation))
+
+    zenodo_json_path = ROOT / ".zenodo.json"
+    zenodo_json_text = zenodo_json_path.read_text(encoding="utf-8")
+    zenodo_data = json.loads(zenodo_json_text)
+    zenodo_data["version"] = version
+    zenodo_data["publication_date"] = _citation_date(updated_citation)
+    updated_zenodo_json = json.dumps(zenodo_data, indent=2, ensure_ascii=False) + "\n"
+    if updated_zenodo_json != zenodo_json_text:
+        changes.append((zenodo_json_path, updated_zenodo_json))
 
     demo_readme = ROOT / "demo" / "README.md"
     demo_text = demo_readme.read_text(encoding="utf-8")
