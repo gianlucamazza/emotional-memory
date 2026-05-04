@@ -7,6 +7,7 @@ import json
 import re
 import sys
 import tomllib
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,6 +44,19 @@ def main(argv: list[str] | None = None) -> int:
         "--require-local-doi",
         action="store_true",
         help="Also require local .zenodo_doi to match the version DOI in release.toml",
+    )
+    parser.add_argument(
+        "--check-zenodo-remote",
+        action="store_true",
+        help=(
+            "Query Zenodo REST API to verify that the version DOI's conceptdoi "
+            "matches release.toml concept_doi (requires network access)"
+        ),
+    )
+    parser.add_argument(
+        "--zenodo-base",
+        default="https://zenodo.org",
+        help="Zenodo base URL (use https://sandbox.zenodo.org for sandbox)",
     )
     args = parser.parse_args(argv)
 
@@ -148,6 +162,25 @@ def main(argv: list[str] | None = None) -> int:
             errors.append("codemeta.json version does not match pyproject.toml")
         if concept_doi not in codemeta.get("identifier", ""):
             errors.append("codemeta.json identifier does not contain release.toml concept_doi")
+
+    # ── optional: Zenodo remote concept-DOI alignment ────────────────────────
+    if args.check_zenodo_remote:
+        record_id = version_doi.rsplit(".", 1)[-1]
+        api_url = f"{args.zenodo_base.rstrip('/')}/api/records/{record_id}"
+        try:
+            with urllib.request.urlopen(api_url, timeout=20) as resp:  # noqa: S310
+                payload = json.load(resp)
+            remote_concept = str(payload.get("conceptdoi", "")).strip()
+            if not remote_concept:
+                errors.append(f"Zenodo record {record_id} does not expose a conceptdoi field")
+            elif remote_concept != concept_doi:
+                errors.append(
+                    f"Zenodo concept DOI mismatch: release.toml has {concept_doi!r} "
+                    f"but Zenodo record {record_id} reports {remote_concept!r} — "
+                    "run: make sync-metadata after updating release.toml concept_doi"
+                )
+        except Exception as exc:
+            errors.append(f"Zenodo remote check failed ({api_url}): {exc}")
 
     # ── optional: .zenodo_doi ─────────────────────────────────────────────────
     if args.require_local_doi:

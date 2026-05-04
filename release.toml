@@ -8,7 +8,7 @@
 # arxiv_id:   arXiv identifier, e.g. "2501.12345"; leave empty until submission accepted
 
 [release]
-concept_doi = "10.5281/zenodo.19972284"
+concept_doi = "10.5281/zenodo.19972258"
 version_doi = "10.5281/zenodo.20023601"
 repo_url = "https://github.com/gianlucamazza/emotional-memory"
 arxiv_id = ""

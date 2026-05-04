@@ -375,7 +375,7 @@ def _initial_em_state() -> EmotionalMemory:
 
 # Release metadata — managed by scripts/sync_release_metadata.py
 # Edit release.toml, then run: make sync-metadata
-_ZENODO_CONCEPT_DOI = "10.5281/zenodo.19972284"  # [ssot:concept_doi]
+_ZENODO_CONCEPT_DOI = "10.5281/zenodo.19972258"  # [ssot:concept_doi]
 _REPO_URL = "https://github.com/gianlucamazza/emotional-memory"  # [ssot:repo_url]
 
 _DESCRIPTION = f"""

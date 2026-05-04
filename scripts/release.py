@@ -33,6 +33,7 @@ import os
 import re
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,6 +136,26 @@ def phase1_zenodo_reserve(state: dict[str, object], base_url: str) -> None:
         print(f"{FAIL} No reserved_doi found in state file", file=sys.stderr)
         sys.exit(1)
     print(f"{OK} Reserved DOI: {reserved_doi}")
+
+    # Guard: verify Zenodo-reported concept DOI matches release.toml.
+    # A mismatch means the new draft landed in a different umbrella record —
+    # this happened when a GitHub webhook created a parallel concept DOI.
+    release_toml = tomllib.loads((ROOT / "release.toml").read_text(encoding="utf-8"))
+    expected_concept = str(release_toml["release"]["concept_doi"])
+    zenodo_concept = str(state.get("concept_doi", ""))
+    if zenodo_concept and zenodo_concept != expected_concept:
+        print(
+            f"{FAIL} Concept DOI mismatch detected:\n"
+            f"  release.toml expects: {expected_concept}\n"
+            f"  Zenodo draft reports: {zenodo_concept}\n"
+            "  The new draft is under a different Zenodo umbrella.\n"
+            "  Fix: update concept_doi in release.toml to match the Zenodo value,\n"
+            "  then run 'make sync-metadata' before retrying.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if zenodo_concept:
+        print(f"{OK} Concept DOI verified: {zenodo_concept}")
 
 
 def phase2_doi_sync(state: dict[str, object], version: str) -> None:
