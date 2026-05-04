@@ -60,11 +60,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **Orphan benchmark artifacts pruned** (9 files):
-  `benchmarks/comparative/results.{csv,sbert.csv}`,
-  `benchmarks/locomo/results.{dryrun.json,dryrun.md,checkpoint.jsonl}`,
+- **Orphan benchmark artifacts pruned** (5 files):
+  `benchmarks/comparative/results.csv` (v1 hash embedder, superseded by `results.sbert.csv`),
   `benchmarks/ablation/results.{json,md,protocol.json}` (v1 hash-only, superseded by SBERT runs),
   `benchmarks/appraisal_confound/results.json` (superseded by `results.confirmatory.json`).
+  Note: `benchmarks/comparative/results.sbert.csv` is the paper-canonical SBERT comparative
+  result and is RETAINED. (The locomo dryrun/checkpoint files were untracked ephemeral
+  artefacts, never committed.)
 
 ## [0.8.2] - 2026-05-04
 
