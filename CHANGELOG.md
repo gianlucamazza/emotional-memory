@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-05-04
+
+Paper-polish release. No API or behavioural changes; library code is identical
+to v0.7.0. Bumps version to provide a canonical Zenodo archive of the corrected
+paper bundle (§Limitations integrity fixes + complete pre-registered ablation
+disclosure).
+
 ### Added
 
 - `release.toml` — single source of truth for release-facing metadata
@@ -818,7 +825,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.0...v0.6.1
