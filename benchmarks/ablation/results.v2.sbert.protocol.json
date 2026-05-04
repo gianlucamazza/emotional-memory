@@ -1,0 +1,67 @@
+{
+  "benchmark": "ablation_realistic_recall_v2",
+  "base_benchmark": "realistic_recall_v2",
+  "ablations": [
+    {
+      "variant": "full",
+      "flags": {}
+    },
+    {
+      "variant": "no_appraisal",
+      "flags": {
+        "enable_appraisal": false
+      }
+    },
+    {
+      "variant": "no_mood",
+      "flags": {
+        "enable_mood_signal": false
+      }
+    },
+    {
+      "variant": "no_momentum",
+      "flags": {
+        "enable_momentum": false
+      }
+    },
+    {
+      "variant": "no_resonance",
+      "flags": {
+        "enable_resonance": false
+      }
+    },
+    {
+      "variant": "no_reconsolidation",
+      "flags": {
+        "enable_reconsolidation": false
+      }
+    },
+    {
+      "variant": "dual_path",
+      "flags": {
+        "dual_path_encoding": true
+      }
+    },
+    {
+      "variant": "aft_keyword_synchronous",
+      "flags": {}
+    }
+  ],
+  "statistics": {
+    "n_bootstrap": 2000,
+    "confidence": 0.95,
+    "ci_method": "bootstrap_percentile",
+    "seed": 0,
+    "multiple_comparisons_correction": "holm_bonferroni",
+    "effect_size": "cohens_d_paired_hedges_corrected"
+  },
+  "interpretation_notes": [
+    "delta = ablated - full: negative means layer helps.",
+    "no_appraisal is a no-op: no appraisal engine configured in realistic benchmark.",
+    "dual_path uses KeywordAppraisalEngine + elaborate(); He1 FAIL expected (keyword appraisal degrades affect on this dataset, same as G3/Addendum A).",
+    "no_reconsolidation disables APE-gated reconsolidation window; update_prediction (predictive learning) still runs.",
+    "aft_keyword_synchronous: synchronous keyword appraisal (Addendum F baseline); compare vs dual_path for Hf1 \u2014 does deferral mitigate destructive override?",
+    "Holm denominator = 7 (all non-full variants); adding aft_keyword_synchronous slightly increases p_adj for existing variants.",
+    "N=100 queries (v1.4 expansion); directional trends are informative even if not all results survive correction."
+  ]
+}

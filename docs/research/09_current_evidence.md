@@ -108,6 +108,45 @@ The next recommended studies, in order:
 
 ---
 
+## S3 + Hd2 Closure (2026-05-04)
+
+### Study S3 — Layer Ablation @ N=200 (realistic_recall_v2)
+
+Result files: `benchmarks/ablation/results.v2.sbert.json`, `results.v2.e5.json`
+
+| Variant | SBERT top1 | e5 top1 | SBERT Δ vs full | e5 Δ vs full | S3 verdict |
+|---|---|---|---|---|---|
+| full | 0.54 | 0.51 | — | — | baseline |
+| no_mood | 0.52 | 0.50 | -0.02 (NS) | -0.005 (NS) | Ha **FAIL** |
+| no_resonance | 0.56 | 0.59 | +0.02 (NS) | +0.085 (**SIG**) | Hb **FAIL** |
+| no_appraisal | 0.53 | 0.51 | -0.01 (NS) | +0.005 (NS) | Hc **PASS** (invariant) |
+| no_momentum | 0.56 | 0.51 | +0.02 (NS) | 0.00 (NS) | Hd NS (exploratory) |
+| dual_path | 0.34 | 0.24 | -0.20 (SIG) | -0.27 (SIG) | He1 replicated |
+| no_reconsolidation | 0.54 | 0.53 | +0.01 (NS) | +0.03 (NS) | He2 null replicated |
+| aft_keyword_synchronous | 0.09 | 0.06 | -0.45 (SIG) | -0.45 (SIG) | Hf1 replicated |
+
+**Key finding:** Per-layer ablations (Ha, Hb) are NOT significant at power.
+The resonance layer shows an unexpected *positive* effect with e5 (Hb FAIL,
+opposite direction). The AFT architecture advantage is a system-level emergent
+property; no single layer is isolatably responsible.
+
+### Hd2 — Addendum D Generalization (realistic_recall_v2)
+
+Result files: `benchmarks/appraisal_confound/results.hd2.sbert.json`, `results.hd2_it.me5.json`
+
+| Study | Dataset/Embedder | Verdict | Δ (top1) | p | Cohen's d |
+|---|---|---|---|---|---|
+| Hd1 (primary) | v1 / SBERT | **PASS** | +0.230 | <0.001 | 0.515 |
+| Hd2 (generalization) | v2 / SBERT | **PASS** | +0.125 | <0.001 | 0.286 |
+| Hd2_IT (cross-language) | v2_it / me5 | **PASS** | +0.163 | 0.012 | 0.289 |
+
+**Key finding:** AFT architecture advantage (aft_noAppraisal > naive_cosine)
+generalizes from v1 to v2 (smaller but above Δ>0.10 threshold) and extends
+to Italian cross-language with multilingual embedder. System-level advantage
+is real; per-layer attribution is not (S3 above).
+
+---
+
 ## Reading guide
 
 - For the theoretical motivation: [Design Principles](05_design_principles.md)

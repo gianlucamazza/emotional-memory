@@ -48,6 +48,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from tqdm import tqdm
+
 from benchmarks.common.statistics import (
     bootstrap_ci,
     ci_payload,
@@ -129,7 +131,11 @@ def _build_embedder(name: str | None) -> Any:
         ) from exc
     if name == "sbert-bge":
         return SentenceTransformerEmbedder.make_bge_small()
-    raise ValueError(f"Unknown embedder: {name!r}. Choices: hash, sbert-bge")
+    if name == "multilingual-e5-small":
+        return SentenceTransformerEmbedder("intfloat/multilingual-e5-small")
+    raise ValueError(
+        f"Unknown embedder: {name!r}. Choices: hash, sbert-bge, multilingual-e5-small"
+    )
 
 
 def _collect_top1_flags(scenario_reports: list[dict[str, Any]]) -> list[float]:
@@ -160,9 +166,11 @@ def run_study(
     with tempfile.TemporaryDirectory() as tmpdir:
         workdir = Path(tmpdir)
 
-        for system_name in SYSTEMS:
+        for system_name in tqdm(SYSTEMS, desc="systems", unit="system"):
             adapter = _make_adapter(system_name, workdir=workdir, embedder=embedder)
-            for scenario in dataset.scenarios:
+            for scenario in tqdm(
+                dataset.scenarios, desc=system_name, unit="scenario", leave=False
+            ):
                 adapter.reset()
                 # Pass n_bootstrap=1: per-scenario CIs are discarded; all
                 # bootstrap happens once below on the full flag lists.
@@ -198,7 +206,15 @@ def run_study(
     hb2_delta, hb2_lo, hb2_hi, hb2_p = paired_bootstrap_diff(
         kw_flags, no_flags, n_bootstrap=n_bootstrap, seed=seed
     )
-    # Hd1 (Addendum D): aft_noAppraisal > naive_cosine, Δ > 0.10
+    # Hd1/Hd2 (Addendum D): aft_noAppraisal > naive_cosine, Δ > 0.10
+    # Label is Hd1 on v1 (primary), Hd2 on v2 (generalization), Hd2_IT on v2_it.
+    _HD_LABEL_MAP = {
+        "realistic_recall_v1": "Hd1",
+        "realistic_recall_v2": "Hd2",
+        "realistic_recall_v2_it": "Hd2_IT",
+    }
+    hd_label = _HD_LABEL_MAP.get(dataset.name, f"Hd_{dataset.name}")
+    hd_scope = "Addendum D primary" if hd_label == "Hd1" else "Addendum D generalization"
     hd1_delta, hd1_lo, hd1_hi, hd1_p = paired_bootstrap_diff(
         no_flags, cos_flags, n_bootstrap=n_bootstrap, seed=seed
     )
@@ -213,8 +229,8 @@ def run_study(
     hd1_pass = hd1_delta > 0.10 and hd1_lo > 0.0
 
     hypotheses = {
-        "Hd1": {
-            "description": "aft_noAppraisal.top1 > naive_cosine.top1, Δ > 0.10 (Addendum D)",
+        hd_label: {
+            "description": (f"aft_noAppraisal.top1 > naive_cosine.top1, Δ > 0.10 ({hd_scope})"),
             "result": "PASS" if hd1_pass else "FAIL",
             "delta": round(hd1_delta, 4),
             "ci_95": ci_payload(hd1_delta, hd1_lo, hd1_hi, n_bootstrap=n_bootstrap),
@@ -350,7 +366,11 @@ def _render_markdown(results: dict[str, Any]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Appraisal confound study.")
-    parser.add_argument("--embedder", default="sbert-bge", choices=["hash", "sbert-bge"])
+    parser.add_argument(
+        "--embedder",
+        default="sbert-bge",
+        choices=["hash", "sbert-bge", "multilingual-e5-small"],
+    )
     parser.add_argument(
         "--n-bootstrap",
         type=int,
@@ -366,13 +386,22 @@ def main() -> None:
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     parser.add_argument("--out-protocol", type=Path, default=DEFAULT_OUT_PROTOCOL)
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=None,
+        help="Dataset JSON path (default: realistic_recall_v1.json). "
+        "Use realistic_recall_v2.json for Hd2 generalization.",
+    )
     args = parser.parse_args()
 
+    dataset_path = args.dataset if args.dataset is not None else DATASET
     print(
         f"Running appraisal confound study "
         f"(embedder={args.embedder}, n_bootstrap={args.n_bootstrap}, seed={args.seed}) …"
     )
     results = run_study(
+        dataset_path,
         embedder_name=args.embedder,
         n_bootstrap=args.n_bootstrap,
         seed=args.seed,

@@ -35,6 +35,8 @@ import math
 from pathlib import Path
 from typing import Any
 
+from tqdm import tqdm
+
 from benchmarks.common.statistics import (
     DEFAULT_N_BOOTSTRAP,
     cohens_d_paired,
@@ -154,7 +156,7 @@ def run_ablation_study(
     variant_results: list[dict[str, Any]] = []
     query_flags_by_variant: dict[str, dict[str, dict[str, bool]]] = {}
 
-    for variant_name, flag_kwargs in ABLATIONS:
+    for variant_name, flag_kwargs in tqdm(ABLATIONS, desc="ablation variants", unit="variant"):
         cfg = EmotionalMemoryConfig(**flag_kwargs)
         adapter_cls = _ADAPTER_OVERRIDES.get(variant_name)
         bench = run_benchmark(
@@ -249,7 +251,7 @@ def run_ablation_study(
         pairwise.append(row)
 
     return {
-        "benchmark": "ablation_realistic_v1",
+        "benchmark": f"ablation_{dataset.name}",
         "base_benchmark": dataset.name,
         "variants": variant_results,
         "pairwise_vs_full": pairwise,
@@ -476,13 +478,20 @@ def main() -> None:
         "--embedder",
         type=str,
         default="sbert-bge",
-        choices=["hash", "sbert-bge", "sbert-mini"],
+        choices=["hash", "sbert-bge", "sbert-mini", "e5-small-v2", "multilingual-e5-small"],
         help="Embedder backend (hash = TokenHashEmbedder, sbert-bge = BAAI/bge-small-en-v1.5).",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=None,
+        help="Dataset JSON path (default: realistic_recall_v1.json). "
+        "Use benchmarks/datasets/realistic_recall_v2.json for S3 powered ablation.",
     )
     args = parser.parse_args()
 
     emb = _build_embedder(args.embedder)
-    dataset = load_dataset()
+    dataset = load_dataset() if args.dataset is None else load_dataset(args.dataset)
     print(f"Running ablation study on {dataset.name} ({len(dataset.scenarios)} scenarios)...")
     results = run_ablation_study(
         dataset,

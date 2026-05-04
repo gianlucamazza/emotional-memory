@@ -78,10 +78,14 @@ Goal: lift the public-claim ceiling by closing Gate 2 and adding the missing int
 - [ ] Collect `ratings.jsonl`, run pre-registered analysis pipeline (`benchmarks/human_eval/pipeline.py`)
 - [ ] Update `claim_validation_matrix.json` and audit doc
 
-### S3 ablation @ N=200 + Hd2 generalisation
-- [ ] Re-point `benchmarks/ablation/runner.py` at `realistic_recall_v2` (and `v2_it` for Hd2) — currently bound to v1
-- [ ] Execute confirmatory ablation at full power
-- [ ] Update Addendum E / preregistration_addendum_v3 closure status
+### S3 ablation @ N=200 + Hd2 generalisation — CLOSED 2026-05-04
+- [x] Re-point `benchmarks/ablation/runner.py` at `realistic_recall_v2` — `--dataset` flag added; `bench-s3-sbert` / `bench-s3-e5` targets added to Makefile
+- [x] Execute confirmatory ablation at full power (N=200, seed=0, n_bootstrap=2000, both SBERT and e5)
+  - Ha (no_mood): FAIL on both embedders (SBERT Δ=-0.02 p=0.264; e5 Δ=-0.005 p=0.915)
+  - Hb (no_resonance): FAIL on both (SBERT Δ=+0.02 p=0.203; e5 Δ=+0.085 p<0.001 — opposite direction)
+  - Hc (no_appraisal invariant): PASS on both — benchmark correctly inert
+  - Hd2 / Hd2_IT: PASS (EN Δ=0.125, IT Δ=0.163 — architecture advantage generalizes)
+- [x] Closure docs: `benchmarks/preregistration_addendum_s3_closure.md`, `benchmarks/preregistration_addendum_hd2_closure.md`, S3 footer in `preregistration.md`, Hd2 footer in `preregistration_addendum_v3.md`
 
 ### G7 — PAD dominance as first-class CoreAffect
 - [ ] Promote `dominance` from `MoodField`-only to `CoreAffect` 3D field

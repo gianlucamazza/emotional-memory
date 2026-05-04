@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
+import pytest
+
 from benchmarks.ablation.runner import run_ablation_study
-from benchmarks.realistic.runner import load_dataset
+from benchmarks.realistic.runner import DATASET, load_dataset
 
 
 def test_ablation_study_structure() -> None:
     dataset = load_dataset()
     results = run_ablation_study(dataset, n_bootstrap=100, seed=0)
 
-    assert results["benchmark"] == "ablation_realistic_v1"
+    # Benchmark id must be derived from dataset.name — not a hardcoded literal.
+    assert results["benchmark"] == f"ablation_{dataset.name}"
+    assert results["benchmark"] == "ablation_realistic_recall_v1"
     assert len(results["variants"]) == 8
 
     variant_names = [v["variant"] for v in results["variants"]]
@@ -52,3 +56,18 @@ def test_ablation_study_structure() -> None:
 
     assert results["statistics"]["n_bootstrap"] == 100
     assert results["statistics"]["ci_method"] == "bootstrap_percentile"
+
+
+@pytest.mark.parametrize(
+    "path,expected_suffix",
+    [
+        (DATASET, "realistic_recall_v1"),
+    ],
+)
+def test_ablation_benchmark_id_derived_from_dataset(path: object, expected_suffix: str) -> None:
+    from pathlib import Path
+
+    dataset = load_dataset(Path(str(path)))
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0)
+    assert results["benchmark"] == f"ablation_{expected_suffix}"
+    assert results["base_benchmark"] == expected_suffix

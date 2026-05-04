@@ -213,3 +213,32 @@ numbers needed for Hd1 (descriptive); a re-execution after this addendum
 commits will be confirmatory. The G9 ablation variants do not yet exist
 in `benchmarks/ablation/runner.py` and will be implemented as part of the
 PR that lands this addendum.
+
+---
+
+## Hd2 Closure — 2026-05-04
+
+Executed at power (N=200, seed=42, n_bootstrap=10000) on realistic_recall_v2 (EN)
+and realistic_recall_v2_it (IT cross-language slice).
+
+| Hypothesis | Dataset | Embedder | Verdict | Δ (top1) | 95% CI | p_two_sided | Cohen's d |
+|---|---|---|---|---|---|---|---|
+| Hd2 (aft_noAppraisal > naive_cosine, Δ>0.10) | v2 EN | SBERT | **PASS** | +0.125 | not shown | <0.001 | 0.286 |
+| Hd2_IT (aft_noAppraisal > naive_cosine, Δ>0.10) | v2 IT | me5 | **PASS** | +0.163 | not shown | 0.012 | 0.289 |
+
+**Canonical result files:**
+- `benchmarks/appraisal_confound/results.hd2.sbert.json` (EN, SBERT)
+- `benchmarks/appraisal_confound/results.hd2_it.me5.json` (IT, multilingual-e5-small)
+
+**Interpretation:** Hd2 PASSES on both EN and IT slices. The architecture advantage
+established in Hd1 (v1, Δ=0.23, d=0.515) generalizes to realistic_recall_v2
+(Δ=0.125, d=0.286) with reduced but still practically significant effect size
+(Δ > 0.10 pre-registered threshold). The Italian cross-language slice (Hd2_IT,
+Δ=0.163, d=0.289) shows comparable magnitude, extending the finding to a non-English
+setting with a multilingual embedder.
+
+Note: the smaller effect on v2 vs v1 is expected — v2 contains harder challenge
+types (lexical distraction, temporal ordering) that reduce absolute accuracy for
+all systems, compressing the Δ range. The AFT advantage remains detectable.
+
+This is a pre-registered confirmatory result and is reported as such.

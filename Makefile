@@ -152,6 +152,36 @@ bench-appraisal-confound:
 bench-appraisal-confound-hash:
 	uv run python -m benchmarks.appraisal_confound.runner --embedder hash
 
+# S3 ablation @ N=200 (pre-registered Study S3, powered — runs on realistic_recall_v2)
+bench-s3-sbert:
+	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
+		--dataset benchmarks/datasets/realistic_recall_v2.json \
+		--out-json benchmarks/ablation/results.v2.sbert.json \
+		--out-md benchmarks/ablation/results.v2.sbert.md \
+		--out-protocol benchmarks/ablation/results.v2.sbert.protocol.json
+
+bench-s3-e5:
+	uv run python -m benchmarks.ablation.runner --embedder e5-small-v2 \
+		--dataset benchmarks/datasets/realistic_recall_v2.json \
+		--out-json benchmarks/ablation/results.v2.e5.json \
+		--out-md benchmarks/ablation/results.v2.e5.md \
+		--out-protocol benchmarks/ablation/results.v2.e5.protocol.json
+
+# Hd2 generalization (Addendum D, v2 EN + cross-language IT slice)
+bench-hd2-sbert:
+	uv run python -m benchmarks.appraisal_confound.runner --embedder sbert-bge \
+		--dataset benchmarks/datasets/realistic_recall_v2.json \
+		--out-json benchmarks/appraisal_confound/results.hd2.sbert.json \
+		--out-md benchmarks/appraisal_confound/results.hd2.sbert.md \
+		--out-protocol benchmarks/appraisal_confound/results.hd2.sbert.protocol.json
+
+bench-hd2-it-me5:
+	uv run python -m benchmarks.appraisal_confound.runner --embedder multilingual-e5-small \
+		--dataset benchmarks/datasets/realistic_recall_v2_it.json \
+		--out-json benchmarks/appraisal_confound/results.hd2_it.me5.json \
+		--out-md benchmarks/appraisal_confound/results.hd2_it.me5.md \
+		--out-protocol benchmarks/appraisal_confound/results.hd2_it.me5.protocol.json
+
 bench-locomo:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner
 

@@ -397,6 +397,25 @@ See \texttt{benchmarks/realistic/results.v2.sbert.md} and
 \texttt{benchmarks/realistic/results.v2.e5.md}.
 The larger, harder probe discriminates where the coarse quadrant probe cannot.
 
+\paragraph{Architecture-attribution generalization ($H_{d2}$).}
+The $H_{d1}$ result (Gate~3) replicates on the harder $N=200$ benchmark:
+\textit{aft\_noAppraisal}~$=0.50$ vs.\ \textit{naive\_cosine}~$=0.38$,
+$\Delta=+0.125$, $p_{\text{bootstrap}}<0.001$, $d=0.286$ (SBERT, v2).
+The advantage extends to a multilingual cross-language slice
+(Italian $N=80$, 20~scenarios $\times$ 4~queries, \texttt{multilingual-e5-small}):
+$\Delta=+0.163$, $p=0.012$, $d=0.289$.\footnote{$H_{d2}$ closure:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_closure.md}%
+{\texttt{preregistration\_addendum\_hd2\_closure.md}};
+canonical JSONs:
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2.sbert.json}%
+{\texttt{results.hd2.sbert.json}},
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_it.me5.json}%
+{\texttt{results.hd2\_it.me5.json}}.}
+The smaller effect on v2 (vs.\ $\Delta=+0.23$ on v1) reflects the harder
+benchmark; both pass the pre-registered $\Delta>0.10$ threshold and
+generalize the architecture-attribution claim across embedder family
+and language family.
+
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
 % ──────────────────────────────────────────────────────────────────────────────
@@ -521,30 +540,39 @@ rather than affective coherence. Per-task retrieval-weight tuning
 remains open work.
 
 \paragraph{Component ablations.}
-A pre-registered ablation programme (Addendum~E)\footnote{Pre-registration:
+The pre-registered ablation programme (Addendum~E, Study~$S_3$)\footnote{Pre-registration:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_v3.md}{\texttt{preregistration\_addendum\_v3.md}};
 Addendum~F:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_f.md}{\texttt{preregistration\_addendum\_f.md}};
-results:
-\href{\repourl/blob/main/benchmarks/ablation/results.sbert.md}{\texttt{ablation/results.sbert.md}}.}
-tested the load-bearing contribution of each AFT component on the
-realistic-recall benchmark ($N=100$ queries, v1.4, SBERT bge-small-en-v1.5).
-Removing individual layers (mood, resonance, appraisal, momentum, and
-APE-gated reconsolidation) produces no measurable change in
-top1\_accuracy ($|\Delta|\leq 0.01$, $p_{\mathrm{adj}}=1.000$ under
-Holm-Bonferroni across the five comparisons): on this benchmark the
-layers are jointly sufficient but not individually load-bearing, and
-$H_{e2}$ (reconsolidation) is null. A symmetric dual-path encoding variant
-(70/30 blend of appraised and raw core affect, with the
-\texttt{KeywordAppraisalEngine}) is destructive
-($\textit{top1}=0.35$, $\Delta=-0.35$, $p_{\mathrm{adj}}<0.001$;
-$H_{e1}$ rejected). The destructive component is the keyword appraisal
-itself: synchronous keyword appraisal collapses retrieval further
-($\textit{top1}=0.07$), whereas deferring it via the dual-path slow
-elaboration partially recovers signal ($H_{f1}$ PASS,
-$\Delta_{\mathrm{dual\,vs\,sync}}=+0.28$). Dual-path encoding is therefore
-retained as an opt-in feature only; semantically-grounded LLM appraisal
-(non-keyword) is recommended when an appraisal engine is configured.
+$S_3$ closure (confirmatory run):
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_s3\_closure.md}%
+{\texttt{preregistration\_addendum\_s3\_closure.md}};
+canonical JSONs:
+\href{\repourl/blob/main/benchmarks/ablation/results.v2.sbert.json}%
+{\texttt{results.v2.sbert.json}},
+\href{\repourl/blob/main/benchmarks/ablation/results.v2.e5.json}%
+{\texttt{results.v2.e5.json}}.}
+was executed at full power on the harder \texttt{realistic\_recall\_v2}
+benchmark ($N=200$ queries, both SBERT bge-small-en-v1.5 and e5-small-v2).
+Individual layer ablations are \emph{not} significant: removing the mood
+field ($H_a$: $\Delta=-0.02$, $p_{\text{boot}}=0.264$ on SBERT; $-0.005$,
+$p=0.915$ on e5) or the resonance graph ($H_b$: $\Delta=+0.02$, $p=0.203$
+on SBERT; $+0.085$, $p<0.001$ on e5 in the opposite direction) does not
+reduce top1\_accuracy. Removing appraisal is invariant on this benchmark
+($H_c$ PASS: $\Delta=-0.01$ on SBERT, $+0.005$ on e5). The system-level
+architecture advantage observed in $H_{d1}/H_{d2}$ (vs.\ \texttt{naive\_cosine},
+$\Delta=+0.13$ to $+0.23$) is therefore replicable but \emph{cannot be
+attributed to any single layer in isolation}: layers are jointly sufficient
+and likely interact; per-layer attribution at $N=200$ is below the
+detectable effect size and would require either a higher-$N$ design or
+interaction-term modelling.
+A symmetric dual-path encoding variant remains destructive
+($H_{e1}$: $\Delta=-0.20$ on SBERT, $-0.27$ on e5;
+\textit{aft\_keyword\_synchronous}: $\Delta=-0.45$ on both embedders,
+replicating $H_{f1}$). Reconsolidation continues to register null
+($H_{e2}$: $\Delta=+0.01$ SBERT, $+0.03$ e5).
+Dual-path encoding is therefore retained as opt-in only; semantically-grounded
+LLM appraisal (non-keyword) is recommended when an appraisal engine is configured.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
@@ -579,23 +607,30 @@ phenomena, and benchmarked against a semantic-only baseline on a new affect-labe
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
 
-A staged evidence programme has produced four pre-registered results since
+A staged evidence programme has produced six pre-registered results since
 initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
 \textit{aft\_noAppraisal}~$=0.78$ vs.\ \textit{naive\_cosine}~$=0.55$,
 $\Delta=+0.23$ [+0.12, +0.34], $d=0.52$, $N=100$, v1.4, seed=1 (Addendum~D;
-\href{\repourl/blob/main/docs/research/audit\_2026-04.md}{\texttt{audit\_2026-04.md}}, \S{}G3).}).
+\href{\repourl/blob/main/docs/research/audit\_2026-04.md}{\texttt{audit\_2026-04.md}}, \S{}G3).},
+with $H_{d2}$ generalization confirmed: $\Delta=+0.125$ on SBERT v2 ($N=200$)
+and $\Delta=+0.163$ on Italian cross-language with \texttt{multilingual-e5-small}
+($N=80$)).
+A pre-registered layer-ablation at power (Study~$S_3$, $N=200$, both embedder
+classes) finds that per-layer contributions are not individually isolatable:
+$H_a$ (no\_mood) and $H_b$ (no\_resonance) are non-significant on both
+embedders, while the system-level advantage over naive cosine remains robust.
 The external LoCoMo conversational
 QA benchmark (1986 QA pairs, Study S1) produced a negative result: AFT
 underperforms naive RAG (F1 0.168 vs.\ 0.271; Gate 1 not met), revealing that
 affective weighting does not help on factual open-domain QA.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); multilingual coverage beyond
-the Italian proof-of-concept (G6); and per-task retrieval weight tuning to
-investigate the LoCoMo scope limitation. A dominance dimension is scoped for
-v0.8.0 following \texttt{docs/research/11\_dominance\_design.md}.
+the Italian proof-of-concept (G6); a dominance dimension as first-class
+CoreAffect field (design in \texttt{docs/research/11\_dominance\_design.md});
+and per-task retrieval weight tuning to investigate the LoCoMo scope limitation.
 Integration with vector stores (Qdrant, Chroma) and expanded baselines
 (Mem0, MemGPT) are engineering milestones independent of the evidence programme.
 

@@ -753,7 +753,7 @@ wheels = [
 
 [[package]]
 name = "emotional-memory"
-version = "0.7.1"
+version = "0.8.0"
 source = { editable = "." }
 dependencies = [
     { name = "numpy" },
@@ -764,6 +764,7 @@ dependencies = [
 bench = [
     { name = "psutil" },
     { name = "pytest-benchmark" },
+    { name = "tqdm" },
 ]
 demo = [
     { name = "gradio" },
@@ -845,6 +846,7 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
     { name = "sentence-transformers", marker = "extra == 'sentence-transformers'", specifier = ">=2.2" },
     { name = "sqlite-vec", marker = "extra == 'sqlite'", specifier = ">=0.1.1" },
+    { name = "tqdm", marker = "extra == 'bench'", specifier = ">=4.65" },
     { name = "twine", marker = "extra == 'release'", specifier = ">=6.0" },
 ]
 provides-extras = ["dev", "bench", "llm-test", "demo", "dotenv", "sentence-transformers", "sqlite", "redis", "langchain", "mem0", "langmem", "viz", "docs", "release"]

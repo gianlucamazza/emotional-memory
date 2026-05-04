@@ -255,3 +255,37 @@ Results written to `benchmarks/ablation/results.v2.{json,md}`.
 6. **Paper claims:** the arXiv paper and any workshop submission will use only
    confirmatory results for primary claims. Exploratory results are presented as
    "preliminary" or in supplementary material.
+
+---
+
+## S3 Closure — 2026-05-04
+
+Executed at power (N=200, realistic_recall_v2, seed=0, n_bootstrap=2000).
+
+| Hypothesis | Verdict | Embedder | Δ (top1) | 95% CI | p_boot | p_adj_holm |
+|---|---|---|---|---|---|---|
+| Ha (no_mood < full) | **FAIL** | SBERT | -0.02 | [-0.05, 0.01] | 0.264 | 1.000 |
+| Ha (no_mood < full) | **FAIL** | e5 | -0.005 | [-0.05, 0.04] | 0.915 | 1.000 |
+| Hb (no_resonance < full) | **FAIL** | SBERT | +0.02 | [-0.01, 0.05] | 0.203 | 1.000 |
+| Hb (no_resonance < full) | **FAIL** | e5 | +0.085 | [0.04, 0.13] | 0.000 | 0.000 |
+| Hc (no_appraisal ≈ full) | **PASS** | SBERT | -0.01 | [-0.03, 0.00] | 0.283 | — |
+| Hc (no_appraisal ≈ full) | **PASS** | e5 | +0.005 | [-0.03, 0.04] | 0.880 | — |
+| Hd (no_momentum, exploratory) | NS | SBERT | +0.02 | [0.01, 0.04] | 0.067 | — |
+| Hd (no_momentum, exploratory) | NS | e5 | 0.00 | [-0.03, 0.03] | 1.000 | — |
+
+**Canonical result files:**
+- `benchmarks/ablation/results.v2.sbert.json` (SBERT BAAI/bge-small-en-v1.5)
+- `benchmarks/ablation/results.v2.e5.json` (intfloat/e5-small-v2)
+
+**Interpretation:** Ha and Hb both FAIL on both embedders. Removing mood or
+resonance in isolation does not reduce top1_accuracy at N=200. The resonance layer
+shows an anomalous positive effect with e5 (Hb FAIL in the opposite direction,
+Δ=+0.085, p<0.001), suggesting the spreading-activation mechanism may interfere
+with e5's embedding geometry. Hc (no_appraisal invariant) PASSES on both: the
+benchmark correctly does not configure an appraisal engine. The system-level
+architecture advantage (Hd1/Hd2 vs naive cosine, Δ=0.13–0.23) is orthogonal to
+this per-layer ablation: the AFT advantage appears to be a system-level emergent
+property rather than attributable to any single layer in isolation.
+
+This is a pre-registered negative result and is reported as such per Reporting
+rule 5 above.

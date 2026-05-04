@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-05-04
+
+Research milestone: closes Study S3 (layer ablation at power) and Hd2
+(Addendum D generalization). Refactors benchmark runners for multi-dataset
+support and adds progress bars.
+
+### Added
+
+- `benchmarks/ablation/runner.py` — `--dataset PATH` flag; embedder choices
+  extended to `e5-small-v2` + `multilingual-e5-small`; progress bar on variant loop
+- `benchmarks/appraisal_confound/runner.py` — `--dataset PATH` flag; embedder
+  `multilingual-e5-small`; dynamic hypothesis label (`Hd1`/`Hd2`/`Hd2_IT`)
+  derived from dataset name at runtime; progress bars on system + scenario loops
+- `Makefile` — `bench-s3-sbert`, `bench-s3-e5`, `bench-hd2-sbert`, `bench-hd2-it-me5`
+- `benchmarks/ablation/results.v2.sbert.json` + `results.v2.e5.json` — Study S3 power results
+- `benchmarks/appraisal_confound/results.hd2.sbert.json` + `results.hd2_it.me5.json` — Hd2 power results
+- `benchmarks/preregistration_addendum_s3_closure.md` — S3 interpretive closure
+- `benchmarks/preregistration_addendum_hd2_closure.md` — Hd2/Hd2_IT interpretive closure
+- `tqdm>=4.65` added to `[project.optional-dependencies].bench`
+- mypy override for `tqdm` / `tqdm.*` in `pyproject.toml`
+
+### Changed
+
+- `benchmarks/ablation/runner.py` — benchmark id now derived from `dataset.name`
+  (was hardcoded `ablation_realistic_v1`; now `ablation_realistic_recall_v1`)
+- `benchmarks/preregistration.md` — S3 closure footer appended
+- `benchmarks/preregistration_addendum_v3.md` — Hd2 closure footer appended
+- `docs/research/09_current_evidence.md` — S3 + Hd2 evidence tables appended
+- `ROADMAP.md` — S3 + Hd2 milestone items marked `[x]` with date + verdicts
+- `tests/test_ablation_runner.py` — updated assertion; added parametrized benchmark id test
+- `pyproject.toml` — version `0.7.1` → `0.8.0`
+
+### Research verdicts (S3 + Hd2)
+
+| Study | Hypothesis | Verdict |
+|---|---|---|
+| S3 | Ha (no_mood < full) | FAIL — both embedders |
+| S3 | Hb (no_resonance < full) | FAIL — both embedders (e5: opposite direction, SIG) |
+| S3 | Hc (no_appraisal invariant) | PASS — both embedders |
+| Hd2 | aft_noAppraisal > naive_cosine, Δ>0.10, v2 EN | PASS (Δ=0.125, p<0.001) |
+| Hd2_IT | aft_noAppraisal > naive_cosine, Δ>0.10, v2 IT | PASS (Δ=0.163, p=0.012) |
+
 ## [0.7.1] - 2026-05-04
 
 Paper-polish release. No API or behavioural changes; library code is identical
@@ -825,7 +867,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.7.0
 [0.6.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.1...v0.6.2
