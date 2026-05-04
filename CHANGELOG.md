@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `scripts/generate_research_figures.py` — generates benchmark evidence figures
+  from committed JSON artefacts without rerunning long studies. Outputs PNGs for
+  docs and PDFs for paper use.
+- `docs/images/research/` — five evidence figures covering realistic replay v2,
+  challenge-type breakdown, S3 ablation, Italian multilingual slice, and the
+  LoCoMo negative result.
+- `make research-figures` / `make figures` — regenerate research-only or all
+  project figures from repo data.
 - `scripts/preflight.py` — gate G14 verifies the GitHub→Zenodo webhook is
   disabled before release.  Queries `gh api repos/.../hooks` and fails if any
   active hook points at `zenodo.org`.  Skipped gracefully if `gh` is
@@ -18,6 +26,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   concept and aborts if any record matches the current version (other than the
   fresh draft).  Catches duplicate deposits even when both records sit under
   the same concept umbrella.
+
+### Changed
+
+- `README.md`, `docs/research/09_current_evidence.md`, and
+  `docs/research/claim_validation_matrix.json` now surface the benchmark
+  figures and align current evidence wording with closed S3/Hd2 results.
+
+### Fixed
+
+- `emotional_memory.visualization` now rejects invalid radar inputs and
+  unsupported adaptive-heatmap axes instead of rendering misleading figures.
 
 ## [0.8.1] - 2026-05-04
 
