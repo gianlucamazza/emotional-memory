@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `scripts/preflight.py` — gate G14 verifies the GitHub→Zenodo webhook is
+  disabled before release.  Queries `gh api repos/.../hooks` and fails if any
+  active hook points at `zenodo.org`.  Skipped gracefully if `gh` is
+  unavailable.  Prevents shadow duplicate deposits like the v0.8.1 incident.
+- `scripts/release.py` — Phase 1 anti-shadow guard.  After concept-DOI
+  verification, queries the Zenodo public API for published records under the
+  concept and aborts if any record matches the current version (other than the
+  fresh draft).  Catches duplicate deposits even when both records sit under
+  the same concept umbrella.
+
 ## [0.8.1] - 2026-05-04
 
 Publishing-channel patch: include the paper PDF in the Zenodo deposit and
