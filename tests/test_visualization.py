@@ -150,6 +150,20 @@ def test_plot_retrieval_radar_six_scores() -> None:
     assert len(ax.get_xticks()) == 6
 
 
+def test_plot_retrieval_radar_rejects_label_mismatch() -> None:
+    from emotional_memory.visualization import plot_retrieval_radar
+
+    with pytest.raises(ValueError, match="same length"):
+        plot_retrieval_radar([0.8, 0.6], ["Semantic"])
+
+
+def test_plot_retrieval_radar_rejects_out_of_range_score() -> None:
+    from emotional_memory.visualization import plot_retrieval_radar
+
+    with pytest.raises(ValueError, match=r"\[0, 1\]"):
+        plot_retrieval_radar([1.2], ["Semantic"])
+
+
 # ---------------------------------------------------------------------------
 # 5. Mood Evolution
 # ---------------------------------------------------------------------------
@@ -195,6 +209,21 @@ def test_plot_adaptive_weights_heatmap_six_subplots() -> None:
 
     fig = plot_adaptive_weights_heatmap(resolution=5)
     assert len(fig.axes) >= 6
+
+
+def test_plot_adaptive_weights_heatmap_rejects_invalid_resolution() -> None:
+    from emotional_memory.visualization import plot_adaptive_weights_heatmap
+
+    with pytest.raises(ValueError, match="resolution"):
+        plot_adaptive_weights_heatmap(resolution=1)
+
+
+def test_plot_adaptive_weights_heatmap_rejects_ax() -> None:
+    from emotional_memory.visualization import plot_adaptive_weights_heatmap
+
+    _, existing_ax = plt.subplots()
+    with pytest.raises(ValueError, match="ax is not supported"):
+        plot_adaptive_weights_heatmap(ax=existing_ax)
 
 
 # ---------------------------------------------------------------------------

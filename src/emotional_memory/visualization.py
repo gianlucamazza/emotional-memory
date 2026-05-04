@@ -374,6 +374,16 @@ def plot_retrieval_radar(
     _require_matplotlib()
     import numpy as np
 
+    if len(scores) != len(labels):
+        raise ValueError(
+            f"scores and labels must have the same length, got {len(scores)} and {len(labels)}"
+        )
+    if not scores:
+        raise ValueError("scores must contain at least one value")
+    for score in scores:
+        if not 0.0 <= float(score) <= 1.0:
+            raise ValueError(f"scores must be in [0, 1], got {score}")
+
     n = len(scores)
     angles = np.linspace(0.0, 2 * math.pi, n, endpoint=False).tolist()
     angles_closed = [*angles, angles[0]]
@@ -475,7 +485,7 @@ def plot_adaptive_weights_heatmap(
     Args:
         base_weights: Six baseline retrieval weights (must sum to 1.0).
         resolution: Grid resolution (``resolution x resolution`` cells).
-        ax: Unused — this plot always creates its own figure with subplots.
+        ax: Must be ``None``. This plot creates a fixed 2x3 subplot grid.
         title: Figure suptitle.
 
     Returns:
@@ -489,6 +499,13 @@ def plot_adaptive_weights_heatmap(
 
     from emotional_memory.mood import MoodField
     from emotional_memory.retrieval import AdaptiveWeightsConfig, adaptive_weights
+
+    if len(base_weights) != len(SIGNAL_LABELS):
+        raise ValueError(f"base_weights must contain {len(SIGNAL_LABELS)} values")
+    if resolution < 2:
+        raise ValueError("resolution must be >= 2")
+    if ax is not None:
+        raise ValueError("ax is not supported for plot_adaptive_weights_heatmap")
 
     valences = np.linspace(-1.0, 1.0, resolution)
     arousals = np.linspace(0.0, 1.0, resolution)
