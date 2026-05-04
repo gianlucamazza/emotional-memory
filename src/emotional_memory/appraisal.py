@@ -85,7 +85,7 @@ class AppraisalVector(BaseModel):
             + 0.3 * (1.0 - self.coping_potential)
             + 0.2 * self.self_relevance
         )
-        return CoreAffect(valence=valence, arousal=arousal)
+        return CoreAffect(valence=valence, arousal=arousal, dominance=self.coping_potential)
 
 
 @runtime_checkable

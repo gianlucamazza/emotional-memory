@@ -38,9 +38,10 @@ from emotional_memory.mood import MoodField
 # valence [-1,1] (range 2), arousal [0,1] (range 1), dominance [0,1] (range 1)
 # => sqrt(4 + 1 + 1) = sqrt(6)
 _MAX_MOOD_DIST: float = math.sqrt(6.0)
-# Max Euclidean distance in the 2-D CoreAffect space:
-# valence [-1,1] (range 2), arousal [0,1] (range 1) => sqrt(4 + 1) = sqrt(5)
-_MAX_AFFECT_DIST: float = math.sqrt(5.0)
+# Max Euclidean distance in the 3-D CoreAffect space (now full PAD):
+# valence [-1,1] (range 2), arousal [0,1] (range 1), dominance [0,1] (range 1)
+# => sqrt(4 + 1 + 1) = sqrt(6) — same as MoodField space
+_MAX_AFFECT_DIST: float = math.sqrt(6.0)
 # Threshold below which momentum magnitudes are treated as zero (float stability)
 _MOMENTUM_ZERO_THRESHOLD: float = 1e-12
 
@@ -282,7 +283,7 @@ def _affect_proximity(current: CoreAffect, encoded: CoreAffect) -> float:
 
 
 def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) -> float:
-    """Cosine similarity of velocity vectors (direction alignment).
+    """Cosine similarity of 3D velocity vectors (direction alignment).
 
     Returns 0.5 when one or both are zero (neutral — no information).
     """
@@ -290,7 +291,11 @@ def _momentum_alignment(current: AffectiveMomentum, encoded: AffectiveMomentum) 
     mag_e = encoded.magnitude()
     if mag_c < _MOMENTUM_ZERO_THRESHOLD or mag_e < _MOMENTUM_ZERO_THRESHOLD:
         return 0.5
-    dot = current.d_valence * encoded.d_valence + current.d_arousal * encoded.d_arousal
+    dot = (
+        current.d_valence * encoded.d_valence
+        + current.d_arousal * encoded.d_arousal
+        + current.d_dominance * encoded.d_dominance
+    )
     cos = dot / (mag_c * mag_e)
     # Map [-1, +1] → [0, 1]
     return (cos + 1.0) / 2.0

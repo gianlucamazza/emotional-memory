@@ -125,6 +125,6 @@ class TestAffectiveStateSnapshot:
     def test_restore_skips_malformed_history_entries(self):
         s = AffectiveState.initial()
         snap = s.snapshot()
-        snap["_history"] = [["2024-01-01", 0.5, 0.5], ["bad"]]  # second entry malformed
+        snap["_history"] = [["2024-01-01", 0.5, 0.5, 0.5], ["bad"]]  # second entry malformed
         restored = AffectiveState.restore(snap)
         assert len(restored._history) == 1

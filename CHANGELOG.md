@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **G7 — CoreAffect promoted to 3D PAD space** (valence × arousal × dominance).
+  `CoreAffect` now carries a `dominance` field ([0, 1], default 0.5).  This
+  makes perceived control a primary retrieval signal (`s3` affect-proximity now
+  operates in full PAD space, `_MAX_AFFECT_DIST` → √6).  `AffectiveMomentum`
+  gains `d_dominance` / `dd_dominance` derivatives; `AffectiveState` history
+  tuples extend to 4-elements.  `AppraisalVector.to_core_affect()` maps
+  `coping_potential → dominance`; `MoodField.update()` uses
+  `core_affect.dominance` directly instead of the old valence×arousal heuristic.
+  `test_dominance_retrieval_gap.py` promoted from xfail to passing.
+
 - `scripts/generate_research_figures.py` — generates benchmark evidence figures
   from committed JSON artefacts without rerunning long studies. Outputs PNGs for
   docs and PDFs for paper use.

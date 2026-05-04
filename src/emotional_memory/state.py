@@ -21,8 +21,8 @@ from pydantic import BaseModel, PrivateAttr
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.mood import MoodDecayConfig, MoodField
 
-# History entry: (iso_timestamp, valence, arousal)
-_HistoryEntry = tuple[str, float, float]
+# History entry: (iso_timestamp, valence, arousal, dominance)
+_HistoryEntry = tuple[str, float, float, float]
 
 
 class AffectiveState(BaseModel):
@@ -33,7 +33,7 @@ class AffectiveState(BaseModel):
     mood: MoodField
 
     # Private: not serialised, not part of the schema.
-    # Stores the last 3 (timestamp, valence, arousal) points for momentum.
+    # Stores the last 3 (timestamp, valence, arousal, dominance) points for momentum.
     _history: list[_HistoryEntry] = PrivateAttr(default_factory=list)
 
     @classmethod
@@ -68,9 +68,9 @@ class AffectiveState(BaseModel):
         filtered = {k: v for k, v in data.items() if k != "_history"}
         state = cls.model_validate(filtered)
         state._history = [
-            (str(entry[0]), float(entry[1]), float(entry[2]))
+            (str(entry[0]), float(entry[1]), float(entry[2]), float(entry[3]))
             for entry in raw_history
-            if len(entry) >= 3
+            if len(entry) >= 4
         ]
         return state
 
@@ -89,7 +89,10 @@ class AffectiveState(BaseModel):
         if now is None:
             now = datetime.now(tz=UTC)
 
-        history = [*self._history, (now.isoformat(), new_affect.valence, new_affect.arousal)]
+        history = [
+            *self._history,
+            (now.isoformat(), new_affect.valence, new_affect.arousal, new_affect.dominance),
+        ]
         history = history[-3:]
 
         momentum = _compute_momentum(history)
@@ -114,26 +117,36 @@ def _compute_momentum(history: list[_HistoryEntry]) -> AffectiveMomentum:
     if len(history) < 2:
         return AffectiveMomentum.zero()
 
-    t1_str, v1, a1 = history[-2]
-    t2_str, v2, a2 = history[-1]
+    t1_str, v1, a1, d1 = history[-2]
+    t2_str, v2, a2, d2 = history[-1]
     t1 = datetime.fromisoformat(t1_str)
     t2 = datetime.fromisoformat(t2_str)
     dt12 = max((t2 - t1).total_seconds(), 0.001)
 
     d_v = (v2 - v1) / dt12
     d_a = (a2 - a1) / dt12
+    d_d = (d2 - d1) / dt12
 
     if len(history) < 3:
-        return AffectiveMomentum(d_valence=d_v, d_arousal=d_a)
+        return AffectiveMomentum(d_valence=d_v, d_arousal=d_a, d_dominance=d_d)
 
-    t0_str, v0, a0 = history[-3]
+    t0_str, v0, a0, d0 = history[-3]
     t0 = datetime.fromisoformat(t0_str)
     dt01 = max((t1 - t0).total_seconds(), 0.001)
 
     d_v0 = (v1 - v0) / dt01
     d_a0 = (a1 - a0) / dt01
+    d_d0 = (d1 - d0) / dt01
 
     dd_v = d_v - d_v0
     dd_a = d_a - d_a0
+    dd_d = d_d - d_d0
 
-    return AffectiveMomentum(d_valence=d_v, d_arousal=d_a, dd_valence=dd_v, dd_arousal=dd_a)
+    return AffectiveMomentum(
+        d_valence=d_v,
+        d_arousal=d_a,
+        d_dominance=d_d,
+        dd_valence=dd_v,
+        dd_arousal=dd_a,
+        dd_dominance=dd_d,
+    )

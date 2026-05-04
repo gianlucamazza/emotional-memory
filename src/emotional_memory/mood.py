@@ -151,10 +151,8 @@ class MoodField(BaseModel):
         eff_alpha = alpha * (1.0 - base.inertia)
         new_valence = (1.0 - eff_alpha) * base.valence + eff_alpha * core_affect.valence
         new_arousal = (1.0 - eff_alpha) * base.arousal + eff_alpha * core_affect.arousal
-        # Dominance: PAD heuristic — valence * arousal shifts perceived control.
-        # Coefficient 0.5 gives full [-1,1] * [0,1] -> [0, 1] range coverage.
-        dominance_signal = 0.5 + 0.5 * core_affect.valence * core_affect.arousal
-        new_dominance = (1.0 - eff_alpha) * base.dominance + eff_alpha * dominance_signal
+        # Dominance: read directly from CoreAffect (now a first-class PAD dimension).
+        new_dominance = (1.0 - eff_alpha) * base.dominance + eff_alpha * core_affect.dominance
         return MoodField(
             valence=new_valence,
             arousal=new_arousal,
