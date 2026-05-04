@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Multilingual ES — Spanish benchmark** (`realistic_recall_v2_es.json`, 20 scenarios,
+  158 memories, 80 queries).  Hd2_ES: sbert-bge **PASS** Δ=0.138 p=0.045 d=0.233;
+  me5 borderline FAIL Δ=0.113 p=0.110.  Architecture generalisation confirmed for
+  a second non-English language (Spanish) with sbert; me5 marginal.
+
 - **G7 — CoreAffect promoted to 3D PAD space** (valence × arousal × dominance).
   `CoreAffect` now carries a `dominance` field ([0, 1], default 0.5).  This
   makes perceived control a primary retrieval signal (`s3` affect-proximity now
