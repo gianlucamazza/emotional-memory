@@ -268,10 +268,39 @@ zenodo-draft:
 	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
 	uv run python scripts/zenodo_deposit.py --draft-only
 
+zenodo-reserve:
+	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
+	uv run python scripts/zenodo_deposit.py --reserve-only
+
+zenodo-upload-publish:
+	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
+	uv run python scripts/zenodo_deposit.py --upload-from-state
+
 zenodo-publish:
 	@test -n "$$ZENODO_TOKEN" || (echo "ZENODO_TOKEN not set"; exit 1)
 	@test -n "$(DEPOSIT_ID)" || (echo "Usage: make zenodo-publish DEPOSIT_ID=123"; exit 1)
 	uv run python scripts/zenodo_deposit.py --publish-id "$(DEPOSIT_ID)"
+
+release-swh:
+	uv run python scripts/swh_client.py
+
+## Full automated release (API-driven, no GitHub webhook needed)
+## Usage: make release VERSION=0.9.0
+## Resume a failed run: make release VERSION=0.9.0 RELEASE_FLAGS=--resume
+release:
+	@test -n "$(VERSION)" || (echo "Usage: make release VERSION=0.9.0"; exit 1)
+	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+		uv run python scripts/release.py "$(VERSION)" $(RELEASE_FLAGS)
+
+release-resume:
+	@test -n "$(VERSION)" || (echo "Usage: make release-resume VERSION=0.9.0"; exit 1)
+	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+		uv run python scripts/release.py "$(VERSION)" --resume $(RELEASE_FLAGS)
+
+release-sandbox:
+	@test -n "$(VERSION)" || (echo "Usage: make release-sandbox VERSION=0.9.0"; exit 1)
+	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+		uv run python scripts/release.py "$(VERSION)" --sandbox $(RELEASE_FLAGS)
 
 release-check:
 	@test -n "$(VERSION)" || (echo "Usage: make release-check VERSION=0.6.3"; exit 1)
@@ -347,14 +376,20 @@ help:
 	@echo "  docs-serve                 Live-reload local server"
 	@echo "  docs-images                Regenerate docs/images/ PNGs"
 	@echo ""
-	@echo "Release:"
-	@echo "  release-check VERSION=x.y.z  Full release gate incl. real-LLM checks"
-	@echo "  publish-pypi-manual       Manual PyPI upload via twine + PYPI_TOKEN"
+	@echo "Release (automated, API-driven):"
+	@echo "  release VERSION=x.y.z        Full release: preflight→DOI reserve→sync→commit→tag→Zenodo→PyPI→GH→HF→SWH"
+	@echo "  release-resume VERSION=x.y.z Resume from last successful phase"
+	@echo "  release-sandbox VERSION=x.y.z Test against Zenodo sandbox"
+	@echo "  release-check VERSION=x.y.z  Pre-release gate (tests + LLM checks)"
+	@echo "  zenodo-reserve               Phase 1: prereserve Zenodo DOI (before tagging)"
+	@echo "  zenodo-upload-publish        Phase 2: upload files + publish reserved draft"
+	@echo "  release-swh                  Trigger Software Heritage save"
+	@echo "  release-space                Push demo subtree to Hugging Face Space"
+	@echo "  publish-pypi-manual          Manual PyPI upload via twine + PYPI_TOKEN"
 	@echo "  verify-pypi-release VERSION=x.y.z  Poll PyPI until the release is visible"
-	@echo "  sync-release-metadata     Sync Zenodo DOI metadata from .zenodo_doi"
-	@echo "  zenodo-draft              Create/upload a Zenodo draft deposition"
-	@echo "  zenodo-publish            Publish an existing Zenodo draft by DEPOSIT_ID"
-	@echo "  release-space             Push demo subtree to the Hugging Face Space remote"
-	@echo "  dist                       Build wheel + sdist"
-	@echo "  publish                    Build and publish to PyPI"
-	@echo "  clean                      Remove build artefacts"
+	@echo "  sync-release-metadata        Sync all files from release.toml SSOT"
+	@echo "  zenodo-draft                 Create Zenodo draft (legacy, fresh deposit)"
+	@echo "  zenodo-publish DEPOSIT_ID=N  Publish an existing Zenodo draft"
+	@echo "  dist                         Build wheel + sdist"
+	@echo "  publish                      Build and publish to PyPI"
+	@echo "  clean                        Remove build artefacts"

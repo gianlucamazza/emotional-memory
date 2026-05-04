@@ -35,10 +35,10 @@ def _project_version() -> str:
     return match.group(1)
 
 
-def _load_from_toml() -> tuple[str, str, str]:
-    """Return (concept_doi, version_doi, repo_url) from release.toml."""
+def _load_from_toml() -> tuple[str, str, str, str]:
+    """Return (concept_doi, version_doi, repo_url, arxiv_id) from release.toml."""
     data = tomllib.loads((ROOT / "release.toml").read_text(encoding="utf-8"))["release"]
-    return data["concept_doi"], data["version_doi"], data["repo_url"]
+    return data["concept_doi"], data["version_doi"], data["repo_url"], data.get("arxiv_id", "")
 
 
 def _load_version_doi(explicit: str | None) -> str:
@@ -89,6 +89,7 @@ def sync_release_metadata(
     concept_doi: str,
     dry_run: bool,
     repo_url: str = "https://github.com/gianlucamazza/emotional-memory",
+    arxiv_id: str = "",
 ) -> list[Path]:
     version = _project_version()
     changes: list[tuple[Path, str]] = []
@@ -229,8 +230,63 @@ def sync_release_metadata(
         updated_paper_main,
         r"paper main \repourl newcommand",
     )
+    updated_paper_main = _replace(
+        r"(\\newcommand\{\\arxivid\}\{)[^}]*(}% \[ssot:arxiv_id\])",
+        rf"\g<1>{arxiv_id}\g<2>",
+        updated_paper_main,
+        r"paper main \arxivid newcommand",
+    )
     if updated_paper_main != paper_main_text:
         changes.append((paper_main, updated_paper_main))
+
+    # arxiv_id → CITATION.cff identifiers + .zenodo.json related_identifiers
+    if arxiv_id:
+        arxiv_url = f"https://arxiv.org/abs/{arxiv_id}"
+
+        # CITATION.cff: add identifiers block if absent or update existing arxiv entry
+        cff_path = ROOT / "CITATION.cff"
+        changes_dict = dict(changes)
+        cff_text = changes_dict.get(cff_path) or cff_path.read_text(encoding="utf-8")
+        arxiv_entry_yaml = (
+            f'  - type: url\n    value: "{arxiv_url}"\n    description: "arXiv preprint"'
+        )
+        if "identifiers:" not in cff_text:
+            updated_cff = cff_text.rstrip() + f"\nidentifiers:\n{arxiv_entry_yaml}\n"
+        else:
+            updated_cff = re.sub(
+                r'(  - type: url\n\s+value: "https://arxiv\.org/abs/)[^"]*(")',
+                rf"\g<1>{arxiv_id}\g<2>",
+                cff_text,
+            )
+            if updated_cff == cff_text and arxiv_url not in cff_text:
+                updated_cff = re.sub(
+                    r"(identifiers:)",
+                    rf"\1\n{arxiv_entry_yaml}",
+                    cff_text,
+                    count=1,
+                )
+        if updated_cff != cff_text:
+            changes_dict[cff_path] = updated_cff
+            changes = list(changes_dict.items())
+
+        # .zenodo.json: add/update arXiv related_identifier
+        zj_path = ROOT / ".zenodo.json"
+        changes_dict2 = dict(changes)
+        zj_text = changes_dict2.get(zj_path) or zj_path.read_text(encoding="utf-8")
+        zj_data = json.loads(zj_text)
+        identifiers = zj_data.get("related_identifiers", [])
+        arxiv_entry = {"identifier": arxiv_url, "relation": "isDescribedBy", "scheme": "url"}
+        existing = [i for i in identifiers if "arxiv.org" in i.get("identifier", "")]
+        if not existing:
+            identifiers.append(arxiv_entry)
+        else:
+            for entry in existing:
+                entry["identifier"] = arxiv_url
+        zj_data["related_identifiers"] = identifiers
+        updated_zj = json.dumps(zj_data, indent=2, ensure_ascii=False) + "\n"
+        if updated_zj != zj_text:
+            changes_dict2[zj_path] = updated_zj
+            changes = list(changes_dict2.items())
 
     updated_paths: list[Path] = []
     for path, updated_text in changes:
@@ -269,14 +325,15 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.from_toml:
-        concept_doi, version_doi, repo_url = _load_from_toml()
+        concept_doi, version_doi, repo_url, arxiv_id = _load_from_toml()
     else:
         version_doi = _load_version_doi(args.version_doi)
         concept_doi = args.concept_doi or _fetch_concept_doi(args.base_url, version_doi)
         repo_url = "https://github.com/gianlucamazza/emotional-memory"
+        arxiv_id = ""
 
     changed = sync_release_metadata(
-        version_doi, concept_doi, dry_run=args.dry_run, repo_url=repo_url
+        version_doi, concept_doi, dry_run=args.dry_run, repo_url=repo_url, arxiv_id=arxiv_id
     )
 
     if changed:

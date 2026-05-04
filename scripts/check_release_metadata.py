@@ -51,6 +51,7 @@ def main(argv: list[str] | None = None) -> int:
     concept_doi: str = release["concept_doi"]
     version_doi: str = release["version_doi"]
     repo_url: str = release["repo_url"]
+    arxiv_id: str = release.get("arxiv_id", "")
     concept_url = f"https://doi.org/{concept_doi}"
 
     version = _pyproject_version()
@@ -114,6 +115,12 @@ def main(argv: list[str] | None = None) -> int:
         errors.append(r"paper/main.tex \zenodoversiondoi does not match release.toml version_doi")
     if repo_url not in paper_main:
         errors.append(r"paper/main.tex \repourl does not match release.toml repo_url")
+    if (
+        arxiv_id
+        and f"\\arxivid{{{arxiv_id}}}" not in paper_main
+        and f"\\newcommand{{\\arxivid}}{{{arxiv_id}}}" not in paper_main
+    ):
+        errors.append(r"paper/main.tex \arxivid does not match release.toml arxiv_id")
 
     # ── paper/SUBMISSION.md ───────────────────────────────────────────────────
     if version_doi not in paper_submission:

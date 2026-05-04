@@ -5,8 +5,10 @@
 # concept_doi: perpetual umbrella DOI for the project (never changes between releases)
 # version_doi: per-release Zenodo DOI; update here after each new Zenodo record
 # repo_url:    canonical GitHub repository URL
+# arxiv_id:   arXiv identifier, e.g. "2501.12345"; leave empty until submission accepted
 
 [release]
 concept_doi = "10.5281/zenodo.19972284"
 version_doi = "10.5281/zenodo.20023601"
 repo_url = "https://github.com/gianlucamazza/emotional-memory"
+arxiv_id = ""
