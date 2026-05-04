@@ -50,10 +50,10 @@ evidence level, and still-open gaps.
 | ID | Claim area | Status | Evidence level | Allowed public wording | Current evidence | Not yet shown | Next study |
 |---|---|---|---|---|---|---|---|
 | `aft_multilayer_engine` | Architecture | Implemented | `1_theory_fidelity` | AFT is implemented as a coherent multi-layer memory engine. | Public API, engine/retrieval/state modules, sync/async parity tests. | External validation of architectural value. | Keep API/docs aligned while external evaluations grow. |
-| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items), while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay benchmark (SBERT) shows AFT top1 = 0.70 vs naive_cosine = 0.50 (N = 100). | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
-| `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. | Ecological correspondence to human emotional memory. | Human and behavioral validation. |
+| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 and Italian cross-language; S3 shows no single layer is isolatably responsible. | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
+| `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. | Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future). | Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection. |
 | `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
-| `replayable_multi_session_help` | Realistic tasks | Controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001). | Realistic replay v2 (50 scenarios, 200 queries). SBERT: AFT 0.53 vs naive 0.33, Δ=+0.21 p<0.001 d=0.49. e5-small-v2: AFT 0.50 vs naive 0.34, Δ=+0.16 p<0.001 d=0.31. | Architecture attribution (appraisal confound pending); multilingual; external open-domain QA (LoCoMo Gate 1 FAIL). | Run appraisal confound. Add Italian slice (PR-F). |
+| `replayable_multi_session_help` | Realistic tasks | Controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001). | Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED. | General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation. | Execute human-evaluation pilot; investigate per-task retrieval-weight tuning for factual QA. |
 | `locomo_external_qa_negative` | External benchmarks | Controlled evidence | `4_realistic_tasks` | On the LoCoMo conversational QA benchmark (1986 QA pairs), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 not met). | Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0, p_one=1.0). | Whether task-specific retrieval weight tuning could close the gap. | Investigate per-task configuration; document as scope limitation in paper. |
 | `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
 
@@ -77,8 +77,8 @@ evidence level, and still-open gaps.
   shows decisive aggregate advantage on both embedder classes. Per-challenge
   breakdown (SBERT): semantic_confound 0.72 vs 0.47, affective_arc 0.42 vs 0.15,
   momentum_alignment 0.60 vs 0.33, same_topic_distractor 0.75 vs 0.62,
-  recency_confound 0.15 vs 0.05. Architecture attribution still pending
-  (appraisal confound unresolved).
+  recency_confound 0.15 vs 0.05. Hd2 confirms the architecture-level advantage;
+  S3 shows that the advantage is not isolatable to a single AFT layer.
 - **Negative external result (Gate 1, 2026-04-27)**: On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA. See `locomo_external_qa_negative` in `claim_validation_matrix.json`.
 - **Study-readiness improvement**: the human-eval pilot is now operationally
   specified as a 10-scenario, 2-condition (`aft` vs `naive_cosine`) protocol,
@@ -144,6 +144,23 @@ Result files: `benchmarks/appraisal_confound/results.hd2.sbert.json`, `results.h
 generalizes from v1 to v2 (smaller but above Δ>0.10 threshold) and extends
 to Italian cross-language with multilingual embedder. System-level advantage
 is real; per-layer attribution is not (S3 above).
+
+---
+
+## Evidence figures
+
+These figures are generated from the committed benchmark JSON artefacts with
+`make research-figures`; they do not rerun long benchmark jobs.
+
+![Realistic replay v2 overview](../images/research/research_realistic_v2_overview.png)
+
+![Realistic replay v2 by challenge type](../images/research/research_realistic_v2_challenges.png)
+
+![S3 ablation study](../images/research/research_ablation_s3.png)
+
+![Italian multilingual slice](../images/research/research_multilingual_it.png)
+
+![LoCoMo negative result](../images/research/research_locomo_negative.png)
 
 ---
 

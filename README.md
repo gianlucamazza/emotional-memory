@@ -328,7 +328,23 @@ Spider chart of the 5 Stimulus Evaluation Check dimensions.
 
 ```bash
 make docs-images   # regenerate all PNGs in docs/images/
+make research-figures   # regenerate benchmark evidence figures
 ```
+
+### Evidence Figures
+
+The research figures below are generated from committed benchmark JSON artefacts,
+not from rerunning long studies.
+
+![Realistic Replay Overview](docs/images/research/research_realistic_v2_overview.png)
+
+![Realistic Replay Challenge Breakdown](docs/images/research/research_realistic_v2_challenges.png)
+
+![S3 Ablation Study](docs/images/research/research_ablation_s3.png)
+
+![Italian Multilingual Slice](docs/images/research/research_multilingual_it.png)
+
+![LoCoMo Negative Result](docs/images/research/research_locomo_negative.png)
 
 ## Comparison with Existing Systems
 

@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -235,6 +235,11 @@ demo-run:
 docs-images:
 	uv run python scripts/generate_docs_images.py
 
+research-figures:
+	uv run python scripts/generate_research_figures.py
+
+figures: docs-images research-figures
+
 docs:
 	uv run mkdocs build --strict
 
@@ -375,6 +380,8 @@ help:
 	@echo "  docs                       Build static site"
 	@echo "  docs-serve                 Live-reload local server"
 	@echo "  docs-images                Regenerate docs/images/ PNGs"
+	@echo "  research-figures           Regenerate evidence figures from benchmark JSON"
+	@echo "  figures                    Regenerate docs + research figures"
 	@echo ""
 	@echo "Release (automated, API-driven):"
 	@echo "  release VERSION=x.y.z        Full release: preflight→DOI reserve→sync→commit→tag→Zenodo→PyPI→GH→HF→SWH"
