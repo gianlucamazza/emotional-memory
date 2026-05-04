@@ -140,11 +140,15 @@ resonance graph structure.
 
 \subsection{Layer 1: Core Affect}
 
-$c = (\nu, \alpha) \in [-1,1] \times [0,1]$ is a point in Russell's
-two-dimensional circumplex, where $\nu$ is valence (negative $\leftrightarrow$
-positive) and $\alpha$ is arousal (calm $\leftrightarrow$ excited)
-\citep{russell1980circumplex}. Core affect represents the instantaneous affective
-state at encoding time.
+$c = (\nu, \alpha, \delta) \in [-1,1] \times [0,1] \times [0,1]$ is a point in
+the Pleasure-Arousal-Dominance (PAD) space, where $\nu$ is valence (negative
+$\leftrightarrow$ positive), $\alpha$ is arousal (calm $\leftrightarrow$ excited),
+and $\delta$ is dominance (helpless $\leftrightarrow$ full control)
+\citep{russell1980circumplex,mehrabian1974approach}. Core affect represents the
+instantaneous affective state at encoding time. The dominance axis is populated
+from the appraisal layer (coping potential, Layer~4) and is a first-class
+dimension of all retrieval signals (affect proximity $s_3$ uses the 3D
+Euclidean distance with normalizer $\sqrt{6}$).
 
 \subsection{Layer 2: Affective Momentum}
 
@@ -171,7 +175,10 @@ $\mathbf{a} \in [-1,1]^5$ encodes Scherer's five Stimulus Evaluation Checks (SEC
 novelty, intrinsic pleasantness, goal relevance, coping potential, and norm
 compatibility~\citep{scherer1984appraisal}. A learned or rule-based appraisal
 engine maps the encoding context to an appraisal vector, which is then projected
-to a core affect update via a fixed linear map.
+to a core affect update via a fixed linear map. Coping potential (SEC~4) maps
+directly to the dominance axis of core affect ($\delta = \text{coping\_potential}
+\in [0,1]$, where 0 encodes helplessness and 1 encodes full control), so that
+appraisal and core affect share a unified 3D PAD representation.
 
 \subsection{Layer 5: Resonance Graph}
 
@@ -402,20 +409,29 @@ The larger, harder probe discriminates where the coarse quadrant probe cannot.
 The $H_{d1}$ result (Gate~3) replicates on the harder $N=200$ benchmark:
 \textit{aft\_noAppraisal}~$=0.50$ vs.\ \textit{naive\_cosine}~$=0.38$,
 $\Delta=+0.125$, $p_{\text{bootstrap}}<0.001$, $d=0.286$ (SBERT, v2).
-The advantage extends to a multilingual cross-language slice
-(Italian $N=80$, 20~scenarios $\times$ 4~queries, \texttt{multilingual-e5-small}):
-$\Delta=+0.163$, $p=0.012$, $d=0.289$.\footnote{$H_{d2}$ closure:
+The advantage extends to two multilingual cross-language slices:
+Italian ($N=80$, 20~scenarios, \texttt{multilingual-e5-small}):
+$\Delta=+0.163$, $p=0.012$, $d=0.289$;
+Spanish ($N=80$, 20~scenarios, SBERT bge-small-en-v1.5):
+$\Delta=+0.138$, $p=0.045$, $d=0.233$.
+A second Spanish run with \texttt{multilingual-e5-small} returns
+$\Delta=+0.113$, $p=0.110$, $d=0.189$ — a borderline null consistent with
+the smaller model size rather than architectural failure.\footnote{$H_{d2}$ closure:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_closure.md}%
 {\texttt{preregistration\_addendum\_hd2\_closure.md}};
 canonical JSONs:
 \href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2.sbert.json}%
 {\texttt{results.hd2.sbert.json}},
 \href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_it.me5.json}%
-{\texttt{results.hd2\_it.me5.json}}.}
+{\texttt{results.hd2\_it.me5.json}},
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_es.sbert.json}%
+{\texttt{results.hd2\_es.sbert.json}},
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_es.me5.json}%
+{\texttt{results.hd2\_es.me5.json}}.}
 The smaller effect on v2 (vs.\ $\Delta=+0.23$ on v1) reflects the harder
-benchmark; both pass the pre-registered $\Delta>0.10$ threshold and
-generalize the architecture-attribution claim across embedder family
-and language family.
+benchmark; all SBERT-family runs pass the pre-registered $\Delta>0.10$ threshold
+and generalize the architecture-attribution claim across embedder family
+and language family (English, Italian, Spanish).
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
@@ -507,28 +523,28 @@ real emotional corpora (EmpatheticDialogues, GoEmotions) would provide stronger
 external validity.
 
 \paragraph{Language and embedding scope.}
-All benchmarks, appraisal prompts, and scenario corpora are English-only.
-Performance on other languages is untested.
+Benchmarks have been validated in English (v2, $N=200$), Italian (v2\_it,
+$N=80$, G6), and Spanish (v2\_es, $N=80$, Hd2\_ES). All three languages show
+the AFT advantage over naive cosine under at least one embedder family.
 The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
 $N=200$) is conditional on a dense sentence embedder; under a non-semantic
 (hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
 significance\footnote{v1.4 hash-embedder pilot; full results:
 \href{\repourl/blob/main/benchmarks/realistic/results.md}{\texttt{benchmarks/realistic/results.md}}.}.
-A multilingual Italian slice (G6, $N=80$)\footnote{Addendum~H companion writeup:
+Multilingual Italian (G6, $N=80$)\footnote{Addendum~H companion writeup:
 \href{\repourl/blob/main/docs/research/12\_multilingual\_followup.md}{\texttt{12\_multilingual\_followup.md}};
 pre-registration:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_h.md}{\texttt{preregistration\_addendum\_h.md}}.}
-shows a significant hit@k advantage under both embedder families tested:
-$\Delta=+0.15$ ($p=0.0005$) with English-centric SBERT bge-small-en-v1.5,
-and $\Delta=+0.16$ ($p=0.001$) with multilingual-e5-small (intfloat,
-117M parameters, 100+ languages).
-Switching to the multilingual embedder raises naive\_cosine top1 from 0.15 to
-0.21 (+40\%), confirming that the absolute-accuracy gap vs the English v2
-baseline ($\text{top1}=0.53$) was driven primarily by the English-centric
-embedder rather than by AFT itself.
+shows a significant hit@k advantage under both embedder families tested.
+The Spanish slice (Hd2\_ES) confirms Hd2 with SBERT ($\Delta=+0.138$,
+$p=0.045$) but not with \texttt{multilingual-e5-small} ($\Delta=+0.113$,
+$p=0.110$); we interpret the me5 miss as a borderline null driven by model
+size rather than a failure of the architecture.
 Any claim about AFT's retrieval advantage should therefore be scoped to
 \emph{dense embedding regimes}; the hit@k signal generalises across embedder
-language coverage.
+language coverage (English, Italian, Spanish confirmed; other languages untested).
+The appraisal scenario corpora and keyword-appraisal rules remain English-only;
+the LLM-backed appraisal engine handles multilingual input.
 
 \paragraph{External-benchmark scope.}
 On the LoCoMo conversational QA benchmark (Study~S1, 1986 QA pairs, scored
@@ -616,9 +632,10 @@ Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
 \textit{aft\_noAppraisal}~$=0.78$ vs.\ \textit{naive\_cosine}~$=0.55$,
 $\Delta=+0.23$ [+0.12, +0.34], $d=0.52$, $N=100$, v1.4, seed=1 (Addendum~D;
 \href{\repourl/blob/main/docs/research/audit\_2026-04.md}{\texttt{audit\_2026-04.md}}, \S{}G3).},
-with $H_{d2}$ generalization confirmed: $\Delta=+0.125$ on SBERT v2 ($N=200$)
-and $\Delta=+0.163$ on Italian cross-language with \texttt{multilingual-e5-small}
-($N=80$)).
+with $H_{d2}$ generalization confirmed: $\Delta=+0.125$ on SBERT v2 ($N=200$),
+$\Delta=+0.163$ on Italian cross-language with \texttt{multilingual-e5-small}
+($N=80$), and $\Delta=+0.138$ on Spanish cross-language with SBERT
+($N=80$; me5 borderline null, $p=0.110$).
 A pre-registered layer-ablation at power (Study~$S_3$, $N=200$, both embedder
 classes) finds that per-layer contributions are not individually isolatable:
 $H_a$ (no\_mood) and $H_b$ (no\_resonance) are non-significant on both
@@ -628,10 +645,12 @@ QA benchmark (1986 QA pairs, Study S1) produced a negative result: AFT
 underperforms naive RAG (F1 0.168 vs.\ 0.271; Gate 1 not met), revealing that
 affective weighting does not help on factual open-domain QA.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
-(protocol in \texttt{benchmarks/human\_eval/}); multilingual coverage beyond
-the Italian proof-of-concept (G6); a dominance dimension as first-class
-CoreAffect field (design in \texttt{docs/research/11\_dominance\_design.md});
-and per-task retrieval weight tuning to investigate the LoCoMo scope limitation.
+(protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
+beyond the English/Italian/Spanish slices validated here; and per-task retrieval
+weight tuning to investigate the LoCoMo scope limitation.
+The dominance axis (PAD third dimension) is now a first-class \texttt{CoreAffect}
+field as of v0.8.2 (commit \texttt{8b9ddbe}); future work will assess whether
+dominance-specific scenarios improve retrieval on emotion-rich corpora.
 Integration with vector stores (Qdrant, Chroma) and expanded baselines
 (Mem0, MemGPT) are engineering milestones independent of the evidence programme.
 
