@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-05-04
+
+Publishing-channel patch: include the paper PDF in the Zenodo deposit and
+realign the canonical concept DOI to `10.5281/zenodo.19972258` (the umbrella
+that contains the API-driven releases). No code changes.
+
+### Changed
+
+- `release.toml` — `concept_doi` corrected to `10.5281/zenodo.19972258`
+  (the previous value `10.5281/zenodo.19972284` was the legacy webhook
+  umbrella, frozen at v0.7.0)
+- `pyproject.toml` — version `0.8.0` → `0.8.1`
+- All SSOT-managed files re-synced: README badge, codemeta.json, paper/main.tex,
+  demo/README.md, demo/app.py
+
+### Added
+
+- `scripts/check_release_metadata.py` — `--check-zenodo-remote` flag that
+  queries the Zenodo REST API to verify `conceptdoi` matches release.toml
+- `scripts/release.py` — Phase 1 guard that fails fast if the reserved
+  draft's `conceptdoi` ≠ release.toml `concept_doi`
+
+### Fixed
+
+- v0.8.0 Zenodo deposit was source-only because the bucket was locked after
+  the GitHub-webhook deposit; the paper PDF lived only on the GitHub Release
+  asset. v0.8.1 ships the paper PDF directly in the Zenodo record.
+
 ## [0.8.0] - 2026-05-04
 
 Research milestone: closes Study S3 (layer ablation at power) and Hd2
@@ -867,7 +895,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.6.2...v0.7.0
