@@ -50,7 +50,7 @@ with EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder()) as em:
 
 | Layer | Class | Theory |
 |---|---|---|
-| **CoreAffect** | `CoreAffect` | Barrett/Russell circumplex — continuous (valence, arousal) |
+| **CoreAffect** | `CoreAffect` | Russell-Mehrabian PAD model — continuous (valence, arousal, dominance) |
 | **AffectiveMomentum** | `AffectiveMomentum` | Spinoza — affect as transition (velocity + acceleration) |
 | **MoodField** | `MoodField` | Heidegger §29 — slow-moving global mood with inertia |
 | **AppraisalVector** | `AppraisalVector` | Scherer CPM — emotion from evaluation (5 dimensions) |

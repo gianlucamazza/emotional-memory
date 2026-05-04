@@ -25,7 +25,7 @@ text + current emotional state
            │
            ▼
     ┌─────────────┐
-    │  CoreAffect  │  ← (valence, arousal) — the emotional substrate of this moment
+    │  CoreAffect  │  ← (valence, arousal, dominance) — 3D PAD emotional substrate
     └──────┬──────┘
            │
            ▼
@@ -70,7 +70,7 @@ embed(query) → query_vector
 Pass 1 — score all candidates (6 signals, no spreading):
     s1  semantic similarity     (cosine of embeddings)
     s2  mood congruence         (how close is memory's mood to current mood?)
-    s3  core affect proximity   (distance in valence-arousal space)
+    s3  core affect proximity   (distance in PAD space, 3D, sqrt(6) normalizer)
     s4  momentum alignment      (do affect trajectories point the same way?)
     s5  recency / decay         (ACT-R power-law: strength decays with time)
     s6  resonance boost         (placeholder; set to 0 in Pass 1)
@@ -125,7 +125,7 @@ reflects the **post-retrieval** stored state.
 
 | Layer | What it is | Why it matters for retrieval |
 |---|---|---|
-| **CoreAffect** | (valence, arousal) point in the circumplex | Mood-congruent matching: memories from similar emotional states rank higher |
+| **CoreAffect** | (valence, arousal, dominance) point in PAD space | Mood-congruent matching: memories from similar emotional states rank higher |
 | **AffectiveMomentum** | Velocity + acceleration of affect change | Captures the *direction* of emotion, not just its position |
 | **MoodField** | Slow-moving background mood (EMA) | Provides the "ambient" emotional filter that shifts retrieval weights |
 | **AppraisalVector** | 5 Scherer evaluation checks → CoreAffect delta | Explains *why* something felt the way it did |

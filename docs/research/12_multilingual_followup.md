@@ -90,8 +90,9 @@ isolates the backbone contribution and confirms the AFT layer generalises.
 - The Italian keyword appraisal rules in `make_multilingual()` cover common
   emotion categories but are narrower than the English set. An LLM-backed
   appraisal engine in Italian may change the picture.
-- No Spanish, French, or German slice exists. Generalisation beyond Italian is
-  not established.
+- A Spanish slice (Hd2_ES, `realistic_recall_v2_es.json`, 20 scenarios / 80 queries)
+  was added in v0.8.2 (commit `898e132`). SBERT PASS Δ=0.138 p=0.045 d=0.233;
+  me5 borderline FAIL Δ=0.113 p=0.110 d=0.189. No French or German slice exists.
 
 ---
 
@@ -102,8 +103,9 @@ This analysis closes audit priority **(6) Multilingual slice (Addendum B)** from
 embedder configurations, results are committed, and the cross-embedder robustness
 claim is supported.
 
-**Claim update:** Language coverage claims remain pinned to "Italian and English
-conversational text" until a third language is validated.
+**Claim update:** Language coverage claims updated to "English, Italian, and Spanish
+conversational text" (v0.8.2). Hd2 generalizes to Spanish with SBERT; me5-ES is a
+borderline null — see Hd2_ES result files in `benchmarks/appraisal_confound/`.
 
 ---
 

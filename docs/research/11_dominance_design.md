@@ -1,30 +1,28 @@
 # Dominance Dimension — Design Note (G7)
 
-**Status:** Scoped for v0.8.0 — not implemented in current library.
+**Status:** IMPLEMENTED in v0.8.2 — commit `8b9ddbe` (2026-05-04). Option A shipped.
 **References:** Mehrabian & Russell (1974); `benchmarks/fidelity/test_pad_dominance.py`;
-`docs/research/08_limitations.md §1.1`.
+`benchmarks/fidelity/test_dominance_retrieval_gap.py`.
 
 ---
 
-## 1. Current state
+## 1. State before v0.8.2 (historical)
 
-`CoreAffect` is a **2-dimensional** (valence × arousal) value object
-(`src/emotional_memory/affect.py`). Dominance lives only in `MoodField`
-(`src/emotional_memory/mood.py`) as a derived scalar updated via the
-PAD heuristic:
+`CoreAffect` was a **2-dimensional** (valence × arousal) value object.
+Dominance lived only in `MoodField` as a derived scalar via the PAD heuristic:
 
 ```
 dominance_signal = 0.5 + 0.5 * valence * arousal
 ```
 
-`MoodField.dominance` drives no retrieval signal; it modulates only the
-background affective state snapshot visible via `engine.get_current_mood()`.
+`MoodField.dominance` drove no retrieval signal. Two memories encoded at
+identical (valence, arousal) but with semantically opposite dominance —
+e.g., *"I seized control of the argument"* (high dominance) vs *"I felt helpless"*
+(low dominance) — received **identical** `CoreAffect` fingerprints and were
+indistinguishable by any of AFT's 6 retrieval signals.
 
-Consequence: two memories encoded at identical (valence, arousal) but with
-semantically opposite dominance — e.g., *"I seized control of the argument"*
-(high dominance) vs *"I felt helpless in the situation"* (low dominance) —
-receive **identical** `CoreAffect` fingerprints and are indistinguishable by
-any of AFT's 6 retrieval signals.
+This gap was operationalised by `test_dominance_retrieval_gap.py` (xfail until
+v0.8.2).
 
 ---
 
@@ -115,3 +113,25 @@ remains compatible with the current 2D `CoreAffect`.
 
 Adding a dominance-specific challenge type would be a natural extension for
 `realistic_recall_v3` (post v0.8.0).
+
+---
+
+## 7. Closure — v0.8.2 implementation (2026-05-04)
+
+Option A was shipped in commit `8b9ddbe`. Implementation summary:
+
+- `CoreAffect` is now **3D** (valence × arousal × dominance). `dominance: float = 0.5`
+  (neutral default, clamped [0, 1] by Pydantic validator).
+- `_MAX_AFFECT_DIST` in `retrieval.py` updated √5 → √6 (Euclidean normalizer for 3D PAD).
+- `AppraisalVector.coping_potential` maps directly to `CoreAffect.dominance` (no signed
+  conversion needed — same [0, 1] scale).
+- `MoodField` reads `core_affect.dominance` directly in the EMA update (no heuristic).
+- `AffectiveMomentum` gains `d_dominance` and `dd_dominance` fields.
+- `AffectiveState._history` tuples extended to 4-element `(ts, v, a, d)`.
+- `test_dominance_retrieval_gap.py` xfail removed — test passes.
+- `test_pad_dominance.py` rewritten to test EMA-direct behaviour (not the old heuristic).
+
+The backward-compat migration path (Option A §3 above) was intentionally skipped:
+existing serialised states with 3-element history tuples are rejected on restore
+(`len(entry) >= 4` guard). Fresh encode → export → import round-trips use the 4-element
+format natively.

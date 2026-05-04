@@ -9,31 +9,34 @@
 
 ### 1.1 Affect dimensionality
 
-The model uses Russell's 2-dimensional circumplex (valence–arousal). This is the
-most widely cited and computationally tractable choice, but it has documented
+Since v0.8.2, `CoreAffect` is a **3D PAD** (Pleasure-Arousal-Dominance) value
+object (Mehrabian & Russell 1974), implemented as a continuous coordinate
+`(valence, arousal, dominance)`. The dominance dimension was promoted from a
+`MoodField` heuristic to a first-class field in commit `8b9ddbe`. Remaining
 limitations:
 
-- **Does not capture dominance (full PAD)**: the PAD model of Mehrabian &
-  Russell (1974) includes a third *dominance* dimension (control/submission).
-  In the current version, `CoreAffect` only models valence and arousal;
-  dominance is derived optionally via `AppraisalVector.dominance`. It is not
-  yet a primary dimension of the field.
 - **Contested circumplex structure**: Russell (2003) himself revised the
   theory toward "core affect" as a contextual construction. The current model
-  uses the classic 1980 form, not the constructionist revisions.
+  uses the classic 1980 form + Mehrabian dominance extension, not the
+  constructionist revisions.
 - **Limited emotional granularity**: the Plutchik mapping to 8 primary emotions
   is a discretization of the continuous space. Complex emotions (nostalgia,
   Schadenfreude, awe) have no direct representation.
+- **Dominance estimation**: `KeywordAppraisalEngine` infers dominance from
+  `coping_potential` vocabulary; `LLMAppraisalEngine` delegates to the Scherer
+  CPM prompt. Cross-cultural validity of dominance estimates is not evaluated.
 
 ### 1.2 Language dependence
 
-- **Optimized for English and Italian**: the `KeywordAppraisalEngine` uses
-  English-language rules. The `LLMAppraisalEngine` depends on the underlying
-  LLM — it works best with languages well-represented in the pretraining
-  distribution.
-- **No formal cross-lingual validation**: no benchmarks exist that test the
-  psychological coherence of affective predictions across languages other
-  than English.
+- **Validated on English, Italian, and Spanish**: the realistic-recall benchmark
+  has been run on EN (v2, SBERT/e5), IT (v2_it, me5), and ES (v2_es, sbert/me5)
+  slices. Hd2 hypothesis passes on EN and IT; ES shows a split: SBERT PASS
+  (Δ=0.138, p=0.045) but me5 borderline FAIL (Δ=0.113, p=0.110).
+- **`KeywordAppraisalEngine` is English-only**: the `LLMAppraisalEngine` handles
+  multilingual input, but appraisal quality varies by language.
+- **No formal cross-lingual validation beyond EN/IT/ES**: generalisation to
+  other languages is not established. Larger multilingual embedders
+  (e.g., `BGE-M3`) are a natural next step.
 
 ---
 

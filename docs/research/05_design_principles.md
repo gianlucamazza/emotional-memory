@@ -19,17 +19,18 @@ memory on its own. AFT integrates them as distinct layers of a unified represent
 ## The Five Layers of the Affective Field
 
 ### Layer 1 — Core Affect
-**Inspiration**: Barrett (2017), Russell (1980)
-**Structure**: Continuous coordinate `(valence: float, arousal: float)` in the circumplex space
+**Inspiration**: Mehrabian & Russell (1974), Russell (1980), Barrett (2017)
+**Structure**: Continuous coordinate `(valence: float, arousal: float, dominance: float)` in PAD space
 
 The fundamental affective substrate — always active, like the background hum of the system.
-Corresponds to Barrett's interoception: a continuous stream of valence and arousal before any
-categorization.
+Corresponds to Barrett's interoception: a continuous stream of valence, arousal, and dominance
+before any categorization.
 
 ```python
 CoreAffect:
-    valence: float   # [-1.0, +1.0] from very negative to very positive
-    arousal: float   # [0.0, 1.0] from completely calm to maximum excitement
+    valence: float    # [-1.0, +1.0] from very negative to very positive
+    arousal: float    # [0.0, 1.0] from completely calm to maximum excitement
+    dominance: float  # [0.0, 1.0] from helpless to full control (PAD third axis)
 ```
 
 **Principle**: Discrete emotion labels (joy, fear, anger) are not primitives — they are **regions
@@ -115,6 +116,8 @@ coping_signed = 2.0 * coping_potential - 1.0
 
 valence = 0.4*goal_relevance + 0.3*norm_congruence + 0.2*coping_signed + 0.1*novelty
 arousal = 0.5*abs(novelty) + 0.3*(1-coping_potential) + 0.2*self_relevance
+# coping_potential maps directly to the dominance (PAD) axis:
+dominance = coping_potential   # 0 = helpless, 1 = full control
 ```
 
 The mapping is configurable — this is the most empirically open component of the system.
@@ -153,7 +156,7 @@ Every memory carries an `EmotionalTag` that captures all 5 layers at encoding ti
 ```python
 class EmotionalTag(BaseModel):  # Pydantic, frozen=True
     # Layer 1: Core Affect at encoding time
-    core_affect: CoreAffect                   # (valence, arousal)
+    core_affect: CoreAffect                   # (valence, arousal, dominance)
 
     # Layer 2: Momentum at encoding time
     momentum: AffectiveMomentum               # (d_valence, d_arousal, dd_valence, dd_arousal)

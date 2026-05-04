@@ -99,7 +99,7 @@ AFT models emotion as a **field** — distributed, dynamic, multi-layer — rath
 
 | Layer | Model | What it captures |
 |---|---|---|
-| **CoreAffect** | Barrett/Russell circumplex | Continuous `(valence, arousal)` — the emotional substrate |
+| **CoreAffect** | Russell-Mehrabian PAD model | Continuous `(valence, arousal, dominance)` — the emotional substrate |
 | **AffectiveMomentum** | Spinoza — affect as transition | Velocity and acceleration of affect change |
 | **MoodField** | Heidegger — *Stimmung* as attunement | Slow-moving global mood with inertia (EMA) |
 | **AppraisalVector** | Scherer/Lazarus/Stoics | Emotion derived from evaluation: novelty, goal-relevance, coping, norm-congruence, self-relevance |
@@ -278,7 +278,7 @@ from emotional_memory.visualization import plot_circumplex, plot_decay_curves
 
 ### Valence-Arousal Circumplex
 
-Memories plotted on Russell's (1980) 2D circumplex, colored by consolidation strength.
+Memories plotted on the Russell-Mehrabian PAD model (valence-arousal plane), colored by consolidation strength.
 
 ![Circumplex](docs/images/circumplex.png)
 
@@ -353,7 +353,7 @@ not from rerunning long studies.
 | **License** | MIT | Apache 2.0 | Apache 2.0 | Apache 2.0 | MIT |
 | **Persistence** | InMemory / SQLite | Qdrant, Chroma, Pinecone, PG, MongoDB | PostgreSQL / SQLite | Neo4j (self-hosted) / Cloud | In-memory / custom |
 | **BYO embedder** | ✅ any `Embedder` protocol | ✅ (OpenAI default) | ⚠️ partial | ⚠️ partial | ✅ |
-| **Emotion model** | ✅ 5-layer AFT (valence, arousal, mood, appraisal, resonance) | ❌ | ❌ | ❌ | ❌ |
+| **Emotion model** | ✅ 5-layer AFT (valence, arousal, dominance, mood, appraisal, resonance) | ❌ | ❌ | ❌ | ❌ |
 | **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | ✅ tool-call edit | ✅ edge invalidation | ❌ |
 | **Persistent mood state** | ✅ MoodField (Heidegger EMA) | ❌ | ❌ | ❌ | ❌ |
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -397,6 +397,11 @@ retrieval probe, not a general downstream evaluation of production memory system
   embedder, not AFT. Residual gap vs English v2 (top1 0.53) reflects dataset
   difficulty and model size; a larger multilingual model (e.g. bge-m3) is a
   natural next step.
+- **Spanish multilingual slice (Hd2_ES, 20 scenarios / 80 queries)**:
+  With SBERT bge-small-en-v1.5: AFT top1=0.25, naive_cosine top1=0.10,
+  Δ=+0.138 [p=0.045, d=0.233] — PASS. Hypothesis Hd2 generalizes to Spanish
+  with SBERT. With multilingual-e5-small: Δ=+0.113 [p=0.110, d=0.189] — FAIL
+  (marginal, borderline signal; larger multilingual model expected to close gap).
 - **Negative external result (LoCoMo, Gate 1 FAIL)**: on the LoCoMo
   conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting

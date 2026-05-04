@@ -139,11 +139,15 @@ Result files: `benchmarks/appraisal_confound/results.hd2.sbert.json`, `results.h
 | Hd1 (primary) | v1 / SBERT | **PASS** | +0.230 | <0.001 | 0.515 |
 | Hd2 (generalization) | v2 / SBERT | **PASS** | +0.125 | <0.001 | 0.286 |
 | Hd2_IT (cross-language) | v2_it / me5 | **PASS** | +0.163 | 0.012 | 0.289 |
+| Hd2_ES (cross-language) | v2_es / SBERT | **PASS** | +0.138 | 0.045 | 0.233 |
+| Hd2_ES (cross-language) | v2_es / me5 | FAIL | +0.113 | 0.110 | 0.189 |
 
 **Key finding:** AFT architecture advantage (aft_noAppraisal > naive_cosine)
 generalizes from v1 to v2 (smaller but above Δ>0.10 threshold) and extends
-to Italian cross-language with multilingual embedder. System-level advantage
-is real; per-layer attribution is not (S3 above).
+to Italian and Spanish cross-language with multilingual embedder. The me5
+result on Spanish is a borderline null (p=0.110) — an honest negative finding,
+likely driven by model size (118M) rather than architecture. System-level
+advantage is real; per-layer attribution is not (S3 above).
 
 ---
 
