@@ -110,7 +110,86 @@ artefact in `benchmarks/realistic/challenge_subset_pairwise.json`. The
 benchmark still does not support strong claims of general superiority over
 semantic-only retrieval in fully naturalistic multi-turn scenarios.
 
-### 2.4 Human-eval pipeline not yet run with real ratings
+### 2.4 Oracle-affect circularity in Hd* studies
+
+The primary architecture comparison studies (Hd1, Hd2, Hd2_IT, Hd2_ES) compare
+`aft_noAppraisal` — AFT using **preset valence/arousal values from the benchmark
+dataset** — against `naive_cosine` which has no access to any affective signal.
+
+This means the Hd* numbers do **not** test whether AFT with automatic appraisal
+beats naive cosine. They test: "given a perfect oracle of affect, does the AFT
+retrieval architecture (mood field, momentum, resonance, decay) utilize that oracle
+better than a pure cosine baseline?"
+
+The dataset's affect values were hand-crafted by the author with AFT theory in mind
+(valence/arousal chosen to discriminate the target memory). This introduces two
+distinct concerns:
+
+- **Operationalization gap**: real-world AFT deployments use `LLMAppraisalEngine`
+  or `KeywordAppraisalEngine`, not preset oracle values. The Ha2/Hb2 results show
+  that even keyword appraisal collapses performance (Δ = −0.39). The architecture
+  advantage under automatic appraisal is not yet established.
+- **Dataset circularity**: affect labels were designed to favor affective
+  discrimination. Scenarios where valence is not discriminative would reduce the
+  oracle advantage. The proportion of AFT-favorable vs. neutral scenarios has not
+  been audited.
+
+Addendum G (future study) will address this by running the architecture comparison
+with `LLMAppraisalEngine` on a dataset designed without preset affect injection.
+Until Addendum G is executed, Hd* results should be read as "architecture potential
+under oracle affect", not "architecture advantage in production".
+
+### 2.5 Resonance sign reversal on e5-small-v2
+
+S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the
+`ResonanceLink` layer **improves** top1 accuracy: Δ = +0.085 [0.04, 0.13],
+p_boot < 0.001, p_adj < 0.001 (Holm-corrected). This is the opposite of the
+theoretical prediction (resonance should boost relevant memories).
+
+The SBERT embedder shows Δ = +0.02 (NS, p=0.20) for the same ablation — a
+directionally opposite but non-significant result. The sign reversal is
+**statistically confirmed on e5 but not replicated on SBERT**.
+
+Potential explanations:
+1. **Geometry incompatibility**: e5-small-v2's distance space clusters semantically
+   related items more aggressively than SBERT. Spreading activation over this geometry
+   may amplify noise rather than signal, causing resonance links to hurt rather than help.
+2. **Resonance as amplifier**: if the spreading-activation BFS traverses links that
+   connect semantically similar but contextually incorrect memories, it boosts
+   distractors in e5's tighter cluster geometry.
+3. **Benchmark-specific**: `realistic_recall_v2` contains challenge types (semantic
+   confound, same-topic distractor) explicitly designed to create confusable neighbors.
+   Resonance may be counterproductive when the primary challenge is distractor
+   rejection rather than recall.
+
+This finding does not refute resonance's theoretical role, but it indicates that
+the interaction between the spreading-activation mechanism and the embedder's
+distance geometry is non-trivial and embedder-dependent. It is disclosed in
+`claim_validation_matrix.json` under `theory_faithful_operationalization.not_yet_shown`.
+
+### 2.6 Controlled benchmark scope and confirmation bias
+
+The `realistic_recall_v2` benchmark (50 scenarios, 200 queries, 5 challenge types × 40)
+was designed to evaluate AFT on scenarios where affective signals are relevant. Four of
+the five challenge types are **by construction pro-AFT**:
+
+- `affective_arc` — valence discriminates the emotionally salient target from neutral alternatives
+- `momentum_alignment` — emotional momentum is the primary differentiating signal
+- `semantic_confound` — surface cosine fails specifically where affect differs
+- `same_topic_distractor` — same-topic distractors are partly rejected via affect
+
+Only `recency_confound` is valence-neutral (the discrimination criterion is temporal, not
+affective). The aggregate advantage (Δ=+0.205 SBERT, Δ=+0.155 e5) should therefore be
+read as **"AFT advantage when affective context is discriminative"**, not as general
+superiority across all retrieval scenarios.
+
+This is complementary to the LoCoMo negative result (Gate 1 FAIL, F1=0.168 vs 0.271):
+on factual open-domain QA where affect is not discriminative, AFT provides no advantage.
+The two results are consistent — AFT's benefit is scope-dependent. Scenarios where
+valence and arousal do not distinguish the target from distractors are under-represented
+in v2; their effect on aggregate top1 is unknown.
+
+### 2.7 Human-eval pipeline not yet run with real ratings
 
 The repository now ships an executable pipeline in `benchmarks/human_eval/`
 that generates packets, rating templates, and aggregated summaries, with a

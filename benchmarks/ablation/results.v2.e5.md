@@ -2,7 +2,7 @@
 
 Measures the isolated contribution of each AFT layer to `top1_accuracy` on the realistic replay benchmark.
 
-95% CI via percentile bootstrap (n=2000, seed=0). Pairwise delta = ablated - full (negative = layer helps).
+95% CI via percentile bootstrap (n=10000, seed=0). Pairwise delta = ablated - full (negative = layer helps).
 
 **Note on `no_appraisal`**: the realistic benchmark injects affect directly via `set_affect()`, so no appraisal engine is configured. This ablation is a no-op on this benchmark and confirms correct flag hook-up only.
 
@@ -16,38 +16,38 @@ Measures the isolated contribution of each AFT layer to `top1_accuracy` on the r
 
 | Variant | top1 [95% CI] | hit@k [95% CI] | N queries |
 | ------- | ------------- | -------------- | --------- |
-| `full` | 0.51 [0.43, 0.57] | 0.64 [0.57, 0.71] | 200 |
-| `no_appraisal` | 0.51 [0.44, 0.58] | 0.63 [0.56, 0.70] | 200 |
-| `no_mood` | 0.50 [0.43, 0.57] | 0.62 [0.55, 0.69] | 200 |
-| `no_momentum` | 0.51 [0.43, 0.57] | 0.63 [0.56, 0.70] | 200 |
-| `no_resonance` | 0.59 [0.52, 0.66] | 0.69 [0.62, 0.75] | 200 |
-| `no_reconsolidation` | 0.53 [0.46, 0.60] | 0.65 [0.58, 0.71] | 200 |
-| `dual_path` | 0.24 [0.18, 0.30] | 0.44 [0.38, 0.51] | 200 |
-| `aft_keyword_synchronous` | 0.06 [0.03, 0.10] | 0.17 [0.12, 0.22] | 200 |
+| `full` | 0.51 [0.44, 0.58] | 0.63 [0.56, 0.69] | 200 |
+| `no_appraisal` | 0.51 [0.43, 0.57] | 0.62 [0.55, 0.69] | 200 |
+| `no_mood` | 0.49 [0.42, 0.56] | 0.61 [0.55, 0.68] | 200 |
+| `no_momentum` | 0.50 [0.43, 0.57] | 0.62 [0.55, 0.69] | 200 |
+| `no_resonance` | 0.58 [0.52, 0.65] | 0.69 [0.62, 0.75] | 200 |
+| `no_reconsolidation` | 0.52 [0.45, 0.58] | 0.64 [0.57, 0.70] | 200 |
+| `dual_path` | 0.23 [0.17, 0.29] | 0.44 [0.38, 0.51] | 200 |
+| `aft_keyword_synchronous` | 0.07 [0.04, 0.10] | 0.17 [0.12, 0.22] | 200 |
 
 ## Pairwise vs Full (top1_accuracy)
 
 | Variant | Δ [95% CI] | p (bootstrap) | p_adj (Holm) | p (McNemar) | d (Hedges g) | N | Discordant |
 | ------- | ---------- | ------------- | ------------ | ----------- | ------------ | - | ---------- |
-| `no_appraisal` | 0.01 [-0.03, 0.04] | 0.880 | 1.000 | 1.000 | 0.021 | 200 | 11 |
-| `no_mood` | -0.01 [-0.05, 0.04] | 0.915 | 1.000 | 1.000 | -0.016 | 200 | 19 |
-| `no_momentum` | 0.00 [-0.03, 0.03] | 1.000 | 1.000 | 1.000 | 0.000 | 200 | 10 |
-| `no_resonance` | 0.09 [0.04, 0.13] | 0.000 | 0.000 | 0.000 | 0.270 | 200 | 21 |
-| `no_reconsolidation` | 0.03 [-0.01, 0.06] | 0.209 | 0.836 | 0.267 | 0.098 | 200 | 13 |
-| `dual_path` | -0.27 [-0.34, -0.19] | 0.000 | 0.000 | 0.000 | -0.493 | 200 | 71 |
-| `aft_keyword_synchronous` | -0.45 [-0.52, -0.37] | 0.000 | 0.000 | 0.000 | -0.826 | 200 | 97 |
+| `no_appraisal` | -0.01 [-0.02, 0.01] | 0.758 | 1.000 | 1.000 | -0.041 | 200 | 3 |
+| `no_mood` | -0.01 [-0.06, 0.03] | 0.543 | 1.000 | 0.629 | -0.051 | 200 | 17 |
+| `no_momentum` | -0.01 [-0.03, 0.01] | 0.433 | 1.000 | 0.625 | -0.070 | 200 | 4 |
+| `no_resonance` | 0.07 [0.04, 0.12] | 0.000 | 0.001 | 0.000 | 0.283 | 200 | 15 |
+| `no_reconsolidation` | 0.01 [-0.01, 0.04] | 0.526 | 1.000 | 0.688 | 0.058 | 200 | 6 |
+| `dual_path` | -0.28 [-0.35, -0.20] | 0.000 | 0.000 | 0.000 | -0.508 | 200 | 73 |
+| `aft_keyword_synchronous` | -0.44 [-0.52, -0.36] | 0.000 | 0.000 | 0.000 | -0.817 | 200 | 96 |
 
 ## Pairwise vs Full (hit@k)
 
 | Variant | Δ [95% CI] | p (bootstrap) | p_adj (Holm) | p (McNemar) | d (Hedges g) | N | Discordant |
 | ------- | ---------- | ------------- | ------------ | ----------- | ------------ | - | ---------- |
-| `no_appraisal` | -0.01 [-0.03, 0.00] | 0.261 | 0.781 | 0.500 | -0.100 | 200 | 2 |
-| `no_mood` | -0.02 [-0.04, 0.00] | 0.147 | 0.588 | 0.219 | -0.116 | 200 | 6 |
-| `no_momentum` | -0.01 [-0.03, 0.00] | 0.273 | 0.781 | 0.500 | -0.100 | 200 | 2 |
-| `no_resonance` | 0.04 [0.01, 0.08] | 0.009 | 0.043 | 0.012 | 0.194 | 200 | 11 |
-| `no_reconsolidation` | 0.01 [-0.01, 0.03] | 0.770 | 0.781 | 1.000 | 0.041 | 200 | 3 |
-| `dual_path` | -0.20 [-0.26, -0.14] | 0.000 | 0.000 | 0.000 | -0.497 | 200 | 40 |
-| `aft_keyword_synchronous` | -0.47 [-0.55, -0.41] | 0.000 | 0.000 | 0.000 | -0.909 | 200 | 99 |
+| `no_appraisal` | -0.01 [-0.03, 0.00] | 0.271 | 1.000 | 0.500 | -0.100 | 200 | 2 |
+| `no_mood` | -0.01 [-0.04, 0.01] | 0.399 | 1.000 | 0.508 | -0.070 | 200 | 9 |
+| `no_momentum` | -0.01 [-0.03, 0.00] | 0.271 | 1.000 | 0.500 | -0.100 | 200 | 2 |
+| `no_resonance` | 0.06 [0.02, 0.09] | 0.004 | 0.019 | 0.003 | 0.220 | 200 | 13 |
+| `no_reconsolidation` | 0.01 [-0.01, 0.03] | 0.764 | 1.000 | 1.000 | 0.041 | 200 | 3 |
+| `dual_path` | -0.19 [-0.25, -0.13] | 0.000 | 0.000 | 0.000 | -0.440 | 200 | 44 |
+| `aft_keyword_synchronous` | -0.47 [-0.54, -0.40] | 0.000 | 0.000 | 0.000 | -0.875 | 200 | 99 |
 
 ## Interpretation
 
@@ -57,8 +57,9 @@ A variant with Δ significantly negative (CI entirely below 0, p_adj < 0.05 afte
 
 Hf1 tests whether deferring keyword appraisal (slow-path `elaborate()`) partially mitigates the destructive override of synchronous keyword appraisal.
 
-| Metric | dual_path | aft_keyword_synchronous | Δ (Hf1) | Verdict |
-|--------|-----------|------------------------|---------|---------|
-| top1   | 0.240 | 0.060 | +0.1800 | **Hf1 PASS** |
+Pre-registered criterion (Addendum F): paired bootstrap (n=10,000, seed=0), one-tailed p < 0.05 **and** bootstrap CI for Δ_Hf1 fully above 0.
 
-Note: paired bootstrap and Holm-corrected p-values for each variant vs full_aft are in the pairwise tables above. Direct Hf1 statistical significance requires a separate pairwise bootstrap not computed here; the delta direction is the pre-registered criterion.
+| Metric | dual_path | aft_kw_sync | Δ [95% CI] | p (one-tailed) | CI>0 | Verdict |
+|--------|-----------|------------|------------|----------------|------|---------|
+| top1 | 0.235 | 0.070 | 0.17 [0.11, 0.23] | 0.0000 | ✓ | **Hf1 PASS** |
+| hit@k | 0.440 | 0.165 | 0.28 [0.20, 0.35] | 0.0000 | ✓ | — |

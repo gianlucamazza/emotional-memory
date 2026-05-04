@@ -130,6 +130,15 @@ The resonance layer shows an unexpected *positive* effect with e5 (Hb FAIL,
 opposite direction). The AFT architecture advantage is a system-level emergent
 property; no single layer is isolatably responsible.
 
+**Hf1 direct bootstrap (v2 secondary, n=10,000, seed=0):**
+
+| Embedder | dual_path | aft_kw_sync | Δ_Hf1 [95% CI] | p (one-tailed) | Verdict |
+|---|---|---|---|---|---|
+| SBERT | 0.350 | 0.095 | +0.255 [0.190, 0.320] | <0.001 | **Hf1 PASS** |
+| e5 | 0.235 | 0.070 | +0.165 [0.110, 0.225] | <0.001 | **Hf1 PASS** |
+
+Primary Hf1 (v1.4, N=100): see `benchmarks/ablation/results.sbert.md`.
+
 ### Hd2 — Addendum D Generalization (realistic_recall_v2)
 
 Result files: `benchmarks/appraisal_confound/results.hd2.sbert.json`, `results.hd2_it.me5.json`
@@ -148,6 +157,36 @@ to Italian and Spanish cross-language with multilingual embedder. The me5
 result on Spanish is a borderline null (p=0.110) — an honest negative finding,
 likely driven by model size (118M) rather than architecture. System-level
 advantage is real; per-layer attribution is not (S3 above).
+
+---
+
+## Power notes (ex-post)
+
+Observed power estimates for results with d < 0.30 or p near α, using the
+one-tailed paired t-test approximation `power = Φ(d·√N − z_α)` with z_α = 1.645
+(α=0.05). These are approximate — the actual tests use paired bootstrap on binary
+vectors, not t-tests.
+
+| Study | N | d (Cohen) | ~Power | Interpretation |
+|---|---|---|---|---|
+| Hd2 EN SBERT | 200 | 0.286 | ~99% | Adequately powered |
+| Hd2_IT me5 | 80 | 0.289 | ~83% | Moderately powered |
+| Hd2_ES SBERT | 80 | 0.233 | ~67% | Borderline; result significant but narrow margin |
+| Hd2_ES me5 | 80 | 0.189 | ~52% | Underpowered for this d; FAIL plausibly Type II |
+| S2 H4 affective_arc SBERT | 40 | ~0.55 (est.) | ~97% | Adequately powered |
+| S2 H5 recency_confound SBERT | 40 | ~0.20 (est.) | ~35% | Underpowered; marginal FAIL expected |
+| S2 H6 momentum_alignment e5 | 40 | ~0.01 (est.) | ~5% | Near-zero true effect or incompatible geometry |
+
+**Implications:**
+- Hd2_ES me5 FAIL (p=0.110) is consistent with a true effect of d≈0.19 at N=80 — the
+  miss is likely Type II, not evidence against the architecture. N≈120 would be needed
+  for 80% power at d=0.19.
+- S2 H5 recency_confound (SBERT) at N=40 is substantially underpowered. The marginal
+  p_adj=0.054 is consistent with a real but small effect (d≈0.20). Confirming H5 would
+  require N≥100 per challenge type.
+- S2 H6 momentum_alignment (e5) shows near-zero effect (Δ=0.025), suggesting the
+  signal is absent for this embedder rather than underpowered.
+- Results with high power (Hd2 EN SBERT, H3, H4) are robust to replication.
 
 ---
 

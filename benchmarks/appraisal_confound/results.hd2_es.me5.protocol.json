@@ -1,0 +1,34 @@
+{
+  "study": "appraisal_confound",
+  "dataset": "realistic_recall_v2_es",
+  "dataset_version": "1.0",
+  "embedder": "multilingual-e5-small",
+  "systems": [
+    "aft_noAppraisal",
+    "aft_keyword",
+    "naive_cosine"
+  ],
+  "n_bootstrap": 10000,
+  "seed": 42,
+  "hypotheses": {
+    "Hd2_ES": {
+      "description": "aft_noAppraisal.top1 > naive_cosine.top1, \u0394 > 0.10 (Addendum D generalization)",
+      "result": "FAIL"
+    },
+    "Ha2": {
+      "description": "aft_keyword.top1 > naive_cosine.top1 (\u0394 > 0.05, one-tailed alpha=0.05)",
+      "result": "FAIL"
+    },
+    "Hb2": {
+      "description": "|aft_keyword - aft_noAppraisal| < 0.05 (equivalence)",
+      "result": "FAIL"
+    }
+  },
+  "interpretation_notes": [
+    "Ha2: one-tailed alpha=0.05 + \u0394>0.05 (pre-reg Addendum A). p_one_sided = p_two_sided / 2 (bootstrap symmetric, direction fixed).",
+    "Hb2: equivalence; |aft_keyword - aft_noAppraisal| CI fully inside \u00b10.05.",
+    "No Holm correction: single primary hypothesis in this study (pre-reg Addendum A).",
+    "aft_noAppraisal vs naive_cosine (descriptive, not pre-registered): architecture-attribution signal; aligns with Study S2 (no appraisal in S2 either).",
+    "Hb2 FAIL means keyword appraisal overrides preset affect destructively on this dataset \u2014 keyword-inferred affect is noisier than hand-curated presets."
+  ]
+}

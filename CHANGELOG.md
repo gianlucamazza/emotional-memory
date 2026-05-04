@@ -7,6 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### v0.8.3 staging (2026-05-05)
+
+### Added
+
+- **Addendum G pre-registration scaffold** (`benchmarks/preregistration_addendum_g.md`):
+  formal protocol for dual-path ablation with `LLMAppraisalEngine` on a dataset without
+  preset affect injection. Closes 3 dangling citations in claim matrix and §Limitations.
+  Status: pending dataset construction and execution.
+
+- **Pre-registration closure documents** — S1 LoCoMo (`preregistration_s1_closure.md`),
+  Add. B+C (`preregistration_addendum_bc_closure.md`): formalize H1/H2 FAIL for LoCoMo,
+  note Add. B subsumed by Add. H + S2, note Add. C pending execution (human-eval).
+
+- **`paper/ARXIV_CHECKLIST.md`** — formal arXiv submission checklist (source bundle,
+  content, metadata, reproducibility gate).
+
+- **`tools/audit_claim_refs.py`** — script that parses `claim_validation_matrix.json`
+  and verifies every `benchmark_ref`, `evidence_ref`, `protocol_ref`, `limitations_ref`
+  path exists on disk. Exits 1 on any missing path. Integrated into `make meta-check`
+  and therefore into `make check`.
+
+- **`make reproduce-paper-check`** — runs `scripts/reproduce_paper.py` then
+  `git diff --exit-code paper/tables/`; fails if committed tables are stale.
+  Added as a step to the `benchmarks` CI job in `.github/workflows/ci.yml`.
+
+### Changed
+
+- **CI coverage threshold enforced**: `pytest --cov-fail-under=80` added to
+  `.github/workflows/ci.yml`. Coverage is now a hard gate, not just an observable.
+
+- **§Limitations: dataset confirmation bias disclosed** (`docs/research/08_limitations.md`
+  §2.6, `paper/main.tex` new paragraph). 4 of 5 `realistic_recall_v2` challenge types
+  are by-construction pro-AFT; aggregate advantage should be read as "AFT advantage when
+  affective context discriminates", not general superiority.
+
+- **§Limitations renumbered**: old §2.6 (human-eval) promoted to §2.7 to make room for
+  new §2.6 (dataset scope / confirmation bias).
+
+- **Hd-family Bonferroni-5 p_adj committed** (`benchmarks/preregistration_addendum_hd2_closure.md`):
+  added `p_adj_bonf×5` column. Primary family (Hd1+Hd2): PASS (p_adj <0.005). Cross-language
+  extensions (Hd2_IT, Hd2_ES) are exploratory and borderline/fail under family correction.
+
+- **`claim_validation_matrix.json`**: `replayable_multi_session_help.not_yet_shown` updated
+  to flag that valence-neutral scenario generalisation is not yet established.
+
+- **mkdocs nav**: `claim_validation_matrix.json` added to Research section.
+
+- **README intro**: added one-line trilingual evaluation note (EN/IT/ES).
+
+- **`pyproject.toml` ruff per-file-ignores**: `tools/**` added (T201, S603, S314, S311).
+
+### Removed
+
+- **Orphan benchmark artifacts pruned** (9 files):
+  `benchmarks/comparative/results.{csv,sbert.csv}`,
+  `benchmarks/locomo/results.{dryrun.json,dryrun.md,checkpoint.jsonl}`,
+  `benchmarks/ablation/results.{json,md,protocol.json}` (v1 hash-only, superseded by SBERT runs),
+  `benchmarks/appraisal_confound/results.json` (superseded by `results.confirmatory.json`).
+
 ## [0.8.2] - 2026-05-04
 
 ### Added

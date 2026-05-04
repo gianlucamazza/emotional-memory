@@ -6,8 +6,8 @@ import pytest
 
 from benchmarks.common.statistics import holm_bonferroni
 from benchmarks.realistic.analyze_challenge_subsets import (
-    CHALLENGE_TYPES,
     SBERT_JSON,
+    _challenge_types_present,
     compute_pairwise_by_challenge,
 )
 
@@ -21,15 +21,15 @@ def test_compute_pairwise_by_challenge_shape() -> None:
     assert result["baseline"] == "naive_cosine"
     challenge_data = result["challenge_types"]
 
-    # All 4 challenge types present
-    assert set(challenge_data.keys()) == set(CHALLENGE_TYPES)
+    expected_types = _challenge_types_present(SBERT_JSON)
+    assert set(challenge_data.keys()) == set(expected_types)
 
     import json
 
     raw = json.loads(SBERT_JSON.read_text(encoding="utf-8"))
     expected_counts = raw["difficulty_profile"]["challenge_type_counts"]
 
-    for ct in CHALLENGE_TYPES:
+    for ct in expected_types:
         for metric in ("top1", "hit_at_k"):
             m = challenge_data[ct][metric]
             assert "n_queries" in m
@@ -46,21 +46,23 @@ def test_compute_pairwise_by_challenge_is_deterministic() -> None:
     r1 = compute_pairwise_by_challenge(SBERT_JSON)
     r2 = compute_pairwise_by_challenge(SBERT_JSON)
 
-    for ct in CHALLENGE_TYPES:
+    challenge_types = _challenge_types_present(SBERT_JSON)
+    for ct in challenge_types:
         for metric in ("top1", "hit_at_k"):
             assert r1["challenge_types"][ct][metric] == r2["challenge_types"][ct][metric]
 
 
 def test_holm_correction_family() -> None:
-    # Holm correction is applied per-metric family (4 challenge types)
+    # Holm correction is applied per-metric family (challenge types present)
     # not globally across both metrics at once.
     result = compute_pairwise_by_challenge(SBERT_JSON)
+    challenge_types = _challenge_types_present(SBERT_JSON)
 
     # Collect raw p_bootstrap values per metric family
     for metric in ("top1", "hit_at_k"):
         p_vals = []
         adj_vals = []
-        for ct in CHALLENGE_TYPES:
+        for ct in challenge_types:
             m = result["challenge_types"][ct][metric]
             if m["p_bootstrap"] is not None and m["p_bootstrap_adj_holm"] is not None:
                 p_vals.append(m["p_bootstrap"])

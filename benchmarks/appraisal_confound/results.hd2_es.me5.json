@@ -43,7 +43,7 @@
     }
   },
   "hypotheses": {
-    "Hd_realistic_recall_v2_es": {
+    "Hd2_ES": {
       "description": "aft_noAppraisal.top1 > naive_cosine.top1, \u0394 > 0.10 (Addendum D generalization)",
       "result": "FAIL",
       "delta": 0.1125,

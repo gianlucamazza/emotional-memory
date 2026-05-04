@@ -77,7 +77,9 @@ nav:
     - Current Evidence: research/09_current_evidence.md
     - Scientific Quality Bar: research/10_scientific_quality_bar.md
     - Dominance Design (implemented v0.8.2): research/11_dominance_design.md
+    - Multilingual Follow-up: research/12_multilingual_followup.md
     - Audit (2026-04): research/audit_2026-04.md
+    - Claim Validation Matrix: research/claim_validation_matrix.json
     - Bibliography: research/06_bibliography.md
   - Blog:
     - April 2026 Kickoff: blog/2026-04-kickoff.md

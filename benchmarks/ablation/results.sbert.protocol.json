@@ -1,5 +1,5 @@
 {
-  "benchmark": "ablation_realistic_v1",
+  "benchmark": "ablation_realistic_recall_v1",
   "base_benchmark": "realistic_recall_v1",
   "ablations": [
     {
@@ -48,7 +48,7 @@
     }
   ],
   "statistics": {
-    "n_bootstrap": 2000,
+    "n_bootstrap": 10000,
     "confidence": 0.95,
     "ci_method": "bootstrap_percentile",
     "seed": 0,

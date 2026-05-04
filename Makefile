@@ -73,11 +73,12 @@ sync-metadata-dry:
 
 meta-check:
 	uv run python scripts/check_release_metadata.py
+	uv run python tools/audit_claim_refs.py
 
 meta-check-local:
 	uv run python scripts/check_release_metadata.py --require-local-doi
 
-check: lint typecheck meta-check test
+check: lint typecheck meta-check test bench-fidelity
 
 bench-fidelity:
 	uv run pytest benchmarks/fidelity/ -v -m fidelity
@@ -196,6 +197,10 @@ human-eval-summary:
 
 reproduce-paper:
 	uv run python scripts/reproduce_paper.py
+
+reproduce-paper-check:
+	uv run python scripts/reproduce_paper.py
+	git diff --exit-code paper/tables/ || (echo "ERROR: paper/tables/ is stale — run 'make reproduce-paper' and commit"; exit 1)
 
 paper:
 	cd paper && latexmk -pdf -interaction=nonstopmode main.tex

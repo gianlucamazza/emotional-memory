@@ -55,11 +55,21 @@ Parameters: seed=0, n_bootstrap=2000, N=200 (realistic_recall_v2), Holm correcti
 
 Destructive variants (replication of prior results, not S3 hypotheses):
 
-| Variant | SBERT Δ | e5 Δ | Verdict |
+| Variant | SBERT Δ vs full | e5 Δ vs full | Verdict |
 |---|---|---|---|
 | dual_path | -0.20 | -0.27 | Destructive (He1 replicated) |
-| aft_keyword_synchronous | -0.45 | -0.45 | Destructive (Hf1 replicated) |
+| aft_keyword_synchronous | -0.45 | -0.45 | Destructive (Hf1 base replicated) |
 | no_reconsolidation | +0.01 | +0.03 | Neutral (He2 null replicated) |
+
+**Hf1 direct comparison (Add. F, secondary on v2):**
+dual_path vs aft_keyword_synchronous direct paired bootstrap (n=10,000, seed=0):
+
+| Embedder | Δ_Hf1 [95% CI] | p (one-tailed) | CI above 0 | Verdict |
+|---|---|---|---|---|
+| SBERT bge-small-en | +0.255 [0.190, 0.320] | <0.001 | ✓ | **Hf1 PASS** |
+| e5-small-v2 | +0.165 [0.110, 0.225] | <0.001 | ✓ | **Hf1 PASS** |
+
+Primary Hf1 (v1.4, N=100, n=10,000, seed=0): Δ=+0.290 [0.190, 0.390], p<0.001, CI above 0 → **PASS**. See `benchmarks/preregistration_addendum_f_closure.md`.
 
 ---
 

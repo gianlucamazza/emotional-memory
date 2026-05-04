@@ -45,9 +45,9 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
-      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 and Italian cross-language; S3 shows no single layer is isolatably responsible.",
-      "not_yet_shown": "General downstream superiority over production memory systems.",
-      "next_study": "Expand external and realistic retrieval evaluations.",
+      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 (EN SBERT Δ=+0.125, IT me5 Δ=+0.163, ES SBERT Δ=+0.138); S3 shows no single layer is isolatably responsible.",
+      "not_yet_shown": "General downstream superiority over production memory systems. Architecture advantage under automatic appraisal (all Hd* use oracle/preset affect; see oracle-affect limitation). Consistent cross-embedder per-type advantage (H6 momentum_alignment fails for e5-small-v2).",
+      "next_study": "Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection. Expand external and realistic retrieval evaluations.",
       "evidence_refs": [
         "benchmarks/fidelity/test_emotional_vs_cosine.py",
         "benchmarks/fidelity/test_mood_congruent.py"
@@ -56,8 +56,11 @@
         "benchmarks/comparative/results.sbert.md",
         "benchmarks/realistic/results.v2.sbert.md",
         "benchmarks/realistic/results.v2.e5.md",
+        "benchmarks/appraisal_confound/results.confirmatory.md",
         "benchmarks/appraisal_confound/results.hd2.sbert.md",
-        "benchmarks/appraisal_confound/results.hd2_it.me5.md"
+        "benchmarks/appraisal_confound/results.hd2_it.me5.md",
+        "benchmarks/appraisal_confound/results.hd2_es.sbert.md",
+        "benchmarks/appraisal_confound/results.hd2_es.me5.md"
       ],
       "protocol_refs": [
         "benchmarks/comparative/protocol.md"
@@ -74,7 +77,7 @@
       "evidence_level": "1_theory_fidelity",
       "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
       "current_evidence": "126 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution.",
-      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future).",
+      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future). Positive resonance contribution under e5-small-v2 (Hb sign reversal: removing resonance improves e5 top1 Δ=+0.085 p<0.001; may reflect e5 geometry incompatibility rather than resonance inertness).",
       "next_study": "Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection.",
       "evidence_refs": [
         "benchmarks/fidelity/test_appraisal_affect.py",
@@ -120,7 +123,7 @@
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001).",
       "current_evidence": "Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED.",
-      "not_yet_shown": "General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation.",
+      "not_yet_shown": "General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation. Generalization beyond affect-discriminative scenarios: v2 benchmark has 4/5 challenge types where AFT signals are theoretically relevant by design; advantage on valence-neutral tasks is not established.",
       "next_study": "Execute human-evaluation pilot; investigate per-task retrieval-weight tuning for factual QA.",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
@@ -131,6 +134,9 @@
         "benchmarks/realistic/results.v2.sbert.md",
         "benchmarks/realistic/results.v2.e5.md",
         "benchmarks/realistic/results.v2_it.me5.md",
+        "benchmarks/realistic/results.v2_it.sbert.md",
+        "benchmarks/realistic/results.v2_es.sbert.md",
+        "benchmarks/realistic/results.v2_es.me5.md",
         "benchmarks/ablation/results.v2.sbert.md",
         "benchmarks/ablation/results.v2.e5.md"
       ],

@@ -250,11 +250,65 @@ def run_ablation_study(
         row["hit_at_k"]["p_bootstrap_adj_holm"] = round(p_adj_h, 4)
         pairwise.append(row)
 
+    # Hf1: direct paired bootstrap — dual_path vs aft_keyword_synchronous
+    hf1_pairwise: dict[str, Any] | None = None
+    if (
+        "dual_path" in query_flags_by_variant
+        and "aft_keyword_synchronous" in query_flags_by_variant
+    ):
+        dp_flags = query_flags_by_variant["dual_path"]
+        ks_flags = query_flags_by_variant["aft_keyword_synchronous"]
+        dp_top1 = [dp_flags.get(qid, {"top1_hit": False})["top1_hit"] for qid in query_ids]
+        ks_top1 = [ks_flags.get(qid, {"top1_hit": False})["top1_hit"] for qid in query_ids]
+        dp_hit = [dp_flags.get(qid, {"hit": False})["hit"] for qid in query_ids]
+        ks_hit = [ks_flags.get(qid, {"hit": False})["hit"] for qid in query_ids]
+
+        diff_t, lo_t, hi_t, p_two_t = paired_bootstrap_diff(
+            dp_top1, ks_top1, n_bootstrap=n_bootstrap, seed=seed
+        )
+        p_one_t = p_two_t / 2 if diff_t > 0 else 1.0 - p_two_t / 2
+        only_dp_t = sum(a and not b for a, b in zip(dp_top1, ks_top1, strict=True))
+        only_ks_t = sum(b and not a for a, b in zip(dp_top1, ks_top1, strict=True))
+
+        diff_h, lo_h, hi_h, p_two_h = paired_bootstrap_diff(
+            dp_hit, ks_hit, n_bootstrap=n_bootstrap, seed=seed
+        )
+        p_one_h = p_two_h / 2 if diff_h > 0 else 1.0 - p_two_h / 2
+        only_dp_h = sum(a and not b for a, b in zip(dp_hit, ks_hit, strict=True))
+        only_ks_h = sum(b and not a for a, b in zip(dp_hit, ks_hit, strict=True))
+
+        hf1_pairwise = {
+            "system": "dual_path",
+            "baseline": "aft_keyword_synchronous",
+            "n_queries": len(query_ids),
+            "top1": {
+                "diff": round(diff_t, 4),
+                "ci_lower": round(lo_t, 4),
+                "ci_upper": round(hi_t, 4),
+                "p_two_sided": round(p_two_t, 4),
+                "p_one_sided": round(p_one_t, 4),
+                "ci_above_zero": bool(lo_t > 0),
+                "only_system": only_dp_t,
+                "only_baseline": only_ks_t,
+            },
+            "hit_at_k": {
+                "diff": round(diff_h, 4),
+                "ci_lower": round(lo_h, 4),
+                "ci_upper": round(hi_h, 4),
+                "p_two_sided": round(p_two_h, 4),
+                "p_one_sided": round(p_one_h, 4),
+                "ci_above_zero": bool(lo_h > 0),
+                "only_system": only_dp_h,
+                "only_baseline": only_ks_h,
+            },
+        }
+
     return {
         "benchmark": f"ablation_{dataset.name}",
         "base_benchmark": dataset.name,
         "variants": variant_results,
         "pairwise_vs_full": pairwise,
+        "hf1_pairwise": hf1_pairwise,
         "statistics": {
             "n_bootstrap": n_bootstrap,
             "confidence": 0.95,
@@ -386,36 +440,54 @@ def _render_markdown(results: dict[str, Any]) -> str:
     ]
 
     # Hf1 supplementary: dual_path vs aft_keyword_synchronous
-    pw = {r["variant"]: r for r in results["pairwise_vs_full"]}
-    if "dual_path" in pw and "aft_keyword_synchronous" in pw:
+    hf1 = results.get("hf1_pairwise")
+    if hf1:
+        t = hf1["top1"]
+        h = hf1["hit_at_k"]
+        pass_t = t["p_one_sided"] < 0.05 and t["ci_above_zero"]
+        verdict = "**Hf1 PASS**" if pass_t else "**Hf1 FAIL**"
+        ci_sym_t = "✓" if t["ci_above_zero"] else "✗"
+        delta_str_t = format_point_ci(t["diff"], t["ci_lower"], t["ci_upper"])
+        delta_str_h = format_point_ci(h["diff"], h["ci_lower"], h["ci_upper"])
+
+        dp_row = next((v for v in results["variants"] if v["variant"] == "dual_path"), None)
+        ks_row = next(
+            (v for v in results["variants"] if v["variant"] == "aft_keyword_synchronous"), None
+        )
+        dp_top1_pt = (
+            dp_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            if dp_row
+            else float("nan")
+        )
+        ks_top1_pt = (
+            ks_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
+            if ks_row
+            else float("nan")
+        )
+        dp_hit_pt = (
+            dp_row["aggregate_metrics"].get("hit_at_k", float("nan")) if dp_row else float("nan")
+        )
+        ks_hit_pt = (
+            ks_row["aggregate_metrics"].get("hit_at_k", float("nan")) if ks_row else float("nan")
+        )
+
         lines += [
             "## Supplementary: Hf1 — dual_path vs aft_keyword_synchronous (Addendum F)",
             "",
             "Hf1 tests whether deferring keyword appraisal (slow-path `elaborate()`) partially "
             "mitigates the destructive override of synchronous keyword appraisal.",
             "",
+            "Pre-registered criterion (Addendum F): paired bootstrap (n=10,000, seed=0), "
+            "one-tailed p < 0.05 **and** bootstrap CI for Δ_Hf1 fully above 0.",
+            "",
+            "| Metric | dual_path | aft_kw_sync | Δ [95% CI] | p (one-tailed) | CI>0 | Verdict |",
+            "|--------|-----------|------------|------------|----------------|------|---------|",
+            f"| top1 | {dp_top1_pt:.3f} | {ks_top1_pt:.3f} | {delta_str_t} "
+            f"| {t['p_one_sided']:.4f} | {ci_sym_t} | {verdict} |",
+            f"| hit@k | {dp_hit_pt:.3f} | {ks_hit_pt:.3f} | {delta_str_h} "
+            f"| {h['p_one_sided']:.4f} | {'✓' if h['ci_above_zero'] else '✗'} | — |",
+            "",
         ]
-        # Compute direct Hf1 comparison from the stored variant results
-        dp_row = next((v for v in results["variants"] if v["variant"] == "dual_path"), None)
-        ks_row = next(
-            (v for v in results["variants"] if v["variant"] == "aft_keyword_synchronous"), None
-        )
-        if dp_row and ks_row:
-            dp_top1 = dp_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
-            ks_top1 = ks_row["aggregate_metrics"].get("top1_accuracy", float("nan"))
-            delta_hf1 = round(dp_top1 - ks_top1, 4)
-            verdict = "**Hf1 PASS**" if delta_hf1 > 0 else "**Hf1 FAIL**"
-            lines += [
-                "| Metric | dual_path | aft_keyword_synchronous | Δ (Hf1) | Verdict |",
-                "|--------|-----------|------------------------|---------|---------|",
-                f"| top1   | {dp_top1:.3f} | {ks_top1:.3f} | {delta_hf1:+.4f} | {verdict} |",
-                "",
-                "Note: paired bootstrap and Holm-corrected p-values for each variant "
-                "vs full_aft are in the pairwise tables above. Direct Hf1 statistical "
-                "significance requires a separate pairwise bootstrap not computed here; "
-                "the delta direction is the pre-registered criterion.",
-                "",
-            ]
 
     return "\n".join(lines)
 

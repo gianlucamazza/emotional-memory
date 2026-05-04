@@ -44,11 +44,28 @@ Per-study N: Hd2 EN N=200 (50 scenarios × 4 queries); Hd2_IT N=80 (20 scenarios
 
 ## Results summary
 
-| Study | Dataset | Embedder | Verdict | Δ (top1) | p_two_sided | Cohen's d |
-|---|---|---|---|---|---|---|
-| Hd1 (primary, v1) | realistic_recall_v1 | SBERT | **PASS** | +0.230 | <0.001 | 0.515 |
-| Hd2 (generalization, v2) | realistic_recall_v2 | SBERT | **PASS** | +0.125 | <0.001 | 0.286 |
-| Hd2_IT (cross-language, v2_it) | realistic_recall_v2_it | me5 | **PASS** | +0.163 | 0.012 | 0.289 |
+| Study | Dataset | Embedder | Verdict | Δ (top1) | p_two_sided | p_adj_bonf×5 | Cohen's d |
+|---|---|---|---|---|---|---|---|
+| Hd1 (primary, v1) | realistic_recall_v1 | SBERT | **PASS** | +0.230 | <0.001 | <0.005 | 0.515 |
+| Hd2 (generalization, v2) | realistic_recall_v2 | SBERT | **PASS** | +0.125 | <0.001 | <0.005 | 0.286 |
+| Hd2_IT (cross-language, v2_it) | realistic_recall_v2_it | me5 | PASS (raw) / borderline (family) | +0.163 | 0.012 | 0.060 | 0.289 |
+| Hd2_ES (cross-language, v2_es) | realistic_recall_v2_es | SBERT | PASS (raw) / FAIL (family) | +0.138 | 0.045 | 0.225 | 0.233 |
+| Hd2_ES (cross-language, v2_es) | realistic_recall_v2_es | me5 | FAIL | +0.113 | 0.110 | 0.550 | 0.189 |
+
+**Note — Bonferroni family correction:** The 5 studies above span two pre-registration
+scopes: (1) primary family {Hd1, Hd2}, pre-registered in Addendum D; (2) secondary
+exploratory cross-language extensions {Hd2_IT, Hd2_ES.sbert, Hd2_ES.me5}, not jointly
+pre-registered. Applying a conservative 5-way Bonferroni correction at α_family=0.05
+(threshold per test = 0.01):
+
+- **Hd1, Hd2**: PASS even under family correction (p_adj <0.005).
+- **Hd2_IT**: borderline FAIL under 5-way family correction (p_adj=0.060 > 0.05).
+  Within its own pre-reg scope (secondary/exploratory) it is significant (p=0.012).
+- **Hd2_ES.sbert, Hd2_ES.me5**: FAIL under family correction.
+
+The canonical interpretation is: the primary architecture advantage (Hd1+Hd2, both
+p_adj <0.005) is robust. Cross-language extensions are positive directionally but
+fragile under family-wise correction; they are best reported as exploratory.
 
 ---
 
@@ -63,6 +80,14 @@ absolute accuracy for all systems. The Δ > 0.10 pre-registered threshold is met
 Italian slice, the advantage is Δ=0.163 (d=0.289), comparable in magnitude to
 EN. This extends the AFT architecture claim to non-English language + multilingual
 embedder settings, consistent with Addendum H (hit@k significance on Italian).
+
+**Hd2_ES (cross-language, Spanish).** SBERT: Δ=+0.138, p=0.045, d=0.233 — PASS at
+α=0.05. Multilingual-e5-small: Δ=+0.113, p=0.110, d=0.189 — FAIL. The Spanish slice
+shows the same pattern as Italian: SBERT geometry captures the affective advantage
+(marginal p=0.045), while the multilingual embedder shows a consistent positive
+direction but insufficient power (N=80 only, d=0.189 requires N≈120 for 80% power).
+Hd2_ES is not a pre-registered confirmatory study (Addendum H extends to Italian; ES
+is an exploratory extension consistent with Addendum H intent).
 
 **Coherence with S3 results.** S3 found Ha/Hb FAIL (mood, resonance individually
 not significant). The Hd2 PASS establishes that the *system-level* advantage is

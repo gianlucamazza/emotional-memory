@@ -49,7 +49,7 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Run tests with coverage
-        run: uv run pytest --cov --cov-report=xml
+        run: uv run pytest --cov --cov-report=xml --cov-fail-under=80
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.13'
@@ -164,6 +164,9 @@ jobs:
 
       - name: Run fidelity benchmarks
         run: uv run pytest benchmarks/fidelity/ -v
+
+      - name: Validate paper tables are up-to-date
+        run: make reproduce-paper-check
 
       - name: Run performance benchmarks
         run: >

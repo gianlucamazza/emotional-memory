@@ -1,19 +1,28 @@
-"""Per-challenge-type pairwise analysis for realistic_recall_v1 benchmark.
+"""Per-challenge-type pairwise analysis for realistic_recall benchmarks.
 
-Reads two pre-run JSON results files (hash and sbert embedders) and computes
+Reads two pre-run JSON results files (two embedder variants) and computes
 paired bootstrap + McNemar pairwise stats per challenge_type for the
-(aft, naive_cosine) pair. Holm-Bonferroni correction applied across the 4
+(aft, naive_cosine) pair. Holm-Bonferroni correction applied across all
 challenge types within each metric family.
 
 CLI usage::
 
+    # v1 (4 challenge types, default)
     uv run python -m benchmarks.realistic.analyze_challenge_subsets
 
-Writes: benchmarks/realistic/challenge_subset_pairwise.json
+    # v2 (5 challenge types, S2 H4-H6 analysis)
+    uv run python -m benchmarks.realistic.analyze_challenge_subsets \\
+        --sbert-json benchmarks/realistic/results.v2.sbert.json \\
+        --second-json benchmarks/realistic/results.v2.e5.json \\
+        --second-label e5-small-v2 \\
+        --out benchmarks/realistic/challenge_subset_pairwise_v2.json
+
+Writes: benchmarks/realistic/challenge_subset_pairwise.json (default)
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from typing import Any
@@ -30,8 +39,10 @@ SBERT_JSON = _REALISTIC_DIR / "results.sbert.json"
 HASH_JSON = _REALISTIC_DIR / "results.json"
 OUT_JSON = _REALISTIC_DIR / "challenge_subset_pairwise.json"
 
-CHALLENGE_TYPES = (
+# Ordered list of all possible challenge types (union of v1 and v2)
+_ALL_CHALLENGE_TYPES = (
     "affective_arc",
+    "momentum_alignment",
     "recency_confound",
     "same_topic_distractor",
     "semantic_confound",
@@ -55,10 +66,27 @@ def _flat_queries(data: dict[str, Any], system: str) -> list[dict[str, Any]]:
     ]
 
 
+def _challenge_types_present(results_path: Path) -> tuple[str, ...]:
+    """Derive the challenge types present in this results file."""
+    data = json.loads(results_path.read_text(encoding="utf-8"))
+    found: set[str] = set()
+    aft = next((s for s in data["systems"] if s["system"] == "aft"), None)
+    if aft is None:
+        return _ALL_CHALLENGE_TYPES
+    for scenario in aft.get("scenarios", []):
+        for session in scenario.get("sessions", []):
+            for q in session.get("queries", []):
+                ct = q.get("challenge_type")
+                if ct:
+                    found.add(ct)
+    return tuple(ct for ct in _ALL_CHALLENGE_TYPES if ct in found)
+
+
 def _per_challenge_per_query_metric(
     data: dict[str, Any],
     system: str,
     baseline: str,
+    challenge_types: tuple[str, ...],
 ) -> dict[str, dict[str, tuple[list[float], list[float]]]]:
     """Pair system vs baseline per-query hit vectors, grouped by challenge type."""
     sys_qs = _flat_queries(data, system)
@@ -66,7 +94,7 @@ def _per_challenge_per_query_metric(
     base_by_id = {q["query_id"]: q for q in base_qs}
 
     result: dict[str, dict[str, tuple[list[float], list[float]]]] = {
-        ct: {"top1": ([], []), "hit_at_k": ([], [])} for ct in CHALLENGE_TYPES
+        ct: {"top1": ([], []), "hit_at_k": ([], [])} for ct in challenge_types
     }
     for sq in sys_qs:
         bq = base_by_id.get(sq["query_id"])
@@ -103,15 +131,19 @@ def compute_pairwise_by_challenge(
     *,
     system: str = "aft",
     baseline: str = "naive_cosine",
+    challenge_types: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
     """Compute pairwise bootstrap + McNemar stats per challenge type.
 
     Returns a structured dict with per-challenge, per-metric pairwise stats.
-    Holm-Bonferroni correction applied across the 4 challenge types within
+    Holm-Bonferroni correction applied across all challenge types within
     each metric family independently.
     """
     data = json.loads(results_path.read_text(encoding="utf-8"))
-    pairs = _per_challenge_per_query_metric(data, system, baseline)
+    if challenge_types is None:
+        challenge_types = _challenge_types_present(results_path)
+
+    pairs = _per_challenge_per_query_metric(data, system, baseline, challenge_types)
     sys_ests = _get_challenge_point_estimates(data, system)
     base_ests = _get_challenge_point_estimates(data, baseline)
 
@@ -119,7 +151,7 @@ def compute_pairwise_by_challenge(
     raw: dict[str, dict[str, dict[str, Any]]] = {}
     p_by_metric: dict[str, list[tuple[str, float]]] = {"top1": [], "hit_at_k": []}
 
-    for ct in CHALLENGE_TYPES:
+    for ct in challenge_types:
         raw[ct] = {}
         for metric in ("top1", "hit_at_k"):
             a, b = pairs[ct][metric]
@@ -190,9 +222,11 @@ def compute_pairwise_by_challenge(
 
 
 def _embedder_label(path: Path) -> str:
-    stem = path.stem  # e.g. "results" or "results.sbert"
+    stem = path.stem  # e.g. "results" or "results.sbert" or "results.v2.e5"
     if "sbert" in stem:
         return "sbert-bge"
+    if "e5" in stem:
+        return "e5-small-v2"
     return "hash"
 
 
@@ -256,18 +290,48 @@ def _resolution_section(
 
 
 def main() -> None:
-    sbert_result = compute_pairwise_by_challenge(SBERT_JSON)
-    hash_result = compute_pairwise_by_challenge(HASH_JSON)
+    parser = argparse.ArgumentParser(description="Per-challenge-type pairwise analysis.")
+    parser.add_argument(
+        "--sbert-json",
+        type=Path,
+        default=SBERT_JSON,
+        help=f"Primary (SBERT) results JSON (default: {SBERT_JSON.name})",
+    )
+    parser.add_argument(
+        "--second-json",
+        type=Path,
+        default=HASH_JSON,
+        help=f"Secondary results JSON (default: {HASH_JSON.name})",
+    )
+    parser.add_argument(
+        "--second-label",
+        type=str,
+        default=None,
+        help="Label for secondary embedder (auto-derived from filename if omitted)",
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=OUT_JSON,
+        help=f"Output JSON path (default: {OUT_JSON.name})",
+    )
+    args = parser.parse_args()
+
+    sbert_result = compute_pairwise_by_challenge(args.sbert_json)
+    second_result = compute_pairwise_by_challenge(args.second_json)
+    if args.second_label:
+        second_result["embedder_label"] = args.second_label
 
     payload: dict[str, Any] = {
         "generated_by": "benchmarks.realistic.analyze_challenge_subsets",
         "sbert": sbert_result,
-        "hash": hash_result,
+        "hash": second_result,
     }
-    OUT_JSON.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Written: {OUT_JSON}")
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Written: {args.out}")
     print()
-    print(_resolution_section(sbert_result, hash_result))
+    print(_resolution_section(sbert_result, second_result))
 
 
 if __name__ == "__main__":

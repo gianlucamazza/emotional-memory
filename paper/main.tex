@@ -591,6 +591,46 @@ replicating $H_{f1}$). Reconsolidation continues to register null
 Dual-path encoding is therefore retained as opt-in only; semantically-grounded
 LLM appraisal (non-keyword) is recommended when an appraisal engine is configured.
 
+\paragraph{Resonance sign reversal on e5-small-v2.}
+The ablation finding for the resonance layer ($H_b$: $+0.085$, $p<0.001$ on
+e5-small-v2) is a statistically confirmed sign reversal: removing \texttt{ResonanceLink}
+\emph{improves} top1 accuracy for this embedder. We do not interpret this as evidence
+that resonance is harmful in general. The SBERT embedder yields a
+non-significant $\Delta=+0.02$ ($p=0.203$) for the same ablation. The most
+plausible explanation is geometry-specific: e5-small-v2 clusters semantically
+related items more tightly than SBERT-bge; spreading activation over a
+tight-cluster geometry amplifies distractor promotion in challenge types
+designed to test semantic confounding (\texttt{semantic\_confound},
+\texttt{same\_topic\_distractor}). This interaction is embedder-dependent
+and motivates future work on adaptive resonance-weight scheduling.
+
+\paragraph{Oracle-affect operationalization.}
+The appraisal-confound studies ($H_{d1}$, $H_{d2}$, cross-language Hd2\_IT/ES)
+compare \texttt{aft\_noAppraisal}---AFT using \emph{preset} valence/arousal
+values from the benchmark---against \texttt{naive\_cosine}, which has no access
+to affect at all. This design isolates the \emph{retrieval architecture} given
+perfect affect, but does not test the \emph{appraisal pipeline} under real
+inference conditions. The Ha2/Hb2 results show that keyword appraisal
+is destructive ($\Delta=-0.39$ vs.\ naive\_cosine), so the architecture
+advantage under automatic appraisal remains unconfirmed. Addendum~G
+(deferred; see \texttt{benchmarks/preregistration\_addendum\_a\_closure.md})
+will address this gap with an LLM-backed appraisal condition on a dataset
+not pre-seeded with oracle affect values.
+
+\paragraph{Controlled benchmark scope.}
+\texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
+AFT's affective signals are theoretically discriminative
+(\texttt{affective\_arc}, \texttt{momentum\_alignment},
+\texttt{semantic\_confound}, \texttt{same\_topic\_distractor}).
+Only \texttt{recency\_confound} is valence-neutral.
+The aggregate advantage ($\Delta=+0.205$ SBERT; $+0.155$ e5) should therefore
+be read as \emph{AFT advantage when affective context discriminates}, not as
+uniform superiority across all retrieval tasks. This is consistent with the
+LoCoMo negative result (Gate~1 FAIL): where affect is non-discriminative,
+AFT provides no advantage. Scenarios with valence-neutral discrimination
+criteria are under-represented in v2, and their effect on aggregate accuracy
+is unknown.
+
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
 \label{sec:reproducibility}

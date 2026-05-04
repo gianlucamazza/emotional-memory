@@ -7,31 +7,31 @@
       "flags": {},
       "aggregate_metrics": {
         "query_count": 200,
-        "top1_accuracy": 0.505,
-        "hit_at_k": 0.64,
+        "top1_accuracy": 0.51,
+        "hit_at_k": 0.63,
         "minimum_candidate_count": 6,
         "nontrivial_query_rate": 0.885,
         "ci": {
           "top1_accuracy": {
-            "point": 0.505,
-            "ci_lower": 0.435,
-            "ci_upper": 0.575,
+            "point": 0.51,
+            "ci_lower": 0.44,
+            "ci_upper": 0.58,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "hit_at_k": {
-            "point": 0.64,
-            "ci_lower": 0.575,
-            "ci_upper": 0.7051249999999992,
+            "point": 0.63,
+            "ci_lower": 0.565,
+            "ci_upper": 0.695,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "nontrivial_query_rate": {
             "point": 0.885,
-            "ci_lower": 0.835,
+            "ci_lower": 0.84,
             "ci_upper": 0.925,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           }
         },
         "stateful_session_rate": 0.99
@@ -50,21 +50,21 @@
               "ci_lower": 0.35,
               "ci_upper": 0.65,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.55,
               "ci_lower": 0.4,
               "ci_upper": 0.7,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.85,
               "ci_lower": 0.725,
               "ci_upper": 0.95,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -79,54 +79,54 @@
             "top1_accuracy": {
               "point": 0.475,
               "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
+              "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.975,
-              "ci_lower": 0.925,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "recency_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.3,
-          "hit_at_k": 0.475,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.3,
-              "ci_lower": 0.175,
-              "ci_upper": 0.45,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.475,
               "ci_lower": 0.325,
               "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.975,
+              "ci_lower": 0.925,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.275,
+          "hit_at_k": 0.475,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.275,
+              "ci_lower": 0.15,
+              "ci_upper": 0.425,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -143,52 +143,52 @@
               "ci_lower": 0.525,
               "ci_upper": 0.825,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.875,
-              "ci_lower": 0.75,
+              "ci_lower": 0.775,
               "ci_upper": 0.975,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.6,
               "ci_lower": 0.45,
               "ci_upper": 0.75,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
         {
           "challenge_type": "semantic_confound",
           "query_count": 40,
-          "top1_accuracy": 0.575,
-          "hit_at_k": 0.825,
+          "top1_accuracy": 0.625,
+          "hit_at_k": 0.775,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
             "top1_accuracy": {
-              "point": 0.575,
-              "ci_lower": 0.425,
-              "ci_upper": 0.725,
+              "point": 0.625,
+              "ci_lower": 0.475,
+              "ci_upper": 0.775,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.825,
-              "ci_lower": 0.7,
-              "ci_upper": 0.925,
+              "point": 0.775,
+              "ci_lower": 0.65,
+              "ci_upper": 0.9,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         }
@@ -201,31 +201,31 @@
       },
       "aggregate_metrics": {
         "query_count": 200,
-        "top1_accuracy": 0.51,
-        "hit_at_k": 0.63,
+        "top1_accuracy": 0.505,
+        "hit_at_k": 0.62,
         "minimum_candidate_count": 6,
         "nontrivial_query_rate": 0.885,
         "ci": {
           "top1_accuracy": {
-            "point": 0.51,
-            "ci_lower": 0.44,
-            "ci_upper": 0.58,
+            "point": 0.505,
+            "ci_lower": 0.435,
+            "ci_upper": 0.575,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "hit_at_k": {
-            "point": 0.63,
-            "ci_lower": 0.56,
-            "ci_upper": 0.7,
+            "point": 0.62,
+            "ci_lower": 0.55,
+            "ci_upper": 0.685,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "nontrivial_query_rate": {
             "point": 0.885,
-            "ci_lower": 0.835,
+            "ci_lower": 0.84,
             "ci_upper": 0.925,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           }
         },
         "stateful_session_rate": 0.99
@@ -244,21 +244,21 @@
               "ci_lower": 0.35,
               "ci_upper": 0.65,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.55,
               "ci_lower": 0.4,
               "ci_upper": 0.7,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.85,
               "ci_lower": 0.725,
               "ci_upper": 0.95,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -273,23 +273,23 @@
             "top1_accuracy": {
               "point": 0.475,
               "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
+              "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.475,
               "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
+              "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.975,
               "ci_lower": 0.925,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -297,61 +297,61 @@
           "challenge_type": "recency_confound",
           "query_count": 40,
           "top1_accuracy": 0.275,
-          "hit_at_k": 0.45,
+          "hit_at_k": 0.425,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
             "top1_accuracy": {
               "point": 0.275,
               "ci_lower": 0.15,
-              "ci_upper": 0.4006249999999966,
+              "ci_upper": 0.425,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.45,
-              "ci_lower": 0.3,
-              "ci_upper": 0.6,
+              "point": 0.425,
+              "ci_lower": 0.275,
+              "ci_upper": 0.575,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
         {
           "challenge_type": "same_topic_distractor",
           "query_count": 40,
-          "top1_accuracy": 0.675,
-          "hit_at_k": 0.85,
+          "top1_accuracy": 0.65,
+          "hit_at_k": 0.875,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 0.6,
           "ci": {
             "top1_accuracy": {
-              "point": 0.675,
-              "ci_lower": 0.525,
-              "ci_upper": 0.825,
+              "point": 0.65,
+              "ci_lower": 0.5,
+              "ci_upper": 0.8,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.85,
-              "ci_lower": 0.725,
-              "ci_upper": 0.95,
+              "point": 0.875,
+              "ci_lower": 0.775,
+              "ci_upper": 0.975,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.6,
               "ci_lower": 0.45,
               "ci_upper": 0.75,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -359,7 +359,7 @@
           "challenge_type": "semantic_confound",
           "query_count": 40,
           "top1_accuracy": 0.625,
-          "hit_at_k": 0.825,
+          "hit_at_k": 0.775,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
@@ -368,21 +368,21 @@
               "ci_lower": 0.475,
               "ci_upper": 0.775,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.825,
-              "ci_lower": 0.7,
-              "ci_upper": 0.925,
+              "point": 0.775,
+              "ci_lower": 0.65,
+              "ci_upper": 0.9,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         }
@@ -395,31 +395,31 @@
       },
       "aggregate_metrics": {
         "query_count": 200,
-        "top1_accuracy": 0.5,
-        "hit_at_k": 0.62,
+        "top1_accuracy": 0.495,
+        "hit_at_k": 0.615,
         "minimum_candidate_count": 6,
         "nontrivial_query_rate": 0.885,
         "ci": {
           "top1_accuracy": {
-            "point": 0.5,
-            "ci_lower": 0.43,
-            "ci_upper": 0.57,
+            "point": 0.495,
+            "ci_lower": 0.425,
+            "ci_upper": 0.565,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "hit_at_k": {
-            "point": 0.62,
-            "ci_lower": 0.55,
-            "ci_upper": 0.69,
+            "point": 0.615,
+            "ci_lower": 0.545,
+            "ci_upper": 0.68,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "nontrivial_query_rate": {
             "point": 0.885,
-            "ci_lower": 0.835,
+            "ci_lower": 0.84,
             "ci_upper": 0.925,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           }
         },
         "stateful_session_rate": 0.99
@@ -429,7 +429,7 @@
           "challenge_type": "affective_arc",
           "query_count": 40,
           "top1_accuracy": 0.4,
-          "hit_at_k": 0.5,
+          "hit_at_k": 0.525,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 0.85,
           "ci": {
@@ -438,21 +438,21 @@
               "ci_lower": 0.25,
               "ci_upper": 0.55,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.5,
-              "ci_lower": 0.35,
-              "ci_upper": 0.65,
+              "point": 0.525,
+              "ci_lower": 0.375,
+              "ci_upper": 0.675,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.85,
               "ci_lower": 0.725,
               "ci_upper": 0.95,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -467,217 +467,23 @@
             "top1_accuracy": {
               "point": 0.475,
               "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
+              "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.5,
               "ci_lower": 0.35,
               "ci_upper": 0.65,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.975,
               "ci_lower": 0.925,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "recency_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.3,
-          "hit_at_k": 0.45,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.3,
-              "ci_lower": 0.175,
-              "ci_upper": 0.425,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.45,
-              "ci_lower": 0.3,
-              "ci_upper": 0.6,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "same_topic_distractor",
-          "query_count": 40,
-          "top1_accuracy": 0.75,
-          "hit_at_k": 0.875,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.6,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.75,
-              "ci_lower": 0.625,
-              "ci_upper": 0.875,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.875,
-              "ci_lower": 0.75,
-              "ci_upper": 0.975,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "semantic_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.575,
-          "hit_at_k": 0.775,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.575,
-              "ci_lower": 0.425,
-              "ci_upper": 0.725,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.775,
-              "ci_lower": 0.65,
-              "ci_upper": 0.9,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        }
-      ]
-    },
-    {
-      "variant": "no_momentum",
-      "flags": {
-        "enable_momentum": false
-      },
-      "aggregate_metrics": {
-        "query_count": 200,
-        "top1_accuracy": 0.505,
-        "hit_at_k": 0.63,
-        "minimum_candidate_count": 6,
-        "nontrivial_query_rate": 0.885,
-        "ci": {
-          "top1_accuracy": {
-            "point": 0.505,
-            "ci_lower": 0.435,
-            "ci_upper": 0.575,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "hit_at_k": {
-            "point": 0.63,
-            "ci_lower": 0.56,
-            "ci_upper": 0.6951249999999992,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "nontrivial_query_rate": {
-            "point": 0.885,
-            "ci_lower": 0.835,
-            "ci_upper": 0.925,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          }
-        },
-        "stateful_session_rate": 0.99
-      },
-      "challenge_type_metrics": [
-        {
-          "challenge_type": "affective_arc",
-          "query_count": 40,
-          "top1_accuracy": 0.5,
-          "hit_at_k": 0.55,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.85,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.5,
-              "ci_lower": 0.35,
-              "ci_upper": 0.65,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.55,
-              "ci_lower": 0.4,
-              "ci_upper": 0.7,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.85,
-              "ci_lower": 0.725,
-              "ci_upper": 0.95,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "momentum_alignment",
-          "query_count": 40,
-          "top1_accuracy": 0.475,
-          "hit_at_k": 0.475,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.975,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.975,
-              "ci_lower": 0.925,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -685,418 +491,30 @@
           "challenge_type": "recency_confound",
           "query_count": 40,
           "top1_accuracy": 0.275,
-          "hit_at_k": 0.45,
+          "hit_at_k": 0.425,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
             "top1_accuracy": {
               "point": 0.275,
               "ci_lower": 0.15,
-              "ci_upper": 0.4006249999999966,
+              "ci_upper": 0.425,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.45,
-              "ci_lower": 0.3,
-              "ci_upper": 0.6,
+              "point": 0.425,
+              "ci_lower": 0.275,
+              "ci_upper": 0.575,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "same_topic_distractor",
-          "query_count": 40,
-          "top1_accuracy": 0.675,
-          "hit_at_k": 0.875,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.6,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.675,
-              "ci_lower": 0.525,
-              "ci_upper": 0.825,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.875,
-              "ci_lower": 0.75,
-              "ci_upper": 0.975,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "semantic_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.6,
-          "hit_at_k": 0.8,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.8,
-              "ci_lower": 0.675,
-              "ci_upper": 0.925,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        }
-      ]
-    },
-    {
-      "variant": "no_resonance",
-      "flags": {
-        "enable_resonance": false
-      },
-      "aggregate_metrics": {
-        "query_count": 200,
-        "top1_accuracy": 0.59,
-        "hit_at_k": 0.685,
-        "minimum_candidate_count": 6,
-        "nontrivial_query_rate": 0.885,
-        "ci": {
-          "top1_accuracy": {
-            "point": 0.59,
-            "ci_lower": 0.52,
-            "ci_upper": 0.655,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "hit_at_k": {
-            "point": 0.685,
-            "ci_lower": 0.62,
-            "ci_upper": 0.75,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "nontrivial_query_rate": {
-            "point": 0.885,
-            "ci_lower": 0.835,
-            "ci_upper": 0.925,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          }
-        },
-        "stateful_session_rate": 0.99
-      },
-      "challenge_type_metrics": [
-        {
-          "challenge_type": "affective_arc",
-          "query_count": 40,
-          "top1_accuracy": 0.6,
-          "hit_at_k": 0.6,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.85,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.85,
-              "ci_lower": 0.725,
-              "ci_upper": 0.95,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "momentum_alignment",
-          "query_count": 40,
-          "top1_accuracy": 0.475,
-          "hit_at_k": 0.525,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.975,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.525,
-              "ci_lower": 0.375,
-              "ci_upper": 0.675,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.975,
-              "ci_lower": 0.925,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "recency_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.4,
-          "hit_at_k": 0.525,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.4,
-              "ci_lower": 0.25,
-              "ci_upper": 0.55,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.525,
-              "ci_lower": 0.375,
-              "ci_upper": 0.675,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "same_topic_distractor",
-          "query_count": 40,
-          "top1_accuracy": 0.725,
-          "hit_at_k": 0.9,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.6,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.725,
-              "ci_lower": 0.575,
-              "ci_upper": 0.85,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.9,
-              "ci_lower": 0.8,
-              "ci_upper": 0.975,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.6,
-              "ci_lower": 0.45,
-              "ci_upper": 0.75,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "semantic_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.75,
-          "hit_at_k": 0.875,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.75,
-              "ci_lower": 0.625,
-              "ci_upper": 0.875,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.875,
-              "ci_lower": 0.775,
-              "ci_upper": 0.975,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        }
-      ]
-    },
-    {
-      "variant": "no_reconsolidation",
-      "flags": {
-        "enable_reconsolidation": false
-      },
-      "aggregate_metrics": {
-        "query_count": 200,
-        "top1_accuracy": 0.53,
-        "hit_at_k": 0.645,
-        "minimum_candidate_count": 6,
-        "nontrivial_query_rate": 0.885,
-        "ci": {
-          "top1_accuracy": {
-            "point": 0.53,
-            "ci_lower": 0.46,
-            "ci_upper": 0.6,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "hit_at_k": {
-            "point": 0.645,
-            "ci_lower": 0.5798750000000001,
-            "ci_upper": 0.715,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          },
-          "nontrivial_query_rate": {
-            "point": 0.885,
-            "ci_lower": 0.835,
-            "ci_upper": 0.925,
-            "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
-          }
-        },
-        "stateful_session_rate": 0.99
-      },
-      "challenge_type_metrics": [
-        {
-          "challenge_type": "affective_arc",
-          "query_count": 40,
-          "top1_accuracy": 0.5,
-          "hit_at_k": 0.55,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.85,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.5,
-              "ci_lower": 0.35,
-              "ci_upper": 0.65,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.55,
-              "ci_lower": 0.4,
-              "ci_upper": 0.7,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.85,
-              "ci_lower": 0.725,
-              "ci_upper": 0.95,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "momentum_alignment",
-          "query_count": 40,
-          "top1_accuracy": 0.475,
-          "hit_at_k": 0.5,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 0.975,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.6256249999999965,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.5,
-              "ci_lower": 0.35,
-              "ci_upper": 0.65,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 0.975,
-              "ci_lower": 0.925,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            }
-          }
-        },
-        {
-          "challenge_type": "recency_confound",
-          "query_count": 40,
-          "top1_accuracy": 0.3,
-          "hit_at_k": 0.475,
-          "minimum_candidate_count": 6,
-          "nontrivial_query_rate": 1.0,
-          "ci": {
-            "top1_accuracy": {
-              "point": 0.3,
-              "ci_lower": 0.175,
-              "ci_upper": 0.45,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "hit_at_k": {
-              "point": 0.475,
-              "ci_lower": 0.325,
-              "ci_upper": 0.625,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
-            },
-            "nontrivial_query_rate": {
-              "point": 1.0,
-              "ci_lower": 1.0,
-              "ci_upper": 1.0,
-              "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1113,52 +531,634 @@
               "ci_lower": 0.6,
               "ci_upper": 0.875,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.875,
-              "ci_lower": 0.75,
+              "ci_lower": 0.775,
               "ci_upper": 0.975,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.6,
               "ci_lower": 0.45,
               "ci_upper": 0.75,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
         {
           "challenge_type": "semantic_confound",
           "query_count": 40,
-          "top1_accuracy": 0.625,
-          "hit_at_k": 0.825,
+          "top1_accuracy": 0.575,
+          "hit_at_k": 0.75,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
             "top1_accuracy": {
-              "point": 0.625,
-              "ci_lower": 0.475,
-              "ci_upper": 0.775,
+              "point": 0.575,
+              "ci_lower": 0.425,
+              "ci_upper": 0.725,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.825,
-              "ci_lower": 0.7,
-              "ci_upper": 0.925,
+              "point": 0.75,
+              "ci_lower": 0.625,
+              "ci_upper": 0.875,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_momentum",
+      "flags": {
+        "enable_momentum": false
+      },
+      "aggregate_metrics": {
+        "query_count": 200,
+        "top1_accuracy": 0.5,
+        "hit_at_k": 0.62,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 0.885,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.5,
+            "ci_lower": 0.43,
+            "ci_upper": 0.57,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "hit_at_k": {
+            "point": 0.62,
+            "ci_lower": 0.55,
+            "ci_upper": 0.685,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "nontrivial_query_rate": {
+            "point": 0.885,
+            "ci_lower": 0.84,
+            "ci_upper": 0.925,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          }
+        },
+        "stateful_session_rate": 0.99
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 40,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 0.55,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.85,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.35,
+              "ci_upper": 0.65,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.55,
+              "ci_lower": 0.4,
+              "ci_upper": 0.7,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.85,
+              "ci_lower": 0.725,
+              "ci_upper": 0.95,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "momentum_alignment",
+          "query_count": 40,
+          "top1_accuracy": 0.475,
+          "hit_at_k": 0.475,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.975,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.975,
+              "ci_lower": 0.925,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.25,
+          "hit_at_k": 0.425,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.25,
+              "ci_lower": 0.125,
+              "ci_upper": 0.4,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.425,
+              "ci_lower": 0.275,
+              "ci_upper": 0.575,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 40,
+          "top1_accuracy": 0.675,
+          "hit_at_k": 0.875,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.6,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.675,
+              "ci_lower": 0.525,
+              "ci_upper": 0.825,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.875,
+              "ci_lower": 0.775,
+              "ci_upper": 0.975,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.6,
+          "hit_at_k": 0.775,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.775,
+              "ci_lower": 0.65,
+              "ci_upper": 0.9,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_resonance",
+      "flags": {
+        "enable_resonance": false
+      },
+      "aggregate_metrics": {
+        "query_count": 200,
+        "top1_accuracy": 0.585,
+        "hit_at_k": 0.685,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 0.885,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.585,
+            "ci_lower": 0.515,
+            "ci_upper": 0.65,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "hit_at_k": {
+            "point": 0.685,
+            "ci_lower": 0.62,
+            "ci_upper": 0.75,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "nontrivial_query_rate": {
+            "point": 0.885,
+            "ci_lower": 0.84,
+            "ci_upper": 0.925,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          }
+        },
+        "stateful_session_rate": 0.99
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 40,
+          "top1_accuracy": 0.575,
+          "hit_at_k": 0.6,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.85,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.575,
+              "ci_lower": 0.425,
+              "ci_upper": 0.725,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.85,
+              "ci_lower": 0.725,
+              "ci_upper": 0.95,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "momentum_alignment",
+          "query_count": 40,
+          "top1_accuracy": 0.475,
+          "hit_at_k": 0.525,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.975,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.525,
+              "ci_lower": 0.375,
+              "ci_upper": 0.675,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.975,
+              "ci_lower": 0.925,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.4,
+          "hit_at_k": 0.525,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.4,
+              "ci_lower": 0.25,
+              "ci_upper": 0.55,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.525,
+              "ci_lower": 0.375,
+              "ci_upper": 0.675,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 40,
+          "top1_accuracy": 0.725,
+          "hit_at_k": 0.9,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.6,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.725,
+              "ci_lower": 0.575,
+              "ci_upper": 0.85,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.9,
+              "ci_lower": 0.8,
+              "ci_upper": 0.975,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 0.875,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.625,
+              "ci_upper": 0.875,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.875,
+              "ci_lower": 0.775,
+              "ci_upper": 0.975,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "variant": "no_reconsolidation",
+      "flags": {
+        "enable_reconsolidation": false
+      },
+      "aggregate_metrics": {
+        "query_count": 200,
+        "top1_accuracy": 0.52,
+        "hit_at_k": 0.635,
+        "minimum_candidate_count": 6,
+        "nontrivial_query_rate": 0.885,
+        "ci": {
+          "top1_accuracy": {
+            "point": 0.52,
+            "ci_lower": 0.45,
+            "ci_upper": 0.585,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "hit_at_k": {
+            "point": 0.635,
+            "ci_lower": 0.57,
+            "ci_upper": 0.7,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          },
+          "nontrivial_query_rate": {
+            "point": 0.885,
+            "ci_lower": 0.84,
+            "ci_upper": 0.925,
+            "ci_method": "bootstrap_percentile",
+            "n_bootstrap": 10000
+          }
+        },
+        "stateful_session_rate": 0.99
+      },
+      "challenge_type_metrics": [
+        {
+          "challenge_type": "affective_arc",
+          "query_count": 40,
+          "top1_accuracy": 0.5,
+          "hit_at_k": 0.55,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.85,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.5,
+              "ci_lower": 0.35,
+              "ci_upper": 0.65,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.55,
+              "ci_lower": 0.4,
+              "ci_upper": 0.7,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.85,
+              "ci_lower": 0.725,
+              "ci_upper": 0.95,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "momentum_alignment",
+          "query_count": 40,
+          "top1_accuracy": 0.475,
+          "hit_at_k": 0.5,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.975,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.5,
+              "ci_lower": 0.35,
+              "ci_upper": 0.65,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.975,
+              "ci_lower": 0.925,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "recency_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.275,
+          "hit_at_k": 0.475,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.275,
+              "ci_lower": 0.15,
+              "ci_upper": 0.425,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "same_topic_distractor",
+          "query_count": 40,
+          "top1_accuracy": 0.75,
+          "hit_at_k": 0.875,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 0.6,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.75,
+              "ci_lower": 0.6,
+              "ci_upper": 0.875,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.875,
+              "ci_lower": 0.775,
+              "ci_upper": 0.975,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            }
+          }
+        },
+        {
+          "challenge_type": "semantic_confound",
+          "query_count": 40,
+          "top1_accuracy": 0.6,
+          "hit_at_k": 0.775,
+          "minimum_candidate_count": 6,
+          "nontrivial_query_rate": 1.0,
+          "ci": {
+            "top1_accuracy": {
+              "point": 0.6,
+              "ci_lower": 0.45,
+              "ci_upper": 0.75,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "hit_at_k": {
+              "point": 0.775,
+              "ci_lower": 0.65,
+              "ci_upper": 0.9,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
+            },
+            "nontrivial_query_rate": {
+              "point": 1.0,
+              "ci_lower": 1.0,
+              "ci_upper": 1.0,
+              "ci_method": "bootstrap_percentile",
+              "n_bootstrap": 10000
             }
           }
         }
@@ -1171,31 +1171,31 @@
       },
       "aggregate_metrics": {
         "query_count": 200,
-        "top1_accuracy": 0.24,
+        "top1_accuracy": 0.235,
         "hit_at_k": 0.44,
         "minimum_candidate_count": 6,
         "nontrivial_query_rate": 0.885,
         "ci": {
           "top1_accuracy": {
-            "point": 0.24,
-            "ci_lower": 0.1848750000000002,
-            "ci_upper": 0.3,
+            "point": 0.235,
+            "ci_lower": 0.175,
+            "ci_upper": 0.295,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "hit_at_k": {
             "point": 0.44,
             "ci_lower": 0.375,
             "ci_upper": 0.51,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "nontrivial_query_rate": {
             "point": 0.885,
-            "ci_lower": 0.835,
+            "ci_lower": 0.84,
             "ci_upper": 0.925,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           }
         },
         "stateful_session_rate": 0.99
@@ -1205,7 +1205,7 @@
           "challenge_type": "affective_arc",
           "query_count": 40,
           "top1_accuracy": 0.25,
-          "hit_at_k": 0.425,
+          "hit_at_k": 0.45,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 0.85,
           "ci": {
@@ -1214,21 +1214,21 @@
               "ci_lower": 0.125,
               "ci_upper": 0.4,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.425,
-              "ci_lower": 0.275,
-              "ci_upper": 0.575,
+              "point": 0.45,
+              "ci_lower": 0.3,
+              "ci_upper": 0.6,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.85,
               "ci_lower": 0.725,
               "ci_upper": 0.95,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1236,7 +1236,7 @@
           "challenge_type": "momentum_alignment",
           "query_count": 40,
           "top1_accuracy": 0.1,
-          "hit_at_k": 0.325,
+          "hit_at_k": 0.375,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 0.975,
           "ci": {
@@ -1245,21 +1245,21 @@
               "ci_lower": 0.025,
               "ci_upper": 0.2,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.325,
-              "ci_lower": 0.2,
-              "ci_upper": 0.475,
+              "point": 0.375,
+              "ci_lower": 0.225,
+              "ci_upper": 0.525,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.975,
               "ci_lower": 0.925,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1267,7 +1267,7 @@
           "challenge_type": "recency_confound",
           "query_count": 40,
           "top1_accuracy": 0.175,
-          "hit_at_k": 0.325,
+          "hit_at_k": 0.275,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
@@ -1276,21 +1276,21 @@
               "ci_lower": 0.075,
               "ci_upper": 0.3,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.325,
-              "ci_lower": 0.2,
-              "ci_upper": 0.475,
+              "point": 0.275,
+              "ci_lower": 0.15,
+              "ci_upper": 0.425,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1307,52 +1307,52 @@
               "ci_lower": 0.225,
               "ci_upper": 0.525,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.625,
               "ci_lower": 0.475,
               "ci_upper": 0.775,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.6,
               "ci_lower": 0.45,
               "ci_upper": 0.75,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
         {
           "challenge_type": "semantic_confound",
           "query_count": 40,
-          "top1_accuracy": 0.3,
-          "hit_at_k": 0.5,
+          "top1_accuracy": 0.275,
+          "hit_at_k": 0.475,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 1.0,
           "ci": {
             "top1_accuracy": {
-              "point": 0.3,
-              "ci_lower": 0.175,
-              "ci_upper": 0.45,
+              "point": 0.275,
+              "ci_lower": 0.15,
+              "ci_upper": 0.425,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
-              "point": 0.5,
-              "ci_lower": 0.35,
-              "ci_upper": 0.65,
+              "point": 0.475,
+              "ci_lower": 0.325,
+              "ci_upper": 0.625,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         }
@@ -1363,31 +1363,31 @@
       "flags": {},
       "aggregate_metrics": {
         "query_count": 200,
-        "top1_accuracy": 0.06,
+        "top1_accuracy": 0.07,
         "hit_at_k": 0.165,
         "minimum_candidate_count": 6,
         "nontrivial_query_rate": 0.885,
         "ci": {
           "top1_accuracy": {
-            "point": 0.06,
-            "ci_lower": 0.03,
-            "ci_upper": 0.095,
+            "point": 0.07,
+            "ci_lower": 0.035,
+            "ci_upper": 0.105,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "hit_at_k": {
             "point": 0.165,
             "ci_lower": 0.115,
-            "ci_upper": 0.22,
+            "ci_upper": 0.21512499999999818,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           },
           "nontrivial_query_rate": {
             "point": 0.885,
-            "ci_lower": 0.835,
+            "ci_lower": 0.84,
             "ci_upper": 0.925,
             "ci_method": "bootstrap_percentile",
-            "n_bootstrap": 2000
+            "n_bootstrap": 10000
           }
         },
         "stateful_session_rate": 0.99
@@ -1406,52 +1406,52 @@
               "ci_lower": 0.0,
               "ci_upper": 0.075,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.1,
               "ci_lower": 0.025,
               "ci_upper": 0.2,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.85,
               "ci_lower": 0.725,
               "ci_upper": 0.95,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
         {
           "challenge_type": "momentum_alignment",
           "query_count": 40,
-          "top1_accuracy": 0.0,
+          "top1_accuracy": 0.05,
           "hit_at_k": 0.1,
           "minimum_candidate_count": 6,
           "nontrivial_query_rate": 0.975,
           "ci": {
             "top1_accuracy": {
-              "point": 0.0,
+              "point": 0.05,
               "ci_lower": 0.0,
-              "ci_upper": 0.0,
+              "ci_upper": 0.125,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.1,
               "ci_lower": 0.025,
               "ci_upper": 0.2,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.975,
               "ci_lower": 0.925,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1468,21 +1468,21 @@
               "ci_lower": 0.0,
               "ci_upper": 0.125,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.15,
               "ci_lower": 0.05,
               "ci_upper": 0.275,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1499,21 +1499,21 @@
               "ci_lower": 0.075,
               "ci_upper": 0.3,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.275,
               "ci_lower": 0.15,
               "ci_upper": 0.425,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 0.6,
               "ci_lower": 0.45,
               "ci_upper": 0.75,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         },
@@ -1530,21 +1530,21 @@
               "ci_lower": 0.0,
               "ci_upper": 0.125,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "hit_at_k": {
               "point": 0.2,
               "ci_lower": 0.075,
               "ci_upper": 0.325,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             },
             "nontrivial_query_rate": {
               "point": 1.0,
               "ci_lower": 1.0,
               "ci_upper": 1.0,
               "ci_method": "bootstrap_percentile",
-              "n_bootstrap": 2000
+              "n_bootstrap": 10000
             }
           }
         }
@@ -1556,155 +1556,155 @@
       "variant": "no_appraisal",
       "baseline": "full",
       "top1": {
-        "diff": 0.005,
-        "ci_lower": -0.0251,
-        "ci_upper": 0.035,
-        "p_bootstrap": 0.88,
+        "diff": -0.005,
+        "ci_lower": -0.02,
+        "ci_upper": 0.01,
+        "p_bootstrap": 0.7579,
         "p_mcnemar": 1.0,
-        "effect_size_d": 0.0212,
+        "effect_size_d": -0.0406,
         "n_queries": 200,
-        "n_discordant": 11,
+        "n_discordant": 3,
         "p_bootstrap_adj_holm": 1.0
       },
       "hit_at_k": {
         "diff": -0.01,
         "ci_lower": -0.025,
         "ci_upper": 0.0,
-        "p_bootstrap": 0.2605,
+        "p_bootstrap": 0.2709,
         "p_mcnemar": 0.5,
         "effect_size_d": -0.0999,
         "n_queries": 200,
         "n_discordant": 2,
-        "p_bootstrap_adj_holm": 0.7815
+        "p_bootstrap_adj_holm": 1.0
       }
     },
     {
       "variant": "no_mood",
       "baseline": "full",
       "top1": {
-        "diff": -0.005,
-        "ci_lower": -0.05,
-        "ci_upper": 0.04,
-        "p_bootstrap": 0.915,
-        "p_mcnemar": 1.0,
-        "effect_size_d": -0.0161,
+        "diff": -0.015,
+        "ci_lower": -0.055,
+        "ci_upper": 0.025,
+        "p_bootstrap": 0.5431,
+        "p_mcnemar": 0.6291,
+        "effect_size_d": -0.0512,
         "n_queries": 200,
-        "n_discordant": 19,
+        "n_discordant": 17,
         "p_bootstrap_adj_holm": 1.0
       },
       "hit_at_k": {
-        "diff": -0.02,
+        "diff": -0.015,
         "ci_lower": -0.045,
-        "ci_upper": 0.0,
-        "p_bootstrap": 0.147,
-        "p_mcnemar": 0.2188,
-        "effect_size_d": -0.1155,
+        "ci_upper": 0.015,
+        "p_bootstrap": 0.3986,
+        "p_mcnemar": 0.5078,
+        "effect_size_d": -0.0704,
         "n_queries": 200,
-        "n_discordant": 6,
-        "p_bootstrap_adj_holm": 0.588
+        "n_discordant": 9,
+        "p_bootstrap_adj_holm": 1.0
       }
     },
     {
       "variant": "no_momentum",
       "baseline": "full",
       "top1": {
-        "diff": 0.0,
+        "diff": -0.01,
         "ci_lower": -0.03,
-        "ci_upper": 0.03,
-        "p_bootstrap": 1.0,
-        "p_mcnemar": 1.0,
-        "effect_size_d": 0.0,
+        "ci_upper": 0.01,
+        "p_bootstrap": 0.4326,
+        "p_mcnemar": 0.625,
+        "effect_size_d": -0.0704,
         "n_queries": 200,
-        "n_discordant": 10,
+        "n_discordant": 4,
         "p_bootstrap_adj_holm": 1.0
       },
       "hit_at_k": {
         "diff": -0.01,
         "ci_lower": -0.025,
         "ci_upper": 0.0,
-        "p_bootstrap": 0.273,
+        "p_bootstrap": 0.2709,
         "p_mcnemar": 0.5,
         "effect_size_d": -0.0999,
         "n_queries": 200,
         "n_discordant": 2,
-        "p_bootstrap_adj_holm": 0.7815
+        "p_bootstrap_adj_holm": 1.0
       }
     },
     {
       "variant": "no_resonance",
       "baseline": "full",
       "top1": {
-        "diff": 0.085,
+        "diff": 0.075,
         "ci_lower": 0.04,
-        "ci_upper": 0.13,
-        "p_bootstrap": 0.0,
-        "p_mcnemar": 0.0002,
-        "effect_size_d": 0.2701,
+        "ci_upper": 0.115,
+        "p_bootstrap": 0.0002,
+        "p_mcnemar": 0.0001,
+        "effect_size_d": 0.283,
         "n_queries": 200,
-        "n_discordant": 21,
-        "p_bootstrap_adj_holm": 0.0
+        "n_discordant": 15,
+        "p_bootstrap_adj_holm": 0.001
       },
       "hit_at_k": {
-        "diff": 0.045,
-        "ci_lower": 0.015,
-        "ci_upper": 0.08,
-        "p_bootstrap": 0.0085,
-        "p_mcnemar": 0.0117,
-        "effect_size_d": 0.1943,
+        "diff": 0.055,
+        "ci_lower": 0.02,
+        "ci_upper": 0.09,
+        "p_bootstrap": 0.0039,
+        "p_mcnemar": 0.0034,
+        "effect_size_d": 0.2195,
         "n_queries": 200,
-        "n_discordant": 11,
-        "p_bootstrap_adj_holm": 0.0425
+        "n_discordant": 13,
+        "p_bootstrap_adj_holm": 0.0195
       }
     },
     {
       "variant": "no_reconsolidation",
       "baseline": "full",
       "top1": {
-        "diff": 0.025,
-        "ci_lower": -0.01,
-        "ci_upper": 0.06,
-        "p_bootstrap": 0.209,
-        "p_mcnemar": 0.2668,
-        "effect_size_d": 0.0979,
+        "diff": 0.01,
+        "ci_lower": -0.015,
+        "ci_upper": 0.035,
+        "p_bootstrap": 0.5263,
+        "p_mcnemar": 0.6875,
+        "effect_size_d": 0.0575,
         "n_queries": 200,
-        "n_discordant": 13,
-        "p_bootstrap_adj_holm": 0.836
+        "n_discordant": 6,
+        "p_bootstrap_adj_holm": 1.0
       },
       "hit_at_k": {
         "diff": 0.005,
         "ci_lower": -0.01,
         "ci_upper": 0.025,
-        "p_bootstrap": 0.7705,
+        "p_bootstrap": 0.7636,
         "p_mcnemar": 1.0,
         "effect_size_d": 0.0406,
         "n_queries": 200,
         "n_discordant": 3,
-        "p_bootstrap_adj_holm": 0.7815
+        "p_bootstrap_adj_holm": 1.0
       }
     },
     {
       "variant": "dual_path",
       "baseline": "full",
       "top1": {
-        "diff": -0.265,
-        "ci_lower": -0.335,
-        "ci_upper": -0.19,
+        "diff": -0.275,
+        "ci_lower": -0.35,
+        "ci_upper": -0.2,
         "p_bootstrap": 0.0,
         "p_mcnemar": 0.0,
-        "effect_size_d": -0.4935,
+        "effect_size_d": -0.508,
         "n_queries": 200,
-        "n_discordant": 71,
+        "n_discordant": 73,
         "p_bootstrap_adj_holm": 0.0
       },
       "hit_at_k": {
-        "diff": -0.2,
-        "ci_lower": -0.255,
-        "ci_upper": -0.145,
+        "diff": -0.19,
+        "ci_lower": -0.25,
+        "ci_upper": -0.13,
         "p_bootstrap": 0.0,
         "p_mcnemar": 0.0,
-        "effect_size_d": -0.4969,
+        "effect_size_d": -0.4403,
         "n_queries": 200,
-        "n_discordant": 40,
+        "n_discordant": 44,
         "p_bootstrap_adj_holm": 0.0
       }
     },
@@ -1712,31 +1712,56 @@
       "variant": "aft_keyword_synchronous",
       "baseline": "full",
       "top1": {
-        "diff": -0.445,
+        "diff": -0.44,
         "ci_lower": -0.515,
-        "ci_upper": -0.37,
+        "ci_upper": -0.365,
         "p_bootstrap": 0.0,
         "p_mcnemar": 0.0,
-        "effect_size_d": -0.8255,
+        "effect_size_d": -0.817,
         "n_queries": 200,
-        "n_discordant": 97,
+        "n_discordant": 96,
         "p_bootstrap_adj_holm": 0.0
       },
       "hit_at_k": {
-        "diff": -0.475,
-        "ci_lower": -0.545,
-        "ci_upper": -0.405,
+        "diff": -0.465,
+        "ci_lower": -0.535,
+        "ci_upper": -0.395,
         "p_bootstrap": 0.0,
         "p_mcnemar": 0.0,
-        "effect_size_d": -0.9095,
+        "effect_size_d": -0.8752,
         "n_queries": 200,
         "n_discordant": 99,
         "p_bootstrap_adj_holm": 0.0
       }
     }
   ],
+  "hf1_pairwise": {
+    "system": "dual_path",
+    "baseline": "aft_keyword_synchronous",
+    "n_queries": 200,
+    "top1": {
+      "diff": 0.165,
+      "ci_lower": 0.11,
+      "ci_upper": 0.225,
+      "p_two_sided": 0.0,
+      "p_one_sided": 0.0,
+      "ci_above_zero": true,
+      "only_system": 36,
+      "only_baseline": 3
+    },
+    "hit_at_k": {
+      "diff": 0.275,
+      "ci_lower": 0.2,
+      "ci_upper": 0.35,
+      "p_two_sided": 0.0,
+      "p_one_sided": 0.0,
+      "ci_above_zero": true,
+      "only_system": 63,
+      "only_baseline": 8
+    }
+  },
   "statistics": {
-    "n_bootstrap": 2000,
+    "n_bootstrap": 10000,
     "confidence": 0.95,
     "ci_method": "bootstrap_percentile",
     "seed": 0,

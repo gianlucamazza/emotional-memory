@@ -289,3 +289,36 @@ property rather than attributable to any single layer in isolation.
 
 This is a pre-registered negative result and is reported as such per Reporting
 rule 5 above.
+
+---
+
+## S2 Closure — 2026-05-04
+
+Executed at power (N=200, realistic_recall_v2, seed=0, n_bootstrap=2000).
+Full closure: `benchmarks/preregistration_s2_closure.md`.
+
+**H3 (overall, both embedders):** PASS.
+
+| Hypothesis | Type | Embedder | Verdict | Δ (top1) | p_adj_holm |
+|---|---|---|---|---|---|
+| H3 (overall) | confirmatory | SBERT | **PASS** | +0.205 | <0.001 |
+| H3 (overall) | confirmatory | e5 | **PASS** | +0.155 | <0.001 |
+| H4 (affective_arc) | confirmatory | SBERT | **PASS** | +0.275 | 0.000 |
+| H4 (affective_arc) | confirmatory | e5 | **PASS** | +0.275 | 0.008 |
+| H5 (recency_confound) | confirmatory | SBERT | **FAIL** (p_adj=0.054) | +0.100 | 0.054 |
+| H5 (recency_confound) | confirmatory | e5 | **PASS** | +0.200 | 0.040 |
+| H6 (momentum_alignment) | confirmatory | SBERT | **PASS** | +0.275 | 0.000 |
+| H6 (momentum_alignment) | confirmatory | e5 | **FAIL** (p_adj=0.811) | +0.025 | 0.811 |
+
+**Canonical result files:**
+- `benchmarks/realistic/results.v2.sbert.json` (overall, SBERT)
+- `benchmarks/realistic/results.v2.e5.json` (overall, e5)
+- `benchmarks/realistic/challenge_subset_pairwise_v2.json` (per-challenge Holm)
+
+**Interpretation:** H3 (overall) and H4 (affective_arc) are confirmed on both
+embedders. H5 and H6 are embedder-dependent: SBERT shows the theoretically predicted
+advantages for recency_confound and momentum_alignment; e5-small-v2 shows the
+advantage only for recency_confound (H5 PASS) while momentum_alignment (H6) fails
+entirely. The architecture-level advantage is consistent (H3/H4); per-type advantages
+are geometry-dependent. Hd2 (N=200) independently confirms the system-level
+advantage; S2 and Hd2 jointly support the overall AFT claim.
