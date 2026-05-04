@@ -212,6 +212,7 @@ def run_study(
         "realistic_recall_v1": "Hd1",
         "realistic_recall_v2": "Hd2",
         "realistic_recall_v2_it": "Hd2_IT",
+        "realistic_recall_v2_es": "Hd2_ES",
     }
     hd_label = _HD_LABEL_MAP.get(dataset.name, f"Hd_{dataset.name}")
     hd_scope = "Addendum D primary" if hd_label == "Hd1" else "Addendum D generalization"

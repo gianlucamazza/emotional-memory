@@ -277,7 +277,7 @@ def _mood_congruence(current: MoodField, snapshot: MoodField) -> float:
 
 
 def _affect_proximity(current: CoreAffect, encoded: CoreAffect) -> float:
-    """Similarity in core affect space. Distance <= sqrt(5) ~= 2.236."""
+    """Similarity in core affect space. Distance <= sqrt(6) ~= 2.449."""
     dist = current.distance(encoded)
     return max(0.0, 1.0 - dist / _MAX_AFFECT_DIST)
 
