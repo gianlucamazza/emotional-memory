@@ -21,6 +21,7 @@ Gates checked:
     G11 twine check on built artefacts PASSED
     G12 smoke install into a fresh venv + import works
     G13 sdist does not contain secret-like patterns (.env, credentials)
+    G14 GitHub→Zenodo webhook is disabled (prevents shadow duplicate deposits)
 
 Skip gates G10-G13 with --fast for a quick syntactic-only check.
 Use --ci to skip git-state gates that are not meaningful in detached CI contexts.
@@ -29,6 +30,7 @@ Use --ci to skip git-state gates that are not meaningful in detached CI contexts
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
@@ -340,6 +342,43 @@ def gate_smoke_install(dist_dir: Path, version: str) -> Gate:
     return g
 
 
+def gate_zenodo_webhook_off() -> Gate:
+    g = Gate("G14", "GitHub→Zenodo webhook disabled")
+    try:
+        r = subprocess.run(
+            ["gh", "api", "repos/gianlucamazza/emotional-memory/hooks"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        if r.returncode != 0:
+            g.ok("skipped (gh api unavailable — verify manually)")
+            return g
+        hooks = json.loads(r.stdout)
+        if not isinstance(hooks, list):
+            g.ok("skipped (unexpected hooks response)")
+            return g
+        active_zenodo = [
+            h
+            for h in hooks
+            if "zenodo.org" in h.get("config", {}).get("url", "") and h.get("active", False)
+        ]
+        if active_zenodo:
+            url = active_zenodo[0].get("config", {}).get("url", "?")
+            g.fail(
+                f"active webhook to zenodo.org: {url!r}\n"
+                "    Disable at: https://zenodo.org/account/settings/github/ "
+                "(toggle the repo to OFF)"
+            )
+        else:
+            g.ok("no active zenodo.org webhook")
+    except (subprocess.TimeoutExpired, json.JSONDecodeError, OSError):
+        g.ok("skipped (check unavailable — verify manually)")
+    return g
+
+
 def gate_sdist_no_secrets(dist_dir: Path) -> Gate:
     g = Gate("G13", "sdist contains no secret-like files")
     sdists = list(dist_dir.glob("*.tar.gz"))
@@ -408,6 +447,7 @@ def main() -> None:
                 gate_tag_absent(version),
                 gate_clean_tree(),
                 gate_on_main(),
+                gate_zenodo_webhook_off(),
             ]
         )
 

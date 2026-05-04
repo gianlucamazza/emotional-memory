@@ -34,6 +34,8 @@ import re
 import subprocess
 import sys
 import tomllib
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -156,6 +158,34 @@ def phase1_zenodo_reserve(state: dict[str, object], base_url: str) -> None:
         sys.exit(1)
     if zenodo_concept:
         print(f"{OK} Concept DOI verified: {zenodo_concept}")
+
+    # Guard: detect shadow deposits — a published record for this version already
+    # exists under the concept (e.g. created by the GitHub→Zenodo webhook).
+    version_str = str(state.get("version", ""))
+    _deposit_id_raw = state.get("deposit_id")
+    draft_id = int(_deposit_id_raw) if isinstance(_deposit_id_raw, (int, str)) else 0
+    if zenodo_concept and version_str:
+        q = urllib.parse.quote(f'conceptdoi:"{zenodo_concept}"')
+        api_url = f"https://zenodo.org/api/records?q={q}&allversions=true&size=25"
+        try:
+            with urllib.request.urlopen(api_url, timeout=15) as resp:  # noqa: S310
+                data = json.loads(resp.read().decode())
+            for h in data.get("hits", {}).get("hits", []):
+                if h.get("metadata", {}).get("version") == version_str and h["id"] != draft_id:
+                    print(
+                        f"{FAIL} Shadow deposit detected: published record id={h['id']} "
+                        f"(doi={h.get('doi', '?')}) already exists for v{version_str} "
+                        f"under concept {zenodo_concept}.\n"
+                        "  Likely a GitHub→Zenodo webhook auto-deposit.\n"
+                        "  Delete it from Zenodo UI (record → Edit → Delete) and\n"
+                        "  disable the webhook at zenodo.org/account/settings/github/\n"
+                        "  before retrying.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+            print(f"{OK} No shadow deposit found for v{version_str}")
+        except Exception:
+            print(f"{INFO} Could not check for shadow deposits (network unavailable)")
 
 
 def phase2_doi_sync(state: dict[str, object], version: str) -> None:
