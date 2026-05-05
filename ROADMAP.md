@@ -124,11 +124,9 @@ Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
 - [ ] Collect `ratings.jsonl`, run `benchmarks/human_eval/pipeline.py`
 - [ ] Update `claim_validation_matrix.json` and audit doc
 
-### G7 — PAD dominance as first-class CoreAffect (deferred from v0.8)
-- [ ] Promote `dominance` from `MoodField`-only to `CoreAffect` 3D field
-- [ ] Migration path for serialised `AffectiveState` (back-compat read for v0.7-era snapshots)
-- [ ] Re-enable `benchmarks/fidelity/test_dominance_retrieval_gap.py` (currently `xfail strict`)
-- [ ] Design note `docs/research/11_dominance_design.md` already shipped
+### G7 — PAD dominance (CLOSED, #28 wontfix)
+- [x] 3D `CoreAffect` shipped in v0.8.2 (`8b9ddbe`); fidelity test re-enabled. Design note: `docs/research/11_dominance_design.md`.
+- Back-compat read for pre-v0.8.2 snapshots intentionally not implemented (see #28 closure comment).
 
 ### Sign-reversal experiment (open from v0.8 S3 closure)
 - [ ] Investigate why `no_resonance` ablation shows `Δ=+0.085 p<0.001` with e5 (opposite direction to SBERT Δ=+0.02)
