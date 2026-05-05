@@ -104,7 +104,7 @@ Goal: lift the public-claim ceiling by closing Gate 2 and adding the missing int
 Goal: make the library production-grade for teams running agents at scale. (These are the items originally scoped for v0.7.0; deferred while the evidence programme took priority.)
 
 ### Enterprise vector stores
-- [ ] `QdrantStore` adapter + `[qdrant]` optional extra
+- [x] `QdrantStore` adapter + `[qdrant]` optional extra
 - [ ] `ChromaStore` adapter + `[chroma]` optional extra
 - [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
 

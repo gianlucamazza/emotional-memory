@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`QdrantStore` adapter** (`src/emotional_memory/stores/qdrant.py`): persistent
+  `MemoryStore` backed by Qdrant vector database. Supports embedded (`:memory:`),
+  local on-disk, and remote server modes. Point IDs are deterministic UUID5 from
+  `memory.id`; full `Memory` JSON stored in payload (mirrors `SQLiteStore` design).
+  Available via `pip install "emotional-memory[qdrant]"`. ROADMAP v0.9 first item.
+
 ### Documentation
 
 - **Paper §Limitations alignment with v0.8.2 PAD upgrade** (`paper/main.tex`):
