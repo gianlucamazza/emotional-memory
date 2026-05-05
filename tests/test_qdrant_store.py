@@ -38,6 +38,10 @@ class TestQdrantStoreInit:
         store = QdrantStore()
         assert not store._collection_ready
 
+    def test_url_and_path_mutually_exclusive(self, tmp_path):
+        with pytest.raises(ValueError, match="at most one"):
+            QdrantStore(url="http://localhost:6333", path=str(tmp_path / "qdrant"))
+
 
 # ---------------------------------------------------------------------------
 # UUID5 helper
@@ -65,14 +69,14 @@ class TestUuidFor:
 class TestQdrantStoreSaveGet:
     def test_save_and_get(self):
         store = QdrantStore()
-        m = make_test_memory("hello")
+        m = make_test_memory("hello", embedding=[1.0, 0.0, 0.0])
         store.save(m)
         got = store.get(m.id)
         assert got is not None
         assert got.id == m.id
         assert got.content == m.content
 
-    def test_save_with_embedding(self):
+    def test_save_preserves_embedding(self):
         store = QdrantStore()
         m = make_test_memory("embedded", embedding=[1.0, 0.0, 0.0])
         store.save(m)
@@ -80,8 +84,13 @@ class TestQdrantStoreSaveGet:
         assert got is not None
         assert got.embedding == [1.0, 0.0, 0.0]
 
-    def test_get_missing_returns_none(self):
+    def test_get_missing_returns_none_before_collection(self):
         store = QdrantStore()
+        assert store.get("nonexistent-id") is None
+
+    def test_get_missing_returns_none_after_collection_created(self):
+        store = QdrantStore()
+        store.save(make_test_memory("seed", embedding=[1.0, 0.0, 0.0]))
         assert store.get("nonexistent-id") is None
 
     def test_save_replaces_existing(self):
@@ -95,24 +104,18 @@ class TestQdrantStoreSaveGet:
         assert got.content == "replaced"
         assert len(store) == 1
 
-    def test_save_without_embedding_uses_fallback(self):
+    def test_save_without_embedding_raises(self):
         store = QdrantStore()
         m = make_test_memory("no-embedding")
-        store.save(m)
-        assert not store._collection_ready
-        assert m.id in store._fallback
+        with pytest.raises(ValueError, match="embedding"):
+            store.save(m)
 
-    def test_save_with_embedding_promotes_fallback(self):
+    def test_save_dim_mismatch_raises(self):
         store = QdrantStore()
-        m_no_emb = make_test_memory("no-emb-yet")
-        store.save(m_no_emb)
-        assert m_no_emb.id in store._fallback
-
-        m_with_emb = make_test_memory("trigger-collection", embedding=[0.5, 0.5, 0.0])
-        store.save(m_with_emb)
-        assert store._collection_ready
-        # m_no_emb stays in fallback (no embedding to promote)
-        assert m_no_emb.id in store._fallback
+        store.save(make_test_memory("first", embedding=[1.0, 0.0, 0.0]))
+        m = make_test_memory("wrong-dim", embedding=[1.0, 0.0])
+        with pytest.raises(ValueError, match="dimension"):
+            store.save(m)
 
 
 # ---------------------------------------------------------------------------
@@ -132,12 +135,20 @@ class TestQdrantStoreUpdate:
         assert got.content == "updated"
         assert len(store) == 1
 
-    def test_update_nonexistent_is_noop(self):
+    def test_update_nonexistent_is_noop_no_collection(self):
         store = QdrantStore()
         m = make_test_memory("ghost", embedding=[1.0, 0.0, 0.0])
-        store.update(m)  # should not raise
-        # save() will upsert it into Qdrant
-        assert store.get(m.id) is not None
+        store.update(m)
+        assert len(store) == 0
+        assert store.get(m.id) is None
+
+    def test_update_nonexistent_is_noop_with_collection(self):
+        store = QdrantStore()
+        store.save(make_test_memory("seed", embedding=[1.0, 0.0, 0.0]))
+        ghost = make_test_memory("ghost", embedding=[0.0, 1.0, 0.0])
+        store.update(ghost)
+        assert store.get(ghost.id) is None
+        assert len(store) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -146,7 +157,7 @@ class TestQdrantStoreUpdate:
 
 
 class TestQdrantStoreDelete:
-    def test_delete_existing_with_embedding(self):
+    def test_delete_existing(self):
         store = QdrantStore()
         m = make_test_memory("deletable", embedding=[1.0, 0.0, 0.0])
         store.save(m)
@@ -154,16 +165,13 @@ class TestQdrantStoreDelete:
         assert store.get(m.id) is None
         assert len(store) == 0
 
-    def test_delete_existing_without_embedding(self):
+    def test_delete_nonexistent_does_not_raise_no_collection(self):
         store = QdrantStore()
-        m = make_test_memory("no-emb-delete")
-        store.save(m)
-        store.delete(m.id)
-        assert store.get(m.id) is None
-        assert len(store) == 0
+        store.delete("not-here")  # must not raise
 
-    def test_delete_nonexistent_does_not_raise(self):
+    def test_delete_nonexistent_does_not_raise_with_collection(self):
         store = QdrantStore()
+        store.save(make_test_memory("seed", embedding=[1.0, 0.0, 0.0]))
         store.delete("not-here")  # must not raise
 
     def test_delete_reduces_count(self):
@@ -183,30 +191,17 @@ class TestQdrantStoreDelete:
 
 
 class TestQdrantStoreListAll:
-    def test_empty(self):
-        store = QdrantStore()
-        assert store.list_all() == []
+    def test_empty_no_collection(self):
+        assert QdrantStore().list_all() == []
 
-    def test_returns_all_with_embeddings(self):
+    def test_returns_all_memories(self):
         store = QdrantStore()
         memories = [make_test_memory(f"m{i}", embedding=[float(i), 0.0, 0.0]) for i in range(5)]
         for m in memories:
             store.save(m)
         result = store.list_all()
         assert len(result) == 5
-        ids = {m.id for m in result}
-        assert ids == {m.id for m in memories}
-
-    def test_returns_fallback_memories_too(self):
-        store = QdrantStore()
-        m_vec = make_test_memory("with-emb", embedding=[1.0, 0.0, 0.0])
-        m_novec = make_test_memory("no-emb")
-        store.save(m_vec)
-        store.save(m_novec)
-        result = store.list_all()
-        ids = {m.id for m in result}
-        assert m_vec.id in ids
-        assert m_novec.id in ids
+        assert {m.id for m in result} == {m.id for m in memories}
 
 
 class TestQdrantStoreLen:
@@ -217,12 +212,6 @@ class TestQdrantStoreLen:
         store = QdrantStore()
         store.save(make_test_memory("a", embedding=[1.0, 0.0, 0.0]))
         store.save(make_test_memory("b", embedding=[0.0, 1.0, 0.0]))
-        assert len(store) == 2
-
-    def test_counts_fallback_and_qdrant(self):
-        store = QdrantStore()
-        store.save(make_test_memory("no-emb"))
-        store.save(make_test_memory("with-emb", embedding=[1.0, 0.0, 0.0]))
         assert len(store) == 2
 
 
@@ -245,21 +234,20 @@ class TestQdrantStoreSearch:
     def test_top_k_respected(self):
         store = QdrantStore()
         for i in range(5):
-            store.save(make_test_memory(f"m{i}", embedding=[float(i), 0.0, 0.0]))
-        results = store.search_by_embedding([4.0, 0.0, 0.0], top_k=2)
-        assert len(results) <= 2
+            store.save(make_test_memory(f"m{i}", embedding=[float(i + 1), 0.0, 0.0]))
+        results = store.search_by_embedding([5.0, 0.0, 0.0], top_k=2)
+        assert len(results) == 2
 
-    def test_empty_store_returns_empty(self):
+    def test_empty_store_returns_empty_no_collection(self):
         store = QdrantStore()
         assert store.search_by_embedding([1.0, 0.0, 0.0], top_k=5) == []
 
-    def test_no_collection_brute_force_fallback(self):
+    def test_empty_store_returns_empty_with_collection(self):
         store = QdrantStore()
-        m = make_test_memory("brute-force", embedding=[1.0, 0.0, 0.0])
-        # force into fallback by saving without triggering collection creation
-        store._fallback[m.id] = m
-        results = store.search_by_embedding([1.0, 0.0, 0.0], top_k=3)
-        assert any(r.id == m.id for r in results)
+        m = make_test_memory("seed", embedding=[1.0, 0.0, 0.0])
+        store.save(m)
+        store.delete(m.id)
+        assert store.search_by_embedding([1.0, 0.0, 0.0], top_k=5) == []
 
 
 # ---------------------------------------------------------------------------
@@ -270,7 +258,7 @@ class TestQdrantStoreSearch:
 class TestQdrantStoreContextManager:
     def test_with_block_returns_store(self):
         with QdrantStore() as store:
-            store.save(make_test_memory("inside-ctx"))
+            store.save(make_test_memory("inside-ctx", embedding=[1.0, 0.0, 0.0]))
             assert len(store) == 1
 
     def test_close_is_callable(self):
@@ -290,3 +278,26 @@ class TestQdrantStoreRepr:
         assert "QdrantStore" in r
         assert "emotional_memory" in r
         assert "count=" in r
+
+
+# ---------------------------------------------------------------------------
+# Persistence (file-backed)
+# ---------------------------------------------------------------------------
+
+
+class TestQdrantStorePersistence:
+    def test_local_path_persists_across_instances(self, tmp_path):
+        path = str(tmp_path / "qdrant_data")
+        store1 = QdrantStore(path=path)
+        m = make_test_memory("persistent", embedding=[1.0, 0.0, 0.0])
+        store1.save(m)
+        assert len(store1) == 1
+        store1.close()
+
+        store2 = QdrantStore(path=path)
+        got = store2.get(m.id)
+        assert got is not None
+        assert got.content == "persistent"
+        assert store2._collection_ready
+        assert store2._dim == 3
+        store2.close()
