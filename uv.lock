@@ -883,7 +883,7 @@ wheels = [
 
 [[package]]
 name = "emotional-memory"
-version = "0.8.3"
+version = "0.9.0"
 source = { editable = "." }
 dependencies = [
     { name = "numpy" },
@@ -930,6 +930,10 @@ llm-test = [
 mem0 = [
     { name = "mem0ai" },
 ]
+otel = [
+    { name = "opentelemetry-api" },
+    { name = "opentelemetry-sdk" },
+]
 qdrant = [
     { name = "qdrant-client" },
 ]
@@ -969,6 +973,8 @@ requires-dist = [
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.25" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.10" },
     { name = "numpy", specifier = ">=1.24" },
+    { name = "opentelemetry-api", marker = "extra == 'otel'", specifier = ">=1.20" },
+    { name = "opentelemetry-sdk", marker = "extra == 'otel'", specifier = ">=1.20" },
     { name = "psutil", marker = "extra == 'bench'", specifier = ">=5.9" },
     { name = "pydantic", specifier = ">=2.0,<3" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7" },
@@ -987,7 +993,7 @@ requires-dist = [
     { name = "tqdm", marker = "extra == 'bench'", specifier = ">=4.65" },
     { name = "twine", marker = "extra == 'release'", specifier = ">=6.0" },
 ]
-provides-extras = ["dev", "bench", "llm-test", "demo", "dotenv", "sentence-transformers", "sqlite", "qdrant", "chroma", "redis", "langchain", "mem0", "langmem", "viz", "docs", "release"]
+provides-extras = ["dev", "bench", "llm-test", "demo", "dotenv", "sentence-transformers", "sqlite", "qdrant", "chroma", "otel", "redis", "langchain", "mem0", "langmem", "viz", "docs", "release"]
 
 [[package]]
 name = "fastapi"
