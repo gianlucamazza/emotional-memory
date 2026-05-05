@@ -114,10 +114,11 @@ Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
 - [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking
 - [ ] Schema-validated `AppraisalVector` (Pydantic) for non-Scherer outputs
 
-### LoCoMo per-task Pareto study (deferred from v0.9 — Gate 1 follow-up)
-- [ ] Pre-register a per-task-type weight search before any tuning runs
-- [ ] Sweep harness extending `benchmarks/locomo/runner.py`
-- [ ] Pareto-frontier analysis: AFT-favourable vs naive-favourable task categories
+### LoCoMo per-task Pareto study (Gate 1 follow-up)
+- [x] Pre-registration frozen — Addendum J (`benchmarks/preregistration_addendum_j.md`): 10-config weight grid, 200-QA stratified subsample, cost ~$1.
+- [ ] Implement `--sample-per-category` + `--sample-seed` in LoCoMo runner
+- [ ] Execute sweep (requires LLM API budget approval + key)
+- [ ] Pareto-frontier analysis: close `benchmarks/preregistration_addendum_j_closure.md`
 
 ### Gate 2 — Human evaluation execution (deferred from v0.8)
 - [ ] Distribute `benchmarks/human_eval/` packets to 20–30 raters (Prolific or MTurk)

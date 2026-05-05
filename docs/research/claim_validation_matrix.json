@@ -159,15 +159,16 @@
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA.",
       "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0). Holm-corrected one-tailed p=1.0 for both hypotheses.",
-      "not_yet_shown": "Whether a task-specific configuration of AFT (lower mood weight, affect-neutral retrieval) could match baseline on factual QA.",
-      "next_study": "Investigate per-task retrieval weight tuning; document as scope limitation in paper.",
+      "not_yet_shown": "Whether a task-specific configuration of AFT (lower mood weight, affect-neutral retrieval) could match baseline on factual QA. Pareto sweep pre-registered in Addendum J (frozen, pending execution ~$1 LLM budget).",
+      "next_study": "Execute Addendum J Pareto sweep (10 weight configs × 200-QA stratified subset); requires `--sample-per-category` runner extension + LLM budget.",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/locomo/results.json",
         "benchmarks/locomo/results.md"
       ],
       "protocol_refs": [
-        "benchmarks/preregistration.md"
+        "benchmarks/preregistration.md",
+        "benchmarks/preregistration_addendum_j.md"
       ],
       "limitations_refs": [
         "docs/research/08_limitations.md"
