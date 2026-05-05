@@ -128,9 +128,9 @@ Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
 - [x] 3D `CoreAffect` shipped in v0.8.2 (`8b9ddbe`); fidelity test re-enabled. Design note: `docs/research/11_dominance_design.md`.
 - Back-compat read for pre-v0.8.2 snapshots intentionally not implemented (see #28 closure comment).
 
-### Sign-reversal experiment (open from v0.8 S3 closure)
-- [ ] Investigate why `no_resonance` ablation shows `Δ=+0.085 p<0.001` with e5 (opposite direction to SBERT Δ=+0.02)
-- [ ] Controlled experiment: e5 × resonance enabled/disabled; pre-register before running
+### Sign-reversal experiment (CLOSED, #29)
+- [x] Per-challenge decomposition: magnitude amplification, not sign reversal. `semantic_confound` is the dominant driver (e5 Δ=+0.125 vs SBERT Δ=+0.025). See `benchmarks/preregistration_addendum_i.md`.
+- Mechanism confirmation (Hi3, link-set instrumentation) deferred to when N≥500 dataset is available.
 
 ### Multilingual breadth (deferred from v0.8)
 - [x] One additional non-English slice — Spanish (`realistic_recall_v2_es.json`, shipped v0.8.2 as Hd2_ES). Closes #30.
