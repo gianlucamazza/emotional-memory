@@ -105,7 +105,7 @@ Goal: make the library production-grade for teams running agents at scale. (Thes
 
 ### Enterprise vector stores
 - [x] `QdrantStore` adapter + `[qdrant]` optional extra
-- [ ] `ChromaStore` adapter + `[chroma]` optional extra
+- [x] `ChromaStore` adapter + `[chroma]` optional extra
 - [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
 
 ### Observability

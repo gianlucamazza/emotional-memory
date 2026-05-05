@@ -254,9 +254,9 @@ scalable.
 
 ### 3.4 No "enterprise" vector store
 
-The available adapters are `InMemoryStore` (RAM, non-persistent) and
-`SQLiteStore` (local file, scalable to ~10^6 memories). There are no
-adapters for distributed systems such as Qdrant, Chroma, Weaviate, or
+The available adapters are `InMemoryStore` (RAM, non-persistent),
+`SQLiteStore` (local file, scalable to ~10^6 memories), `QdrantStore`
+(v0.9), and `ChromaStore` (v0.9). There are no adapters for Weaviate or
 Pinecone. The `MemoryStore` Protocol is duck-typed and contributions are
 welcome.
 
@@ -290,10 +290,10 @@ release:
 | Limit | Indicative horizon |
 |---|---|
 | Broader, comparative affect-aware realistic benchmark | post-0.6 |
-| Qdrant / Chroma adapters | architecture track |
+| Qdrant / Chroma adapters | ✅ shipped v0.9 |
 | Execute the human-eval pilot with real ratings | research track |
 | Dominance as a primary dimension | research track |
-| Distributed / enterprise memory store (Qdrant, Chroma, ...) | product track |
+| Distributed / enterprise memory store (Qdrant, Chroma, ...) | ✅ shipped v0.9 |
 
 ---
 

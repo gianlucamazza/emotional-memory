@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`ChromaStore` adapter** (`src/emotional_memory/stores/chroma.py`): persistent
+  `MemoryStore` backed by Chroma vector database. Supports ephemeral (in-memory),
+  local on-disk (`PersistentClient`), and remote server (`HttpClient`) modes.
+  Memory IDs used directly as Chroma point IDs; full `Memory` JSON stored as
+  document; embeddings passed as `np.float32` arrays. Lazy collection creation
+  with cosine distance; dimension stored in collection metadata for persistence
+  resume. Available via `pip install "emotional-memory[chroma]"`. ROADMAP v0.9
+  second item.
+
 - **`QdrantStore` adapter** (`src/emotional_memory/stores/qdrant.py`): persistent
   `MemoryStore` backed by Qdrant vector database. Supports embedded (`:memory:`),
   local on-disk, and remote server modes. Point IDs are deterministic UUID5 from
