@@ -59,6 +59,12 @@ with contextlib.suppress(ImportError):
 
     _sqlite_available = True
 
+_qdrant_available = False
+with contextlib.suppress(ImportError):
+    from emotional_memory.stores.qdrant import QdrantStore as QdrantStore
+
+    _qdrant_available = True
+
 _sqlite_state_available = False
 with contextlib.suppress(ImportError):
     from emotional_memory.state_stores.sqlite import (
@@ -140,6 +146,9 @@ __all__ = [
 
 if _sqlite_available:
     __all__ = [*__all__, "SQLiteStore"]
+
+if _qdrant_available:
+    __all__ = [*__all__, "QdrantStore"]
 
 if _sqlite_state_available:
     __all__ = [*__all__, "SQLiteAffectiveStateStore"]

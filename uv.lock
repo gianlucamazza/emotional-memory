@@ -797,6 +797,9 @@ llm-test = [
 mem0 = [
     { name = "mem0ai" },
 ]
+qdrant = [
+    { name = "qdrant-client" },
+]
 redis = [
     { name = "redis" },
 ]
@@ -841,6 +844,7 @@ requires-dist = [
     { name = "python-dotenv", marker = "extra == 'dotenv'", specifier = ">=1.0" },
     { name = "python-dotenv", marker = "extra == 'release'", specifier = ">=1.0" },
     { name = "pyyaml", marker = "extra == 'release'", specifier = ">=6.0" },
+    { name = "qdrant-client", marker = "extra == 'qdrant'", specifier = ">=1.10" },
     { name = "redis", marker = "extra == 'redis'", specifier = ">=5.0" },
     { name = "requests", marker = "extra == 'release'", specifier = ">=2.32" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
@@ -849,7 +853,7 @@ requires-dist = [
     { name = "tqdm", marker = "extra == 'bench'", specifier = ">=4.65" },
     { name = "twine", marker = "extra == 'release'", specifier = ">=6.0" },
 ]
-provides-extras = ["dev", "bench", "llm-test", "demo", "dotenv", "sentence-transformers", "sqlite", "redis", "langchain", "mem0", "langmem", "viz", "docs", "release"]
+provides-extras = ["dev", "bench", "llm-test", "demo", "dotenv", "sentence-transformers", "sqlite", "qdrant", "redis", "langchain", "mem0", "langmem", "viz", "docs", "release"]
 
 [[package]]
 name = "fastapi"
