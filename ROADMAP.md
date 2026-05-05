@@ -109,9 +109,9 @@ Goal: make the library production-grade for teams running agents at scale. (Thes
 - [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
 
 ### Observability
-- [ ] Optional OpenTelemetry spans on `encode`, `retrieve`, `elaborate`, `observe`
-- [ ] `[otel]` optional extra; spans no-op when extra is absent
-- [ ] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
+- [x] Optional OpenTelemetry spans on `encode`, `retrieve`, `encode_batch`, `elaborate`, `observe`, `prune`
+- [x] `[otel]` optional extra; spans no-op when extra is absent
+- [x] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
 
 ### BYO appraisal schema
 - [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking

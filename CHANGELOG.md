@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **OpenTelemetry spans** (`src/emotional_memory/telemetry.py`): optional
+  distributed tracing via the `[otel]` extra (`opentelemetry-api>=1.20`,
+  `opentelemetry-sdk>=1.20`). Root spans on `encode`, `retrieve`,
+  `encode_batch`, `elaborate`, `observe`, and `prune`; child spans on
+  `embed` and `store.search_by_embedding`. No-op when the extra is absent —
+  zero overhead at import time. Exceptions recorded on spans with
+  `StatusCode.ERROR`. Mirrored on `AsyncEmotionalMemory`. Tested with
+  `InMemorySpanExporter` (18 tests in `tests/test_telemetry.py`). Available
+  via `pip install "emotional-memory[otel]"`.
+
 - **`ChromaStore` adapter** (`src/emotional_memory/stores/chroma.py`): persistent
   `MemoryStore` backed by Chroma vector database. Supports ephemeral (in-memory),
   local on-disk (`PersistentClient`), and remote server (`HttpClient`) modes.

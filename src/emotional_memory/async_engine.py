@@ -63,6 +63,7 @@ from emotional_memory.retrieval import (
     update_prediction,
 )
 from emotional_memory.state import AffectiveState
+from emotional_memory.telemetry import traced_span
 
 logger = logging.getLogger(__name__)
 
@@ -217,13 +218,14 @@ class AsyncEmotionalMemory:
         metadata: dict[str, Any] | None = None,
     ) -> EmotionalTag:
         """Update affective state from content without storing a retrievable memory."""
-        tag, _ = await self._build_tag(
-            content,
-            appraisal,
-            metadata,
-            now=datetime.now(tz=UTC),
-            allow_fast_path=False,
-        )
+        with traced_span("emotional_memory.observe", {"content_length": len(content)}):
+            tag, _ = await self._build_tag(
+                content,
+                appraisal,
+                metadata,
+                now=datetime.now(tz=UTC),
+                allow_fast_path=False,
+            )
         return tag
 
     async def encode(
@@ -236,60 +238,65 @@ class AsyncEmotionalMemory:
 
         Mirrors ``EmotionalMemory.encode`` with awaited I/O calls.
         """
-        now = datetime.now(tz=UTC)
-        logger.debug("encode start: content_len=%d", len(content))
+        with traced_span("emotional_memory.encode", {"content_length": len(content)}):
+            now = datetime.now(tz=UTC)
+            logger.debug("encode start: content_len=%d", len(content))
 
-        # Steps 1-3: resolve affect, update state, and build EmotionalTag.
-        tag, _ = await self._build_tag(
-            content,
-            appraisal,
-            metadata,
-            now=now,
-            allow_fast_path=True,
-        )
-
-        # Step 4: embed (async I/O)
-        embedding = await self._embedder.embed(content)
-        if embedding and bool(np.isnan(np.asarray(embedding)).any()):
-            warnings.warn(
-                f"Embedder returned NaN values for content (len={len(content)}). "
-                "Semantic retrieval will be degraded for this memory.",
-                stacklevel=2,
+            # Steps 1-3: resolve affect, update state, and build EmotionalTag.
+            tag, _ = await self._build_tag(
+                content,
+                appraisal,
+                metadata,
+                now=now,
+                allow_fast_path=True,
             )
 
-        # Step 5: store (async I/O)
-        memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=metadata)
-        await self._store.save(memory)
-
-        # Step 6: resonance links — pre-filter when store is large (async I/O)
-        if self._config.enable_resonance:
-            resonance_limit = (
-                self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-            )
-            store_size = await self._store.count()
-            if store_size > resonance_limit and memory.embedding is not None:
-                candidates = await self._store.search_by_embedding(
-                    memory.embedding, resonance_limit
+            # Step 4: embed (async I/O)
+            with traced_span("emotional_memory.embed", {"content_length": len(content)}):
+                embedding = await self._embedder.embed(content)
+            if embedding and bool(np.isnan(np.asarray(embedding)).any()):
+                warnings.warn(
+                    f"Embedder returned NaN values for content (len={len(content)}). "
+                    "Semantic retrieval will be degraded for this memory.",
+                    stacklevel=2,
                 )
-            else:
-                candidates = await self._store.list_all()
 
-            links = build_resonance_links(memory, candidates, self._config.resonance)
-            if links:
-                updated_tag = tag.model_copy(update={"resonance_links": links})
-                memory = memory.model_copy(update={"tag": updated_tag})
-                await self._store.update(memory)
-                logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
+            # Step 5: store (async I/O)
+            memory = Memory.create(
+                content=content, tag=tag, embedding=embedding, metadata=metadata
+            )
+            await self._store.save(memory)
 
-                await self._add_bidirectional_links(memory, links)
+            # Step 6: resonance links — pre-filter when store is large (async I/O)
+            if self._config.enable_resonance:
+                resonance_limit = (
+                    self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+                )
+                store_size = await self._store.count()
+                if store_size > resonance_limit and memory.embedding is not None:
+                    with traced_span("emotional_memory.store.search_by_embedding"):
+                        candidates = await self._store.search_by_embedding(
+                            memory.embedding, resonance_limit
+                        )
+                else:
+                    candidates = await self._store.list_all()
 
-        logger.debug(
-            "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
-            memory.id,
-            tag.core_affect.valence,
-            tag.core_affect.arousal,
-            tag.consolidation_strength,
-        )
+                links = build_resonance_links(memory, candidates, self._config.resonance)
+                if links:
+                    updated_tag = tag.model_copy(update={"resonance_links": links})
+                    memory = memory.model_copy(update={"tag": updated_tag})
+                    await self._store.update(memory)
+                    logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
+
+                    await self._add_bidirectional_links(memory, links)
+
+            logger.debug(
+                "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
+                memory.id,
+                tag.core_affect.valence,
+                tag.core_affect.arousal,
+                tag.consolidation_strength,
+            )
         return memory
 
     async def retrieve(self, query: str, top_k: int = 5) -> list[Memory]:
@@ -299,45 +306,56 @@ class AsyncEmotionalMemory:
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
-        now = datetime.now(tz=UTC)
-        store_count = await self._store.count()
-        logger.debug(
-            "retrieve start: query_len=%d top_k=%d store=%d", len(query), top_k, store_count
-        )
-        query_embedding = await self._embedder.embed(query)
+        with traced_span(
+            "emotional_memory.retrieve",
+            {"query_length": len(query), "top_k": top_k},
+        ):
+            now = datetime.now(tz=UTC)
+            store_count = await self._store.count()
+            logger.debug(
+                "retrieve start: query_len=%d top_k=%d store=%d", len(query), top_k, store_count
+            )
+            with traced_span("emotional_memory.embed", {"content_length": len(query)}):
+                query_embedding = await self._embedder.embed(query)
 
-        # G2 pre-filter (async)
-        rc = self._config.retrieval
-        candidate_limit = top_k * rc.candidate_multiplier
-        store_size = store_count  # reuse the count already fetched above
-        if store_size > candidate_limit:
-            candidates = await self._store.search_by_embedding(query_embedding, candidate_limit)
-        else:
-            candidates = await self._store.list_all()
+            # G2 pre-filter (async)
+            rc = self._config.retrieval
+            candidate_limit = top_k * rc.candidate_multiplier
+            if store_count > candidate_limit:
+                with traced_span(
+                    "emotional_memory.store.search_by_embedding", {"limit": candidate_limit}
+                ):
+                    candidates = await self._store.search_by_embedding(
+                        query_embedding, candidate_limit
+                    )
+            else:
+                candidates = await self._store.list_all()
 
-        if not candidates:
-            return []
+            if not candidates:
+                return []
 
-        _spreading_fn = (
-            (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
-        )
-        plan = build_retrieval_plan(
-            query_embedding=query_embedding,
-            query_affect=self._state.core_affect,
-            current_mood=self._state.mood,
-            current_momentum=self._state.momentum,
-            candidates=candidates,
-            top_k=top_k,
-            now=now,
-            decay_config=self._config.decay,
-            retrieval_config=rc,
-            propagation_hops=self._config.resonance.propagation_hops,
-            spreading_activation_fn=_spreading_fn,
-            precomputed_weights=self._effective_retrieval_weights(),
-        )
-        top = [item.memory for item in plan.pass2[:top_k]]
-        result = await self._apply_retrieval_updates(top, now)
-        logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
+            _spreading_fn = (
+                (lambda *a, **kw: {})
+                if not self._config.enable_resonance
+                else spreading_activation
+            )
+            plan = build_retrieval_plan(
+                query_embedding=query_embedding,
+                query_affect=self._state.core_affect,
+                current_mood=self._state.mood,
+                current_momentum=self._state.momentum,
+                candidates=candidates,
+                top_k=top_k,
+                now=now,
+                decay_config=self._config.decay,
+                retrieval_config=rc,
+                propagation_hops=self._config.resonance.propagation_hops,
+                spreading_activation_fn=_spreading_fn,
+                precomputed_weights=self._effective_retrieval_weights(),
+            )
+            top = [item.memory for item in plan.pass2[:top_k]]
+            result = await self._apply_retrieval_updates(top, now)
+            logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
 
     async def retrieve_with_explanations(
@@ -477,78 +495,88 @@ class AsyncEmotionalMemory:
             raise ValueError(
                 f"metadata length ({len(metadata)}) must match contents length ({len(contents)})"
             )
-        embeddings = await self._embedder.embed_batch(contents)
-        results = []
-        for i, (content, embedding) in enumerate(zip(contents, embeddings, strict=True)):
-            meta = metadata[i] if metadata else None
-            now = datetime.now(tz=UTC)
+        with traced_span("emotional_memory.encode_batch", {"batch_size": len(contents)}):
+            with traced_span(
+                "emotional_memory.embed", {"content_length": sum(len(c) for c in contents)}
+            ):
+                embeddings = await self._embedder.embed_batch(contents)
+            results = []
+            for i, (content, embedding) in enumerate(zip(contents, embeddings, strict=True)):
+                meta = metadata[i] if metadata else None
+                now = datetime.now(tz=UTC)
 
-            # Resolve appraisal per item (mirrors encode())
-            # Dual-path: skip appraisal on fast path
-            use_fast_path = self._config.dual_path_encoding and self._appraisal_engine is not None
-            appraisal: AppraisalVector | None = None
-            if not use_fast_path and self._appraisal_engine is not None:
-                appraisal = await self._appraisal_engine.appraise(content, context=meta)
-
-            new_affect = (
-                appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
-            )
-            async with self._state_lock:
-                self._state = self._state.update(
-                    new_affect,
-                    now=now,
-                    mood_alpha=self._config.mood_alpha,
-                    mood_decay=self._config.mood_decay,
+                # Resolve appraisal per item (mirrors encode())
+                # Dual-path: skip appraisal on fast path
+                use_fast_path = (
+                    self._config.dual_path_encoding and self._appraisal_engine is not None
                 )
-                _state_snap = self._state
-            await self._persist_state_async()
+                appraisal: AppraisalVector | None = None
+                if not use_fast_path and self._appraisal_engine is not None:
+                    appraisal = await self._appraisal_engine.appraise(content, context=meta)
 
-            cs = consolidation_strength(new_affect.arousal, _state_snap.mood.arousal)
-            tag = make_emotional_tag(
-                core_affect=_state_snap.core_affect,
-                momentum=_state_snap.momentum,
-                mood=_state_snap.mood,
-                consolidation_strength=cs,
-                appraisal=appraisal,
-            )
-
-            # Mark pending_appraisal for fast-path memories
-            if use_fast_path:
-                tag = tag.model_copy(update={"pending_appraisal": True})
-
-            # Auto-categorize: attach Plutchik EmotionLabel
-            if self._config.auto_categorize:
-                tag = label_tag(tag)
-
-            if embedding and bool(np.isnan(np.asarray(embedding)).any()):
-                warnings.warn(
-                    f"Embedder returned NaN values for content[{i}] (len={len(content)}). "
-                    "Semantic retrieval will be degraded for this memory.",
-                    stacklevel=2,
+                new_affect = (
+                    appraisal.to_core_affect()
+                    if appraisal is not None
+                    else self._state.core_affect
                 )
-            memory = Memory.create(content=content, tag=tag, embedding=embedding, metadata=meta)
-            await self._store.save(memory)
+                async with self._state_lock:
+                    self._state = self._state.update(
+                        new_affect,
+                        now=now,
+                        mood_alpha=self._config.mood_alpha,
+                        mood_decay=self._config.mood_decay,
+                    )
+                    _state_snap = self._state
+                await self._persist_state_async()
 
-            resonance_limit = (
-                self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-            )
-            store_size = await self._store.count()
-            if store_size > resonance_limit and memory.embedding is not None:
-                candidates = await self._store.search_by_embedding(
-                    memory.embedding, resonance_limit
+                cs = consolidation_strength(new_affect.arousal, _state_snap.mood.arousal)
+                tag = make_emotional_tag(
+                    core_affect=_state_snap.core_affect,
+                    momentum=_state_snap.momentum,
+                    mood=_state_snap.mood,
+                    consolidation_strength=cs,
+                    appraisal=appraisal,
                 )
-            else:
-                candidates = await self._store.list_all()
 
-            links = build_resonance_links(memory, candidates, self._config.resonance)
-            if links:
-                updated_tag = tag.model_copy(update={"resonance_links": links})
-                memory = memory.model_copy(update={"tag": updated_tag})
-                await self._store.update(memory)
+                # Mark pending_appraisal for fast-path memories
+                if use_fast_path:
+                    tag = tag.model_copy(update={"pending_appraisal": True})
 
-                await self._add_bidirectional_links(memory, links)
+                # Auto-categorize: attach Plutchik EmotionLabel
+                if self._config.auto_categorize:
+                    tag = label_tag(tag)
 
-            results.append(memory)
+                if embedding and bool(np.isnan(np.asarray(embedding)).any()):
+                    warnings.warn(
+                        f"Embedder returned NaN values for content[{i}] (len={len(content)}). "
+                        "Semantic retrieval will be degraded for this memory.",
+                        stacklevel=2,
+                    )
+                memory = Memory.create(
+                    content=content, tag=tag, embedding=embedding, metadata=meta
+                )
+                await self._store.save(memory)
+
+                resonance_limit = (
+                    self._config.resonance.max_links * self._config.resonance.candidate_multiplier
+                )
+                store_size = await self._store.count()
+                if store_size > resonance_limit and memory.embedding is not None:
+                    candidates = await self._store.search_by_embedding(
+                        memory.embedding, resonance_limit
+                    )
+                else:
+                    candidates = await self._store.list_all()
+
+                links = build_resonance_links(memory, candidates, self._config.resonance)
+                if links:
+                    updated_tag = tag.model_copy(update={"resonance_links": links})
+                    memory = memory.model_copy(update={"tag": updated_tag})
+                    await self._store.update(memory)
+
+                    await self._add_bidirectional_links(memory, links)
+
+                results.append(memory)
         return results
 
     async def _add_bidirectional_links(self, memory: Memory, links: list[ResonanceLink]) -> None:
@@ -631,10 +659,12 @@ class AsyncEmotionalMemory:
             The updated Memory, or None if the memory does not exist,
             is not pending appraisal, or no appraisal engine is configured.
         """
-        mem = await self._store.get(memory_id)
-        if mem is None:
-            return None
-        return await self._elaborate_with_memory(mem)
+        with traced_span("emotional_memory.elaborate", {"memory_id": memory_id}):
+            mem = await self._store.get(memory_id)
+            if mem is None:
+                return None
+            result = await self._elaborate_with_memory(mem)
+        return result
 
     async def elaborate_pending(self) -> list[Memory]:
         """Elaborate all memories with pending_appraisal=True (async).
@@ -724,14 +754,15 @@ class AsyncEmotionalMemory:
         """
         from emotional_memory.decay import compute_effective_strength
 
-        now = datetime.now(tz=UTC)
-        to_delete = [
-            m.id
-            for m in await self._store.list_all()
-            if compute_effective_strength(m.tag, now, self._config.decay) < threshold
-        ]
-        for memory_id in to_delete:
-            await self._store.delete(memory_id)
+        with traced_span("emotional_memory.prune", {"threshold": threshold}):
+            now = datetime.now(tz=UTC)
+            to_delete = [
+                m.id
+                for m in await self._store.list_all()
+                if compute_effective_strength(m.tag, now, self._config.decay) < threshold
+            ]
+            for memory_id in to_delete:
+                await self._store.delete(memory_id)
         return len(to_delete)
 
     async def export_memories(self) -> list[dict[str, Any]]:

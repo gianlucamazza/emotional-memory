@@ -77,6 +77,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
 | `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
 | `stores/chroma.py` | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra) |
+| `telemetry.py` | `traced_span()` context manager — OTel spans, no-op when `[otel]` extra absent |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
 ### Key Data Flow
