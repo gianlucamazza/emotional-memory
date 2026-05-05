@@ -106,7 +106,7 @@ Goal: make the library production-grade for teams running agents at scale. (Thes
 ### Enterprise vector stores
 - [x] `QdrantStore` adapter + `[qdrant]` optional extra
 - [x] `ChromaStore` adapter + `[chroma]` optional extra
-- [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
+- [x] Both implement the `MemoryStore` protocol; ANN behaviour documented in `docs/api/stores.md`
 
 ### Observability
 - [x] Optional OpenTelemetry spans on `encode`, `retrieve`, `encode_batch`, `elaborate`, `observe`, `prune`

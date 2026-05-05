@@ -72,15 +72,16 @@ The runner also reports, for every query:
 - `naive_cosine`: semantic-only control with the same deterministic embedder
 - `recency`: no semantic or affective reasoning
 
-Current interpretation:
+Current interpretation (v2, N=200):
 
-- this benchmark now separates AFT from recency-only controls under non-trivial
-  candidate pools
-- **v1.4 (50 scenarios / 100 queries)**: aggregate top1 0.70 vs 0.50
-  (`sbert-bge`, N = 100)
-- `semantic_confound` (N = 30): AFT top1 0.73 vs naive 0.47, Δ = +0.27
-  [0.10, 0.43], p_adj = 0.006 — **first per-challenge result to survive Holm
-  correction**
-- other per-subset results remain below the significance threshold
-- it still does **not** establish a robust general advantage over semantic-only
-  baselines or production memory systems in fully naturalistic scenarios
+- **v2 (50 scenarios / 200 queries, 5 challenge types)**: SBERT Δ top1 = +0.125
+  [p<0.001, d=0.286]; e5-small-v2 Δ = +0.155 [p<0.001]; aggregate hit@k AFT
+  advantage +0.205 (SBERT) and +0.155 (e5). Per-challenge breakdown: `affective_arc`
+  (+0.275) and `momentum_alignment` (+0.27) drive the signal; `same_topic_distractor`
+  and `semantic_confound` show no significant advantage.
+- **Italian slice (G6, 20 scenarios / 80 queries)**: SBERT hit@k Δ = +0.15 [p=0.0005];
+  me5-small Δ = +0.16 [p=0.001]. EN-only embedder is the accuracy bottleneck, not AFT.
+- **Spanish slice (Hd2_ES, 20 scenarios / 80 queries)**: SBERT Δ = +0.138 [p=0.045,
+  d=0.233] — PASS; me5-small Δ = +0.113 [p=0.110] — FAIL (borderline).
+- 4 of 5 challenge types in v2 are by construction favourable to affective retrieval —
+  aggregate advantage should be read as scope-conditional, not general superiority.

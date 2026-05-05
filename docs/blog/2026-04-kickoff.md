@@ -126,3 +126,10 @@ open an issue — I'd genuinely like to know.
 ---
 
 *Gianluca Mazza — April 2026*
+
+---
+
+**Update — May 2026 (v0.9):** All three items above shipped as optional extras on the
+`feature/v0.9` branch: `QdrantStore` (`[qdrant]`), `ChromaStore` (`[chroma]`), and
+OpenTelemetry spans (`[otel]`). Roadmap items above reflect the original April expectations
+and are preserved as a historical record.

@@ -49,11 +49,13 @@ nav:
   - Tutorials:
     - Async usage: tutorials/async.md
     - Persistence: tutorials/persistence.md
+    - Observability: tutorials/observability.md
     - LangChain integration: tutorials/langchain.md
   - API Reference:
     - Engine (sync): api/engine.md
     - Engine (async): api/async_engine.md
     - Stores: api/stores.md
+    - Telemetry: api/telemetry.md
     - Appraisal: api/appraisal.md
     - Models: api/models.md
     - Interfaces: api/interfaces.md
