@@ -26,7 +26,12 @@ from numpy.typing import NDArray
 from pydantic import BaseModel
 
 from emotional_memory.affect import CoreAffect
-from emotional_memory.appraisal import AppraisalEngine, AppraisalVector, consolidation_strength
+from emotional_memory.appraisal import (
+    AppraisalEngine,
+    AppraisalVector,
+    GenericAppraisalVector,
+    consolidation_strength,
+)
 from emotional_memory.categorize import label_tag
 from emotional_memory.decay import DecayConfig
 from emotional_memory.interfaces import AffectiveStateStore, Embedder, MemoryStore
@@ -146,18 +151,17 @@ class EmotionalMemory:
             and self._appraisal_engine is not None
         )
 
+        # May be GenericAppraisalVector when a custom AppraisalSchema is used
+        computed: AppraisalVector | GenericAppraisalVector | None = appraisal
         if (
             not use_fast_path
-            and appraisal is None
+            and computed is None
             and self._appraisal_engine is not None
             and self._config.enable_appraisal
         ):
-            appraisal = self._appraisal_engine.appraise(content, context=metadata)
+            computed = self._appraisal_engine.appraise(content, context=metadata)
 
-        if appraisal is not None:
-            new_affect = appraisal.to_core_affect()
-        else:
-            new_affect = self._state.core_affect
+        new_affect = computed.to_core_affect() if computed is not None else self._state.core_affect
 
         self._state = self._state.update(
             new_affect,
@@ -167,13 +171,18 @@ class EmotionalMemory:
         )
         self._persist_state()
 
+        # Only Scherer AppraisalVector is stored in the tag; custom schemas project
+        # to CoreAffect inline and leave the appraisal field as None.
+        stored_appraisal: AppraisalVector | None = (
+            computed if isinstance(computed, AppraisalVector) else None
+        )
         cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
         tag = make_emotional_tag(
             core_affect=self._state.core_affect,
             momentum=self._state.momentum,
             mood=self._state.mood,
             consolidation_strength=cs,
-            appraisal=appraisal,
+            appraisal=stored_appraisal,
         )
         if use_fast_path:
             tag = tag.model_copy(update={"pending_appraisal": True})
@@ -550,12 +559,12 @@ class EmotionalMemory:
                 use_fast_path = (
                     self._config.dual_path_encoding and self._appraisal_engine is not None
                 )
-                appraisal: AppraisalVector | None = None
+                computed_appraisal: AppraisalVector | GenericAppraisalVector | None = None
                 if not use_fast_path and self._appraisal_engine is not None:
-                    appraisal = self._appraisal_engine.appraise(content, context=meta)
+                    computed_appraisal = self._appraisal_engine.appraise(content, context=meta)
 
-                if appraisal is not None:
-                    new_affect = appraisal.to_core_affect()
+                if computed_appraisal is not None:
+                    new_affect = computed_appraisal.to_core_affect()
                 else:
                     new_affect = self._state.core_affect
 
@@ -567,13 +576,16 @@ class EmotionalMemory:
                 )
                 self._persist_state()
 
+                stored_appraisal_b: AppraisalVector | None = (
+                    computed_appraisal if isinstance(computed_appraisal, AppraisalVector) else None
+                )
                 cs = consolidation_strength(new_affect.arousal, self._state.mood.arousal)
                 tag = make_emotional_tag(
                     core_affect=self._state.core_affect,
                     momentum=self._state.momentum,
                     mood=self._state.mood,
                     consolidation_strength=cs,
-                    appraisal=appraisal,
+                    appraisal=stored_appraisal_b,
                 )
 
                 # Mark pending_appraisal for fast-path memories

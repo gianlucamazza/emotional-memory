@@ -57,6 +57,7 @@ nav:
     - Stores: api/stores.md
     - Telemetry: api/telemetry.md
     - Appraisal: api/appraisal.md
+    - Appraisal Schema: api/appraisal_schema.md
     - Models: api/models.md
     - Interfaces: api/interfaces.md
     - Categorize: api/categorize.md

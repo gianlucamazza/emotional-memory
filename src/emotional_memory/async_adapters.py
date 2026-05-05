@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any
 
-from emotional_memory.appraisal import AppraisalVector
+from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.interfaces import Embedder, MemoryStore
 from emotional_memory.models import Memory
 
@@ -108,7 +108,7 @@ class SyncToAsyncAppraisalEngine:
 
     async def appraise(
         self, event_text: str, context: dict[str, Any] | None = None
-    ) -> AppraisalVector:
+    ) -> AppraisalVector | GenericAppraisalVector:
         return await asyncio.to_thread(self._inner.appraise, event_text, context)
 
 

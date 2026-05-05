@@ -652,12 +652,13 @@ def plot_appraisal_radar(
     title: str = "Appraisal Vector (Scherer CPM)",
     color: str = "#DD5555",
 ) -> Figure:
-    """Spider chart for the five Scherer Stimulus Evaluation Check dimensions.
+    """Spider chart for appraisal vector dimensions.
+
+    Accepts an ``AppraisalVector`` (Scherer CPM), a ``GenericAppraisalVector``
+    (custom schema), or a plain dict.
 
     Args:
-        appraisal: An ``AppraisalVector`` instance *or* a plain dict with
-            keys: ``novelty``, ``goal_relevance``, ``coping_potential``,
-            ``norm_congruence``, ``self_relevance``.
+        appraisal: ``AppraisalVector``, ``GenericAppraisalVector``, or dict.
         ax: Optional existing *polar* ``Axes``.
         title: Plot title.
         color: Fill / line color.
@@ -668,29 +669,53 @@ def plot_appraisal_radar(
     _require_matplotlib()
     import numpy as np
 
-    from emotional_memory.appraisal import AppraisalVector
+    from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 
-    if isinstance(appraisal, AppraisalVector):
-        raw: dict[str, float] = {
+    raw: dict[str, float]
+    # Per-dimension (lo, hi) ranges used for normalisation to [0, 1]
+    dim_ranges: dict[str, tuple[float, float]]
+    labels: list[str]
+
+    if isinstance(appraisal, GenericAppraisalVector):
+        raw = appraisal.dimensions
+        dim_ranges = {d.name: d.range for d in appraisal._schema.dimensions}
+        labels = [d.name.replace("_", " ").title() for d in appraisal._schema.dimensions]
+        keys = [d.name for d in appraisal._schema.dimensions]
+    elif isinstance(appraisal, AppraisalVector):
+        raw = {
             "novelty": appraisal.novelty,
             "goal_relevance": appraisal.goal_relevance,
             "coping_potential": appraisal.coping_potential,
             "norm_congruence": appraisal.norm_congruence,
             "self_relevance": appraisal.self_relevance,
         }
+        dim_ranges = {
+            "novelty": (-1.0, 1.0),
+            "goal_relevance": (-1.0, 1.0),
+            "coping_potential": (0.0, 1.0),
+            "norm_congruence": (-1.0, 1.0),
+            "self_relevance": (0.0, 1.0),
+        }
+        labels = list(APPRAISAL_LABELS)
+        keys = list(dim_ranges)
     elif isinstance(appraisal, dict):
         raw = {str(k): float(v) for k, v in appraisal.items()}
+        dim_ranges = {}
+        labels = [k.replace("_", " ").title() for k in raw]
+        keys = list(raw)
     else:
-        raise TypeError(f"appraisal must be AppraisalVector or dict, got {type(appraisal)}")
+        raise TypeError(
+            f"appraisal must be AppraisalVector, GenericAppraisalVector, or dict, "
+            f"got {type(appraisal)}"
+        )
 
-    # Normalise all dimensions to [0, 1] for the radar
-    # novelty/goal_relevance/norm_congruence are [-1,+1] → shift by 0.5
     def _norm(key: str, val: float) -> float:
-        if key in ("novelty", "goal_relevance", "norm_congruence"):
-            return (val + 1.0) / 2.0
-        return val  # already [0,1]
+        rng = dim_ranges.get(key)
+        if rng is None:
+            return val
+        lo, hi = rng
+        return (val - lo) / (hi - lo) if hi > lo else 0.5
 
-    keys = ["novelty", "goal_relevance", "coping_potential", "norm_congruence", "self_relevance"]
     values = [_norm(k, raw.get(k, 0.0)) for k in keys]
 
     n = len(values)
@@ -704,7 +729,7 @@ def plot_appraisal_radar(
     _ax.fill(angles_closed, values_closed, alpha=0.25, color=color)
 
     _ax.set_xticks(angles)
-    _ax.set_xticklabels(APPRAISAL_LABELS, fontsize=9)
+    _ax.set_xticklabels(labels, fontsize=9)
     _ax.set_ylim(0.0, 1.0)
     _ax.set_yticks([0.25, 0.5, 0.75, 1.0])
     _ax.set_yticklabels(["0.25", "0.50", "0.75", "1.00"], fontsize=7)

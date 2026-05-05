@@ -23,11 +23,41 @@ still receive some consolidation. (McGaugh 2004; Yerkes & Dodson 1908).
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, field_validator
 
 from emotional_memory.affect import CoreAffect
+from emotional_memory.appraisal_schema import AppraisalSchema
+
+
+class GenericAppraisalVector:
+    """An appraisal vector for non-Scherer schemas.
+
+    Produced by ``LLMAppraisalEngine`` when a custom ``AppraisalSchema`` is
+    configured. The Scherer-specific field names are not meaningful here;
+    call ``to_core_affect()`` to project into valence/arousal space via the
+    schema's mapping function.
+    """
+
+    __slots__ = ("_schema", "dimensions")
+
+    def __init__(self, dimensions: Mapping[str, float], schema: AppraisalSchema) -> None:
+        self.dimensions: dict[str, float] = dict(dimensions)
+        self._schema: AppraisalSchema = schema
+
+    @property
+    def schema_name(self) -> str:
+        return self._schema.name
+
+    def to_core_affect(self) -> CoreAffect:
+        return self._schema.project_to_core_affect(self.dimensions)
+
+    def __repr__(self) -> str:
+        return (
+            f"{type(self).__name__}(schema={self._schema.name!r}, dimensions={self.dimensions!r})"
+        )
 
 
 class AppraisalVector(BaseModel):
@@ -87,18 +117,26 @@ class AppraisalVector(BaseModel):
         )
         return CoreAffect(valence=valence, arousal=arousal, dominance=self.coping_potential)
 
+    @property
+    def schema_name(self) -> str:
+        return "scherer_cpm"
+
 
 @runtime_checkable
 class AppraisalEngine(Protocol):
-    """Protocol for computing an AppraisalVector from an event description.
+    """Protocol for computing an appraisal vector from an event description.
 
     Implementations may call an LLM, use rule-based heuristics, or any
     other strategy. The library ships only StaticAppraisalEngine for testing.
+
+    Return type is ``AppraisalVector | GenericAppraisalVector``:
+    ``AppraisalVector`` for the default Scherer CPM schema,
+    ``GenericAppraisalVector`` when a custom ``AppraisalSchema`` is used.
     """
 
     def appraise(
         self, event_text: str, context: dict[str, Any] | None = None
-    ) -> AppraisalVector: ...
+    ) -> AppraisalVector | GenericAppraisalVector: ...
 
 
 class StaticAppraisalEngine:

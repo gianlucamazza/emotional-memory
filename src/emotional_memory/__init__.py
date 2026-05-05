@@ -9,6 +9,7 @@ from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.appraisal import (
     AppraisalEngine,
     AppraisalVector,
+    GenericAppraisalVector,
     StaticAppraisalEngine,
     consolidation_strength,
 )
@@ -18,6 +19,11 @@ from emotional_memory.appraisal_llm import (
     LLMAppraisalConfig,
     LLMAppraisalEngine,
     LLMCallable,
+)
+from emotional_memory.appraisal_schema import (
+    SCHERER_CPM_SCHEMA,
+    AppraisalDimension,
+    AppraisalSchema,
 )
 from emotional_memory.async_adapters import (
     SyncToAsyncAppraisalEngine,
@@ -92,11 +98,14 @@ with contextlib.suppress(ImportError):
     _langchain_available = True
 
 __all__ = [
+    "SCHERER_CPM_SCHEMA",
     "AdaptiveWeightsConfig",
     "AffectiveMomentum",
     "AffectiveState",
     "AffectiveStateStore",
+    "AppraisalDimension",
     "AppraisalEngine",
+    "AppraisalSchema",
     "AppraisalVector",
     "AsyncAppraisalEngine",
     "AsyncEmbedder",
@@ -109,6 +118,7 @@ __all__ = [
     "EmotionalMemory",
     "EmotionalMemoryConfig",
     "EmotionalTag",
+    "GenericAppraisalVector",
     "InMemoryAffectiveStateStore",
     "InMemoryStore",
     "KeywordAppraisalEngine",

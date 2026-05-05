@@ -4,7 +4,8 @@ import json
 
 import pytest
 
-from emotional_memory.appraisal import AppraisalVector
+from emotional_memory.affect import CoreAffect
+from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.appraisal_llm import (
     _APPRAISAL_JSON_SCHEMA,
     KeywordAppraisalEngine,
@@ -13,6 +14,7 @@ from emotional_memory.appraisal_llm import (
     LLMAppraisalEngine,
     LLMCallable,
 )
+from emotional_memory.appraisal_schema import AppraisalDimension, AppraisalSchema
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -181,6 +183,75 @@ class TestLLMAppraisalEngine:
         assert "coping_potential" in required
         assert "norm_congruence" in required
         assert "self_relevance" in required
+
+    def test_custom_schema_end_to_end(self):
+        occ_schema = AppraisalSchema(
+            name="occ_subset",
+            dimensions=(
+                AppraisalDimension(
+                    name="desirability",
+                    range=(-1.0, 1.0),
+                    neutral=0.0,
+                    description="Desired outcome: -1=bad, 1=good",
+                ),
+                AppraisalDimension(
+                    name="praiseworthiness",
+                    range=(-1.0, 1.0),
+                    neutral=0.0,
+                    description="Action quality: -1=blame, 1=praise",
+                ),
+                AppraisalDimension(
+                    name="appealingness",
+                    range=(0.0, 1.0),
+                    neutral=0.5,
+                    description="Aesthetic appeal: 0=repulsive, 1=beautiful",
+                ),
+            ),
+            system_prompt="Rate the event on OCC dimensions. Return JSON.",
+            project_to_core_affect=lambda d: CoreAffect(
+                valence=0.6 * d["desirability"] + 0.4 * d["praiseworthiness"],
+                arousal=0.5 * abs(d["desirability"]),
+                dominance=0.5,
+            ),
+        )
+
+        captured: list[dict] = []
+
+        def capturing_llm(prompt: str, json_schema: dict) -> str:
+            captured.append(json_schema)
+            return json.dumps({"desirability": 0.8, "praiseworthiness": 0.6, "appealingness": 0.9})
+
+        engine = LLMAppraisalEngine(
+            capturing_llm,  # type: ignore[arg-type]
+            config=LLMAppraisalConfig(appraisal_schema=occ_schema),
+        )
+        result = engine.appraise("A beautiful sunset")
+
+        # JSON schema passed to the LLM must contain the 3 OCC dims, not Scherer's 5
+        assert len(captured) == 1
+        passed_schema = captured[0]
+        assert set(passed_schema["required"]) == {
+            "desirability",
+            "praiseworthiness",
+            "appealingness",
+        }
+        assert "novelty" not in passed_schema["required"]
+
+        # Result must be a GenericAppraisalVector with the correct schema_name
+        assert isinstance(result, GenericAppraisalVector)
+        assert result.schema_name == "occ_subset"
+
+        # GenericAppraisalVector must project correctly to CoreAffect
+        ca = result.to_core_affect()
+        assert isinstance(ca, CoreAffect)
+        assert ca.valence == pytest.approx(0.6 * 0.8 + 0.4 * 0.6, abs=1e-6)
+        assert ca.arousal == pytest.approx(0.5 * 0.8, abs=1e-6)
+
+    def test_default_schema_still_returns_appraisal_vector(self):
+        engine = LLMAppraisalEngine(_make_llm(_SUCCESS_RESP))
+        result = engine.appraise("test event")
+        assert isinstance(result, AppraisalVector)
+        assert result.schema_name == "scherer_cpm"
 
 
 # ---------------------------------------------------------------------------

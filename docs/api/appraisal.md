@@ -1,5 +1,7 @@
 # Appraisal
 
+See also: [Appraisal Schema](appraisal_schema.md) — plug in custom theories (OCC, GRID, domain-specific).
+
 ## Protocols and Data Types
 
 ::: emotional_memory.appraisal.AppraisalVector

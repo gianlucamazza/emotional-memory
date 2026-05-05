@@ -68,6 +68,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | Module | Purpose |
 |--------|---------|
 | `categorize.py` | `EmotionLabel`, `categorize_affect()`, `label_tag()` — Plutchik wheel: maps (valence, arousal) to 8 primary emotions with intensity tiers (Russell 1980 + Plutchik 1980) |
+| `appraisal_schema.py` | `AppraisalSchema`, `AppraisalDimension`, `SCHERER_CPM_SCHEMA` — pluggable appraisal-theory schemas (OCC, GRID, custom) |
 | `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback) |
 | `async_engine.py` | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory` |
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |

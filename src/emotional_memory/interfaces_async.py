@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any, Protocol, runtime_checkable
 
-from emotional_memory.appraisal import AppraisalVector
+from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.models import Memory
 
 
@@ -59,4 +59,4 @@ class AsyncAppraisalEngine(Protocol):
 
     async def appraise(
         self, event_text: str, context: dict[str, Any] | None = None
-    ) -> AppraisalVector: ...
+    ) -> AppraisalVector | GenericAppraisalVector: ...

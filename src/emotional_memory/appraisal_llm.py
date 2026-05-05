@@ -47,7 +47,8 @@ from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel
 
-from emotional_memory.appraisal import AppraisalVector
+from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
+from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
 
 logger = logging.getLogger(__name__)
 
@@ -142,14 +143,24 @@ class LLMCallable(Protocol):
 class LLMAppraisalConfig(BaseModel):
     """Configuration for LLMAppraisalEngine."""
 
+    model_config = {"arbitrary_types_allowed": True}
+
     system_prompt: str = _SYSTEM_PROMPT
-    """System prompt describing the appraisal task."""
+    """System prompt describing the appraisal task.
+
+    When ``appraisal_schema`` is set and this field is left at its default, the engine
+    uses ``appraisal_schema.system_prompt`` instead.  Explicitly setting this field
+    always takes precedence.
+    """
 
     cache_size: int = 128
     """Number of (text, context) pairs to cache.  0 disables the cache."""
 
     fallback_on_error: bool = True
     """Return a neutral AppraisalVector instead of raising on LLM/parse errors."""
+
+    appraisal_schema: AppraisalSchema | None = None
+    """Appraisal schema to use.  ``None`` defaults to ``SCHERER_CPM_SCHEMA``."""
 
 
 # ---------------------------------------------------------------------------
@@ -166,7 +177,16 @@ class LLMAppraisalEngine:
     mutated under the lock.
     """
 
-    __slots__ = ("_cache", "_cache_lock", "_config", "_fallback", "_llm")
+    __slots__ = (
+        "_cache",
+        "_cache_lock",
+        "_config",
+        "_effective_prompt",
+        "_fallback",
+        "_json_schema",
+        "_llm",
+        "_schema",
+    )
 
     def __init__(
         self,
@@ -176,22 +196,37 @@ class LLMAppraisalEngine:
     ) -> None:
         self._llm = llm
         self._config = config or LLMAppraisalConfig()
+        self._schema: AppraisalSchema = self._config.appraisal_schema or SCHERER_CPM_SCHEMA
         self._fallback = fallback or AppraisalVector.neutral()
-        self._cache: OrderedDict[str, AppraisalVector] = OrderedDict()
+        self._cache: OrderedDict[str, AppraisalVector | GenericAppraisalVector] = OrderedDict()
         self._cache_lock = threading.Lock()
+
+        # Effective prompt: user-set system_prompt in config overrides schema default.
+        # Detect via model_fields_set so the schema prompt wins when config is default.
+        if "system_prompt" in self._config.model_fields_set:
+            self._effective_prompt: str = self._config.system_prompt
+        else:
+            self._effective_prompt = self._schema.system_prompt
+
+        self._json_schema: dict[str, Any] = self._schema.to_json_schema()
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
 
-    def appraise(self, event_text: str, context: dict[str, Any] | None = None) -> AppraisalVector:
-        """Appraise *event_text* via the LLM, returning an AppraisalVector.
+    def appraise(
+        self, event_text: str, context: dict[str, Any] | None = None
+    ) -> AppraisalVector | GenericAppraisalVector:
+        """Appraise *event_text* via the LLM.
 
-        Results are cached by (event_text, context) key.  On error, if
+        Returns an ``AppraisalVector`` for the default Scherer CPM schema or a
+        ``GenericAppraisalVector`` when a custom ``AppraisalSchema`` is configured.
+
+        Results are cached by (schema, event_text, context) key.  On error, if
         ``fallback_on_error`` is True, returns the neutral fallback vector
         instead of propagating the exception.
         """
-        cache_key = self._make_cache_key(event_text, context)
+        cache_key = self._make_cache_key(event_text, context, self._schema.name)
 
         if self._config.cache_size > 0:
             with self._cache_lock:
@@ -201,8 +236,9 @@ class LLMAppraisalEngine:
                     return self._cache[cache_key]
 
         prompt = self._build_prompt(event_text, context)
+        vector: AppraisalVector | GenericAppraisalVector
         try:
-            raw = self._llm(prompt, _APPRAISAL_JSON_SCHEMA)
+            raw = self._llm(prompt, self._json_schema)
         except Exception as exc:
             if self._config.fallback_on_error:
                 logger.warning("appraise: LLM call failed, using fallback: %s", exc)
@@ -212,7 +248,10 @@ class LLMAppraisalEngine:
         else:
             try:
                 data = self._extract_json(raw)
-                vector = AppraisalVector(**data)
+                if self._schema is SCHERER_CPM_SCHEMA:
+                    vector = AppraisalVector(**data)
+                else:
+                    vector = GenericAppraisalVector(dimensions=data, schema=self._schema)
             except Exception:
                 if self._config.fallback_on_error:
                     logger.debug(
@@ -252,14 +291,14 @@ class LLMAppraisalEngine:
     # ------------------------------------------------------------------
 
     def _build_prompt(self, event_text: str, context: dict[str, Any] | None) -> str:
-        parts = [self._config.system_prompt, "", f'Event: "{event_text}"']
+        parts = [self._effective_prompt, "", f'Event: "{event_text}"']
         if context:
             parts.append(f"Context: {json.dumps(context, ensure_ascii=False)}")
         return "\n".join(parts)
 
     @staticmethod
-    def _make_cache_key(event_text: str, context: dict[str, Any] | None) -> str:
-        raw = event_text + (json.dumps(context, sort_keys=True) if context else "")
+    def _make_cache_key(event_text: str, context: dict[str, Any] | None, schema_name: str) -> str:
+        raw = schema_name + event_text + (json.dumps(context, sort_keys=True) if context else "")
         return hashlib.sha256(raw.encode()).hexdigest()
 
     @staticmethod

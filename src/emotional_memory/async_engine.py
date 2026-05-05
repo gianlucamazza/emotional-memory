@@ -42,7 +42,11 @@ import numpy as np
 from numpy.typing import NDArray
 
 from emotional_memory.affect import CoreAffect
-from emotional_memory.appraisal import AppraisalVector, consolidation_strength
+from emotional_memory.appraisal import (
+    AppraisalVector,
+    GenericAppraisalVector,
+    consolidation_strength,
+)
 from emotional_memory.categorize import label_tag
 from emotional_memory.engine import EmotionalMemoryConfig
 from emotional_memory.interfaces import AffectiveStateStore
@@ -176,17 +180,16 @@ class AsyncEmotionalMemory:
             and self._appraisal_engine is not None
         )
 
+        computed: AppraisalVector | GenericAppraisalVector | None = appraisal
         if (
             not use_fast_path
-            and appraisal is None
+            and computed is None
             and self._appraisal_engine is not None
             and self._config.enable_appraisal
         ):
-            appraisal = await self._appraisal_engine.appraise(content, context=metadata)
+            computed = await self._appraisal_engine.appraise(content, context=metadata)
 
-        new_affect = (
-            appraisal.to_core_affect() if appraisal is not None else self._state.core_affect
-        )
+        new_affect = computed.to_core_affect() if computed is not None else self._state.core_affect
         async with self._state_lock:
             self._state = self._state.update(
                 new_affect,
@@ -197,13 +200,16 @@ class AsyncEmotionalMemory:
             state_snapshot = self._state
         await self._persist_state_async()
 
+        stored_appraisal: AppraisalVector | None = (
+            computed if isinstance(computed, AppraisalVector) else None
+        )
         cs = consolidation_strength(new_affect.arousal, state_snapshot.mood.arousal)
         tag = make_emotional_tag(
             core_affect=state_snapshot.core_affect,
             momentum=state_snapshot.momentum,
             mood=state_snapshot.mood,
             consolidation_strength=cs,
-            appraisal=appraisal,
+            appraisal=stored_appraisal,
         )
         if use_fast_path:
             tag = tag.model_copy(update={"pending_appraisal": True})
@@ -510,13 +516,13 @@ class AsyncEmotionalMemory:
                 use_fast_path = (
                     self._config.dual_path_encoding and self._appraisal_engine is not None
                 )
-                appraisal: AppraisalVector | None = None
+                computed_a: AppraisalVector | GenericAppraisalVector | None = None
                 if not use_fast_path and self._appraisal_engine is not None:
-                    appraisal = await self._appraisal_engine.appraise(content, context=meta)
+                    computed_a = await self._appraisal_engine.appraise(content, context=meta)
 
                 new_affect = (
-                    appraisal.to_core_affect()
-                    if appraisal is not None
+                    computed_a.to_core_affect()
+                    if computed_a is not None
                     else self._state.core_affect
                 )
                 async with self._state_lock:
@@ -529,13 +535,16 @@ class AsyncEmotionalMemory:
                     _state_snap = self._state
                 await self._persist_state_async()
 
+                stored_a: AppraisalVector | None = (
+                    computed_a if isinstance(computed_a, AppraisalVector) else None
+                )
                 cs = consolidation_strength(new_affect.arousal, _state_snap.mood.arousal)
                 tag = make_emotional_tag(
                     core_affect=_state_snap.core_affect,
                     momentum=_state_snap.momentum,
                     mood=_state_snap.mood,
                     consolidation_strength=cs,
-                    appraisal=appraisal,
+                    appraisal=stored_a,
                 )
 
                 # Mark pending_appraisal for fast-path memories
