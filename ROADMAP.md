@@ -64,63 +64,79 @@ Moved to **v0.9.0** below. The dot-release window remains open for paper polish 
 Dot release(s) for the paper bundle, no API changes:
 
 - [x] Footnote linking Addendum H from §Limitations of `paper/main.tex`
-- [ ] arXiv submission executed (cs.LG, no endorsement) — bundle is shipped, upload pending
-- [ ] Post-acceptance: update `CITATION.cff` with arXiv URL, refresh README badges
+- [x] arXiv submission bundle ready (`paper/arxiv-submission.tar.gz`, `make check-arxiv-bundle` enforces freshness)
+- [ ] arXiv submission executed (cs.LG, no endorsement) — upload pending (user action)
+- [ ] Post-submission: update `release.toml: arxiv_id`, run `sync_release_metadata --from-toml`, refresh README badges
 
 ---
 
-## v0.8.0 — Closing the open gates (target: 2026 Q3)
+## v0.8.x — Evidence programme, closed (2026-04 → 2026-05) ✓
 
-Goal: lift the public-claim ceiling by closing Gate 2 and adding the missing intra-theory dimension.
+All items in this milestone shipped across v0.8.0–v0.8.3 dot releases.
 
-### Gate 2 — Human evaluation (kit shipped, execution pending)
-- [ ] Distribute the existing `benchmarks/human_eval/` packets to 20–30 raters (Prolific or MTurk)
-- [ ] Collect `ratings.jsonl`, run pre-registered analysis pipeline (`benchmarks/human_eval/pipeline.py`)
-- [ ] Update `claim_validation_matrix.json` and audit doc
+### Gate evidence — all closed
+- [x] **S3 ablation @ N=200** — Ha (no_mood): FAIL; Hb (no_resonance): FAIL (e5 opposite direction — sign-reversal open question, moved to v0.10); Hc: PASS; Hd2/Hd2_IT: PASS (EN Δ=+0.125, IT Δ=+0.163). Closure docs in `benchmarks/`.
+- [x] **G7 PAD dominance design** — design note `docs/research/11_dominance_design.md` shipped. CoreAffect 3D promotion deferred to v0.10 (back-compat migration required).
+- [x] **SSOT automation** — `make bump VERSION=X.Y.Z` (atomic 3-file edit + propagation + preflight), `make check-all`, `sync_release_metadata` covers demo/README drift.
 
-### S3 ablation @ N=200 + Hd2 generalisation — CLOSED 2026-05-04
-- [x] Re-point `benchmarks/ablation/runner.py` at `realistic_recall_v2` — `--dataset` flag added; `bench-s3-sbert` / `bench-s3-e5` targets added to Makefile
-- [x] Execute confirmatory ablation at full power (N=200, seed=0, n_bootstrap=2000, both SBERT and e5)
-  - Ha (no_mood): FAIL on both embedders (SBERT Δ=-0.02 p=0.264; e5 Δ=-0.005 p=0.915)
-  - Hb (no_resonance): FAIL on both (SBERT Δ=+0.02 p=0.203; e5 Δ=+0.085 p<0.001 — opposite direction)
-  - Hc (no_appraisal invariant): PASS on both — benchmark correctly inert
-  - Hd2 / Hd2_IT: PASS (EN Δ=0.125, IT Δ=0.163 — architecture advantage generalizes)
-- [x] Closure docs: `benchmarks/preregistration_addendum_s3_closure.md`, `benchmarks/preregistration_addendum_hd2_closure.md`, S3 footer in `preregistration.md`, Hd2 footer in `preregistration_addendum_v3.md`
+### Gate 2 — Human evaluation (kit shipped, execution deferred to v0.10)
+Kit is ready in `benchmarks/human_eval/`. Execution (Prolific/MTurk distribution) moved to v0.10.
 
-### G7 — PAD dominance as first-class CoreAffect
-- [ ] Promote `dominance` from `MoodField`-only to `CoreAffect` 3D field
-- [ ] Migration path for serialised `AffectiveState` (back-compat read for v0.7-era snapshots)
-- [ ] Re-enable `benchmarks/fidelity/test_dominance_retrieval_gap.py` (currently `xfail strict`)
-- [ ] Design note `docs/research/11_dominance_design.md` already shipped — implements that design
-
-### Multilingual breadth (beyond Italian)
-- [ ] One additional non-English slice (Spanish or French) using the existing `make_multilingual()` factory
-- [ ] Extends G6 cross-embedder claim to ≥3 language families
+### Multilingual breadth (ES/FR) — deferred to v0.10
+Italian slice (G6) closed. Spanish/French extension moved to v0.10.
 
 ---
 
-## v0.9.0 — Production Readiness (target: 2026 Q4)
+## v0.9.0 — Production Readiness (shipped, PR #24) ✓
 
-Goal: make the library production-grade for teams running agents at scale. (These are the items originally scoped for v0.7.0; deferred while the evidence programme took priority.)
+Goal: make the library production-grade for teams running agents at scale.
 
 ### Enterprise vector stores
-- [ ] `QdrantStore` adapter + `[qdrant]` optional extra
-- [ ] `ChromaStore` adapter + `[chroma]` optional extra
-- [ ] Both implement the `MemoryStore` protocol; ANN behaviour parity with `SQLiteStore` documented
+- [x] `QdrantStore` adapter + `[qdrant]` optional extra
+- [x] `ChromaStore` adapter + `[chroma]` optional extra
+- [x] Both implement the `MemoryStore` protocol; ANN behaviour documented in `docs/api/stores.md`
 
 ### Observability
-- [ ] Optional OpenTelemetry spans on `encode`, `retrieve`, `elaborate`, `observe`
-- [ ] `[otel]` optional extra; spans no-op when extra is absent
-- [ ] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
+- [x] Optional OpenTelemetry spans on `encode`, `retrieve`, `encode_batch`, `elaborate`, `observe`, `prune`
+- [x] `[otel]` optional extra; spans no-op when extra is absent
+- [x] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
 
-### BYO appraisal schema
+### Deferred to v0.10
+BYO appraisal schema and LoCoMo per-task tuning were descoped from v0.9 to keep the release focused. See v0.10 below.
+
+---
+
+## v0.10.0 — Evidence + parametricity (target: 2026)
+
+Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
+
+### BYO appraisal schema (deferred from v0.9)
 - [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking
 - [ ] Schema-validated `AppraisalVector` (Pydantic) for non-Scherer outputs
 
-### LoCoMo per-task tuning (Pareto study)
-- [ ] Pre-register a per-task-type weight search (Gate 1 follow-up to the negative result) — explicit confirmatory design before any tuning runs
+### LoCoMo per-task Pareto study (deferred from v0.9 — Gate 1 follow-up)
+- [ ] Pre-register a per-task-type weight search before any tuning runs
 - [ ] Sweep harness extending `benchmarks/locomo/runner.py`
-- [ ] Pareto-frontier analysis: AFT-favourable categories vs naive-favourable categories
+- [ ] Pareto-frontier analysis: AFT-favourable vs naive-favourable task categories
+
+### Gate 2 — Human evaluation execution (deferred from v0.8)
+- [ ] Distribute `benchmarks/human_eval/` packets to 20–30 raters (Prolific or MTurk)
+- [ ] Collect `ratings.jsonl`, run `benchmarks/human_eval/pipeline.py`
+- [ ] Update `claim_validation_matrix.json` and audit doc
+
+### G7 — PAD dominance as first-class CoreAffect (deferred from v0.8)
+- [ ] Promote `dominance` from `MoodField`-only to `CoreAffect` 3D field
+- [ ] Migration path for serialised `AffectiveState` (back-compat read for v0.7-era snapshots)
+- [ ] Re-enable `benchmarks/fidelity/test_dominance_retrieval_gap.py` (currently `xfail strict`)
+- [ ] Design note `docs/research/11_dominance_design.md` already shipped
+
+### Sign-reversal experiment (open from v0.8 S3 closure)
+- [ ] Investigate why `no_resonance` ablation shows `Δ=+0.085 p<0.001` with e5 (opposite direction to SBERT Δ=+0.02)
+- [ ] Controlled experiment: e5 × resonance enabled/disabled; pre-register before running
+
+### Multilingual breadth (deferred from v0.8)
+- [ ] One additional non-English slice (Spanish or French) using the existing `make_multilingual()` factory
+- [ ] Extends G6 cross-embedder claim to ≥3 language families
 
 ---
 

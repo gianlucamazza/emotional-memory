@@ -13,6 +13,20 @@
 
 ::: emotional_memory.stores.sqlite.SQLiteStore
 
+### QdrantStore
+
+!!! note
+    Requires the `qdrant` extra: `uv pip install "emotional-memory[qdrant]"`
+
+::: emotional_memory.stores.qdrant.QdrantStore
+
+### ChromaStore
+
+!!! note
+    Requires the `chroma` extra: `uv pip install "emotional-memory[chroma]"`
+
+::: emotional_memory.stores.chroma.ChromaStore
+
 ## Affective State Stores
 
 These backends persist the engine's runtime affective state (valence, arousal,

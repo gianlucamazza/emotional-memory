@@ -82,7 +82,7 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 
 | Command | Scope | Speed |
 |---|---|---|
-| `make test` | Unit + integration (513+ tests) | ~1s |
+| `make test` | Unit + integration (835+ tests) | ~1s |
 | `make cov` | Same with branch coverage (≥ 80% enforced) | ~2s |
 | `make bench-fidelity` | 126 parametrized psychological invariant tests | ~5s |
 | `make bench-perf` | Latency/throughput benchmarks | ~30s |
@@ -211,7 +211,7 @@ make install-release
 Recommended release gate:
 
 ```bash
-make release-check VERSION=0.7.0
+make release-check VERSION=X.Y.Z
 ```
 
 That target runs:
@@ -219,14 +219,14 @@ That target runs:
 - `make check`
 - `make test-llm`
 - `make bench-appraisal`
-- `uv run python scripts/preflight.py 0.7.0`
+- `uv run python scripts/preflight.py X.Y.Z`
 
 Publishing order:
 
 ```bash
 git push origin main
-git tag -a v0.7.0 -m "v0.7.0"
-git push origin v0.7.0
+git tag -a vX.Y.Z -m "vX.Y.Z"
+git push origin vX.Y.Z
 ```
 
 Normal PyPI path:
@@ -240,7 +240,7 @@ Manual PyPI fallback:
 
 ```bash
 make publish-pypi-manual
-make verify-pypi-release VERSION=0.7.0
+make verify-pypi-release VERSION=X.Y.Z
 ```
 
 Zenodo:

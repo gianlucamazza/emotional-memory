@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-05-05
+
+### Added
+
+- **OpenTelemetry spans** (`src/emotional_memory/telemetry.py`): optional
+  distributed tracing via the `[otel]` extra (`opentelemetry-api>=1.20`,
+  `opentelemetry-sdk>=1.20`). Root spans on `encode`, `retrieve`,
+  `encode_batch`, `elaborate`, `observe`, and `prune`; child spans on
+  `embed` and `store.search_by_embedding`. No-op when the extra is absent —
+  zero overhead at import time. Exceptions recorded on spans with
+  `StatusCode.ERROR`. Mirrored on `AsyncEmotionalMemory`. Tested with
+  `InMemorySpanExporter` (18 tests in `tests/test_telemetry.py`). Available
+  via `pip install "emotional-memory[otel]"`.
+
+- **`ChromaStore` adapter** (`src/emotional_memory/stores/chroma.py`): persistent
+  `MemoryStore` backed by Chroma vector database. Supports ephemeral (in-memory),
+  local on-disk (`PersistentClient`), and remote server (`HttpClient`) modes.
+  Memory IDs used directly as Chroma point IDs; full `Memory` JSON stored as
+  document; embeddings passed as `np.float32` arrays. Lazy collection creation
+  with cosine distance; dimension stored in collection metadata for persistence
+  resume. Available via `pip install "emotional-memory[chroma]"`. ROADMAP v0.9
+  second item.
+
+- **`QdrantStore` adapter** (`src/emotional_memory/stores/qdrant.py`): persistent
+  `MemoryStore` backed by Qdrant vector database. Supports embedded (`:memory:`),
+  local on-disk, and remote server modes. Point IDs are deterministic UUID5 from
+  `memory.id`; full `Memory` JSON stored in payload (mirrors `SQLiteStore` design).
+  Available via `pip install "emotional-memory[qdrant]"`. ROADMAP v0.9 first item.
+
 ### Documentation
 
 - **Paper §Limitations alignment with v0.8.2 PAD upgrade** (`paper/main.tex`):
@@ -1021,7 +1050,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.3...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.0...v0.8.1

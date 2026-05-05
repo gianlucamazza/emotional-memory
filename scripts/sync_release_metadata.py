@@ -150,6 +150,18 @@ def sync_release_metadata(
         updated_demo,
         "demo README BibTeX DOI",
     )
+    updated_demo = _replace(
+        r"- \*\*PyPI\*\*: \[`emotional-memory [^`]+`\]\(https://pypi\.org/project/emotional-memory/[^/]+/\)",
+        f"- **PyPI**: [`emotional-memory {version}`](https://pypi.org/project/emotional-memory/{version}/)",
+        updated_demo,
+        "demo README PyPI link",
+    )
+    updated_demo = _replace(
+        r"^  version = \{[^}]+\},$",
+        f"  version = {{{version}}},",
+        updated_demo,
+        "demo README BibTeX version",
+    )
     if updated_demo != demo_text:
         changes.append((demo_readme, updated_demo))
 

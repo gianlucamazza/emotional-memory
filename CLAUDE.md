@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 make check          # Full suite: lint + typecheck + test (run before commits)
+make check-all      # check + mkdocs --strict + preflight --fast + reproduce-paper-check
+make bump VERSION=X.Y.Z  # Atomic version bump: patches 3 upstream files, then propagates via sync-metadata
 make test           # Run tests only
 make cov            # Tests with branch coverage (80% minimum enforced)
 make typecheck      # mypy strict mode
@@ -75,6 +77,9 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal |
 | `integrations/langchain.py` | LangChain memory integration (optional) |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
+| `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
+| `stores/chroma.py` | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra) |
+| `telemetry.py` | `traced_span()` context manager — OTel spans, no-op when `[otel]` extra absent |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
 ### Key Data Flow
@@ -125,7 +130,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 `get_current_mood(now)` on both engines reads the `MoodField` regressed via `MoodDecayConfig` without mutating state. Configured via `EmotionalMemoryConfig.mood_decay`.
 
-`SQLiteStore` is exported from the top-level `__init__.py` and from `stores/__init__.py` when `sqlite-vec` is installed (guarded by `contextlib.suppress(ImportError)`).
+`SQLiteStore`, `QdrantStore`, and `ChromaStore` are exported from `stores/__init__.py` when their respective optional dependencies are installed (each guarded by `contextlib.suppress(ImportError)`). `SQLiteStore` is also re-exported from the top-level `__init__.py`.
 
 `SQLiteAffectiveStateStore` and `InMemoryAffectiveStateStore` are exported from `state_stores/__init__.py`. `RedisAffectiveStateStore` requires the `redis` extra.
 

@@ -92,3 +92,31 @@ Schema highlights:
 `recency_confound`. Rebalanced to tighten per-challenge confidence intervals.
 Its role is to support realistic replay studies, not to act as a broad
 leaderboard.
+
+## realistic_recall_v2
+
+`realistic_recall_v2.json` is the current primary benchmark used in all v0.7+ evidence
+claims. It is a superset of v1 with 5 challenge types and doubled query count.
+
+**v2**: 50 scenarios, 200 queries — challenge-type distribution:
+`affective_arc`, `momentum_alignment`, `same_topic_distractor`,
+`semantic_confound`, `recency_confound`. Added `momentum_alignment` to directly
+probe the affective-momentum layer.
+
+Used in: Hd2 (Gate 3 confirmatory), G4/G5 cross-embedder, S3 ablation.
+
+## realistic_recall_v2_it
+
+`realistic_recall_v2_it.json` is the Italian-language slice used in G6 (multilingual).
+
+**v2_it**: 20 scenarios, 80 queries — same schema as v2, translated to Italian.
+Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
+`semantic_confound`. Used with SBERT bge-small-en-v1.5 and multilingual-e5-small.
+
+## realistic_recall_v2_es
+
+`realistic_recall_v2_es.json` is the Spanish-language slice used in Hd2_ES.
+
+**v2_es**: 20 scenarios, 80 queries — same schema as v2, translated to Spanish.
+Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
+`semantic_confound`. Used with SBERT bge-small-en-v1.5 and multilingual-e5-small.

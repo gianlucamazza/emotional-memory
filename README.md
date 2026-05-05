@@ -14,6 +14,9 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 uv pip install emotional-memory
 uv pip install "emotional-memory[sentence-transformers]"  # real semantic embeddings (recommended)
 uv pip install "emotional-memory[sqlite]"                 # SQLite persistence via sqlite-vec
+uv pip install "emotional-memory[qdrant]"                 # Qdrant vector database
+uv pip install "emotional-memory[chroma]"                 # ChromaDB vector database
+uv pip install "emotional-memory[otel]"                   # OpenTelemetry tracing (no-op without this extra)
 uv pip install "emotional-memory[redis]"                  # shared affective-state persistence via Redis
 uv pip install "emotional-memory[viz]"                    # matplotlib visualization
 uv pip install "emotional-memory[dotenv]"                 # .env file loading via python-dotenv
@@ -31,7 +34,7 @@ make install-demo
 
 ## Quickstart
 
-```python
+```bash
 uv pip install "emotional-memory[sentence-transformers]"
 ```
 
@@ -237,6 +240,15 @@ dunder methods cannot be coroutines.
 **Stores included:**
 - `InMemoryStore` — dict-backed, brute-force cosine search (no extra deps)
 - `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`uv pip install "emotional-memory[sqlite]"`)
+- `QdrantStore` — Qdrant vector database, embedded or server mode (`uv pip install "emotional-memory[qdrant]"`)
+- `ChromaStore` — ChromaDB vector database, ephemeral or persistent (`uv pip install "emotional-memory[chroma]"`)
+
+**Affective-state stores included** (persist the runtime mood/momentum state across sessions):
+- `InMemoryAffectiveStateStore` — in-process only, no extra deps
+- `SQLiteAffectiveStateStore` — durable across restarts (`[sqlite]` extra)
+- `RedisAffectiveStateStore` — shared across processes/services (`[redis]` extra)
+
+Pass one as `state_store=` to `EmotionalMemory(...)` to enable cross-session mood continuity.
 
 ### Appraisal Engines
 
@@ -351,7 +363,7 @@ not from rerunning long studies.
 | | **emotional-memory (AFT)** | **Mem0** | **Letta** | **Zep** | **LangChain Memory** |
 |---|---|---|---|---|---|
 | **License** | MIT | Apache 2.0 | Apache 2.0 | Apache 2.0 | MIT |
-| **Persistence** | InMemory / SQLite | Qdrant, Chroma, Pinecone, PG, MongoDB | PostgreSQL / SQLite | Neo4j (self-hosted) / Cloud | In-memory / custom |
+| **Persistence** | InMemory / SQLite / Qdrant / Chroma | Qdrant, Chroma, Pinecone, PG, MongoDB | PostgreSQL / SQLite | Neo4j (self-hosted) / Cloud | In-memory / custom |
 | **BYO embedder** | ✅ any `Embedder` protocol | ✅ (OpenAI default) | ⚠️ partial | ⚠️ partial | ✅ |
 | **Emotion model** | ✅ 5-layer AFT (valence, arousal, dominance, mood, appraisal, resonance) | ❌ | ❌ | ❌ | ❌ |
 | **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | ✅ tool-call edit | ✅ edge invalidation | ❌ |
@@ -402,10 +414,12 @@ retrieval probe, not a general downstream evaluation of production memory system
   Δ=+0.138 [p=0.045, d=0.233] — PASS. Hypothesis Hd2 generalizes to Spanish
   with SBERT. With multilingual-e5-small: Δ=+0.113 [p=0.110, d=0.189] — FAIL
   (marginal, borderline signal; larger multilingual model expected to close gap).
-- **Negative external result (LoCoMo, Gate 1 FAIL)**: on the LoCoMo
+- **Honest negative — LoCoMo external benchmark (Gate 1 FAIL)**: on the LoCoMo
   conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
-  does not help on factual open-domain QA.
+  does not improve factual open-domain QA. The advantage documented above is
+  *scope-conditional*: it emerges on mood-congruent realistic-recall tasks,
+  not on general conversational retrieval.
 - **Not yet established**: general superiority over systems such as Mem0 or
   LangMem on realistic agent tasks; completed human evaluation results; or
   ecological correspondence to human emotional memory.
@@ -529,7 +543,7 @@ messages update affective state without being stored, and control commands such 
 fully-configured `EmotionalMemory` so you control the store backend and embedder.
 `clear()` removes stored memories, clears the transcript, and resets affective state.
 
-## Logging
+## Logging & Observability
 
 The library uses the standard `logging` module. Enable debug output to trace the full pipeline:
 
@@ -542,6 +556,34 @@ logging.getLogger("emotional_memory").setLevel(logging.DEBUG)
 
 Debug events include: encode start/stored/resonance, retrieve start/done, reconsolidation
 triggers, LLM appraisal cache hits, and fallback activations.
+
+### OpenTelemetry tracing
+
+Install the optional `[otel]` extra to get distributed spans on every engine operation:
+
+```bash
+uv pip install "emotional-memory[otel]"
+```
+
+```python
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+provider = TracerProvider()
+exporter = InMemorySpanExporter()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+# wire to your OTLP/Jaeger/Zipkin backend instead of InMemorySpanExporter
+
+from opentelemetry import trace
+trace.set_tracer_provider(provider)
+
+# now all em.encode(), em.retrieve(), em.prune(), etc. emit spans automatically
+```
+
+Root spans are emitted for `encode`, `retrieve`, `encode_batch`, `elaborate`, `observe`, and
+`prune`. Child spans cover individual `embed` and `store.search_by_embedding` calls.
+**Without the `[otel]` extra, all tracing is zero-overhead no-op.**
 
 ## Examples
 

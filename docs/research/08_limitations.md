@@ -254,9 +254,9 @@ scalable.
 
 ### 3.4 No "enterprise" vector store
 
-The available adapters are `InMemoryStore` (RAM, non-persistent) and
-`SQLiteStore` (local file, scalable to ~10^6 memories). There are no
-adapters for distributed systems such as Qdrant, Chroma, Weaviate, or
+The available adapters are `InMemoryStore` (RAM, non-persistent),
+`SQLiteStore` (local file, scalable to ~10^6 memories), `QdrantStore`
+(v0.9), and `ChromaStore` (v0.9). There are no adapters for Weaviate or
 Pinecone. The `MemoryStore` Protocol is duck-typed and contributions are
 welcome.
 
@@ -274,7 +274,7 @@ is pre-cognitive and structurally tied to being-in-the-world. The mapping is
 
 ### 4.2 AFT novelty credentials are not peer-reviewed
 
-As of the v0.5.x release, Affective Field Theory has not been formally
+As of the v0.9 release, Affective Field Theory has not been formally
 published in a peer-reviewed venue. Originality claims (in particular the
 unified integration of Russell + Scherer + Heidegger + Hebb + Collins &
 Loftus in a single computational model for LLM memory) are plausible but
@@ -284,17 +284,23 @@ have not yet been validated by the scientific community.
 
 ## 5. Future Work
 
-The following limits are explicitly planned but are not tied to a specific
-release:
+### Recently shipped (v0.9)
+
+| Feature | Status |
+|---|---|
+| Qdrant vector-database adapter (`[qdrant]` extra) | ✅ shipped v0.9 |
+| ChromaDB adapter (`[chroma]` extra) | ✅ shipped v0.9 |
+| OpenTelemetry spans (`[otel]` extra) | ✅ shipped v0.9 |
+
+### Open limits (not tied to a specific release)
 
 | Limit | Indicative horizon |
 |---|---|
-| Broader, comparative affect-aware realistic benchmark | post-0.6 |
-| Qdrant / Chroma adapters | architecture track |
+| Broader, comparative affect-aware realistic benchmark | ongoing research |
 | Execute the human-eval pilot with real ratings | research track |
-| Dominance as a primary dimension | research track |
-| Distributed / enterprise memory store (Qdrant, Chroma, ...) | product track |
+| BYO appraisal schema (OCC, GRID, custom taxonomies) | v0.10 |
+| LoCoMo per-task weight tuning (Pareto study) | research track |
 
 ---
 
-*Document added in v0.5.1. Update at every significant release.*
+*Document added in v0.5.1. Last updated: v0.9 (2026-05-05).*

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "emotional_memory"
-version = "0.8.3"
+version = "0.9.0"
 description = "Emotional memory library for LLMs based on Affective Field Theory"
 requires-python = ">=3.11"
 license = "MIT"
@@ -46,6 +46,9 @@ demo = ["gradio>=6.13,<7"]
 dotenv = ["python-dotenv>=1.0"]
 sentence-transformers = ["sentence-transformers>=2.2"]
 sqlite = ["sqlite-vec>=0.1.1"]
+qdrant = ["qdrant-client>=1.10"]
+chroma = ["chromadb>=0.5"]
+otel = ["opentelemetry-api>=1.20", "opentelemetry-sdk>=1.20"]
 redis = ["redis>=5.0"]
 langchain = ["langchain-core>=0.3"]
 mem0 = ["mem0ai>=2.0"]
@@ -158,4 +161,16 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["tqdm", "tqdm.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["qdrant_client", "qdrant_client.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["chromadb", "chromadb.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["opentelemetry", "opentelemetry.*"]
 ignore_missing_imports = true
