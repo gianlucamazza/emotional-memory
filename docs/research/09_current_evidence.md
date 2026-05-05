@@ -201,7 +201,7 @@ These figures are generated from the committed benchmark JSON artefacts with
 
 ![S3 ablation study](../images/research/research_ablation_s3.png)
 
-![Italian multilingual slice](../images/research/research_multilingual_it.png)
+![Multilingual slices (IT + ES)](../images/research/research_multilingual.png)
 
 ![LoCoMo negative result](../images/research/research_locomo_negative.png)
 

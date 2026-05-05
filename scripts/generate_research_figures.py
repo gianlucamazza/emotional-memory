@@ -33,6 +33,8 @@ except ImportError as exc:
 REALISTIC_SBERT = ROOT / "benchmarks" / "realistic" / "results.v2.sbert.json"
 REALISTIC_IT_SBERT = ROOT / "benchmarks" / "realistic" / "results.v2_it.sbert.json"
 REALISTIC_IT_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_it.me5.json"
+REALISTIC_ES_SBERT = ROOT / "benchmarks" / "realistic" / "results.v2_es.sbert.json"
+REALISTIC_ES_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_es.me5.json"
 ABLATION_SBERT = ROOT / "benchmarks" / "ablation" / "results.v2.sbert.json"
 LOCOMO = ROOT / "benchmarks" / "locomo" / "results.json"
 
@@ -173,15 +175,14 @@ def _figure_ablation_forest(data: dict[str, Any]) -> object:
     return fig
 
 
-def _figure_multilingual(sbert: dict[str, Any], me5: dict[str, Any]) -> object:
-    datasets = [("SBERT EN-only", sbert), ("multilingual-e5", me5)]
-    x = np.arange(len(datasets))
+def _figure_multilingual(slices: list[tuple[str, dict[str, Any]]]) -> object:
+    x = np.arange(len(slices))
     width = 0.35
 
-    fig, ax = plt.subplots(figsize=(7.5, 4.5))
+    fig, ax = plt.subplots(figsize=(9.0, 4.5))
     for offset, system_name in [(-width / 2, "aft"), (width / 2, "naive_cosine")]:
         rows: list[tuple[str, float, float, float]] = []
-        for label, data in datasets:
+        for label, data in slices:
             system = next(s for s in data["systems"] if s["system"] == system_name)
             rows.append((label, *_ci(system["aggregate_metrics"], "hit_at_k")))
         values = [point for _, point, _, _ in rows]
@@ -204,11 +205,11 @@ def _figure_multilingual(sbert: dict[str, Any], me5: dict[str, Any]) -> object:
         )
 
     ax.set_xticks(x)
-    ax.set_xticklabels([label for label, _ in datasets])
+    ax.set_xticklabels([label for label, _ in slices])
     _style_axis(
         ax,
         ylabel="Hit@k",
-        title="Italian slice: signal survives multilingual embedder swap",
+        title="Multilingual slices: AFT advantage across languages and embedders",
     )
     ax.legend(frameon=False, ncol=2)
     return fig
@@ -271,6 +272,8 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
     realistic = _load_json(REALISTIC_SBERT)
     realistic_it_sbert = _load_json(REALISTIC_IT_SBERT)
     realistic_it_me5 = _load_json(REALISTIC_IT_ME5)
+    realistic_es_sbert = _load_json(REALISTIC_ES_SBERT)
+    realistic_es_me5 = _load_json(REALISTIC_ES_ME5)
     ablation = _load_json(ABLATION_SBERT)
     locomo = _load_json(LOCOMO)
 
@@ -289,10 +292,17 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
     )
     _save(_figure_ablation_forest(ablation), png_dir, pdf_dir, "research_ablation_s3")
     _save(
-        _figure_multilingual(realistic_it_sbert, realistic_it_me5),
+        _figure_multilingual(
+            [
+                ("IT (SBERT)", realistic_it_sbert),
+                ("IT (me5)", realistic_it_me5),
+                ("ES (SBERT)", realistic_es_sbert),
+                ("ES (me5)", realistic_es_me5),
+            ]
+        ),
         png_dir,
         pdf_dir,
-        "research_multilingual_it",
+        "research_multilingual",
     )
     _save(_figure_locomo(locomo), png_dir, pdf_dir, "research_locomo_negative")
     print("Done.")

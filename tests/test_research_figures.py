@@ -22,7 +22,7 @@ def test_generate_research_figures_writes_expected_outputs(tmp_path: object) -> 
         "research_realistic_v2_overview",
         "research_realistic_v2_challenges",
         "research_ablation_s3",
-        "research_multilingual_it",
+        "research_multilingual",
         "research_locomo_negative",
     }
     assert {p.stem for p in png_dir.glob("*.png")} == expected

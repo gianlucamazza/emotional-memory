@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Pluggable `AppraisalSchema`** (`src/emotional_memory/appraisal_schema.py`): inject
+  any appraisal theory (OCC, GRID, custom) into `LLMAppraisalEngine` without forking.
+  `AppraisalDimension` defines each axis; `AppraisalSchema` bundles dimensions, an LLM
+  prompt, and a `project_to_core_affect` callable.  `SCHERER_CPM_SCHEMA` wraps the
+  existing 5-SEC formula as the default — all back-compat paths intact.  `GenericAppraisalVector`
+  carries arbitrary dimensions and delegates `to_core_affect()` to the schema's projection.
+  `LLMAppraisalConfig.appraisal_schema` drives prompt and JSON-schema generation.
+  Exported from the top-level package; documented in `docs/api/appraisal_schema.md`.
+  Closes #25.
+
+- **Multilingual figure extended to IT + ES** (`scripts/generate_research_figures.py`):
+  `_figure_multilingual` now plots four slices — Italian × SBERT, Italian × me5, Spanish × SBERT,
+  Spanish × me5 — with AFT vs naive_cosine bars and 95% CI error bars.  Output renamed from
+  `research_multilingual_it` to `research_multilingual`.  Closes #30 (Spanish dataset and results
+  were already present from v0.8.2; this closes the figure gap).
+
 ## [0.9.0] - 2026-05-05
 
 ### Added

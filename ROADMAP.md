@@ -135,8 +135,8 @@ Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
 - [ ] Controlled experiment: e5 × resonance enabled/disabled; pre-register before running
 
 ### Multilingual breadth (deferred from v0.8)
-- [ ] One additional non-English slice (Spanish or French) using the existing `make_multilingual()` factory
-- [ ] Extends G6 cross-embedder claim to ≥3 language families
+- [x] One additional non-English slice — Spanish (`realistic_recall_v2_es.json`, shipped v0.8.2 as Hd2_ES). Closes #30.
+- [x] Extends G6 cross-embedder claim to ≥3 language families — `_figure_multilingual` now shows IT + ES × SBERT + me5.
 
 ---
 
