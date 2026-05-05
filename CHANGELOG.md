@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **Paper §Limitations alignment with v0.8.2 PAD upgrade** (`paper/main.tex`):
+  rename heading "Single affect dimension" → "Affect model scope"; update
+  description from 2D valence-arousal to 3D PAD with `\citealp{mehrabian1974approach}`;
+  explicit disclosure that no study yet isolates dominance's discriminative
+  contribution over the 2D baseline.
+
+- **Audit gap closures** (`docs/research/audit_2026-04.md`):
+  G7 (dimensional coverage) and G8 (paper narrative risk) marked
+  ✓ CLOSED 2026-05-05; Q4/Q5 reviewer-anticipation answers updated to
+  reference current evidence (v2 N=200 effect sizes, multilingual G6 +
+  Hd2_ES, 3D PAD shipped).
+
+- **arXiv bundle refresh** (`paper/arxiv-submission.tar.gz`): regenerated
+  to include the updated `main.tex` after the §Affect model scope edit.
+
 ## [0.8.3] - 2026-05-05
 
 ### Added
