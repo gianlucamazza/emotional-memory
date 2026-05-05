@@ -77,8 +77,8 @@
       "evidence_level": "1_theory_fidelity",
       "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
       "current_evidence": "126 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution.",
-      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future). Positive resonance contribution under e5-small-v2 (Hb sign reversal: removing resonance improves e5 top1 Δ=+0.085 p<0.001; may reflect e5 geometry incompatibility rather than resonance inertness).",
-      "next_study": "Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection.",
+      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G future). Positive resonance contribution under e5-small-v2: Hb FAIL (Addendum S3) confirmed that disabling resonance improves e5 top1 by Δ=+0.085 (p<0.001). Addendum I (2026-05-06) decomposes this by challenge type — the per-challenge signs are consistent (both embedders Δ≥0 on every type); the amplification is concentrated on semantic_confound (e5 Δ=+0.125 vs SBERT Δ=+0.025). Mechanistic hypothesis (e5 tighter intra-topic clusters → resonance over-fires on semantic_confound) is stated but not yet confirmed; deferred to Hi3 on N≥500 dataset with link-set instrumentation.",
+      "next_study": "Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection. Addendum I Hi3: confirmatory mechanism study (link-set instrumentation, N≥500).",
       "evidence_refs": [
         "benchmarks/fidelity/test_appraisal_affect.py",
         "benchmarks/fidelity/test_mood_adaptive.py",
@@ -89,7 +89,9 @@
         "benchmarks/ablation/results.v2.sbert.md",
         "benchmarks/ablation/results.v2.e5.md"
       ],
-      "protocol_refs": [],
+      "protocol_refs": [
+        "benchmarks/preregistration_addendum_i.md"
+      ],
       "limitations_refs": [
         "docs/research/08_limitations.md"
       ]
