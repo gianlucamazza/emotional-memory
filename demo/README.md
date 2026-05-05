@@ -118,7 +118,7 @@ all other exceptions untouched.
 
 ## Links
 
-- **PyPI**: [`emotional-memory 0.7.0`](https://pypi.org/project/emotional-memory/0.7.0/)
+- **PyPI**: [`emotional-memory 0.9.0`](https://pypi.org/project/emotional-memory/0.9.0/)
 - **GitHub**: [gianlucamazza/emotional-memory](https://github.com/gianlucamazza/emotional-memory)
 - **Zenodo Concept DOI**: [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
 
@@ -128,7 +128,7 @@ all other exceptions untouched.
 @software{mazza_emotional_memory_2026,
   author  = {Mazza, Gianluca},
   title   = {emotional-memory: Affective Field Theory for LLM Memory},
-  version = {0.7.0},
+  version = {0.9.0},
   year    = {2026},
   doi     = {10.5281/zenodo.20035251},
   url     = {https://github.com/gianlucamazza/emotional-memory}
