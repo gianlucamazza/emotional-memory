@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -71,6 +71,10 @@ sync-metadata:
 sync-metadata-dry:
 	uv run python scripts/sync_release_metadata.py --from-toml --dry-run
 
+bump:
+	@test -n "$(VERSION)" || (echo "Usage: make bump VERSION=X.Y.Z [DATE=YYYY-MM-DD]"; exit 1)
+	uv run python scripts/bump_version.py $(VERSION) $(if $(DATE),--date $(DATE),)
+
 meta-check:
 	uv run python scripts/check_release_metadata.py
 	uv run python tools/audit_claim_refs.py
@@ -79,6 +83,11 @@ meta-check-local:
 	uv run python scripts/check_release_metadata.py --require-local-doi
 
 check: lint typecheck meta-check test bench-fidelity
+
+check-all: check
+	uv run mkdocs build --strict --quiet
+	uv run python scripts/preflight.py --fast
+	$(MAKE) reproduce-paper-check
 
 bench-fidelity:
 	uv run pytest benchmarks/fidelity/ -v -m fidelity
