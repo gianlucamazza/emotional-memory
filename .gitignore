@@ -42,6 +42,7 @@ site/
 paper/tables/table*.md
 paper/figures/*.png
 paper/figures/*.pdf
+docs/images/research/*.pdf
 paper/main.pdf
 paper/*.aux
 paper/*.bbl

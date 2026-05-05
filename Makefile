@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -88,6 +88,12 @@ check-all: check
 	uv run mkdocs build --strict --quiet
 	uv run python scripts/preflight.py --fast
 	$(MAKE) reproduce-paper-check
+	$(MAKE) check-arxiv-bundle
+
+check-arxiv-bundle:
+	@diff <(tar -xzf paper/arxiv-submission.tar.gz -O ./main.tex) paper/main.tex > /dev/null || \
+		(echo "ERROR: paper/arxiv-submission.tar.gz is stale — run 'make paper-arxiv' and commit the bundle"; exit 1)
+	@echo "OK: arxiv bundle main.tex matches paper/main.tex"
 
 bench-fidelity:
 	uv run pytest benchmarks/fidelity/ -v -m fidelity
@@ -216,13 +222,14 @@ paper:
 
 paper-arxiv:
 	cd paper && latexmk -pdf -interaction=nonstopmode main.tex
-	mkdir -p paper/arxiv-build
+	mkdir -p paper/arxiv-build/figures paper/arxiv-build/tables
 	cp paper/main.tex paper/arxiv-build/
 	cp paper/main.bbl paper/arxiv-build/
 	cp paper/refs.bib paper/arxiv-build/
-	cp -r paper/figures paper/arxiv-build/
-	cp -r paper/tables paper/arxiv-build/
+	cp paper/figures/*.pdf paper/arxiv-build/figures/
+	cp paper/tables/*.tex paper/arxiv-build/tables/
 	tar -czf paper/arxiv-submission.tar.gz -C paper/arxiv-build .
+	sha256sum paper/arxiv-submission.tar.gz | awk '{print $$1}' > paper/arxiv-submission.sha256
 	rm -rf paper/arxiv-build
 	@echo "arXiv bundle ready: paper/arxiv-submission.tar.gz"
 	@tar -tzf paper/arxiv-submission.tar.gz

@@ -301,7 +301,7 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate research evidence figures.")
     parser.add_argument("--png-dir", default=str(ROOT / "docs" / "images" / "research"))
-    parser.add_argument("--pdf-dir", default=str(ROOT / "paper" / "figures"))
+    parser.add_argument("--pdf-dir", default=str(ROOT / "docs" / "images" / "research"))
     args = parser.parse_args()
 
     generate(Path(args.png_dir), Path(args.pdf_dir))
