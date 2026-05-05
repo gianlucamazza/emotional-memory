@@ -695,8 +695,11 @@ weight tuning to investigate the LoCoMo scope limitation.
 The dominance axis (PAD third dimension) is now a first-class \texttt{CoreAffect}
 field as of v0.8.2 (commit \texttt{8b9ddbe}); future work will assess whether
 dominance-specific scenarios improve retrieval on emotion-rich corpora.
-Integration with vector stores (Qdrant, Chroma) and expanded baselines
-(Mem0, MemGPT) are engineering milestones independent of the evidence programme.
+Vector-store adapters for Qdrant and ChromaDB shipped in v0.9 as optional extras
+(\texttt{[qdrant]}, \texttt{[chroma]}), each implementing the duck-typed \texttt{MemoryStore}
+protocol in strict vector-first mode.
+Expanded baselines (Mem0, MemGPT) remain future engineering work independent of the
+evidence programme.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}

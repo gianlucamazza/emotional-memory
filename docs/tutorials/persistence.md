@@ -4,18 +4,23 @@ By default `EmotionalMemory` uses `InMemoryStore`, which is ephemeral.  For
 production use you want memories and affective state to survive process
 restarts.  This tutorial covers:
 
-1. **`SQLiteStore`** — durable on-disk storage with ANN search
-2. **`SQLiteAffectiveStateStore`** — canonical affective state continuity
-3. **`export_memories` / `import_memories`** — backup and migration
-4. **`prune()`** — removing decayed memories
+1. **`SQLiteStore`** — durable on-disk storage with ANN search (local file)
+2. **`QdrantStore`** / **`ChromaStore`** — vector-database backends for scale
+3. **`SQLiteAffectiveStateStore`** — canonical affective state continuity
+4. **`export_memories` / `import_memories`** — backup and migration
+5. **`prune()`** — removing decayed memories
 
 ## Installation
 
 ```bash
-uv pip install "emotional-memory[sqlite]"
+uv pip install "emotional-memory[sqlite]"    # SQLite backend
+uv pip install "emotional-memory[qdrant]"    # Qdrant backend
+uv pip install "emotional-memory[chroma]"    # ChromaDB backend
 ```
 
 `SQLiteStore` requires `sqlite-vec` for approximate-nearest-neighbour search.
+`QdrantStore` and `ChromaStore` require embeddings to be provided on every
+`save()` call (vector-first strict mode — no dict fallback).
 
 For shared affective state across instances you can also use:
 
@@ -170,6 +175,6 @@ when a state store is configured. See [Async tutorial](async.md) for the full as
 ## See also
 
 - [`EmotionalMemory` API reference](../api/engine.md)
-- [`SQLiteStore`](../api/stores.md)
+- [`SQLiteStore`, `QdrantStore`, `ChromaStore`](../api/stores.md)
 - [Async tutorial](async.md)
 - `examples/persistence.py` in the repository

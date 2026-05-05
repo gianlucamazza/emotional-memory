@@ -15,6 +15,7 @@ uv pip install emotional-memory
 uv pip install "emotional-memory[sentence-transformers]"  # real semantic embeddings (recommended)
 uv pip install "emotional-memory[sqlite]"                 # SQLite persistence via sqlite-vec
 uv pip install "emotional-memory[qdrant]"                 # Qdrant vector database
+uv pip install "emotional-memory[chroma]"                 # ChromaDB vector database
 uv pip install "emotional-memory[redis]"                  # shared affective-state persistence via Redis
 uv pip install "emotional-memory[viz]"                    # matplotlib visualization
 uv pip install "emotional-memory[dotenv]"                 # .env file loading via python-dotenv
@@ -239,6 +240,7 @@ dunder methods cannot be coroutines.
 - `InMemoryStore` — dict-backed, brute-force cosine search (no extra deps)
 - `SQLiteStore` — persistent SQLite + sqlite-vec ANN search (`uv pip install "emotional-memory[sqlite]"`)
 - `QdrantStore` — Qdrant vector database, embedded or server mode (`uv pip install "emotional-memory[qdrant]"`)
+- `ChromaStore` — ChromaDB vector database, ephemeral or persistent (`uv pip install "emotional-memory[chroma]"`)
 
 ### Appraisal Engines
 
