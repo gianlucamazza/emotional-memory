@@ -507,10 +507,14 @@ The full Layer-4 pipeline requires an external LLM or rule engine for appraisal.
 Without it, the AppraisalVector defaults to a zero vector and only Layers 1--3,5
 are active.
 
-\paragraph{Single affect dimension.}
-AFT models affect in a two-dimensional valence-arousal space (plus dominance for
-the mood field). Richer models (e.g., Panksepp's seven primary affects, or the
-Geneva Emotion Wheel) may better capture fine-grained emotional distinctions.
+\paragraph{Affect model scope.}
+AFT models affect in a three-dimensional valence-arousal-dominance space
+(\textsc{pad}; \citealp{mehrabian1974approach}). The dominance dimension is
+populated via coping-potential appraisal (default 0.5 when no appraisal engine
+is active); no study yet isolates whether dominance adds discriminative retrieval
+power over the two-dimensional baseline. Richer discrete models
+(e.g., Panksepp's seven primary affects, or the Geneva Emotion Wheel) may
+better capture fine-grained emotional distinctions.
 
 \paragraph{No human evaluation.}
 Fidelity tests validate psychological invariants from the literature against the
