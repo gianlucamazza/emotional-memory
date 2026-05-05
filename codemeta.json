@@ -4,9 +4,9 @@
   "name": "emotional-memory: Affective Field Theory for LLM Memory",
   "description": "A Python library implementing Affective Field Theory (AFT) — a 5-layer emotional model for LLM memory that integrates valence-arousal affect (Russell 1980), affective momentum (Spinoza), mood fields (Heidegger), appraisal vectors (Scherer CPM), and resonance links with spreading activation (Collins & Loftus 1975) and Hebbian strengthening (Hebb 1949).",
   "identifier": "https://doi.org/10.5281/zenodo.19972258",
-  "version": "0.8.3",
+  "version": "0.9.0",
   "dateCreated": "2025-01-01",
-  "datePublished": "2026-05-04",
+  "datePublished": "2026-05-05",
   "license": "https://spdx.org/licenses/MIT.html",
   "programmingLanguage": {
     "@type": "ComputerLanguage",

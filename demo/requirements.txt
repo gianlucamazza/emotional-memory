@@ -1,6 +1,6 @@
 # Hugging Face Space runtime overlay.
 # Local contributor setup should use: `make install-demo`
-emotional-memory==0.8.3
+emotional-memory==0.9.0
 gradio>=6.13,<7
 httpx>=0.27
 matplotlib>=3.7
