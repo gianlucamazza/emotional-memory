@@ -354,7 +354,7 @@ not from rerunning long studies.
 
 ![S3 Ablation Study](docs/images/research/research_ablation_s3.png)
 
-![Italian Multilingual Slice](docs/images/research/research_multilingual_it.png)
+![Multilingual Slices (IT + ES)](docs/images/research/research_multilingual.png)
 
 ![LoCoMo Negative Result](docs/images/research/research_locomo_negative.png)
 
