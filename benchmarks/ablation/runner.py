@@ -32,6 +32,8 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import statistics as _stats_module
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -45,9 +47,9 @@ from benchmarks.common.statistics import (
     mcnemar_exact,
     paired_bootstrap_diff,
 )
-from benchmarks.realistic.adapters import AFTReplayAdapter
+from benchmarks.realistic.adapters import AFTReplayAdapter, ReplaySessionEnd
 from benchmarks.realistic.runner import _build_embedder, load_dataset, run_benchmark
-from emotional_memory import Embedder, EmotionalMemoryConfig
+from emotional_memory import Embedder, EmotionalMemory, EmotionalMemoryConfig
 
 
 class AFTDualPathReplayAdapter(AFTReplayAdapter):
@@ -104,6 +106,107 @@ class AFTKeywordSynchronousReplayAdapter(AFTReplayAdapter):
         return result
 
 
+def _collect_link_stats(engine: EmotionalMemory) -> dict[str, Any]:
+    """Collect ResonanceLink aggregate stats for all encoded memories (session snapshot).
+
+    Uses only the public ``export_memories()`` API so this is safe to call before
+    ``engine.close()``.  The ``per_memory_counts`` list is preserved verbatim so
+    that ``_aggregate_link_stats`` can compute exact cross-session statistics.
+    """
+    all_memories = engine.export_memories()
+    per_memory_counts: list[int] = []
+    link_types: Counter[str] = Counter()
+    all_strengths: list[float] = []
+
+    for m in all_memories:
+        links: list[dict[str, Any]] = m.get("tag", {}).get("resonance_links", [])
+        per_memory_counts.append(len(links))
+        for link in links:
+            link_types[str(link["link_type"])] += 1
+            all_strengths.append(float(link["strength"]))
+
+    n = len(per_memory_counts)
+    if n == 0:
+        return {
+            "n_memories": 0,
+            "per_memory_counts": [],
+            "links_per_memory": {"mean": 0.0, "median": 0.0, "max": 0},
+            "link_types": {},
+            "link_strength_distribution": [],
+        }
+    return {
+        "n_memories": n,
+        "per_memory_counts": per_memory_counts,
+        "links_per_memory": {
+            "mean": round(_stats_module.mean(per_memory_counts), 4),
+            "median": float(_stats_module.median(per_memory_counts)),
+            "max": max(per_memory_counts),
+        },
+        "link_types": dict(link_types),
+        "link_strength_distribution": sorted(all_strengths, reverse=True),
+    }
+
+
+def _aggregate_link_stats(per_session: list[dict[str, Any]]) -> dict[str, Any]:
+    """Aggregate per-session link stat snapshots into a single cross-scenario summary."""
+    if not per_session:
+        return {
+            "sessions": 0,
+            "n_memories_total": 0,
+            "links_per_memory": {"mean": 0.0, "median": 0.0, "max": 0},
+            "link_types": {},
+            "link_strength_distribution": [],
+        }
+
+    all_counts: list[int] = []
+    combined_types: Counter[str] = Counter()
+    all_strengths: list[float] = []
+
+    for s in per_session:
+        all_counts.extend(s.get("per_memory_counts", []))
+        combined_types.update(s.get("link_types", {}))
+        all_strengths.extend(s.get("link_strength_distribution", []))
+
+    n_total = len(all_counts)
+    all_strengths_sorted = sorted(all_strengths, reverse=True)
+
+    if n_total == 0:
+        return {
+            "sessions": len(per_session),
+            "n_memories_total": 0,
+            "links_per_memory": {"mean": 0.0, "median": 0.0, "max": 0},
+            "link_types": {},
+            "link_strength_distribution": [],
+        }
+
+    return {
+        "sessions": len(per_session),
+        "n_memories_total": n_total,
+        "links_per_memory": {
+            "mean": round(_stats_module.mean(all_counts), 4),
+            "median": float(_stats_module.median(all_counts)),
+            "max": max(all_counts),
+        },
+        "link_types": dict(combined_types),
+        "link_strength_distribution": all_strengths_sorted,
+    }
+
+
+def _make_link_stats_adapter_cls(
+    accumulator: list[dict[str, Any]],
+) -> type[AFTReplayAdapter]:
+    """Return an AFTReplayAdapter subclass that appends link stats to *accumulator* at
+    the end of each session (before the engine is closed)."""
+
+    class _LinkStatsAdapter(AFTReplayAdapter):
+        def end_session(self) -> ReplaySessionEnd:
+            if self._engine is not None:
+                accumulator.append(_collect_link_stats(self._engine))
+            return super().end_session()
+
+    return _LinkStatsAdapter
+
+
 ABLATIONS: list[tuple[str, dict[str, bool]]] = [
     ("full", {}),
     ("no_appraisal", {"enable_appraisal": False}),
@@ -155,10 +258,13 @@ def run_ablation_study(
 
     variant_results: list[dict[str, Any]] = []
     query_flags_by_variant: dict[str, dict[str, dict[str, bool]]] = {}
+    full_link_stats_accumulator: list[dict[str, Any]] = []
 
     for variant_name, flag_kwargs in tqdm(ABLATIONS, desc="ablation variants", unit="variant"):
         cfg = EmotionalMemoryConfig(**flag_kwargs)
         adapter_cls = _ADAPTER_OVERRIDES.get(variant_name)
+        if variant_name == "full" and adapter_cls is None:
+            adapter_cls = _make_link_stats_adapter_cls(full_link_stats_accumulator)
         bench = run_benchmark(
             dataset,
             systems=["aft"],
@@ -309,6 +415,7 @@ def run_ablation_study(
         "variants": variant_results,
         "pairwise_vs_full": pairwise,
         "hf1_pairwise": hf1_pairwise,
+        "link_set_stats": _aggregate_link_stats(full_link_stats_accumulator),
         "statistics": {
             "n_bootstrap": n_bootstrap,
             "confidence": 0.95,

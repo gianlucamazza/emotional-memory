@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from benchmarks.ablation.runner import run_ablation_study
+from benchmarks.ablation.runner import (
+    _aggregate_link_stats,
+    _collect_link_stats,
+    run_ablation_study,
+)
 from benchmarks.realistic.runner import DATASET, load_dataset
 
 
@@ -71,3 +75,77 @@ def test_ablation_benchmark_id_derived_from_dataset(path: object, expected_suffi
     results = run_ablation_study(dataset, n_bootstrap=20, seed=0)
     assert results["benchmark"] == f"ablation_{expected_suffix}"
     assert results["base_benchmark"] == expected_suffix
+
+
+def test_ablation_study_emits_link_set_stats() -> None:
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0)
+    stats = results["link_set_stats"]
+    assert "sessions" in stats
+    assert "n_memories_total" in stats
+    assert stats["sessions"] > 0
+    assert stats["n_memories_total"] > 0
+    lpm = stats["links_per_memory"]
+    assert lpm["mean"] <= lpm["max"]
+    assert lpm["max"] <= 5  # ResonanceConfig.max_links default
+    assert lpm["mean"] >= 0.0
+
+
+def test_collect_link_stats_invariants() -> None:
+    from benchmarks.realistic.adapters.base import TokenHashEmbedder
+    from emotional_memory import EmotionalMemory
+    from emotional_memory.stores.in_memory import InMemoryStore
+
+    em = EmotionalMemory(store=InMemoryStore(), embedder=TokenHashEmbedder())
+    for i in range(6):
+        em.encode(f"memory content number {i} about topic {i % 3}", metadata={})
+
+    stats = _collect_link_stats(em)
+    em.close()
+
+    # structural invariants
+    assert stats["n_memories"] == 6
+    assert len(stats["per_memory_counts"]) == 6
+    assert stats["links_per_memory"]["mean"] <= stats["links_per_memory"]["max"]
+    assert stats["links_per_memory"]["max"] <= 5
+
+    # link_types counts must equal len(link_strength_distribution)
+    total_links = sum(stats["link_types"].values())
+    assert total_links == len(stats["link_strength_distribution"])
+
+    # all strengths in [0, 1]
+    assert all(0.0 <= s <= 1.0 for s in stats["link_strength_distribution"])
+
+
+def test_aggregate_link_stats_invariants() -> None:
+    session_a = {
+        "n_memories": 3,
+        "per_memory_counts": [2, 3, 1],
+        "link_types": {"semantic": 4, "temporal": 2},
+        "link_strength_distribution": [0.9, 0.8, 0.7, 0.6, 0.5, 0.4],
+    }
+    session_b = {
+        "n_memories": 2,
+        "per_memory_counts": [5, 0],
+        "link_types": {"semantic": 3, "emotional": 2},
+        "link_strength_distribution": [1.0, 0.95, 0.85, 0.75, 0.65],
+    }
+    agg = _aggregate_link_stats([session_a, session_b])
+
+    assert agg["sessions"] == 2
+    assert agg["n_memories_total"] == 5  # 3 + 2
+    assert agg["links_per_memory"]["max"] == 5
+    assert agg["link_types"]["semantic"] == 7  # 4 + 3
+    assert agg["link_types"]["temporal"] == 2
+    assert agg["link_types"]["emotional"] == 2
+    total = sum(agg["link_types"].values())
+    assert total == len(agg["link_strength_distribution"])
+    # sorted descending
+    strengths = agg["link_strength_distribution"]
+    assert strengths == sorted(strengths, reverse=True)
+
+
+def test_aggregate_link_stats_empty() -> None:
+    agg = _aggregate_link_stats([])
+    assert agg["sessions"] == 0
+    assert agg["n_memories_total"] == 0
