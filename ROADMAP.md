@@ -82,8 +82,8 @@ All items in this milestone shipped across v0.8.0–v0.8.3 dot releases.
 ### Gate 2 — Human evaluation (kit shipped, execution deferred to v0.10)
 Kit is ready in `benchmarks/human_eval/`. Execution (Prolific/MTurk distribution) moved to v0.10.
 
-### Multilingual breadth (ES/FR) — deferred to v0.10
-Italian slice (G6) closed. Spanish/French extension moved to v0.10.
+### Multilingual breadth — Italian + Spanish shipped; French deferred to v0.10
+Italian (G6) and Spanish (Hd2_ES, v0.8.2) slices closed. French extension deferred to v0.10.
 
 ---
 
@@ -102,7 +102,7 @@ Goal: make the library production-grade for teams running agents at scale.
 - [x] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
 
 ### Deferred to v0.10
-BYO appraisal schema and LoCoMo per-task tuning were descoped from v0.9 to keep the release focused. See v0.10 below.
+BYO appraisal schema (#25) shipped post-v0.9 (commit `57ef515`). LoCoMo per-task Pareto study (#26) executed post-v0.9 (Add. J, Hj1 FAIL). See v0.10 below.
 
 ---
 
@@ -110,9 +110,9 @@ BYO appraisal schema and LoCoMo per-task tuning were descoped from v0.9 to keep 
 
 Collecting items deferred from v0.7–v0.9.
 
-### BYO appraisal schema (deferred from v0.9)
-- [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking
-- [ ] Schema-validated `AppraisalVector` (Pydantic) for non-Scherer outputs
+### BYO appraisal schema (shipped, #25) ✓
+- [x] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking (commit `57ef515`)
+- [x] Schema-validated `AppraisalVector` (Pydantic) for non-Scherer outputs (commit `57ef515`)
 
 ### LoCoMo per-task Pareto study (Gate 1 follow-up) — CLOSED, #26
 - [x] Pre-registration frozen — Addendum J (`benchmarks/preregistration_addendum_j.md`): 10-config weight grid, 200-QA stratified subsample, cost ~$1.
