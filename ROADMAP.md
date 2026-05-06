@@ -101,7 +101,7 @@ Goal: make the library production-grade for teams running agents at scale.
 - [x] `[otel]` optional extra; spans no-op when extra is absent
 - [x] (Structured `logging.DEBUG` events on pipeline operations already shipped in v0.2.0.)
 
-### Deferred to v0.10
+### Post-v0.9 follow-ups (under [Unreleased] in CHANGELOG, scoped to v0.10)
 BYO appraisal schema (#25) shipped post-v0.9 (commit `57ef515`). LoCoMo per-task Pareto study (#26) executed post-v0.9 (Add. J, Hj1 FAIL). See v0.10 below.
 
 ---
