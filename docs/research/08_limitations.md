@@ -241,7 +241,7 @@ The remaining options are architectural rather than parametric:
 These are larger architectural changes outside v0.10 scope. Full-N (all
 1500 LoCoMo queries) replication of W2 was *not* warranted given the 200-QA
 result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
-`docs/research/addendum_j_closure.md` for the full numerical record.
+`benchmarks/preregistration_addendum_j_closure.md` for the full numerical record.
 
 ---
 
