@@ -1,0 +1,84 @@
+{
+  "study": "addendum_i_hi3",
+  "prereg": "benchmarks/preregistration_addendum_i.md",
+  "dataset": "benchmarks/datasets/realistic_recall_v3.json",
+  "inputs": {
+    "sbert": "benchmarks/ablation/results.v3.sbert.json",
+    "e5": "benchmarks/ablation/results.v3.e5.json"
+  },
+  "protocol": {
+    "n_bootstrap": 10000,
+    "seed": 1,
+    "alpha": 0.05,
+    "effect_threshold": 0.05,
+    "family_m": 3,
+    "correction": "holm_bonferroni",
+    "ci_method": "bootstrap_percentile",
+    "p_direction": "one_sided_directional"
+  },
+  "hypotheses": {
+    "Hi3": {
+      "n_pairs": 100,
+      "delta": 0.09,
+      "ci_lower": 0.03,
+      "ci_upper": 0.16,
+      "p_two_sided": 0.0157,
+      "p_one_sided": 0.0078,
+      "cohens_d": 0.2565,
+      "p_adj_holm": 0.0234,
+      "verdict": "PASS",
+      "challenge_type": "semantic_confound",
+      "hypothesis": "Hi3"
+    },
+    "Hi3_recency": {
+      "n_pairs": 100,
+      "delta": 0.07,
+      "ci_lower": 0.02,
+      "ci_upper": 0.13,
+      "p_two_sided": 0.0224,
+      "p_one_sided": 0.0112,
+      "cohens_d": 0.2388,
+      "p_adj_holm": 0.0234,
+      "verdict": "PASS",
+      "challenge_type": "recency_confound",
+      "hypothesis": "Hi3_recency"
+    },
+    "Hi3_arc": {
+      "n_pairs": 100,
+      "delta": 0.01,
+      "ci_lower": -0.02,
+      "ci_upper": 0.05,
+      "p_two_sided": 0.759,
+      "p_one_sided": 0.3795,
+      "cohens_d": 0.0575,
+      "p_adj_holm": 0.3795,
+      "verdict": "FAIL",
+      "challenge_type": "affective_arc",
+      "hypothesis": "Hi3_arc"
+    }
+  },
+  "mechanism_exploratory": {
+    "sbert": {
+      "links_per_memory_mean": 4.9999,
+      "links_per_memory_max": 5,
+      "n_memories_total": 94125,
+      "link_types": {
+        "temporal": 216724,
+        "contrastive": 841,
+        "causal": 244029,
+        "emotional": 9022
+      }
+    },
+    "e5": {
+      "links_per_memory_mean": 4.9999,
+      "links_per_memory_max": 5,
+      "n_memories_total": 94125,
+      "link_types": {
+        "causal": 469750,
+        "contrastive": 866
+      }
+    },
+    "note": "Exploratory \u2014 no formal test. Differences in link density may explain differential resonance amplification between embedders."
+  },
+  "run_timestamp": "2026-05-06T20:13:17.947713+00:00"
+}

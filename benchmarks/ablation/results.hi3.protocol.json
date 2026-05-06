@@ -1,0 +1,28 @@
+{
+  "study": "addendum_i_hi3",
+  "prereg": "benchmarks/preregistration_addendum_i.md",
+  "protocol": {
+    "n_bootstrap": 10000,
+    "seed": 1,
+    "alpha": 0.05,
+    "effect_threshold": 0.05,
+    "family_m": 3,
+    "correction": "holm_bonferroni",
+    "ci_method": "bootstrap_percentile",
+    "p_direction": "one_sided_directional"
+  },
+  "run_timestamp": "2026-05-06T20:13:17.947713+00:00",
+  "input_hashes": {
+    "sbert": "70b492d87f839837",
+    "e5": "ea78a6f953561acd"
+  },
+  "verdicts": {
+    "Hi3": "PASS",
+    "Hi3_recency": "PASS",
+    "Hi3_arc": "FAIL"
+  },
+  "overall_verdict": "PASS",
+  "exploratory_followup": [
+    "counterfactual_cosine_threshold_raised \u2014 deferred; requires re-run with modified ResonanceConfig.cosine_threshold"
+  ]
+}

@@ -613,17 +613,24 @@ $p<0.001$ on e5-small-v2) is a confirmed \emph{magnitude amplification}, not
 a sign reversal: per-challenge decomposition (Addendum~I, post-hoc) shows
 $\Delta \geq 0$ for every (embedder $\times$ challenge-type) cell, with the
 amplification concentrated on \texttt{semantic\_confound} (e5 $\Delta=+0.125$
-vs.\ SBERT $\Delta=+0.025$).\footnote{Addendum~I decomposition:
-\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_i.md}%
-{\texttt{preregistration\_addendum\_i.md}}.}
-Removing \texttt{ResonanceLink} \emph{improves} top1 accuracy for e5 in
-aggregate; SBERT yields a non-significant $\Delta=+0.02$ ($p=0.203$).
-The most plausible explanation is geometry-specific: e5-small-v2 clusters
-semantically related items more tightly than SBERT-bge; spreading activation
-over a tight-cluster geometry amplifies distractor promotion on challenge types
-requiring affective discrimination among topic-near memories.
-Mechanism confirmation (Hi3: link-set instrumentation, $N\geq500$) is deferred
-to when a larger affect-rich dataset is available.
+vs.\ SBERT $\Delta=+0.025$).
+Hi3 (Addendum~I closure, $N=500$, seed$=$1, Holm $m=3$) confirms this
+cross-embedder amplification at the pre-registered threshold:\footnote{%
+Hi3 closure:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_i\_closure.md}%
+{\texttt{preregistration\_addendum\_i\_closure.md}}.}
+\texttt{semantic\_confound} $\Delta=+0.090$ [0.030, 0.160], $d=0.257$,
+Holm-adj $p=0.023$ (\textbf{PASS}); \texttt{recency\_confound} $\Delta=+0.070$,
+$d=0.239$, Holm-adj $p=0.023$ (PASS); \texttt{affective\_arc} $\Delta=+0.010$,
+$p=0.380$ (FAIL).
+The amplification is multi-channel on semantic and recency challenges but does
+not extend to affective-arc queries.
+The most plausible explanation remains geometry-specific: e5-small-v2 clusters
+semantically related items more tightly than SBERT-bge, causing spreading
+activation to over-fire on topic-near distractors.
+Link-count instrumentation (both embedders saturate the top-5 link cap,
+mean~$\approx 5.0$) does not yet differentiate the mechanism at link-density
+granularity; link-type and link-strength distributions remain unmeasured.
 
 \paragraph{Oracle-affect operationalization.}
 The appraisal-confound studies ($H_{d1}$, $H_{d2}$, cross-language Hd2\_IT/ES)
