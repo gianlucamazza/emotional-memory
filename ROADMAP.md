@@ -75,7 +75,7 @@ Dot release(s) for the paper bundle, no API changes:
 All items in this milestone shipped across v0.8.0–v0.8.3 dot releases.
 
 ### Gate evidence — all closed
-- [x] **S3 ablation @ N=200** — Ha (no_mood): FAIL; Hb (no_resonance): FAIL (e5 opposite direction — sign-reversal open question, moved to v0.10); Hc: PASS; Hd2/Hd2_IT: PASS (EN Δ=+0.125, IT Δ=+0.163). Closure docs in `benchmarks/`.
+- [x] **S3 ablation @ N=200** — Ha (no_mood): FAIL; Hb (no_resonance): FAIL (e5 magnitude amplification — decomposed in Add. I, #29 closed); Hc: PASS; Hd2/Hd2_IT: PASS (EN Δ=+0.125, IT Δ=+0.163). Closure docs in `benchmarks/`.
 - [x] **G7 PAD dominance design** — design note `docs/research/11_dominance_design.md` shipped. CoreAffect 3D promotion deferred to v0.10 (back-compat migration required).
 - [x] **SSOT automation** — `make bump VERSION=X.Y.Z` (atomic 3-file edit + propagation + preflight), `make check-all`, `sync_release_metadata` covers demo/README drift.
 
@@ -108,7 +108,7 @@ BYO appraisal schema and LoCoMo per-task tuning were descoped from v0.9 to keep 
 
 ## v0.10.0 — Evidence + parametricity (target: 2026)
 
-Collecting items deferred from v0.7–v0.9 plus the open sign-reversal question.
+Collecting items deferred from v0.7–v0.9.
 
 ### BYO appraisal schema (deferred from v0.9)
 - [ ] `AppraisalSchema` config class — parameterise the Scherer CPM prompt so OCC, GRID, or custom taxonomies can be injected without forking

@@ -371,7 +371,7 @@ not from rerunning long studies.
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
 | **Internal fidelity tests** | ✅ 126 cases, 20 phenomena ([bench-fidelity](benchmarks/fidelity/)) | — | — | — | — |
-| **External benchmark** | ✅ LoCoMo (FAIL: F1 0.168 vs 0.271) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
+| **External benchmark** | ✅ LoCoMo (FAIL: F1 0.168 vs 0.271; Pareto Hj1 FAIL) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
 | **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
 **Key differentiator**: emotional-memory makes affect a first-class, multi-layer part
@@ -419,7 +419,10 @@ retrieval probe, not a general downstream evaluation of production memory system
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
   does not improve factual open-domain QA. The advantage documented above is
   *scope-conditional*: it emerges on mood-congruent realistic-recall tasks,
-  not on general conversational retrieval.
+  not on general conversational retrieval. Add. J Pareto sweep (10 weight
+  configs × 200-QA stratified subsample, seed=42) confirms this gap is not
+  closable via `base_weights` tuning: best AFT config W2 F1=0.1765 vs
+  naive_rag=0.2092 on every category (Hj1 FAIL).
 - **Not yet established**: general superiority over systems such as Mem0 or
   LangMem on realistic agent tasks; completed human evaluation results; or
   ecological correspondence to human emotional memory.

@@ -139,16 +139,18 @@ with `LLMAppraisalEngine` on a dataset designed without preset affect injection.
 Until Addendum G is executed, Hd* results should be read as "architecture potential
 under oracle affect", not "architecture advantage in production".
 
-### 2.5 Resonance sign reversal on e5-small-v2
+### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the
 `ResonanceLink` layer **improves** top1 accuracy: Δ = +0.085 [0.04, 0.13],
-p_boot < 0.001, p_adj < 0.001 (Holm-corrected). This is the opposite of the
-theoretical prediction (resonance should boost relevant memories).
+p_boot < 0.001, p_adj < 0.001 (Holm-corrected). Per-challenge decomposition
+(Addendum I, `benchmarks/preregistration_addendum_i.md`) confirms this is
+**magnitude amplification, not sign reversal**: Δ≥0 on all five challenge
+types, concentrated in `semantic_confound` (e5 Δ=+0.125 vs SBERT Δ=+0.025).
 
 The SBERT embedder shows Δ = +0.02 (NS, p=0.20) for the same ablation — a
-directionally opposite but non-significant result. The sign reversal is
-**statistically confirmed on e5 but not replicated on SBERT**.
+non-significant result on SBERT.  The effect is thus **embedder-dependent**:
+statistically significant on e5 but not on SBERT.
 
 Potential explanations:
 1. **Geometry incompatibility**: e5-small-v2's distance space clusters semantically
@@ -303,4 +305,4 @@ have not yet been validated by the scientific community.
 
 ---
 
-*Document added in v0.5.1. Last updated: v0.9 (2026-05-05).*
+*Document added in v0.5.1. Last updated: v0.9 (2026-05-06).*

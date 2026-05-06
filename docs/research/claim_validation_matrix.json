@@ -126,7 +126,7 @@
       "allowed_public_wording": "AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001).",
       "current_evidence": "Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED.",
       "not_yet_shown": "General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation. Generalization beyond affect-discriminative scenarios: v2 benchmark has 4/5 challenge types where AFT signals are theoretically relevant by design; advantage on valence-neutral tasks is not established.",
-      "next_study": "Execute human-evaluation pilot; investigate per-task retrieval-weight tuning for factual QA.",
+      "next_study": "Execute human-evaluation pilot. Per-task retrieval-weight tuning closed by Hj1 FAIL (Add. J).",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
         "tests/test_realistic_benchmark.py"

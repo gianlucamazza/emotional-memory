@@ -1,10 +1,10 @@
-# Pre-registration Addendum I — Sign-Reversal Decomposition: e5 × no_resonance
+# Pre-registration Addendum I — Resonance Magnitude-Amplification Decomposition: e5 × no_resonance
 
 **Date written:** 2026-05-06
 **Protocol version:** addendum_i_v1
 **Parent pre-regs:** `benchmarks/preregistration_addendum_v3.md` (S3),
 `benchmarks/preregistration_addendum_s3_closure.md` (Hb FAIL closure)
-**Closes:** #29 (sign-reversal investigation)
+**Closes:** #29 (magnitude-amplification investigation)
 
 > **Epistemic status:** This is a **post-hoc analysis document**, not a strict
 > pre-registration. The committed result files

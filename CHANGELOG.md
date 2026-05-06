@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Pre-registration Addendum I** (`benchmarks/preregistration_addendum_i.md`):
+  e5 × no_resonance ablation reframed from "sign reversal" to **magnitude
+  amplification** — Δ≥0 on all five challenge types, concentrated on
+  `semantic_confound` (e5 Δ=+0.125 vs SBERT Δ=+0.025). Closes #29.
+
+- **Pre-registration Addendum J** (`benchmarks/preregistration_addendum_j_closure.md`):
+  LoCoMo per-task Pareto sweep executed (10 weight configs × 200-QA stratified
+  subsample, seed=42). **Hj1 FAIL** — no AFT config achieves F1 ≥ naive_rag on
+  any category. Best config W2 (`sem=0.50, mood=0.30, no resonance`) F1=0.1765
+  vs naive_rag=0.2092. Per-task `base_weights` tuning line closed. Closes #26.
+
 ### Added
 
 - **Pluggable `AppraisalSchema`** (`src/emotional_memory/appraisal_schema.py`): inject

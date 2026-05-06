@@ -28,7 +28,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | No placeholders (`XXXX`, `TODO`, `???`) in text | ✗ | `grep -n "TODO\|XXXX\|???"`  in `main.tex` |
 | Acknowledgements section present | ✗ | |
 | All claims in §Results match committed JSON artifacts | ✓ | `make reproduce-paper-check` passes — zero diff |
-| §Limitations is present and complete | ✓ | Updated in v0.8.3 (oracle-affect, sign-reversal, dataset scope) |
+| §Limitations is present and complete | ✓ | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL) |
 | Negative results (LoCoMo Gate 1 FAIL) are disclosed | ✓ | §Limitations §External-benchmark scope |
 
 ---
