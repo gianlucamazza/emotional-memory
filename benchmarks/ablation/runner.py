@@ -244,6 +244,23 @@ def _extract_query_flags(bench_result: dict[str, Any]) -> dict[str, dict[str, bo
     return flags
 
 
+def _extract_query_records(bench_result: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Return {query_id: {top1_hit, hit, challenge_type, scenario_id}} for the aft system."""
+    aft = next(s for s in bench_result["systems"] if s["system"] == "aft")
+    records: dict[str, dict[str, Any]] = {}
+    for scenario in aft["scenarios"]:
+        scenario_id = str(scenario["scenario_id"])
+        for session in scenario["sessions"]:
+            for q in session["queries"]:
+                records[q["query_id"]] = {
+                    "top1_hit": bool(q["top1_hit"]),
+                    "hit": bool(q["hit"]),
+                    "challenge_type": str(q["challenge_type"]),
+                    "scenario_id": scenario_id,
+                }
+    return records
+
+
 def run_ablation_study(
     dataset: Any | None = None,
     *,
@@ -251,13 +268,21 @@ def run_ablation_study(
     seed: int = 0,
     top_k: int | None = None,
     embedder: Embedder | None = None,
+    emit_per_query: bool = False,
 ) -> dict[str, Any]:
-    """Run the full ablation study and return the results dict."""
+    """Run the full ablation study and return the results dict.
+
+    When *emit_per_query* is True the returned dict gains a top-level
+    ``per_query_records`` field keyed by variant name, containing a list of
+    per-query dicts sorted by ``query_id``.  This field is absent by default to
+    preserve bit-identical outputs with the committed v2 result artefacts.
+    """
     if dataset is None:
         dataset = load_dataset()
 
     variant_results: list[dict[str, Any]] = []
     query_flags_by_variant: dict[str, dict[str, dict[str, bool]]] = {}
+    query_records_by_variant: dict[str, dict[str, dict[str, Any]]] = {}
     full_link_stats_accumulator: list[dict[str, Any]] = []
 
     for variant_name, flag_kwargs in tqdm(ABLATIONS, desc="ablation variants", unit="variant"):
@@ -277,6 +302,8 @@ def run_ablation_study(
         )
         aft_sys = next(s for s in bench["systems"] if s["system"] == "aft")
         query_flags_by_variant[variant_name] = _extract_query_flags(bench)
+        if emit_per_query:
+            query_records_by_variant[variant_name] = _extract_query_records(bench)
         variant_results.append(
             {
                 "variant": variant_name,
@@ -409,7 +436,7 @@ def run_ablation_study(
             },
         }
 
-    return {
+    result: dict[str, Any] = {
         "benchmark": f"ablation_{dataset.name}",
         "base_benchmark": dataset.name,
         "variants": variant_results,
@@ -425,6 +452,15 @@ def run_ablation_study(
             "effect_size": "cohens_d_paired_hedges_corrected",
         },
     }
+    if emit_per_query:
+        result["per_query_records"] = {
+            variant: [
+                {"query_id": qid, **query_records_by_variant[variant][qid]}
+                for qid in sorted(query_records_by_variant[variant])
+            ]
+            for variant in query_records_by_variant
+        }
+    return result
 
 
 def _render_markdown(results: dict[str, Any]) -> str:
@@ -667,6 +703,13 @@ def main() -> None:
         help="Dataset JSON path (default: realistic_recall_v1.json). "
         "Use benchmarks/datasets/realistic_recall_v2.json for S3 powered ablation.",
     )
+    parser.add_argument(
+        "--per-query-records",
+        action="store_true",
+        default=False,
+        help="Emit per_query_records field in JSON output (required for Hi3 analysis). "
+        "Off by default to preserve bit-identical outputs with committed v2 artefacts.",
+    )
     args = parser.parse_args()
 
     emb = _build_embedder(args.embedder)
@@ -678,6 +721,7 @@ def main() -> None:
         seed=args.seed,
         top_k=args.top_k,
         embedder=emb,
+        emit_per_query=args.per_query_records,
     )
 
     out_json = args.out_json if args.out_json is not None else args.output_dir / "results.json"

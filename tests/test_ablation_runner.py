@@ -9,7 +9,7 @@ from benchmarks.ablation.runner import (
     _collect_link_stats,
     run_ablation_study,
 )
-from benchmarks.realistic.runner import DATASET, load_dataset
+from benchmarks.realistic.runner import CHALLENGE_TYPES, DATASET, load_dataset
 
 
 def test_ablation_study_structure() -> None:
@@ -149,3 +149,80 @@ def test_aggregate_link_stats_empty() -> None:
     agg = _aggregate_link_stats([])
     assert agg["sessions"] == 0
     assert agg["n_memories_total"] == 0
+
+
+# ---------------------------------------------------------------------------
+# per_query_records tests (Step 3a — Hi3 prerequisite)
+# ---------------------------------------------------------------------------
+
+VARIANT_NAMES = [
+    "full",
+    "no_appraisal",
+    "no_mood",
+    "no_momentum",
+    "no_resonance",
+    "no_reconsolidation",
+    "dual_path",
+    "aft_keyword_synchronous",
+]
+
+
+def test_per_query_records_absent_by_default() -> None:
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0)
+    assert "per_query_records" not in results
+
+
+def test_per_query_records_emitted_when_requested() -> None:
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0, emit_per_query=True)
+    assert "per_query_records" in results
+    pqr = results["per_query_records"]
+    assert set(pqr.keys()) == set(VARIANT_NAMES)
+    # All variants must have the same number of records
+    counts = {variant: len(records) for variant, records in pqr.items()}
+    assert len(set(counts.values())) == 1, f"Inconsistent per-query counts: {counts}"
+
+
+def test_per_query_records_alignment() -> None:
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0, emit_per_query=True)
+    pqr = results["per_query_records"]
+
+    # Each variant's records must be sorted by query_id
+    for variant, records in pqr.items():
+        ids = [r["query_id"] for r in records]
+        assert ids == sorted(ids), f"Records not sorted for variant {variant!r}"
+
+    # All variants must share the same query_id set
+    id_sets = [frozenset(r["query_id"] for r in records) for records in pqr.values()]
+    assert len(set(id_sets)) == 1, "Variants have different query_id sets"
+
+
+def test_per_query_records_field_types() -> None:
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0, emit_per_query=True)
+    for records in results["per_query_records"].values():
+        for rec in records:
+            assert isinstance(rec["query_id"], str)
+            assert isinstance(rec["scenario_id"], str)
+            assert isinstance(rec["challenge_type"], str)
+            assert rec["challenge_type"] in CHALLENGE_TYPES
+            assert isinstance(rec["top1_hit"], bool)
+            assert isinstance(rec["hit"], bool)
+
+
+def test_v2_results_top_level_keys_unchanged() -> None:
+    """Regression: emit_per_query=False produces the same top-level key set as v2."""
+    expected_keys = {
+        "benchmark",
+        "base_benchmark",
+        "variants",
+        "pairwise_vs_full",
+        "hf1_pairwise",
+        "link_set_stats",
+        "statistics",
+    }
+    dataset = load_dataset()
+    results = run_ablation_study(dataset, n_bootstrap=20, seed=0)
+    assert set(results.keys()) == expected_keys

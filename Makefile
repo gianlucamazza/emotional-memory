@@ -180,6 +180,7 @@ bench-hi3-sbert:
 	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
 		--dataset benchmarks/datasets/realistic_recall_v3.json \
 		--seed 1 \
+		--per-query-records \
 		--out-json benchmarks/ablation/results.v3.sbert.json \
 		--out-md benchmarks/ablation/results.v3.sbert.md \
 		--out-protocol benchmarks/ablation/results.v3.sbert.protocol.json
@@ -188,6 +189,7 @@ bench-hi3-e5:
 	uv run python -m benchmarks.ablation.runner --embedder e5-small-v2 \
 		--dataset benchmarks/datasets/realistic_recall_v3.json \
 		--seed 1 \
+		--per-query-records \
 		--out-json benchmarks/ablation/results.v3.e5.json \
 		--out-md benchmarks/ablation/results.v3.e5.md \
 		--out-protocol benchmarks/ablation/results.v3.e5.protocol.json
