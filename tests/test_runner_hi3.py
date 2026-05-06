@@ -107,9 +107,9 @@ def test_build_amp_vector_basic() -> None:
         no_res_hits=[False, True, False, True],
     )
     qids, amp = _build_amp_vector(records, challenge_type="semantic_confound")
-    # amp[i] = full - no_res: [1-0, 1-1, 0-0, 0-1] = [1, 0, 0, -1]
+    # amp[i] = no_res - full: [0-1, 1-1, 0-0, 1-0] = [-1, 0, 0, 1]
     assert len(qids) == 4
-    assert amp == [1.0, 0.0, 0.0, -1.0]
+    assert amp == [-1.0, 0.0, 0.0, 1.0]
 
 
 def test_build_amp_vector_filters_challenge_type() -> None:
@@ -191,12 +191,12 @@ def test_load_per_query_records_raises_missing_field(tmp_path: Path) -> None:
 
 
 def test_runner_hi3_pass_path(tmp_path: Path) -> None:
-    """Synthetic data where e5 has much stronger resonance amplification on semantic_confound."""
+    """Synthetic data where e5 is hurt by resonance much more than SBERT on semantic_confound."""
     n = 60
 
-    # e5: resonance always helps on semantic_confound (amp_e5 ~ +1)
-    e5_full = [True] * n
-    e5_no_res = [False] * n
+    # e5: resonance always hurts (no_res > full → amp_e5 ~ +1 in pre-reg convention)
+    e5_full = [False] * n
+    e5_no_res = [True] * n
     # sbert: resonance has no effect (amp_sbert ~ 0)
     sb_full = [True] * (n // 2) + [False] * (n // 2)
     sb_no_res = [True] * (n // 2) + [False] * (n // 2)
@@ -333,15 +333,15 @@ def test_runner_hi3_holm_correction(tmp_path: Path) -> None:
     sc = _make_records(
         n=n,
         challenge_type="semantic_confound",
-        full_hits=[True] * n,
-        no_res_hits=[False] * n,
+        full_hits=[False] * n,
+        no_res_hits=[True] * n,
         scenario_prefix="sc",
     )
     rc = _make_records(
         n=n,
         challenge_type="recency_confound",
-        full_hits=[True] * (n // 2) + [False] * (n // 2),
-        no_res_hits=[False] * (n // 2) + [False] * (n // 2),
+        full_hits=[False] * (n // 2) + [True] * (n // 2),
+        no_res_hits=[True] * (n // 2) + [True] * (n // 2),
         scenario_prefix="rc",
     )
     ar = _make_records(
@@ -444,8 +444,9 @@ def test_runner_hi3_alignment_raises_on_mismatch(tmp_path: Path) -> None:
 def test_runner_hi3_uses_prescribed_seed(tmp_path: Path) -> None:
     """run_hi3 must propagate seed=1 to paired_bootstrap_diff."""
     n = 20
+    # e5 hurt by resonance (no_res > full), sbert neutral — produces non-zero delta
     e5_recs = _make_records(
-        n=n, challenge_type="semantic_confound", full_hits=[True] * n, no_res_hits=[False] * n
+        n=n, challenge_type="semantic_confound", full_hits=[False] * n, no_res_hits=[True] * n
     )
     sb_recs = _make_records(
         n=n, challenge_type="semantic_confound", full_hits=[False] * n, no_res_hits=[False] * n

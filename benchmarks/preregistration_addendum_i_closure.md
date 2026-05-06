@@ -56,8 +56,9 @@ Parameters (frozen in `runner_hi3.py`):
 - Holm family (m=3): {Hi3 (semantic_confound, primary), Hi3_recency, Hi3_arc}
 - Statistic per hypothesis:
   `delta = mean(amp_e5) - mean(amp_sbert)`
-  where `amp[i] = full_top1_hit[i] - no_resonance_top1_hit[i]`
-  (positive = resonance helps; double-difference = e5 amplification over SBERT)
+  where `amp[i] = no_resonance_top1_hit[i] - full_top1_hit[i]`
+  (positive = resonance hurts; double-difference = e5 interference amplification over SBERT;
+  matches pre-reg §Hi3 sign convention: Δ = no_resonance − full)
 - Dataset: `realistic_recall_v3.json` (N={{n_queries}} queries)
 
 Output files:

@@ -11,9 +11,13 @@ Hi3 family (m=3, Holm-Bonferroni):
   Hi3_arc      — affective_arc     amplification: e5 > SBERT by +0.05 (secondary)
 
 Statistic for each challenge type:
-  amp_e5[i]    = full_top1(e5)[i]   - no_resonance_top1(e5)[i]
-  amp_sbert[i] = full_top1(sbert)[i] - no_resonance_top1(sbert)[i]
+  amp_e5[i]    = no_resonance_top1(e5)[i]   - full_top1(e5)[i]
+  amp_sbert[i] = no_resonance_top1(sbert)[i] - full_top1(sbert)[i]
   delta        = mean(amp_e5) - mean(amp_sbert)   [paired bootstrap, n=10_000, seed=1]
+
+Sign convention (matches pre-reg §Hi3):
+  amp > 0 means resonance *hurts* that embedder on that query.
+  delta > 0 means e5 is hurt more by resonance than SBERT (amplification of interference).
 
 PASS iff delta > 0.05  AND  p_adj (Holm) < 0.05  (one-tailed, directional).
 """
@@ -100,8 +104,8 @@ def _build_amp_vector(
 ) -> tuple[list[str], list[float]]:
     """Build (query_ids, amp) for one challenge type and one embedder run.
 
-    amp[i] = full_top1_hit[i] - no_resonance_top1_hit[i]
-    Positive when resonance helps for that query; negative when it hurts.
+    amp[i] = no_resonance_top1_hit[i] - full_top1_hit[i]
+    Positive when resonance hurts for that query (pre-reg sign convention).
     Records are keyed by variant name; each list is sorted by query_id.
     """
     full_by_id = {r["query_id"]: r for r in records.get("full", [])}
@@ -113,7 +117,7 @@ def _build_amp_vector(
         if qid in no_res_by_id and full_by_id[qid]["challenge_type"] == challenge_type
     )
     amp = [
-        float(full_by_id[qid]["top1_hit"]) - float(no_res_by_id[qid]["top1_hit"])
+        float(no_res_by_id[qid]["top1_hit"]) - float(full_by_id[qid]["top1_hit"])
         for qid in shared_ids
     ]
     return shared_ids, amp
@@ -172,7 +176,7 @@ def _test_hypothesis(
     delta, lo, hi, p_two = paired_bootstrap_diff(
         amp_e5, amp_sbert, n_bootstrap=n_bootstrap, seed=seed
     )
-    # One-sided p: directional (e5 > sbert amplification)
+    # One-sided p: directional (e5 > sbert interference amplification, delta > 0)
     p_one = p_two / 2.0 if delta > 0 else 1.0 - p_two / 2.0
     d = cohens_d_paired(amp_e5, amp_sbert)
     return {
@@ -305,7 +309,8 @@ def _render_markdown(results: dict[str, Any]) -> str:
         f"CI=95%, {proto['p_direction']}, Holm m={proto['family_m']}",
         "",
         "Statistic: `delta = mean(amp_e5) - mean(amp_sbert)` where "
-        "`amp[i] = full_top1_hit[i] - no_resonance_top1_hit[i]`.  ",
+        "`amp[i] = no_resonance_top1_hit[i] - full_top1_hit[i]` "
+        "(positive = resonance hurts; pre-reg sign convention).  ",
         f"PASS iff `delta > {proto['effect_threshold']}` AND `p_adj < {proto['alpha']}`.",
         "",
         "## Confirmatory Results",
