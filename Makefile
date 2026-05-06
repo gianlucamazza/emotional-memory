@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -167,6 +167,13 @@ bench-appraisal-confound:
 
 bench-appraisal-confound-hash:
 	uv run python -m benchmarks.appraisal_confound.runner --embedder hash
+
+# Addendum G — Hg1: dual-path LLM appraisal on affect-free dataset (requires API key)
+bench-addendum-g: llm-config-strict
+	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder sbert-bge
+
+bench-addendum-g-hash: llm-config-strict
+	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder hash
 
 # S3 ablation @ N=200 (pre-registered Study S3, powered — runs on realistic_recall_v2)
 bench-s3-sbert:
@@ -390,6 +397,8 @@ help:
 	@echo "  bench-comparative-sbert    Cross-system comparison (SBERT embedder, paper-canonical)"
 	@echo "  bench-appraisal-confound   Appraisal confound study (SBERT, no LLM key)"
 	@echo "  bench-appraisal-confound-hash  Appraisal confound study (hash embedder)"
+	@echo "  bench-addendum-g           Add. G — Hg1: LLM appraisal affect-free (requires API key)"
+	@echo "  bench-addendum-g-hash      Add. G fast smoke test with hash embedder"
 	@echo "  bench-realistic            Replayable multi-session benchmark with persisted state"
 	@echo "  bench-locomo               LoCoMo benchmark (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
 	@echo "  bench-locomo-dry           LoCoMo dry run: 2 conversations, 5 QA each, no judge"
