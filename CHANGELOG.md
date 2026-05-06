@@ -20,6 +20,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   any category. Best config W2 (`sem=0.50, mood=0.30, no resonance`) F1=0.1765
   vs naive_rag=0.2092. Per-task `base_weights` tuning line closed. Closes #26.
 
+### Fixed
+
+- **`ChromaStore` top-level re-export**: `ChromaStore` was documented in the v0.9.0
+  release notes and `docs/api/stores.md` but absent from
+  `src/emotional_memory/__init__.py`. Now lazy-exported via the same
+  `_chroma_available` guard pattern used for `QdrantStore` (gated on the `[chroma]`
+  extra). Users can now `from emotional_memory import ChromaStore` without a
+  direct sub-module import.
+
+### Tests
+
+- Added 4 regression tests for `benchmarks/locomo/pareto_runner.py`
+  (`tests/test_pareto_runner.py`): `_compute_pareto_table` Hj1 FAIL synthetic
+  scenario, Hj1 PASS synthetic scenario, and `_stratified_subsample` seed=42
+  determinism + per-category count contract. Locks in Add. J verdict semantics
+  against future regressions in the verdict logic.
+
 ### Added
 
 - **Pluggable `AppraisalSchema`** (`src/emotional_memory/appraisal_schema.py`): inject
