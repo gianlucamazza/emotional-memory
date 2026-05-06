@@ -71,6 +71,12 @@ with contextlib.suppress(ImportError):
 
     _qdrant_available = True
 
+_chroma_available = False
+with contextlib.suppress(ImportError):
+    from emotional_memory.stores.chroma import ChromaStore as ChromaStore
+
+    _chroma_available = True
+
 _sqlite_state_available = False
 with contextlib.suppress(ImportError):
     from emotional_memory.state_stores.sqlite import (
@@ -159,6 +165,9 @@ if _sqlite_available:
 
 if _qdrant_available:
     __all__ = [*__all__, "QdrantStore"]
+
+if _chroma_available:
+    __all__ = [*__all__, "ChromaStore"]
 
 if _sqlite_state_available:
     __all__ = [*__all__, "SQLiteAffectiveStateStore"]

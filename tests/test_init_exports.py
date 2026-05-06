@@ -27,3 +27,10 @@ def test_state_store_exports_are_stable() -> None:
     assert "InMemoryAffectiveStateStore" in emotional_memory.__all__
     assert hasattr(emotional_memory, "SQLiteAffectiveStateStore")
     assert hasattr(emotional_memory, "RedisAffectiveStateStore")
+
+
+def test_vector_store_exports_are_stable() -> None:
+    assert hasattr(emotional_memory, "InMemoryStore")
+    assert hasattr(emotional_memory, "SQLiteStore")
+    assert hasattr(emotional_memory, "QdrantStore")
+    assert hasattr(emotional_memory, "ChromaStore")
