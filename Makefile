@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -174,6 +174,23 @@ bench-addendum-g: llm-config-strict
 
 bench-addendum-g-hash: llm-config-strict
 	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder hash
+
+# Hi3 confirmatory ablation @ N=500 (seed=1 frozen — runs on realistic_recall_v3)
+bench-hi3-sbert:
+	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
+		--dataset benchmarks/datasets/realistic_recall_v3.json \
+		--seed 1 \
+		--out-json benchmarks/ablation/results.v3.sbert.json \
+		--out-md benchmarks/ablation/results.v3.sbert.md \
+		--out-protocol benchmarks/ablation/results.v3.sbert.protocol.json
+
+bench-hi3-e5:
+	uv run python -m benchmarks.ablation.runner --embedder e5-small-v2 \
+		--dataset benchmarks/datasets/realistic_recall_v3.json \
+		--seed 1 \
+		--out-json benchmarks/ablation/results.v3.e5.json \
+		--out-md benchmarks/ablation/results.v3.e5.md \
+		--out-protocol benchmarks/ablation/results.v3.e5.protocol.json
 
 # S3 ablation @ N=200 (pre-registered Study S3, powered — runs on realistic_recall_v2)
 bench-s3-sbert:
