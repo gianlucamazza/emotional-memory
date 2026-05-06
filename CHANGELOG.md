@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
-- **Pre-registration Addendum I** (`benchmarks/preregistration_addendum_i.md`):
-  e5 × no_resonance ablation reframed from "sign reversal" to **magnitude
-  amplification** — Δ≥0 on all five challenge types, concentrated on
-  `semantic_confound` (e5 Δ=+0.125 vs SBERT Δ=+0.025). Closes #29.
+- **Pre-registration Addendum I — Hi3 confirmatory closure** (`benchmarks/preregistration_addendum_i_closure.md`):
+  N=500, seed=1, Holm m=3 family. **Hi3 PASS** on `semantic_confound`
+  (Δ=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234) confirms the v2
+  per-challenge embedder amplification is not a sample-size artefact.
+  Secondary Hi3_recency PASS (Δ=+0.070, p_adj=0.0234); Hi3_arc FAIL
+  (Δ=+0.010, p_adj=0.380). Mechanism (Hi2: link-set density) remains
+  exploratory — both embedders saturate top-5 link cap. Closes #29.
 
 - **Pre-registration Addendum J** (`benchmarks/preregistration_addendum_j_closure.md`):
   LoCoMo per-task Pareto sweep executed (10 weight configs × 200-QA stratified

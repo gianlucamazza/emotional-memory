@@ -131,7 +131,7 @@ Collecting items deferred from v0.7–v0.9.
 
 ### Sign-reversal experiment (CLOSED, #29)
 - [x] Per-challenge decomposition: magnitude amplification, not sign reversal. `semantic_confound` is the dominant driver (e5 Δ=+0.125 vs SBERT Δ=+0.025). See `benchmarks/preregistration_addendum_i.md`.
-- Mechanism confirmation (Hi3, link-set instrumentation) deferred to when N≥500 dataset is available.
+- [x] **Hi3 confirmatory (CLOSED, 2026-05-06)**: N=500 confirms cross-embedder amplification on `semantic_confound` (Δ=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234, **PASS**). Secondary Hi3_recency PASS (Δ=+0.070); Hi3_arc FAIL (Δ=+0.010). Closure: `benchmarks/preregistration_addendum_i_closure.md`. Mechanism (Hi2: link-set density differentiation) remains exploratory — both embedders saturate top-5 link cap; link-type/strength instrumentation not yet measured.
 
 ### Multilingual breadth (deferred from v0.8)
 - [x] One additional non-English slice — Spanish (`realistic_recall_v2_es.json`, shipped v0.8.2 as Hd2_ES). Closes #30.

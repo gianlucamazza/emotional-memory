@@ -152,6 +152,21 @@ The SBERT embedder shows Δ = +0.02 (NS, p=0.20) for the same ablation — a
 non-significant result on SBERT.  The effect is thus **embedder-dependent**:
 statistically significant on e5 but not on SBERT.
 
+**Hi3 confirmatory closure (2026-05-06, N=500, seed=1, Holm m=3):** the
+cross-embedder amplification on `semantic_confound` is confirmed at the
+pre-registered threshold. Primary Hi3 **PASS** (Δ=+0.090 [0.030, 0.160],
+d=0.257, Holm-adj p=0.0234). Secondary Hi3_recency PASS (Δ=+0.070, p_adj=0.0234)
+extends the amplification to `recency_confound`; Hi3_arc FAIL (Δ=+0.010,
+p_adj=0.380) scopes it: the embedder gap does not extend to `affective_arc`
+queries. The v2 finding is not a sample-size artefact. Closure document:
+`benchmarks/preregistration_addendum_i_closure.md`.
+
+Mechanism remains exploratory: link-count instrumentation shows both embedders
+saturate the top-5 link cap (mean ≈ 5.0), so link density alone does not
+differentiate the embedders. The Hi2 spreading-activation over-fire hypothesis
+is not yet localised at link-density granularity; link-type and link-strength
+distributions remain unmeasured.
+
 Potential explanations:
 1. **Geometry incompatibility**: e5-small-v2's distance space clusters semantically
    related items more aggressively than SBERT. Spreading activation over this geometry
@@ -167,7 +182,8 @@ Potential explanations:
 This finding does not refute resonance's theoretical role, but it indicates that
 the interaction between the spreading-activation mechanism and the embedder's
 distance geometry is non-trivial and embedder-dependent. It is disclosed in
-`claim_validation_matrix.json` under `theory_faithful_operationalization.not_yet_shown`.
+`claim_validation_matrix.json` under the dedicated claims `resonance_amplification_e5`
+(Hi3 PASS), `Hi3_recency` (PASS), and `Hi3_arc` (FAIL).
 
 ### 2.6 Controlled benchmark scope and confirmation bias
 
