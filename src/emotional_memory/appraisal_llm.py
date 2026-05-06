@@ -45,7 +45,7 @@ import threading
 from collections import OrderedDict
 from typing import Any, Protocol, runtime_checkable
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
@@ -161,6 +161,13 @@ class LLMAppraisalConfig(BaseModel):
 
     appraisal_schema: AppraisalSchema | None = None
     """Appraisal schema to use.  ``None`` defaults to ``SCHERER_CPM_SCHEMA``."""
+
+    @field_validator("cache_size")
+    @classmethod
+    def _check_cache_size(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError(f"cache_size must be >= 0 (0 disables caching), got {v}")
+        return v
 
 
 # ---------------------------------------------------------------------------

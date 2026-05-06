@@ -137,6 +137,52 @@ class TestAdaptiveWeightsConfig:
         assert abs(float(w_just_above[3]) - float(w_just_below[3])) < 0.05
 
 
+class TestAdaptiveWeightsConfigValidation:
+    """Negative-input regression tests for AdaptiveWeightsConfig validators."""
+
+    def test_negative_strength_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(negative_mood_strength=-0.1)
+
+    def test_strength_above_one_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(high_arousal_strength=1.5)
+
+    def test_zero_sharpness_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(negative_mood_sharpness=0.0)
+
+    def test_negative_sharpness_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(calm_sharpness=-1.0)
+
+    def test_valence_center_out_of_range_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(negative_mood_center=-2.0)
+
+    def test_arousal_center_out_of_range_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(high_arousal_center=1.5)
+
+    def test_zero_calm_valence_width_raises(self):
+        from emotional_memory.retrieval import AdaptiveWeightsConfig
+
+        with pytest.raises(ValidationError):
+            AdaptiveWeightsConfig(calm_valence_width=0.0)
+
+
 class TestSmoothGate:
     def test_at_center_returns_half(self):
         from emotional_memory.retrieval import _smooth_gate

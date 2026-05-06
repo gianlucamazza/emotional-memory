@@ -254,6 +254,20 @@ class TestLLMAppraisalEngine:
         assert result.schema_name == "scherer_cpm"
 
 
+class TestLLMAppraisalConfigValidation:
+    """Negative-input regression tests for LLMAppraisalConfig validators."""
+
+    def test_negative_cache_size_raises(self):
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError, match="cache_size"):
+            LLMAppraisalConfig(cache_size=-1)
+
+    def test_zero_cache_size_accepted(self):
+        cfg = LLMAppraisalConfig(cache_size=0)
+        assert cfg.cache_size == 0
+
+
 # ---------------------------------------------------------------------------
 # KeywordAppraisalEngine
 # ---------------------------------------------------------------------------

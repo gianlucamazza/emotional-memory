@@ -74,6 +74,41 @@ class AdaptiveWeightsConfig(BaseModel):
     calm_arousal_center: float = 0.3
     calm_sharpness: float = 5.0
 
+    @field_validator("negative_mood_strength", "high_arousal_strength", "calm_strength")
+    @classmethod
+    def _check_strength(cls, v: float) -> float:
+        if not (0.0 <= v <= 1.0):
+            raise ValueError(f"strength must be in [0.0, 1.0], got {v}")
+        return v
+
+    @field_validator("negative_mood_sharpness", "high_arousal_sharpness", "calm_sharpness")
+    @classmethod
+    def _check_sharpness(cls, v: float) -> float:
+        if v <= 0.0:
+            raise ValueError(f"sharpness must be > 0, got {v}")
+        return v
+
+    @field_validator("negative_mood_center")
+    @classmethod
+    def _check_valence_center(cls, v: float) -> float:
+        if not (-1.0 <= v <= 1.0):
+            raise ValueError(f"valence center must be in [-1.0, 1.0], got {v}")
+        return v
+
+    @field_validator("high_arousal_center", "calm_arousal_center")
+    @classmethod
+    def _check_arousal_center(cls, v: float) -> float:
+        if not (0.0 <= v <= 1.0):
+            raise ValueError(f"arousal center must be in [0.0, 1.0], got {v}")
+        return v
+
+    @field_validator("calm_valence_width")
+    @classmethod
+    def _check_valence_width(cls, v: float) -> float:
+        if v <= 0.0:
+            raise ValueError(f"calm_valence_width must be > 0, got {v}")
+        return v
+
 
 class RetrievalConfig(BaseModel):
     """Parameters for multi-signal retrieval scoring."""

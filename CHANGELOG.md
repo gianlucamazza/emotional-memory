@@ -22,6 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **`AdaptiveWeightsConfig` field validation**: `AdaptiveWeightsConfig` now validates
+  field bounds on construction — strengths ∈ [0.0, 1.0], sharpnesses > 0,
+  `negative_mood_center` ∈ [-1.0, 1.0], arousal centers ∈ [0.0, 1.0],
+  `calm_valence_width` > 0. Previously out-of-range values were silently accepted
+  and propagated into sigmoid/Gaussian math, producing undefined retrieval-weight
+  behaviour. A `ValidationError` is now raised at config construction time.
+
+- **`LLMAppraisalConfig.cache_size` validation**: `cache_size < 0` now raises
+  `ValidationError` (0 remains valid — disables caching).
+
 - **`ChromaStore` top-level re-export**: `ChromaStore` was documented in the v0.9.0
   release notes and `docs/api/stores.md` but absent from
   `src/emotional_memory/__init__.py`. Now lazy-exported via the same
@@ -36,6 +46,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   scenario, Hj1 PASS synthetic scenario, and `_stratified_subsample` seed=42
   determinism + per-category count contract. Locks in Add. J verdict semantics
   against future regressions in the verdict logic.
+
+- Negative-input regression tests for `AdaptiveWeightsConfig` (7 cases),
+  `MoodDecayConfig` (2 cases: zero / negative `base_half_life_seconds`), and
+  `LLMAppraisalConfig` (1 case: negative `cache_size`). Fences config validators
+  against silent removal or bounds-drift in future edits.
 
 ### Added
 

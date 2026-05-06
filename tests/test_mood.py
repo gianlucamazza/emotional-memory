@@ -93,6 +93,18 @@ class TestMoodDecayConfig:
         assert cfg.baseline_arousal == pytest.approx(0.3)
         assert cfg.baseline_dominance == pytest.approx(0.5)
 
+    def test_zero_half_life_raises(self):
+        from emotional_memory.mood import MoodDecayConfig
+
+        with pytest.raises(ValidationError):
+            MoodDecayConfig(base_half_life_seconds=0.0)
+
+    def test_negative_half_life_raises(self):
+        from emotional_memory.mood import MoodDecayConfig
+
+        with pytest.raises(ValidationError):
+            MoodDecayConfig(base_half_life_seconds=-3600.0)
+
 
 class TestMoodRegress:
     def test_zero_elapsed_returns_identical_values(self):
