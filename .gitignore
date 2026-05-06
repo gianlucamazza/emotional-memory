@@ -63,5 +63,6 @@ coverage.xml
 
 # Benchmark dry-run outputs — not evidence, use *.dryrun.* to protect from citation
 benchmarks/locomo/results.dryrun.*
-# Checkpoint file: intermediate resume state, not final evidence
+# Checkpoint files: intermediate resume state, not final evidence
 benchmarks/locomo/results.checkpoint.jsonl
+benchmarks/locomo/pareto_results.checkpoint.jsonl

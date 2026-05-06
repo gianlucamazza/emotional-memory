@@ -557,8 +557,20 @@ metrics: F1 $0.168$ vs.\ $0.271$ ($H_1$ FAIL, $\Delta=-0.101$) and
 judge-accuracy $0.279$ vs.\ $0.441$ ($H_2$ FAIL, $\Delta=-0.159$);
 Gate~1 not met. Affective weighting does not help on factual open-domain
 QA where the optimal answer is determined by literal content recall
-rather than affective coherence. Per-task retrieval-weight tuning
-remains open work.
+rather than affective coherence.
+A pre-registered Pareto sweep (Addendum~J, Study~S4) tested 10 weight
+configurations ($N=200$ stratified subsample, seed=42, 50 QA per category):
+no configuration achieved F1 $\geq$ naive RAG on any category (Hj1 FAIL).
+The closest cell was W2 ($\text{sem}=0.50$, $\text{mood}=0.30$, resonance
+disabled) on multi-hop ($\Delta=-0.011$).
+Per-task \texttt{base\_weights} tuning is therefore a closed negative line;
+future work targeting the LoCoMo gap requires architectural changes (e.g.\
+per-category weight routing or query-type classification).\footnote{Pareto
+pre-registration and closure:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_j.md}%
+{\texttt{preregistration\_addendum\_j.md}},
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_j\_closure.md}%
+{\texttt{preregistration\_addendum\_j\_closure.md}}.}
 
 \paragraph{Component ablations.}
 The pre-registered ablation programme (Addendum~E, Study~$S_3$)\footnote{Pre-registration:
@@ -595,18 +607,23 @@ replicating $H_{f1}$). Reconsolidation continues to register null
 Dual-path encoding is therefore retained as opt-in only; semantically-grounded
 LLM appraisal (non-keyword) is recommended when an appraisal engine is configured.
 
-\paragraph{Resonance sign reversal on e5-small-v2.}
-The ablation finding for the resonance layer ($H_b$: $+0.085$, $p<0.001$ on
-e5-small-v2) is a statistically confirmed sign reversal: removing \texttt{ResonanceLink}
-\emph{improves} top1 accuracy for this embedder. We do not interpret this as evidence
-that resonance is harmful in general. The SBERT embedder yields a
-non-significant $\Delta=+0.02$ ($p=0.203$) for the same ablation. The most
-plausible explanation is geometry-specific: e5-small-v2 clusters semantically
-related items more tightly than SBERT-bge; spreading activation over a
-tight-cluster geometry amplifies distractor promotion in challenge types
-designed to test semantic confounding (\texttt{semantic\_confound},
-\texttt{same\_topic\_distractor}). This interaction is embedder-dependent
-and motivates future work on adaptive resonance-weight scheduling.
+\paragraph{Resonance magnitude amplification on e5-small-v2.}
+The ablation finding for the resonance layer ($H_b$: $\Delta=+0.085$,
+$p<0.001$ on e5-small-v2) is a confirmed \emph{magnitude amplification}, not
+a sign reversal: per-challenge decomposition (Addendum~I, post-hoc) shows
+$\Delta \geq 0$ for every (embedder $\times$ challenge-type) cell, with the
+amplification concentrated on \texttt{semantic\_confound} (e5 $\Delta=+0.125$
+vs.\ SBERT $\Delta=+0.025$).\footnote{Addendum~I decomposition:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_i.md}%
+{\texttt{preregistration\_addendum\_i.md}}.}
+Removing \texttt{ResonanceLink} \emph{improves} top1 accuracy for e5 in
+aggregate; SBERT yields a non-significant $\Delta=+0.02$ ($p=0.203$).
+The most plausible explanation is geometry-specific: e5-small-v2 clusters
+semantically related items more tightly than SBERT-bge; spreading activation
+over a tight-cluster geometry amplifies distractor promotion on challenge types
+requiring affective discrimination among topic-near memories.
+Mechanism confirmation (Hi3: link-set instrumentation, $N\geq500$) is deferred
+to when a larger affect-rich dataset is available.
 
 \paragraph{Oracle-affect operationalization.}
 The appraisal-confound studies ($H_{d1}$, $H_{d2}$, cross-language Hd2\_IT/ES)
@@ -688,10 +705,14 @@ The external LoCoMo conversational
 QA benchmark (1986 QA pairs, Study S1) produced a negative result: AFT
 underperforms naive RAG (F1 0.168 vs.\ 0.271; Gate 1 not met), revealing that
 affective weighting does not help on factual open-domain QA.
+The pre-registered Pareto sweep (Study S4, Addendum~J) confirmed this scope
+limitation holds across all 10 weight configurations (Hj1 FAIL): per-task
+\texttt{base\_weights} tuning cannot close the gap.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
-beyond the English/Italian/Spanish slices validated here; and per-task retrieval
-weight tuning to investigate the LoCoMo scope limitation.
+beyond the English/Italian/Spanish slices validated here; and architectural
+approaches to LoCoMo factual QA (per-category weight routing, query-type
+classification).
 The dominance axis (PAD third dimension) is now a first-class \texttt{CoreAffect}
 field as of v0.8.2 (commit \texttt{8b9ddbe}); future work will assess whether
 dominance-specific scenarios improve retrieval on emotion-rich corpora.

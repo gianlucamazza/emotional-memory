@@ -299,7 +299,7 @@ have not yet been validated by the scientific community.
 | Broader, comparative affect-aware realistic benchmark | ongoing research |
 | Execute the human-eval pilot with real ratings | research track |
 | BYO appraisal schema (OCC, GRID, custom taxonomies) | v0.10 |
-| LoCoMo per-task weight tuning (Pareto study) | research track |
+| LoCoMo per-task weight tuning via `base_weights` — **closed** (Add. J Hj1 FAIL 2026-05-06; architectural approaches remain open) | closed |
 
 ---
 

@@ -158,17 +158,20 @@
       "status": "controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA.",
-      "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0). Holm-corrected one-tailed p=1.0 for both hypotheses.",
-      "not_yet_shown": "Whether a task-specific configuration of AFT (lower mood weight, affect-neutral retrieval) could match baseline on factual QA. Pareto sweep pre-registered in Addendum J (frozen, pending execution ~$1 LLM budget).",
-      "next_study": "Execute Addendum J Pareto sweep (10 weight configs × 200-QA stratified subset); requires `--sample-per-category` runner extension + LLM budget.",
+      "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0). Holm-corrected one-tailed p=1.0 for both hypotheses. Add. J Pareto sweep executed 2026-05-06 (10 weight configs × 200-QA stratified subsample, seed=42, 50 per category). Hj1 FAIL: no AFT config achieves F1 ≥ naive_rag on any category. Best AFT config (W2: sem=0.50, mood=0.30, no resonance) achieves aggregate F1=0.1765 vs naive_rag F1=0.2092 (Δ=−0.033); closest cell W2×multi_hop Δ=−0.011. The per-task base_weights tuning line is closed as honest negative.",
+      "not_yet_shown": "Whether architectural changes (per-category weight routing, selective affect suppression on literal queries, factual/affective dual branching) could close the gap. base_weights tuning alone cannot match naive_rag (Hj1 FAIL, Add. J closure).",
+      "next_study": "Architectural approaches: per-category weight routing or query-type classifier to suppress affective signals on literal-content retrieval tasks. Full-N W2 replication is not warranted (Hj1 FAIL per Add. J §Conclusion).",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/locomo/results.json",
-        "benchmarks/locomo/results.md"
+        "benchmarks/locomo/results.md",
+        "benchmarks/locomo/pareto_results.json",
+        "benchmarks/locomo/pareto_results.md"
       ],
       "protocol_refs": [
         "benchmarks/preregistration.md",
-        "benchmarks/preregistration_addendum_j.md"
+        "benchmarks/preregistration_addendum_j.md",
+        "benchmarks/preregistration_addendum_j_closure.md"
       ],
       "limitations_refs": [
         "docs/research/08_limitations.md"
