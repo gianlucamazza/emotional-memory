@@ -588,11 +588,13 @@ canonical JSONs:
 was executed at full power on the harder \texttt{realistic\_recall\_v2}
 benchmark ($N=200$ queries, both SBERT bge-small-en-v1.5 and e5-small-v2).
 Individual layer ablations are \emph{not} significant: removing the mood
-field ($H_a$: $\Delta=-0.02$, $p_{\text{boot}}=0.264$ on SBERT; $-0.005$,
-$p=0.915$ on e5) or the resonance graph ($H_b$: $\Delta=+0.02$, $p=0.203$
-on SBERT; $+0.085$, $p<0.001$ on e5 in the opposite direction) does not
-reduce top1\_accuracy. Removing appraisal is invariant on this benchmark
-($H_c$ PASS: $\Delta=-0.01$ on SBERT, $+0.005$ on e5). The system-level
+field ($H_a$: $\Delta=0.00$, $p_{\text{boot}}=1.000$ on SBERT; $-0.015$,
+$p=0.543$ on e5) or the resonance graph ($H_b$: $\Delta=+0.030$,
+$p_{\text{boot}}=0.022$, $p_{\text{holm}}=0.109$ on SBERT; $+0.075$,
+$p_{\text{boot}}<0.001$, $p_{\text{holm}}=0.001$ on e5 in the opposite
+direction) does not reduce top1\_accuracy under family-wise correction.
+Removing appraisal is invariant on this benchmark
+($H_c$ PASS: $\Delta=0.00$ on SBERT, $-0.005$ on e5). The system-level
 architecture advantage observed in $H_{d1}/H_{d2}$ (vs.\ \texttt{naive\_cosine},
 $\Delta=+0.13$ to $+0.23$) is therefore replicable but \emph{cannot be
 attributed to any single layer in isolation}: layers are jointly sufficient
@@ -600,16 +602,16 @@ and likely interact; per-layer attribution at $N=200$ is below the
 detectable effect size and would require either a higher-$N$ design or
 interaction-term modelling.
 A symmetric dual-path encoding variant remains destructive
-($H_{e1}$: $\Delta=-0.20$ on SBERT, $-0.27$ on e5;
-\textit{aft\_keyword\_synchronous}: $\Delta=-0.45$ on both embedders,
+($H_{e1}$: $\Delta=-0.185$ on SBERT, $-0.275$ on e5;
+\textit{aft\_keyword\_synchronous}: $\Delta=-0.440$ on both embedders,
 replicating $H_{f1}$). Reconsolidation continues to register null
-($H_{e2}$: $\Delta=+0.01$ SBERT, $+0.03$ e5).
+($H_{e2}$: $\Delta=+0.010$ on both embedders).
 Dual-path encoding is therefore retained as opt-in only; semantically-grounded
 LLM appraisal (non-keyword) is recommended when an appraisal engine is configured.
 
 \paragraph{Resonance magnitude amplification on e5-small-v2.}
-The ablation finding for the resonance layer ($H_b$: $\Delta=+0.085$,
-$p<0.001$ on e5-small-v2) is a confirmed \emph{magnitude amplification}, not
+The ablation finding for the resonance layer ($H_b$: $\Delta=+0.075$,
+$p_{\text{boot}}<0.001$ on e5-small-v2) is a confirmed \emph{magnitude amplification}, not
 a sign reversal: per-challenge decomposition (Addendum~I, post-hoc) shows
 $\Delta \geq 0$ for every (embedder $\times$ challenge-type) cell, with the
 amplification concentrated on \texttt{semantic\_confound} (e5 $\Delta=+0.125$

@@ -44,22 +44,29 @@ Parameters: seed=0, n_bootstrap=2000, N=200 (realistic_recall_v2), Holm correcti
 
 | Hypothesis | Embedder | Verdict | full top1 | variant top1 | Δ | p_boot | p_adj_holm |
 |---|---|---|---|---|---|---|---|
-| Ha (no_mood) | SBERT | **FAIL** | 0.54 | 0.52 | -0.02 | 0.264 | 1.000 |
-| Ha (no_mood) | e5 | **FAIL** | 0.51 | 0.50 | -0.005 | 0.915 | 1.000 |
-| Hb (no_resonance) | SBERT | **FAIL** | 0.54 | 0.56 | +0.02 | 0.203 | 1.000 |
-| Hb (no_resonance) | e5 | **FAIL** | 0.51 | 0.59 | +0.085 | 0.000 | 0.000 |
-| Hc (no_appraisal) | SBERT | **PASS** | 0.54 | 0.53 | -0.01 | 0.283 | — |
-| Hc (no_appraisal) | e5 | **PASS** | 0.51 | 0.51 | +0.005 | 0.880 | — |
-| Hd (no_momentum, expl.) | SBERT | NS | 0.54 | 0.56 | +0.02 | 0.067 | — |
-| Hd (no_momentum, expl.) | e5 | NS | 0.51 | 0.51 | 0.00 | 1.000 | — |
+| Ha (no_mood) | SBERT | **FAIL** | 0.535 | 0.535 | +0.000 | 1.000 | 1.000 |
+| Ha (no_mood) | e5 | **FAIL** | 0.510 | 0.495 | -0.015 | 0.543 | 1.000 |
+| Hb (no_resonance) | SBERT | **FAIL** (Holm) | 0.535 | 0.565 | +0.030 | 0.022 | 0.109 |
+| Hb (no_resonance) | e5 | **FAIL** | 0.510 | 0.585 | +0.075 | 0.0002 | 0.001 |
+| Hc (no_appraisal) | SBERT | **PASS** | 0.535 | 0.535 | +0.000 | 1.000 | — |
+| Hc (no_appraisal) | e5 | **PASS** | 0.510 | 0.505 | -0.005 | 0.758 | — |
+| Hd (no_momentum, expl.) | SBERT | NS | 0.535 | 0.540 | +0.005 | 0.629 | — |
+| Hd (no_momentum, expl.) | e5 | NS | 0.510 | 0.500 | -0.010 | 0.433 | — |
+
+> **Note (2026-05-07 audit):** values above match the committed canonical JSON
+> (`benchmarks/ablation/results.v2.{sbert,e5}.json`, n_bootstrap=10000, seed=0,
+> holm_bonferroni). The original closure was drafted from a preliminary run
+> (n_bootstrap=2000) and carried forward verbatim; the Hi3 pre-registration
+> (`preregistration_addendum_i.md` lines 31–34) already established the JSON as
+> authoritative and acknowledged the +0.085 → +0.075 discrepancy.
 
 Destructive variants (replication of prior results, not S3 hypotheses):
 
 | Variant | SBERT Δ vs full | e5 Δ vs full | Verdict |
 |---|---|---|---|
-| dual_path | -0.20 | -0.27 | Destructive (He1 replicated) |
-| aft_keyword_synchronous | -0.45 | -0.45 | Destructive (Hf1 base replicated) |
-| no_reconsolidation | +0.01 | +0.03 | Neutral (He2 null replicated) |
+| dual_path | -0.185 | -0.275 | Destructive (He1 replicated) |
+| aft_keyword_synchronous | -0.440 | -0.440 | Destructive (Hf1 base replicated) |
+| no_reconsolidation | +0.010 | +0.010 | Neutral (He2 null replicated) |
 
 **Hf1 direct comparison (Add. F, secondary on v2):**
 dual_path vs aft_keyword_synchronous direct paired bootstrap (n=10,000, seed=0):
@@ -78,7 +85,7 @@ Primary Hf1 (v1.4, N=100, n=10,000, seed=0): Δ=+0.290 [0.190, 0.390], p<0.001, 
 **Ha FAIL, Hb FAIL — both embedders.** Removing the MoodField or ResonanceLink
 layer in isolation does not reduce `top1_accuracy` at N=200 on realistic_recall_v2.
 For the SBERT embedder, both Ha and Hb are non-significant. For e5, the resonance
-removal produces a statistically significant *improvement* (Δ=+0.085, p<0.001),
+removal produces a statistically significant *improvement* (Δ=+0.075, p_boot=0.0002, p_holm=0.001),
 suggesting that the spreading-activation mechanism may interfere with e5's
 distance geometry on this benchmark.
 

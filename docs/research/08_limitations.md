@@ -142,15 +142,16 @@ under oracle affect", not "architecture advantage in production".
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the
-`ResonanceLink` layer **improves** top1 accuracy: Δ = +0.085 [0.04, 0.13],
-p_boot < 0.001, p_adj < 0.001 (Holm-corrected). Per-challenge decomposition
-(Addendum I, `benchmarks/preregistration_addendum_i.md`) confirms this is
-**magnitude amplification, not sign reversal**: Δ≥0 on all five challenge
+`ResonanceLink` layer **improves** top1 accuracy: Δ = +0.075 [0.040, 0.115],
+p_boot=0.0002, p_adj=0.001 (Holm-corrected, n_bootstrap=10000). Per-challenge
+decomposition (Addendum I, `benchmarks/preregistration_addendum_i.md`) confirms
+this is **magnitude amplification, not sign reversal**: Δ≥0 on all five challenge
 types, concentrated in `semantic_confound` (e5 Δ=+0.125 vs SBERT Δ=+0.025).
 
-The SBERT embedder shows Δ = +0.02 (NS, p=0.20) for the same ablation — a
-non-significant result on SBERT.  The effect is thus **embedder-dependent**:
-statistically significant on e5 but not on SBERT.
+The SBERT embedder shows Δ = +0.030 (raw p_boot=0.022, family-corrected NS
+p_holm=0.109) for the same ablation — a non-significant result under Holm
+correction.  The effect is thus **embedder-dependent**: statistically significant
+on e5 but not on SBERT.
 
 **Hi3 confirmatory closure (2026-05-06, N=500, seed=1, Holm m=3):** the
 cross-embedder amplification on `semantic_confound` is confirmed at the
