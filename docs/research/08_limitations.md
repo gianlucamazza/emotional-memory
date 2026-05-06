@@ -210,6 +210,39 @@ the procedural gap but not the empirical one:
   ratings from at least 2 raters. The target is alpha ≥ 0.67 with 3+
   raters; no real ratings have been collected yet.
 
+### 2.8 LoCoMo per-task weight tuning closed (Add. J Hj1 FAIL)
+
+Following the LoCoMo Gate-1 negative result (G2 FAIL, F1=0.168 vs naive_rag=0.271
+on the full benchmark), Addendum J (`benchmarks/preregistration_addendum_j.md`)
+pre-registered a per-category Pareto sweep over 10 weight configurations × a
+200-QA stratified subsample (seed=42) to test whether per-task `base_weights`
+tuning could close the gap. **Hj1 FAIL** (2026-05-06): no AFT configuration
+reaches `naive_rag` parity on any of the four LoCoMo categories
+(`single_hop`, `multi_hop`, `temporal`, `open_domain`).
+
+The best configuration (W2: `sem=0.50, mood=0.30, no resonance`) improves
+over the AFT default by Δ_F1=+0.044 (0.1765 vs 0.1323) and over W0 by
+Δ_judge_acc=+0.085, but still trails `naive_rag` (F1=0.2092) by Δ=−0.033.
+Aggregating across 10 sweeps and 4 categories produced no Pareto frontier
+where AFT dominates the baseline, even on categories where affect could
+plausibly help (`temporal` arc-like queries).
+
+This forecloses the per-task weight-tuning hypothesis as a path to closing G2.
+The remaining options are architectural rather than parametric:
+
+- **Per-category routing**: classify queries by type and switch between AFT and
+  naive cosine retrieval based on whether affect is discriminative.
+- **Query-type classifier**: detect "factual open-domain" vs "affective arc"
+  queries upstream of the 6-signal scorer and downweight non-discriminative
+  signals dynamically.
+- **Hybrid retrieval**: combine naive top-k with AFT re-ranking only when the
+  affect signal exceeds a confidence threshold.
+
+These are larger architectural changes outside v0.10 scope. Full-N (all
+1500 LoCoMo queries) replication of W2 was *not* warranted given the 200-QA
+result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
+`docs/research/addendum_j_closure.md` for the full numerical record.
+
 ---
 
 ## 3. Architectural Limits
@@ -301,7 +334,7 @@ have not yet been validated by the scientific community.
 | Broader, comparative affect-aware realistic benchmark | ongoing research |
 | Execute the human-eval pilot with real ratings | research track |
 | BYO appraisal schema (OCC, GRID, custom taxonomies) | v0.10 |
-| LoCoMo per-task weight tuning via `base_weights` — **closed** (Add. J Hj1 FAIL 2026-05-06; architectural approaches remain open) | closed |
+
 
 ---
 
