@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-dailydialog bench-dailydialog-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -239,6 +239,20 @@ bench-hd2-it-me5:
 		--out-md benchmarks/appraisal_confound/results.hd2_it.me5.md \
 		--out-protocol benchmarks/appraisal_confound/results.hd2_it.me5.protocol.json
 
+bench-dailydialog:
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.runner
+
+bench-dailydialog-dry:
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.runner --dry-run
+
+build-dailydialog-personas:
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.persona_builder \
+	    --n 120 --seed 0
+
+build-dailydialog-personas-dry:
+	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.persona_builder \
+	    --n 5 --seed 0 --dry-run
+
 bench-locomo:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner
 
@@ -435,6 +449,9 @@ help:
 	@echo "  bench-addendum-g           Add. G — Hg1: LLM appraisal affect-free (requires API key)"
 	@echo "  bench-addendum-g-hash      Add. G fast smoke test with hash embedder"
 	@echo "  bench-realistic            Replayable multi-session benchmark with persisted state"
+	@echo "  bench-dailydialog          DailyDialog affect-conditioned retrieval (Hk1, no API key)"
+	@echo "  bench-dailydialog-dry      DailyDialog dry run (5 personas)"
+	@echo "  build-dailydialog-personas Build synthetic-persona JSON (requires: pip install datasets)"
 	@echo "  bench-locomo               LoCoMo benchmark (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
 	@echo "  bench-locomo-dry           LoCoMo dry run: 2 conversations, 5 QA each, no judge"
 	@echo "  bench-locomo-pareto        Add. J Pareto sweep (10 weight configs × 200 QA, requires API key)"
