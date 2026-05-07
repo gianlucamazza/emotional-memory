@@ -168,6 +168,26 @@ Cross-language evidence is scoped to a single exploratory Spanish-SBERT result a
 N=80 (Δ=+0.138, p=0.045). See
 [power top-up closure](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
 
+### Hk1 — DailyDialog Ecological Replication (Branch B)
+
+Result files: `benchmarks/dailydialog/results.{json,md,protocol.json}`  
+Pre-reg: `benchmarks/preregistration_addendum_k_dailydialog.md`  
+Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`
+
+| Query type | N | AFT top1 | Cosine top1 | Δ | p_holm | d | Verdict |
+|---|---|---|---|---|---|---|---|
+| **aggregate** | **396** | **0.212** | **0.220** | **−0.008** | **1.000** | **−0.015** | **FAIL** |
+| emotion_state_recall | 120 | 0.217 | 0.225 | −0.008 | 1.000 | −0.017 | FAIL |
+| affect_conditioned_content | 120 | 0.175 | 0.217 | −0.042 | 1.000 | −0.088 | FAIL |
+| affective_trajectory | 39 | 0.385 | 0.282 | +0.103 | 0.734 | +0.186 | FAIL (N=39) |
+| cross_session_control | 117 | 0.188 | 0.197 | −0.009 | 1.000 | −0.017 | FAIL |
+
+**Branch B confirmed.** AFT does not outperform naive cosine on naturalistic
+DailyDialog at N=120. The `affective_trajectory` positive trend (d=0.186) is
+an exploratory signal, not a confirmatory PASS (underpowered, p_holm=0.734).
+Consistent with LoCoMo FAIL: advantage is regime-specific to curated
+affective benchmarks with dense emotion content.
+
 ---
 
 ## Power notes (ex-post)

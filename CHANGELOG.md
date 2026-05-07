@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
+- **P3-1 / Hk1 — DailyDialog ecological replication — Branch B closure** (2026-05-07):
+  Pre-registered ecological replication on DailyDialog (Li et al. 2017) with N=120
+  synthetic personas, 396 affect-conditioned queries (4 types from Ekman labels, no LLM),
+  multilingual-e5-small, seed=0, n_bootstrap=10000. **Branch B (FAIL):** AFT top1=0.212
+  vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000, d=-0.015). Only `affective_trajectory`
+  shows an exploratory positive trend (Δ=+0.103, d=0.186, N=39; p_holm=0.734, underpowered).
+  Cross-domain ecological replication not established; AFT advantage is regime-specific
+  to curated affective benchmarks, consistent with LoCoMo FAIL. Paper §5 and §8 updated.
+  Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`.
+
 - **Pre-registration Addendum Hd2-PowerTopUp — Branch C closure** (2026-05-07):
   Power top-up to N=120 (30 scenarios per language) executed on multilingual-e5-small
   for Italian and Spanish. **Branch C (FAIL-FAIL):** IT Δ=+0.058 [−0.042, +0.158],

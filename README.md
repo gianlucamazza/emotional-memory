@@ -426,9 +426,17 @@ retrieval probe, not a general downstream evaluation of production memory system
   configs × 200-QA stratified subsample, seed=42) confirms this gap is not
   closable via `base_weights` tuning: best AFT config W2 F1=0.1765 vs
   naive_rag=0.2092 on every category (Hj1 FAIL).
+- **Honest negative — DailyDialog ecological replication (Hk1, Branch B, 2026-05-07)**:
+  Pre-registered replication on DailyDialog (Li et al. 2017) with N=120 synthetic
+  personas, 396 affect-conditioned queries, multilingual-e5-small. AFT top1=0.212
+  vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall
+  advantage does not extend to naturalistic short-turn dialogue; AFT advantage is
+  regime-specific (curated affective benchmarks with explicit arc/momentum structure).
+  Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`.
 - **Not yet established**: general superiority over systems such as Mem0 or
-  LangMem on realistic agent tasks; completed human evaluation results; or
-  ecological correspondence to human emotional memory.
+  LangMem on realistic agent tasks; completed human evaluation results; ecological
+  validation in naturalistic dialogue (Hk1 FAIL); or full human behavioral
+  correspondence.
 
 See [Current Evidence](docs/research/09_current_evidence.md) for the study ladder
 and the current claim-to-evidence matrix. The canonical machine-readable source

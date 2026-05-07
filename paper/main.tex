@@ -456,6 +456,34 @@ Cross-language evidence is therefore limited to a single exploratory Spanish-SBE
 result at $N=80$; the \texttt{multilingual-e5-small} runs at the pre-declared power
 do not establish the effect for Italian or Spanish.
 
+\paragraph{Cross-domain ecological replication ($H_{k1}$, DailyDialog).}
+To test whether the realistic-recall advantage extends to a naturalistic corpus,
+we ran a pre-registered ecological replication on DailyDialog~\citep{li2017dailydialog}
+(CC~BY-NC-SA 4.0; Li et al.\ 2017, IJCNLP).
+120 synthetic personas were built by concatenating 4--5 real DailyDialog dialogues
+(train + validation splits, emotion-density $\geq$30\%),
+with 396 affect-conditioned queries generated programmatically from turn-level
+Ekman emotion labels (no LLM in the loop).
+Pre-registered decision rule: paired bootstrap $n=10\,000$, seed~0, Holm $m=4$,
+one-tailed; PASS requires $p_{\text{holm}}<0.05$ and $\Delta>0$.
+Result: AFT \texttt{top1}~$=0.212$ vs.\ naive cosine~$=0.220$
+($\Delta=-0.008$, 95\% CI $[-0.056,+0.043]$, $p_{\text{holm}}=1.000$, $d=-0.015$;
+\textbf{Hk1 FAIL, Branch~B}).
+The \texttt{affective\_trajectory} sub-type shows a positive trend
+($\Delta=+0.103$, $d=0.186$, $N=39$) but is underpowered ($p_{\text{holm}}=0.734$).%
+\footnote{Hk1 pre-registration:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_k\_dailydialog.md}%
+{\texttt{preregistration\_addendum\_k\_dailydialog.md}};
+closure:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_k\_dailydialog\_closure.md}%
+{\texttt{preregistration\_addendum\_k\_dailydialog\_closure.md}};
+results: \href{\repourl/blob/main/benchmarks/dailydialog/results.json}%
+{\texttt{benchmarks/dailydialog/results.json}}.}
+The DailyDialog FAIL is consistent with the LoCoMo negative result:
+AFT's retrieval advantage is \emph{regime-specific}, materialising when the
+retrieval task is explicitly designed around affective arcs and momentum shifts
+(realistic\_recall\_v2) rather than naturalistic short turns.
+
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
 \paragraph{SOTA reference (exploratory).}
@@ -754,11 +782,14 @@ AFT's affective signals are theoretically discriminative
 Only \texttt{recency\_confound} is valence-neutral.
 The aggregate advantage ($\Delta=+0.205$ SBERT; $+0.155$ e5) should therefore
 be read as \emph{AFT advantage when affective context discriminates}, not as
-uniform superiority across all retrieval tasks. This is consistent with the
-LoCoMo negative result (Gate~1 FAIL): where affect is non-discriminative,
-AFT provides no advantage. Scenarios with valence-neutral discrimination
-criteria are under-represented in v2, and their effect on aggregate accuracy
-is unknown.
+uniform superiority across all retrieval tasks. This is consistent with two
+independent negative results: the LoCoMo factual QA benchmark (Gate~1 FAIL)
+and the DailyDialog ecological replication ($H_{k1}$ FAIL; see above).
+In both cases, either affect is non-discriminative (LoCoMo) or the affective
+content per turn is too sparse for the 6-signal scorer to outperform semantic
+similarity (DailyDialog short turns, $\approx$17\% emotion-bearing turns before
+density filtering). Scenarios with valence-neutral discrimination criteria are
+under-represented in v2, and their effect on aggregate accuracy is unknown.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
@@ -817,11 +848,17 @@ affective weighting does not help on factual open-domain QA.
 The pre-registered Pareto sweep (Study S4, Addendum~J) confirmed this scope
 limitation holds across all 10 weight configurations (Hj1 FAIL): per-task
 \texttt{base\_weights} tuning cannot close the gap.
+A pre-registered ecological replication on DailyDialog ($H_{k1}$, $N=120$
+personas, 396 affect-conditioned queries) did not replicate the advantage
+(Branch~B FAIL, $\Delta=-0.008$, $d=-0.015$), confirming that the regime boundary
+is naturalistic affect density rather than dataset size.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
-beyond the English/Italian/Spanish slices validated here; and architectural
-approaches to LoCoMo factual QA (per-category weight routing, query-type
-classification).
+beyond the English/Italian/Spanish slices validated here; architectural approaches
+to LoCoMo factual QA (per-category weight routing, query-type classification);
+and identifying naturalistic corpora with sufficient affect density (e.g.\
+affective-trajectory proportion $>$30\%) where the DailyDialog-style replication
+could be expected to pass.
 The dominance axis (PAD third dimension) is now a first-class \texttt{CoreAffect}
 field as of v0.8.2 (commit \texttt{8b9ddbe}); future work will assess whether
 dominance-specific scenarios improve retrieval on emotion-rich corpora.

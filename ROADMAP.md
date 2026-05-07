@@ -138,6 +138,11 @@ Collecting items deferred from v0.7–v0.9.
 - [x] One additional non-English slice — Spanish (`realistic_recall_v2_es.json`, shipped v0.8.2 as Hd2_ES). Closes #30.
 - [x] Extends G6 cross-embedder claim to ≥3 language families — `_figure_multilingual` now shows IT + ES × SBERT + me5.
 
+### P3-1 — DailyDialog ecological replication (CLOSED, Branch B, 2026-05-07)
+- [x] Pre-registration: `benchmarks/preregistration_addendum_k_dailydialog.md` (Hk1).
+- [x] DailyDialog benchmark infrastructure: persona builder, programmatic query generator (4 types), AFT + naive_cosine adapters, runner with paired bootstrap + Holm m=4.
+- [x] **Hk1 FAIL (Branch B)**: N=120 personas, 396 queries, multilingual-e5-small. AFT top1=0.212 vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000, d=-0.015). Only `affective_trajectory` shows exploratory positive trend (Δ=+0.103, d=0.186, N=39; underpowered). Cross-domain ecological replication not established. Regime-specificity of AFT advantage confirmed consistent with LoCoMo FAIL. Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`.
+
 ---
 
 ## v1.0.0 — Stability commitment (target: when above is closed)
