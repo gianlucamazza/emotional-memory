@@ -84,7 +84,12 @@ recall benchmark (v2, $N=200$, 5 challenge types), AFT achieves
 \texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only cosine retrieval
 ($\Delta=+0.21$, 95\,\% CI [0.15,\,0.27], $p<0.001$, $d=0.49$; SBERT
 bge-small-en-v1.5), with the advantage replicated on a second embedder class
-(e5-small-v2: $\Delta=+0.16$, $p<0.001$). The implementation is released
+(e5-small-v2: $\Delta=+0.16$, $p<0.001$). This advantage holds under
+oracle-provided affect labels; with \texttt{LLMAppraisalEngine} in dual-path
+mode on affect-free data (Addendum~G, $N=200$), architecture parity is
+maintained but the pre-registered minimum effect is not reached
+(Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$), scoping the main result to
+preset-affect scenarios. The implementation is released
 as the open-source \texttt{emotional-memory} Python library (MIT license).
 \end{abstract}
 
