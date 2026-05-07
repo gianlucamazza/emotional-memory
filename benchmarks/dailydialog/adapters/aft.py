@@ -73,8 +73,6 @@ class AFTDailyDialogAdapter(DailyDialogAdapter):
                     "session_id": session.session_id,
                     "dialog_id": session.dialog_id,
                     "emotion": turn.emotion,
-                    "topic": session.topic,
-                    "topic_name": session.topic_name,
                 },
             )
             self._memory_session_map[memory.id] = session.session_id

@@ -1,24 +1,20 @@
 """Deterministic affect-conditioned query generator for DailyDialog personas.
 
-All queries are generated programmatically from emotion labels and topic metadata.
+All queries are generated programmatically from emotion labels.
 No LLM is used, guaranteeing determinism and eliminating ground-truth bias.
 
 Four query types are produced per persona (when constraints are satisfiable):
-    1. emotion_state_recall       — which topic session felt a specific emotion?
-    2. affect_conditioned_content — when feeling X, what was the topic?
-    3. affective_trajectory       — which session shifted from one valence to another?
-    4. cross_session_control      — among same-topic sessions, which was least/most aroused?
+    1. emotion_state_recall       — which conversation felt a specific emotion?
+    2. affect_conditioned_content — when feeling X, what were you talking about?
+    3. affective_trajectory       — which conversation shifted from one valence to another?
+    4. cross_session_control      — which conversation had the most calm/animated atmosphere?
 """
 
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
 
 from benchmarks.dailydialog.dataset import EKMAN_PAD_MAP, Persona, PersonaQuery, PersonaSession
-
-if TYPE_CHECKING:
-    pass
 
 # Query type constants (used as dict keys throughout the benchmark)
 TYPE_EMOTION_STATE_RECALL = "emotion_state_recall"
@@ -57,40 +53,32 @@ def _try_emotion_state_recall(
     rng: random.Random,
     query_idx: int,
 ) -> PersonaQuery | None:
-    """Type 1: "Which conversation about {topic} felt most {emotion}?"
+    """Type 1: "Which conversation felt most {emotion}?"
 
-    Requires ≥2 sessions where at least two sessions share a topic but have
-    different dominant emotions.  This forces the adapter to use affect signals
-    (valence/arousal) rather than topic-keyword matching to find the answer.
+    Target is a session with a non-zero dominant emotion; distractors are
+    sessions with a different dominant emotion.  Tests whether the adapter
+    can retrieve by affective state rather than pure semantic similarity.
     """
-    # Group sessions by topic
-    topic_groups: dict[int, list[PersonaSession]] = {}
-    for s in persona.sessions:
-        topic_groups.setdefault(s.topic, []).append(s)
+    if len(persona.sessions) < 2:
+        return None
 
-    # Find topic groups with ≥2 different dominant emotions (hard constraint)
-    hard_groups: list[tuple[int, list[PersonaSession]]] = []
-    for topic, sessions in topic_groups.items():
-        emotions = {s.dominant_emotion for s in sessions}
-        if len(emotions) >= 2:
-            hard_groups.append((topic, sessions))
+    # Prefer sessions with a distinct non-zero emotion
+    emotion_sessions = [s for s in persona.sessions if s.dominant_emotion != 0]
+    if not emotion_sessions:
+        return None
 
-    if hard_groups:
-        # Pick a random valid group; within it, pick target and one distractor
-        topic, group = rng.choice(hard_groups)
-        rng.shuffle(group := list(group))
-        target = group[0]
-        distractor = next(s for s in group[1:] if s.dominant_emotion != target.dominant_emotion)
-    else:
-        # Soft fallback: pick any session; distractors are other sessions
-        if len(persona.sessions) < 2:
-            return None
-        target = rng.choice(persona.sessions)
-        distractor = rng.choice([s for s in persona.sessions if s.session_id != target.session_id])
+    target = rng.choice(emotion_sessions)
+    # Prefer distractors with a different dominant emotion
+    diff = [
+        s
+        for s in persona.sessions
+        if s.session_id != target.session_id and s.dominant_emotion != target.dominant_emotion
+    ]
+    others = [s for s in persona.sessions if s.session_id != target.session_id]
+    distractor = rng.choice(diff if diff else others)
 
     emotion_name = target.dominant_emotion_name
-    topic_name = target.topic_name
-    text = f"Which conversation about {topic_name} felt most {emotion_name}?"
+    text = f"Which conversation felt most {emotion_name}?"
 
     return PersonaQuery(
         query_id=f"{persona.persona_id}_q{query_idx}",
@@ -116,7 +104,6 @@ def _try_affect_conditioned_content(
     if len(persona.sessions) < 2:
         return None
 
-    # Find sessions with a non-zero dominant emotion (preference)
     emotion_sessions = [s for s in persona.sessions if s.dominant_emotion != 0]
     if not emotion_sessions:
         return None
@@ -126,12 +113,11 @@ def _try_affect_conditioned_content(
     if not others:
         return None
 
-    # Prefer distractor with different emotion; fall back to any other
     diff_emotion = [s for s in others if s.dominant_emotion != target.dominant_emotion]
     distractor = rng.choice(diff_emotion if diff_emotion else others)
 
     emotion_name = target.dominant_emotion_name
-    text = f"When the {emotion_name} feeling came up, what topic was being discussed?"
+    text = f"When the {emotion_name} feeling came up, what was being discussed?"
 
     return PersonaQuery(
         query_id=f"{persona.persona_id}_q{query_idx}",
@@ -149,7 +135,7 @@ def _try_affective_trajectory(
     rng: random.Random,
     query_idx: int,
 ) -> PersonaQuery | None:
-    """Type 3: "Which {topic} conversation shifted from a {from_tone} to a {to_tone} mood?"
+    """Type 3: "Which conversation shifted from a {from_tone} to a {to_tone} mood?"
 
     Requires a session where the valence of the first non-neutral turn differs
     from the valence of the last non-neutral turn in direction (one positive,
@@ -180,8 +166,7 @@ def _try_affective_trajectory(
         return None
     distractor = rng.choice(others)
 
-    topic_name = target.topic_name
-    text = f"Which conversation about {topic_name} shifted from a {from_tone} to a {to_tone} mood?"
+    text = f"Which conversation shifted from a {from_tone} to a {to_tone} mood?"
 
     return PersonaQuery(
         query_id=f"{persona.persona_id}_q{query_idx}",
@@ -199,41 +184,30 @@ def _try_cross_session_control(
     rng: random.Random,
     query_idx: int,
 ) -> PersonaQuery | None:
-    """Type 4: "Among the {topic} conversations, which had the most {calm/animated} atmosphere?"
+    """Type 4: "Which conversation had the most {calm/animated} atmosphere?"
 
-    Requires ≥2 sessions sharing the same topic with different arousal values.
-    The target is the session with the lowest/highest arousal among same-topic sessions.
-    Tests whether AFT's arousal-based scoring can distinguish low vs high arousal memory.
+    Requires ≥2 sessions with different arousal values.
+    The target is the session with the lowest (calm) or highest (animated) arousal.
+    Tests whether AFT's arousal-based scoring discriminates low vs high arousal memory.
     """
-    topic_groups: dict[int, list[PersonaSession]] = {}
-    for s in persona.sessions:
-        topic_groups.setdefault(s.topic, []).append(s)
-
-    # Need ≥2 sessions on same topic with different arousal values
-    valid_groups: list[list[PersonaSession]] = [
-        grp
-        for grp in topic_groups.values()
-        if len(grp) >= 2 and len({s.arousal for s in grp}) >= 2
-    ]
-
-    if not valid_groups:
+    if len(persona.sessions) < 2:
         return None
 
-    group = rng.choice(valid_groups)
-    # Sort by arousal to pick extreme target
-    sorted_grp = sorted(group, key=lambda s: s.arousal)
+    unique_arousals = {s.arousal for s in persona.sessions}
+    if len(unique_arousals) < 2:
+        return None
+
+    sorted_sessions = sorted(persona.sessions, key=lambda s: s.arousal)
     if rng.random() < 0.5:
-        target = sorted_grp[0]  # lowest arousal = most calm
+        target = sorted_sessions[0]  # lowest arousal → most calm
         atmosphere = "calm"
     else:
-        target = sorted_grp[-1]  # highest arousal = most animated
+        target = sorted_sessions[-1]  # highest arousal → most animated
         atmosphere = "animated"
 
-    distractor = rng.choice([s for s in group if s.session_id != target.session_id])
-    topic_name = target.topic_name
-    text = (
-        f"Among the conversations about {topic_name}, which had the most {atmosphere} atmosphere?"
-    )
+    others = [s for s in persona.sessions if s.session_id != target.session_id]
+    distractor = rng.choice(others)
+    text = f"Which conversation had the most {atmosphere} atmosphere?"
 
     return PersonaQuery(
         query_id=f"{persona.persona_id}_q{query_idx}",

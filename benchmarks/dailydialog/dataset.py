@@ -21,37 +21,25 @@ from typing import Any
 
 EKMAN_LABEL_NAMES: dict[int, str] = {
     0: "no_emotion",
-    1: "happy",
-    2: "surprise",
-    3: "sadness",
-    4: "anger",
-    5: "disgust",
-    6: "fear",
+    1: "anger",
+    2: "disgust",
+    3: "fear",
+    4: "happiness",
+    5: "sadness",
+    6: "surprise",
 }
 
-# Canonical Ekman → PAD mapping (valence, arousal, dominance)
+# Canonical Ekman → PAD mapping (valence, arousal, dominance).
+# Integer codes match the raw DailyDialog emotion files (Li et al. 2017).
 # Same valence/arousal conventions as appraisal_keyword.py in the main library.
 EKMAN_PAD_MAP: dict[int, tuple[float, float, float]] = {
     0: (0.00, 0.20, 0.50),  # no_emotion — neutral baseline
-    1: (0.70, 0.50, 0.60),  # happy
-    2: (0.05, 0.80, -0.20),  # surprise — valence ambiguous, high arousal
-    3: (-0.60, 0.20, -0.40),  # sadness
-    4: (-0.50, 0.75, 0.60),  # anger
-    5: (-0.60, 0.40, 0.30),  # disgust
-    6: (-0.55, 0.75, -0.60),  # fear
-}
-
-TOPIC_NAMES: dict[int, str] = {
-    1: "ordinary life",
-    2: "school life",
-    3: "culture and education",
-    4: "attitude and emotion",
-    5: "relationship",
-    6: "tourism",
-    7: "health",
-    8: "work",
-    9: "politics",
-    10: "finance",
+    1: (-0.50, 0.75, 0.60),  # anger
+    2: (-0.60, 0.40, 0.30),  # disgust
+    3: (-0.55, 0.75, -0.60),  # fear
+    4: (0.70, 0.50, 0.60),  # happiness
+    5: (-0.60, 0.20, -0.40),  # sadness
+    6: (0.05, 0.80, -0.20),  # surprise — valence ambiguous, high arousal
 }
 
 # ---------------------------------------------------------------------------
@@ -69,7 +57,6 @@ class DailyTurn:
 @dataclass(frozen=True)
 class RawDialog:
     dialog_id: str
-    topic: int
     turns: tuple[DailyTurn, ...]
 
     @property
@@ -98,8 +85,6 @@ class RawDialog:
 class PersonaSession:
     session_id: str
     dialog_id: str
-    topic: int
-    topic_name: str
     turns: tuple[DailyTurn, ...]
     dominant_emotion: int
     dominant_emotion_name: str
@@ -112,8 +97,6 @@ class PersonaSession:
         return {
             "session_id": self.session_id,
             "dialog_id": self.dialog_id,
-            "topic": self.topic,
-            "topic_name": self.topic_name,
             "turns": [{"text": t.text, "emotion": t.emotion, "act": t.act} for t in self.turns],
             "dominant_emotion": self.dominant_emotion,
             "dominant_emotion_name": self.dominant_emotion_name,
@@ -128,8 +111,6 @@ class PersonaSession:
         return cls(
             session_id=str(d["session_id"]),
             dialog_id=str(d["dialog_id"]),
-            topic=int(d["topic"]),
-            topic_name=str(d["topic_name"]),
             turns=tuple(
                 DailyTurn(
                     text=str(t["text"]),
