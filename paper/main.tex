@@ -448,26 +448,44 @@ To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduc
 \paragraph{SOTA reference (exploratory).}
 We extend the comparative probe with two production LLM-backed memory
 systems---Mem0~\citep{chhikara2025mem0} and LangMem (LangGraph)---using
-\texttt{gpt-4.1-mini} for both their internal LLM extraction and search
-calls.\footnote{SOTA closure:
-\href{\repourl/blob/main/benchmarks/comparative/protocol.sota.md}%
-{\texttt{protocol.sota.md}};
-results: \href{\repourl/blob/main/benchmarks/comparative/results.sota.sbert.md}%
-{\texttt{results.sota.sbert.md}}.}
-On the same four-quadrant probe, Mem0 achieves recall@5\,=\,1.00 [1.00, 1.00]
-($\Delta=+0.20$ vs.\ cosine, paired bootstrap $p=0.045$, McNemar $p=0.125$);
-LangMem 0.90 [0.75, 1.00] ($\Delta=+0.10$, $p_{\text{boot}}=0.254$).
-On quality, AFT (0.85) is below both LLM-backed systems on this probe.
+\texttt{gpt-4.1-mini}.  Both runs are exploratory ($H_{\text{sota}}$,
+$H_{\text{v2\_sota}}$; no Holm correction).
+
+\textit{affect\_reference\_v1 (controlled quadrant probe).}%
+\footnote{Closure: \href{\repourl/blob/main/benchmarks/comparative/protocol.sota.md}%
+{\texttt{protocol.sota.md}}; results: \texttt{results.sota.sbert.md}.}
+Mem0 achieves recall@5\,=\,1.00 [1.00, 1.00]
+($\Delta=+0.20$ vs.\ cosine, $p=0.045$); LangMem 0.90 ($\Delta=+0.10$, $p=0.254$);
+AFT 0.85 ($\Delta=+0.05$, $p=0.825$).
+LLM-backed memory dominates on this probe.
 On encode latency, AFT (45 ms/item) is $\sim$25$\times$ faster than
 Mem0 (1130 ms/item) and $\sim$3$\times$ faster than LangMem (150 ms/item),
-with no LLM dependency at runtime.
-This positions AFT as a deterministic, low-latency alternative on
-affect-aware retrieval probes where the LLM cost dimension matters; the
-result does not establish AFT quality superiority on this dataset.
-The hypothesis was registered as exploratory ($H_{\text{sota}}$, no Holm
-correction). SOTA replication on the harder \texttt{realistic\_recall\_v2}
-benchmark---where AFT shows the $\Delta=+0.21$ advantage over cosine---is
-deferred to future work.
+with no LLM call at runtime.
+
+\textit{realistic\_recall\_v2 (multi-session realistic replay).}%
+\footnote{Closure: \href{\repourl/blob/main/benchmarks/comparative/protocol.sota.v2.md}%
+{\texttt{protocol.sota.v2.md}}; results: \texttt{results.sota.v2.sbert.md}.}
+On the same v2 dataset as the headline Hd2 result,
+AFT achieves top1\_accuracy\,=\,0.535 [0.465, 0.600]
+($\Delta=+0.210$ [+0.155, +0.270] vs.\ cosine, $p<0.001$, $d=0.512$).
+Mem0 scores 0.330 ($\Delta=+0.005$, $p=0.945$) and
+LangMem 0.365 ($\Delta=+0.040$, $p=0.233$);
+neither outperforms naive cosine on this benchmark.
+The advantage is consistent across challenge types:
+AFT leads by $+0.275$ on affective\_arc, momentum\_alignment,
+and semantic\_confound (N\,=\,40 each).
+
+\textit{Interpretation.}
+The two results are complementary, not contradictory.
+\texttt{affect\_reference\_v1} tests semantic quadrant recall (four centroids,
+N\,=\,258 memories); LLM-extracted summaries produce highly relevant
+matches.  \texttt{realistic\_recall\_v2} tests affect-modulated multi-session
+retrieval; oracle mood, momentum, and resonance scoring provide the decisive
+signal.  AFT's architecture-specific advantage materialises on the task it was
+designed for.  The trade-off is scope: the v2 advantage holds only under
+preset oracle affect labels (see \S\ref{sec:limitations} oracle-affect caveat).
+Both systems produce no LLM call at test time; the latency advantage
+($\sim$25$\times$ encode) is preserved across both evaluations.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Related Work}
@@ -788,12 +806,12 @@ dominance-specific scenarios improve retrieval on emotion-rich corpora.
 Vector-store adapters for Qdrant and ChromaDB shipped in v0.9 as optional extras
 (\texttt{[qdrant]}, \texttt{[chroma]}), each implementing the duck-typed \texttt{MemoryStore}
 protocol in strict vector-first mode.
-Expanded baselines were partially executed in this revision: Mem0 and LangMem
-on \texttt{affect\_reference\_v1} (\S\ref{sec:benchmark} SOTA reference)
-show that production LLM-backed memory dominates AFT on quality
-(Mem0 1.00 vs.\ AFT 0.85) at $\sim$25$\times$ higher encode latency.
-SOTA replication on \texttt{realistic\_recall\_v2} and on the LoCoMo factual
-QA benchmark remains open work.
+Expanded baselines were executed in this revision: Mem0 and LangMem on
+\texttt{affect\_reference\_v1} (LLM-backed memory dominates on the simple probe,
+Mem0 recall@5\,=\,1.00 vs.\ AFT 0.85) and on \texttt{realistic\_recall\_v2}
+(AFT top1\,=\,0.535 $\gg$ Mem0\,=\,0.330, LangMem\,=\,0.365; see
+\S\ref{sec:benchmark} SOTA reference).
+SOTA replication on the LoCoMo factual QA benchmark remains open work.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}

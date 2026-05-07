@@ -45,9 +45,9 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
-      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 ≈ 0.80-0.85 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). SOTA extension (2026-05-07, gpt-4.1-mini): on the same probe Mem0 reaches recall@5 = 1.00 (Δ = +0.20 vs cosine, p_boot = 0.045) and LangMem 0.90 (Δ = +0.10, p_boot = 0.254); AFT 0.85 (Δ = +0.05, p_boot = 0.825). LLM-backed memory dominates AFT on quality but at 25× higher encode latency (Mem0 1130 ms/item vs AFT 45 ms/item). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 (EN SBERT Δ=+0.125, IT me5 Δ=+0.163, ES SBERT Δ=+0.138); S3 shows no single layer is isolatably responsible.",
-      "not_yet_shown": "General downstream superiority over production memory systems — Mem0 and LangMem outperform AFT on the affect_reference_v1 probe; AFT trade-off is latency/cost rather than quality. SOTA replication on realistic_recall_v2 (where AFT shows the +0.21 advantage) is not yet executed. Architecture advantage under automatic appraisal (all Hd* use oracle/preset affect; see oracle-affect limitation; Hg1 FAIL). Consistent cross-embedder per-type advantage (H6 momentum_alignment fails for e5-small-v2).",
-      "next_study": "SOTA replication on realistic_recall_v2 to test whether the v2 advantage (Δ=+0.21) holds against Mem0/LangMem. Expand external and realistic retrieval evaluations.",
+      "current_evidence": "126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 ≈ 0.80-0.85 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). SOTA extension on affect_reference_v1 (2026-05-07, gpt-4.1-mini): Mem0 reaches recall@5 = 1.00 (Δ = +0.20 vs cosine, p_boot = 0.045) and LangMem 0.90 (Δ = +0.10, p_boot = 0.254); AFT 0.85 (Δ = +0.05, p_boot = 0.825). LLM-backed memory dominates AFT on that simpler probe but at 25× higher encode latency (Mem0 1130 ms/item vs AFT 45 ms/item). The realistic replay v2 benchmark (Hd2 PASS) shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49). SOTA replication on v2 (2026-05-07, gpt-4.1-mini, H_v2_sota PASS): on the same v2 dataset Mem0 = 0.330 (Δ vs cosine = +0.005, p=0.945) and LangMem = 0.365 (Δ = +0.040, p=0.233); neither beats naive_cosine. AFT top1 = 0.535 (Δ vs cosine = +0.210 [+0.155,+0.270], p<0.001, d=0.512) — non-overlapping CIs vs both SOTA systems. Pattern inverts across benchmarks: Mem0 excels at semantic quadrant recall (affect_reference_v1) while AFT excels at affect-modulated multi-session recall (v2). Architecture advantage under automatic appraisal: Hg1 FAIL (LLM appraisal + oracle-free; Δ=−0.010, p=0.367). All Hd* results use oracle/preset affect.",
+      "not_yet_shown": "General downstream superiority over production memory systems in the semantic-recall regime — Mem0 and LangMem outperform AFT on affect_reference_v1 (simple quadrant probe). Architecture advantage under automatic appraisal unconfirmed (Hg1 FAIL). Consistent cross-embedder per-type advantage (H6 momentum_alignment fails for e5-small-v2). Human / ecological validation (#27 open).",
+      "next_study": "P2 robustness: power top-up Hd2 IT/ES to N=120; inter-rater agreement (κ Cohen) on affect_reference_v1. Expand to external realistic QA benchmarks.",
       "evidence_refs": [
         "benchmarks/fidelity/test_emotional_vs_cosine.py",
         "benchmarks/fidelity/test_mood_congruent.py"
@@ -55,6 +55,7 @@
       "benchmark_refs": [
         "benchmarks/comparative/results.sbert.md",
         "benchmarks/comparative/results.sota.sbert.md",
+        "benchmarks/comparative/results.sota.v2.sbert.md",
         "benchmarks/realistic/results.v2.sbert.md",
         "benchmarks/realistic/results.v2.e5.md",
         "benchmarks/appraisal_confound/results.confirmatory.md",
@@ -65,7 +66,31 @@
       ],
       "protocol_refs": [
         "benchmarks/comparative/protocol.md",
-        "benchmarks/comparative/protocol.sota.md"
+        "benchmarks/comparative/protocol.sota.md",
+        "benchmarks/comparative/protocol.sota.v2.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
+      "claim_id": "realistic_replay_vs_sota",
+      "claim_text": "On multi-session realistic replay (v2), AFT (oracle-affect) outperforms production LLM-backed memory systems (Mem0, LangMem) on top1_accuracy.",
+      "claim_area": "Retrieval behavior vs SOTA",
+      "status": "controlled_evidence",
+      "evidence_level": "4_realistic_tasks",
+      "allowed_public_wording": "On the realistic multi-session replay benchmark, AFT with preset affect labels achieves top1_accuracy = 0.535 vs Mem0 = 0.330 and LangMem = 0.365 — an advantage of Δ +0.21 (d=0.51) with non-overlapping 95% CIs. Neither LLM-backed system outperforms naive cosine on this benchmark.",
+      "current_evidence": "H_v2_sota PASS (exploratory, 2026-05-07, gpt-4.1-mini, sbert-bge, N=200, n_bootstrap=10000, seed=0): AFT top1=0.535 [0.465,0.600], Mem0=0.330 [0.265,0.395], LangMem=0.365 [0.300,0.430], cosine=0.325 [0.260,0.390]. Pairwise vs cosine: AFT Δ=+0.210 [+0.155,+0.270], p<0.001, d=0.512; Mem0 Δ=+0.005, p=0.945; LangMem Δ=+0.040, p=0.233. Per-challenge AFT advantage strongest on semantic_confound (+0.275), momentum_alignment (+0.275), affective_arc (+0.275). Pattern inverts vs affect_reference_v1 (where Mem0=1.00>AFT=0.85): the two benchmarks test different capabilities. Methodological asymmetry: AFT receives oracle affect; Mem0/LangMem do not.",
+      "not_yet_shown": "Advantage without oracle-affect (Hg1 FAIL). Advantage on factual QA (LoCoMo S1 FAIL). Advantage under realistic appraisal. Human evaluation.",
+      "next_study": "SOTA replication on v2 with automatic appraisal (would require gpt-4.1-mini appraisal, consistent with Hg1 methodology). Cross-embedder replication (e5-small-v2 on v2 SOTA).",
+      "evidence_refs": [],
+      "benchmark_refs": [
+        "benchmarks/comparative/results.sota.v2.sbert.json",
+        "benchmarks/comparative/results.sota.v2.sbert.md"
+      ],
+      "protocol_refs": [
+        "benchmarks/comparative/protocol.sota.v2.md",
+        "benchmarks/preregistration_addendum_v2_sota.md"
       ],
       "limitations_refs": [
         "docs/research/08_limitations.md"

@@ -1,6 +1,6 @@
 # Pre-registration: SOTA Replication on realistic_recall_v2
 
-**Status:** PENDING_EXECUTION
+**Status:** PASS
 **Date (pre-reg):** 2026-05-07
 **Embedder:** `sbert-bge` (BAAI/bge-small-en-v1.5)
 **LLM model (mem0, langmem):** `gpt-4.1-mini`
