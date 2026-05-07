@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-05-07
+
 ### Research
 
 - **P3-1 / Hk1 — DailyDialog ecological replication — Branch B closure** (2026-05-07):
@@ -1135,7 +1137,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.1...v0.8.2
