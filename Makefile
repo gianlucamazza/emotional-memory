@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -108,6 +108,12 @@ bench-comparative:
 
 bench-comparative-sbert:
 	uv run python -m benchmarks.comparative.runner --embedder sbert --out benchmarks/comparative/results.sbert.csv
+
+bench-comparative-sota: llm-config-strict
+	uv run python -m benchmarks.comparative.runner \
+		--systems aft,naive_cosine,recency,mem0,langmem \
+		--embedder sbert \
+		--out benchmarks/comparative/results.sota.sbert.csv
 
 bench-realistic:
 	uv run python -m benchmarks.realistic.runner --embedder sbert-bge
@@ -423,6 +429,7 @@ help:
 	@echo "  bench-appraisal            LLM appraisal quality (requires API key)"
 	@echo "  bench-comparative          Cross-system comparison (hash embedder, quick)"
 	@echo "  bench-comparative-sbert    Cross-system comparison (SBERT embedder, paper-canonical)"
+	@echo "  bench-comparative-sota     Cross-system comparison incl. Mem0+LangMem (requires API key + install-mem0 install-langmem)"
 	@echo "  bench-appraisal-confound   Appraisal confound study (SBERT, no LLM key)"
 	@echo "  bench-appraisal-confound-hash  Appraisal confound study (hash embedder)"
 	@echo "  bench-addendum-g           Add. G — Hg1: LLM appraisal affect-free (requires API key)"

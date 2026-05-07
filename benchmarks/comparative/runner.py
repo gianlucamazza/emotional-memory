@@ -38,9 +38,11 @@ try:
 except ImportError:
     pass
 
-# Bridge project-specific key → standard OpenAI env var expected by mem0/langmem.
+# Bridge project-specific keys → standard OpenAI env vars expected by mem0/langmem.
 if "OPENAI_API_KEY" not in os.environ and "EMOTIONAL_MEMORY_LLM_API_KEY" in os.environ:
     os.environ["OPENAI_API_KEY"] = os.environ["EMOTIONAL_MEMORY_LLM_API_KEY"]
+if "OPENAI_BASE_URL" not in os.environ and "EMOTIONAL_MEMORY_LLM_BASE_URL" in os.environ:
+    os.environ["OPENAI_BASE_URL"] = os.environ["EMOTIONAL_MEMORY_LLM_BASE_URL"]
 
 from benchmarks.common.statistics import (
     DEFAULT_N_BOOTSTRAP,
@@ -58,6 +60,84 @@ from benchmarks.comparative.adapters.recency import RecencyAdapter
 ROOT = Path(__file__).parent.parent.parent
 DATASET = ROOT / "benchmarks" / "datasets" / "affect_reference_v1.jsonl"
 DEFAULT_OUT = ROOT / "benchmarks" / "comparative" / "results.csv"
+
+_REASONING_MODEL_PREFIXES = ("o1", "o3", "o4", "gpt-5", "gpt5")
+_CONFIGURED_MODEL = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", "").lower()
+_ENDPOINT_IS_REASONING = any(_CONFIGURED_MODEL.startswith(p) for p in _REASONING_MODEL_PREFIXES)
+
+
+def _patch_max_tokens_compat() -> None:
+    """Normalise outbound httpx requests for reasoning-model compatibility.
+
+    Newer OpenAI-compatible models (o1/o3/gpt-5 series) restrict parameters
+    that third-party libraries (mem0, langmem) still send unconditionally:
+      - max_tokens → renamed to max_completion_tokens (always safe)
+      - temperature / top_p with non-default value → stripped when the
+        configured endpoint model is a reasoning model, or when max_tokens
+        was present (reliable legacy-library signal)
+
+    Patching at the httpx transport level avoids touching library internals.
+    """
+    import json as _json
+
+    import httpx
+
+    def _rewrite(request: httpx.Request) -> httpx.Request:
+        if not request.content:
+            return request
+        try:
+            body = _json.loads(request.content)
+        except Exception:
+            return request
+
+        changed = False
+        had_max_tokens = "max_tokens" in body
+        if had_max_tokens:
+            body["max_completion_tokens"] = body.pop("max_tokens")
+            changed = True
+
+        # Detect reasoning model by body model name or configured endpoint model.
+        body_model = str(body.get("model", "")).lower()
+        is_reasoning = _ENDPOINT_IS_REASONING or any(
+            body_model.startswith(p) for p in _REASONING_MODEL_PREFIXES
+        )
+        if is_reasoning or had_max_tokens:
+            for param in ("temperature", "top_p"):
+                if param in body and body[param] != 1:
+                    del body[param]
+                    changed = True
+
+        if not changed:
+            return request
+
+        new_bytes = _json.dumps(body).encode()
+        headers = dict(request.headers.items())
+        headers["content-length"] = str(len(new_bytes))
+        return httpx.Request(
+            method=request.method,
+            url=request.url,
+            headers=headers,
+            content=new_bytes,
+        )
+
+    _orig_sync = httpx.Client.send
+
+    def _sync_send(
+        self: httpx.Client, request: httpx.Request, *args: Any, **kwargs: Any
+    ) -> httpx.Response:
+        return _orig_sync(self, _rewrite(request), *args, **kwargs)
+
+    httpx.Client.send = _sync_send  # type: ignore[method-assign]
+
+    _orig_async = httpx.AsyncClient.send
+
+    async def _async_send(
+        self: httpx.AsyncClient, request: httpx.Request, *args: Any, **kwargs: Any
+    ) -> httpx.Response:
+        return await _orig_async(self, _rewrite(request), *args, **kwargs)
+
+    httpx.AsyncClient.send = _async_send  # type: ignore[method-assign]
+
 
 # ---------------------------------------------------------------------------
 # Mood-congruent query set — one representative query per quadrant.
@@ -317,6 +397,7 @@ def main() -> None:
     print(f"Dataset: {len(examples)} examples")
     print(f"Embedder: {args.embedder}")
 
+    _patch_max_tokens_compat()
     embedder = _build_embedder(args.embedder)
     system_names = [s.strip() for s in args.systems.split(",")]
     adapters = _make_adapters(system_names, embedder=embedder)

@@ -30,10 +30,18 @@ class Mem0Adapter(MemoryAdapter):
         try:
             from mem0 import Memory
 
+            _model = os.environ.get("EMOTIONAL_MEMORY_LLM_MODEL", "gpt-4o-mini")
+            _base_url = os.environ.get("OPENAI_BASE_URL") or os.environ.get(
+                "EMOTIONAL_MEMORY_LLM_BASE_URL"
+            )
+            _llm_config: dict[str, object] = {"model": _model}
+            if _base_url:
+                _llm_config["openai_base_url"] = _base_url
+
             self._tmpdir = tempfile.TemporaryDirectory(prefix="qdrant_bench_")
             self._mem = Memory.from_config(
                 {
-                    "llm": {"provider": "openai", "config": {"model": "gpt-5-mini"}},
+                    "llm": {"provider": "openai", "config": _llm_config},
                     "embedder": {"provider": "openai"},
                     "vector_store": {
                         "provider": "qdrant",

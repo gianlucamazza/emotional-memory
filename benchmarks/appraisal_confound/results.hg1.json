@@ -1,0 +1,109 @@
+{
+  "study": "addendum_g_hg1",
+  "dataset": "realistic_recall_v3_noAF",
+  "dataset_version": "1.0.0",
+  "embedder": "sbert-bge",
+  "n_scenarios": 50,
+  "n_queries": 200,
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "systems": {
+    "aft_llm_dual": {
+      "n_queries": 200,
+      "top1_accuracy": 0.315,
+      "ci_95": {
+        "point": 0.315,
+        "ci_lower": 0.25,
+        "ci_upper": 0.38,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    },
+    "naive_cosine": {
+      "n_queries": 200,
+      "top1_accuracy": 0.325,
+      "ci_95": {
+        "point": 0.325,
+        "ci_lower": 0.26,
+        "ci_upper": 0.39,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    },
+    "aft_neutral": {
+      "n_queries": 200,
+      "top1_accuracy": 0.315,
+      "ci_95": {
+        "point": 0.315,
+        "ci_lower": 0.25,
+        "ci_upper": 0.38,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    },
+    "aft_llm_sync": {
+      "n_queries": 200,
+      "top1_accuracy": 0.13,
+      "ci_95": {
+        "point": 0.13,
+        "ci_lower": 0.085,
+        "ci_upper": 0.18,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    }
+  },
+  "hypotheses": {
+    "Hg1": {
+      "description": "aft_llm_dual.top1 > naive_cosine.top1 (\u0394 > 0.05, one-tailed alpha=0.05)",
+      "result": "FAIL",
+      "confirmatory": true,
+      "delta": -0.01,
+      "ci_95": {
+        "point": -0.01,
+        "ci_lower": -0.055,
+        "ci_upper": 0.035,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_one_sided": 0.3669,
+      "p_two_sided": 0.7338,
+      "cohens_d": -0.0316,
+      "interpretation": "No significant advantage of aft_llm_dual over naive cosine at \u0394>0.05. LLM appraisal does not provide net positive on this dataset at this effect size."
+    },
+    "Hg2": {
+      "description": "aft_llm_dual.top1 > aft_neutral.top1 (exploratory)",
+      "result": "FAIL",
+      "confirmatory": false,
+      "delta": 0.0,
+      "ci_95": {
+        "point": 0.0,
+        "ci_lower": -0.055,
+        "ci_upper": 0.055,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_one_sided": 0.5,
+      "p_two_sided": 1.0,
+      "cohens_d": 0.0,
+      "interpretation": "LLM appraisal does not reliably outperform neutral affect baseline."
+    },
+    "Hg3": {
+      "description": "aft_llm_dual.top1 > aft_llm_sync.top1 (exploratory)",
+      "result": "PASS",
+      "confirmatory": false,
+      "delta": 0.185,
+      "ci_95": {
+        "point": 0.185,
+        "ci_lower": 0.11,
+        "ci_upper": 0.26,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_one_sided": 0.0,
+      "p_two_sided": 0.0,
+      "cohens_d": 0.3422,
+      "interpretation": "Dual-path (deferred) LLM appraisal outperforms synchronous LLM appraisal."
+    }
+  }
+}

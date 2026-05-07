@@ -250,6 +250,29 @@
       ]
     },
     {
+      "claim_id": "appraisal_llm_real_dual_path",
+      "claim_text": "AFT with LLM dual-path appraisal outperforms naive cosine on affect-free data.",
+      "claim_area": "Appraisal quality",
+      "status": "not_established",
+      "evidence_level": "3_appraisal_quality",
+      "allowed_public_wording": "Hg1 FAIL: AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on N=200 affect-free queries (Δ=-0.010 [-0.055, 0.035], d=-0.032, p_one=0.367). The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.",
+      "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. Δ=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral Δ=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync Δ=+0.185, d=0.342).",
+      "not_yet_shown": "Whether a larger N, stronger LLM, or different dataset would show signal. The Hg3 PASS (dual-path > sync) is not disputed; only the architecture vs cosine delta is not established.",
+      "next_study": "Larger N replication (N≥400) or stronger LLM appraisal to assess power vs effect-size tradeoff.",
+      "evidence_refs": [],
+      "benchmark_refs": [
+        "benchmarks/appraisal_confound/results.hg1.json",
+        "benchmarks/appraisal_confound/results.hg1.md"
+      ],
+      "protocol_refs": [
+        "benchmarks/preregistration_addendum_g.md",
+        "benchmarks/preregistration_addendum_g_closure.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
+    },
+    {
       "claim_id": "models_human_emotional_memory",
       "claim_text": "The system models human emotional memory.",
       "claim_area": "Ecological validity",

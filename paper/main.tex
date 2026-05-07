@@ -73,8 +73,7 @@ memory systems for LLM agents rely primarily on semantic similarity and recency
 for retrieval, neglecting the affective modulation of human memory well-documented
 in cognitive psychology. AFT encodes every memory event with a full affective
 fingerprint comprising: (1)~a Russell circumplex core affect, (2)~affective
-momentum tracking velocity and acceleration of emotional change, (3)~a slow-moving
-Heidegger-inspired mood field, (4)~a Scherer appraisal vector, and (5)~a resonance
+momentum tracking velocity and acceleration of emotional change, (3)~a slow-adapting background mood field (PAD exponential moving average), (4)~a Scherer appraisal vector, and (5)~a resonance
 graph supporting spreading activation and Hebbian strengthening. Retrieval uses a
 six-signal composite scorer with mood-adaptive weights, and a Pearce-Hall
 prediction-error gate controls reconsolidation lability. We validate the model
@@ -118,6 +117,11 @@ grounded in Russell's circumplex~\citep{russell1980circumplex}, Scherer's Compon
 Process Model~\citep{scherer1984appraisal}, Collins and Loftus spreading
 activation~\citep{collins1975spreading}, ACT-R decay~\citep{anderson1983actr},
 and Pearce-Hall associative learning~\citep{pearce1980hall}.
+Each component draws on established cognitive-psychological theory; the contribution
+of AFT is their integration into a unified, empirically-validated memory engine
+with a pre-registered evidence programme. To our knowledge, no prior open-source
+system combines all five affective layers with mood-congruent retrieval and
+APE-gated reconsolidation in a single production-ready implementation.
 
 \paragraph{Contributions.}
 \begin{enumerate}
@@ -471,6 +475,21 @@ systems with emotional context, which our affect\_reference\_v1 dataset compleme
 heuristic schedules rather than the ACT-R power-law modulated by encoding
 arousal. No paper in our survey implements APE-gated reconsolidation windows.
 
+\paragraph{Appraisal-based architectures.}
+\citet{croissant2024chain} implement a Scherer-inspired chain-of-emotion step
+before LLM response generation, mapping appraisal dimensions to emotional
+states to improve emotional support dialogue — the closest prior antecedent to
+AFT Layer~4. Unlike AFT, that work does not maintain a persistent affective
+memory state, resonance graph, or multi-session retrieval pipeline.
+
+\paragraph{Spreading activation in retrieval.}
+\citet{gutierrez2024hipporag} use Personalized PageRank over a knowledge graph
+as a spreading-activation retrieval mechanism, demonstrating its efficacy over
+pure cosine retrieval on multi-hop QA.
+\citet{jiang2026synapse} apply semantic spreading activation to long-context
+LLM memory — both are architecturally related to AFT Layer~5, but without
+valence-arousal grounding or Hebbian co-retrieval strengthening.
+
 \paragraph{Affective computing and LLM emotion understanding.}
 Several recent works examine whether LLMs can model human affect.
 \citet{gandhi2024humanlike} demonstrate human-like affective cognition in
@@ -479,12 +498,11 @@ valence and arousal with moderate accuracy; and \citet{liu2024emollms} release
 a suite of emotion-tuned LLMs and annotation tools.
 \citet{zhang2024affective} survey the emerging intersection of affective computing
 and LLMs. In the memory-specific domain, \citet{xu2025amem} propose A-MEM, an
-agentic memory system, and \citet{jiang2026synapse} introduce SYNAPSE, which uses
-semantic spreading activation — architecturally related to AFT Layer 5, but
-without the affective grounding. \citet{damllm2025} and \citet{tan2025prospective}
+agentic memory system. \citet{damllm2025} and \citet{tan2025prospective}
 address dynamic affective state management and prospective/retrospective reflection
-in LLM agents, respectively. None of these systems implement the five-layer
-affective fingerprint or APE-gated reconsolidation that distinguishes AFT.
+in LLM agents, respectively. None of these systems simultaneously implement the
+five-layer affective fingerprint, APE-gated reconsolidation, and Hebbian resonance
+that distinguish AFT.
 
 \paragraph{AFT differentiators.}
 AFT is, to our knowledge, the only open-source system that simultaneously
@@ -492,6 +510,10 @@ provides: (1)~a Russell circumplex representation driving mood-congruent
 retrieval; (2)~a five-layer affective fingerprint per memory; (3)~APE-gated
 reconsolidation windows; (4)~arousal-modulated ACT-R decay with an arousal
 floor; and (5)~spreading activation with Hebbian link strengthening.
+Individual components draw on well-established antecedents (Russell 1980;
+Collins \& Loftus 1975; Scherer 1984; Bower 1981; Hebb 1949); the contribution
+of AFT is their integration into a unified, empirically-validated memory engine
+with a pre-registered evidence programme.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Limitations}
@@ -642,10 +664,18 @@ to affect at all. This design isolates the \emph{retrieval architecture} given
 perfect affect, but does not test the \emph{appraisal pipeline} under real
 inference conditions. The Ha2/Hb2 results show that keyword appraisal
 is destructive ($\Delta=-0.39$ vs.\ naive\_cosine), so the architecture
-advantage under automatic appraisal remains unconfirmed. Addendum~G
-(deferred; see \texttt{benchmarks/preregistration\_addendum\_g.md})
-will address this gap with an LLM-backed appraisal condition on a dataset
-not pre-seeded with oracle affect values.
+advantage under automatic appraisal was tested in Addendum~G
+(executed 2026-05-07; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_g\_closure.md}%
+{\texttt{preregistration\_addendum\_g\_closure.md}}.})
+with \texttt{LLMAppraisalEngine} in dual-path mode (\texttt{gpt-5-mini})
+on $N=200$ queries from \texttt{realistic\_recall\_v3\_noAF},
+a dataset not pre-seeded with oracle affect values.
+\textbf{Hg1 FAIL}: $\Delta=-0.010$ [$-0.055$, $0.035$], $d=-0.032$,
+$p_{\text{one}}=0.367$---the architecture advantage does not extend to
+LLM dual-path appraisal at this sample size.
+The oracle-affect circularity remains the operative scope boundary of the
+$H_{d1}$/$H_{d2}$ claims.
 
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
