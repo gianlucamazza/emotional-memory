@@ -1,0 +1,93 @@
+{
+  "study": "appraisal_confound",
+  "dataset": "realistic_recall_v2_it",
+  "dataset_version": "1.0",
+  "embedder": "multilingual-e5-small",
+  "n_scenarios": 30,
+  "n_queries": 120,
+  "n_bootstrap": 10000,
+  "seed": 42,
+  "systems": {
+    "aft_noAppraisal": {
+      "n_queries": 120,
+      "top1_accuracy": 0.3333,
+      "ci_95": {
+        "point": 0.3333333333333333,
+        "ci_lower": 0.25,
+        "ci_upper": 0.416874999999997,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    },
+    "aft_keyword": {
+      "n_queries": 120,
+      "top1_accuracy": 0.0667,
+      "ci_95": {
+        "point": 0.06666666666666667,
+        "ci_lower": 0.025,
+        "ci_upper": 0.11666666666666667,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    },
+    "naive_cosine": {
+      "n_queries": 120,
+      "top1_accuracy": 0.275,
+      "ci_95": {
+        "point": 0.275,
+        "ci_lower": 0.2,
+        "ci_upper": 0.35833333333333334,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      }
+    }
+  },
+  "hypotheses": {
+    "Hd2_IT": {
+      "description": "aft_noAppraisal.top1 > naive_cosine.top1, \u0394 > 0.10 (Addendum D generalization)",
+      "result": "FAIL",
+      "delta": 0.0583,
+      "ci_95": {
+        "point": 0.058333333333333334,
+        "ci_lower": -0.041666666666666664,
+        "ci_upper": 0.15833333333333333,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_two_sided": 0.276,
+      "cohens_d": 0.1052,
+      "interpretation": "AFT without appraisal does not show a practically significant advantage over naive cosine at \u0394 > 0.10 threshold."
+    },
+    "Ha2": {
+      "description": "aft_keyword.top1 > naive_cosine.top1 (\u0394 > 0.05, one-tailed alpha=0.05)",
+      "result": "FAIL",
+      "delta": -0.2083,
+      "ci_95": {
+        "point": -0.20833333333333334,
+        "ci_lower": -0.3,
+        "ci_upper": -0.11666666666666667,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_one_sided": 0.0,
+      "p_two_sided": 0.0,
+      "cohens_d": -0.4031,
+      "interpretation": "No significant advantage of AFT+keyword over naive cosine. Architecture benefit not confirmed on this dataset."
+    },
+    "Hb2": {
+      "description": "|aft_keyword - aft_noAppraisal| < 0.05 (equivalence)",
+      "result": "FAIL",
+      "delta": -0.2667,
+      "ci_95": {
+        "point": -0.26666666666666666,
+        "ci_lower": -0.36666666666666664,
+        "ci_upper": -0.16666666666666666,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 10000
+      },
+      "p_two_sided": 0.0,
+      "cohens_d": -0.4885,
+      "interpretation": "Keyword appraisal meaningfully changes retrieval vs preset affect. Appraisal inference is not neutral."
+    }
+  }
+}

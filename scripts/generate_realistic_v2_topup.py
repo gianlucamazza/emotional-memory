@@ -49,7 +49,7 @@ if "EMOTIONAL_MEMORY_LLM_API_KEY" in os.environ and "OPENAI_API_KEY" not in os.e
 
 # ── Challenge assignment (10 new scenarios, 8 occurrences per type) ──────────
 # Each row = 4 challenge_types assigned to queries of that scenario.
-# Every type appears in exactly 8 of 10 scenarios → 8×1 per scenario = 8 queries per type.
+# Every type appears in exactly 8 of 10 scenarios -> 8x1 per scenario = 8 queries per type.
 CHALLENGE_ASSIGNMENT: list[list[str]] = [
     ["semantic_confound", "affective_arc", "recency_confound", "same_topic_distractor"],
     ["affective_arc", "recency_confound", "same_topic_distractor", "momentum_alignment"],
@@ -474,11 +474,13 @@ def _validate_scenario(scenario: dict[str, Any], existing_ids: set[str]) -> list
                 errors.append(f"memory_id duplicate within scenario: {mid!r}")
             all_memory_ids.add(mid)
 
-    for sess in scenario["sessions"]:
-        for q in sess.get("queries", []):
-            for eid in q["expected_memory_ids"]:
-                if eid not in all_memory_ids:
-                    errors.append(f"expected_memory_id {eid!r} not found in scenario events")
+    errors.extend(
+        f"expected_memory_id {eid!r} not found in scenario events"
+        for sess in scenario["sessions"]
+        for q in sess.get("queries", [])
+        for eid in q["expected_memory_ids"]
+        if eid not in all_memory_ids
+    )
 
     return errors
 
@@ -702,15 +704,17 @@ def _verify_dataset(path: Path, expected_n: int, expected_queries: int) -> None:
         for sess in s["sessions"]
         for q_list in [sess.get("queries", [])]
     )
-    assert n_scenarios == expected_n, f"Expected {expected_n} scenarios, got {n_scenarios}"
-    assert n_queries == expected_queries, f"Expected {expected_queries} queries, got {n_queries}"
+    if n_scenarios != expected_n:
+        raise ValueError(f"Expected {expected_n} scenarios, got {n_scenarios}")
+    if n_queries != expected_queries:
+        raise ValueError(f"Expected {expected_queries} queries, got {n_queries}")
     # Verify global memory_id uniqueness
     all_ids = [
         ev["memory_id"] for s in d["scenarios"] for sess in s["sessions"] for ev in sess["events"]
     ]
-    assert len(all_ids) == len(set(all_ids)), (
-        f"Duplicate memory_ids found: {len(all_ids) - len(set(all_ids))} duplicates"
-    )
+    n_dupes = len(all_ids) - len(set(all_ids))
+    if n_dupes > 0:
+        raise ValueError(f"Duplicate memory_ids found: {n_dupes} duplicates")
     print(f"  Sanity OK — {n_scenarios} scenarios, {n_queries} queries, all IDs unique")
 
 
