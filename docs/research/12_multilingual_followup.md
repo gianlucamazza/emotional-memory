@@ -92,7 +92,32 @@ isolates the backbone contribution and confirms the AFT layer generalises.
   appraisal engine in Italian may change the picture.
 - A Spanish slice (Hd2_ES, `realistic_recall_v2_es.json`, 20 scenarios / 80 queries)
   was added in v0.8.2 (commit `898e132`). SBERT PASS Δ=0.138 p=0.045 d=0.233;
-  me5 borderline FAIL Δ=0.113 p=0.110 d=0.189. No French or German slice exists.
+  me5 FAIL Δ=0.113 p=0.110 d=0.189. No French or German slice exists.
+
+---
+
+## Branch C closure — Power top-up to N=120 (2026-05-07)
+
+A pre-registered power top-up extended both IT and ES datasets to N=120 (30 scenarios)
+and re-ran the me5 runner. Pre-registration committed before dataset generation or
+benchmark execution to prevent data-snooping.
+
+| Language | N=80 Δ | N=80 p | N=80 d | N=120 Δ | N=120 p | N=120 d | Branch |
+|---|---|---|---|---|---|---|---|
+| Italian (me5) | +0.163 | 0.012 | 0.290 | **+0.058** | **0.276** | **0.105** | C |
+| Spanish (me5) | +0.113 | 0.110 | 0.189 | **0.000** | **1.000** | **0.000** | C |
+
+**Decision: Branch C (FAIL-FAIL).** Neither language reaches significance at the
+pre-declared N=120 power target. Cross-language evidence is limited to:
+
+- Italian hit@k advantage (SBERT + me5, N=80, d≈0.35–0.41) — significant but a
+  different metric than the headline top1 used for Hd2.
+- Spanish-SBERT top1 (N=80, Δ=+0.138, p=0.045, d=0.233) — directional positive,
+  single result, not power-replicated.
+
+The headline EN advantage (SBERT d=0.49, e5 d=0.31, N=200) is unaffected.
+
+Full closure: [`benchmarks/preregistration_addendum_hd2_powertopup_closure.md`](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
 
 ---
 
@@ -100,12 +125,10 @@ isolates the backbone contribution and confirms the AFT layer generalises.
 
 This analysis closes audit priority **(6) Multilingual slice (Addendum B)** from
 [`audit_2026-04.md`](audit_2026-04.md). The slice has been executed on two
-embedder configurations, results are committed, and the cross-embedder robustness
-claim is supported.
+embedder configurations, and the power top-up has been run (Branch C closure, 2026-05-07).
 
-**Claim update:** Language coverage claims updated to "English, Italian, and Spanish
-conversational text" (v0.8.2). Hd2 generalizes to Spanish with SBERT; me5-ES is a
-borderline null — see Hd2_ES result files in `benchmarks/appraisal_confound/`.
+**Claim update:** Cross-language claims scoped to "English (robust, multi-embedder);
+Spanish exploratory positive (SBERT N=80); Italian and Spanish me5 FAIL at declared power."
 
 ---
 

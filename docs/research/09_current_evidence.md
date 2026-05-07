@@ -59,6 +59,8 @@ evidence level, and still-open gaps.
 | `Hi3_recency` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Hi3_recency PASS (secondary, Holm-corrected): e5 resonance interference exceeds SBERT on recency_confound queries (Δ=+0.070 [0.020,0.130], d=0.239, Holm-adj p=0.0234, N=500). | Hi3_recency secondary PASS in Holm m=3 family (Addendum I closure, 2026-05-06): Δ=0.070, CI=[0.020,0.130], p_adj=0.0234, d=0.239. | Mechanism; replication on independent dataset. | Contingent on Hi3 mechanism study. |
 | `Hi3_arc` | Retrieval behavior | Not established | `2_controlled_retrieval` | Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size. | Hi3_arc secondary FAIL (Addendum I closure, 2026-05-06): Δ=0.010, p_adj=0.3795, d=0.058. Embedder amplification scoped to semantic_confound and recency_confound. | Whether larger N or different dataset would show signal. | No active follow-up; Hi3_arc FAIL scopes the amplification claim. |
 | `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
+| `realistic_replay_vs_sota` | Retrieval behavior vs SOTA | Controlled evidence | `4_realistic_tasks` | On the realistic multi-session replay benchmark, AFT with preset affect labels achieves top1_accuracy = 0.535 vs Mem0 = 0.330 and LangMem = 0.365 — an advantage of Δ +0.21 (d=0.51) with non-overlapping 95% CIs. Neither LLM-backed system outperforms naive cosine on this benchmark. | H_v2_sota PASS (exploratory, 2026-05-07, gpt-4.1-mini, sbert-bge, N=200, n_bootstrap=10000, seed=0). AFT top1=0.535 vs Mem0=0.330 and LangMem=0.365; both SOTA systems below naive_cosine=0.325. | Advantage without oracle-affect (Hg1 FAIL). Advantage on factual QA (LoCoMo S1 FAIL). | SOTA replication with automatic appraisal engine (would require non-circular affect-free dataset). |
+| `appraisal_llm_real_dual_path` | Appraisal quality | Not established | `3_appraisal_quality` | Hg1 FAIL: AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on N=200 affect-free queries (Δ=-0.010 [-0.055, 0.035], d=-0.032, p_one=0.367). The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims. | Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, oracle-free. Hg1 FAIL. | Whether larger N, stronger LLM, or different dataset would show signal. | Larger N replication (N≥400) or stronger LLM appraisal. |
 
 ---
 
@@ -146,20 +148,25 @@ Primary Hf1 (v1.4, N=100): see `benchmarks/ablation/results.sbert.md`.
 
 Result files: `benchmarks/appraisal_confound/results.hd2.sbert.json`, `results.hd2_it.me5.json`
 
-| Study | Dataset/Embedder | Verdict | Δ (top1) | p | Cohen's d |
-|---|---|---|---|---|---|
-| Hd1 (primary) | v1 / SBERT | **PASS** | +0.230 | <0.001 | 0.515 |
-| Hd2 (generalization) | v2 / SBERT | **PASS** | +0.125 | <0.001 | 0.286 |
-| Hd2_IT (cross-language) | v2_it / me5 | **PASS** | +0.163 | 0.012 | 0.289 |
-| Hd2_ES (cross-language) | v2_es / SBERT | **PASS** | +0.138 | 0.045 | 0.233 |
-| Hd2_ES (cross-language) | v2_es / me5 | FAIL | +0.113 | 0.110 | 0.189 |
+| Study | Dataset/Embedder | N | Verdict | Δ (top1) | p | Cohen's d |
+|---|---|---|---|---|---|---|
+| Hd1 (primary) | v1 / SBERT | 100 | **PASS** | +0.230 | <0.001 | 0.515 |
+| Hd2 (generalization) | v2 / SBERT | 200 | **PASS** | +0.125 | <0.001 | 0.286 |
+| Hd2_IT (cross-language) | v2_it / me5 | 80 | PASS (raw) / borderline (family) | +0.163 | 0.012 | 0.289 |
+| Hd2_ES (cross-language) | v2_es / SBERT | 80 | PASS (raw) | +0.138 | 0.045 | 0.233 |
+| Hd2_ES (cross-language) | v2_es / me5 | 80 | FAIL | +0.113 | 0.110 | 0.189 |
+| **Hd2_IT_v120 (power top-up)** | v2_it / me5 | **120** | **FAIL** | **+0.058** | **0.276** | **0.105** |
+| **Hd2_ES_v120 (power top-up)** | v2_es / me5 | **120** | **FAIL** | **0.000** | **1.000** | **0.000** |
 
-**Key finding:** AFT architecture advantage (aft_noAppraisal > naive_cosine)
-generalizes from v1 to v2 (smaller but above Δ>0.10 threshold) and extends
-to Italian and Spanish cross-language with multilingual embedder. The me5
-result on Spanish is a borderline null (p=0.110) — an honest negative finding,
-likely driven by model size (118M) rather than architecture. System-level
+**Key finding (EN):** AFT architecture advantage (aft_noAppraisal > naive_cosine)
+generalizes from v1 to v2 (smaller but above Δ>0.10 threshold). System-level
 advantage is real; per-layer attribution is not (S3 above).
+
+**Cross-language (Branch C):** Pre-registered power top-up to N=120 on
+multilingual-e5-small (IT + ES) does not establish the effect for either language.
+Cross-language evidence is scoped to a single exploratory Spanish-SBERT result at
+N=80 (Δ=+0.138, p=0.045). See
+[power top-up closure](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
 
 ---
 
@@ -176,14 +183,14 @@ vectors, not t-tests.
 | Hd2_IT me5 | 80 | 0.289 | ~83% | Moderately powered |
 | Hd2_ES SBERT | 80 | 0.233 | ~67% | Borderline; result significant but narrow margin |
 | Hd2_ES me5 | 80 | 0.189 | ~52% | Underpowered for this d; FAIL plausibly Type II |
+| Hd2_IT me5 (v120) | 120 | 0.105 | ~38% | Executed at declared power: FAIL; d collapsed vs N=80 |
+| Hd2_ES me5 (v120) | 120 | 0.000 | ~5% | Executed at declared power: FAIL; Δ=0.000 (exact null) |
 | S2 H4 affective_arc SBERT | 40 | ~0.55 (est.) | ~97% | Adequately powered |
 | S2 H5 recency_confound SBERT | 40 | ~0.20 (est.) | ~35% | Underpowered; marginal FAIL expected |
 | S2 H6 momentum_alignment e5 | 40 | ~0.01 (est.) | ~5% | Near-zero true effect or incompatible geometry |
 
 **Implications:**
-- Hd2_ES me5 FAIL (p=0.110) is consistent with a true effect of d≈0.19 at N=80 — the
-  miss is likely Type II, not evidence against the architecture. N≈120 would be needed
-  for 80% power at d=0.19.
+- Hd2_ES me5 FAIL (p=0.110) at N=80 was consistent with Type II error (d≈0.19 at N=80 → ~52% power). Pre-registered power top-up to N=120 was executed (2026-05-07): Δ=0.000, p=1.00. The original miss was not Type II; the true d is near zero at this test configuration.
 - S2 H5 recency_confound (SBERT) at N=40 is substantially underpowered. The marginal
   p_adj=0.054 is consistent with a real but small effect (d≈0.20). Confirming H5 would
   require N≥100 per challenge type.

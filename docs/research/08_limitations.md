@@ -28,10 +28,15 @@ limitations:
 
 ### 1.2 Language dependence
 
-- **Validated on English, Italian, and Spanish**: the realistic-recall benchmark
-  has been run on EN (v2, SBERT/e5), IT (v2_it, me5), and ES (v2_es, sbert/me5)
-  slices. Hd2 hypothesis passes on EN and IT; ES shows a split: SBERT PASS
-  (Δ=0.138, p=0.045) but me5 borderline FAIL (Δ=0.113, p=0.110).
+- **Validated robustly in English only**: the headline realistic-recall advantage
+  (SBERT d=0.49, e5-small-v2 d=0.31, N=200) is robust and multi-embedder. Italian
+  (Hd2_IT, N=80) shows a significant hit@k advantage but top1 non-significant;
+  a pre-registered power top-up to N=120 on multilingual-e5-small returns
+  Δ=+0.058 (p=0.276) — FAIL at declared power. Spanish (Hd2_ES, SBERT, N=80):
+  Δ=+0.138, p=0.045 — a single directional positive, not power-replicated;
+  me5 FAIL at both N=80 (Δ=+0.113, p=0.110) and N=120 (Δ=0.000, p=1.00).
+  See power top-up closure
+  [`benchmarks/preregistration_addendum_hd2_powertopup_closure.md`](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
 - **`KeywordAppraisalEngine` is English-only**: the `LLMAppraisalEngine` handles
   multilingual input, but appraisal quality varies by language.
 - **No formal cross-lingual validation beyond EN/IT/ES**: generalisation to
