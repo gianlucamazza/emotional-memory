@@ -395,13 +395,14 @@ query quadrant's centroid valence/arousal, activating mood-congruent scoring.
 \input{tables/table3_comparative.tex}
 \end{table}
 
-On this coarse quadrant-level probe both AFT and \texttt{naive\_cosine} achieve
-recall@5\,=\,0.80 ($\Delta$\,=\,0.00, 95\% CI [--0.25, 0.25], $p$\,=\,1.00).
+On this coarse quadrant-level probe AFT achieves recall@5\,=\,0.85 vs.\
+\texttt{naive\_cosine}\,=\,0.80 ($\Delta=+0.05$, 95\% CI [--0.15, 0.30],
+$p_{\text{boot}}=0.825$).
 The recency baseline confirms 0.25 as the expected floor on a balanced
 four-quadrant dataset. The benchmark is intentionally narrow—it measures whether
 the affect fingerprint is preserved in retrieval, not whether the multi-signal
 architecture outperforms a semantic-only baseline at this granularity.
-The tie at $N=20$ reflects a \textbf{dense-embedder ceiling effect}: with only
+The near-tie at $N=20$ reflects a \textbf{dense-embedder ceiling effect}: with only
 four quadrant centroids and recall@5 over a 20-item pool, any embedder that
 correctly places memories in quadrant space saturates the metric.
 Advantage of the full AFT architecture is measured on the replayable multi-session
@@ -443,6 +444,30 @@ and generalize the architecture-attribution claim across embedder family
 and language family (English, Italian, Spanish).
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
+
+\paragraph{SOTA reference (exploratory).}
+We extend the comparative probe with two production LLM-backed memory
+systems---Mem0~\citep{chhikara2025mem0} and LangMem (LangGraph)---using
+\texttt{gpt-4.1-mini} for both their internal LLM extraction and search
+calls.\footnote{SOTA closure:
+\href{\repourl/blob/main/benchmarks/comparative/protocol.sota.md}%
+{\texttt{protocol.sota.md}};
+results: \href{\repourl/blob/main/benchmarks/comparative/results.sota.sbert.md}%
+{\texttt{results.sota.sbert.md}}.}
+On the same four-quadrant probe, Mem0 achieves recall@5\,=\,1.00 [1.00, 1.00]
+($\Delta=+0.20$ vs.\ cosine, paired bootstrap $p=0.045$, McNemar $p=0.125$);
+LangMem 0.90 [0.75, 1.00] ($\Delta=+0.10$, $p_{\text{boot}}=0.254$).
+On quality, AFT (0.85) is below both LLM-backed systems on this probe.
+On encode latency, AFT (45 ms/item) is $\sim$25$\times$ faster than
+Mem0 (1130 ms/item) and $\sim$3$\times$ faster than LangMem (150 ms/item),
+with no LLM dependency at runtime.
+This positions AFT as a deterministic, low-latency alternative on
+affect-aware retrieval probes where the LLM cost dimension matters; the
+result does not establish AFT quality superiority on this dataset.
+The hypothesis was registered as exploratory ($H_{\text{sota}}$, no Holm
+correction). SOTA replication on the harder \texttt{realistic\_recall\_v2}
+benchmark---where AFT shows the $\Delta=+0.21$ advantage over cosine---is
+deferred to future work.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Related Work}
@@ -763,8 +788,12 @@ dominance-specific scenarios improve retrieval on emotion-rich corpora.
 Vector-store adapters for Qdrant and ChromaDB shipped in v0.9 as optional extras
 (\texttt{[qdrant]}, \texttt{[chroma]}), each implementing the duck-typed \texttt{MemoryStore}
 protocol in strict vector-first mode.
-Expanded baselines (Mem0, MemGPT) remain future engineering work independent of the
-evidence programme.
+Expanded baselines were partially executed in this revision: Mem0 and LangMem
+on \texttt{affect\_reference\_v1} (\S\ref{sec:benchmark} SOTA reference)
+show that production LLM-backed memory dominates AFT on quality
+(Mem0 1.00 vs.\ AFT 0.85) at $\sim$25$\times$ higher encode latency.
+SOTA replication on \texttt{realistic\_recall\_v2} and on the LoCoMo factual
+QA benchmark remains open work.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}

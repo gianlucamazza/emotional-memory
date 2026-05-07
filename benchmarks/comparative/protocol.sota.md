@@ -1,6 +1,6 @@
 # Comparative Benchmark — SOTA Extension (Mem0, LangMem)
 
-**Status:** EXECUTING
+**Status:** COMPLETE
 **Date:** 2026-05-07
 **Embedder:** `sbert` (`sentence-transformers/all-MiniLM-L6-v2`)
 **LLM model (mem0, langmem):** `gpt-4.1-mini`
@@ -100,10 +100,96 @@ beyond educational/research value.
 
 ## Reporting
 
-Closure document and result interpretation will be appended below in
-§Results once the run completes. Files produced:
+Files produced:
 
 - `benchmarks/comparative/results.sota.sbert.csv` — raw per-system
 - `benchmarks/comparative/results.sota.sbert.md` — human-readable summary
 - `benchmarks/comparative/results.sota.sbert.protocol.json` — execution
   metadata (seeds, models, dataset hash, embedder)
+
+---
+
+## Results (2026-05-07)
+
+### Recall@5 (mood-congruent quadrant)
+
+| System | Recall@5 [95% CI] | Encode ms/item | Retrieve p50 ms | Retrieve p95 ms |
+|---|---:|---:|---:|---:|
+| **mem0** | **1.00** [1.00, 1.00] | 1130.04 | 239.78 | 269.93 |
+| langmem | 0.90 [0.75, 1.00] | 150.01 | 160.47 | 164.75 |
+| aft | 0.85 [0.65, 1.00] | 45.29 | 45.16 | 47.07 |
+| naive_cosine | 0.80 [0.60, 0.95] | 32.47 | 68.19 | 83.15 |
+| recency | 0.25 [0.10, 0.45] | 0.01 | 0.02 | 0.04 |
+
+### Pairwise vs naive_cosine (paired bootstrap n=2000, seed=0)
+
+| System | Δ [95% CI] | p (bootstrap) | p (McNemar) | Discordant |
+|---|---:|---:|---:|---:|
+| mem0 | +0.20 [0.05, 0.40] | **0.045** | 0.125 | 4 |
+| langmem | +0.10 [0.00, 0.25] | 0.254 | 0.500 | 2 |
+| aft | +0.05 [-0.15, 0.30] | 0.825 | 1.000 | 5 |
+| recency | -0.55 [-0.75, -0.35] | <0.001 | 0.001 | 11 |
+
+### Interpretation
+
+**Quality ranking (recall@5):** mem0 > langmem > aft > naive_cosine > recency.
+On `affect_reference_v1`, the LLM-backed memory systems (Mem0, LangMem)
+score equal to or higher than AFT. Mem0 achieves a perfect recall@5 = 1.00
+on all 4 quadrant queries; the bootstrap pairwise vs naive_cosine reaches
+nominal p = 0.045 (McNemar p = 0.125 — borderline given N = 20 items and
+ceiling-bound CI).
+
+**H_sota verdict (exploratory, non-confirmatory):** AFT is **not strictly
+non-inferior** to Mem0 on this probe (Δ = -0.15, AFT below). AFT remains
+non-inferior to LangMem (Δ = -0.05, within the CI of the AFT vs cosine
+contrast). The hypothesis "AFT ≥ best of {Mem0, LangMem}" is not supported
+on this dataset.
+
+**Latency ranking (encode):** recency < naive_cosine < aft < langmem < mem0.
+AFT is ~25× faster on encode than Mem0 (45 ms vs 1130 ms/item) and ~3×
+faster than LangMem. On retrieve, AFT is the fastest non-deterministic
+system at p50 = 45 ms (vs 240 ms Mem0, 160 ms LangMem).
+
+**Cost dimension (not measured but architectural):** Mem0 and LangMem
+issue at least one LLM call per encode and per retrieve. AFT issues zero
+LLM calls at runtime (the appraisal engine is optional and was disabled
+for this run, AFT operating in oracle-affect mode per `protocol.md`). On
+a 1M-event corpus the LLM-call differential dominates total cost.
+
+**Honest trade-off framing:** Mem0 dominates AFT in this probe's quality
+metric; AFT dominates Mem0 in encode/retrieve latency and runtime cost.
+LangMem sits between them on both axes.
+
+### Coherence with prior closures (re-checked post-result)
+
+- **Hd1/Hd2 (oracle preset, realistic_recall_v2):** AFT advantage on the
+  realistic replay benchmark (Δ=+0.21 vs cosine, d=0.49, N=200) is on a
+  **different probe** (multi-session realistic recall, 5 challenge types).
+  This SOTA result on `affect_reference_v1` (single-quadrant retrieval,
+  N=20 items) does not contradict it but does narrow the scope: Mem0/
+  LangMem are not in the v2 evaluation, so we cannot infer whether they
+  would also outperform AFT there. Recommend a future SOTA replication
+  on v2.
+- **Hg1 FAIL (Addendum G):** With LLM appraisal, AFT does not beat
+  cosine. The current SOTA result is consistent: external LLM-backed
+  systems do beat cosine, but AFT (without LLM at runtime) does not match
+  them on quality.
+- **LoCoMo S1 FAIL:** AFT underperforms naive RAG on factual QA. The
+  current SOTA result extends the picture: on affect-aware retrieval too,
+  AFT is competitive with cosine but below LLM-backed memory.
+
+### Paper-section action
+
+Add a paragraph in §6 (Benchmark) reporting the SOTA comparison with
+honest trade-off framing. Update the abstract's "comparative benchmark
+against a semantic-only baseline" wording to reflect that LLM-backed
+SOTA was tested and outperforms AFT on this probe at higher latency/cost.
+
+### `claim_validation_matrix.json` action
+
+Update `retrieval_affect_aware` `current_evidence` to mention the SOTA
+comparison: AFT recall@5 = 0.85 vs Mem0 1.00 vs LangMem 0.90 on the
+controlled probe (encode latency 45 ms vs 1130 ms vs 150 ms). The
+existing claim "retrieval is affect-aware" remains valid; the new
+qualifier is that affect-aware ranking under hand-crafted scoring does
+not match LLM-extracted memory on this metric, but is ~25× cheaper.
