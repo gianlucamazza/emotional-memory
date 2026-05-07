@@ -419,14 +419,8 @@ The larger, harder probe discriminates where the coarse quadrant probe cannot.
 The $H_{d1}$ result (Gate~3) replicates on the harder $N=200$ benchmark:
 \textit{aft\_noAppraisal}~$=0.50$ vs.\ \textit{naive\_cosine}~$=0.38$,
 $\Delta=+0.125$, $p_{\text{bootstrap}}<0.001$, $d=0.286$ (SBERT, v2).
-The advantage extends to two multilingual cross-language slices:
-Italian ($N=80$, 20~scenarios, \texttt{multilingual-e5-small}):
-$\Delta=+0.163$, $p=0.012$, $d=0.289$;
-Spanish ($N=80$, 20~scenarios, SBERT bge-small-en-v1.5):
-$\Delta=+0.138$, $p=0.045$, $d=0.233$.
-A second Spanish run with \texttt{multilingual-e5-small} returns
-$\Delta=+0.113$, $p=0.110$, $d=0.189$ — a borderline null consistent with
-the smaller model size rather than architectural failure.\footnote{$H_{d2}$ closure:
+The smaller effect on v2 (vs.\ $\Delta=+0.23$ on v1) reflects the harder
+benchmark; the $\Delta>0.10$ pre-registered threshold is met.\footnote{$H_{d2}$ closure:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_closure.md}%
 {\texttt{preregistration\_addendum\_hd2\_closure.md}};
 canonical JSONs:
@@ -438,10 +432,29 @@ canonical JSONs:
 {\texttt{results.hd2\_es.sbert.json}},
 \href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_es.me5.json}%
 {\texttt{results.hd2\_es.me5.json}}.}
-The smaller effect on v2 (vs.\ $\Delta=+0.23$ on v1) reflects the harder
-benchmark; all SBERT-family runs pass the pre-registered $\Delta>0.10$ threshold
-and generalize the architecture-attribution claim across embedder family
-and language family (English, Italian, Spanish).
+
+\paragraph{Cross-language exploratory slices.}
+Spanish ($N=80$, 20~scenarios, SBERT bge-small-en-v1.5) returns
+$\Delta=+0.138$, $p=0.045$, $d=0.233$ — a directional positive result.
+A pre-registered power top-up (Branch~C closure) extended both the Italian and
+Spanish slices to $N=120$ (30~scenarios, \texttt{multilingual-e5-small}):
+Italian $\Delta=+0.058$ [$-0.042$,\;$+0.158$], $p=0.276$;
+Spanish $\Delta=0.000$ [$-0.100$,\;$+0.100$], $p=1.00$.
+Neither reaches significance at the pre-declared power target.\footnote{Power
+top-up pre-reg:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_powertopup.md}%
+{\texttt{preregistration\_addendum\_hd2\_powertopup.md}};
+closure (Branch~C):
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_powertopup\_closure.md}%
+{\texttt{preregistration\_addendum\_hd2\_powertopup\_closure.md}};
+result JSONs:
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_it.me5.v120.json}%
+{\texttt{results.hd2\_it.me5.v120.json}},
+\href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_es.me5.v120.json}%
+{\texttt{results.hd2\_es.me5.v120.json}}.}
+Cross-language evidence is therefore limited to a single exploratory Spanish-SBERT
+result at $N=80$; the \texttt{multilingual-e5-small} runs at the pre-declared power
+do not establish the effect for Italian or Spanish.
 
 To reproduce this table: \texttt{make bench-comparative-sbert \&\& make reproduce-paper}.
 
@@ -597,26 +610,34 @@ real emotional corpora (EmpatheticDialogues, GoEmotions) would provide stronger
 external validity.
 
 \paragraph{Language and embedding scope.}
-Benchmarks have been validated in English (v2, $N=200$), Italian (v2\_it,
-$N=80$, G6), and Spanish (v2\_es, $N=80$, Hd2\_ES). All three languages show
-the AFT advantage over naive cosine under at least one embedder family.
 The realistic-recall advantage ($\Delta=+0.21$, SBERT bge-small-en-v1.5; v2,
 $N=200$) is conditional on a dense sentence embedder; under a non-semantic
 (hash) embedder the gap reduces to $\Delta\approx+0.06$ and does not reach
 significance\footnote{v1.4 hash-embedder pilot; full results:
 \href{\repourl/blob/main/benchmarks/realistic/results.md}{\texttt{benchmarks/realistic/results.md}}.}.
-Multilingual Italian (G6, $N=80$)\footnote{Addendum~H companion writeup:
+Any claim about AFT's retrieval advantage should therefore be scoped to
+\emph{dense embedding regimes}.
+
+\paragraph{Cross-language scope.}
+The headline advantage is established robustly in English across both embedder
+families (SBERT $d=0.49$, e5-small-v2 $d=0.31$, $N=200$).
+Multilingual Italian (Hd2\_IT, $N=80$)\footnote{Addendum~H companion writeup:
 \href{\repourl/blob/main/docs/research/12\_multilingual\_followup.md}{\texttt{12\_multilingual\_followup.md}};
 pre-registration:
 \href{\repourl/blob/main/benchmarks/preregistration\_addendum\_h.md}{\texttt{preregistration\_addendum\_h.md}}.}
-shows a significant hit@k advantage under both embedder families tested.
-The Spanish slice (Hd2\_ES) confirms Hd2 with SBERT ($\Delta=+0.138$,
-$p=0.045$) but not with \texttt{multilingual-e5-small} ($\Delta=+0.113$,
-$p=0.110$); we interpret the me5 miss as a borderline null driven by model
-size rather than a failure of the architecture.
-Any claim about AFT's retrieval advantage should therefore be scoped to
-\emph{dense embedding regimes}; the hit@k signal generalises across embedder
-language coverage (English, Italian, Spanish confirmed; other languages untested).
+shows a significant \texttt{hit@k} advantage ($\Delta\approx+0.15$--$+0.16$)
+across both embedder families, but \texttt{top1\_accuracy} differences are
+non-significant at $N=80$.
+Spanish (Hd2\_ES, SBERT, $N=80$): $\Delta=+0.138$, $p=0.045$ — a directional
+positive result.
+A pre-registered power top-up to $N=120$\footnote{Power top-up closure (Branch~C):
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_hd2\_powertopup\_closure.md}%
+{\texttt{preregistration\_addendum\_hd2\_powertopup\_closure.md}}.}
+on \texttt{multilingual-e5-small} (Italian: $\Delta=+0.058$, $p=0.276$;
+Spanish: $\Delta=0.000$, $p=1.00$) does not establish the effect at declared
+power for either language.
+Cross-language evidence is therefore limited to a single exploratory positive
+(Spanish-SBERT, $N=80$); broader language coverage requires explicit replication.
 The appraisal scenario corpora and keyword-appraisal rules remain English-only;
 the LLM-backed appraisal engine handles multilingual input.
 
@@ -780,10 +801,11 @@ Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
 \textit{aft\_noAppraisal}~$=0.78$ vs.\ \textit{naive\_cosine}~$=0.55$,
 $\Delta=+0.23$ [+0.12, +0.34], $d=0.52$, $N=100$, v1.4, seed=1 (Addendum~D;
 \href{\repourl/blob/main/docs/research/audit\_2026-04.md}{\texttt{audit\_2026-04.md}}, \S{}G3).},
-with $H_{d2}$ generalization confirmed: $\Delta=+0.125$ on SBERT v2 ($N=200$),
-$\Delta=+0.163$ on Italian cross-language with \texttt{multilingual-e5-small}
-($N=80$), and $\Delta=+0.138$ on Spanish cross-language with SBERT
-($N=80$; me5 borderline null, $p=0.110$).
+with $H_{d2}$ generalization confirmed: $\Delta=+0.125$ on SBERT v2 ($N=200$).
+Spanish cross-language ($N=80$, SBERT, $\Delta=+0.138$, $p=0.045$) provides a
+directional positive data point; a pre-registered power top-up to $N=120$ on
+\texttt{multilingual-e5-small} (Italian and Spanish) did not replicate the effect
+(both $p>0.25$, Branch~C closure).
 A pre-registered layer-ablation at power (Study~$S_3$, $N=200$, both embedder
 classes) finds that per-layer contributions are not individually isolatable:
 $H_a$ (no\_mood) and $H_b$ (no\_resonance) are non-significant on both
