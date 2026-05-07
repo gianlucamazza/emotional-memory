@@ -39,6 +39,15 @@ htmlcov/
 site/
 
 # Paper — generated artefacts (keep LaTeX sources, ignore build outputs)
+# Root-level build outputs from latexmk run outside paper/
+main.aux
+main.bbl
+main.blg
+main.fdb_latexmk
+main.fls
+main.log
+main.out
+main.synctex.gz
 paper/tables/table*.md
 paper/figures/*.png
 paper/figures/*.pdf
