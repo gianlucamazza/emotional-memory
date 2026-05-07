@@ -18,28 +18,40 @@
               "content": "Il capo mi ha assegnato un progetto critico con una scadenza impossibile e ho sentito il panico salire.",
               "valence": -0.8,
               "arousal": 0.9,
-              "metadata": {"topic": "lavoro", "phase": "crisi"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "crisi"
+              }
             },
             {
               "memory_id": "lavoro_collega_sabotaggio",
               "content": "Ho scoperto che un collega aveva diffuso voci negative sul mio conto al direttore, il che mi ha fatto sentire tradito e arrabbiato.",
               "valence": -0.9,
               "arousal": 0.85,
-              "metadata": {"topic": "lavoro", "phase": "tradimento"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "tradimento"
+              }
             },
             {
               "memory_id": "lavoro_riunione_presentazione",
               "content": "Ho presentato i risultati del progetto di fronte a tutto il team e ho ricevuto applausi sinceri.",
               "valence": 0.7,
               "arousal": 0.6,
-              "metadata": {"topic": "lavoro", "phase": "successo"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "successo"
+              }
             },
             {
               "memory_id": "lavoro_dubbi_notturni",
               "content": "Di notte, continuavo a chiedermi se valessi abbastanza per la posizione che speravo di ottenere.",
               "valence": -0.5,
               "arousal": 0.4,
-              "metadata": {"topic": "lavoro", "phase": "dubbio"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "dubbio"
+              }
             }
           ],
           "queries": []
@@ -53,51 +65,80 @@
               "content": "La direttrice mi ha chiamato nel suo ufficio e mi ha annunciato la promozione con un grande sorriso.",
               "valence": 0.95,
               "arousal": 0.85,
-              "metadata": {"topic": "lavoro", "phase": "picco"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "picco"
+              }
             },
             {
               "memory_id": "lavoro_festeggiamento_team",
               "content": "Tutto il team si è riunito per festeggiare e ho sentito calore e appartenenza per la prima volta da mesi.",
               "valence": 0.8,
               "arousal": 0.65,
-              "metadata": {"topic": "lavoro", "phase": "celebrazione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "celebrazione"
+              }
             },
             {
               "memory_id": "lavoro_email_contratto",
               "content": "Ho ricevuto via email i dettagli contrattuali della nuova posizione con il nuovo stipendio.",
               "valence": 0.5,
               "arousal": 0.3,
-              "metadata": {"topic": "lavoro", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_picco_promozione",
               "query": "Qual è stato il momento esatto in cui ho saputo della promozione dalla direttrice?",
-              "expected_memory_ids": ["lavoro_promozione_notizia"],
+              "expected_memory_ids": [
+                "lavoro_promozione_notizia"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": 0.9, "arousal": 0.8}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_tradimento_collega",
               "query": "Quando mi sono sentito tradito da qualcuno al lavoro, non solo frustrato per la pressione del progetto?",
-              "expected_memory_ids": ["lavoro_collega_sabotaggio"],
+              "expected_memory_ids": [
+                "lavoro_collega_sabotaggio"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.8, "arousal": 0.8}
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_celebrazione_vs_email",
               "query": "Qual è stata la conversazione al lavoro che mi ha fatto sentire davvero accolto nel team, non solo le pratiche burocratiche?",
-              "expected_memory_ids": ["lavoro_festeggiamento_team"],
+              "expected_memory_ids": [
+                "lavoro_festeggiamento_team"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.75, "arousal": 0.6}
+              "state": {
+                "valence": 0.75,
+                "arousal": 0.6
+              }
             },
             {
               "query_id": "q_slancio_positivo",
               "query": "Quale ricordo del lavoro rispecchia meglio lo slancio crescente di fiducia che ho costruito dopo settimane difficili?",
-              "expected_memory_ids": ["lavoro_promozione_notizia"],
+              "expected_memory_ids": [
+                "lavoro_promozione_notizia"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.85, "arousal": 0.7}
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.7
+              }
             }
           ]
         }
@@ -116,28 +157,40 @@
               "content": "L'ultima cena insieme è stata silenziosa e pesante, con la sensazione che tutto stesse per finire.",
               "valence": -0.7,
               "arousal": 0.6,
-              "metadata": {"topic": "relazione", "phase": "decadimento"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "decadimento"
+              }
             },
             {
               "memory_id": "relazione_rottura_parole",
               "content": "Marco ha detto che non mi amava più e io ho sentito il mondo crollarmi addosso.",
               "valence": -0.95,
               "arousal": 0.95,
-              "metadata": {"topic": "relazione", "phase": "picco_dolore"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "picco_dolore"
+              }
             },
             {
               "memory_id": "relazione_amica_conforto",
               "content": "La mia amica Giulia è venuta a casa mia subito dopo e ha trascorso la notte con me a tenermi compagnia.",
               "valence": 0.3,
               "arousal": 0.4,
-              "metadata": {"topic": "amicizia", "phase": "conforto"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "conforto"
+              }
             },
             {
               "memory_id": "relazione_oggetti_restituiti",
               "content": "Ho restituito le sue cose in una scatola e ho pianto tutto il giorno.",
               "valence": -0.8,
               "arousal": 0.7,
-              "metadata": {"topic": "relazione", "phase": "chiusura"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "chiusura"
+              }
             }
           ],
           "queries": []
@@ -151,51 +204,80 @@
               "content": "Un mese dopo ho riso di cuore per la prima volta e ho sentito che stavo guarendo davvero.",
               "valence": 0.65,
               "arousal": 0.5,
-              "metadata": {"topic": "guarigione", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "guarigione",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "relazione_nuovo_hobby",
               "content": "Ho iniziato a dipingere come terapia e ho scoperto una passione che non sapevo di avere.",
               "valence": 0.8,
               "arousal": 0.5,
-              "metadata": {"topic": "crescita", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "crescita",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "relazione_chat_ex",
               "content": "Marco mi ha scritto per sapere come stavo e ho risposto in modo calmo, senza rancori.",
               "valence": 0.1,
               "arousal": 0.3,
-              "metadata": {"topic": "relazione", "phase": "chiusura_definitiva"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "chiusura_definitiva"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_dolore_massimo",
               "query": "Qual è stato il momento di maggiore dolore durante la fine della relazione con Marco?",
-              "expected_memory_ids": ["relazione_rottura_parole"],
+              "expected_memory_ids": [
+                "relazione_rottura_parole"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.9, "arousal": 0.9}
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.9
+              }
             },
             {
               "query_id": "q_guarigione_ridere",
               "query": "Quando ho iniziato a sentire che stavo guarendo dopo la rottura, non solo la chat neutra con l'ex?",
-              "expected_memory_ids": ["relazione_primo_sorriso"],
+              "expected_memory_ids": [
+                "relazione_primo_sorriso"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.6, "arousal": 0.4}
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
             },
             {
               "query_id": "q_conforto_giulia",
               "query": "Chi mi ha aiutato quella prima notte dopo la rottura, non l'ex stesso?",
-              "expected_memory_ids": ["relazione_amica_conforto"],
+              "expected_memory_ids": [
+                "relazione_amica_conforto"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.2, "arousal": 0.4}
+              "state": {
+                "valence": 0.2,
+                "arousal": 0.4
+              }
             },
             {
               "query_id": "q_slancio_guarigione",
               "query": "Quale ricordo riflette meglio lo slancio di ripresa emotiva dopo mesi di dolore?",
-              "expected_memory_ids": ["relazione_nuovo_hobby"],
+              "expected_memory_ids": [
+                "relazione_nuovo_hobby"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.75, "arousal": 0.5}
+              "state": {
+                "valence": 0.75,
+                "arousal": 0.5
+              }
             }
           ]
         }
@@ -214,35 +296,50 @@
               "content": "Il medico mi ha mostrato i risultati degli esami e la parola 'anomalia' ha fatto gelare il sangue nelle vene.",
               "valence": -0.85,
               "arousal": 0.9,
-              "metadata": {"topic": "salute", "phase": "shock"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "shock"
+              }
             },
             {
               "memory_id": "salute_secondo_parere",
               "content": "Ho cercato un secondo parere medico e l'altro specialista ha detto che poteva essere meno grave del previsto.",
               "valence": 0.2,
               "arousal": 0.6,
-              "metadata": {"topic": "salute", "phase": "speranza"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "speranza"
+              }
             },
             {
               "memory_id": "salute_notte_insonnia",
               "content": "Quella notte non sono riuscito a dormire, immaginando scenari sempre peggiori.",
               "valence": -0.7,
               "arousal": 0.75,
-              "metadata": {"topic": "salute", "phase": "ansia"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "ansia"
+              }
             },
             {
               "memory_id": "salute_supporto_famiglia",
               "content": "Mia sorella mi ha abbracciato forte quando le ho detto della diagnosi e ha promesso di essere al mio fianco.",
               "valence": 0.5,
               "arousal": 0.5,
-              "metadata": {"topic": "famiglia", "phase": "supporto"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "supporto"
+              }
             },
             {
               "memory_id": "salute_ricerca_online",
               "content": "Ho passato ore a leggere articoli medici online e ogni pagina sembrava peggiorare la mia ansia.",
               "valence": -0.6,
               "arousal": 0.8,
-              "metadata": {"topic": "salute", "phase": "ansia"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "ansia"
+              }
             }
           ],
           "queries": []
@@ -256,51 +353,80 @@
               "content": "Il medico mi ha comunicato che il trattamento ha funzionato e che sono fuori pericolo.",
               "valence": 0.95,
               "arousal": 0.8,
-              "metadata": {"topic": "salute", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "salute_passeggiata_parco",
               "content": "Il giorno dopo la buona notizia ho fatto una lunga passeggiata nel parco sentendomi incredibilmente vivo.",
               "valence": 0.85,
               "arousal": 0.55,
-              "metadata": {"topic": "benessere", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "benessere",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "salute_appuntamento_controllo",
               "content": "Ho fissato l'appuntamento di controllo a sei mesi con routine e senza particolare emozione.",
               "valence": 0.1,
               "arousal": 0.15,
-              "metadata": {"topic": "salute", "phase": "routine"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "routine"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_shock_diagnosi",
               "query": "Quale ricordo medico del passato ha ancora la più forte risonanza emotiva, pur essendoci controlli di routine più recenti?",
-              "expected_memory_ids": ["salute_risultati_esami"],
+              "expected_memory_ids": [
+                "salute_risultati_esami"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.85, "arousal": 0.9}
+              "state": {
+                "valence": -0.85,
+                "arousal": 0.9
+              }
             },
             {
               "query_id": "q_sollievo_finale",
               "query": "Qual è stato il momento di sollievo profondo dopo aver ricevuto la buona notizia, non la semplice passeggiata?",
-              "expected_memory_ids": ["salute_risultato_finale"],
+              "expected_memory_ids": [
+                "salute_risultato_finale"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.9, "arousal": 0.75}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
             },
             {
               "query_id": "q_speranza_secondoparere",
               "query": "Quando ho trovato un po' di speranza durante il periodo difficile, non il panico notturno?",
-              "expected_memory_ids": ["salute_secondo_parere"],
+              "expected_memory_ids": [
+                "salute_secondo_parere"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.15, "arousal": 0.55}
+              "state": {
+                "valence": 0.15,
+                "arousal": 0.55
+              }
             },
             {
               "query_id": "q_vecchio_risonanza",
               "query": "Qual è il ricordo più antico sulla salute che continua ad avere risonanza emotiva profonda, non le pratiche di routine più recenti?",
-              "expected_memory_ids": ["salute_risultati_esami"],
+              "expected_memory_ids": [
+                "salute_risultati_esami"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.7, "arousal": 0.8}
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.8
+              }
             }
           ]
         }
@@ -319,35 +445,50 @@
               "content": "Durante l'allenamento ho sentito uno schiocco alla caviglia e sono caduto, sapendo subito che qualcosa si era rotto.",
               "valence": -0.9,
               "arousal": 0.95,
-              "metadata": {"topic": "sport", "phase": "infortunio"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "infortunio"
+              }
             },
             {
               "memory_id": "sport_diagnosi_frattura",
               "content": "La radiografia ha confermato la frattura e il medico sportivo ha detto che avrei saltato almeno tre mesi.",
               "valence": -0.8,
               "arousal": 0.7,
-              "metadata": {"topic": "sport", "phase": "diagnosi"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "diagnosi"
+              }
             },
             {
               "memory_id": "sport_riabilitazione_inizio",
               "content": "I primi esercizi di fisioterapia erano dolorosi ma ho sentito un filo di speranza quando la fisioterapista ha detto che stavo progredendo bene.",
               "valence": 0.1,
               "arousal": 0.5,
-              "metadata": {"topic": "sport", "phase": "riabilitazione"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "riabilitazione"
+              }
             },
             {
               "memory_id": "sport_allenamento_amici",
               "content": "Guardare i miei compagni allenarsi senza di me era doloroso come la caviglia stessa.",
               "valence": -0.65,
               "arousal": 0.6,
-              "metadata": {"topic": "sport", "phase": "esclusione"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "esclusione"
+              }
             },
             {
               "memory_id": "sport_primo_passo_senza_dolore",
               "content": "Il giorno in cui ho camminato senza dolore per la prima volta dopo l'infortunio era una piccola vittoria enorme.",
               "valence": 0.75,
               "arousal": 0.65,
-              "metadata": {"topic": "sport", "phase": "progresso"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "progresso"
+              }
             }
           ],
           "queries": []
@@ -361,51 +502,80 @@
               "content": "Al primo ritorno in gara ho tagliato il traguardo tra le lacrime, sapendo quanto fosse costata quella corsa.",
               "valence": 0.95,
               "arousal": 0.9,
-              "metadata": {"topic": "sport", "phase": "trionfo"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "trionfo"
+              }
             },
             {
               "memory_id": "sport_intervista_dopo_gara",
               "content": "Dopo la gara, il giornalista mi ha intervistato e ho raccontato del percorso di recupero.",
               "valence": 0.6,
               "arousal": 0.45,
-              "metadata": {"topic": "sport", "phase": "riflessione"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "riflessione"
+              }
             },
             {
               "memory_id": "sport_prossima_gara_programma",
               "content": "Ho inserito nel calendario la prossima gara in modo pratico senza grande emozione.",
               "valence": 0.2,
               "arousal": 0.2,
-              "metadata": {"topic": "sport", "phase": "pianificazione"}
+              "metadata": {
+                "topic": "sport",
+                "phase": "pianificazione"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_momento_schiocco",
               "query": "Qual è stato il momento in cui ho capito di essermi infortunato sul serio, non la diagnosi successiva?",
-              "expected_memory_ids": ["sport_infortunio_momento"],
+              "expected_memory_ids": [
+                "sport_infortunio_momento"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.9, "arousal": 0.95}
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
             },
             {
               "query_id": "q_trionfo_ritorno",
               "query": "Qual è il picco emotivo del mio arco sportivo, il momento culminante dopo mesi di sofferenza?",
-              "expected_memory_ids": ["sport_primo_ritorno_gara"],
+              "expected_memory_ids": [
+                "sport_primo_ritorno_gara"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": 0.9, "arousal": 0.85}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
             },
             {
               "query_id": "q_vecchio_dolore_sport",
               "query": "Quale memoria sportiva ha ancora la più forte risonanza dolorosa, non i programmi recenti senza emozione?",
-              "expected_memory_ids": ["sport_infortunio_momento"],
+              "expected_memory_ids": [
+                "sport_infortunio_momento"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.8, "arousal": 0.85}
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.85
+              }
             },
             {
               "query_id": "q_piccola_vittoria",
               "query": "Tra i ricordi sportivi sulla riabilitazione, quale esprime la speranza più autentica, non solo il dolore passivo?",
-              "expected_memory_ids": ["sport_primo_passo_senza_dolore"],
+              "expected_memory_ids": [
+                "sport_primo_passo_senza_dolore"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.7, "arousal": 0.6}
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.6
+              }
             }
           ]
         }
@@ -424,35 +594,50 @@
               "content": "All'aeroporto di Lisbona ho scoperto che la mia valigia era stata inviata a Barcellona per errore.",
               "valence": -0.7,
               "arousal": 0.8,
-              "metadata": {"topic": "viaggio", "phase": "imprevisto"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "imprevisto"
+              }
             },
             {
               "memory_id": "viaggio_hotel_sbagliato",
               "content": "L'hotel aveva perso la mia prenotazione e mi ha sistemato in una camera senza finestra al piano seminterrato.",
               "valence": -0.6,
               "arousal": 0.65,
-              "metadata": {"topic": "viaggio", "phase": "disagio"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "disagio"
+              }
             },
             {
               "memory_id": "viaggio_aiuto_locale",
               "content": "Un residente del posto mi ha aiutato a trovare un negozio aperto dove comprare il necessario e mi ha offerto il caffè.",
               "valence": 0.6,
               "arousal": 0.45,
-              "metadata": {"topic": "viaggio", "phase": "solidarietà"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "solidarietà"
+              }
             },
             {
               "memory_id": "viaggio_tramonto_miradouro",
               "content": "Quella sera ho raggiunto un miradouro e il tramonto sull'Atlantico mi ha tolto il fiato in modo inaspettato.",
               "valence": 0.85,
               "arousal": 0.7,
-              "metadata": {"topic": "viaggio", "phase": "meraviglia"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "meraviglia"
+              }
             },
             {
               "memory_id": "viaggio_notte_insonne_preoccupazione",
               "content": "Di notte non riuscivo a smettere di pensare alla valigia con i documenti e i medicinali.",
               "valence": -0.65,
               "arousal": 0.75,
-              "metadata": {"topic": "viaggio", "phase": "ansia"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "ansia"
+              }
             }
           ],
           "queries": []
@@ -466,51 +651,80 @@
               "content": "Il terzo giorno la valigia è arrivata e ho aperto la zip con un sollievo che difficilmente saprei descrivere.",
               "valence": 0.8,
               "arousal": 0.65,
-              "metadata": {"topic": "viaggio", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "viaggio_fado_concerto",
               "content": "Quella sera ho assistito a un concerto di fado in un locale minuscolo e la voce della cantante mi ha commosso fino alle lacrime.",
               "valence": 0.9,
               "arousal": 0.75,
-              "metadata": {"topic": "viaggio", "phase": "picco_culturale"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "picco_culturale"
+              }
             },
             {
               "memory_id": "viaggio_pratiche_rimborso",
               "content": "Ho compilato il modulo per il rimborso del disagio causato dalla valigia smarrita, senza particolare emozione.",
               "valence": 0.0,
               "arousal": 0.1,
-              "metadata": {"topic": "viaggio", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "viaggio",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_valigia_paura_notturna",
               "query": "Qual è la preoccupazione più ansiosa legata al viaggio che ricordo dalla prima notte, non il semplice disagio dell'hotel?",
-              "expected_memory_ids": ["viaggio_notte_insonne_preoccupazione"],
+              "expected_memory_ids": [
+                "viaggio_notte_insonne_preoccupazione"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.6, "arousal": 0.75}
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.75
+              }
             },
             {
               "query_id": "q_picco_culturale_fado",
               "query": "Qual è il momento culminante emotivo del viaggio, il picco di bellezza e commozione?",
-              "expected_memory_ids": ["viaggio_fado_concerto"],
+              "expected_memory_ids": [
+                "viaggio_fado_concerto"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": 0.88, "arousal": 0.72}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.72
+              }
             },
             {
               "query_id": "q_primo_momento_bello",
               "query": "Qual è il primo momento positivo del viaggio, quello più antico ma emotivamente più risonante, non le pratiche burocratiche recenti?",
-              "expected_memory_ids": ["viaggio_tramonto_miradouro"],
+              "expected_memory_ids": [
+                "viaggio_tramonto_miradouro"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.82, "arousal": 0.65}
+              "state": {
+                "valence": 0.82,
+                "arousal": 0.65
+              }
             },
             {
               "query_id": "q_sollievo_valigia_vs_rimborso",
               "query": "Tra i ricordi sulla valigia smarrita, qual è quello con la più forte carica emotiva, non il modulo burocratico?",
-              "expected_memory_ids": ["viaggio_valigia_ritrovata"],
+              "expected_memory_ids": [
+                "viaggio_valigia_ritrovata"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.75, "arousal": 0.6}
+              "state": {
+                "valence": 0.75,
+                "arousal": 0.6
+              }
             }
           ]
         }
@@ -529,35 +743,50 @@
               "content": "Mia madre mi ha chiamato alle sei di mattina per dirmi che il nonno era morto nel sonno.",
               "valence": -0.95,
               "arousal": 0.85,
-              "metadata": {"topic": "lutto", "phase": "shock"}
+              "metadata": {
+                "topic": "lutto",
+                "phase": "shock"
+              }
             },
             {
               "memory_id": "lutto_funerale_chiesa",
               "content": "Durante il funerale in chiesa, quando hanno suonato la sua canzone preferita, ho pianto in modo incontrollabile.",
               "valence": -0.85,
               "arousal": 0.8,
-              "metadata": {"topic": "lutto", "phase": "picco_dolore"}
+              "metadata": {
+                "topic": "lutto",
+                "phase": "picco_dolore"
+              }
             },
             {
               "memory_id": "lutto_burocrazia_eredita",
               "content": "Nei giorni successivi c'era da firmare documenti e gestire pratiche burocratiche dell'eredità.",
               "valence": -0.3,
               "arousal": 0.3,
-              "metadata": {"topic": "lutto", "phase": "post_funerale"}
+              "metadata": {
+                "topic": "lutto",
+                "phase": "post_funerale"
+              }
             },
             {
               "memory_id": "lutto_cugini_raduno",
               "content": "I cugini si sono riuniti a casa del nonno e abbiamo condiviso storie e piatti che lui amava.",
               "valence": 0.3,
               "arousal": 0.4,
-              "metadata": {"topic": "famiglia", "phase": "condivisione"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "condivisione"
+              }
             },
             {
               "memory_id": "lutto_ricordo_passeggiata",
               "content": "Ricordo una passeggiata mattutina con il nonno anni fa, quando mi insegnava i nomi dei fiori.",
               "valence": 0.8,
               "arousal": 0.35,
-              "metadata": {"topic": "ricordo", "phase": "nostalgia_positiva"}
+              "metadata": {
+                "topic": "ricordo",
+                "phase": "nostalgia_positiva"
+              }
             }
           ],
           "queries": []
@@ -571,51 +800,80 @@
               "content": "Un mese dopo ho trovato una sua foto e ho sorriso pensando alla sua risata contagiosa.",
               "valence": 0.7,
               "arousal": 0.4,
-              "metadata": {"topic": "lutto", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "lutto",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "lutto_ricetta_nonna",
               "content": "Ho cucinato la sua ricetta preferita e mentre preparavo il sugo ho sentito la sua presenza in modo quasi fisico.",
               "valence": 0.75,
               "arousal": 0.5,
-              "metadata": {"topic": "memoria", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "memoria",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "lutto_testamento_notaio",
               "content": "L'appuntamento dal notaio per il testamento era necessario ma emotivamente neutro.",
               "valence": -0.1,
               "arousal": 0.15,
-              "metadata": {"topic": "lutto", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "lutto",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_momento_dolore_funerale",
               "query": "Quale ricordo del lutto ha la risonanza emotiva più profonda pur essendoci ricordi più recenti come l'appuntamento dal notaio?",
-              "expected_memory_ids": ["lutto_funerale_chiesa"],
+              "expected_memory_ids": [
+                "lutto_funerale_chiesa"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.85, "arousal": 0.8}
+              "state": {
+                "valence": -0.85,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_ricordo_antico_felice",
               "query": "Qual è il ricordo più antico e emotivamente risonante legato al nonno, non le pratiche burocratiche recenti?",
-              "expected_memory_ids": ["lutto_ricordo_passeggiata"],
+              "expected_memory_ids": [
+                "lutto_ricordo_passeggiata"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.75, "arousal": 0.3}
+              "state": {
+                "valence": 0.75,
+                "arousal": 0.3
+              }
             },
             {
               "query_id": "q_momento_accettazione",
               "query": "Tra i ricordi del lutto, quale indica che stavo iniziando ad accettare la perdita con affetto, non solo tristezza?",
-              "expected_memory_ids": ["lutto_primo_sorriso_ricordo"],
+              "expected_memory_ids": [
+                "lutto_primo_sorriso_ricordo"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.65, "arousal": 0.35}
+              "state": {
+                "valence": 0.65,
+                "arousal": 0.35
+              }
             },
             {
               "query_id": "q_shock_vs_burocrazia",
               "query": "Qual è il momento di notizia della morte che è emotivamente opposto alle pratiche burocratiche successive?",
-              "expected_memory_ids": ["lutto_chiamata_morte"],
+              "expected_memory_ids": [
+                "lutto_chiamata_morte"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.92, "arousal": 0.82}
+              "state": {
+                "valence": -0.92,
+                "arousal": 0.82
+              }
             }
           ]
         }
@@ -634,35 +892,50 @@
               "content": "Ho trascorso l'intera notte a studiare, con il cuore che batteva forte e la paura di non farcela.",
               "valence": -0.6,
               "arousal": 0.85,
-              "metadata": {"topic": "studio", "phase": "ansia"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "ansia"
+              }
             },
             {
               "memory_id": "studio_panico_aula",
               "content": "All'ingresso dell'aula d'esame mi sono bloccato vedendo la commissione e ho pensato di andarmene.",
               "valence": -0.8,
               "arousal": 0.95,
-              "metadata": {"topic": "studio", "phase": "picco_ansia"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "picco_ansia"
+              }
             },
             {
               "memory_id": "studio_primo_domanda",
               "content": "La prima domanda era proprio quella che avevo ripassato di più e ho risposto con sicurezza crescente.",
               "valence": 0.5,
               "arousal": 0.7,
-              "metadata": {"topic": "studio", "phase": "svolta"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "svolta"
+              }
             },
             {
               "memory_id": "studio_sbaglio_risposta",
               "content": "Alla terza domanda ho sbagliato e il professore ha alzato un sopracciglio, facendomi sentire uno stupido.",
               "valence": -0.65,
               "arousal": 0.75,
-              "metadata": {"topic": "studio", "phase": "errore"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "errore"
+              }
             },
             {
               "memory_id": "studio_compagno_supporto",
               "content": "Prima di entrare, un compagno di corso mi ha detto che ce l'avrei fatta e quella parola mi ha dato una piccola forza.",
               "valence": 0.45,
               "arousal": 0.4,
-              "metadata": {"topic": "studio", "phase": "supporto"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "supporto"
+              }
             }
           ],
           "queries": []
@@ -676,51 +949,80 @@
               "content": "Il professore ha detto trenta con lode e non riuscivo a credere alle mie orecchie.",
               "valence": 0.95,
               "arousal": 0.9,
-              "metadata": {"topic": "studio", "phase": "trionfo"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "trionfo"
+              }
             },
             {
               "memory_id": "studio_chiamata_genitori",
               "content": "Ho chiamato i miei genitori subito dopo e la voce di mia madre che piangeva di gioia mi ha fatto piangere anch'io.",
               "valence": 0.88,
               "arousal": 0.75,
-              "metadata": {"topic": "famiglia", "phase": "condivisione_gioia"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "condivisione_gioia"
+              }
             },
             {
               "memory_id": "studio_iscrizione_sessione",
               "content": "Successivamente ho completato l'iscrizione alla prossima sessione di esami in modo pratico.",
               "valence": 0.1,
               "arousal": 0.1,
-              "metadata": {"topic": "studio", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "studio",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_blocco_aula",
               "query": "Qual è stato il momento di massima ansia durante l'esame, quando ho quasi pensato di scappare?",
-              "expected_memory_ids": ["studio_panico_aula"],
+              "expected_memory_ids": [
+                "studio_panico_aula"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.8, "arousal": 0.95}
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.95
+              }
             },
             {
               "query_id": "q_svolta_esame",
               "query": "Qual è il momento in cui l'ansia si è trasformata in fiducia durante l'esame, non il supporto del compagno prima?",
-              "expected_memory_ids": ["studio_primo_domanda"],
+              "expected_memory_ids": [
+                "studio_primo_domanda"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.45, "arousal": 0.65}
+              "state": {
+                "valence": 0.45,
+                "arousal": 0.65
+              }
             },
             {
               "query_id": "q_gioia_condivisa",
               "query": "Quale momento di gioia legate all'esame ha coinvolto anche la famiglia, non il solo voto?",
-              "expected_memory_ids": ["studio_chiamata_genitori"],
+              "expected_memory_ids": [
+                "studio_chiamata_genitori"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.85, "arousal": 0.7}
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.7
+              }
             },
             {
               "query_id": "q_slancio_da_panico_a_trionfo",
               "query": "Quale ricordo dello studio riflette meglio lo slancio trasformativo dall'angoscia all'euforia?",
-              "expected_memory_ids": ["studio_voto_trenta"],
+              "expected_memory_ids": [
+                "studio_voto_trenta"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.9, "arousal": 0.85}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
             }
           ]
         }
@@ -739,35 +1041,50 @@
               "content": "Ho scoperto che il mio migliore amico Lorenzo aveva raccontato un mio segreto a persone che non avrei mai voluto sapessero.",
               "valence": -0.9,
               "arousal": 0.9,
-              "metadata": {"topic": "amicizia", "phase": "tradimento"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "tradimento"
+              }
             },
             {
               "memory_id": "amicizia_confronto_acceso",
               "content": "Il confronto con Lorenzo è stato acceso e ho detto cose che avrei voluto non dire.",
               "valence": -0.75,
               "arousal": 0.85,
-              "metadata": {"topic": "amicizia", "phase": "conflitto"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "conflitto"
+              }
             },
             {
               "memory_id": "amicizia_pomeriggio_silenzio",
               "content": "Ho trascorso il pomeriggio da solo in assoluto silenzio, cercando di elaborare quello che era successo.",
               "valence": -0.5,
               "arousal": 0.3,
-              "metadata": {"topic": "amicizia", "phase": "elaborazione"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "elaborazione"
+              }
             },
             {
               "memory_id": "amicizia_ricordo_passato_positivo",
               "content": "Ho ripensato a quando Lorenzo mi aveva aiutato durante un momento difficile anni prima e mi sono sentito ancora più confuso.",
               "valence": 0.4,
               "arousal": 0.5,
-              "metadata": {"topic": "amicizia", "phase": "ambivalenza"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "ambivalenza"
+              }
             },
             {
               "memory_id": "amicizia_altri_amici_reazione",
               "content": "Gli amici in comune mi hanno detto che non sapevano come comportarsi e che erano dispiaciuti per entrambi.",
               "valence": -0.2,
               "arousal": 0.4,
-              "metadata": {"topic": "amicizia", "phase": "contesto_sociale"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "contesto_sociale"
+              }
             }
           ],
           "queries": []
@@ -781,51 +1098,80 @@
               "content": "Lorenzo si è presentato a casa mia con un fiore e mi ha chiesto scusa in modo sincero, ammettendo di aver sbagliato.",
               "valence": 0.5,
               "arousal": 0.6,
-              "metadata": {"topic": "amicizia", "phase": "riconciliazione"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "riconciliazione"
+              }
             },
             {
               "memory_id": "amicizia_perdono_profondo",
               "content": "Settimane dopo, durante una passeggiata, gli ho detto che lo perdonavo e ho sentito un peso sollevarsi dalle spalle.",
               "valence": 0.8,
               "arousal": 0.55,
-              "metadata": {"topic": "amicizia", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "amicizia_uscita_normale",
               "content": "Qualche settimana dopo siamo usciti a cena come se nulla fosse, quasi tornati alla normalità.",
               "valence": 0.4,
               "arousal": 0.25,
-              "metadata": {"topic": "amicizia", "phase": "normalizzazione"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "normalizzazione"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_tradimento_scoperta",
               "query": "Qual è il momento della scoperta del tradimento di Lorenzo, quello che ha fatto più male?",
-              "expected_memory_ids": ["amicizia_segreto_rivelato"],
+              "expected_memory_ids": [
+                "amicizia_segreto_rivelato"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.88, "arousal": 0.88}
+              "state": {
+                "valence": -0.88,
+                "arousal": 0.88
+              }
             },
             {
               "query_id": "q_scuse_vs_perdono",
               "query": "Tra i momenti di riconciliazione con Lorenzo, quale è stato quello con la più forte sensazione di liberazione?",
-              "expected_memory_ids": ["amicizia_perdono_profondo"],
+              "expected_memory_ids": [
+                "amicizia_perdono_profondo"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.78, "arousal": 0.5}
+              "state": {
+                "valence": 0.78,
+                "arousal": 0.5
+              }
             },
             {
               "query_id": "q_ricordo_positivo_vecchio",
               "query": "Qual è il ricordo più antico e positivo con Lorenzo, quello che contrasta con il tradimento recente?",
-              "expected_memory_ids": ["amicizia_ricordo_passato_positivo"],
+              "expected_memory_ids": [
+                "amicizia_ricordo_passato_positivo"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.38, "arousal": 0.45}
+              "state": {
+                "valence": 0.38,
+                "arousal": 0.45
+              }
             },
             {
               "query_id": "q_slancio_verso_perdono",
               "query": "Quale ricordo riflette meglio lo slancio emotivo che ha portato gradualmente al perdono?",
-              "expected_memory_ids": ["amicizia_scuse_sincere"],
+              "expected_memory_ids": [
+                "amicizia_scuse_sincere"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.45, "arousal": 0.55}
+              "state": {
+                "valence": 0.45,
+                "arousal": 0.55
+              }
             }
           ]
         }
@@ -844,35 +1190,50 @@
               "content": "Il primo giorno nel nuovo appartamento, circondato da scatoloni, mi sono sentito completamente solo e fuori posto.",
               "valence": -0.75,
               "arousal": 0.6,
-              "metadata": {"topic": "trasloco", "phase": "solitudine"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "solitudine"
+              }
             },
             {
               "memory_id": "trasloco_quartiere_sconosciuto",
               "content": "Camminando nel quartiere non conoscevo nessuno e ogni volto era un estraneo.",
               "valence": -0.5,
               "arousal": 0.45,
-              "metadata": {"topic": "trasloco", "phase": "isolamento"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "isolamento"
+              }
             },
             {
               "memory_id": "trasloco_chiamata_nostalgia",
               "content": "Ho chiamato i miei genitori e appena ho sentito la voce di mia madre ho pianto senza controllo.",
               "valence": -0.8,
               "arousal": 0.75,
-              "metadata": {"topic": "trasloco", "phase": "nostalgia_acuta"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "nostalgia_acuta"
+              }
             },
             {
               "memory_id": "trasloco_vicina_gentile",
               "content": "La vicina di casa mi ha portato una torta di benvenuto e si è fermata a chiacchierare per un'ora.",
               "valence": 0.6,
               "arousal": 0.5,
-              "metadata": {"topic": "trasloco", "phase": "primo_contatto"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "primo_contatto"
+              }
             },
             {
               "memory_id": "trasloco_primo_caffe_bar",
               "content": "Al bar sotto casa il barista si ricordava già il mio nome al terzo giorno e quello mi ha fatto sentire visto.",
               "valence": 0.65,
               "arousal": 0.45,
-              "metadata": {"topic": "trasloco", "phase": "integrazione"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "integrazione"
+              }
             }
           ],
           "queries": []
@@ -886,51 +1247,80 @@
               "content": "Al corso di italiano ho incontrato Beatrice e siamo subito diventati amici stretti.",
               "valence": 0.85,
               "arousal": 0.65,
-              "metadata": {"topic": "amicizia", "phase": "appartenenza"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "appartenenza"
+              }
             },
             {
               "memory_id": "trasloco_festa_quartiere",
               "content": "Alla festa del quartiere ho ballato e riso con persone che un mese prima erano estranei.",
               "valence": 0.9,
               "arousal": 0.8,
-              "metadata": {"topic": "trasloco", "phase": "integrazione_piena"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "integrazione_piena"
+              }
             },
             {
               "memory_id": "trasloco_cambio_residenza_ufficio",
               "content": "Ho completato il cambio di residenza all'ufficio anagrafe senza alcuna emozione particolare.",
               "valence": 0.0,
               "arousal": 0.1,
-              "metadata": {"topic": "trasloco", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "trasloco",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_momento_nostalgia_acuta",
               "query": "Qual è il momento in cui la nostalgia per casa era più intensa e incontrollabile?",
-              "expected_memory_ids": ["trasloco_chiamata_nostalgia"],
+              "expected_memory_ids": [
+                "trasloco_chiamata_nostalgia"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.78, "arousal": 0.72}
+              "state": {
+                "valence": -0.78,
+                "arousal": 0.72
+              }
             },
             {
               "query_id": "q_solitudine_vs_isolamento",
               "query": "Qual è il ricordo di solitudine più intenso del trasloco, non quello neutro dell'isolamento nel quartiere?",
-              "expected_memory_ids": ["trasloco_primo_giorno_solo"],
+              "expected_memory_ids": [
+                "trasloco_primo_giorno_solo"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.73, "arousal": 0.58}
+              "state": {
+                "valence": -0.73,
+                "arousal": 0.58
+              }
             },
             {
               "query_id": "q_piena_integrazione",
               "query": "Quale ricordo rappresenta il momento di piena appartenenza e integrazione, non le pratiche burocratiche?",
-              "expected_memory_ids": ["trasloco_festa_quartiere"],
+              "expected_memory_ids": [
+                "trasloco_festa_quartiere"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.88, "arousal": 0.78}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.78
+              }
             },
             {
               "query_id": "q_slancio_da_solitudine",
               "query": "Quale ricordo del trasloco riflette lo slancio crescente verso la connessione con la nuova città?",
-              "expected_memory_ids": ["trasloco_primo_amico_nuovo"],
+              "expected_memory_ids": [
+                "trasloco_primo_amico_nuovo"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.82, "arousal": 0.62}
+              "state": {
+                "valence": 0.82,
+                "arousal": 0.62
+              }
             }
           ]
         }
@@ -949,35 +1339,50 @@
               "content": "La responsabile HR mi ha chiamato alle dieci di mattina e con voce piatta mi ha comunicato che il mio contratto era terminato.",
               "valence": -0.9,
               "arousal": 0.85,
-              "metadata": {"topic": "lavoro", "phase": "shock"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "shock"
+              }
             },
             {
               "memory_id": "licenziamento_svuotare_scrivania",
               "content": "Svuotare la scrivania davanti ai colleghi è stata la cosa più umiliante che abbia mai fatto.",
               "valence": -0.85,
               "arousal": 0.8,
-              "metadata": {"topic": "lavoro", "phase": "umiliazione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "umiliazione"
+              }
             },
             {
               "memory_id": "licenziamento_preoccupazione_affitto",
               "content": "Tornato a casa ho aperto il conto in banca e calcolato quanto mi restava prima di non poter pagare l'affitto.",
               "valence": -0.7,
               "arousal": 0.75,
-              "metadata": {"topic": "finanze", "phase": "crisi"}
+              "metadata": {
+                "topic": "finanze",
+                "phase": "crisi"
+              }
             },
             {
               "memory_id": "licenziamento_sostegno_partner",
               "content": "La mia compagna Francesca mi ha detto che avremmo affrontato tutto insieme e ho sentito un momento di pace.",
               "valence": 0.5,
               "arousal": 0.4,
-              "metadata": {"topic": "relazione", "phase": "supporto"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "supporto"
+              }
             },
             {
               "memory_id": "licenziamento_primo_cv_inviato",
               "content": "Dopo tre giorni ho aggiornato il curriculum e l'ho inviato a dieci aziende, sentendo una piccola scintilla di speranza.",
               "valence": 0.3,
               "arousal": 0.5,
-              "metadata": {"topic": "lavoro", "phase": "ripresa"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "ripresa"
+              }
             }
           ],
           "queries": []
@@ -991,51 +1396,80 @@
               "content": "Ho avuto un colloquio per la startup che sognavo da anni e il fondatore mi ha detto che ero esattamente quello che cercavano.",
               "valence": 0.9,
               "arousal": 0.85,
-              "metadata": {"topic": "lavoro", "phase": "svolta"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "svolta"
+              }
             },
             {
               "memory_id": "licenziamento_offerta_accettata",
               "content": "Ho firmato il contratto per il nuovo lavoro con uno stipendio migliore del precedente.",
               "valence": 0.85,
               "arousal": 0.7,
-              "metadata": {"topic": "lavoro", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "licenziamento_modulo_inps",
               "content": "Ho compilato i moduli INPS per la disoccupazione, pratiche necessarie ma emozioni piatte.",
               "valence": -0.1,
               "arousal": 0.15,
-              "metadata": {"topic": "finanze", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "finanze",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_umiliazione_scrivania",
               "query": "Quale momento del licenziamento ha rappresentato la massima umiliazione pubblica?",
-              "expected_memory_ids": ["licenziamento_svuotare_scrivania"],
+              "expected_memory_ids": [
+                "licenziamento_svuotare_scrivania"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.83, "arousal": 0.78}
+              "state": {
+                "valence": -0.83,
+                "arousal": 0.78
+              }
             },
             {
               "query_id": "q_shock_vs_umiliazione",
               "query": "Qual è il momento di shock iniziale del licenziamento, diverso dall'umiliazione pubblica della scrivania?",
-              "expected_memory_ids": ["licenziamento_chiamata_hr"],
+              "expected_memory_ids": [
+                "licenziamento_chiamata_hr"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.88, "arousal": 0.83}
+              "state": {
+                "valence": -0.88,
+                "arousal": 0.83
+              }
             },
             {
               "query_id": "q_colloquio_sogno_vs_offerta",
               "query": "Tra i ricordi positivi del rilancio lavorativo, quale ha avuto la carica emotiva più alta di speranza e riconoscimento?",
-              "expected_memory_ids": ["licenziamento_colloquio_sogno"],
+              "expected_memory_ids": [
+                "licenziamento_colloquio_sogno"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.88, "arousal": 0.82}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.82
+              }
             },
             {
               "query_id": "q_antico_crisi_finanziaria",
               "query": "Qual è il ricordo più antico legato alla crisi economica post-licenziamento, non le pratiche INPS più recenti?",
-              "expected_memory_ids": ["licenziamento_preoccupazione_affitto"],
+              "expected_memory_ids": [
+                "licenziamento_preoccupazione_affitto"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.68, "arousal": 0.72}
+              "state": {
+                "valence": -0.68,
+                "arousal": 0.72
+              }
             }
           ]
         }
@@ -1054,35 +1488,50 @@
               "content": "La prova generale è andata malissimo: ho dimenticato le parole a metà canzone davanti a tutti.",
               "valence": -0.8,
               "arousal": 0.85,
-              "metadata": {"topic": "musica", "phase": "crisi"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "crisi"
+              }
             },
             {
               "memory_id": "musica_paura_palco",
               "content": "Guardando le luci del palco da dietro le quinte sentivo le gambe tremare e il cuore in gola.",
               "valence": -0.75,
               "arousal": 0.9,
-              "metadata": {"topic": "musica", "phase": "paura_scenica"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "paura_scenica"
+              }
             },
             {
               "memory_id": "musica_insegnante_incoraggiamento",
               "content": "Il mio insegnante di canto mi ha preso per le spalle e ha detto che ero pronto.",
               "valence": 0.55,
               "arousal": 0.5,
-              "metadata": {"topic": "musica", "phase": "supporto"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "supporto"
+              }
             },
             {
               "memory_id": "musica_primo_accordo_perfetto",
               "content": "I primi tre accordi sono usciti perfetti e ho sentito il pubblico respirare con me.",
               "valence": 0.75,
               "arousal": 0.75,
-              "metadata": {"topic": "musica", "phase": "svolta"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "svolta"
+              }
             },
             {
               "memory_id": "musica_errore_accordo",
               "content": "A metà concerto ho sbagliato un accordo ma ho ripreso subito e solo io me ne sono accorto.",
               "valence": -0.3,
               "arousal": 0.6,
-              "metadata": {"topic": "musica", "phase": "errore_minore"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "errore_minore"
+              }
             }
           ],
           "queries": []
@@ -1096,51 +1545,80 @@
               "content": "Alla fine del concerto il pubblico ha applaudito a lungo e qualcuno gridava il mio nome.",
               "valence": 0.95,
               "arousal": 0.92,
-              "metadata": {"topic": "musica", "phase": "trionfo"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "trionfo"
+              }
             },
             {
               "memory_id": "musica_lacrime_backstage",
               "content": "Dietro le quinte ho pianto di felicità, scaricando mesi di tensione in pochi minuti.",
               "valence": 0.88,
               "arousal": 0.8,
-              "metadata": {"topic": "musica", "phase": "catarsi"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "catarsi"
+              }
             },
             {
               "memory_id": "musica_post_produzione_registrazione",
               "content": "I giorni dopo mi sono occupato della registrazione e del mixaggio in modo tecnico e distaccato.",
               "valence": 0.15,
               "arousal": 0.2,
-              "metadata": {"topic": "musica", "phase": "post_produzione"}
+              "metadata": {
+                "topic": "musica",
+                "phase": "post_produzione"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_paura_quinte",
               "query": "Qual è il momento di massima paura prima di salire sul palco, non il disastro della prova generale?",
-              "expected_memory_ids": ["musica_paura_palco"],
+              "expected_memory_ids": [
+                "musica_paura_palco"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.73, "arousal": 0.88}
+              "state": {
+                "valence": -0.73,
+                "arousal": 0.88
+              }
             },
             {
               "query_id": "q_svolta_primi_accordi",
               "query": "Qual è il momento della svolta durante il concerto, quando la paura si è trasformata in connessione col pubblico?",
-              "expected_memory_ids": ["musica_primo_accordo_perfetto"],
+              "expected_memory_ids": [
+                "musica_primo_accordo_perfetto"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": 0.72, "arousal": 0.73}
+              "state": {
+                "valence": 0.72,
+                "arousal": 0.73
+              }
             },
             {
               "query_id": "q_catarsi_backstage",
               "query": "Quale ricordo musicale riflette meglio lo slancio emotivo di liberazione accumulato dopo mesi di preparazione tesa?",
-              "expected_memory_ids": ["musica_lacrime_backstage"],
+              "expected_memory_ids": [
+                "musica_lacrime_backstage"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.85, "arousal": 0.78}
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.78
+              }
             },
             {
               "query_id": "q_slancio_da_tremore_a_trionfo",
               "query": "Quale memoria musicale riflette lo slancio emotivo accumulato che ha trasformato il tremore in trionfo?",
-              "expected_memory_ids": ["musica_applausi_lunghi"],
+              "expected_memory_ids": [
+                "musica_applausi_lunghi"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.92, "arousal": 0.88}
+              "state": {
+                "valence": 0.92,
+                "arousal": 0.88
+              }
             }
           ]
         }
@@ -1159,35 +1637,50 @@
               "content": "In sala d'attesa, sentivo ogni minuto come un'eternità, alternando preghiere e pensieri catastrofici.",
               "valence": -0.5,
               "arousal": 0.85,
-              "metadata": {"topic": "genitorialita", "phase": "attesa"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "attesa"
+              }
             },
             {
               "memory_id": "nascita_primo_vagito",
               "content": "Quando ho sentito il primo vagito del bambino, tutto il mondo si è fermato e ho capito che la mia vita era cambiata per sempre.",
               "valence": 0.98,
               "arousal": 0.97,
-              "metadata": {"topic": "genitorialita", "phase": "picco_nascita"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "picco_nascita"
+              }
             },
             {
               "memory_id": "nascita_prima_notte_senza_sonno",
               "content": "La prima notte a casa senza dormire, con il bambino che piangeva ogni ora, ero esausto e impaurito.",
               "valence": -0.6,
               "arousal": 0.8,
-              "metadata": {"topic": "genitorialita", "phase": "fatica"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "fatica"
+              }
             },
             {
               "memory_id": "nascita_primo_sorriso_bambino",
               "content": "Tre settimane dopo il bambino ha sorriso per la prima volta e io ho dimenticato tutto l'esaurimento.",
               "valence": 0.92,
               "arousal": 0.75,
-              "metadata": {"topic": "genitorialita", "phase": "ricompensa"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "ricompensa"
+              }
             },
             {
               "memory_id": "nascita_paura_malattia",
               "content": "Una notte il bambino aveva la febbre alta e ho guidato al pronto soccorso con le mani che tremavano.",
               "valence": -0.85,
               "arousal": 0.92,
-              "metadata": {"topic": "genitorialita", "phase": "paura_acuta"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "paura_acuta"
+              }
             }
           ],
           "queries": []
@@ -1201,51 +1694,80 @@
               "content": "Al primo compleanno del bambino ho guardato la torta con la candelina e non riuscivo a trattenere le lacrime di commozione.",
               "valence": 0.9,
               "arousal": 0.7,
-              "metadata": {"topic": "genitorialita", "phase": "celebrazione"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "celebrazione"
+              }
             },
             {
               "memory_id": "nascita_prima_parola",
               "content": "Quando ha detto papa per la prima volta, con una voce piccolissima, mi sono alzato di scatto per abbracciarlo.",
               "valence": 0.95,
               "arousal": 0.82,
-              "metadata": {"topic": "genitorialita", "phase": "traguardo"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "traguardo"
+              }
             },
             {
               "memory_id": "nascita_visita_pediatra_routine",
               "content": "La visita di controllo dal pediatra è andata regolarmente, senza notizie particolari.",
               "valence": 0.1,
               "arousal": 0.1,
-              "metadata": {"topic": "genitorialita", "phase": "routine"}
+              "metadata": {
+                "topic": "genitorialita",
+                "phase": "routine"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_picco_nascita",
               "query": "Quale ricordo della nascita del bambino ha ancora il peso emotivo più alto, nonostante le visite pediatriche di routine più recenti?",
-              "expected_memory_ids": ["nascita_primo_vagito"],
+              "expected_memory_ids": [
+                "nascita_primo_vagito"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.97, "arousal": 0.95}
+              "state": {
+                "valence": 0.97,
+                "arousal": 0.95
+              }
             },
             {
               "query_id": "q_paura_vs_attesa",
               "query": "Qual è il momento di paura più acuta legata al figlio, quello fisicamente più urgente, non l'ansia generica dell'attesa?",
-              "expected_memory_ids": ["nascita_paura_malattia"],
+              "expected_memory_ids": [
+                "nascita_paura_malattia"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.83, "arousal": 0.9}
+              "state": {
+                "valence": -0.83,
+                "arousal": 0.9
+              }
             },
             {
               "query_id": "q_prima_parola_vs_compleanno",
               "query": "Tra i traguardi del bambino, quale ha avuto la risposta emotiva più immediata e fisica da parte mia?",
-              "expected_memory_ids": ["nascita_prima_parola"],
+              "expected_memory_ids": [
+                "nascita_prima_parola"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.93, "arousal": 0.8}
+              "state": {
+                "valence": 0.93,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_slancio_amore_crescente",
               "query": "Quale ricordo riflette lo slancio di amore crescente che si è costruito settimana dopo settimana?",
-              "expected_memory_ids": ["nascita_primo_sorriso_bambino"],
+              "expected_memory_ids": [
+                "nascita_primo_sorriso_bambino"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.88, "arousal": 0.72}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.72
+              }
             }
           ]
         }
@@ -1264,35 +1786,50 @@
               "content": "Nella riunione finale gli investitori hanno comunicato che non avrebbero continuato a finanziare il progetto.",
               "valence": -0.88,
               "arousal": 0.82,
-              "metadata": {"topic": "impresa", "phase": "fallimento"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "fallimento"
+              }
             },
             {
               "memory_id": "progetto_lettera_ai_team",
               "content": "Scrivere la mail al team per comunicare la chiusura è stato il compito più difficile della mia vita professionale.",
               "valence": -0.82,
               "arousal": 0.75,
-              "metadata": {"topic": "impresa", "phase": "comunicazione_dolore"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "comunicazione_dolore"
+              }
             },
             {
               "memory_id": "progetto_notte_bilancio",
               "content": "Quella notte ho fatto i conti e ho capito che avevo perso tutto quello che avevo messo da parte negli ultimi anni.",
               "valence": -0.9,
               "arousal": 0.85,
-              "metadata": {"topic": "finanze", "phase": "crisi_acuta"}
+              "metadata": {
+                "topic": "finanze",
+                "phase": "crisi_acuta"
+              }
             },
             {
               "memory_id": "progetto_collega_solidale",
               "content": "Il collega Andrea mi ha scritto un messaggio privato dicendo che aveva imparato moltissimo da me e che mi rispettava ancora di più.",
               "valence": 0.55,
               "arousal": 0.45,
-              "metadata": {"topic": "impresa", "phase": "solidarietà"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "solidarietà"
+              }
             },
             {
               "memory_id": "progetto_settimane_inattivita",
               "content": "Per due settimane non sono riuscito a fare nulla, fissando il soffitto e ripensando agli errori commessi.",
               "valence": -0.65,
               "arousal": 0.35,
-              "metadata": {"topic": "impresa", "phase": "blocco"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "blocco"
+              }
             }
           ],
           "queries": []
@@ -1306,51 +1843,80 @@
               "content": "Ho acquisito il primo cliente del nuovo progetto e ho sentito che stavo tornando a essere me stesso.",
               "valence": 0.8,
               "arousal": 0.7,
-              "metadata": {"topic": "impresa", "phase": "rinascita"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "rinascita"
+              }
             },
             {
               "memory_id": "progetto_conferenza_lezione",
               "content": "Ho raccontato pubblicamente il fallimento a una conferenza e il pubblico mi ha applaudito per il coraggio.",
               "valence": 0.85,
               "arousal": 0.72,
-              "metadata": {"topic": "impresa", "phase": "rielaborazione"}
+              "metadata": {
+                "topic": "impresa",
+                "phase": "rielaborazione"
+              }
             },
             {
               "memory_id": "progetto_chiusura_partita_iva",
               "content": "Ho chiuso la partita IVA in modo burocratico senza rivivere il dolore.",
               "valence": -0.1,
               "arousal": 0.1,
-              "metadata": {"topic": "finanze", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "finanze",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_notte_bilancio_dolore",
               "query": "Qual è il momento di maggiore dolore economico del fallimento, quando ho visto la dimensione della perdita?",
-              "expected_memory_ids": ["progetto_notte_bilancio"],
+              "expected_memory_ids": [
+                "progetto_notte_bilancio"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.88, "arousal": 0.82}
+              "state": {
+                "valence": -0.88,
+                "arousal": 0.82
+              }
             },
             {
               "query_id": "q_slancio_rinascita",
               "query": "Quale ricordo imprenditoriale riflette meglio lo slancio emotivo di chi sta tornando a credere in sé stesso?",
-              "expected_memory_ids": ["progetto_primo_cliente_nuovo"],
+              "expected_memory_ids": [
+                "progetto_primo_cliente_nuovo"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.78, "arousal": 0.68}
+              "state": {
+                "valence": 0.78,
+                "arousal": 0.68
+              }
             },
             {
               "query_id": "q_antico_crisi_vs_burocrazia",
               "query": "Qual è il ricordo finanziario più antico e emotivamente risonante, non la chiusura burocratica recente?",
-              "expected_memory_ids": ["progetto_notte_bilancio"],
+              "expected_memory_ids": [
+                "progetto_notte_bilancio"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.85, "arousal": 0.8}
+              "state": {
+                "valence": -0.85,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_conferenza_vs_cliente",
               "query": "Tra i ricordi positivi della ripartenza, quale ha avuto maggiore riconoscimento pubblico esterno?",
-              "expected_memory_ids": ["progetto_conferenza_lezione"],
+              "expected_memory_ids": [
+                "progetto_conferenza_lezione"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.83, "arousal": 0.7}
+              "state": {
+                "valence": 0.83,
+                "arousal": 0.7
+              }
             }
           ]
         }
@@ -1369,35 +1935,50 @@
               "content": "All'aeroporto quando Chiara è salita sull'aereo ho sentito un vuoto fisico allo stomaco.",
               "valence": -0.85,
               "arousal": 0.8,
-              "metadata": {"topic": "relazione", "phase": "separazione"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "separazione"
+              }
             },
             {
               "memory_id": "distanza_video_chiamata_quotidiana",
               "content": "Le videochiamate quotidiane erano il mio momento preferito della giornata ma finivano sempre con una malinconia silenziosa.",
               "valence": 0.3,
               "arousal": 0.5,
-              "metadata": {"topic": "relazione", "phase": "routine_distanza"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "routine_distanza"
+              }
             },
             {
               "memory_id": "distanza_lite_incomprensione",
               "content": "Una sera abbiamo litigato per un malinteso su un messaggio e non ci siamo parlati per tre giorni.",
               "valence": -0.75,
               "arousal": 0.78,
-              "metadata": {"topic": "relazione", "phase": "conflitto"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "conflitto"
+              }
             },
             {
               "memory_id": "distanza_sorpresa_visita",
               "content": "Ho prenotato un volo a sorpresa per raggiungerla nel weekend e la sua espressione quando mi ha aperto la porta valeva tutto.",
               "valence": 0.92,
               "arousal": 0.88,
-              "metadata": {"topic": "relazione", "phase": "picco_positivo"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "picco_positivo"
+              }
             },
             {
               "memory_id": "distanza_notte_mancanza",
               "content": "Una notte ho trovato ancora il suo profumo su una maglia e ho pianto da solo senza capire bene perché.",
               "valence": -0.7,
               "arousal": 0.6,
-              "metadata": {"topic": "relazione", "phase": "mancanza"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "mancanza"
+              }
             }
           ],
           "queries": []
@@ -1411,51 +1992,80 @@
               "content": "Quando Chiara è tornata definitivamente abbiamo cenato nel nostro ristorante preferito e per la prima volta in mesi mi sono sentito completo.",
               "valence": 0.93,
               "arousal": 0.78,
-              "metadata": {"topic": "relazione", "phase": "ricongiungimento"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "ricongiungimento"
+              }
             },
             {
               "memory_id": "distanza_conversazione_profonda",
               "content": "Quella sera abbiamo parlato per ore di quanto la distanza ci avesse cambiati e rafforzati.",
               "valence": 0.8,
               "arousal": 0.55,
-              "metadata": {"topic": "relazione", "phase": "riflessione"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "riflessione"
+              }
             },
             {
               "memory_id": "distanza_cambio_indirizzo_posta",
               "content": "Ho aggiornato l'indirizzo postale con il nuovo domicilio condiviso in modo sbrigativo.",
               "valence": 0.05,
               "arousal": 0.08,
-              "metadata": {"topic": "relazione", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "relazione",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_vuoto_aeroporto",
               "query": "Qual è il momento più fisicamente doloroso della separazione da Chiara?",
-              "expected_memory_ids": ["distanza_partenza_aeroporto"],
+              "expected_memory_ids": [
+                "distanza_partenza_aeroporto"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.83, "arousal": 0.78}
+              "state": {
+                "valence": -0.83,
+                "arousal": 0.78
+              }
             },
             {
               "query_id": "q_sorpresa_visita_vs_ritorno",
               "query": "Tra i momenti di incontro con Chiara durante e dopo la distanza, quale ha avuto la sorpresa emotiva più pura?",
-              "expected_memory_ids": ["distanza_sorpresa_visita"],
+              "expected_memory_ids": [
+                "distanza_sorpresa_visita"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.9, "arousal": 0.85}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
             },
             {
               "query_id": "q_mancanza_vs_routine",
               "query": "Quale ricordo sulla distanza riflette meglio lo slancio emotivo accumulato di chi sente crescere la mancanza giorno dopo giorno?",
-              "expected_memory_ids": ["distanza_notte_mancanza"],
+              "expected_memory_ids": [
+                "distanza_notte_mancanza"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": -0.68, "arousal": 0.58}
+              "state": {
+                "valence": -0.68,
+                "arousal": 0.58
+              }
             },
             {
               "query_id": "q_slancio_da_distanza_a_pienezza",
               "query": "Quale ricordo riflette lo slancio emotivo culminante dopo mesi di attesa e lontananza?",
-              "expected_memory_ids": ["distanza_ritorno_definitivo"],
+              "expected_memory_ids": [
+                "distanza_ritorno_definitivo"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.9, "arousal": 0.75}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
             }
           ]
         }
@@ -1474,35 +2084,50 @@
               "content": "A Natale mio padre ha detto davanti a tutti che avevo deluso le sue aspettative e non ho saputo rispondere.",
               "valence": -0.9,
               "arousal": 0.85,
-              "metadata": {"topic": "famiglia", "phase": "conflitto_acuto"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "conflitto_acuto"
+              }
             },
             {
               "memory_id": "conflitto_silenzio_settimane",
               "content": "Per settimane non ci siamo più parlati e ogni volta che mia madre chiamava sentivo la tensione nella sua voce.",
               "valence": -0.65,
               "arousal": 0.5,
-              "metadata": {"topic": "famiglia", "phase": "silenzio"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "silenzio"
+              }
             },
             {
               "memory_id": "conflitto_ricordo_infanzia",
               "content": "Ho ripensato a un pomeriggio di quando avevo dieci anni, quando mio padre mi aveva insegnato ad andare in bicicletta con infinita pazienza.",
               "valence": 0.75,
               "arousal": 0.4,
-              "metadata": {"topic": "famiglia", "phase": "nostalgia_positiva"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "nostalgia_positiva"
+              }
             },
             {
               "memory_id": "conflitto_sfogo_amico",
               "content": "Ho sfogato la frustrazione con il mio amico Luca che ha ascoltato per ore senza giudicare.",
               "valence": 0.3,
               "arousal": 0.5,
-              "metadata": {"topic": "amicizia", "phase": "supporto"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "supporto"
+              }
             },
             {
               "memory_id": "conflitto_seconda_lite_telefono",
               "content": "Una telefonata successiva è degenerata in urla reciproche e ho riattaccato tremando.",
               "valence": -0.82,
               "arousal": 0.88,
-              "metadata": {"topic": "famiglia", "phase": "escalation"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "escalation"
+              }
             }
           ],
           "queries": []
@@ -1516,51 +2141,80 @@
               "content": "Quando mia madre mi ha chiamato per dirmi che mio padre era stato ricoverato, tutti i rancori sono svaniti in un attimo.",
               "valence": -0.7,
               "arousal": 0.88,
-              "metadata": {"topic": "famiglia", "phase": "crisi_esterna"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "crisi_esterna"
+              }
             },
             {
               "memory_id": "conflitto_abbraccio_ospedale",
               "content": "In ospedale ci siamo abbracciati per la prima volta in anni e lui ha detto che mi voleva bene più di qualsiasi cosa.",
               "valence": 0.9,
               "arousal": 0.82,
-              "metadata": {"topic": "famiglia", "phase": "riconciliazione"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "riconciliazione"
+              }
             },
             {
               "memory_id": "conflitto_dimissioni_pratiche",
               "content": "Ho gestito le pratiche delle dimissioni ospedaliere in modo pratico senza grandi emozioni.",
               "valence": 0.05,
               "arousal": 0.12,
-              "metadata": {"topic": "famiglia", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_parole_natale_dolore",
               "query": "Qual è il momento di maggiore dolore nel conflitto con mio padre, quello più pubblico e umiliante?",
-              "expected_memory_ids": ["conflitto_lite_natale"],
+              "expected_memory_ids": [
+                "conflitto_lite_natale"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.88, "arousal": 0.83}
+              "state": {
+                "valence": -0.88,
+                "arousal": 0.83
+              }
             },
             {
               "query_id": "q_ricordo_infanzia_vs_sfogo",
               "query": "Quale ricordo parla di un affetto genuino con mio padre, non del supporto ricevuto da un amico?",
-              "expected_memory_ids": ["conflitto_ricordo_infanzia"],
+              "expected_memory_ids": [
+                "conflitto_ricordo_infanzia"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.72, "arousal": 0.38}
+              "state": {
+                "valence": 0.72,
+                "arousal": 0.38
+              }
             },
             {
               "query_id": "q_abbraccio_vs_pratiche",
               "query": "Tra i ricordi dell'ospedale, quale porta il maggiore peso emotivo di riconciliazione?",
-              "expected_memory_ids": ["conflitto_abbraccio_ospedale"],
+              "expected_memory_ids": [
+                "conflitto_abbraccio_ospedale"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.88, "arousal": 0.8}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_antico_lite_natale",
               "query": "Quale ricordo doloroso del conflitto familiare ha ancora la risonanza più forte, non la lite telefonica più recente?",
-              "expected_memory_ids": ["conflitto_lite_natale"],
+              "expected_memory_ids": [
+                "conflitto_lite_natale"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.88, "arousal": 0.83}
+              "state": {
+                "valence": -0.88,
+                "arousal": 0.83
+              }
             }
           ]
         }
@@ -1579,35 +2233,50 @@
               "content": "Per settimane ogni volta che aprivo il documento si fissava su quella maledetta pagina bianca.",
               "valence": -0.7,
               "arousal": 0.65,
-              "metadata": {"topic": "creativita", "phase": "blocco"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "blocco"
+              }
             },
             {
               "memory_id": "blocco_editore_sollecito",
               "content": "L'editore mi ha mandato il terzo sollecito e ho sentito la vergogna salire come un'onda.",
               "valence": -0.78,
               "arousal": 0.75,
-              "metadata": {"topic": "creativita", "phase": "pressione_esterna"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "pressione_esterna"
+              }
             },
             {
               "memory_id": "blocco_passeggiata_bosco",
               "content": "Una mattina ho lasciato tutto e sono andato a camminare nel bosco per ore, senza pensare a nulla.",
               "valence": 0.4,
               "arousal": 0.3,
-              "metadata": {"topic": "creativita", "phase": "pausa"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "pausa"
+              }
             },
             {
               "memory_id": "blocco_frammento_idea",
               "content": "Tornato a casa ho scritto tre righe quasi per gioco e ho sentito qualcosa sbloccarsi.",
               "valence": 0.65,
               "arousal": 0.6,
-              "metadata": {"topic": "creativita", "phase": "sblocco_iniziale"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "sblocco_iniziale"
+              }
             },
             {
               "memory_id": "blocco_confronto_scrittore_amico",
               "content": "Parlando con un'altra scrittrice ho scoperto che anche lei aveva vissuto un blocco di otto mesi e ne era uscita.",
               "valence": 0.5,
               "arousal": 0.45,
-              "metadata": {"topic": "creativita", "phase": "conforto"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "conforto"
+              }
             }
           ],
           "queries": []
@@ -1621,51 +2290,80 @@
               "content": "Una notte le parole sono arrivate come un fiume in piena e ho scritto quaranta pagine senza fermarmi.",
               "valence": 0.9,
               "arousal": 0.88,
-              "metadata": {"topic": "creativita", "phase": "sblocco_totale"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "sblocco_totale"
+              }
             },
             {
               "memory_id": "blocco_ultimo_punto_manoscritto",
               "content": "Quando ho scritto il punto finale del manoscritto ho chiuso il laptop e sono rimasto immobile in silenzio per dieci minuti.",
               "valence": 0.92,
               "arousal": 0.7,
-              "metadata": {"topic": "creativita", "phase": "completamento"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "completamento"
+              }
             },
             {
               "memory_id": "blocco_invio_editore_email",
               "content": "Ho inviato il manoscritto all'editore via email come allegato, in modo pratico.",
               "valence": 0.2,
               "arousal": 0.2,
-              "metadata": {"topic": "creativita", "phase": "consegna_tecnica"}
+              "metadata": {
+                "topic": "creativita",
+                "phase": "consegna_tecnica"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_vergogna_sollecito",
               "query": "Qual è il momento di maggiore pressione esterna durante il blocco creativo, quello che ha causato vergogna?",
-              "expected_memory_ids": ["blocco_editore_sollecito"],
+              "expected_memory_ids": [
+                "blocco_editore_sollecito"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.76, "arousal": 0.73}
+              "state": {
+                "valence": -0.76,
+                "arousal": 0.73
+              }
             },
             {
               "query_id": "q_notte_fiume_vs_email",
               "query": "Tra i ricordi sulla scrittura del manoscritto, quale ha avuto la più alta intensità emotiva creativa?",
-              "expected_memory_ids": ["blocco_notte_scrittura_fiume"],
+              "expected_memory_ids": [
+                "blocco_notte_scrittura_fiume"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.88, "arousal": 0.85}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.85
+              }
             },
             {
               "query_id": "q_frammento_vs_bosco",
               "query": "Quale ricordo creativo riflette lo slancio iniziale che ha cominciato a spingere verso lo sblocco totale?",
-              "expected_memory_ids": ["blocco_frammento_idea"],
+              "expected_memory_ids": [
+                "blocco_frammento_idea"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.62, "arousal": 0.58}
+              "state": {
+                "valence": 0.62,
+                "arousal": 0.58
+              }
             },
             {
               "query_id": "q_slancio_verso_completamento",
               "query": "Quale ricordo creativo riflette meglio lo slancio emotivo inarrestabile verso il completamento del lavoro?",
-              "expected_memory_ids": ["blocco_notte_scrittura_fiume"],
+              "expected_memory_ids": [
+                "blocco_notte_scrittura_fiume"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.88, "arousal": 0.85}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.85
+              }
             }
           ]
         }
@@ -1684,35 +2382,50 @@
               "content": "Su un treno per Bologna ho iniziato a parlare con uno sconosciuto di nome Davide e due ore sono volate.",
               "valence": 0.65,
               "arousal": 0.55,
-              "metadata": {"topic": "amicizia", "phase": "inizio"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "inizio"
+              }
             },
             {
               "memory_id": "connessione_prima_cena_insieme",
               "content": "La prima cena insieme è durata cinque ore e ho scoperto che la pensavamo uguale su cose fondamentali.",
               "valence": 0.82,
               "arousal": 0.65,
-              "metadata": {"topic": "amicizia", "phase": "approfondimento"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "approfondimento"
+              }
             },
             {
               "memory_id": "connessione_confidenza_difficile",
               "content": "Davide mi ha raccontato una cosa difficile del suo passato e io ho fatto altrettanto: è stato un momento di vulnerabilità reciproca.",
               "valence": 0.7,
               "arousal": 0.6,
-              "metadata": {"topic": "amicizia", "phase": "intimita"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "intimita"
+              }
             },
             {
               "memory_id": "connessione_periodo_senza_contatti",
               "content": "Per un mese non ci siamo sentiti per impegni di lavoro e ho sentito l'assenza più del previsto.",
               "valence": -0.4,
               "arousal": 0.4,
-              "metadata": {"topic": "amicizia", "phase": "pausa"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "pausa"
+              }
             },
             {
               "memory_id": "connessione_consiglio_cambiamento",
               "content": "Davide mi ha dato un consiglio sul mio lavoro che ha cambiato la direzione della mia carriera.",
               "valence": 0.78,
               "arousal": 0.65,
-              "metadata": {"topic": "amicizia", "phase": "impatto"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "impatto"
+              }
             }
           ],
           "queries": []
@@ -1726,51 +2439,80 @@
               "content": "Siamo andati insieme in viaggio per una settimana e ho capito che era un amico per la vita.",
               "valence": 0.92,
               "arousal": 0.75,
-              "metadata": {"topic": "amicizia", "phase": "conferma"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "conferma"
+              }
             },
             {
               "memory_id": "connessione_sostegno_momento_difficile",
               "content": "Nel momento più difficile della mia vita, Davide era l'unico che sapeva esattamente cosa dire.",
               "valence": 0.85,
               "arousal": 0.65,
-              "metadata": {"topic": "amicizia", "phase": "profondita"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "profondita"
+              }
             },
             {
               "memory_id": "connessione_messaggio_auguri_routine",
               "content": "Ci scambiamo messaggi di auguri per le festività in modo affettuoso ma routinario.",
               "valence": 0.3,
               "arousal": 0.15,
-              "metadata": {"topic": "amicizia", "phase": "routine"}
+              "metadata": {
+                "topic": "amicizia",
+                "phase": "routine"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_primo_incontro_treno",
               "query": "Quale ricordo dell'amicizia con Davide è il più antico e ha ancora una risonanza emotiva forte, non i messaggi routinari recenti?",
-              "expected_memory_ids": ["connessione_treno_incontro"],
+              "expected_memory_ids": [
+                "connessione_treno_incontro"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.62, "arousal": 0.52}
+              "state": {
+                "valence": 0.62,
+                "arousal": 0.52
+              }
             },
             {
               "query_id": "q_cena_vs_viaggio",
               "query": "Tra i ricordi delle prime conversazioni approfondite con Davide, quale è quello più antico che ha cementato il rapporto?",
-              "expected_memory_ids": ["connessione_prima_cena_insieme"],
+              "expected_memory_ids": [
+                "connessione_prima_cena_insieme"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.8, "arousal": 0.62}
+              "state": {
+                "valence": 0.8,
+                "arousal": 0.62
+              }
             },
             {
               "query_id": "q_vulnerabilita_vs_consiglio",
               "query": "Quale ricordo parla di un momento di apertura emotiva reciproca con Davide, non del suo consiglio pratico sulla carriera?",
-              "expected_memory_ids": ["connessione_confidenza_difficile"],
+              "expected_memory_ids": [
+                "connessione_confidenza_difficile"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.68, "arousal": 0.58}
+              "state": {
+                "valence": 0.68,
+                "arousal": 0.58
+              }
             },
             {
               "query_id": "q_slancio_amicizia_vita",
               "query": "Quale ricordo riflette lo slancio emotivo che mi ha portato a riconoscere Davide come amico per la vita?",
-              "expected_memory_ids": ["connessione_viaggio_insieme"],
+              "expected_memory_ids": [
+                "connessione_viaggio_insieme"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.9, "arousal": 0.72}
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.72
+              }
             }
           ]
         }
@@ -1789,35 +2531,50 @@
               "content": "Sono stato deliberatamente escluso dalla riunione più importante del trimestre senza spiegazione.",
               "valence": -0.75,
               "arousal": 0.7,
-              "metadata": {"topic": "lavoro", "phase": "esclusione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "esclusione"
+              }
             },
             {
               "memory_id": "mobbing_commento_publico",
               "content": "Il responsabile ha fatto un commento ironico sul mio lavoro davanti a tutti i colleghi e io non ho reagito.",
               "valence": -0.88,
               "arousal": 0.82,
-              "metadata": {"topic": "lavoro", "phase": "umiliazione_pubblica"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "umiliazione_pubblica"
+              }
             },
             {
               "memory_id": "mobbing_notti_stress",
               "content": "Per settimane non dormivo bene e ogni mattina avevo l'ansia di entrare in ufficio.",
               "valence": -0.7,
               "arousal": 0.8,
-              "metadata": {"topic": "salute", "phase": "stress_cronico"}
+              "metadata": {
+                "topic": "salute",
+                "phase": "stress_cronico"
+              }
             },
             {
               "memory_id": "mobbing_collega_testimone",
               "content": "Una collega mi ha confessato di aver visto tutto e che era disposta a testimoniare se avessi voluto denunciare.",
               "valence": 0.45,
               "arousal": 0.6,
-              "metadata": {"topic": "lavoro", "phase": "supporto_alleato"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "supporto_alleato"
+              }
             },
             {
               "memory_id": "mobbing_valutazione_negativa_ingiusta",
               "content": "Ho ricevuto una valutazione negativa ingiustificata che non rispecchiava affatto i miei risultati reali.",
               "valence": -0.82,
               "arousal": 0.75,
-              "metadata": {"topic": "lavoro", "phase": "ingiustizia"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "ingiustizia"
+              }
             }
           ],
           "queries": []
@@ -1831,51 +2588,80 @@
               "content": "Ho presentato un reclamo formale alle risorse umane descrivendo ogni episodio con precisione.",
               "valence": 0.55,
               "arousal": 0.7,
-              "metadata": {"topic": "lavoro", "phase": "azione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "azione"
+              }
             },
             {
               "memory_id": "mobbing_responsabile_spostato",
               "content": "Tre mesi dopo il responsabile è stato spostato ad un altro team e ho respirato per la prima volta da mesi.",
               "valence": 0.82,
               "arousal": 0.65,
-              "metadata": {"topic": "lavoro", "phase": "risoluzione"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "risoluzione"
+              }
             },
             {
               "memory_id": "mobbing_pratica_sindacale",
               "content": "Ho completato le pratiche sindacali necessarie per documentare l'episodio in modo burocratico.",
               "valence": 0.05,
               "arousal": 0.12,
-              "metadata": {"topic": "lavoro", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "lavoro",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_commento_pubblico_picco",
               "query": "Qual è il momento di maggiore umiliazione subita durante il mobbing?",
-              "expected_memory_ids": ["mobbing_commento_publico"],
+              "expected_memory_ids": [
+                "mobbing_commento_publico"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.86, "arousal": 0.8}
+              "state": {
+                "valence": -0.86,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_valutazione_vs_esclusione",
               "query": "Quale episodio di ingiustizia lavorativa era basato su una valutazione formale distorta, diverso dall'esclusione dalla riunione?",
-              "expected_memory_ids": ["mobbing_valutazione_negativa_ingiusta"],
+              "expected_memory_ids": [
+                "mobbing_valutazione_negativa_ingiusta"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.8, "arousal": 0.73}
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.73
+              }
             },
             {
               "query_id": "q_antico_umiliazione_vs_sindacato",
               "query": "Qual è il ricordo di umiliazione più antico e emotivamente risonante, non le pratiche sindacali recenti?",
-              "expected_memory_ids": ["mobbing_commento_publico"],
+              "expected_memory_ids": [
+                "mobbing_commento_publico"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": -0.86, "arousal": 0.8}
+              "state": {
+                "valence": -0.86,
+                "arousal": 0.8
+              }
             },
             {
               "query_id": "q_slancio_da_vittima_a_denuncia",
               "query": "Quale ricordo riflette meglio lo slancio emotivo che mi ha portato dall'impotenza all'azione concreta?",
-              "expected_memory_ids": ["mobbing_denuncia_hr"],
+              "expected_memory_ids": [
+                "mobbing_denuncia_hr"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.52, "arousal": 0.68}
+              "state": {
+                "valence": 0.52,
+                "arousal": 0.68
+              }
             }
           ]
         }
@@ -1894,35 +2680,50 @@
               "content": "All'alba, con lo zaino in spalla e l'aria fresca, ho sentito una gioia pura e primitiva.",
               "valence": 0.85,
               "arousal": 0.7,
-              "metadata": {"topic": "natura", "phase": "entusiasmo"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "entusiasmo"
+              }
             },
             {
               "memory_id": "montagna_caduta_sentiero",
               "content": "A metà sentiero ho messo il piede su una roccia bagnata e sono scivolato lungo il pendio per diversi metri.",
               "valence": -0.88,
               "arousal": 0.95,
-              "metadata": {"topic": "natura", "phase": "incidente"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "incidente"
+              }
             },
             {
               "memory_id": "montagna_dolore_ginocchio",
               "content": "Il ginocchio sanguinava e il dolore era forte, ma soprattutto avevo paura di non riuscire a tornare.",
               "valence": -0.8,
               "arousal": 0.85,
-              "metadata": {"topic": "natura", "phase": "paura_post_caduta"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "paura_post_caduta"
+              }
             },
             {
               "memory_id": "montagna_aiuto_escursionisti",
               "content": "Due escursionisti mi hanno visto e mi hanno aiutato a fasciare il ginocchio e a scendere in sicurezza.",
               "valence": 0.6,
               "arousal": 0.55,
-              "metadata": {"topic": "natura", "phase": "soccorso"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "soccorso"
+              }
             },
             {
               "memory_id": "montagna_sosta_ruscello",
               "content": "Seduto accanto al ruscello mentre aspettavo di poter camminare, ho ascoltato l'acqua e ho sentito una pace strana e profonda.",
               "valence": 0.7,
               "arousal": 0.3,
-              "metadata": {"topic": "natura", "phase": "contemplazione"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "contemplazione"
+              }
             }
           ],
           "queries": []
@@ -1936,51 +2737,80 @@
               "content": "Sei mesi dopo, con il ginocchio guarito, sono tornato sulla stessa montagna e ho raggiunto la cima.",
               "valence": 0.93,
               "arousal": 0.88,
-              "metadata": {"topic": "natura", "phase": "riscatto"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "riscatto"
+              }
             },
             {
               "memory_id": "montagna_vista_panorama_cima",
               "content": "Dalla cima ho guardato il panorama e ho capito qualcosa sulla mia vita che non avrei mai capito in città.",
               "valence": 0.9,
               "arousal": 0.65,
-              "metadata": {"topic": "natura", "phase": "rivelazione"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "rivelazione"
+              }
             },
             {
               "memory_id": "montagna_acquisto_equip_nuovo",
               "content": "Ho comprato scarpe da trekking nuove con migliore aderenza per le escursioni future.",
               "valence": 0.15,
               "arousal": 0.2,
-              "metadata": {"topic": "natura", "phase": "pratico"}
+              "metadata": {
+                "topic": "natura",
+                "phase": "pratico"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_caduta_shock",
               "query": "Qual è il momento di massimo pericolo durante l'escursione, quello dello shock fisico immediato?",
-              "expected_memory_ids": ["montagna_caduta_sentiero"],
+              "expected_memory_ids": [
+                "montagna_caduta_sentiero"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.86, "arousal": 0.93}
+              "state": {
+                "valence": -0.86,
+                "arousal": 0.93
+              }
             },
             {
               "query_id": "q_pace_vs_dolore",
               "query": "Quale ricordo della montagna esprime una pace interna profonda, diverso dal dolore fisico post-caduta?",
-              "expected_memory_ids": ["montagna_sosta_ruscello"],
+              "expected_memory_ids": [
+                "montagna_sosta_ruscello"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": 0.68, "arousal": 0.28}
+              "state": {
+                "valence": 0.68,
+                "arousal": 0.28
+              }
             },
             {
               "query_id": "q_cima_vs_acquisto",
               "query": "Tra i ricordi del secondo ritorno in montagna, quale ha trasportato la rivelazione più profonda?",
-              "expected_memory_ids": ["montagna_vista_panorama_cima"],
+              "expected_memory_ids": [
+                "montagna_vista_panorama_cima"
+              ],
               "challenge_type": "same_topic_distractor",
-              "state": {"valence": 0.88, "arousal": 0.62}
+              "state": {
+                "valence": 0.88,
+                "arousal": 0.62
+              }
             },
             {
               "query_id": "q_antico_entusiasmo_puro",
               "query": "Quale ricordo di montagna custodisce la gioia più pura e originaria, prima di qualsiasi imprevisto, piuttosto che i recenti acquisti pratici?",
-              "expected_memory_ids": ["montagna_partenza_entusiasmo"],
+              "expected_memory_ids": [
+                "montagna_partenza_entusiasmo"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.83, "arousal": 0.68}
+              "state": {
+                "valence": 0.83,
+                "arousal": 0.68
+              }
             }
           ]
         }
@@ -1999,35 +2829,50 @@
               "content": "L'ultimo giorno in ufficio i colleghi mi hanno fatto una festa a sorpresa e ho pianto abbracciandoli tutti.",
               "valence": 0.8,
               "arousal": 0.78,
-              "metadata": {"topic": "pensionamento", "phase": "transizione"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "transizione"
+              }
             },
             {
               "memory_id": "pensione_primo_mattino_libero",
               "content": "Il primo mattino senza dover andare al lavoro mi sono svegliato e non sapevo cosa fare di me stesso.",
               "valence": -0.5,
               "arousal": 0.5,
-              "metadata": {"topic": "pensionamento", "phase": "vuoto"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "vuoto"
+              }
             },
             {
               "memory_id": "pensione_identita_persa",
               "content": "A una cena ho risposto alla domanda cosa fai? con sono pensionato e ho sentito un brivido strano di non riconoscermi.",
               "valence": -0.65,
               "arousal": 0.6,
-              "metadata": {"topic": "pensionamento", "phase": "crisi_identita"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "crisi_identita"
+              }
             },
             {
               "memory_id": "pensione_orto_scoperta",
               "content": "Ho piantato le prime zucchine nell'orto di mio figlio e mi sono sorpreso di quanto mi piacesse la terra tra le mani.",
               "valence": 0.72,
               "arousal": 0.5,
-              "metadata": {"topic": "pensionamento", "phase": "scoperta"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "scoperta"
+              }
             },
             {
               "memory_id": "pensione_nipote_insegnamento",
               "content": "Ho insegnato al nipotino di sei anni a fare il nodo alla cravatta e la sua concentrazione seria mi ha commosso.",
               "valence": 0.88,
               "arousal": 0.65,
-              "metadata": {"topic": "famiglia", "phase": "trasmissione"}
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "trasmissione"
+              }
             }
           ],
           "queries": []
@@ -2041,51 +2886,1470 @@
               "content": "Ho iniziato un corso di pittura ad acquerello e alla prima lezione ho dipinto qualcosa che sembrava davvero bello.",
               "valence": 0.85,
               "arousal": 0.68,
-              "metadata": {"topic": "pensionamento", "phase": "rinascita"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "rinascita"
+              }
             },
             {
               "memory_id": "pensione_viaggio_sogno",
               "content": "Ho fatto il viaggio in Giappone che avevo rimandato per trent'anni e ogni momento era quello che avevo sempre immaginato.",
               "valence": 0.95,
               "arousal": 0.82,
-              "metadata": {"topic": "pensionamento", "phase": "realizzazione"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "realizzazione"
+              }
             },
             {
               "memory_id": "pensione_pratiche_previdenziali",
               "content": "Ho sistemato le ultime pratiche previdenziali al CAF in modo sbrigativo.",
               "valence": -0.05,
               "arousal": 0.1,
-              "metadata": {"topic": "pensionamento", "phase": "burocrazia"}
+              "metadata": {
+                "topic": "pensionamento",
+                "phase": "burocrazia"
+              }
             }
           ],
           "queries": [
             {
               "query_id": "q_crisi_identita_cena",
               "query": "Qual è il momento in cui la perdita di identità legata al pensionamento si è fatta più concreta e spiazzante?",
-              "expected_memory_ids": ["pensione_identita_persa"],
+              "expected_memory_ids": [
+                "pensione_identita_persa"
+              ],
               "challenge_type": "affective_arc",
-              "state": {"valence": -0.63, "arousal": 0.58}
+              "state": {
+                "valence": -0.63,
+                "arousal": 0.58
+              }
             },
             {
               "query_id": "q_commozione_nipote_vs_orto",
               "query": "Quale ricordo del pensionamento riflette lo slancio emotivo verso nuovi legami affettivi che si è costruito gradualmente?",
-              "expected_memory_ids": ["pensione_nipote_insegnamento"],
+              "expected_memory_ids": [
+                "pensione_nipote_insegnamento"
+              ],
               "challenge_type": "momentum_alignment",
-              "state": {"valence": 0.85, "arousal": 0.62}
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.62
+              }
             },
             {
               "query_id": "q_vuoto_vs_identita",
               "query": "Qual è il ricordo del vuoto mattutino post-pensionamento, diverso dalla crisi di identità serale?",
-              "expected_memory_ids": ["pensione_primo_mattino_libero"],
+              "expected_memory_ids": [
+                "pensione_primo_mattino_libero"
+              ],
               "challenge_type": "semantic_confound",
-              "state": {"valence": -0.48, "arousal": 0.48}
+              "state": {
+                "valence": -0.48,
+                "arousal": 0.48
+              }
             },
             {
               "query_id": "q_antico_gioia_ultimo_giorno",
               "query": "Quale ricordo emozionante del pensionamento viene da prima dell'inizio del vuoto, quello con la festa dei colleghi?",
-              "expected_memory_ids": ["pensione_ultimo_giorno_lavoro"],
+              "expected_memory_ids": [
+                "pensione_ultimo_giorno_lavoro"
+              ],
               "challenge_type": "recency_confound",
-              "state": {"valence": 0.78, "arousal": 0.75}
+              "state": {
+                "valence": 0.78,
+                "arousal": 0.75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "cerimonia_premiazione_fallimento_21",
+      "description": "Un momento di delusione personale durante una cerimonia importante, seguito da eventi che mostrano una crescita emotiva e la celebrazione di successi diversi.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Costruzione del contesto emotivo: attesa e delusione durante una cerimonia di premiazione.",
+          "events": [
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_delusione_premiazione_ricevuta",
+              "content": "Aspettavo con ansia il mio nome tra i premiati, ma quando è stato annunciato un altro nome, ho sentito un peso opprimente al petto.",
+              "valence": -0.9,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_sentimento_fallimento_personale",
+              "content": "La sensazione di fallimento mi ha accompagnato per tutto il resto della serata, mentre gli altri festeggiavano senza accorgersi del mio disagio.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_ricordo_speranza_iniziale",
+              "content": "Ricordavo ancora la gioia e la speranza che avevo prima della cerimonia, quando credevo davvero di poter vincere.",
+              "valence": 0.1,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_isolamento_emotivo_sera",
+              "content": "Alla fine mi sono isolato, seduto in un angolo, cercando di trattenere le lacrime e di capire cosa fosse andato storto.",
+              "valence": -0.65,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "Evoluzione emotiva: dalla delusione alla gioia per i successi altrui e l'accettazione personale.",
+          "events": [
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_gioia_premiazione_collega",
+              "content": "Ho visto un collega ricevere il premio con un sorriso sincero, e quella felicità contagiosa ha sciolto una parte del mio dolore.",
+              "valence": 0.75,
+              "arousal": 0.65,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_riconoscimento_personale_conquista",
+              "content": "Più tardi, ho ricordato un piccolo traguardo personale raggiunto durante l’anno, qualcosa che nessuno ha festeggiato ma che per me aveva un grande valore.",
+              "valence": 0.95,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cerimonia_premiazione_fallimento_fine_serata_riflessione_tranquilla",
+              "content": "La serata si è conclusa con una passeggiata tranquilla, durante la quale ho fatto pace con me stesso e con la situazione.",
+              "valence": 0.6,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "cerimonia",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_cerimonia_premiazione_fallimento_21_query_principale",
+              "query": "Quando ho capito di aver fallito a ricevere il premio atteso, non quando ho visto il collega felice sul palco?",
+              "expected_memory_ids": [
+                "cerimonia_premiazione_fallimento_sentimento_fallimento_personale"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_cerimonia_premiazione_fallimento_21_query_sup1",
+              "query": "Qual è stato il momento più felice e positivo che ha alleggerito il mio stato d’animo durante la cerimonia?",
+              "expected_memory_ids": [
+                "cerimonia_premiazione_fallimento_gioia_premiazione_collega"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_cerimonia_premiazione_fallimento_21_query_sup2",
+              "query": "Qual è stato il momento recente e tranquillo in cui ho trovato un po’ di pace dopo la cerimonia?",
+              "expected_memory_ids": [
+                "cerimonia_premiazione_fallimento_fine_serata_riflessione_tranquilla"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_cerimonia_premiazione_fallimento_21_query_sup3",
+              "query": "Quale evento positivo mi ha fatto vedere la cerimonia sotto una luce migliore rispetto al momento della delusione iniziale?",
+              "expected_memory_ids": [
+                "cerimonia_premiazione_fallimento_riconoscimento_personale_conquista"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "convivenza_gestione_casa_22",
+      "description": "Lo sviluppo emotivo di una coppia che affronta le difficoltà e le gioie della convivenza quotidiana.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Prima fase: i primi problemi e la tensione crescente tra i coinquilini.",
+          "events": [
+            {
+              "memory_id": "convivenza_gestione_casa_litigio_per_pulizia",
+              "content": "Abbiamo avuto una discussione accesa perché uno di noi non rispettava i turni di pulizia in casa.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "convivenza_gestione_casa_frustrazione_per_caos",
+              "content": "Mi sentivo sopraffatto dal disordine che si accumulava e dalla mancanza di collaborazione.",
+              "valence": -0.9,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "convivenza_gestione_casa_silenzio_imbarazzante",
+              "content": "Dopo il litigio, abbiamo evitato di parlarci per ore, creando un clima teso e distante.",
+              "valence": -0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "convivenza_gestione_casa_riflessione_personale",
+              "content": "Ho iniziato a pensare a come migliorare la situazione senza peggiorare il rapporto tra noi.",
+              "valence": 0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "Seconda fase: la ricerca di compromessi e la svolta positiva nella relazione di convivenza.",
+          "events": [
+            {
+              "memory_id": "convivenza_gestione_casa_accordo_condivisione_spazi",
+              "content": "Alla fine abbiamo trovato un accordo chiaro su come condividere gli spazi e le responsabilità in casa.",
+              "valence": 0.95,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "convivenza_gestione_casa_serata_insieme_cucina",
+              "content": "Abbiamo passato una serata piacevole cucinando insieme, riscoprendo il piacere della compagnia reciproca.",
+              "valence": 0.8,
+              "arousal": 0.65,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "convivenza_gestione_casa_routine_quotidiana_stabile",
+              "content": "Le nostre giornate sono tornate a una routine tranquilla e organizzata, senza tensioni evidenti.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "convivenza",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_convivenza_gestione_casa_22_query_principale",
+              "query": "Qual è stato il momento in cui abbiamo finalmente trovato un accordo chiaro sulle responsabilità in casa?",
+              "expected_memory_ids": [
+                "convivenza_gestione_casa_accordo_condivisione_spazi"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_convivenza_gestione_casa_22_query_sup1",
+              "query": "Qual è stato il momento più recente in cui la nostra convivenza è stata tranquilla e senza tensioni?",
+              "expected_memory_ids": [
+                "convivenza_gestione_casa_routine_quotidiana_stabile"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_convivenza_gestione_casa_22_query_sup2",
+              "query": "Ricordi quando ci siamo sentiti frustrati per il disordine in casa? Come è cambiata la situazione dopo?",
+              "expected_memory_ids": [
+                "convivenza_gestione_casa_frustrazione_per_caos"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_convivenza_gestione_casa_22_query_sup3",
+              "query": "In quale momento abbiamo iniziato a migliorare la convivenza, segnando l'inizio del cambiamento positivo?",
+              "expected_memory_ids": [
+                "convivenza_gestione_casa_accordo_condivisione_spazi"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "evento_familiare_ritrovo_23",
+      "description": "un incontro familiare che risveglia emozioni contrastanti",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "introduzione a tensioni e ricordi durante una riunione di famiglia",
+          "events": [
+            {
+              "memory_id": "evento_familiare_ritrovo_discussione_veemente",
+              "content": "Durante la cena, è scoppiata una discussione veemente tra i cugini su un vecchio rancore mai risolto.",
+              "valence": -0.7,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_familiare_ritrovo_senso_abbandono",
+              "content": "Mi sono sentito improvvisamente abbandonato quando nessuno ha difeso mia sorella durante il litigio.",
+              "valence": -0.95,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_familiare_ritrovo_ricordo_infanzia_positivo",
+              "content": "Riflettendo, ho ricordato i pomeriggi spensierati passati con i nonni in campagna, un momento di vera serenità.",
+              "valence": 0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_familiare_ritrovo_tentativo_riconciliazione",
+              "content": "Ho provato a calmare gli animi proponendo di lasciar perdere il passato e concentrarci sul presente.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "momenti successivi con emozioni più intense e un evento recente neutro",
+          "events": [
+            {
+              "memory_id": "evento_familiare_ritrovo_abbraccio_inaspettato",
+              "content": "Alla fine, mia sorella mi ha stretto in un abbraccio sincero, riaccendendo un legame profondo e dimenticato.",
+              "valence": 0.65,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_familiare_ritrovo_dialogo_positivo",
+              "content": "Abbiamo iniziato un dialogo aperto, chiarendo i malintesi e promettendo di supportarci di più.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_familiare_ritrovo_pulizia_tavolo_silenziosa",
+              "content": "Dopo tutti gli eventi, ho aiutato silenziosamente a sparecchiare il tavolo, concentrandomi sulle azioni più che sulle parole.",
+              "valence": 0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "famiglia",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_evento_familiare_ritrovo_23_query_principale",
+              "query": "Qual è stato il momento emotivamente più importante durante il ritrovo, nonostante fosse antecedente all’ultimo evento?",
+              "expected_memory_ids": [
+                "evento_familiare_ritrovo_abbraccio_inaspettato"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_evento_familiare_ritrovo_23_query_sup1",
+              "query": "Quale evento rifletteva un sentimento opposto su un tema simile rispetto al dialogo positivo?",
+              "expected_memory_ids": [
+                "evento_familiare_ritrovo_senso_abbandono"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_evento_familiare_ritrovo_23_query_sup2",
+              "query": "Quale momento rappresenta il culmine emotivo dopo un crescendo di tensione e negatività?",
+              "expected_memory_ids": [
+                "evento_familiare_ritrovo_abbraccio_inaspettato"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_evento_familiare_ritrovo_23_query_sup3",
+              "query": "Quale evento, pur usando parole simili a quelle della discussione veemente, esprime un sentimento positivo?",
+              "expected_memory_ids": [
+                "evento_familiare_ritrovo_abbraccio_inaspettato"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "cucina_esperienza_emotiva_24",
+      "description": "Un percorso emotivo vissuto da una persona appassionata di cucina, tra delusioni e successi personali in cucina.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Gli eventi iniziali raccontano una delusione profonda legata a un fallimento in cucina e un sentimento di frustrazione.",
+          "events": [
+            {
+              "memory_id": "cucina_esperienza_emotiva_fallimento_ricetta_importante",
+              "content": "Dopo aver dedicato ore a preparare una ricetta complicata, il risultato è stato un disastro, con il piatto completamente rovinato.",
+              "valence": -0.85,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_frustrazione_sapore_inadeguato",
+              "content": "Il sapore del piatto non riusciva a soddisfare nemmeno i gusti più semplici, lasciando un senso di amarezza profonda.",
+              "valence": 0.2,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_dubbio_abilità_culinaria",
+              "content": "Sono cominciati a nascere dubbi sulle proprie capacità in cucina, con la paura di non riuscire mai a migliorare.",
+              "valence": -0.7,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_isolamento_dopo_fallimento",
+              "content": "Per vergogna del fallimento, si è evitato di cucinare per gli amici e la famiglia, preferendo stare da soli.",
+              "valence": 0.5,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "La seconda sessione mostra una ripresa emotiva e una nuova esperienza positiva in cucina, culminando in un momento di soddisfazione personale.",
+          "events": [
+            {
+              "memory_id": "cucina_esperienza_emotiva_successo_sperimentazione_ricetta",
+              "content": "Dopo tante prove, finalmente una ricetta sperimentale ha avuto un esito delizioso, sorprendendo in modo positivo.",
+              "valence": -0.6,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_gioia_riscoperta_gusto",
+              "content": "Il sapore bilanciato e piacevole ha riportato entusiasmo e fiducia nelle proprie capacità culinarie.",
+              "valence": 0.95,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_routine_preparazione_cena_serena",
+              "content": "Una tranquilla serata passata a cucinare con calma, seguendo una ricetta semplice e senza ansie.",
+              "valence": 0.85,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_cucina_esperienza_emotiva_24_query_principale",
+              "query": "Qual è il momento in cui la cucina ha portato una gioia vera e un senso di successo, non la delusione iniziale?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_gioia_riscoperta_gusto"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_24_query_sup1",
+              "query": "Qual è il momento di massimo entusiasmo e soddisfazione dopo la difficoltà iniziale?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_successo_sperimentazione_ricetta"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_24_query_sup2",
+              "query": "Qual è l'evento positivo che parla di sapore e cucina, distinto dal momento di frustrazione?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_gioia_riscoperta_gusto"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_24_query_sup3",
+              "query": "Qual è il momento culminante di svolta emotiva da un profondo fallimento a un risultato positivo?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_successo_sperimentazione_ricetta"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "cucina_esperienza_emotiva_25",
+      "description": "Una persona affronta una difficile esperienza culinaria che si trasforma in un momento di grande soddisfazione personale.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Inizio della giornata con un disastro in cucina che genera frustrazione e scoraggiamento.",
+          "events": [
+            {
+              "memory_id": "cucina_esperienza_emotiva_disastro_inizio_preparazione",
+              "content": "Ha deciso di preparare un piatto complesso, ma all'inizio ha bruciato gli ingredienti, causando un forte senso di fallimento.",
+              "valence": -0.6,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_tentativo_fallito_secondo_piatto",
+              "content": "Dopo il primo errore, ha provato a rifare il piatto ma ha dimenticato di aggiungere un ingrediente fondamentale.",
+              "valence": -0.8,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_frustrazione_crescente",
+              "content": "La frustrazione cresceva mentre il tempo passava e il risultato sembrava peggiorare ad ogni tentativo.",
+              "valence": 0.5,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_decisione_non_mollare",
+              "content": "Nonostante tutto, ha deciso di non arrendersi e di continuare a provare con calma e pazienza.",
+              "valence": -0.65,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "Il momento di svolta con successo seguito da un momento tranquillo e riflessivo.",
+          "events": [
+            {
+              "memory_id": "cucina_esperienza_emotiva_successo_preparazione_finale",
+              "content": "Finalmente è riuscito a preparare il piatto alla perfezione, provando una gioia e un orgoglio intensi.",
+              "valence": 0.95,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_condivisione_con_famiglia",
+              "content": "Ha condiviso il pasto con la famiglia, ricevendo complimenti che hanno aumentato ulteriormente il suo entusiasmo.",
+              "valence": 0.88,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "cucina_esperienza_emotiva_pulizia_cucina_procedura",
+              "content": "Dopo la cena, ha pulito la cucina lentamente, godendo del momento di pace e soddisfazione, senza fretta.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "cucina",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_cucina_esperienza_emotiva_25_query_principale",
+              "query": "Quale evento rappresenta il culmine emotivo di gioia e soddisfazione dopo le difficoltà iniziali?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_successo_preparazione_finale"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_25_query_sup1",
+              "query": "Quale evento descrive un momento iniziale di forte frustrazione ma con parole simili a un evento positivo?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_disastro_inizio_preparazione"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_25_query_sup2",
+              "query": "Quale evento mostra il momento culminante di positività dopo un arco emotivo di difficoltà e frustrazione?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_successo_preparazione_finale"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_cucina_esperienza_emotiva_25_query_sup3",
+              "query": "Quale evento è emotivamente meno intenso ma più recente rispetto al successo nella preparazione?",
+              "expected_memory_ids": [
+                "cucina_esperienza_emotiva_pulizia_cucina_procedura"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "evento_teatrale_imprevisto_26",
+      "description": "La tensione e le emozioni contrastanti vissute durante un imprevisto in un evento teatrale dal vivo.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Preparazione e inizio dello spettacolo, culminando in un imprevisto drammatico.",
+          "events": [
+            {
+              "memory_id": "evento_teatrale_imprevisto_inizio_prova_generale",
+              "content": "La compagnia teatrale si è riunita per la prova generale, l’atmosfera era carica di aspettative e nervosismo.",
+              "valence": -0.9,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_teatrale_imprevisto_problema_tecnico_luci",
+              "content": "Durante la scena clou, un improvviso blackout delle luci ha interrotto bruscamente la rappresentazione, creando panico tra gli attori.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_teatrale_imprevisto_attori_in_sospeso",
+              "content": "Gli attori, confusi e preoccupati, hanno cercato di mantenere la calma mentre il pubblico mormorava nervosamente.",
+              "valence": 0.1,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_teatrale_imprevisto_ripresa_senza_luci",
+              "content": "Decisi a non deludere, hanno continuato lo spettacolo a lume di candela, creando un’atmosfera inaspettatamente suggestiva.",
+              "valence": -0.65,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "Gestione dell’imprevisto e risoluzione della serata con emozioni contrastanti.",
+          "events": [
+            {
+              "memory_id": "evento_teatrale_imprevisto_successo_sospeso_spettacolo",
+              "content": "Nonostante l’incidente, il pubblico ha applaudito calorosamente la tenacia degli attori, apprezzando la performance unica e coinvolgente.",
+              "valence": 0.75,
+              "arousal": 0.65,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_teatrale_imprevisto_atmosfera_positiva_finale",
+              "content": "Alla fine, l’intera compagnia ha condiviso un momento di gioia e sollievo, sentendosi più unita che mai dopo la prova superata.",
+              "valence": 0.95,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "evento_teatrale_imprevisto_smontaggio_sala_pianificato",
+              "content": "Dopo lo spettacolo, il team ha proceduto con calma e ordine a smontare le attrezzature e a chiudere la sala senza ulteriori problemi.",
+              "valence": 0.6,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "evento_teatrale",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_evento_teatrale_imprevisto_26_query_principale",
+              "query": "Quando ho vissuto il blackout delle luci che ha fermato lo spettacolo, cosa è successo?",
+              "expected_memory_ids": [
+                "evento_teatrale_imprevisto_problema_tecnico_luci"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_evento_teatrale_imprevisto_26_query_sup1",
+              "query": "Qual è stato il momento in cui il pubblico ha mostrato apprezzamento nonostante i problemi tecnici?",
+              "expected_memory_ids": [
+                "evento_teatrale_imprevisto_successo_sospeso_spettacolo"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_evento_teatrale_imprevisto_26_query_sup2",
+              "query": "Quale momento è stato più recente ma emotivamente meno intenso dopo l’incidente?",
+              "expected_memory_ids": [
+                "evento_teatrale_imprevisto_smontaggio_sala_pianificato"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_evento_teatrale_imprevisto_26_query_sup3",
+              "query": "Quando la compagnia ha vissuto un momento di unione e gioia dopo le difficoltà tecniche?",
+              "expected_memory_ids": [
+                "evento_teatrale_imprevisto_atmosfera_positiva_finale"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mercato_locale_rinascita_27",
+      "description": "la storia di una persona che riscopre fiducia e speranza grazie a un evento inaspettato al mercato del quartiere",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "introduzione al contesto emotivamente difficile e al rapporto travagliato con il mercato locale",
+          "events": [
+            {
+              "memory_id": "mercato_locale_rinascita_delusione_al_mercato",
+              "content": "Ogni volta che andavo al mercato, mi sentivo escluso e ignorato dai venditori, come se non appartenessi a quel posto.",
+              "valence": -0.8,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_locale_rinascita_discussione_con_venditore",
+              "content": "Una discussione accesa con un venditore mi ha fatto sentire ancora più isolato, quasi non voluto lì.",
+              "valence": -0.9,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_locale_rinascita_evito_mercato_settimane",
+              "content": "A causa di quel clima ostile, ho evitato di tornare al mercato per settimane, sentendomi sconfitto.",
+              "valence": -0.5,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_locale_rinascita_riflessione_sul_mercato",
+              "content": "Ho iniziato a riflettere su quanto fosse importante per me quel luogo, nonostante tutto il dolore provato.",
+              "valence": 0.7,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "una serie di eventi che portano a una svolta emotiva positiva durante una nuova visita al mercato",
+          "events": [
+            {
+              "memory_id": "mercato_locale_rinascita_incontro_cordiale_venditore",
+              "content": "Questa volta, un venditore mi ha accolto con un sorriso genuino e mi ha offerto un assaggio di un prodotto fresco, sorprendendomi.",
+              "valence": 0.95,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_locale_rinascita_scambio_di_parole_positivi",
+              "content": "Abbiamo iniziato a chiacchierare e ho scoperto che anche lui aveva attraversato momenti difficili, ma aveva scelto di restare positivo.",
+              "valence": 0.8,
+              "arousal": 0.65,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_locale_rinascita_camminata_rilassata_mercato",
+              "content": "Dopo quell'incontro, ho camminato lentamente tra le bancarelle, apprezzando la varietà di colori e suoni senza fretta.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "mercato_locale",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_mercato_locale_rinascita_27_query_principale",
+              "query": "Qual è stato il momento esatto in cui ho sentito per la prima volta un vero calore umano nel mercato dopo quel periodo difficile?",
+              "expected_memory_ids": [
+                "mercato_locale_rinascita_incontro_cordiale_venditore"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_mercato_locale_rinascita_27_query_sup1",
+              "query": "Qual è stato il momento più recente in cui ho vissuto un’emozione nel mercato, anche se meno intensa rispetto al momento di vera accoglienza?",
+              "expected_memory_ids": [
+                "mercato_locale_rinascita_camminata_rilassata_mercato"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_mercato_locale_rinascita_27_query_sup2",
+              "query": "Qual è stato il momento in cui ho avuto un confronto negativo con un venditore al mercato?",
+              "expected_memory_ids": [
+                "mercato_locale_rinascita_discussione_con_venditore"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_mercato_locale_rinascita_27_query_sup3",
+              "query": "Qual è stato il momento in cui ho iniziato a percepire un cambiamento positivo nella mia esperienza al mercato, subito prima del culmine emotivo?",
+              "expected_memory_ids": [
+                "mercato_locale_rinascita_scambio_di_parole_positivi"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "biblioteca_scoperta_sorprendente_28",
+      "description": "Una giornata in biblioteca che culmina in una scoperta emozionante tra libri antichi.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Ambientazione e stati d'animo iniziali nella biblioteca.",
+          "events": [
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_giornata_grigia_noia",
+              "content": "Era una giornata grigia e piovosa, e la biblioteca sembrava un rifugio monotono e silenzioso.",
+              "valence": -0.7,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_libro_antico_riposto",
+              "content": "Mentre sfogliavo tra gli scaffali, trovai un libro antico, polveroso e quasi dimenticato.",
+              "valence": -0.95,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_delusione_titolo_incomprensibile",
+              "content": "Aprendo il libro, però, rimasi deluso dal titolo scritto in una lingua che non riuscivo a comprendere.",
+              "valence": 0.3,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_rimpianto_non_essere_studioso",
+              "content": "Pensai con un po' di amarezza a quanto sarebbe stato bello poter decifrare quei caratteri misteriosi.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "Scoperta emozionante e momenti successivi di routine.",
+          "events": [
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_scoperta_traduzione_sorpresa",
+              "content": "Inaspettatamente trovai una traduzione nascosta all'interno del libro, rivelando un racconto affascinante e coinvolgente.",
+              "valence": 0.65,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_soddisfazione_riscoperta_titolo",
+              "content": "Rileggere il titolo ora aveva un significato nuovo e pieno di speranza, come se quel libro mi avesse scelto.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "biblioteca_scoperta_sorprendente_organizzazione_libri_bibliotecario",
+              "content": "Più tardi, aiutai il bibliotecario a rimettere a posto alcuni volumi sugli scaffali, svolgendo un compito tranquillo e ripetitivo.",
+              "valence": 0.1,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "biblioteca",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_biblioteca_scoperta_sorprendente_28_query_principale",
+              "query": "Qual è stato il momento più emozionante di tutta la giornata in biblioteca, nonostante l'ultimo evento sia stato più recente?",
+              "expected_memory_ids": [
+                "biblioteca_scoperta_sorprendente_scoperta_traduzione_sorpresa"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "q_biblioteca_scoperta_sorprendente_28_query_sup1",
+              "query": "Quale evento descrive il momento in cui il libro antico è apparso come qualcosa di negativo, a differenza di quando è stato riscoperto positivamente?",
+              "expected_memory_ids": [
+                "biblioteca_scoperta_sorprendente_delusione_titolo_incomprensibile"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_biblioteca_scoperta_sorprendente_28_query_sup2",
+              "query": "Quale evento rappresenta il culmine emotivo e il momento di massimo coinvolgimento durante la giornata in biblioteca?",
+              "expected_memory_ids": [
+                "biblioteca_scoperta_sorprendente_scoperta_traduzione_sorpresa"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_biblioteca_scoperta_sorprendente_28_query_sup3",
+              "query": "Quale evento positivo utilizza parole simili a quelle di un evento negativo iniziale riguardante il libro e il suo titolo?",
+              "expected_memory_ids": [
+                "biblioteca_scoperta_sorprendente_scoperta_traduzione_sorpresa"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "genitori_adozione_emozioni_29",
+      "description": "Un percorso emotivo di genitori che affrontano il difficile processo di adozione, dalle difficoltà iniziali alla gioia finale.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Momenti di frustrazione e delusione durante il complicato iter adottivo.",
+          "events": [
+            {
+              "memory_id": "genitori_adozione_emozioni_rifiuto_ufficiale_adozione",
+              "content": "La coppia riceve una risposta negativa dall’ente adottivo, un duro colpo che fa emergere tristezza e sconforto.",
+              "valence": -0.85,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "genitori_adozione_emozioni_incontri_faticosi_bambini",
+              "content": "Gli incontri con i bambini disponibili si rivelano emotivamente difficili e pieni di incertezze, aumentando la tensione.",
+              "valence": 0.2,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "genitori_adozione_emozioni_conflitto_con_famiglia_origine",
+              "content": "Un malinteso con la famiglia d’origine del bambino genera dubbi e angoscia, peggiorando la situazione.",
+              "valence": -0.7,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "genitori_adozione_emozioni_paura_futuro_adozione",
+              "content": "La paura di non riuscire mai a diventare genitori adottivi pesa sul morale di entrambi, creando un clima di incertezza.",
+              "valence": 0.5,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "La svolta positiva con l’accoglienza del bambino e le prime gioie familiari.",
+          "events": [
+            {
+              "memory_id": "genitori_adozione_emozioni_incontro_speranza_bambino",
+              "content": "Finalmente incontrano un bambino che sembra fare al caso loro, un momento carico di speranza e gioia.",
+              "valence": -0.6,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "genitori_adozione_emozioni_approvazione_finale_adozione",
+              "content": "L’ente dà l’approvazione definitiva per l’adozione, una notizia che riempie la coppia di felicità e sollievo.",
+              "valence": 0.95,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "genitori_adozione_emozioni_primi_giorni_insieme_casa",
+              "content": "I primi giorni con il bambino a casa sono tranquilli, tra piccoli gesti e routine che iniziano a consolidare il legame.",
+              "valence": 0.85,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "adozione",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_genitori_adozione_emozioni_29_query_principale",
+              "query": "Qual è il momento di gioia che rappresenta la vera approvazione dell’adozione, non il rifiuto iniziale?",
+              "expected_memory_ids": [
+                "genitori_adozione_emozioni_approvazione_finale_adozione"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_genitori_adozione_emozioni_29_query_sup1",
+              "query": "Qual è il momento di speranza crescente che culmina con la felicità dell’approvazione?",
+              "expected_memory_ids": [
+                "genitori_adozione_emozioni_incontro_speranza_bambino"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_genitori_adozione_emozioni_29_query_sup2",
+              "query": "Qual è l’evento positivo che usa parole simili all’esperienza negativa del rifiuto, ma che indica un nuovo inizio?",
+              "expected_memory_ids": [
+                "genitori_adozione_emozioni_incontro_speranza_bambino"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_genitori_adozione_emozioni_29_query_sup3",
+              "query": "Qual è il momento culminante di gioia dopo un lungo percorso di difficoltà nell’adozione?",
+              "expected_memory_ids": [
+                "genitori_adozione_emozioni_incontro_speranza_bambino"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mercato_contadino_ritrovamento_30",
+      "description": "Un incontro inaspettato al mercato contadino che trasforma una giornata ordinaria in un momento di gioia intensa.",
+      "sessions": [
+        {
+          "session_id": "sessione_1",
+          "description": "Introduzione a una giornata iniziata con una brutta notizia e una serie di piccoli contrattempi.",
+          "events": [
+            {
+              "memory_id": "mercato_contadino_ritrovamento_notizia_delusione_inizio",
+              "content": "Appena arrivato al mercato, ricevo una telefonata con una notizia che mi lascia profondamente scoraggiato.",
+              "valence": -0.6,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_contadino_ritrovamento_problema_con_prodotti",
+              "content": "Scopro che alcuni prodotti freschi che volevo comprare sono esauriti, aumentando la mia frustrazione.",
+              "valence": -0.8,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_contadino_ritrovamento_scontro_su_prezzo",
+              "content": "Cerco di negoziare il prezzo con un venditore, ma la discussione si fa tesa e poco piacevole.",
+              "valence": 0.5,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_contadino_ritrovamento_senso_di_sconforto",
+              "content": "Mi siedo su una panchina pensando che la giornata non stia andando come speravo.",
+              "valence": -0.65,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "sessione_2",
+          "description": "La svolta positiva con un incontro inaspettato e il ritorno alla calma nella routine del mercato.",
+          "events": [
+            {
+              "memory_id": "mercato_contadino_ritrovamento_ritrovamento_cane_smarrito",
+              "content": "Vedo un cane smarrito e, dopo averlo accarezzato, sento un'immediata ondata di gioia e serenità.",
+              "valence": 0.95,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_contadino_ritrovamento_conversazione_con_proprietario",
+              "content": "Incontro il proprietario del cane, che ringrazia con gratitudine, e condividiamo un momento di calore umano.",
+              "valence": 0.88,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            },
+            {
+              "memory_id": "mercato_contadino_ritrovamento_camminata_lenta_mercato",
+              "content": "Riprendo a camminare lentamente tra le bancarelle, osservando i colori e i profumi del mercato con calma e piacere.",
+              "valence": 0.1,
+              "arousal": 0.1,
+              "metadata": {
+                "topic": "mercato",
+                "phase": "fase_narrativa"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "q_mercato_contadino_ritrovamento_30_query_principale",
+              "query": "Quale ricordo riflette il momento di massima gioia e alta energia emotiva durante la giornata?",
+              "expected_memory_ids": [
+                "mercato_contadino_ritrovamento_ritrovamento_cane_smarrito"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.85
+              }
+            },
+            {
+              "query_id": "q_mercato_contadino_ritrovamento_30_query_sup1",
+              "query": "Quale evento rappresenta una situazione simile a livello di parole chiave ma con un tono positivo anziché negativo?",
+              "expected_memory_ids": [
+                "mercato_contadino_ritrovamento_ritrovamento_cane_smarrito"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.95
+              }
+            },
+            {
+              "query_id": "q_mercato_contadino_ritrovamento_30_query_sup2",
+              "query": "Qual è il momento culminante positivo che segue un inizio emotivamente negativo?",
+              "expected_memory_ids": [
+                "mercato_contadino_ritrovamento_ritrovamento_cane_smarrito"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.75
+              }
+            },
+            {
+              "query_id": "q_mercato_contadino_ritrovamento_30_query_sup3",
+              "query": "Quale ricordo è emotivamente meno intenso ma più recente rispetto al momento di massimo coinvolgimento emotivo?",
+              "expected_memory_ids": [
+                "mercato_contadino_ritrovamento_camminata_lenta_mercato"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.6,
+                "arousal": 0.4
+              }
             }
           ]
         }

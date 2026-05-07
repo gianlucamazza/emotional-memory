@@ -398,7 +398,9 @@ def _build_queries(
     queries_raw: list[dict[str, Any]],
     slug: str,
     challenge_types: list[str],
+    scenario_number: int,
 ) -> list[dict[str, Any]]:
+    nn = str(scenario_number).zfill(2)
     result: list[dict[str, Any]] = []
     for q in queries_raw:
         ct = q["challenge_type"]
@@ -406,7 +408,7 @@ def _build_queries(
             raise ValueError(f"Unknown challenge_type in LLM output: {ct!r}")
         result.append(
             {
-                "query_id": f"q_{slug}_{q['id_suffix']}",
+                "query_id": f"q_{slug}_{nn}_{q['id_suffix']}",
                 "query": q["query"],
                 "expected_memory_ids": [f"{slug}_{q['expected_id_suffix']}"],
                 "challenge_type": ct,
@@ -438,7 +440,7 @@ def _assemble_scenario(
     s1_with_va = all_events_with_va[:4]
     s2_with_va = all_events_with_va[4:]
 
-    queries = _build_queries(llm_output["queries"], slug, challenge_types)
+    queries = _build_queries(llm_output["queries"], slug, challenge_types, scenario_number)
 
     return {
         "scenario_id": scenario_id,
