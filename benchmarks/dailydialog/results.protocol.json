@@ -1,0 +1,24 @@
+{
+  "benchmark": "hk1_dailydialog",
+  "pre_registration": "benchmarks/preregistration_addendum_k_dailydialog.md",
+  "systems": [
+    "aft",
+    "naive_cosine"
+  ],
+  "n_personas": 120,
+  "embedder": "multilingual-e5-small",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "primary_metrics": [
+    "top1_accuracy",
+    "hit_at_k"
+  ],
+  "query_types": [
+    "emotion_state_recall",
+    "affect_conditioned_content",
+    "affective_trajectory",
+    "cross_session_control"
+  ],
+  "hypothesis": "Hk1: AFT top1_accuracy > naive_cosine on affect-conditioned recall",
+  "decision_rule": "PASS iff: p_holm<0.05 AND delta>0 AND ci_lower>0 on aggregate, and >=2/3 directional types also PASS individually"
+}
