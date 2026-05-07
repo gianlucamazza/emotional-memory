@@ -75,7 +75,8 @@ Dot release(s) for the paper bundle, no API changes:
 All items in this milestone shipped across v0.8.0–v0.8.3 dot releases.
 
 ### Gate evidence — all closed
-- [x] **S3 ablation @ N=200** — Ha (no_mood): FAIL; Hb (no_resonance): FAIL (e5 magnitude amplification — decomposed in Add. I, #29 closed); Hc: PASS; Hd2/Hd2_IT: PASS (EN Δ=+0.125, IT Δ=+0.163). Closure docs in `benchmarks/`.
+- [x] **S3 ablation @ N=200** — Ha (no_mood): FAIL; Hb (no_resonance): FAIL (e5 magnitude amplification — decomposed in Add. I, #29 closed); Hc: PASS; Hd2: PASS (EN Δ=+0.125). Closure docs in `benchmarks/`.
+- [x] **P2-1 power top-up Hd2 IT/ES to N=120** — Branch C (FAIL-FAIL, 2026-05-07). me5: IT Δ=+0.058 p=0.276, ES Δ=0.000 p=1.00. Cross-language scoped to ES-SBERT N=80 exploratory positive. Closure: `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 - [x] **G7 PAD dominance design** — design note `docs/research/11_dominance_design.md` shipped. CoreAffect 3D promotion deferred to v0.10 (back-compat migration required).
 - [x] **SSOT automation** — `make bump VERSION=X.Y.Z` (atomic 3-file edit + propagation + preflight), `make check-all`, `sync_release_metadata` covers demo/README drift.
 

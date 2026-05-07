@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
+- **Pre-registration Addendum Hd2-PowerTopUp — Branch C closure** (2026-05-07):
+  Power top-up to N=120 (30 scenarios per language) executed on multilingual-e5-small
+  for Italian and Spanish. **Branch C (FAIL-FAIL):** IT Δ=+0.058 [−0.042, +0.158],
+  p=0.276, d=0.105; ES Δ=0.000 [−0.100, +0.100], p=1.00, d=0.000. Cross-language
+  evidence rescoped: EN headline (d=0.49) unaffected; ES-SBERT N=80 (Δ=+0.138,
+  p=0.045) remains a single exploratory positive; me5 IT/ES do not establish the
+  effect at declared power. Paper §6/§7/§8, docs, README updated accordingly.
+  Closure: `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
+
 - **Pre-registration Addendum I — Hi3 confirmatory closure** (`benchmarks/preregistration_addendum_i_closure.md`):
   N=500, seed=1, Holm m=3 family. **Hi3 PASS** on `semantic_confound`
   (Δ=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234) confirms the v2

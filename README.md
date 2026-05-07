@@ -411,9 +411,12 @@ retrieval probe, not a general downstream evaluation of production memory system
   natural next step.
 - **Spanish multilingual slice (Hd2_ES, 20 scenarios / 80 queries)**:
   With SBERT bge-small-en-v1.5: AFT top1=0.25, naive_cosine top1=0.10,
-  Δ=+0.138 [p=0.045, d=0.233] — PASS. Hypothesis Hd2 generalizes to Spanish
-  with SBERT. With multilingual-e5-small: Δ=+0.113 [p=0.110, d=0.189] — FAIL
-  (marginal, borderline signal; larger multilingual model expected to close gap).
+  Δ=+0.138 [p=0.045, d=0.233] — directional positive (exploratory).
+  With multilingual-e5-small at N=80: Δ=+0.113 [p=0.110] — FAIL.
+  **Power top-up to N=120 (pre-registered, Branch C closure 2026-05-07):**
+  Italian me5 Δ=+0.058 [p=0.276] — FAIL; Spanish me5 Δ=0.000 [p=1.00] — FAIL.
+  Cross-language evidence scoped to Spanish-SBERT N=80 (exploratory); me5 runs
+  at declared power do not establish the effect for Italian or Spanish.
 - **Honest negative — LoCoMo external benchmark (Gate 1 FAIL)**: on the LoCoMo
   conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
   underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
