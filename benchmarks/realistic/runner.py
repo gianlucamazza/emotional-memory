@@ -5,10 +5,24 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import random
 import tempfile
 from pathlib import Path
 from typing import Any
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+except ImportError:
+    pass
+
+# Bridge project-specific keys → standard OpenAI env vars expected by mem0/langmem.
+if "OPENAI_API_KEY" not in os.environ and "EMOTIONAL_MEMORY_LLM_API_KEY" in os.environ:
+    os.environ["OPENAI_API_KEY"] = os.environ["EMOTIONAL_MEMORY_LLM_API_KEY"]
+if "OPENAI_BASE_URL" not in os.environ and "EMOTIONAL_MEMORY_LLM_BASE_URL" in os.environ:
+    os.environ["OPENAI_BASE_URL"] = os.environ["EMOTIONAL_MEMORY_LLM_BASE_URL"]
 
 from pydantic import BaseModel, Field
 
@@ -417,6 +431,14 @@ def _make_adapter(
         return NaiveCosineReplayAdapter(embedder=embedder)
     if system_name == "recency":
         return RecencyReplayAdapter()
+    if system_name == "mem0":
+        from benchmarks.realistic.adapters.sota_shim import make_mem0_replay_shim
+
+        return make_mem0_replay_shim(workdir / system_name)
+    if system_name == "langmem":
+        from benchmarks.realistic.adapters.sota_shim import make_langmem_replay_shim
+
+        return make_langmem_replay_shim(workdir / system_name)
     raise ValueError(f"Unknown system: {system_name}")
 
 
