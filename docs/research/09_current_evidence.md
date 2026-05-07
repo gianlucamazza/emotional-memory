@@ -170,6 +170,10 @@ N=80 (Δ=+0.138, p=0.045). See
 
 ### Hk1 — DailyDialog Ecological Replication (Branch B)
 
+**Claim:** `cross_domain_affect_replication` — **not_established**
+
+Hk1 FAIL (Branch B, 2026-05-07): AFT does not outperform naive cosine on DailyDialog affect-conditioned retrieval (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall advantage is regime-specific (curated affective benchmarks) and does not extend to naturalistic short-turn dialogue.
+
 Result files: `benchmarks/dailydialog/results.{json,md,protocol.json}`  
 Pre-reg: `benchmarks/preregistration_addendum_k_dailydialog.md`  
 Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`
