@@ -11,11 +11,29 @@ Thank you for your interest. This guide covers everything from dev setup to gett
 - [Type checking](#type-checking)
 - [Code style](#code-style)
 - [Commit messages](#commit-messages)
+- [SSOT policy](#ssot-policy)
 - [Pull request process](#pull-request-process)
 - [Maintainer Release](#maintainer-release)
 - [Adding a fidelity benchmark](#adding-a-fidelity-benchmark)
 - [Adding a store or embedder](#adding-a-store-or-embedder)
 - [Contributing research](#contributing-research)
+
+---
+
+## SSOT policy
+
+Several files in this repository carry metadata that is also duplicated in package indices, citation files, and the LaTeX paper (DOI, version, author, license, Python version floor, …). To prevent drift, the project maintains a **Single Source of Truth** discipline: there is one canonical source for each piece of metadata, and the rest are derived.
+
+**Before editing any of the following files, read [`docs/contributing/ssot-policy.md`](docs/contributing/ssot-policy.md):**
+
+- `CITATION.cff` — most fields are derived
+- `.zenodo.json` — most fields are derived
+- `codemeta.json` — most fields are derived
+- `paper/main.tex` — DOI / URL / arxiv\_id macros are derived
+- `demo/app.py` — DOI / URL constants are derived
+- `docs/index.md` — positioning hero is derived from `README.md`
+
+CI runs `check_release_metadata.py`, `check_python_version_consistency.py`, and `check_metadata_ssot.py` on every PR. A failure of any of these is intentional, not a flaky test.
 
 ---
 

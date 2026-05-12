@@ -1,3 +1,6 @@
+# Version, DOI, and date-released are managed by scripts/sync_release_metadata.py
+# (run via `make sync-metadata`). Author and license are validated by
+# scripts/check_metadata_ssot.py (CI guard). See docs/contributing/ssot-policy.md.
 cff-version: 1.2.0
 message: "If you use this software in your research, please cite it using the metadata below."
 type: software

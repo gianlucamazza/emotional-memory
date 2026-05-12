@@ -46,6 +46,8 @@ nav:
   - Home: index.md
   - Mental Model: mental_model.md
   - Migration Guide: migration.md
+  - Contributing:
+    - SSOT Policy: contributing/ssot-policy.md
   - Tutorials:
     - Async usage: tutorials/async.md
     - Persistence: tutorials/persistence.md
