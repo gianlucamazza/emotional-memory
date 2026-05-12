@@ -13,11 +13,13 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      attestations: write
 
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -59,15 +61,45 @@ PY
       - name: Validate artefacts
         run: uv run python -m twine check dist/*
 
+      - name: Generate SBOM (CycloneDX)
+        uses: anchore/sbom-action@v0
+        with:
+          path: .
+          format: cyclonedx-json
+          output-file: dist/sbom.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Attest build provenance (SLSA)
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+
+      - name: Attest SBOM (CycloneDX)
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/*.whl
+            dist/*.tar.gz
+          predicate-type: "https://cyclonedx.org/bom"
+          predicate-path: "dist/sbom.cdx.json"
+
       - name: Upload release artefacts
         uses: actions/upload-artifact@v4
         with:
           name: emotional-memory-${{ steps.version.outputs.version }}-dist
-          path: dist/*
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/sbom.cdx.json
 
       - name: Publish to PyPI
         if: github.event_name == 'push'
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          attestations: true
 
       - name: Verify PyPI release
         if: github.event_name == 'push'
@@ -81,9 +113,12 @@ PY
             echo "- Event: ${GITHUB_EVENT_NAME}"
             echo "- Version: ${{ steps.version.outputs.version }}"
             echo "- Job status: ${{ job.status }}"
-            echo "- Artefacts: uploaded to workflow artifacts"
+            echo "- Artefacts: uploaded to workflow artifacts (incl. SBOM)"
+            echo "- Provenance: SLSA build provenance attestation generated"
+            echo "- SBOM: CycloneDX attestation generated"
             if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
-              echo "- PyPI path: trusted publishing workflow"
+              echo "- PyPI path: trusted publishing + PEP 740 attestations"
+              echo "- Verify locally: \`gh attestation verify <wheel> -R ${{ github.repository }}\`"
               echo "- Manual fallback: \`make publish-pypi-manual\`"
             else
               echo "- Publish step skipped for workflow_dispatch"
