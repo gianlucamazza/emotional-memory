@@ -30,6 +30,14 @@ theme:
 
 plugins:
   - search
+  - include-markdown:
+      # SSOT-friendly: the positioning hero in docs/index.md is sourced
+      # from the top-level README.md to avoid drift between PyPI long
+      # description and the docs site landing page.
+      preserve_includer_indent: false
+      dedent: false
+      rewrite_relative_urls: true
+      heading_offset: 0
   - mkdocstrings:
       handlers:
         python:

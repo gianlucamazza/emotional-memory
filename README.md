@@ -4,9 +4,47 @@
 [![PyPI](https://img.shields.io/pypi/v/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![Python](https://img.shields.io/pypi/pyversions/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19972258.svg)](https://doi.org/10.5281/zenodo.19972258)
+[![Benchmarks](https://img.shields.io/badge/benchmarks-tracked-blue)](https://gianlucamazza.github.io/emotional-memory/dev/bench/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English, Italian, and Spanish on the realistic-recall benchmark (N=200/80 per language).
+
+<!-- ssot:positioning-start -->
+## Why emotional_memory?
+
+Most LLM memory libraries treat retrieval as semantic-only: vector similarity over text. Real human recall is also driven by **affective congruence** — we remember things that feel like how we feel now (Bower 1981), and emotionally-charged events consolidate more strongly than neutral ones (Cahill & McGaugh 1995).
+
+`emotional_memory` adds an explicit affective layer on top of standard semantic retrieval, grounded in 40+ years of affective-science literature and validated against 20 published psychological phenomena (126 fidelity tests).
+
+### How it compares
+
+| Library | Memory model | Affective retrieval | Reconsolidation | Decay model | Psychological fidelity tests |
+|---|---|---|---|---|---|
+| **emotional_memory** | 5-layer AFT (semantic + valence/arousal + momentum + mood + appraisal) | ✅ mood-congruent + APE-gated | ✅ Nader & Schiller 2000 | ACT-R power-law + arousal modulation | 126 tests, 20 phenomena |
+| MemGPT / Letta | Hierarchical context (working + archival) | ❌ | ❌ | None | — |
+| mem0 | Fact extraction + vector store | ❌ | ❌ | None | — |
+| A-MEM | Atomic notes + dynamic links | ❌ | ❌ | None | — |
+| LangMem | Hot/cold memory tiers | ❌ | ❌ | Time-based eviction | — |
+| Generative Agents (Park et al.) | Importance + recency + relevance | Partial (importance only) | ❌ | Exponential | — |
+
+This is **not** a replacement for those tools — `emotional_memory` is a focused primitive that can plug into any of them via the `MemoryStore` protocol (LangChain adapter included).
+
+### 30-second example
+
+```python
+from emotional_memory import EmotionalMemory, InMemoryStore, CoreAffect
+
+em = EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder())
+
+em.set_affect(CoreAffect(valence=-0.6, arousal=0.7))   # stressed
+em.encode("The deployment failed at 3am.")
+em.encode("Beautiful sunset on the lake.")
+
+em.set_affect(CoreAffect(valence=-0.5, arousal=0.6))   # similar mood later
+results = em.retrieve("yesterday", top_k=2)
+# → deployment memory ranks higher than sunset, even with equal semantic distance.
+```
+<!-- ssot:positioning-end -->
 
 ## Installation
 

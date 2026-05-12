@@ -8,6 +8,19 @@ Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-laye
 encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and
 *what mood colored the moment*.
 
+<!--
+Positioning, comparison table, and 30-second example are sourced from the
+top-level README.md (SSOT). To edit, change the README between the
+`ssot:positioning-start` / `ssot:positioning-end` markers; the docs site
+will pick the change up on next build.
+-->
+{%
+  include-markdown "../README.md"
+  start="<!-- ssot:positioning-start -->"
+  end="<!-- ssot:positioning-end -->"
+  rewrite-relative-urls=true
+%}
+
 ## Installation
 
 ```bash
