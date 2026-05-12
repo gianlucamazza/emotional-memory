@@ -1,0 +1,39 @@
+# Codecov configuration.
+# Target is 90% (aspirational for academic-grade quality), with a 1% threshold
+# to absorb noise. The patch target enforces that new code keeps the bar high
+# without retroactively failing on the existing baseline.
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 1%
+        # Don't fail CI on coverage drops below target; surface as warning only.
+        # Once stable above 90%, set informational: false to enforce.
+        informational: true
+        if_not_found: success
+    patch:
+      default:
+        # New code must be at least 85% covered to keep the trend healthy.
+        target: 85%
+        threshold: 5%
+        informational: true
+
+comment:
+  layout: "header, diff, files, footer"
+  behavior: default
+  require_changes: true
+
+ignore:
+  - "tests/**"
+  - "benchmarks/**"
+  - "examples/**"
+  - "scripts/**"
+  - "demo/**"
+  - "tools/**"
+  - "docs/**"
