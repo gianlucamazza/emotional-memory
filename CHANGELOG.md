@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### CI / Security
+
+- **Supply-chain hardening (zizmor self-audit)**: all six GitHub Actions workflows
+  now SHA-pin every third-party action (`actions/checkout`, `astral-sh/setup-uv`,
+  `actions/setup-python`, `codecov/codecov-action`, `actions/upload-artifact`,
+  `github/codeql-action/{init,analyze}`, `amannn/action-semantic-pull-request`,
+  `zizmorcore/zizmor-action`, `anchore/sbom-action`, `actions/attest`,
+  `pypa/gh-action-pypi-publish`, `benchmark-action/github-action-benchmark`).
+- **Least-privilege permissions**: `ci.yml` gains a top-level `permissions: contents: read`
+  with a scoped override (`contents: write`) only on the benchmark job that pushes to
+  `gh-pages`. `persist-credentials: false` added to every checkout step.
+- **`release.yml` cache-poisoning fix**: `setup-uv` now sets `enable-cache: false`
+  to prevent supply-chain poisoning via `workflow_dispatch` runs.
+- **`release.yml` template-injection fix**: `${{ steps.version.outputs.version }}` and
+  `${{ job.status }}` expressions moved to `env:` blocks so they are never inlined into
+  shell scripts.
+- **`scripts/resolve_version.py`** (new): extracts the `project.version` heredoc that
+  was previously inlined in `release.yml`, eliminating the last zizmor injection vector.
+- **Pre-commit hooks modernised**: `.pre-commit-config.yaml` now uses pinned upstream hooks
+  (`ruff-pre-commit v0.11.12`, `validate-pyproject v0.23`,
+  `zizmorcore/zizmor-pre-commit v1.22.0`) and adds `check-merge-conflict`,
+  `check-case-conflict`, `detect-private-key`, `mixed-line-ending`.
+- `uv.lock` gains `basedpyright` and `bracex` (added to dev extras in v0.10.0).
+
+### Build
+
+- **`build` backend switched to `uv_build`** (commit `3b31dd2`).
+- **`basedpyright` added as secondary type-checker** (commit `cba66dc`),
+  running in `continue-on-error: true` mode until baseline warnings are resolved.
+- **CodeQL SAST workflow** (`codeql.yml`) scans Python on push/PR to `main`.
+- **Conventional PR-title enforcement** (`pr-title.yml`) blocks merges that don't
+  follow the Conventional Commits spec.
+- **Codecov informational config** (`codecov.yml`) added.
+- **zizmor workflow** (`zizmor.yml`) runs static analysis on workflow changes with
+  SARIF upload to GitHub Advanced Security.
+- **SBOM + SLSA + PEP 740 attestations** in `release.yml`: CycloneDX SBOM,
+  SLSA build provenance, and PEP 740 attestations generated on every PyPI release.
+
+### Documentation
+
+- `docs/contributing.md` documents the SSOT policy for metadata consistency.
+- README hero section now sourced from README via `include-markdown` plugin.
+
 ## [0.10.0] - 2026-05-07
 
 ### Research
