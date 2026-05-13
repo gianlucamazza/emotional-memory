@@ -59,7 +59,7 @@ Moved to **v0.9.0** below. The dot-release window remains open for paper polish 
 
 ---
 
-## v0.7.x — Paper polish (open)
+## v0.7.x — Paper polish (open — arXiv submission pending, decoupled from version line)
 
 Dot release(s) for the paper bundle, no API changes:
 
@@ -107,7 +107,7 @@ BYO appraisal schema (#25) shipped post-v0.9 (commit `57ef515`). LoCoMo per-task
 
 ---
 
-## v0.10.0 — Evidence + parametricity (target: 2026)
+## v0.10.0 — Evidence + parametricity (shipped 2026-05-07 ✓)
 
 Collecting items deferred from v0.7–v0.9.
 
@@ -142,6 +142,32 @@ Collecting items deferred from v0.7–v0.9.
 - [x] Pre-registration: `benchmarks/preregistration_addendum_k_dailydialog.md` (Hk1).
 - [x] DailyDialog benchmark infrastructure: persona builder, programmatic query generator (4 types), AFT + naive_cosine adapters, runner with paired bootstrap + Holm m=4.
 - [x] **Hk1 FAIL (Branch B)**: N=120 personas, 396 queries, multilingual-e5-small. AFT top1=0.212 vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000, d=-0.015). Only `affective_trajectory` shows exploratory positive trend (Δ=+0.103, d=0.186, N=39; underpowered). Cross-domain ecological replication not established. Regime-specificity of AFT advantage confirmed consistent with LoCoMo FAIL. Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`.
+
+---
+
+## v0.10.x — Supply-chain & developer-experience hardening (in progress, 2026-05)
+
+Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
+
+### CI / Security (shipped 2026-05-12 ✓)
+- [x] **`uv_build` backend** — switched from setuptools to `uv_build` for reproducible wheel builds.
+- [x] **`basedpyright`** — secondary type-checker added to CI (`continue-on-error: true` during baseline cleanup).
+- [x] **CodeQL SAST** (`codeql.yml`) — scans Python on every push/PR to `main`.
+- [x] **Conventional PR-title enforcement** (`pr-title.yml`) — blocks merges that violate Conventional Commits.
+- [x] **Codecov configuration** — informational coverage gate (target 90%, threshold 1%).
+- [x] **zizmor workflow** (`zizmor.yml`) — static analysis of workflow files with SARIF upload to GitHub Advanced Security.
+- [x] **SBOM + SLSA + PEP 740 attestations** in `release.yml` — CycloneDX SBOM, SLSA build provenance, and PEP 740 attestations generated and attested on every PyPI release.
+- [x] **zizmor self-audit** — all six workflows SHA-pinned, `persist-credentials: false` everywhere, `permissions: contents: read` default in `ci.yml`, `release.yml` cache-poisoning and template-injection findings resolved. `uv run zizmor .github/workflows/` → clean.
+- [x] **`scripts/resolve_version.py`** — version resolver extracted from `release.yml` to eliminate heredoc injection vector.
+- [x] **Pre-commit hooks modernised** — upstream pinned hooks (`ruff-pre-commit v0.11.12`, `validate-pyproject v0.23`, `zizmorcore/zizmor-pre-commit v1.22.0`); adds `check-merge-conflict`, `check-case-conflict`, `detect-private-key`, `mixed-line-ending`.
+
+### SSOT tooling (shipped 2026-05-07 ✓)
+- [x] **`scripts/check_metadata_ssot.py`** — validates author/license/keywords across pyproject, CITATION.cff, codemeta.json, .zenodo.json; wired into CI `meta-integrity` job.
+- [x] **`scripts/check_python_version_consistency.py`** — validates Python floor across ruff, mypy, basedpyright, classifiers, CI matrix.
+
+### Open
+- [ ] arXiv submission (cs.LG, no endorsement) — upload pending (user action); see v0.7.x.
+- [ ] Gate 2 — Human evaluation execution (Prolific/MTurk distribution of `benchmarks/human_eval/packets.json`).
 
 ---
 
