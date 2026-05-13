@@ -62,13 +62,17 @@ nav:
     - Observability: tutorials/observability.md
     - LangChain integration: tutorials/langchain.md
     - Mem0 integration: tutorials/mem0.md
+    - Query routing: tutorials/query_routing.md
+    - Custom appraisal schema: tutorials/byo_appraisal_schema.md
   - API Reference:
     - Engine (sync): api/engine.md
     - Engine (async): api/async_engine.md
     - Stores: api/stores.md
+    - State Stores: api/state_stores.md
     - Telemetry: api/telemetry.md
     - Appraisal: api/appraisal.md
     - Appraisal Schema: api/appraisal_schema.md
+    - Query Classifier: api/query_classifier.md
     - Models: api/models.md
     - Interfaces: api/interfaces.md
     - Categorize: api/categorize.md

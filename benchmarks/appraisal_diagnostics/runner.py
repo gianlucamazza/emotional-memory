@@ -42,7 +42,7 @@ from typing import Any
 import numpy as np
 from pydantic import BaseModel, Field
 
-from benchmarks.common.statistics import bootstrap_ci, format_point_ci
+from benchmarks.common.statistics import bootstrap_ci
 
 _HERE = Path(__file__).resolve().parent
 _ROOT = _HERE.parent.parent
@@ -205,7 +205,7 @@ def _pearson_r(x: list[float], y: list[float]) -> float:
 def _confusion_sign(llm: list[float], oracle: list[float]) -> dict[str, int]:
     """Valence sign confusion matrix: TP/FP/TN/FN (oracle positive = oracle >= 0)."""
     counts: dict[str, int] = {"TP": 0, "FP": 0, "TN": 0, "FN": 0}
-    for lv, ov in zip(llm, oracle):
+    for lv, ov in zip(llm, oracle, strict=True):
         pred_pos = lv >= 0.0
         true_pos = ov >= 0.0
         if pred_pos and true_pos:
@@ -306,8 +306,8 @@ def run(
         oracle_arousal.append(event.arousal)
 
     # Residuals
-    res_valence = [lv - ov for lv, ov in zip(llm_valence, oracle_valence)]
-    res_arousal = [la - oa for la, oa in zip(llm_arousal, oracle_arousal)]
+    res_valence = [lv - ov for lv, ov in zip(llm_valence, oracle_valence, strict=True)]
+    res_arousal = [la - oa for la, oa in zip(llm_arousal, oracle_arousal, strict=True)]
 
     # Statistics
     valence_stats = _residual_stats(res_valence, n_bootstrap=n_bootstrap, seed=seed)
@@ -362,7 +362,7 @@ def render_md(result: dict[str, Any]) -> str:
 
     # Residual table
     lines += [
-        "## Residuals (LLM − oracle)",
+        "## Residuals (LLM - oracle)",
         "",
         "| Dimension | Bias (mean) | 95% CI | Std | MAE | Pearson r |",
         "|---|---|---|---|---|---|",
