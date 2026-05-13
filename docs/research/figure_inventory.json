@@ -1,0 +1,212 @@
+{
+  "inventory_version": "1.0",
+  "figures": [
+    {
+      "stem": "circumplex",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/circumplex.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "scatter",
+      "description": "Russell (1980) valence-arousal circumplex with sample memory positions."
+    },
+    {
+      "stem": "decay_curves",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/decay_curves.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "line",
+      "description": "ACT-R power-law decay at three arousal levels and retrieval counts."
+    },
+    {
+      "stem": "yerkes_dodson",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/yerkes_dodson.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "line",
+      "description": "Yerkes-Dodson arousal-performance curve as used for adaptive retrieval weights."
+    },
+    {
+      "stem": "retrieval_radar",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/retrieval_radar.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "radar",
+      "description": "Six-signal retrieval score breakdown for a single query result."
+    },
+    {
+      "stem": "mood_evolution",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/mood_evolution.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "line_multipanel",
+      "description": "PAD mood-field trajectory over a simulated 30-minute session."
+    },
+    {
+      "stem": "adaptive_weights_heatmap",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/adaptive_weights_heatmap.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "heatmap",
+      "description": "Adaptive retrieval weight distribution across valence/arousal space."
+    },
+    {
+      "stem": "resonance_network",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/resonance_network.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "network_graph",
+      "description": "Bidirectional resonance link graph with five link types."
+    },
+    {
+      "stem": "appraisal_radar",
+      "category": "didactic",
+      "generator": "scripts/generate_docs_images.py",
+      "outputs": ["docs/images/appraisal_radar.png"],
+      "source_benchmarks": [],
+      "referenced_in": ["README.md"],
+      "claim_id": null,
+      "plot_kind": "radar",
+      "description": "Scherer CPM five-dimensional appraisal vector (novelty, goal_relevance, etc.)."
+    },
+    {
+      "stem": "research_realistic_v2_overview",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_realistic_v2_overview.png",
+        "docs/images/research/research_realistic_v2_overview.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/realistic/results.v2.sbert.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "replayable_multi_session_help",
+      "plot_kind": "bar_with_ci",
+      "description": "AFT vs naive_cosine vs recency top1_accuracy on realistic replay v2 (SBERT, N=200)."
+    },
+    {
+      "stem": "research_realistic_v2_challenges",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_realistic_v2_challenges.png",
+        "docs/images/research/research_realistic_v2_challenges.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/realistic/results.v2.sbert.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "replayable_multi_session_help",
+      "plot_kind": "grouped_bar",
+      "description": "Per-challenge AFT vs naive_cosine breakdown (5 challenge types in v2)."
+    },
+    {
+      "stem": "research_ablation_s3",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_ablation_s3.png",
+        "docs/images/research/research_ablation_s3.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/ablation/results.v2.sbert.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "theory_faithful_operationalization",
+      "plot_kind": "bar_forest",
+      "description": "S3 ablation: delta top1 vs full AFT for each ablation variant (N=200, SBERT)."
+    },
+    {
+      "stem": "research_multilingual",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_multilingual.png",
+        "docs/images/research/research_multilingual.pdf"
+      ],
+      "source_benchmarks": [
+        "benchmarks/realistic/results.v2_it.sbert.json",
+        "benchmarks/realistic/results.v2_it.me5.json",
+        "benchmarks/realistic/results.v2_es.sbert.json",
+        "benchmarks/realistic/results.v2_es.me5.json"
+      ],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "retrieval_affect_aware",
+      "plot_kind": "grouped_bar_with_ci",
+      "description": "Hit@k AFT vs naive_cosine across IT (SBERT/me5) and ES (SBERT/me5) slices."
+    },
+    {
+      "stem": "research_locomo_negative",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_locomo_negative.png",
+        "docs/images/research/research_locomo_negative.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/locomo/results.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "locomo_external_qa_negative",
+      "plot_kind": "grouped_bar_with_ci",
+      "description": "LoCoMo Gate 1 FAIL: AFT underperforms naive RAG on F1 and judge_accuracy."
+    },
+    {
+      "stem": "fig1_circumplex",
+      "category": "paper",
+      "generator": "scripts/generate_paper_figures.py",
+      "outputs": ["paper/figures/fig1_circumplex.pdf"],
+      "source_benchmarks": [],
+      "referenced_in": ["paper/main.tex"],
+      "claim_id": null,
+      "plot_kind": "scatter",
+      "description": "Paper Figure 1: Russell circumplex with 12 seeded sample memories."
+    },
+    {
+      "stem": "fig2_decay_curves",
+      "category": "paper",
+      "generator": "scripts/generate_paper_figures.py",
+      "outputs": ["paper/figures/fig2_decay_curves.pdf"],
+      "source_benchmarks": [],
+      "referenced_in": ["paper/main.tex"],
+      "claim_id": null,
+      "plot_kind": "line",
+      "description": "Paper Figure 2: ACT-R decay modulated by arousal (McGaugh 2004)."
+    },
+    {
+      "stem": "fig3_mood_evolution",
+      "category": "paper",
+      "generator": "scripts/generate_paper_figures.py",
+      "outputs": ["paper/figures/fig3_mood_evolution.pdf"],
+      "source_benchmarks": [],
+      "referenced_in": ["paper/main.tex"],
+      "claim_id": null,
+      "plot_kind": "line_multipanel",
+      "description": "Paper Figure 3: PAD mood-field trajectory over a simulated conversation."
+    },
+    {
+      "stem": "fig4_resonance_network",
+      "category": "paper",
+      "generator": "scripts/generate_paper_figures.py",
+      "outputs": ["paper/figures/fig4_resonance_network.pdf"],
+      "source_benchmarks": [],
+      "referenced_in": ["paper/main.tex"],
+      "claim_id": null,
+      "plot_kind": "network_graph",
+      "description": "Paper Figure 4: Resonance link graph snapshot."
+    }
+  ]
+}

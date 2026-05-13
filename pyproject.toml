@@ -71,7 +71,7 @@ release = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q --tb=short -m 'not llm and not appraisal_quality'"
-pythonpath = ["tests", "benchmarks"]
+pythonpath = ["tests", "benchmarks", "scripts"]
 python_files = ["test_*.py", "bench_*.py"]
 python_functions = ["test_*", "bench_*"]
 asyncio_mode = "auto"

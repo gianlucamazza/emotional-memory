@@ -4,7 +4,11 @@ Usage::
 
     uv run python scripts/generate_research_figures.py
     uv run python scripts/generate_research_figures.py \
-        --png-dir docs/images/research --pdf-dir paper/figures
+        --png-dir docs/images/research --pdf-dir docs/images/research
+
+Both ``--png-dir`` and ``--pdf-dir`` default to ``docs/images/research/``.
+To also place PDFs inside ``paper/figures/`` pass ``--pdf-dir paper/figures``
+explicitly — this is an intentional manual step, not done automatically.
 
 The figures are intentionally data-driven: they read the benchmark artefacts
 already committed under ``benchmarks/`` and do not rerun long studies.
