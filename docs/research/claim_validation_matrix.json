@@ -6,7 +6,9 @@
     "controlled_evidence": "Supported by controlled benchmark evidence under a narrow protocol.",
     "strong_intra_theory_evidence": "Strongly supported inside the theory the implementation operationalizes.",
     "early_controlled_evidence": "Initial comparative or task evidence exists, but remains narrow or early.",
-    "not_established": "Not supported by current public evidence."
+    "not_established": "Not supported by current public evidence.",
+    "falsified": "Tested under pre-registered protocol and result was negative; no further retry planned under the current design.",
+    "retry_planned": "Tested under pre-registered protocol and result was negative; a targeted follow-up study is planned at higher power or on a more suitable dataset."
   },
   "evidence_level_legend": {
     "1_theory_fidelity": "Theory fidelity",
@@ -261,7 +263,7 @@
       "claim_id": "Hi3_arc",
       "claim_text": "Resonance interference amplification under e5 vs SBERT on affective_arc queries.",
       "claim_area": "Theory fidelity",
-      "status": "not_established",
+      "status": "falsified",
       "evidence_level": "2_controlled_retrieval",
       "allowed_public_wording": "Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size.",
       "current_evidence": "Hi3_arc: paired bootstrap n=10,000 seed=1. Δ=+0.010, CI=[-0.020,0.050], p_one=0.3795, p_adj=0.3795, d=0.058, FAIL. Holm secondary; honest negative result.",
@@ -283,12 +285,12 @@
       "claim_id": "appraisal_llm_real_dual_path",
       "claim_text": "AFT with LLM dual-path appraisal outperforms naive cosine on affect-free data.",
       "claim_area": "Appraisal quality",
-      "status": "not_established",
+      "status": "falsified",
       "evidence_level": "3_appraisal_quality",
       "allowed_public_wording": "Hg1 FAIL: AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on N=200 affect-free queries (Δ=-0.010 [-0.055, 0.035], d=-0.032, p_one=0.367). The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.",
       "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. Δ=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral Δ=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync Δ=+0.185, d=0.342).",
       "not_yet_shown": "Whether a larger N, stronger LLM, or different dataset would show signal. The Hg3 PASS (dual-path > sync) is not disputed; only the architecture vs cosine delta is not established.",
-      "next_study": "Larger N replication (N≥400) or stronger LLM appraisal to assess power vs effect-size tradeoff.",
+      "next_study": "No retry planned (exploratory, effect size d=-0.032 at N=200). Hg3 PASS (dual-path > synchronous, Δ=+0.185, d=0.342) is not disputed; only the architecture-vs-cosine comparison is falsified.",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/appraisal_confound/results.hg1.json",
@@ -306,12 +308,12 @@
       "claim_id": "cross_domain_affect_replication",
       "claim_text": "AFT affect-conditioned retrieval advantage generalises to ecological dialogue corpora.",
       "claim_area": "External benchmarks",
-      "status": "not_established",
+      "status": "retry_planned",
       "evidence_level": "4_realistic_tasks",
       "allowed_public_wording": "Hk1 FAIL (Branch B, 2026-05-07): AFT does not outperform naive cosine on DailyDialog affect-conditioned retrieval (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall advantage is regime-specific (curated affective benchmarks) and does not extend to naturalistic short-turn dialogue.",
       "current_evidence": "Hk1 pre-registered and executed 2026-05-07. Synthetic personas from DailyDialog train+validation (12118 dialogs, 2580 after ≥30% emotion-density filter). 4 programmatic query types from Ekman labels (no LLM). Paired bootstrap n=10000 seed=0, Holm m=4. Aggregate: AFT top1=0.212 vs naive_cosine=0.220 (Δ=-0.008, CI=[-0.056,+0.043], p_holm=1.000, d=-0.015). Only affective_trajectory shows positive trend (Δ=+0.103, d=0.186, N=39) but underpowered (p_holm=0.734). All directional query types FAIL Holm threshold. Branch B confirmed.",
       "not_yet_shown": "Cross-domain replication on an affect-rich naturalistic corpus (>30% affect-bearing turns). Whether longer multi-turn sessions with richer emotion vocabulary would show signal consistent with affective_trajectory trend (d=0.186).",
-      "next_study": "Identify naturalistic corpus with higher affect density; pre-register targeted affective_trajectory hypothesis if d=0.186 signal warrants follow-up at larger N.",
+      "next_study": "Retry planned: targeted affective_trajectory sub-claim at N≥120 on a naturalistic corpus with >30% affect-bearing turns (DailyDialog affect density too low). Pre-register before executing. Contingent on French multilingual slice (WS3b) or equivalent corpus expansion.",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/dailydialog/results.json",
@@ -334,7 +336,7 @@
       "allowed_public_wording": "The system is theory-inspired, but does not yet have human or ecological validation.",
       "current_evidence": "Theory-inspired design only.",
       "not_yet_shown": "Human behavioral correspondence.",
-      "next_study": "Pilot human evaluation with completed ratings and external benchmarks.",
+      "next_study": "Gate 2 (human eval): kit ready (benchmarks/human_eval/), zero ratings collected. Tracking continues on roadmap v1.0; does not block v0.11.0.",
       "evidence_refs": [
         "benchmarks/human_eval/README.md"
       ],

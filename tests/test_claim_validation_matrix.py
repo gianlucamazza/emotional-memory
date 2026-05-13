@@ -37,6 +37,8 @@ def test_claim_validation_matrix_uses_controlled_enums() -> None:
         "strong_intra_theory_evidence",
         "early_controlled_evidence",
         "not_established",
+        "falsified",
+        "retry_planned",
     }
     valid_evidence_levels = {
         "1_theory_fidelity",

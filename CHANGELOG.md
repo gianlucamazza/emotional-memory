@@ -91,6 +91,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`letta_client` mypy override** removed: no `integrations/letta.py` integration file
   exists; the override was an orphan.
 
+### Research
+
+- **Hg1 (`appraisal_llm_real_dual_path`) → `falsified`**: LLM dual-path architecture does
+  not outperform naive cosine on N=200 affect-free queries (Δ=−0.010, d=−0.032, p=0.367;
+  Addendum G closure 2026-05-07). No retry planned at current effect size. Hg3 PASS
+  (dual-path > synchronous Δ=+0.185, d=0.342) is not disputed.
+- **Hi3_arc → `falsified`**: No significant embedder-gap amplification on `affective_arc`
+  queries (Δ=+0.010, d=0.058, Holm-adj p=0.3795, N=500; Addendum I closure 2026-05-06).
+  Amplification claim scoped to `semantic_confound` and `recency_confound` channels.
+- **Hk1 (`cross_domain_affect_replication`) → `retry_planned`**: Aggregate FAIL on
+  DailyDialog (Branch B, Δ=−0.008, p_holm=1.000; confirmed), but `affective_trajectory`
+  sub-claim shows exploratory signal (d=0.186, N=39, underpowered). Retry planned at
+  N≥120 on an affect-richer naturalistic corpus.
+- **`models_human_emotional_memory`** remains `not_established`: Gate 2 (human eval) kit
+  is ready; zero ratings collected. Does not block v0.11.0; tracked on roadmap v1.0.
+
 ## [0.10.0] - 2026-05-07
 
 ### Research

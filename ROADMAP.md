@@ -167,7 +167,31 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ### Open
 - [ ] arXiv submission (cs.LG, no endorsement) — upload pending (user action); see v0.7.x.
-- [ ] Gate 2 — Human evaluation execution (Prolific/MTurk distribution of `benchmarks/human_eval/packets.json`).
+- [ ] Gate 2 — Human evaluation execution (Prolific/MTurk distribution of `benchmarks/human_eval/packets.json`). Does **not** block v0.11.0; tracked on v1.0 roadmap.
+
+---
+
+## v0.11.0 — Feature release (planned)
+
+### WS1 / WS2 — Debt closure (completed 2026-05-13)
+- [x] **SECURITY.md**: supported-versions table updated (0.11.x current, 0.10.x security-only, <0.10 unsupported).
+- [x] **`langmem` extra removed**: no `integrations/langmem.py` existed; mypy overrides and `install-langmem` target cleaned up.
+- [x] **`letta_client` mypy override removed**: orphan override eliminated.
+- [x] **`basedpyright` now gating**: `continue-on-error: true` removed from CI; type-checker blocks merges on error.
+- [x] **Static `__all__` declarations**: optional exports declared upfront; no `reportUnsupportedDunderAll` warnings.
+- [x] **`ChromaStore.__len__` cast**: `int(col.count())` satisfies mypy `no-any-return`.
+- [x] **Makefile test runner**: `uv run python -m pytest` for correct venv resolution.
+
+### WS4 — Research claim closure (completed 2026-05-13)
+- [x] **Hg1 → `falsified`**: LLM dual-path vs cosine on affect-free data (Addendum G). No retry planned.
+- [x] **Hi3_arc → `falsified`**: No embedder gap on `affective_arc` (Addendum I). Amplification scoped to semantic/recency channels.
+- [x] **Hk1 → `retry_planned`**: `affective_trajectory` sub-claim (d=0.186, N=39) warrants N≥120 retry on an affect-richer corpus.
+- [x] Status legend extended with `falsified` and `retry_planned` in `claim_validation_matrix.json`.
+
+### WS3 — New features (open)
+- [ ] **WS3a** — `integrations/mem0.py`: real mem0 adapter (model: `integrations/langchain.py`), tests, tutorial.
+- [ ] **WS3b** — French multilingual slice (`benchmarks/multilingual/fr/`); deferred from v0.8.
+- [ ] **WS3c** — Query-type classifier in `retrieval.py` + `RetrievalConfig`; preregistration addendum L; benchmark run.
 
 ---
 
