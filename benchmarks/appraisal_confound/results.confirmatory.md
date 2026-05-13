@@ -1,6 +1,6 @@
 # Appraisal Confound Study
 
-Dataset: realistic_recall_v1 v1.4  (50 scenarios, 100 queries)  
+Dataset: realistic_recall_v1 v1.4  (50 scenarios, 100 queries)
 Embedder: `sbert-bge`
 
 ## System Results

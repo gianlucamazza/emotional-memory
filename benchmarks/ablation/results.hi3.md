@@ -2,11 +2,11 @@
 
 Resonance amplification on affect-rich queries: e5-small-v2 vs SBERT.
 
-Pre-registration: `benchmarks/preregistration_addendum_i.md`  
-Dataset: `benchmarks/datasets/realistic_recall_v3.json`  
+Pre-registration: `benchmarks/preregistration_addendum_i.md`
+Dataset: `benchmarks/datasets/realistic_recall_v3.json`
 Bootstrap: n=10000, seed=1, CI=95%, one_sided_directional, Holm m=3
 
-Statistic: `delta = mean(amp_e5) - mean(amp_sbert)` where `amp[i] = no_resonance_top1_hit[i] - full_top1_hit[i]` (positive = resonance hurts; pre-reg sign convention).  
+Statistic: `delta = mean(amp_e5) - mean(amp_sbert)` where `amp[i] = no_resonance_top1_hit[i] - full_top1_hit[i]` (positive = resonance hurts; pre-reg sign convention).
 PASS iff `delta > 0.05` AND `p_adj < 0.05`.
 
 ## Confirmatory Results

@@ -1,6 +1,6 @@
 # Appraisal Confound Study
 
-Dataset: realistic_recall_v2_es v1.0  (20 scenarios, 80 queries)  
+Dataset: realistic_recall_v2_es v1.0  (20 scenarios, 80 queries)
 Embedder: `sbert-bge`  n_bootstrap: 10000  seed: 42
 
 ## System Results

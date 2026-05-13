@@ -43,7 +43,7 @@ def _read_json(path: Path) -> dict:
 def _read_cff_field(text: str, field: str) -> str | None:
     """Extract a top-level scalar field from a CITATION.cff. Naive but enough
     for `license`, since we only need exact equality."""
-    m = re.search(rf'^{field}:\s*(.+?)$', text, re.MULTILINE)
+    m = re.search(rf"^{field}:\s*(.+?)$", text, re.MULTILINE)
     if not m:
         return None
     val = m.group(1).strip()
@@ -104,12 +104,12 @@ def check_author(pyproject: dict, findings: list[str]) -> None:
     if cff_path.exists():
         cff_text = cff_path.read_text(encoding="utf-8")
         cff_author = _cff_first_author(cff_text)
-        for key in ("given-names", "family-names", "email"):
-            if cff_author.get(key, "") != expected[key]:
-                findings.append(
-                    f"CITATION.cff: author.{key} = {cff_author.get(key)!r}, "
-                    f"expected {expected[key]!r} (from pyproject.toml)"
-                )
+        findings.extend(
+            f"CITATION.cff: author.{key} = {cff_author.get(key)!r}, "
+            f"expected {expected[key]!r} (from pyproject.toml)"
+            for key in ("given-names", "family-names", "email")
+            if cff_author.get(key, "") != expected[key]
+        )
 
     # codemeta.json
     cm_path = ROOT / "codemeta.json"
@@ -154,8 +154,7 @@ def check_license(pyproject: dict, findings: list[str]) -> None:
         actual = _read_cff_field(cff_path.read_text(encoding="utf-8"), "license") or ""
         if actual != expected:
             findings.append(
-                f"CITATION.cff: license = {actual!r}, "
-                f"expected {expected!r} (from pyproject.toml)"
+                f"CITATION.cff: license = {actual!r}, expected {expected!r} (from pyproject.toml)"
             )
 
     cm_path = ROOT / "codemeta.json"
@@ -206,7 +205,7 @@ def check_keywords(pyproject: dict, findings: list[str]) -> None:
 def main() -> int:
     try:
         pyproject = _read_pyproject()
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"ERROR: cannot parse pyproject.toml: {exc}", file=sys.stderr)
         return 2
 

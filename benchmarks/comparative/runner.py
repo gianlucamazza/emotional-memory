@@ -544,7 +544,7 @@ def main() -> None:
             k = r.get("top_k", args.top_k)
             recall_val = r.get(f"recall@{k}", "—")
             ci_data = r.get("ci")
-            if ci_data and isinstance(recall_val, (int, float)):
+            if ci_data and isinstance(recall_val, int | float):
                 recall_str = format_point_ci(
                     ci_data["point"], ci_data["ci_lower"], ci_data["ci_upper"]
                 )

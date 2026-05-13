@@ -1,6 +1,6 @@
 # Addendum G — Dual-Path LLM Appraisal (Hg1)
 
-Dataset: `realistic_recall_v3_noAF` v1.0.0  (50 scenarios, 200 queries)  
+Dataset: `realistic_recall_v3_noAF` v1.0.0  (50 scenarios, 200 queries)
 Embedder: `sbert-bge`  n_bootstrap: 10000  seed: 0
 
 > **Note:** All memory events were encoded without preset valence/arousal. Affect signal comes exclusively from the LLM appraisal engine.

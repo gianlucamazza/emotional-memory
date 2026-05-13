@@ -104,7 +104,6 @@ def test_messages_content_preserved() -> None:
 
 
 def test_messages_chronological_order() -> None:
-
     from emotional_memory.integrations.langchain import EmotionalMemoryChatHistory
 
     history = EmotionalMemoryChatHistory(_make_em())

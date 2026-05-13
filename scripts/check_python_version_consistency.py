@@ -89,9 +89,7 @@ def _check_mypy_python_version(data: dict, floor: tuple[int, int]) -> Finding | 
     return None
 
 
-def _check_basedpyright_python_version(
-    data: dict, floor: tuple[int, int]
-) -> Finding | None:
+def _check_basedpyright_python_version(data: dict, floor: tuple[int, int]) -> Finding | None:
     pv = data.get("tool", {}).get("basedpyright", {}).get("pythonVersion")
     if pv is None:
         return None
@@ -130,16 +128,16 @@ def _check_classifiers(data: dict, floor: tuple[int, int]) -> list[Finding]:
             )
         )
     # Every minor below the floor must NOT be classified as supported.
-    for m in seen_minors:
-        if m < floor[1]:
-            findings.append(
-                Finding(
-                    file=ROOT / "pyproject.toml",
-                    field="project.classifiers",
-                    expected=f"no classifier below 3.{floor[1]}",
-                    actual=f"has obsolete classifier 'Python :: 3.{m}'",
-                )
-            )
+    findings.extend(
+        Finding(
+            file=ROOT / "pyproject.toml",
+            field="project.classifiers",
+            expected=f"no classifier below 3.{floor[1]}",
+            actual=f"has obsolete classifier 'Python :: 3.{m}'",
+        )
+        for m in seen_minors
+        if m < floor[1]
+    )
     return findings
 
 
@@ -160,20 +158,20 @@ def _check_ci_matrix(floor: tuple[int, int]) -> list[Finding]:
             Finding(
                 file=ci,
                 field="jobs.test.strategy.matrix.python-version",
-                expected=f"includes \"3.{floor[1]}\"",
+                expected=f'includes "3.{floor[1]}"',
                 actual=f"missing 3.{floor[1]} (have {sorted(minors)})",
             )
         )
-    for m_ in minors:
-        if m_ < floor[1]:
-            findings.append(
-                Finding(
-                    file=ci,
-                    field="jobs.test.strategy.matrix.python-version",
-                    expected=f"no version below 3.{floor[1]}",
-                    actual=f"has obsolete \"3.{m_}\"",
-                )
-            )
+    findings.extend(
+        Finding(
+            file=ci,
+            field="jobs.test.strategy.matrix.python-version",
+            expected=f"no version below 3.{floor[1]}",
+            actual=f'has obsolete "3.{m_}"',
+        )
+        for m_ in minors
+        if m_ < floor[1]
+    )
     return findings
 
 
@@ -195,14 +193,15 @@ def main() -> int:
     floor = _floor_from_requires_python(requires_python)
     print(f"SSOT: requires-python = {requires_python!r} → floor = 3.{floor[1]}")
 
-    findings: list[Finding] = []
-    for f in (
-        _check_ruff_target(data, floor),
-        _check_mypy_python_version(data, floor),
-        _check_basedpyright_python_version(data, floor),
-    ):
-        if f is not None:
-            findings.append(f)
+    findings: list[Finding] = [
+        f
+        for f in (
+            _check_ruff_target(data, floor),
+            _check_mypy_python_version(data, floor),
+            _check_basedpyright_python_version(data, floor),
+        )
+        if f is not None
+    ]
     findings.extend(_check_classifiers(data, floor))
     findings.extend(_check_ci_matrix(floor))
 

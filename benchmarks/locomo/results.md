@@ -41,7 +41,7 @@ Dataset: locomo10 (10 conversations, 1986 QA pairs)
 
 ## Hypothesis Tests (pre-registration S1)
 
-Gate 1: **FAIL**  
+Gate 1: **FAIL**
 (n_bootstrap=2000, Holm-Bonferroni correction across H1+H2)
 
 | Hypothesis | Metric | AFT | Baseline | Δ [95%CI] | p_one | p_adj | Result |

@@ -92,7 +92,7 @@ class LangMemAdapter(MemoryAdapter):
                 value = item.get("value") or {}
                 content = value.get("content", "") if isinstance(value, dict) else ""
                 score_raw = item.get("score")
-                score = float(score_raw) if isinstance(score_raw, (int, float)) else 1.0 / (i + 1)
+                score = float(score_raw) if isinstance(score_raw, int | float) else 1.0 / (i + 1)
                 result_items.append(
                     RetrievedItem(
                         id=str(item.get("key", uuid.uuid4())),

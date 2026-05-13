@@ -1,7 +1,7 @@
 # Addendum K — DailyDialog Affect-Conditioned Retrieval: Closure
 
-**Date:** 2026-05-07  
-**Pre-registration:** `benchmarks/preregistration_addendum_k_dailydialog.md` (commit `59917e2`)  
+**Date:** 2026-05-07
+**Pre-registration:** `benchmarks/preregistration_addendum_k_dailydialog.md` (commit `59917e2`)
 **Status:** CLOSED — **Branch B (FAIL)**
 
 ---

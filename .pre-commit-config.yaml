@@ -4,22 +4,34 @@ repos:
     hooks:
       - id: check-yaml
       - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-added-large-files
         args: [--maxkb=500]
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: [--fix=lf]
 
-  - repo: local
+  # Self-contained ruff hook (no `uv run` dependency on host).
+  # The pinned ruff binary is downloaded by pre-commit's own toolchain so
+  # contributors don't need uv installed to run pre-commit locally.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.12
     hooks:
-      - id: ruff-check
-        name: ruff check
-        entry: uv run ruff check --fix
-        language: system
-        types_or: [python, pyi]
-        require_serial: true
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-        name: ruff format
-        entry: uv run ruff format
-        language: system
-        types_or: [python, pyi]
-        require_serial: true
+
+  # Validates that pyproject.toml is well-formed per PEP 621.
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.23
+    hooks:
+      - id: validate-pyproject
+
+  # Static analysis for GitHub Actions workflows.
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.22.0
+    hooks:
+      - id: zizmor

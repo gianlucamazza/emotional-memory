@@ -221,12 +221,12 @@ def _classify_rating_record(record: dict[str, Any]) -> tuple[str, dict[str, Any]
     numeric_ratings = {
         dimension: float(value)
         for dimension, value in ratings_map.items()
-        if isinstance(value, (int, float)) and not isinstance(value, bool)
+        if isinstance(value, int | float) and not isinstance(value, bool)
     }
     missing_dimensions = [
         dimension
         for dimension, value in ratings_map.items()
-        if not isinstance(value, (int, float)) or isinstance(value, bool)
+        if not isinstance(value, int | float) or isinstance(value, bool)
     ]
     is_template = not rater_id and not note and not numeric_ratings
 
