@@ -45,10 +45,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **SBOM + SLSA + PEP 740 attestations** in `release.yml`: CycloneDX SBOM,
   SLSA build provenance, and PEP 740 attestations generated on every PyPI release.
 
+### Tooling / SSOT
+
+- **`scripts/check_metadata_ssot.py`** (new, commit `5701d0a`): validates author, license,
+  and keyword consistency across `pyproject.toml`, `CITATION.cff`, `codemeta.json`,
+  `.zenodo.json`. Integrated into `ci.yml` `meta-integrity` job.
+- **`scripts/check_python_version_consistency.py`** (new, commit `9618413`): validates
+  Python floor (`requires-python`) is aligned across ruff `target-version`, mypy
+  `python_version`, basedpyright `pythonVersion`, classifiers, and CI matrix.
+- **`fix(metadata)` (commit `30f8eba`)**: aligned keywords between `codemeta.json` and
+  `.zenodo.json` (previously diverged after v0.9.0).
+
 ### Documentation
 
-- `docs/contributing.md` documents the SSOT policy for metadata consistency.
-- README hero section now sourced from README via `include-markdown` plugin.
+- `docs/contributing/ssot-policy.md` documents the SSOT policy for metadata consistency.
+- README hero section now sourced from README via `include-markdown` plugin
+  (`mkdocs-include-markdown-plugin` added to `[docs]` extra, commit `9023d4d`).
 
 ## [0.10.0] - 2026-05-07
 
