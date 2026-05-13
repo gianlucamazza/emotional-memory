@@ -16,18 +16,18 @@ jobs:
       attestations: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
         with:
-          enable-cache: true
+          enable-cache: false
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: "3.13"
 
@@ -40,20 +40,14 @@ jobs:
           if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
             VERSION="${GITHUB_REF_NAME#v}"
           else
-            VERSION="$(uv run python - <<'PY'
-import re
-from pathlib import Path
-text = Path('pyproject.toml').read_text(encoding='utf-8')
-match = re.search(r'^version\\s*=\\s*"([^"]+)"', text, re.MULTILINE)
-assert match is not None
-print(match.group(1))
-PY
-)"
+            VERSION="$(uv run python scripts/resolve_version.py)"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Fast release preflight
-        run: uv run python scripts/preflight.py --fast --ci "${{ steps.version.outputs.version }}"
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: uv run python scripts/preflight.py --fast --ci "$RELEASE_VERSION"
 
       - name: Build package
         run: uv build
@@ -62,7 +56,7 @@ PY
         run: uv run python -m twine check dist/*
 
       - name: Generate SBOM (CycloneDX)
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
         with:
           path: .
           format: cyclonedx-json
@@ -71,14 +65,14 @@ PY
           upload-release-assets: false
 
       - name: Attest build provenance (SLSA)
-        uses: actions/attest@v4
+        uses: actions/attest@281a49d4cbb0a72c9575a50d18f6deb515a11deb # v4
         with:
           subject-path: |
             dist/*.whl
             dist/*.tar.gz
 
       - name: Attest SBOM (CycloneDX)
-        uses: actions/attest@v4
+        uses: actions/attest@281a49d4cbb0a72c9575a50d18f6deb515a11deb # v4
         with:
           subject-path: |
             dist/*.whl
@@ -87,7 +81,7 @@ PY
           predicate-path: "dist/sbom.cdx.json"
 
       - name: Upload release artefacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: emotional-memory-${{ steps.version.outputs.version }}-dist
           path: |
@@ -97,22 +91,27 @@ PY
 
       - name: Publish to PyPI
         if: github.event_name == 'push'
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b # release/v1
         with:
           attestations: true
 
       - name: Verify PyPI release
         if: github.event_name == 'push'
-        run: uv run python scripts/verify_pypi_release.py "${{ steps.version.outputs.version }}"
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: uv run python scripts/verify_pypi_release.py "$RELEASE_VERSION"
 
       - name: Release summary
         if: always()
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          JOB_STATUS: ${{ job.status }}
         run: |
           {
             echo "## Release workflow"
             echo "- Event: ${GITHUB_EVENT_NAME}"
-            echo "- Version: ${{ steps.version.outputs.version }}"
-            echo "- Job status: ${{ job.status }}"
+            echo "- Version: ${RELEASE_VERSION}"
+            echo "- Job status: ${JOB_STATUS}"
             echo "- Artefacts: uploaded to workflow artifacts (incl. SBOM)"
             echo "- Provenance: SLSA build provenance attestation generated"
             echo "- SBOM: CycloneDX attestation generated"
