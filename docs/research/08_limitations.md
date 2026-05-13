@@ -35,8 +35,7 @@ limitations:
   Δ=+0.058 (p=0.276) — FAIL at declared power. Spanish (Hd2_ES, SBERT, N=80):
   Δ=+0.138, p=0.045 — a single directional positive, not power-replicated;
   me5 FAIL at both N=80 (Δ=+0.113, p=0.110) and N=120 (Δ=0.000, p=1.00).
-  See power top-up closure
-  [`benchmarks/preregistration_addendum_hd2_powertopup_closure.md`](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
+  See power top-up closure `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 - **`KeywordAppraisalEngine` is English-only**: the `LLMAppraisalEngine` handles
   multilingual input, but appraisal quality varies by language.
 - **No formal cross-lingual validation beyond EN/IT/ES**: generalisation to

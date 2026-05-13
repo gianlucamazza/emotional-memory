@@ -117,7 +117,7 @@ pre-declared N=120 power target. Cross-language evidence is limited to:
 
 The headline EN advantage (SBERT d=0.49, e5 d=0.31, N=200) is unaffected.
 
-Full closure: [`benchmarks/preregistration_addendum_hd2_powertopup_closure.md`](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
+Full closure: `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 
 ---
 

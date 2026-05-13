@@ -165,8 +165,7 @@ advantage is real; per-layer attribution is not (S3 above).
 **Cross-language (Branch C):** Pre-registered power top-up to N=120 on
 multilingual-e5-small (IT + ES) does not establish the effect for either language.
 Cross-language evidence is scoped to a single exploratory Spanish-SBERT result at
-N=80 (Δ=+0.138, p=0.045). See
-[power top-up closure](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
+N=80 (Δ=+0.138, p=0.045). See `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 
 ### Hk1 — DailyDialog Ecological Replication (Branch B)
 
