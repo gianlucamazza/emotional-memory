@@ -61,6 +61,7 @@ nav:
     - Persistence: tutorials/persistence.md
     - Observability: tutorials/observability.md
     - LangChain integration: tutorials/langchain.md
+    - Mem0 integration: tutorials/mem0.md
   - API Reference:
     - Engine (sync): api/engine.md
     - Engine (async): api/async_engine.md

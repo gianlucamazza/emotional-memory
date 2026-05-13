@@ -1,12 +1,21 @@
 """Optional integration exports.
 
-This subpackage currently exposes the LangChain adapter when the
-``langchain`` extra is installed.
+This subpackage exposes:
+
+- **LangChain adapter** (``EmotionalMemoryChatHistory``, ``recommended_conversation_policy``,
+  ``store_all_messages``) — available when the ``langchain`` extra is installed.
+- **mem0-compatible facade** (``EmotionalMemoryMem0Backend``, ``messages_to_content``) —
+  always available; no runtime ``mem0ai`` dependency required.
 """
 
 from __future__ import annotations
 
 from typing import Any
+
+from emotional_memory.integrations.mem0 import (
+    EmotionalMemoryMem0Backend,
+    messages_to_content,
+)
 
 _LANGCHAIN_EXPORTS = (
     "EmotionalMemoryChatHistory",
@@ -14,7 +23,12 @@ _LANGCHAIN_EXPORTS = (
     "store_all_messages",
 )
 
-__all__: list[str] = []
+_MEM0_EXPORTS = (
+    "EmotionalMemoryMem0Backend",
+    "messages_to_content",
+)
+
+__all__: list[str] = ["EmotionalMemoryMem0Backend", "messages_to_content"]
 _langchain_import_error: ImportError | None = None
 
 try:
@@ -27,6 +41,8 @@ else:
     store_all_messages = _langchain.store_all_messages
     __all__ = [
         "EmotionalMemoryChatHistory",
+        "EmotionalMemoryMem0Backend",
+        "messages_to_content",
         "recommended_conversation_policy",
         "store_all_messages",
     ]

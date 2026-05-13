@@ -607,6 +607,33 @@ gh attestation verify emotional_memory-0.10.0-py3-none-any.whl \
   --repo gianlucamazza/emotional-memory
 ```
 
+## mem0 integration
+
+`EmotionalMemoryMem0Backend` exposes the mem0 `Memory` API (`add` / `search` / `get_all` /
+`delete` / `delete_all` / `reset` / `close`) backed by the full AFT retrieval pipeline.
+No runtime `mem0ai` dependency is required — it's always available:
+
+```bash
+uv pip install "emotional-memory[sentence-transformers]"
+```
+
+```python
+from emotional_memory import EmotionalMemory, InMemoryStore
+from emotional_memory.embedders import SentenceTransformerEmbedder
+from emotional_memory.integrations import EmotionalMemoryMem0Backend
+
+em = EmotionalMemory(store=InMemoryStore(), embedder=SentenceTransformerEmbedder())
+backend = EmotionalMemoryMem0Backend(em, default_user_id="alice")
+
+backend.add([{"role": "user", "content": "I had a wonderful day at the park."}])
+results = backend.search("outdoors positive experiences")
+print(results["results"][0]["memory"])
+```
+
+The backend stores memories verbatim. For LLM-based fact extraction, chain a real `mem0.Memory`
+instance as a pre-processor and store its extracted facts here. See
+[the mem0 tutorial](docs/tutorials/mem0.md) for the chain pattern.
+
 ## LangChain integration
 
 `EmotionalMemoryChatHistory` is a drop-in replacement for any LangChain chat history object.

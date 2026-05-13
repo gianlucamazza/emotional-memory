@@ -189,7 +189,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 - [x] Status legend extended with `falsified` and `retry_planned` in `claim_validation_matrix.json`.
 
 ### WS3 — New features (open)
-- [ ] **WS3a** — `integrations/mem0.py`: real mem0 adapter (model: `integrations/langchain.py`), tests, tutorial.
+- [x] **WS3a** — `integrations/mem0.py`: `EmotionalMemoryMem0Backend` facade (mem0 API surface, no runtime mem0ai dep), `messages_to_content` helper, 49 tests, `docs/tutorials/mem0.md` tutorial. Exported from integrations subpackage and top-level `emotional_memory`.
 - [ ] **WS3b** — French multilingual slice (`benchmarks/multilingual/fr/`); deferred from v0.8.
 - [x] **WS3c** — `query_classifier.py` (`HeuristicQueryClassifier`, `LLMQueryClassifier`, `QueryClassifier` protocol, `LOCOMO_ROUTING`); `QueryClassifierConfig` in `retrieval.py`; routing injection in `engine.py` + `async_engine.py`; preregistration addendum L committed. Benchmark run + closure pending (Hl1 confirmatory, Hl2 secondary, Hl3 exploratory).
 

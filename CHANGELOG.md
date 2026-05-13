@@ -93,6 +93,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **mem0-compatible facade** (`EmotionalMemoryMem0Backend` in
+  `emotional_memory.integrations.mem0`): exposes the mem0 `Memory` API
+  (`add` / `search` / `get` / `get_all` / `delete` / `delete_all` / `reset` / `close`)
+  backed by the full AFT retrieval pipeline (semantic + mood congruence + decay +
+  resonance). No runtime `mem0ai` dependency — always available. Helper
+  `messages_to_content()` coerces mem0-style message lists to plain strings.
+  Exported from `emotional_memory.integrations` and top-level `emotional_memory`.
+  Tutorial: `docs/tutorials/mem0.md`.
 - **Query-type classifier** (`emotional_memory.query_classifier`): `HeuristicQueryClassifier`
   (regex/keyword, ~0 latency) and `LLMQueryClassifier` (SHA-256 LRU cache, thread-safe,
   `fallback_on_error` semantics, mirrors `LLMAppraisalEngine` pattern). Protocol:
