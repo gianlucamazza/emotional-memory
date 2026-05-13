@@ -75,7 +75,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
 | `interfaces.py` | `Embedder`, `MemoryStore`, `AffectiveStateStore` protocols + `SequentialEmbedder` base class |
 | `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions |
-| `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal |
+| `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal (submodule-only, not top-level exports; import as `from emotional_memory.llm_http import …`) |
 | `integrations/langchain.py` | LangChain memory integration (optional) |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
 | `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
@@ -100,6 +100,10 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 **prune**: `prune(threshold=0.05)` → iterate all memories, call `compute_effective_strength()`, delete those below threshold. Returns count removed. Async variant awaits each store call.
 
 **export/import**: `export_memories()` → `[Memory.model_dump_json() | json.loads(...)]`. `import_memories(data, overwrite=False)` → `Memory.model_validate(item)` per dict, skip duplicates unless `overwrite=True`. Returns count written.
+
+**encode_batch**: `embed_batch(contents) → list[embedding]` → per-item appraisal (sequential) → per-item encode path. Resonance links built after all items stored.
+
+**elaborate_pending**: iterates all stored memories where `pending_appraisal=True`, calls `elaborate(memory_id)` on each. Returns list of updated `Memory` objects.
 
 **resource cleanup**: `close()` delegates to `store.close()` if available (duck-typed via `getattr`). Both engines support context manager: `with EmotionalMemory(...) as em` / `async with AsyncEmotionalMemory(...) as em`.
 
@@ -139,7 +143,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 - **Immutability**: All value objects are Pydantic `frozen=True`. `update()` methods return new instances.
 - **Protocols over ABCs**: Extend via duck-typed protocols, not inheritance.
-- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`). New top-level flags: `dual_path_encoding` (bool), `elaboration_learning_rate` (float, blend ratio in `elaborate()`), `auto_categorize` (bool, run Plutchik categorization on encode).
+- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`). Top-level flags on `EmotionalMemoryConfig`: `dual_path_encoding` (bool), `elaboration_learning_rate` (float, blend ratio in `elaborate()`), `auto_categorize` (bool, run Plutchik categorization on encode). Ablation toggles: `enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation` (all `bool = True`).
 - **Theory references**: Each component cites source papers — preserve these in docstrings/comments.
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
 - **`__slots__`**: All non-Pydantic classes define `__slots__` for memory efficiency and attribute safety.
