@@ -56,8 +56,24 @@ _TOP_K = 8
 _W0 = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]  # S1 baseline
 _W2 = [0.50, 0.30, 0.10, 0.05, 0.05, 0.00]  # Best Addendum J config
 
-# LoCoMo ground-truth query-type field name in dataset
-_QA_TYPE_FIELD = "question_type"  # "single_hop" | "multi_hop" | "temporal" | "open_domain"
+# Key used in flat-list dicts for stratified sampling and prediction records.
+# Populated from QAPair.category_name at run time (not a QAPair attribute).
+_QA_TYPE_FIELD = "question_type"
+
+
+class _LoggingClassifier:
+    """Wraps a QueryClassifier to record (query, predicted_type) pairs for Hl3."""
+
+    __slots__ = ("_inner", "log")
+
+    def __init__(self, inner: QueryClassifier) -> None:
+        self._inner = inner
+        self.log: list[tuple[str, str]] = []
+
+    def classify(self, query: str) -> str:
+        pred = self._inner.classify(query)
+        self.log.append((query, pred))
+        return pred
 
 
 class _AFTRoutedAdapter(LoCoMoAdapter):
@@ -73,10 +89,16 @@ class _AFTRoutedAdapter(LoCoMoAdapter):
     ) -> None:
         self.name = name
         self._config = config
-        self._query_classifier = query_classifier
         self._top_k = top_k
         self._embedder = SentenceTransformerEmbedder.make_bge_small()
         self._engine: EmotionalMemory | None = None
+        # Wrap with logger to record (query, predicted_type) for Hl3 analysis.
+        if query_classifier is not None:
+            self._logging_clf: _LoggingClassifier | None = _LoggingClassifier(query_classifier)
+            self._query_classifier: QueryClassifier | None = self._logging_clf
+        else:
+            self._logging_clf = None
+            self._query_classifier = None
 
     def reset(self) -> None:
         if self._engine is not None:
@@ -140,6 +162,8 @@ def _make_system(name: str) -> LoCoMoAdapter:
         from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
 
         llm_config = OpenAICompatibleLLMConfig.from_env()
+        if llm_config is None:
+            raise RuntimeError("EMOTIONAL_MEMORY_LLM_API_KEY is required for aft_routed_llm")
         llm = make_httpx_llm(llm_config)
         clf = LLMQueryClassifier(llm=llm, cache_size=512)
         qcc = QueryClassifierConfig(mode="llm", routed_weights=LOCOMO_ROUTING)
@@ -180,9 +204,7 @@ class _OracleRoutedAdapter(_AFTRoutedAdapter):
     def answer(self, qa: QAPair, conversation: Conversation) -> str:
         # Inject ground-truth type into HeuristicQueryClassifier by monkey-patching
         # the classify call via a fixed-response classifier.
-        gt_type: str = getattr(qa, _QA_TYPE_FIELD, "default") or "default"
-        if gt_type not in LOCOMO_ROUTING:
-            gt_type = "default"
+        gt_type: str = qa.category_name if qa.category_name in LOCOMO_ROUTING else "default"
 
         engine = self._require_engine()
         # Temporarily override with an oracle classifier
@@ -205,6 +227,7 @@ class _OracleRoutedAdapter(_AFTRoutedAdapter):
 
 DEFAULT_SYSTEMS = [
     "aft_routed_heuristic",
+    "aft_routed_llm",
     "aft_W0",
     "aft_W2",
     "naive_rag",
@@ -245,23 +268,25 @@ def _run_system(
         for session in conv.sessions:
             system.ingest_session(session, conv)
 
-        for qa in conv.qa_pairs:
-            if subset_ids is not None and qa.qa_id not in subset_ids:
+        for qa_idx, qa in enumerate(conv.qa_pairs):
+            qa_id = f"{conv.sample_id}_{qa_idx}"
+            if subset_ids is not None and qa_id not in subset_ids:
                 continue
             try:
                 pred = system.answer(qa, conv)
             except Exception as exc:
                 pred = ""
                 if verbose:
-                    print(f"  [{system.name}] error on {qa.qa_id}: {exc}")
+                    print(f"  [{system.name}] error on {qa_id}: {exc}")
             predictions.append(
                 {
-                    "qa_id": qa.qa_id,
+                    "qa_id": qa_id,
                     "question": qa.question,
                     "gold": qa.answer,
                     "prediction": pred,
-                    "question_type": getattr(qa, _QA_TYPE_FIELD, "open_domain"),
-                    "is_adversarial": getattr(qa, "is_adversarial", False),
+                    "category": qa.category,
+                    _QA_TYPE_FIELD: qa.category_name,
+                    "is_adversarial": qa.is_adversarial,
                 }
             )
     return predictions
@@ -293,7 +318,7 @@ def _format_table(results: dict[str, Any]) -> str:
     ]
     for sys_name, sys_data in results.items():
         cats = sys_data.get("by_category", {})
-        weighted = sys_data.get("weighted_f1", 0.0)
+        weighted = sys_data.get("aggregate_weighted_f1", 0.0)
         row = [
             sys_name,
             f"{cats.get('single_hop', {}).get('f1', 0.0):.3f}",
@@ -331,9 +356,9 @@ def main(argv: list[str] | None = None) -> None:
     # Build optional subset
     if args.subset == "200qa":
         all_qa_flat = [
-            {"qa_id": qa.qa_id, _QA_TYPE_FIELD: getattr(qa, _QA_TYPE_FIELD, "open_domain")}
+            {"qa_id": f"{conv.sample_id}_{qa_idx}", _QA_TYPE_FIELD: qa.category_name}
             for conv in dataset.conversations
-            for qa in conv.qa_pairs
+            for qa_idx, qa in enumerate(conv.qa_pairs)
         ]
         subset_qa = _stratified_subsample(all_qa_flat, 200, args.seed)
         print(f"Subset: {len(subset_qa)} questions (stratified, seed={args.seed})")
@@ -348,8 +373,34 @@ def main(argv: list[str] | None = None) -> None:
         preds = _run_system(system, dataset, subset=subset_qa, verbose=args.verbose)
         _judge_predictions(preds, verbose=args.verbose)
         scores = score_predictions(preds)
-        all_results[sys_name] = scores
-        print(f"  Weighted F1: {scores.get('weighted_f1', 0.0):.3f}")
+
+        # B1: compute sample-weighted F1 from per-category counts (adversarial excluded).
+        cats = scores.get("by_category", {})
+        total_n = sum(c.get("n", 0) for c in cats.values())
+        scores["aggregate_weighted_f1"] = (
+            sum(c.get("n", 0) * c.get("f1", 0.0) for c in cats.values()) / total_n
+            if total_n > 0
+            else 0.0
+        )
+
+        # B2: persist raw predictions for paired bootstrap.
+        result_entry: dict[str, Any] = {**scores, "predictions": preds}
+
+        # B3: persist classifier log for Hl3 accuracy measurement.
+        logging_clf = getattr(system, "_logging_clf", None)
+        if logging_clf is not None:
+            clf_entries = logging_clf.log
+            result_entry["classifier_predictions"] = [
+                {
+                    "qa_id": preds[i]["qa_id"],
+                    "predicted_type": clf_entries[i][1] if i < len(clf_entries) else "unknown",
+                    "ground_truth_type": preds[i].get(_QA_TYPE_FIELD, "unknown"),
+                }
+                for i in range(len(preds))
+            ]
+
+        all_results[sys_name] = result_entry
+        print(f"  Weighted F1: {scores['aggregate_weighted_f1']:.3f}")
 
     # Write outputs
     args.out_json.parent.mkdir(parents=True, exist_ok=True)

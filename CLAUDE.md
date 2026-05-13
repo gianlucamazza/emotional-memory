@@ -81,6 +81,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
 | `stores/chroma.py` | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra) |
 | `telemetry.py` | `traced_span()` context manager — OTel spans, no-op when `[otel]` extra absent |
+| `query_classifier.py` | `QueryClassifier` protocol, `HeuristicQueryClassifier`, `LLMQueryClassifier`, `LOCOMO_ROUTING`, `QUERY_TYPES` — pluggable query-type routing; drives per-type weight selection in retrieval (Addendum L confirmatory study) |
 | `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
 
 ### Key Data Flow
