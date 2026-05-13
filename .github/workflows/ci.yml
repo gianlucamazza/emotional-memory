@@ -53,7 +53,7 @@ jobs:
         run: uv run ruff format --check .
 
       - name: Run tests with coverage
-        run: uv run pytest --cov --cov-report=xml --cov-report=html --cov-fail-under=80
+        run: uv run python -m pytest --cov --cov-report=xml --cov-report=html --cov-fail-under=80
 
       - name: Upload coverage HTML report
         if: matrix.python-version == '3.13'
@@ -212,14 +212,14 @@ jobs:
         run: uv pip install -e ".[dev,bench]" --system
 
       - name: Run fidelity benchmarks
-        run: uv run pytest benchmarks/fidelity/ -v
+        run: uv run python -m pytest benchmarks/fidelity/ -v
 
       - name: Validate paper tables are up-to-date
         run: make reproduce-paper-check
 
       - name: Run performance benchmarks
         run: >
-          uv run pytest benchmarks/perf/
+          uv run python -m pytest benchmarks/perf/
           --benchmark-only
           --benchmark-sort=mean
           --benchmark-json=benchmark-results.json
@@ -257,7 +257,7 @@ jobs:
         run: uv pip install -e ".[dev,sqlite]" --system
 
       - name: Run SQLite store tests and example smoke tests
-        run: uv run pytest tests/test_sqlite_store.py tests/test_examples.py -v
+        run: uv run python -m pytest tests/test_sqlite_store.py tests/test_examples.py -v
 
   langchain-tests:
     name: LangChain adapter tests
@@ -281,7 +281,7 @@ jobs:
         run: uv pip install -e ".[dev,langchain]" --system
 
       - name: Run LangChain adapter tests
-        run: uv run pytest tests/test_langchain_adapter.py -v
+        run: uv run python -m pytest tests/test_langchain_adapter.py -v
 
   sentence-transformers-tests:
     name: SentenceTransformerEmbedder tests
@@ -305,7 +305,7 @@ jobs:
         run: uv pip install -e ".[dev,sentence-transformers]" --system
 
       - name: Run SentenceTransformerEmbedder tests
-        run: uv run pytest tests/test_sentence_transformers_extra.py -v
+        run: uv run python -m pytest tests/test_sentence_transformers_extra.py -v
 
   viz-tests:
     name: Visualization tests
@@ -329,7 +329,7 @@ jobs:
         run: uv pip install -e ".[dev,viz]" --system
 
       - name: Run visualization tests
-        run: uv run pytest tests/test_visualization.py -v
+        run: uv run python -m pytest tests/test_visualization.py -v
 
   dotenv-tests:
     name: Dotenv extra smoke test
@@ -356,7 +356,7 @@ jobs:
         run: uv run python -c "from dotenv import load_dotenv; print('dotenv OK')"
 
       - name: Run core tests with dotenv installed
-        run: uv run pytest tests/ -k "not sqlite and not visualization and not llm and not sentence_transformers" -q
+        run: uv run python -m pytest tests/ -k "not sqlite and not visualization and not llm and not sentence_transformers" -q
 
   llm-tests:
     name: LLM integration + quality benchmarks
@@ -383,7 +383,7 @@ jobs:
         run: uv pip install -e ".[dev,llm-test]" --system
 
       - name: Validate LLM test files are importable
-        run: uv run pytest --collect-only -m llm -q
+        run: uv run python -m pytest --collect-only -m llm -q
 
       - name: Run LLM integration tests
         env:
@@ -392,7 +392,7 @@ jobs:
           EMOTIONAL_MEMORY_LLM_MODEL: ${{ vars.EMOTIONAL_MEMORY_LLM_MODEL || 'gpt-5-mini' }}
           EMOTIONAL_MEMORY_LLM_OUTPUT_MODE: ${{ vars.EMOTIONAL_MEMORY_LLM_OUTPUT_MODE || 'plain' }}
           EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS: ${{ vars.EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS || '30' }}
-        run: uv run pytest tests/test_llm_integration.py -v -m llm
+        run: uv run python -m pytest tests/test_llm_integration.py -v -m llm
 
       - name: Run appraisal quality benchmarks
         env:
@@ -402,4 +402,4 @@ jobs:
           EMOTIONAL_MEMORY_LLM_OUTPUT_MODE: ${{ vars.EMOTIONAL_MEMORY_LLM_OUTPUT_MODE || 'plain' }}
           EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS: ${{ vars.EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS || '30' }}
           EMOTIONAL_MEMORY_LLM_REPEATS: "1"
-        run: uv run pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
+        run: uv run python -m pytest benchmarks/appraisal_quality/ -v -m appraisal_quality

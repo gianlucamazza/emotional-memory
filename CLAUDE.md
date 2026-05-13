@@ -34,7 +34,7 @@ make publish        # Build and publish to PyPI
 
 Single test:
 ```bash
-uv run pytest tests/test_engine.py::test_name -v
+uv run python -m pytest tests/test_engine.py::test_name -v
 ```
 
 ### LLM test environment variables

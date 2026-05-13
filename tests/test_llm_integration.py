@@ -5,7 +5,9 @@ Gated behind:
     - EMOTIONAL_MEMORY_LLM_API_KEY env var (skipped if missing)
 
 Run with:
-    EMOTIONAL_MEMORY_LLM_API_KEY=... uv run pytest tests/test_llm_integration.py -v -m llm
+    EMOTIONAL_MEMORY_LLM_API_KEY=... uv run python -m pytest \
+        tests/test_llm_integration.py -v -m llm
+
 """
 
 from __future__ import annotations
