@@ -7,6 +7,11 @@ references to benchmark artefacts that support or qualify each claim.
 Each entry carries:
 
 - `claim_text` — the exact public-facing claim
+- `requires_oracle_affect` — `true` if the claim's primary positive-result
+  benchmarks inject preset valence/arousal at encode time (oracle affect);
+  `false` if the benchmark ran without oracle injection (naturalistic or
+  appraisal-driven). Do not conflate oracle-affect results with end-to-end
+  naturalistic results — they measure different things.
 - `evidence_refs` / `benchmark_refs` / `protocol_refs` / `limitations_refs` — file
   paths within the repository that serve as evidence (all paths validated in CI via
   `tools/audit_claim_refs.py`)
