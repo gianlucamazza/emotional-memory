@@ -23,10 +23,11 @@ from __future__ import annotations
 import math
 from collections.abc import Callable, Sequence
 from datetime import datetime
+from typing import Literal
 
 import numpy as np
 from numpy.typing import NDArray
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from emotional_memory._math import cosine_similarity
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
@@ -110,6 +111,42 @@ class AdaptiveWeightsConfig(BaseModel):
         return v
 
 
+class QueryClassifierConfig(BaseModel):
+    """Configuration for per-query-type retrieval weight routing.
+
+    Set ``mode`` to ``'heuristic'`` to activate the built-in regex classifier at
+    zero latency overhead, or ``'llm'`` to use an external ``QueryClassifier``
+    instance passed to the engine constructor.  ``'disabled'`` (default) leaves
+    weight routing inactive and preserves existing behaviour.
+
+    ``routed_weights`` maps query-type labels to 6-element weight vectors (same
+    order as ``RetrievalConfig.base_weights``).  ``LOCOMO_ROUTING`` from
+    ``emotional_memory.query_classifier`` is a ready-to-use routing table.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    mode: Literal["disabled", "heuristic", "llm"] = "disabled"
+    """'heuristic' — auto-create HeuristicQueryClassifier; 'llm' — use the
+    QueryClassifier instance supplied to the engine constructor; 'disabled' — off."""
+
+    routed_weights: dict[str, list[float]] = Field(default_factory=dict)
+    """Per-type weight override. Unknown types fall back to ``default_type``."""
+
+    default_type: str = "default"
+    """Fallback key when the classified type has no entry in ``routed_weights``."""
+
+    @field_validator("routed_weights")
+    @classmethod
+    def _check_routed_lengths(cls, v: dict[str, list[float]]) -> dict[str, list[float]]:
+        for key, weights in v.items():
+            if len(weights) != 6:
+                raise ValueError(
+                    f"routed_weights[{key!r}] must have 6 elements, got {len(weights)}"
+                )
+        return v
+
+
 class RetrievalConfig(BaseModel):
     """Parameters for multi-signal retrieval scoring."""
 
@@ -123,6 +160,9 @@ class RetrievalConfig(BaseModel):
         if len(v) != 6:
             raise ValueError(f"base_weights must have exactly 6 elements, got {len(v)}")
         return v
+
+    query_classifier: QueryClassifierConfig | None = None
+    """Per-query-type weight routing. None = disabled (default behaviour)."""
 
     ape_threshold: float = 0.3
     """Affective Prediction Error threshold to trigger reconsolidation."""

@@ -44,9 +44,17 @@ from emotional_memory.interfaces import (
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
+from emotional_memory.query_classifier import (
+    LOCOMO_ROUTING,
+    QUERY_TYPES,
+    HeuristicQueryClassifier,
+    LLMQueryClassifier,
+    QueryClassifier,
+)
 from emotional_memory.resonance import ResonanceConfig, hebbian_strengthen, spreading_activation
 from emotional_memory.retrieval import (
     AdaptiveWeightsConfig,
+    QueryClassifierConfig,
     RetrievalBreakdown,
     RetrievalConfig,
     RetrievalExplanation,
@@ -104,6 +112,8 @@ with contextlib.suppress(ImportError):
     _langchain_available = True
 
 __all__ = [
+    "LOCOMO_ROUTING",
+    "QUERY_TYPES",
     "SCHERER_CPM_SCHEMA",
     "AdaptiveWeightsConfig",
     "AffectiveMomentum",
@@ -127,6 +137,7 @@ __all__ = [
     "EmotionalMemoryConfig",
     "EmotionalTag",
     "GenericAppraisalVector",
+    "HeuristicQueryClassifier",
     "InMemoryAffectiveStateStore",
     "InMemoryStore",
     "KeywordAppraisalEngine",
@@ -134,11 +145,14 @@ __all__ = [
     "LLMAppraisalConfig",
     "LLMAppraisalEngine",
     "LLMCallable",
+    "LLMQueryClassifier",
     "Memory",
     "MemoryStore",
     "MoodDecayConfig",
     "MoodField",
     "QdrantStore",
+    "QueryClassifier",
+    "QueryClassifierConfig",
     "RedisAffectiveStateStore",
     "ResonanceConfig",
     "ResonanceLink",

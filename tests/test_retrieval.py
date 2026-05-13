@@ -414,3 +414,15 @@ class TestRetrievalConfig:
     def test_seven_weights_raises(self):
         with pytest.raises(ValidationError):
             RetrievalConfig(base_weights=[0.1, 0.1, 0.2, 0.2, 0.2, 0.1, 0.1])
+
+    def test_query_classifier_none_by_default(self):
+        cfg = RetrievalConfig()
+        assert cfg.query_classifier is None
+
+    def test_query_classifier_config_accepted(self):
+        from emotional_memory.retrieval import QueryClassifierConfig
+
+        qcc = QueryClassifierConfig(mode="heuristic")
+        cfg = RetrievalConfig(query_classifier=qcc)
+        assert cfg.query_classifier is not None
+        assert cfg.query_classifier.mode == "heuristic"

@@ -91,6 +91,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`letta_client` mypy override** removed: no `integrations/letta.py` integration file
   exists; the override was an orphan.
 
+### Added
+
+- **Query-type classifier** (`emotional_memory.query_classifier`): `HeuristicQueryClassifier`
+  (regex/keyword, ~0 latency) and `LLMQueryClassifier` (SHA-256 LRU cache, thread-safe,
+  `fallback_on_error` semantics, mirrors `LLMAppraisalEngine` pattern). Protocol:
+  `QueryClassifier`. Routing table `LOCOMO_ROUTING` (derived from Addendum J closure)
+  and constant `QUERY_TYPES` exported from top-level `emotional_memory`.
+- **`QueryClassifierConfig`** (frozen Pydantic model in `retrieval.py`): `mode`
+  (`"disabled"` | `"heuristic"` | `"llm"`), `routed_weights`, `default_type`.
+  Added as optional field on `RetrievalConfig`. Default `None` preserves existing
+  retrieval behaviour unchanged (backward compatible).
+- **Per-query-type weight routing** in `EmotionalMemory` and `AsyncEmotionalMemory`:
+  `_effective_retrieval_weights(query=...)` selects `routed_weights[classify(query)]`
+  before adaptive weight adjustment; `retrieve()` and `retrieve_with_explanations()`
+  pass the query string through. `EmotionalMemory.__init__` gains optional
+  `query_classifier: QueryClassifier | None` parameter.
+- **Pre-registration Addendum L** (`benchmarks/preregistration_addendum_l_query_routing.md`):
+  Hl1 confirmatory (aggregate F1 improvement vs W2 baseline, Δ > 0.02, one-tailed
+  bootstrap n=10,000 α=0.05 Holm m=2), Hl2 secondary (gap closure vs naive_rag),
+  Hl3 exploratory (classifier accuracy vs ground-truth). Decision rule: Branch A
+  (Hl1 supported) → feature recommended as default; Branch B → optional feature.
+
 ### Research
 
 - **Hg1 (`appraisal_llm_real_dual_path`) → `falsified`**: LLM dual-path architecture does

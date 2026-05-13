@@ -191,7 +191,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 ### WS3 — New features (open)
 - [ ] **WS3a** — `integrations/mem0.py`: real mem0 adapter (model: `integrations/langchain.py`), tests, tutorial.
 - [ ] **WS3b** — French multilingual slice (`benchmarks/multilingual/fr/`); deferred from v0.8.
-- [ ] **WS3c** — Query-type classifier in `retrieval.py` + `RetrievalConfig`; preregistration addendum L; benchmark run.
+- [x] **WS3c** — `query_classifier.py` (`HeuristicQueryClassifier`, `LLMQueryClassifier`, `QueryClassifier` protocol, `LOCOMO_ROUTING`); `QueryClassifierConfig` in `retrieval.py`; routing injection in `engine.py` + `async_engine.py`; preregistration addendum L committed. Benchmark run + closure pending (Hl1 confirmatory, Hl2 secondary, Hl3 exploratory).
 
 ---
 

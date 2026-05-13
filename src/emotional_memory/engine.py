@@ -37,6 +37,10 @@ from emotional_memory.decay import DecayConfig
 from emotional_memory.interfaces import AffectiveStateStore, Embedder, MemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
+from emotional_memory.query_classifier import (
+    HeuristicQueryClassifier,
+    QueryClassifier,
+)
 from emotional_memory.resonance import (
     ResonanceConfig,
     build_resonance_links,
@@ -110,7 +114,15 @@ class EmotionalMemory:
         results = engine.retrieve("challenging work accomplishment")
     """
 
-    __slots__ = ("_appraisal_engine", "_config", "_embedder", "_state", "_state_store", "_store")
+    __slots__ = (
+        "_appraisal_engine",
+        "_config",
+        "_embedder",
+        "_query_classifier",
+        "_state",
+        "_state_store",
+        "_store",
+    )
 
     def __init__(
         self,
@@ -119,6 +131,7 @@ class EmotionalMemory:
         appraisal_engine: AppraisalEngine | None = None,
         config: EmotionalMemoryConfig | None = None,
         state_store: AffectiveStateStore | None = None,
+        query_classifier: QueryClassifier | None = None,
     ) -> None:
         self._store = store
         self._embedder = embedder
@@ -126,6 +139,14 @@ class EmotionalMemory:
         self._config = config or EmotionalMemoryConfig()
         self._state_store = state_store
         self._state = self._load_initial_state()
+        qc_cfg = self._config.retrieval.query_classifier
+        if qc_cfg is not None and qc_cfg.mode != "disabled":
+            if qc_cfg.mode == "heuristic":
+                self._query_classifier: QueryClassifier | None = HeuristicQueryClassifier()
+            else:
+                self._query_classifier = query_classifier
+        else:
+            self._query_classifier = None
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(store={self._store!r}, memories={len(self._store)})"
@@ -200,14 +221,23 @@ class EmotionalMemory:
         if self._state_store is not None:
             self._state_store.save(self._state)
 
-    def _effective_retrieval_weights(self) -> NDArray[np.float64]:
+    def _effective_retrieval_weights(self, query: str | None = None) -> NDArray[np.float64]:
         """Return adaptive retrieval weights with ablation mask applied.
 
-        Computes mood-modulated weights, then zeroes disabled signal slots and
-        renormalises so the active signals absorb the freed mass.
+        When a query string is provided and a query classifier is active, the
+        per-type routed weights override ``base_weights`` before mood modulation.
         """
         rc = self._config.retrieval
-        weights = adaptive_weights(self._state.mood, rc.base_weights, rc.adaptive_weights_config)
+        base = rc.base_weights
+        qc_cfg = rc.query_classifier
+        if query is not None and self._query_classifier is not None and qc_cfg is not None:
+            query_type = self._query_classifier.classify(query)
+            routed = qc_cfg.routed_weights.get(query_type) or qc_cfg.routed_weights.get(
+                qc_cfg.default_type
+            )
+            if routed is not None:
+                base = routed
+        weights = adaptive_weights(self._state.mood, base, rc.adaptive_weights_config)
         mask = np.array(
             [
                 True,  # s0 semantic — always active
@@ -390,7 +420,7 @@ class EmotionalMemory:
                 retrieval_config=rc,
                 propagation_hops=self._config.resonance.propagation_hops,
                 spreading_activation_fn=_spreading_fn,
-                precomputed_weights=self._effective_retrieval_weights(),
+                precomputed_weights=self._effective_retrieval_weights(query),
             )
             top = [item.memory for item in plan.pass2[:top_k]]
             result = self._apply_retrieval_updates(top, now)
@@ -442,7 +472,7 @@ class EmotionalMemory:
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
             spreading_activation_fn=_spreading_fn,
-            precomputed_weights=self._effective_retrieval_weights(),
+            precomputed_weights=self._effective_retrieval_weights(query),
         )
         top_ranked = plan.pass2[:top_k]
         result = self._apply_retrieval_updates([item.memory for item in top_ranked], now)
