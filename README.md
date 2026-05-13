@@ -1,10 +1,12 @@
 # emotional_memory
 
 [![CI](https://github.com/gianlucamazza/emotional-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/gianlucamazza/emotional-memory/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/gianlucamazza/emotional-memory/graph/badge.svg)](https://codecov.io/gh/gianlucamazza/emotional-memory)
 [![PyPI](https://img.shields.io/pypi/v/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![Python](https://img.shields.io/pypi/pyversions/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19972258.svg)](https://doi.org/10.5281/zenodo.19972258)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-tracked-blue)](https://gianlucamazza.github.io/emotional-memory/dev/bench/)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English, Italian, and Spanish on the realistic-recall benchmark (N=200/80 per language).
@@ -228,13 +230,21 @@ any sync implementation. `SyncToAsyncStore` also proxies `close()` to the underl
 
 ### Key config classes
 
-- `EmotionalMemoryConfig` — top-level config (decay, retrieval, resonance, mood_alpha, mood_decay)
+- `EmotionalMemoryConfig` — top-level config (nested configs below + top-level flags):
+  - `dual_path_encoding: bool = False` — LeDoux 1996 fast/slow path (encode first, elaborate later)
+  - `elaboration_learning_rate: float = 0.7` — blend ratio when `elaborate()` runs full appraisal (70% appraised / 30% raw)
+  - `auto_categorize: bool = False` — run Plutchik categorization on every encode
+  - `enable_appraisal: bool = True` — use appraisal engine if configured (ablation flag)
+  - `enable_mood_signal: bool = True` — include mood-congruence in retrieval scoring (ablation flag)
+  - `enable_momentum: bool = True` — include momentum alignment in retrieval scoring (ablation flag)
+  - `enable_resonance: bool = True` — build and use resonance graph (ablation flag)
+  - `enable_reconsolidation: bool = True` — APE-gated reconsolidation on retrieve (ablation flag)
 - `RetrievalConfig` — weights, APE threshold, reconsolidation learning rate
 - `ResonanceConfig` — similarity threshold, max links, semantic/emotional/temporal weights, candidate multiplier, `propagation_hops`, `hebbian_increment`, configurable link-classification thresholds
 - `DecayConfig` — power-law decay parameters, arousal modulation, floor values
 - `MoodDecayConfig` — time-based mood regression (half-life, inertia scale, baselines)
 - `AdaptiveWeightsConfig` — smooth mood-adaptive retrieval weight tuning (sigmoid/Gaussian gates)
-- `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour)
+- `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour, `appraisal_schema`)
 
 ### Interfaces (bring your own)
 
@@ -317,6 +327,27 @@ default rules covering success, failure, novelty, danger, and social norms:
 from emotional_memory import KeywordAppraisalEngine
 engine = KeywordAppraisalEngine()  # or pass custom KeywordRule list
 ```
+
+**BYO appraisal schema (`AppraisalSchema`)** — swap the default Scherer CPM prompt for any
+appraisal taxonomy (OCC, GRID, or custom) without forking the library:
+
+```python
+from emotional_memory import LLMAppraisalEngine, LLMAppraisalConfig, AppraisalSchema
+from emotional_memory.appraisal_schema import AppraisalDimension
+
+my_schema = AppraisalSchema(
+    name="occ",
+    dimensions=[
+        AppraisalDimension(name="desirability", range=(-1.0, 1.0), description="…"),
+        AppraisalDimension(name="likelihood",   range=( 0.0, 1.0), description="…"),
+    ],
+)
+config = LLMAppraisalConfig(appraisal_schema=my_schema)
+engine = LLMAppraisalEngine(llm=my_llm, config=config)
+```
+
+The engine validates `AppraisalVector` outputs against the declared schema dimensions.
+`SCHERER_CPM_SCHEMA` (the 5-dimension default) is exported from `emotional_memory` directly.
 
 ## Visualization
 
@@ -553,6 +584,29 @@ Run with: `EMOTIONAL_MEMORY_LLM_API_KEY=... make bench-appraisal`
 
 Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOTIONAL_MEMORY_LLM_BASE_URL`.
 
+## Production readiness
+
+`emotional-memory` is production-hardened for teams that need supply-chain assurances:
+
+| Signal | Status |
+|---|---|
+| **PyPI releases** | Trusted Publishing (OIDC, no long-lived tokens) |
+| **SLSA provenance** | Level 3 — build-provenance attestation on every release |
+| **SBOM** | CycloneDX JSON generated and attested per release (`dist/sbom.cdx.json`) |
+| **PEP 740 attestations** | Signed attestations verifiable via `gh attestation verify` |
+| **SAST** | CodeQL workflow on every push/PR to `main` |
+| **Workflow security** | All third-party GitHub Actions SHA-pinned; zizmor static analysis in CI |
+| **Dependency audit** | pip-audit in CI on every push; no known CVEs |
+| **Coverage** | ≥80% branch coverage enforced; informational target 90% |
+| **Type safety** | mypy strict + basedpyright (secondary) on every PR |
+| **Conventional commits** | PR title enforced (amannn/action-semantic-pull-request) |
+
+```bash
+# Verify provenance of a released wheel locally:
+gh attestation verify emotional_memory-0.10.0-py3-none-any.whl \
+  --repo gianlucamazza/emotional-memory
+```
+
 ## LangChain integration
 
 `EmotionalMemoryChatHistory` is a drop-in replacement for any LangChain chat history object.
@@ -685,6 +739,24 @@ make bench-appraisal          # Scherer CPM prompt quality benchmarks
 | `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | `plain` | LLM response mode: `plain` or `json_object` |
 | `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | `30` | HTTP timeout for OpenAI-compatible calls |
 | `EMOTIONAL_MEMORY_LLM_REPEATS` | `3` | Repeats per phrase in quality benchmarks |
+
+## Citing
+
+If you use `emotional-memory` in research, please cite:
+
+```bibtex
+@software{mazza_emotional_memory_2026,
+  author    = {Mazza, Gianluca},
+  title     = {{emotional-memory: Affective Field Theory for LLM Memory}},
+  year      = {2026},
+  version   = {0.10.0},
+  doi       = {10.5281/zenodo.20070143},
+  url       = {https://github.com/gianlucamazza/emotional-memory},
+  license   = {MIT},
+}
+```
+
+Concept DOI (all versions): [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
 
 ## License
 
