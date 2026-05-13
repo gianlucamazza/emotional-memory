@@ -25,7 +25,11 @@ else:
     EmotionalMemoryChatHistory = _langchain.EmotionalMemoryChatHistory
     recommended_conversation_policy = _langchain.recommended_conversation_policy
     store_all_messages = _langchain.store_all_messages
-    __all__ = list(_LANGCHAIN_EXPORTS)
+    __all__ = [
+        "EmotionalMemoryChatHistory",
+        "recommended_conversation_policy",
+        "store_all_messages",
+    ]
 
 
 def __getattr__(name: str) -> Any:

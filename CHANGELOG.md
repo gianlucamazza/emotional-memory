@@ -61,6 +61,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/contributing/ssot-policy.md` documents the SSOT policy for metadata consistency.
 - README hero section now sourced from README via `include-markdown` plugin
   (`mkdocs-include-markdown-plugin` added to `[docs]` extra, commit `9023d4d`).
+- `SECURITY.md` supported-versions table updated to v0.10.x / v0.11.x.
+
+### Type checking
+
+- **`basedpyright` is now a gating check**: `continue-on-error: true` removed from
+  `.github/workflows/ci.yml`. The type-checker job blocks merges on error.
+- **`__all__` declarations made fully static** in `src/emotional_memory/__init__.py`,
+  `state_stores/__init__.py`, and `integrations/__init__.py`: optional export names are
+  now declared upfront in a single literal list instead of being appended conditionally.
+  This eliminates `reportUnsupportedDunderAll` warnings without any suppression pragmas
+  and aligns with PEP 484 best practice (public API declared statically, availability
+  determined at import time by the optional-extra guard).
+
+### Fixed
+
+- **`ChromaStore.__len__` type annotation**: `col.count()` (chromadb, no stubs) returned
+  `Any`; now cast to `int` explicitly so mypy `no-any-return` is satisfied.
+- **`Makefile` test runner**: all `uv run pytest` invocations changed to
+  `uv run python -m pytest` so that the venv Python is used directly instead of
+  relying on the `pytest` shim, which can resolve to a system-level binary when the
+  venv is not activated.
+
+### Removed
+
+- **`langmem` optional extra** dropped from `pyproject.toml`: no `integrations/langmem.py`
+  existed and no active roadmap item targets it. The `langmem`/`langgraph` mypy overrides
+  and the `install-langmem` Makefile target have been removed accordingly.
+- **`letta_client` mypy override** removed: no `integrations/letta.py` integration file
+  exists; the override was an orphan.
 
 ## [0.10.0] - 2026-05-07
 

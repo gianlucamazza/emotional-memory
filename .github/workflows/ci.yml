@@ -105,11 +105,6 @@ jobs:
   typecheck-pyright:
     name: Type check (basedpyright)
     runs-on: ubuntu-latest
-    # Secondary type-checker. Non-blocking during baseline-cleanup phase;
-    # remove continue-on-error once the project is clean under basedpyright
-    # standard mode.
-    # TODO: flip to blocking once baseline warnings are resolved.
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6

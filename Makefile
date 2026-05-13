@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-langmem install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-dailydialog bench-dailydialog-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-dailydialog bench-dailydialog-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -43,9 +43,6 @@ install-langchain:
 install-mem0:
 	uv pip install -e ".[dev,mem0]"
 
-install-langmem:
-	uv pip install -e ".[dev,langmem]"
-
 install-all:
 	uv pip install -e ".[dev,demo,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
 
@@ -57,10 +54,10 @@ format:
 	uv run ruff format .
 
 test:
-	uv run pytest
+	uv run python -m pytest
 
 cov:
-	uv run pytest --cov --cov-report=term-missing
+	uv run python -m pytest --cov --cov-report=term-missing
 
 typecheck:
 	uv run mypy src/emotional_memory/
@@ -96,10 +93,10 @@ check-arxiv-bundle:
 	@echo "OK: arxiv bundle main.tex matches paper/main.tex"
 
 bench-fidelity:
-	uv run pytest benchmarks/fidelity/ -v -m fidelity
+	uv run python -m pytest benchmarks/fidelity/ -v -m fidelity
 
 bench-perf:
-	uv run pytest benchmarks/perf/ --benchmark-only --benchmark-sort=mean
+	uv run python -m pytest benchmarks/perf/ --benchmark-only --benchmark-sort=mean
 
 bench: bench-fidelity bench-perf
 
@@ -297,10 +294,10 @@ paper-arxiv:
 	@tar -tzf paper/arxiv-submission.tar.gz
 
 bench-appraisal: llm-config-strict
-	uv run pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
+	uv run python -m pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
 
 test-llm: llm-config-strict
-	uv run pytest tests/test_llm_integration.py -v -m llm
+	uv run python -m pytest tests/test_llm_integration.py -v -m llm
 
 llm-config:
 	uv run python scripts/check_llm_config.py
@@ -309,8 +306,8 @@ llm-config-strict:
 	uv run python scripts/check_llm_config.py --strict --require-key
 
 demo-check:
-	uv run pytest tests/test_demo_ui_config.py -q
-	uv run pytest tests/test_demo_app.py -q
+	uv run python -m pytest tests/test_demo_ui_config.py -q
+	uv run python -m pytest tests/test_demo_app.py -q
 
 demo-run:
 	uv run python demo/app.py

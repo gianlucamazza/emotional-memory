@@ -53,7 +53,6 @@ otel = ["opentelemetry-api>=1.20", "opentelemetry-sdk>=1.20"]
 redis = ["redis>=5.0"]
 langchain = ["langchain-core>=0.3"]
 mem0 = ["mem0ai>=2.0"]
-langmem = ["langmem>=0.0.30", "langgraph>=0.3"]
 viz = ["matplotlib>=3.7"]
 docs = [
   "mkdocs>=1.6",
@@ -151,14 +150,6 @@ module = ["mem0", "mem0.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["langmem", "langmem.*", "langgraph", "langgraph.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["letta_client", "letta_client.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = ["matplotlib", "matplotlib.*"]
 ignore_missing_imports = true
 
@@ -181,9 +172,7 @@ ignore_missing_imports = true
 [tool.basedpyright]
 # Secondary type checker complementing mypy. Mypy stays as primary
 # (PEP 484 reference) and basedpyright catches inference / unreachable-code /
-# overload issues mypy misses. Kept at "standard" mode during incremental
-# adoption; raise to "strict" or "all" once the baseline is clean.
-# TODO: remove continue-on-error from ci.yml once baseline passes cleanly.
+# overload issues mypy misses.
 include = ["src/emotional_memory"]
 typeCheckingMode = "standard"
 pythonVersion = "3.11"

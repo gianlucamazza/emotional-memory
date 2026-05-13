@@ -117,11 +117,13 @@ __all__ = [
     "AsyncEmbedder",
     "AsyncEmotionalMemory",
     "AsyncMemoryStore",
+    "ChromaStore",
     "CoreAffect",
     "DecayConfig",
     "Embedder",
     "EmotionLabel",
     "EmotionalMemory",
+    "EmotionalMemoryChatHistory",
     "EmotionalMemoryConfig",
     "EmotionalTag",
     "GenericAppraisalVector",
@@ -136,6 +138,7 @@ __all__ = [
     "MemoryStore",
     "MoodDecayConfig",
     "MoodField",
+    "QdrantStore",
     "RedisAffectiveStateStore",
     "ResonanceConfig",
     "ResonanceLink",
@@ -143,6 +146,9 @@ __all__ = [
     "RetrievalConfig",
     "RetrievalExplanation",
     "RetrievalSignals",
+    "SQLiteAffectiveStateStore",
+    "SQLiteStore",
+    "SentenceTransformerEmbedder",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",
@@ -156,29 +162,8 @@ __all__ = [
     "hebbian_strengthen",
     "label_tag",
     "make_emotional_tag",
+    "recommended_conversation_policy",
     "spreading_activation",
+    "store_all_messages",
     "update_prediction",
 ]
-
-if _sqlite_available:
-    __all__ = [*__all__, "SQLiteStore"]
-
-if _qdrant_available:
-    __all__ = [*__all__, "QdrantStore"]
-
-if _chroma_available:
-    __all__ = [*__all__, "ChromaStore"]
-
-if _sqlite_state_available:
-    __all__ = [*__all__, "SQLiteAffectiveStateStore"]
-
-if _sentence_transformers_available:
-    __all__ = [*__all__, "SentenceTransformerEmbedder"]
-
-if _langchain_available:
-    __all__ = [
-        *__all__,
-        "EmotionalMemoryChatHistory",
-        "recommended_conversation_policy",
-        "store_all_messages",
-    ]

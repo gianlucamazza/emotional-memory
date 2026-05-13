@@ -4,9 +4,9 @@
 
 | Version | Supported |
 | ------- | --------- |
-| 0.9.x (latest minor) | ✓ — full support |
-| 0.8.x   | ✓ — security fixes only |
-| < 0.8   | ✗         |
+| 0.11.x (latest) | ✓ — full support |
+| 0.10.x  | ✓ — security fixes only |
+| < 0.10  | ✗         |
 
 ## Reporting a vulnerability
 

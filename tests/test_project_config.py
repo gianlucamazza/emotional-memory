@@ -99,7 +99,7 @@ def test_release_workflow_verifies_pypi_and_uploads_artefacts() -> None:
 
     assert "workflow_dispatch:" in workflow
     assert "scripts/preflight.py --fast --ci" in workflow
-    assert "actions/upload-artifact@v4" in workflow
+    assert "actions/upload-artifact@" in workflow  # accepts SHA-pinned format
     assert "scripts/verify_pypi_release.py" in workflow
 
 

@@ -204,7 +204,7 @@ class ChromaStore:
         col = self._collection
         if col is None:
             return 0
-        return col.count()
+        return int(col.count())
 
     # ------------------------------------------------------------------
     # Internal helpers
