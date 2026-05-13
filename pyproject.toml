@@ -178,3 +178,8 @@ typeCheckingMode = "standard"
 pythonVersion = "3.11"
 reportMissingImports = "warning"
 reportMissingTypeStubs = false
+
+[dependency-groups]
+dev = [
+    "fakeredis>=2.35.1",
+]

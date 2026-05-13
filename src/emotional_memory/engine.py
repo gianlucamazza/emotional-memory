@@ -856,15 +856,18 @@ class EmotionalMemory:
         Returns:
             Number of memories removed.
         """
-        from emotional_memory.decay import compute_effective_strength
+        from emotional_memory.decay import compute_effective_strength_batch
 
         with traced_span("emotional_memory.prune", {"threshold": threshold}):
             now = datetime.now(tz=UTC)
-            to_delete = [
-                m.id
-                for m in self._store.list_all()
-                if compute_effective_strength(m.tag, now, self._config.decay) < threshold
-            ]
+            mems = self._store.list_all()
+            if mems:
+                strengths = compute_effective_strength_batch(
+                    [m.tag for m in mems], now, self._config.decay
+                )
+                to_delete = [m.id for m, s in zip(mems, strengths, strict=True) if s < threshold]
+            else:
+                to_delete = []
             for memory_id in to_delete:
                 self._store.delete(memory_id)
         return len(to_delete)

@@ -136,3 +136,61 @@ class TestDecayProperties:
             f"count={retrieval_count + 1} ({s_n1:.4f}) should be "
             f">= count={retrieval_count} ({s_n:.4f})"
         )
+
+
+class TestBatchDecay:
+    """Verify compute_effective_strength_batch matches scalar form element-wise."""
+
+    def test_batch_matches_scalar_on_sample(self):
+        import numpy as np
+
+        from emotional_memory.decay import compute_effective_strength_batch
+
+        config = DecayConfig()
+        later = _later(3_600)
+        tags = [
+            _tag(arousal=0.2, strength=0.9, retrieval_count=0),
+            _tag(arousal=0.5, strength=0.7, retrieval_count=2),
+            _tag(arousal=0.8, strength=1.0, retrieval_count=5),  # above floor threshold
+            _tag(arousal=0.1, strength=0.3, retrieval_count=10),
+        ]
+
+        scalar = [compute_effective_strength(t, later, config) for t in tags]
+        batch = compute_effective_strength_batch(tags, later, config)
+
+        assert len(batch) == len(tags)
+        np.testing.assert_allclose(batch, scalar, atol=1e-9)
+
+    def test_batch_empty_input(self):
+        import numpy as np
+
+        from emotional_memory.decay import compute_effective_strength_batch
+
+        result = compute_effective_strength_batch([], _later(100), DecayConfig())
+        assert result.shape == (0,)
+        assert result.dtype == np.float64
+
+    def test_batch_single_element_matches_scalar(self):
+        import numpy as np
+
+        from emotional_memory.decay import compute_effective_strength_batch
+
+        config = DecayConfig(floor_arousal_threshold=0.6, floor_value=0.15)
+        later = _later(7_200)
+        tag = _tag(arousal=0.9, strength=0.5)
+
+        scalar = compute_effective_strength(tag, later, config)
+        batch = compute_effective_strength_batch([tag], later, config)
+        np.testing.assert_allclose(batch[0], scalar, atol=1e-12)
+
+    def test_batch_floor_applied_correctly(self):
+        from emotional_memory.decay import compute_effective_strength_batch
+
+        config = DecayConfig(floor_arousal_threshold=0.7, floor_value=0.1, base_decay=2.0)
+        later = _later(1_000_000)  # very long elapsed → strength approaches 0 without floor
+        tag_high = _tag(arousal=0.9, strength=0.8)  # should get floor
+        tag_low = _tag(arousal=0.3, strength=0.8)  # no floor
+
+        batch = compute_effective_strength_batch([tag_high, tag_low], later, config)
+        assert batch[0] >= config.floor_value - 1e-9
+        assert batch[1] < config.floor_value  # low arousal, no floor protection
