@@ -246,3 +246,42 @@ def test_italian_dataset_total_queries() -> None:
         len(session.queries) for scenario in dataset.scenarios for session in scenario.sessions
     )
     assert total == 120, f"Expected 120 Italian queries, got {total}"
+
+
+# ---------------------------------------------------------------------------
+# French (FR) dataset — Addendum M
+# ---------------------------------------------------------------------------
+
+_FR_DATASET = (
+    __import__("pathlib").Path(__file__).parent.parent
+    / "benchmarks"
+    / "datasets"
+    / "realistic_recall_v2_fr.json"
+)
+
+
+def test_french_dataset_loads() -> None:
+    dataset = load_dataset(_FR_DATASET)
+    assert dataset.name == "realistic_recall_v2_fr"
+    assert len(dataset.scenarios) == 30
+    assert dataset.default_top_k == 2
+
+
+def test_french_dataset_has_valid_challenge_types() -> None:
+    from benchmarks.realistic.runner import CHALLENGE_TYPES
+
+    dataset = load_dataset(_FR_DATASET)
+    for scenario in dataset.scenarios:
+        for session in scenario.sessions:
+            for query in session.queries:
+                assert query.challenge_type in CHALLENGE_TYPES, (
+                    f"Unknown challenge_type {query.challenge_type!r} in {scenario.scenario_id}"
+                )
+
+
+def test_french_dataset_total_queries() -> None:
+    dataset = load_dataset(_FR_DATASET)
+    total = sum(
+        len(session.queries) for scenario in dataset.scenarios for session in scenario.sessions
+    )
+    assert total == 120, f"Expected 120 French queries, got {total}"
