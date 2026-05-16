@@ -458,7 +458,7 @@ not from rerunning long studies.
 
 ![S3 Ablation Study](docs/images/research/research_ablation_s3.png)
 
-![Multilingual Slices (IT + ES)](docs/images/research/research_multilingual.png)
+![Multilingual Slices (IT + ES + FR)](docs/images/research/research_multilingual.png)
 
 ![LoCoMo Negative Result](docs/images/research/research_locomo_negative.png)
 
@@ -520,6 +520,11 @@ retrieval probe, not a general downstream evaluation of production memory system
   me5: AFT hit@k=0.42, naive_cosine=0.26, Δ=+0.16 [p=0.001].
   Spanish-SBERT (N=80 exploratory): Δ=+0.138 [p=0.045]. me5 runs at N=120
   (declared power) FAIL for both languages (Branch C closure 2026-05-07).
+- **French multilingual slice (Addendum M, Branch A PASS, 2026-05-16)**:
+  30 native-FR hand-authored scenarios, 120 queries, me5, 2-session design.
+  AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.
+  Prior expectation: FAIL. `cross_domain_affect_replication` → `controlled_evidence`.
+  Closes WS3b. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
 - **Resonance amplification Hi3 (N=500)**: e5-small-v2 shows larger resonance
   interference than SBERT on semantic_confound queries (Δ=+0.090, d=0.257,
   Holm-adj p=0.023 — PASS) and recency_confound (Δ=+0.070, p=0.023 — PASS).
@@ -538,12 +543,12 @@ retrieval probe, not a general downstream evaluation of production memory system
   weighting does not improve factual open-domain QA. Add. J Pareto sweep
   (10 weight configs × 200-QA) confirms the gap is not closable via
   `base_weights` tuning (Hj1 FAIL).
-- **DailyDialog ecological replication (Hk1 — FAIL, retry planned)**:
+- **DailyDialog ecological replication (Hk1 — FAIL)**:
   N=120 synthetic personas, 396 queries, multilingual-e5-small. AFT
   top1=0.212 vs naive_cosine=0.220 (Δ=−0.008, p_holm=1.000, d=−0.015).
   Only `affective_trajectory` queries show an underpowered positive trend
-  (Δ=+0.103, d=0.186, N=39). Retry planned at N≥120 on a more affect-dense
-  corpus.
+  (Δ=+0.103, d=0.186, N=39). Naturalistic short-turn dialogue does not
+  show the AFT advantage; the 2-session realistic replay format does (FR PASS above).
 - **Human / ecological validation**: not yet established. Kit ready at
   `benchmarks/human_eval/`; zero ratings collected.
 

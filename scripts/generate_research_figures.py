@@ -39,6 +39,7 @@ REALISTIC_IT_SBERT = ROOT / "benchmarks" / "realistic" / "results.v2_it.sbert.js
 REALISTIC_IT_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_it.me5.json"
 REALISTIC_ES_SBERT = ROOT / "benchmarks" / "realistic" / "results.v2_es.sbert.json"
 REALISTIC_ES_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_es.me5.json"
+REALISTIC_FR_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_fr.me5.json"
 ABLATION_SBERT = ROOT / "benchmarks" / "ablation" / "results.v2.sbert.json"
 LOCOMO = ROOT / "benchmarks" / "locomo" / "results.json"
 
@@ -278,6 +279,7 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
     realistic_it_me5 = _load_json(REALISTIC_IT_ME5)
     realistic_es_sbert = _load_json(REALISTIC_ES_SBERT)
     realistic_es_me5 = _load_json(REALISTIC_ES_ME5)
+    realistic_fr_me5 = _load_json(REALISTIC_FR_ME5)
     ablation = _load_json(ABLATION_SBERT)
     locomo = _load_json(LOCOMO)
 
@@ -302,6 +304,7 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
                 ("IT (me5)", realistic_it_me5),
                 ("ES (SBERT)", realistic_es_sbert),
                 ("ES (me5)", realistic_es_me5),
+                ("FR (me5)", realistic_fr_me5),
             ]
         ),
         png_dir,

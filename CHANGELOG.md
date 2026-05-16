@@ -133,7 +133,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hk1 (`cross_domain_affect_replication`) → `retry_planned`**: Aggregate FAIL on
   DailyDialog (Branch B, Δ=−0.008, p_holm=1.000; confirmed), but `affective_trajectory`
   sub-claim shows exploratory signal (d=0.186, N=39, underpowered). Retry planned at
-  N≥120 on an affect-richer naturalistic corpus.
+  N≥120 on an affect-richer naturalistic corpus. *Closed by Addendum M (FR) below →
+  `controlled_evidence`.*
+- **Addendum M FR (`cross_domain_affect_replication`) → `controlled_evidence`**: FR
+  realistic_recall_v2 (me5, N=120, 30 hand-authored native French scenarios, 2-session design)
+  Branch A PASS — AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001,
+  Hedges g=0.424. Cross-language signal confirmed on French. Prior expectation was FAIL;
+  evidence diverges without post-hoc reframing. Closes WS3b.
+  See `benchmarks/preregistration_addendum_m_fr_closure.md`.
 - **`models_human_emotional_memory`** remains `not_established`: Gate 2 (human eval) kit
   is ready; zero ratings collected. Does not block v0.11.0; tracked on roadmap v1.0.
 

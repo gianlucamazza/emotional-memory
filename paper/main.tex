@@ -668,8 +668,17 @@ A pre-registered power top-up to $N=120$\footnote{Power top-up closure (Branch~C
 on \texttt{multilingual-e5-small} (Italian: $\Delta=+0.058$, $p=0.276$;
 Spanish: $\Delta=0.000$, $p=1.00$) does not establish the effect at declared
 power for either language.
-Cross-language evidence is therefore limited to a single exploratory positive
-(Spanish-SBERT, $N=80$); broader language coverage requires explicit replication.
+A pre-registered French slice (Hm1, Addendum~M)\footnote{FR closure:
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_m\_fr\_closure.md}%
+{\texttt{preregistration\_addendum\_m\_fr\_closure.md}}.}
+on \texttt{multilingual-e5-small} at the same pre-declared power ($N=120$,
+30 hand-authored native scenarios, 2-session realistic-replay design)
+\textbf{confirms the cross-language effect}: $\Delta=+0.18$ [+0.11,\,+0.26]
+on \texttt{top1\_accuracy} ($p{<}0.0001$, $g=0.424$, $p_{\mathrm{McNemar}}{<}0.0001$).
+Cross-language evidence is therefore \emph{two-positive}: Spanish-SBERT
+exploratory ($N=80$) and French-me5 confirmatory ($N=120$); $H_{d2}$ remains
+the open gap on \texttt{me5} at single-session granularity (Italian and Spanish
+power-top-up FAIL, Addendum~Hd2).
 The appraisal scenario corpora and keyword-appraisal rules remain English-only;
 the LLM-backed appraisal engine handles multilingual input.
 

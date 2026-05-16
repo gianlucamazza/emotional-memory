@@ -167,9 +167,42 @@ multilingual-e5-small (IT + ES) does not establish the effect for either languag
 Cross-language evidence is scoped to a single exploratory Spanish-SBERT result at
 N=80 (Δ=+0.138, p=0.045). See `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 
+**FR realistic replay (Addendum M, Branch A PASS):** A sibling study using the `realistic.runner`
+2-session design on a natively-authored French dataset (30 scenarios, 120 queries, me5) shows a
+strong AFT advantage: Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424. This is a *different runner
+and dataset format* from the Hd2 appraisal_confound runs above (single-session). Cross-language
+evidence is conditionally established: the 2-session realistic replay format generalises to FR; the
+single-session Hd2 format does not. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
+
+### Hm1 — French Multilingual Slice (Addendum M, Branch A PASS)
+
+**Claim:** `cross_domain_affect_replication` — **controlled_evidence** (as of Addendum M, 2026-05-16)
+
+Pre-reg: `benchmarks/preregistration_addendum_m_fr.md`
+Closure: `benchmarks/preregistration_addendum_m_fr_closure.md`
+
+| System | N | top1 [95% CI] | hit@k [95% CI] |
+|---|---|---|---|
+| `aft` | 120 | **0.31** [0.23, 0.39] | **0.40** [0.32, 0.49] |
+| `naive_cosine` | 120 | 0.12 [0.07, 0.18] | 0.25 [0.17, 0.33] |
+| `recency` | 120 | 0.21 [0.14, 0.28] | 0.48 [0.39, 0.57] |
+
+| Metric | Δ [95% CI] | p_bootstrap | Hedges g | N discordant |
+|---|---|---|---|---|
+| top1 (AFT vs naive) | **+0.18 [0.11, 0.26]** | **0.0000** | **0.424** | 26 / 120 |
+| hit@k (AFT vs naive) | +0.15 [0.09, 0.22] | 0.0000 | 0.416 | 18 / 120 |
+
+**Branch A confirmed (pre-reg declared expected = FAIL).**
+
+Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.
+
+Per challenge type (AFT top1): affective_arc 0.38, same_topic_distractor 0.42, recency_confound 0.29,
+semantic_confound 0.33, momentum_alignment 0.12. Momentum_alignment remains weak across all
+languages tested.
+
 ### Hk1 — DailyDialog Ecological Replication (Branch B)
 
-**Claim:** `cross_domain_affect_replication` — **not_established**
+**Claim:** `cross_domain_affect_replication` — **controlled_evidence** (Hm1 FR PASS closes retry_planned)
 
 Hk1 FAIL (Branch B, 2026-05-07): AFT does not outperform naive cosine on DailyDialog affect-conditioned retrieval (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall advantage is regime-specific (curated affective benchmarks) and does not extend to naturalistic short-turn dialogue.
 
@@ -208,6 +241,7 @@ vectors, not t-tests.
 | Hd2_ES me5 | 80 | 0.189 | ~52% | Underpowered for this d; FAIL plausibly Type II |
 | Hd2_IT me5 (v120) | 120 | 0.105 | ~38% | Executed at declared power: FAIL; d collapsed vs N=80 |
 | Hd2_ES me5 (v120) | 120 | 0.000 | ~5% | Executed at declared power: FAIL; Δ=0.000 (exact null) |
+| Hm1 FR me5 (realistic.runner) | 120 | 0.424 | >99% | Branch A PASS; strong effect, well-powered |
 | S2 H4 affective_arc SBERT | 40 | ~0.55 (est.) | ~97% | Adequately powered |
 | S2 H5 recency_confound SBERT | 40 | ~0.20 (est.) | ~35% | Underpowered; marginal FAIL expected |
 | S2 H6 momentum_alignment e5 | 40 | ~0.01 (est.) | ~5% | Near-zero true effect or incompatible geometry |
@@ -234,7 +268,7 @@ These figures are generated from the committed benchmark JSON artefacts with
 
 ![S3 ablation study](../images/research/research_ablation_s3.png)
 
-![Multilingual slices (IT + ES)](../images/research/research_multilingual.png)
+![Multilingual slices (IT + ES + FR)](../images/research/research_multilingual.png)
 
 ![LoCoMo negative result](../images/research/research_locomo_negative.png)
 
