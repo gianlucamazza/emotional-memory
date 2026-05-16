@@ -189,7 +189,7 @@ def _figure_multilingual(slices: list[tuple[str, dict[str, Any]]]) -> object:
         rows: list[tuple[str, float, float, float]] = []
         for label, data in slices:
             system = next(s for s in data["systems"] if s["system"] == system_name)
-            rows.append((label, *_ci(system["aggregate_metrics"], "hit_at_k")))
+            rows.append((label, *_ci(system["aggregate_metrics"], "top1_accuracy")))
         values = [point for _, point, _, _ in rows]
         lower, upper = _errorbar_parts(rows)
         ax.bar(
@@ -213,10 +213,17 @@ def _figure_multilingual(slices: list[tuple[str, dict[str, Any]]]) -> object:
     ax.set_xticklabels([label for label, _ in slices])
     _style_axis(
         ax,
-        ylabel="Hit@k",
-        title="Multilingual slices: AFT advantage across languages and embedders",
+        ylabel="Top-1 accuracy",
+        title="Cross-language top-1 accuracy (multilingual-e5-small)\nIT/ES: Hd2 N=80; FR: Hm1 N=120 (Branch A PASS)",
     )
     ax.legend(frameon=False, ncol=2)
+    ax.text(
+        0.01,
+        -0.22,
+        "IT/ES at Hd2 original power (N=80); FR at pre-registered Hm1 power (N=120).",
+        transform=ax.transAxes,
+        fontsize=8,
+    )
     return fig
 
 

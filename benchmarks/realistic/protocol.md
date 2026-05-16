@@ -8,7 +8,7 @@
 
 ## Benchmark shape
 
-- Dataset: `realistic_recall_v1.json` (v1), `realistic_recall_v2.json` (v2, 50 scenarios, 200 queries, 5 challenge types), `realistic_recall_v2_it.json` (v2 Italian multilingual slice)
+- Dataset: `realistic_recall_v1.json` (v1), `realistic_recall_v2.json` (v2, 50 scenarios, 200 queries, 5 challenge types), `realistic_recall_v2_it.json` (v2 Italian multilingual slice, G6 N=80), `realistic_recall_v2_es.json` (Spanish slice, Hd2_ES N=80), `realistic_recall_v2_fr.json` (French slice, Addendum M Hm1 N=120)
 - Type: scripted multi-session replay benchmark
 - Execution model:
   - persistent affective state for AFT

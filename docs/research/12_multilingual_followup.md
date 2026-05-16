@@ -1,4 +1,4 @@
-# Multilingual Follow-up: Cross-Embedder Robustness (Italian Corpus)
+# Multilingual Follow-up: Cross-Embedder Robustness (IT + FR)
 
 > **Update 2026-05-16:** A pre-registered French slice (Hm1, Addendum M) confirms
 > the cross-language effect on me5 at N=120 (Δ=+0.18, p<0.0001, g=0.424, Branch A PASS).

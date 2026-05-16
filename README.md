@@ -9,7 +9,7 @@
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English, Italian, and Spanish on the realistic-recall benchmark (N=200/80 per language).
+Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English (N=200, SBERT), Italian and Spanish (N=80 Hd2; N=120 power top-up FAIL at me5), and French (N=120 me5, Δ=+0.18, p&lt;0.0001 — Addendum M PASS) on the realistic-recall benchmark.
 
 <!-- ssot:positioning-start -->
 ## Why emotional_memory?
