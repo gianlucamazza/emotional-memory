@@ -455,9 +455,11 @@ result JSONs:
 {\texttt{results.hd2\_it.me5.v120.json}},
 \href{\repourl/blob/main/benchmarks/appraisal\_confound/results.hd2\_es.me5.v120.json}%
 {\texttt{results.hd2\_es.me5.v120.json}}.}
-Cross-language evidence is therefore limited to a single exploratory Spanish-SBERT
-result at $N=80$; the \texttt{multilingual-e5-small} runs at the pre-declared power
-do not establish the effect for Italian or Spanish.
+Cross-language evidence from the IT/ES power top-up is therefore limited to a
+single exploratory Spanish-SBERT result at $N=80$; the \texttt{multilingual-e5-small}
+runs at the pre-declared power do not establish the effect for Italian or Spanish.
+A subsequent pre-registered French slice (Hm1, Addendum~M) at the same power ($N=120$,
+me5) confirms the cross-language effect; see §Cross-language scope.
 
 \paragraph{Cross-domain ecological replication ($H_{k1}$, DailyDialog).}
 To test whether the realistic-recall advantage extends to a naturalistic corpus,
@@ -775,7 +777,7 @@ concentrates high-strength links on topic-near distractors (Hi2 mechanism
 study).
 
 \paragraph{Oracle-affect operationalization.}
-The appraisal-confound studies ($H_{d1}$, $H_{d2}$, cross-language Hd2\_IT/ES)
+The appraisal-confound studies ($H_{d1}$, $H_{d2}$, cross-language Hd2\_IT/ES, Hm1~FR)
 compare \texttt{aft\_noAppraisal}---AFT using \emph{preset} valence/arousal
 values from the benchmark---against \texttt{naive\_cosine}, which has no access
 to affect at all. This design isolates the \emph{retrieval architecture} given
@@ -845,8 +847,8 @@ phenomena, and benchmarked against a semantic-only baseline on a new affect-labe
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
 
-A staged evidence programme has produced eleven pre-registered studies
-(Addenda A--K) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+A staged evidence programme has produced twelve pre-registered studies
+(Addenda A--K, Hd2-PowerTopUp, and Addendum~M) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
@@ -858,6 +860,8 @@ Spanish cross-language ($N=80$, SBERT, $\Delta=+0.138$, $p=0.045$) provides a
 directional positive data point; a pre-registered power top-up to $N=120$ on
 \texttt{multilingual-e5-small} (Italian and Spanish) did not replicate the effect
 (both $p>0.25$, Branch~C closure).
+A pre-registered French slice (Hm1, Addendum~M, $N=120$, me5) confirms the
+cross-language effect: $\Delta=+0.18$, $p<0.0001$, $g=0.424$ (Branch~A PASS).
 A pre-registered layer-ablation at power (Study~$S_3$, $N=200$, both embedder
 classes) finds that per-layer contributions are not individually isolatable:
 $H_a$ (no\_mood) and $H_b$ (no\_resonance) are non-significant on both
@@ -875,7 +879,7 @@ personas, 396 affect-conditioned queries) did not replicate the advantage
 is naturalistic affect density rather than dataset size.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
-beyond the English/Italian/Spanish slices validated here; architectural approaches
+beyond the English/Italian/Spanish/French slices validated here; architectural approaches
 to LoCoMo factual QA (per-category weight routing, query-type classification);
 and identifying naturalistic corpora with sufficient affect density (e.g.\
 affective-trajectory proportion $>$30\%) where the DailyDialog-style replication

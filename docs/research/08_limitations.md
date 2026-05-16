@@ -38,9 +38,11 @@ limitations:
   See power top-up closure `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 - **`KeywordAppraisalEngine` is English-only**: the `LLMAppraisalEngine` handles
   multilingual input, but appraisal quality varies by language.
-- **No formal cross-lingual validation beyond EN/IT/ES**: generalisation to
-  other languages is not established. Larger multilingual embedders
-  (e.g., `BGE-M3`) are a natural next step.
+- **Cross-lingual validation: EN/IT/ES/FR confirmed, broader scope open**: English
+  (robust), French (Hm1 PASS, me5 N=120), and Spanish-SBERT exploratory (N=80) are
+  validated; Italian and Spanish me5 FAIL at N=120 power. Generalisation to other
+  languages is not established. Larger multilingual embedders (e.g., `BGE-M3`) are a
+  natural next step.
 
 ---
 

@@ -1,5 +1,9 @@
 # Multilingual Follow-up: Cross-Embedder Robustness (Italian Corpus)
 
+> **Update 2026-05-16:** A pre-registered French slice (Hm1, Addendum M) confirms
+> the cross-language effect on me5 at N=120 (Δ=+0.18, p<0.0001, g=0.424, Branch A PASS).
+> Sister closure: [`benchmarks/preregistration_addendum_m_fr_closure.md`](../../benchmarks/preregistration_addendum_m_fr_closure.md).
+
 This page documents the cross-embedder analysis of the Italian multilingual slice
 (Addendum H). It complements the primary Italian results reported in §G6 of the
 paper and in `preregistration_addendum_v2.md` (Addendum B).
@@ -92,7 +96,10 @@ isolates the backbone contribution and confirms the AFT layer generalises.
   appraisal engine in Italian may change the picture.
 - A Spanish slice (Hd2_ES, `realistic_recall_v2_es.json`, 20 scenarios / 80 queries)
   was added in v0.8.2 (commit `898e132`). SBERT PASS Δ=0.138 p=0.045 d=0.233;
-  me5 FAIL Δ=0.113 p=0.110 d=0.189. No French or German slice exists.
+  me5 FAIL Δ=0.113 p=0.110 d=0.189.
+- A French slice (Hm1, Addendum M, 2026-05-16) confirms the effect on me5 at N=120
+  (Δ=+0.18, p<0.0001, g=0.424, Branch A PASS). See
+  `benchmarks/preregistration_addendum_m_fr_closure.md`.
 
 ---
 
@@ -117,6 +124,12 @@ pre-declared N=120 power target. Cross-language evidence is limited to:
 
 The headline EN advantage (SBERT d=0.49, e5 d=0.31, N=200) is unaffected.
 
+**Update 2026-05-16 (Addendum M):** A pre-registered French slice at the same power
+target (N=120, me5) confirms the cross-language effect: Δ=+0.18, p<0.0001, g=0.424
+(Branch A PASS). Cross-language evidence is now **two-positive**: Spanish-SBERT
+exploratory (N=80) and French-me5 confirmatory (N=120). Italian and Spanish me5 power
+top-up results remain unchanged (FAIL at declared power, different dataset ecology).
+
 Full closure: `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 
 ---
@@ -127,8 +140,10 @@ This analysis closes audit priority **(6) Multilingual slice (Addendum B)** from
 [`audit_2026-04.md`](audit_2026-04.md). The slice has been executed on two
 embedder configurations, and the power top-up has been run (Branch C closure, 2026-05-07).
 
-**Claim update:** Cross-language claims scoped to "English (robust, multi-embedder);
-Spanish exploratory positive (SBERT N=80); Italian and Spanish me5 FAIL at declared power."
+**Claim update (2026-05-16):** Cross-language claims scoped to "English (robust,
+multi-embedder); Spanish exploratory positive (SBERT N=80); French confirmatory
+positive (me5 N=120, Addendum M, Branch A PASS); Italian and Spanish me5 FAIL at
+declared power."
 
 ---
 

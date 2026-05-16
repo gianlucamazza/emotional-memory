@@ -153,6 +153,13 @@ bench-realistic-it-me5:
 		--out-md benchmarks/realistic/results.v2_it.me5.md \
 		--out-protocol benchmarks/realistic/results.protocol.v2_it.me5.json
 
+bench-realistic-fr-me5:
+	uv run python -m benchmarks.realistic.runner --embedder multilingual-e5-small \
+		--dataset benchmarks/datasets/realistic_recall_v2_fr.json \
+		--out-json benchmarks/realistic/results.v2_fr.me5.json \
+		--out-md benchmarks/realistic/results.v2_fr.me5.md \
+		--out-protocol benchmarks/realistic/results.protocol.v2_fr.me5.json
+
 bench-ablation:
 	uv run python -m benchmarks.ablation.runner --embedder hash
 

@@ -113,7 +113,7 @@ If the advantage disappears on Class B, the claim must be scoped to
 
 ### Multilingual slice
 
-Realistic recall v2 must include ≥1 non-English slice (Italian or Spanish
+Realistic recall v2 must include ≥1 non-English slice (Italian, Spanish, or French
 preferred; at least 20 scenarios). If performance degrades significantly, the
 paper's scope must be stated as "English conversational text".
 
