@@ -64,6 +64,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README hero section now sourced from README via `include-markdown` plugin
   (`mkdocs-include-markdown-plugin` added to `[docs]` extra, commit `9023d4d`).
 - `SECURITY.md` supported-versions table updated to v0.10.x / v0.11.x.
+- Regenerated `docs/images/` plots (`adaptive_weights_heatmap`, `mood_evolution`,
+  `retrieval_radar`, `yerkes_dodson`) to match current matplotlib style and data.
+- `docs/tutorials/query_routing.md` expanded with execution notes (benchmark
+  invocation, `--with-llm-classifier`, checkpoint/resume, smoke test).
+- `docs/tutorials/observability.md` expanded with `configure_logging()` helper
+  (structured JSON logging and environment-variable level control).
 
 ### Type checking
 

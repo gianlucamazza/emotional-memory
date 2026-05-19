@@ -105,6 +105,41 @@ classifier = LLMQueryClassifier(
 Requires `EMOTIONAL_MEMORY_LLM_API_KEY` in the environment. See
 [LLM configuration](../index.md) for environment variables.
 
+> **Performance warning**: `LLMQueryClassifier` issues one LLM call per
+> `retrieve()`.  On benchmarks this makes runs impractically slow
+> (~10 h for 1 540 QA).  The default `routing_runner` therefore excludes
+> `aft_routed_llm` — add `--with-llm-classifier` if you explicitly want
+> to measure it.
+
+## 5. Benchmark execution notes
+
+Run Addendum L (LoCoMo routing benchmark) via the Makefile target:
+
+```bash
+make bench-locomo-routing
+```
+
+By default five systems are evaluated (`aft_routed_heuristic`, `aft_W0`,
+`aft_W2`, `naive_rag`, `aft_oracle_routed`).  The runner supports:
+
+- **Checkpoint/resume** — `--checkpoint` (default) writes a JSONL file;
+  restart after a crash resumes from the last completed conversation.
+- **Incremental JSON** — `routing_results.json` is rewritten after each
+  system so partial results are never lost.
+- **Progress bars** — `tqdm` on conversations, QA pairs, and judging.
+- **Smoke test** — `--subset 200qa` runs a stratified 200-question subset
+  (~20 min total) for quick validation before a full run.
+
+```bash
+# Smoke test
+PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.routing_runner \
+    --subset 200qa --seed 42 --verbose
+
+# With LLM classifier (slow)
+PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.routing_runner \
+    --with-llm-classifier --verbose
+```
+
 ## API reference
 
 [Query Classifier API](../api/query_classifier.md)
