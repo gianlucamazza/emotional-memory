@@ -171,7 +171,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ---
 
-## v0.11.0 — Feature release (planned)
+## v0.11.0 — Feature release (shipped 2026-05-19 ✓)
 
 ### WS1 / WS2 — Debt closure (completed 2026-05-13)
 - [x] **SECURITY.md**: supported-versions table updated (0.11.x current, 0.10.x security-only, <0.10 unsupported).
