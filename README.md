@@ -648,7 +648,7 @@ Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOT
 
 ```bash
 # Verify provenance of a released wheel locally:
-gh attestation verify emotional_memory-0.10.0-py3-none-any.whl \
+gh attestation verify emotional_memory-0.11.0-py3-none-any.whl \
   --repo gianlucamazza/emotional-memory
 ```
 
@@ -734,6 +734,23 @@ logging.getLogger("emotional_memory").setLevel(logging.DEBUG)
 
 Debug events include: encode start/stored/resonance, retrieve start/done, reconsolidation
 triggers, LLM appraisal cache hits, and fallback activations.
+
+A convenience helper configures the root logger with sensible defaults, optional
+JSON formatting, and environment-variable level control:
+
+```python
+from emotional_memory import configure_logging
+
+configure_logging(level="DEBUG")  # or "INFO", "WARNING", "ERROR"
+# JSON output for production pipelines:
+configure_logging(level="INFO", json_format=True)
+```
+
+Set the level via environment variable without code changes:
+
+```bash
+EMOTIONAL_MEMORY_LOG_LEVEL=DEBUG uv run python my_script.py
+```
 
 ### OpenTelemetry tracing
 
@@ -821,7 +838,7 @@ If you use `emotional-memory` in research, please cite:
   author    = {Mazza, Gianluca},
   title     = {{emotional-memory: Affective Field Theory for LLM Memory}},
   year      = {2026},
-  version   = {0.10.0},
+  version   = {0.11.0},
   doi       = {10.5281/zenodo.20070143},
   url       = {https://github.com/gianlucamazza/emotional-memory},
   license   = {MIT},
