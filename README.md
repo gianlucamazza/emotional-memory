@@ -3,20 +3,29 @@
 [![CI](https://github.com/gianlucamazza/emotional-memory/actions/workflows/ci.yml/badge.svg)](https://github.com/gianlucamazza/emotional-memory/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/gianlucamazza/emotional-memory/graph/badge.svg)](https://codecov.io/gh/gianlucamazza/emotional-memory)
 [![PyPI](https://img.shields.io/pypi/v/emotional_memory)](https://pypi.org/project/emotional_memory/)
+[![Last commit](https://img.shields.io/github/last-commit/gianlucamazza/emotional-memory)](https://github.com/gianlucamazza/emotional-memory/commits/main)
 [![Python](https://img.shields.io/pypi/pyversions/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19972258.svg)](https://doi.org/10.5281/zenodo.19972258)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-tracked-blue)](https://gianlucamazza.github.io/emotional-memory/dev/bench/)
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English (N=200, SBERT), Italian and Spanish (N=80 Hd2; N=120 power top-up FAIL at me5), and French (N=120 me5, Δ=+0.18, p&lt;0.0001 — Addendum M PASS) on the realistic-recall benchmark.
+Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*.
+
+Pre-registered evaluation on `realistic_recall_v2`: English (N=200, SBERT Δ=+0.21, d=0.49) and French (N=120, me5, Δ=+0.18, p<0.0001, Hedges g=0.42 — Addendum M Branch A PASS). Italian/Spanish me5 at declared power (N=120) FAIL; English-SBERT and SBERT-Spanish (N=80) hold. External-QA evaluation (LoCoMo) and naturalistic dialogue (DailyDialog) FAIL — the AFT advantage is regime-specific to affect-discriminative recall, not general superiority. Full [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 <!-- ssot:positioning-start -->
 ## Why emotional_memory?
 
-Most LLM memory libraries treat retrieval as semantic-only: vector similarity over text. Real human recall is also driven by **affective congruence** — we remember things that feel like how we feel now (Bower 1981), and emotionally-charged events consolidate more strongly than neutral ones (Cahill & McGaugh 1995).
+Most LLM memory libraries treat retrieval as semantic-only: vector similarity over text. Real human recall is driven by more:
 
-`emotional_memory` adds an explicit affective layer on top of standard semantic retrieval, grounded in 40+ years of affective-science literature and validated against 20 published psychological phenomena (126 fidelity tests).
+- **Affective congruence** — we remember things that feel like how we feel now (Bower 1981)
+- **Arousal-modulated consolidation** — emotionally-charged events consolidate more strongly (Cahill & McGaugh 1995; ACT-R power-law with arousal floor, McGaugh 2004)
+- **Reconsolidation** — retrieved memories become labile and update with prediction error (Nader & Schiller 2000; APE-gated lability window)
+- **Dual-path encoding** — fast affective signal precedes slow appraisal (LeDoux 1996)
+- **3D affect** — perceived control (dominance) discriminates fear from anger (Mehrabian & Russell 1974; PAD)
+
+`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (126 fidelity tests) and 12+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 ### How it compares
 
@@ -549,6 +558,13 @@ retrieval probe, not a general downstream evaluation of production memory system
   Only `affective_trajectory` queries show an underpowered positive trend
   (Δ=+0.103, d=0.186, N=39). Naturalistic short-turn dialogue does not
   show the AFT advantage; the 2-session realistic replay format does (FR PASS above).
+- **Query-type routing (Addendum L — FAIL, 2026-05-19)**: closed-loop
+  heuristic routing (`HeuristicQueryClassifier` + `LOCOMO_ROUTING`) does not
+  improve aggregate F1 over fixed `W2` weights on 200-QA LoCoMo
+  (Δ=−0.017, below +0.02 practical threshold) and does not close the gap
+  vs `naive_rag` (Δ=−0.081). Per-query-type weight routing is shipped as an
+  **optional feature**, not a default. See
+  `benchmarks/preregistration_addendum_l_query_routing_closure.md`.
 - **Human / ecological validation**: not yet established. Kit ready at
   `benchmarks/human_eval/`; zero ratings collected.
 
@@ -845,7 +861,10 @@ If you use `emotional-memory` in research, please cite:
 }
 ```
 
-Concept DOI (all versions): [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
+- **Concept DOI** (all versions): [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
+- **Paper draft** ([PDF](https://github.com/gianlucamazza/emotional-memory/blob/main/paper/main.tex)) — *Affective Field Theory: A Multi-Layer Model for Emotion-Aware Memory in LLMs*
+- **arXiv-ready bundle**: [`paper/arxiv-submission.tar.gz`](https://github.com/gianlucamazza/emotional-memory/blob/main/paper/arxiv-submission.tar.gz)
+- **Pre-registration corpus**: [`benchmarks/preregistration*.md`](https://github.com/gianlucamazza/emotional-memory/tree/main/benchmarks)
 
 ## License
 
