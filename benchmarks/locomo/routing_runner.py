@@ -1,17 +1,20 @@
 """LoCoMo query-routing benchmark runner (Addendum L).
 
-Evaluates six systems:
+Evaluates five systems by default:
   aft_routed_heuristic  — AFT + HeuristicQueryClassifier + LOCOMO_ROUTING
-  aft_routed_llm        — AFT + LLMQueryClassifier + LOCOMO_ROUTING
   aft_W0                — AFT fixed W0 (S1 baseline)
   aft_W2                — AFT fixed W2 (best Addendum J config)
   naive_rag             — semantic-only (S1 baseline)
   aft_oracle_routed     — ground-truth query-type routing (upper bound)
 
+Optional (slow — one LLM call per retrieve):
+  aft_routed_llm        — AFT + LLMQueryClassifier + LOCOMO_ROUTING
+
 Usage::
 
     uv run python -m benchmarks.locomo.routing_runner
     uv run python -m benchmarks.locomo.routing_runner --subset 200qa --seed 42
+    uv run python -m benchmarks.locomo.routing_runner --with-llm-classifier
 
 Environment variables: same as benchmarks/locomo/runner.py.
 """
@@ -260,7 +263,6 @@ class _OracleRoutedAdapter(_AFTRoutedAdapter):
 
 DEFAULT_SYSTEMS = [
     "aft_routed_heuristic",
-    "aft_routed_llm",
     "aft_W0",
     "aft_W2",
     "naive_rag",
@@ -414,7 +416,24 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--checkpoint", type=Path, default=DEFAULT_CHECKPOINT)
     parser.add_argument("--no-checkpoint", action="store_true")
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument(
+        "--with-llm-classifier",
+        action="store_true",
+        help="Include aft_routed_llm (slow — one LLM call per retrieve)",
+    )
     args = parser.parse_args(argv)
+
+    # Auto-load .env if python-dotenv is available (mirrors Makefile behaviour).
+    try:
+        from dotenv import load_dotenv
+
+        load_dotenv()
+    except ImportError:
+        pass
+
+    systems = list(args.systems)
+    if args.with_llm_classifier:
+        systems.append("aft_routed_llm")
 
     dataset = load_dataset()
     print(f"Dataset: {len(dataset.conversations)} conversations")
@@ -448,7 +467,7 @@ def main(argv: list[str] | None = None) -> None:
         except json.JSONDecodeError:
             all_results = {}
 
-    for sys_name in args.systems:
+    for sys_name in systems:
         if sys_name in all_results:
             if args.verbose:
                 print(
