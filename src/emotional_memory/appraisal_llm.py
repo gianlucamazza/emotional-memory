@@ -485,7 +485,10 @@ class KeywordAppraisalEngine:
 
     @classmethod
     def make_multilingual(cls) -> KeywordAppraisalEngine:
-        """Return an engine with English + Italian rules combined."""
+        """Return an engine with EN + IT keyword rules.
+
+        FR/ES rely on me5 embeddings; no language-specific keywords.
+        """
         return cls(rules=_DEFAULT_RULES + _ITALIAN_RULES)
 
     def __repr__(self) -> str:

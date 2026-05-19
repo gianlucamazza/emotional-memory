@@ -9,7 +9,7 @@
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English, Italian, and Spanish on the realistic-recall benchmark (N=200/80 per language).
+Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*. Validated in English (N=200, SBERT), Italian and Spanish (N=80 Hd2; N=120 power top-up FAIL at me5), and French (N=120 me5, Δ=+0.18, p&lt;0.0001 — Addendum M PASS) on the realistic-recall benchmark.
 
 <!-- ssot:positioning-start -->
 ## Why emotional_memory?
@@ -245,6 +245,41 @@ any sync implementation. `SyncToAsyncStore` also proxies `close()` to the underl
 - `MoodDecayConfig` — time-based mood regression (half-life, inertia scale, baselines)
 - `AdaptiveWeightsConfig` — smooth mood-adaptive retrieval weight tuning (sigmoid/Gaussian gates)
 - `LLMAppraisalConfig` — LLM appraisal engine settings (system prompt, cache size, fallback behaviour, `appraisal_schema`)
+- `QueryClassifierConfig` — query-type routing mode (`heuristic` / `llm`) + per-type weight override table
+
+### Query routing
+
+`EmotionalMemory` supports per-query-type adaptive weights via a pluggable classifier. The built-in
+`HeuristicQueryClassifier` uses keyword patterns to detect temporal, multi-hop, single-hop and
+open-domain questions and selects a matching weight profile from a routing table:
+
+```python
+from emotional_memory import (
+    EmotionalMemory, EmotionalMemoryConfig,
+    HeuristicQueryClassifier, LOCOMO_ROUTING,
+    InMemoryStore,
+)
+from emotional_memory.retrieval import QueryClassifierConfig, RetrievalConfig
+
+em = EmotionalMemory(
+    store=InMemoryStore(),
+    embedder=my_embedder,
+    config=EmotionalMemoryConfig(
+        retrieval=RetrievalConfig(
+            query_classifier=QueryClassifierConfig(
+                mode="heuristic",
+                routed_weights=LOCOMO_ROUTING,
+            )
+        )
+    ),
+    query_classifier=HeuristicQueryClassifier(),
+)
+# retrieve now selects weights based on detected query type
+results = em.retrieve("When did Alice first mention the project?")
+```
+
+`LOCOMO_ROUTING` is the pre-built routing table derived from the Addendum J Pareto sweep.
+For LLM-backed classification use `LLMQueryClassifier` with the same `QueryClassifierConfig`.
 
 ### Interfaces (bring your own)
 
@@ -423,7 +458,7 @@ not from rerunning long studies.
 
 ![S3 Ablation Study](docs/images/research/research_ablation_s3.png)
 
-![Multilingual Slices (IT + ES)](docs/images/research/research_multilingual.png)
+![Multilingual Slices (IT + ES + FR)](docs/images/research/research_multilingual.png)
 
 ![LoCoMo Negative Result](docs/images/research/research_locomo_negative.png)
 
@@ -454,58 +489,68 @@ retrieval probe, not a general downstream evaluation of production memory system
 
 ## Current validation status
 
-- **Strongest evidence today**: 126 fidelity test cases across 20 phenomena show that
-  the implementation behaves coherently with the theories it operationalizes.
-- **Comparative evidence today**: the repo includes a synthetic affect-aware
-  retrieval benchmark (`affect_reference_v1`) and a realistic multi-session
-  replay benchmark (v2, 50 scenarios, 200 queries, 5 challenge types × 40).
-  On the v2 benchmark, AFT outperforms `naive_cosine` on both embedder classes:
-  SBERT bge-small-en-v1.5 — top1 0.53 vs 0.33, Δ=+0.21 [0.15,0.27], p<0.001,
-  d=0.49; e5-small-v2 — top1 0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001,
-  d=0.31. Architecture attribution is confirmed (appraisal confound ruled out,
-  Gate 3 CLOSED). On the controlled quadrant probe (`affect_reference_v1`,
-  SBERT embedder), AFT and naive_cosine both reach recall@5 = 0.80 (ceiling
-  effect at N = 20 items; both well above recency baseline 0.25).
+> **Methodological boundary**: results labelled **A)** below inject preset
+> valence/arousal values at encode time (oracle affect). The LLM/keyword
+> appraisal pipeline is bypassed. Results labelled **B)** ran without
+> oracle affect — either naturalistic or appraisal-driven. These two
+> regimes measure different things; they should not be conflated.
+> The field `requires_oracle_affect` in
+> [`docs/research/claim_validation_matrix.json`](docs/research/claim_validation_matrix.json)
+> encodes this boundary machine-readably for every claim.
+
+### A) Synthetic affect-controlled benchmarks (oracle affect provided)
+
+- **Theory fidelity — 126 fidelity test cases across 20 phenomena**: the
+  implementation behaves coherently with the theories it operationalizes.
+  Phenomena include mood-congruent recall (Bower 1981), arousal floor
+  (McGaugh 2004), ACT-R power-law decay, Hebbian strengthening, spacing
+  effect, spreading activation, and more.
+- **Realistic multi-session replay (v2, N=200)**: AFT outperforms `naive_cosine`
+  on both embedder classes: SBERT bge-small-en-v1.5 — top1 0.53 vs 0.33,
+  Δ=+0.21 [0.15,0.27], p<0.001, d=0.49; e5-small-v2 — top1 0.50 vs 0.34,
+  Δ=+0.16 [0.09,0.22], p<0.001, d=0.31. Architecture attribution confirmed
+  (appraisal confound ruled out, Gate 3 CLOSED).
+- **SOTA comparison (v2, N=200, gpt-4.1-mini)**: AFT top1=0.535 vs Mem0=0.330,
+  LangMem=0.365, naive_cosine=0.325. Δ vs cosine: +0.210 [+0.155,+0.270],
+  p<0.001, d=0.512; non-overlapping CIs. Neither Mem0 nor LangMem beats cosine
+  on this benchmark. **Asymmetry**: Mem0 outperforms AFT on the simpler
+  `affect_reference_v1` probe (recall@5=1.00 vs 0.85) at 25× higher latency.
 - **Italian multilingual slice (G6, 20 scenarios / 80 queries)**:
-  With SBERT bge-small-en-v1.5 (EN-only): AFT top1=0.24 [0.14,0.33],
-  hit@k=0.34 [0.24,0.44]; naive_cosine top1=0.15, hit@k=0.19. Δ hit@k=+0.15
-  [0.07,0.24], p=0.0005 (signal holds); top1 Δ not significant.
-  With multilingual-e5-small (intfloat, 117M params, 100+ languages): AFT
-  top1=0.29 [0.20,0.39], hit@k=0.42 [0.31,0.54]; naive_cosine top1=0.21,
-  hit@k=0.26. Δ hit@k=+0.16 [0.06,0.26], p=0.001 (signal preserved); top1 Δ
-  not significant. The embedder swap lifts naive_cosine top1 from 0.15→0.21
-  (+40%), confirming the absolute-accuracy gap was driven by the EN-only
-  embedder, not AFT. Residual gap vs English v2 (top1 0.53) reflects dataset
-  difficulty and model size; a larger multilingual model (e.g. bge-m3) is a
-  natural next step.
-- **Spanish multilingual slice (Hd2_ES, 20 scenarios / 80 queries)**:
-  With SBERT bge-small-en-v1.5: AFT top1=0.25, naive_cosine top1=0.10,
-  Δ=+0.138 [p=0.045, d=0.233] — directional positive (exploratory).
-  With multilingual-e5-small at N=80: Δ=+0.113 [p=0.110] — FAIL.
-  **Power top-up to N=120 (pre-registered, Branch C closure 2026-05-07):**
-  Italian me5 Δ=+0.058 [p=0.276] — FAIL; Spanish me5 Δ=0.000 [p=1.00] — FAIL.
-  Cross-language evidence scoped to Spanish-SBERT N=80 (exploratory); me5 runs
-  at declared power do not establish the effect for Italian or Spanish.
-- **Honest negative — LoCoMo external benchmark (Gate 1 FAIL)**: on the LoCoMo
-  conversational QA benchmark (1986 QA pairs, 10 conversations), AFT
-  underperforms a naive RAG baseline (F1 0.168 vs 0.271). Affective weighting
-  does not improve factual open-domain QA. The advantage documented above is
-  *scope-conditional*: it emerges on mood-congruent realistic-recall tasks,
-  not on general conversational retrieval. Add. J Pareto sweep (10 weight
-  configs × 200-QA stratified subsample, seed=42) confirms this gap is not
-  closable via `base_weights` tuning: best AFT config W2 F1=0.1765 vs
-  naive_rag=0.2092 on every category (Hj1 FAIL).
-- **Honest negative — DailyDialog ecological replication (Hk1, Branch B, 2026-05-07)**:
-  Pre-registered replication on DailyDialog (Li et al. 2017) with N=120 synthetic
-  personas, 396 affect-conditioned queries, multilingual-e5-small. AFT top1=0.212
-  vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall
-  advantage does not extend to naturalistic short-turn dialogue; AFT advantage is
-  regime-specific (curated affective benchmarks with explicit arc/momentum structure).
-  Closure: `benchmarks/preregistration_addendum_k_dailydialog_closure.md`.
-- **Not yet established**: general superiority over systems such as Mem0 or
-  LangMem on realistic agent tasks; completed human evaluation results; ecological
-  validation in naturalistic dialogue (Hk1 FAIL); or full human behavioral
-  correspondence.
+  SBERT: AFT hit@k=0.34, naive_cosine=0.19, Δ=+0.15 [p=0.0005].
+  me5: AFT hit@k=0.42, naive_cosine=0.26, Δ=+0.16 [p=0.001].
+  Spanish-SBERT (N=80 exploratory): Δ=+0.138 [p=0.045]. me5 runs at N=120
+  (declared power) FAIL for both languages (Branch C closure 2026-05-07).
+- **French multilingual slice (Addendum M, Branch A PASS, 2026-05-16)**:
+  30 native-FR hand-authored scenarios, 120 queries, me5, 2-session design.
+  AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.
+  Prior expectation: FAIL. `cross_domain_affect_replication` → `controlled_evidence`.
+  Closes WS3b. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
+- **Resonance amplification Hi3 (N=500)**: e5-small-v2 shows larger resonance
+  interference than SBERT on semantic_confound queries (Δ=+0.090, d=0.257,
+  Holm-adj p=0.023 — PASS) and recency_confound (Δ=+0.070, p=0.023 — PASS).
+  Hi3_arc FAIL (Δ=+0.010, p=0.38).
+
+### B) End-to-end naturalistic benchmarks (no oracle affect)
+
+- **LLM appraisal end-to-end (Hg1 — FAIL, falsified)**: with
+  `LLMAppraisalEngine` (gpt-5-mini) and no preset affect, AFT dual-path
+  top1=0.315 vs naive_cosine=0.325 (Δ=−0.010, p=0.367). Synchronous
+  appraisal is actively harmful: `aft_llm_sync`=0.130 vs `aft_neutral`=0.315
+  (−18.5 pp). The oracle-affect advantage does not transfer to automatic
+  appraisal under this protocol.
+- **LoCoMo external QA benchmark (Gate 1 FAIL)**: on LoCoMo (1986 QA pairs,
+  10 conversations), AFT F1=0.168 vs naive_rag=0.271 (−10.3 pp). Affective
+  weighting does not improve factual open-domain QA. Add. J Pareto sweep
+  (10 weight configs × 200-QA) confirms the gap is not closable via
+  `base_weights` tuning (Hj1 FAIL).
+- **DailyDialog ecological replication (Hk1 — FAIL)**:
+  N=120 synthetic personas, 396 queries, multilingual-e5-small. AFT
+  top1=0.212 vs naive_cosine=0.220 (Δ=−0.008, p_holm=1.000, d=−0.015).
+  Only `affective_trajectory` queries show an underpowered positive trend
+  (Δ=+0.103, d=0.186, N=39). Naturalistic short-turn dialogue does not
+  show the AFT advantage; the 2-session realistic replay format does (FR PASS above).
+- **Human / ecological validation**: not yet established. Kit ready at
+  `benchmarks/human_eval/`; zero ratings collected.
 
 See [Current Evidence](docs/research/09_current_evidence.md) for the study ladder
 and the current claim-to-evidence matrix. The canonical machine-readable source
@@ -603,9 +648,36 @@ Works with any OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …) via `EMOT
 
 ```bash
 # Verify provenance of a released wheel locally:
-gh attestation verify emotional_memory-0.10.0-py3-none-any.whl \
+gh attestation verify emotional_memory-0.11.0-py3-none-any.whl \
   --repo gianlucamazza/emotional-memory
 ```
+
+## mem0 integration
+
+`EmotionalMemoryMem0Backend` exposes the mem0 `Memory` API (`add` / `search` / `get_all` /
+`delete` / `delete_all` / `reset` / `close`) backed by the full AFT retrieval pipeline.
+No runtime `mem0ai` dependency is required — it's always available:
+
+```bash
+uv pip install "emotional-memory[sentence-transformers]"
+```
+
+```python
+from emotional_memory import EmotionalMemory, InMemoryStore
+from emotional_memory.embedders import SentenceTransformerEmbedder
+from emotional_memory.integrations import EmotionalMemoryMem0Backend
+
+em = EmotionalMemory(store=InMemoryStore(), embedder=SentenceTransformerEmbedder())
+backend = EmotionalMemoryMem0Backend(em, default_user_id="alice")
+
+backend.add([{"role": "user", "content": "I had a wonderful day at the park."}])
+results = backend.search("outdoors positive experiences")
+print(results["results"][0]["memory"])
+```
+
+The backend stores memories verbatim. For LLM-based fact extraction, chain a real `mem0.Memory`
+instance as a pre-processor and store its extracted facts here. See
+[the mem0 tutorial](docs/tutorials/mem0.md) for the chain pattern.
 
 ## LangChain integration
 
@@ -662,6 +734,23 @@ logging.getLogger("emotional_memory").setLevel(logging.DEBUG)
 
 Debug events include: encode start/stored/resonance, retrieve start/done, reconsolidation
 triggers, LLM appraisal cache hits, and fallback activations.
+
+A convenience helper configures the root logger with sensible defaults, optional
+JSON formatting, and environment-variable level control:
+
+```python
+from emotional_memory import configure_logging
+
+configure_logging(level="DEBUG")  # or "INFO", "WARNING", "ERROR"
+# JSON output for production pipelines:
+configure_logging(level="INFO", json_format=True)
+```
+
+Set the level via environment variable without code changes:
+
+```bash
+EMOTIONAL_MEMORY_LOG_LEVEL=DEBUG uv run python my_script.py
+```
 
 ### OpenTelemetry tracing
 
@@ -749,7 +838,7 @@ If you use `emotional-memory` in research, please cite:
   author    = {Mazza, Gianluca},
   title     = {{emotional-memory: Affective Field Theory for LLM Memory}},
   year      = {2026},
-  version   = {0.10.0},
+  version   = {0.11.0},
   doi       = {10.5281/zenodo.20070143},
   url       = {https://github.com/gianlucamazza/emotional-memory},
   license   = {MIT},

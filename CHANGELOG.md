@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-05-19
+
 ### CI / Security
 
 - **Supply-chain hardening (zizmor self-audit)**: all six GitHub Actions workflows
@@ -62,6 +64,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README hero section now sourced from README via `include-markdown` plugin
   (`mkdocs-include-markdown-plugin` added to `[docs]` extra, commit `9023d4d`).
 - `SECURITY.md` supported-versions table updated to v0.10.x / v0.11.x.
+- Regenerated `docs/images/` plots (`adaptive_weights_heatmap`, `mood_evolution`,
+  `retrieval_radar`, `yerkes_dodson`) to match current matplotlib style and data.
+- `docs/tutorials/query_routing.md` expanded with execution notes (benchmark
+  invocation, `--with-llm-classifier`, checkpoint/resume, smoke test).
+- `docs/tutorials/observability.md` expanded with `configure_logging()` helper
+  (structured JSON logging and environment-variable level control).
 
 ### Type checking
 
@@ -93,6 +101,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **mem0-compatible facade** (`EmotionalMemoryMem0Backend` in
+  `emotional_memory.integrations.mem0`): exposes the mem0 `Memory` API
+  (`add` / `search` / `get` / `get_all` / `delete` / `delete_all` / `reset` / `close`)
+  backed by the full AFT retrieval pipeline (semantic + mood congruence + decay +
+  resonance). No runtime `mem0ai` dependency — always available. Helper
+  `messages_to_content()` coerces mem0-style message lists to plain strings.
+  Exported from `emotional_memory.integrations` and top-level `emotional_memory`.
+  Tutorial: `docs/tutorials/mem0.md`.
 - **Query-type classifier** (`emotional_memory.query_classifier`): `HeuristicQueryClassifier`
   (regex/keyword, ~0 latency) and `LLMQueryClassifier` (SHA-256 LRU cache, thread-safe,
   `fallback_on_error` semantics, mirrors `LLMAppraisalEngine` pattern). Protocol:
@@ -113,8 +129,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Hl3 exploratory (classifier accuracy vs ground-truth). Decision rule: Branch A
   (Hl1 supported) → feature recommended as default; Branch B → optional feature.
 
+### Changed
+
+- **`benchmarks/locomo/routing_runner.py`**: `aft_routed_llm` moved out of
+  `DEFAULT_SYSTEMS` to an opt-in `--with-llm-classifier` flag.  The LLM-backed
+  classifier issues one LLM call per `retrieve()`, making a full 1 540-QA run
+  impractically slow (~10 h).  The default five systems
+  (`aft_routed_heuristic`, `aft_W0`, `aft_W2`, `naive_rag`, `aft_oracle_routed`)
+  run in ~1 h.  Auto-loading of `.env` via `python-dotenv` added so the runner
+  works when invoked directly, not only through `make`.
+- **`benchmarks/locomo/runner.py`**: `tqdm` progress bars added to the system
+  and conversation loops in `run_benchmark`.
+
+### Fixed
+
+- **`benchmarks/locomo/routing_runner.py`**: checkpoint/resume via JSONL
+  (`--checkpoint`), incremental JSON writes after each system, and `tqdm`
+  progress bars on conversations, QA pairs, and judging.
+
 ### Research
 
+- **Addendum L (query-type routing) → Branch B FAIL** (200-QA LoCoMo smoke test,
+  2026-05-19): closed-loop heuristic routing does not improve aggregate F1 over
+  fixed W2 (Δ=−0.017, below +0.02 practical threshold) and does not close the
+  gap vs naive_rag (Δ=−0.081). Hl3 exploratory data-collection issue
+  (classifier log bug — all predictions logged as `"unknown"`). Closure:
+  `benchmarks/preregistration_addendum_l_query_routing_closure.md`.
 - **Hg1 (`appraisal_llm_real_dual_path`) → `falsified`**: LLM dual-path architecture does
   not outperform naive cosine on N=200 affect-free queries (Δ=−0.010, d=−0.032, p=0.367;
   Addendum G closure 2026-05-07). No retry planned at current effect size. Hg3 PASS
@@ -125,7 +165,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hk1 (`cross_domain_affect_replication`) → `retry_planned`**: Aggregate FAIL on
   DailyDialog (Branch B, Δ=−0.008, p_holm=1.000; confirmed), but `affective_trajectory`
   sub-claim shows exploratory signal (d=0.186, N=39, underpowered). Retry planned at
-  N≥120 on an affect-richer naturalistic corpus.
+  N≥120 on an affect-richer naturalistic corpus. *Closed by Addendum M (FR) below →
+  `controlled_evidence`.*
+- **Addendum M FR (`cross_domain_affect_replication`) → `controlled_evidence`**: FR
+  realistic_recall_v2 (me5, N=120, 30 hand-authored native French scenarios, 2-session design)
+  Branch A PASS — AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001,
+  Hedges g=0.424. Cross-language signal confirmed on French. Prior expectation was FAIL;
+  evidence diverges without post-hoc reframing. Closes WS3b.
+  See `benchmarks/preregistration_addendum_m_fr_closure.md`.
 - **`models_human_emotional_memory`** remains `not_established`: Gate 2 (human eval) kit
   is ready; zero ratings collected. Does not block v0.11.0; tracked on roadmap v1.0.
 
@@ -1259,7 +1306,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.8.2...v0.8.3

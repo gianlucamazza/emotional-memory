@@ -50,11 +50,11 @@ evidence level, and still-open gaps.
 | ID | Claim area | Status | Evidence level | Allowed public wording | Current evidence | Not yet shown | Next study |
 |---|---|---|---|---|---|---|---|
 | `aft_multilayer_engine` | Architecture | Implemented | `1_theory_fidelity` | AFT is implemented as a coherent multi-layer memory engine. | Public API, engine/retrieval/state modules, sync/async parity tests. | External validation of architectural value. | Keep API/docs aligned while external evaluations grow. |
-| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 and Italian cross-language; S3 shows no single layer is isolatably responsible. | General downstream superiority over production memory systems. | Expand external and realistic retrieval evaluations. |
+| `retrieval_affect_aware` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Retrieval is affect-aware, not semantic-only. | 126 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 = 0.80 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). The realistic replay v2 benchmark shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001) and 0.50 vs 0.34 with e5-small-v2 (Δ=+0.155 [0.090,0.225], p_bootstrap<0.001). Hd2 confirms architecture-level advantage on v2 and Italian cross-language; S3 shows no single layer is isolatably responsible. Addendum M FR PASS (2026-05-16): French slice (me5, N=120, 2-session) AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424 — cross-language signal confirmed. | General downstream superiority over production memory systems. IT/ES cross-language at me5 N=120 remains open (Hd2 Branch C FAIL). | Expand external and realistic retrieval evaluations. |
 | `theory_faithful_operationalization` | Theory fidelity | Strong intra-theory evidence | `1_theory_fidelity` | The implementation is faithful to the theories it operationalizes. | 126 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms; the 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. Hi3 PASS (Addendum I closure, 2026-05-06, N=500): cross-embedder amplification on `semantic_confound` confirmed (Δ=+0.090, d=0.257, p_adj=0.0234); Hi3_recency PASS; Hi3_arc FAIL. | Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G pending). Hi2 mechanism for amplification not localised at link-count instrumentation level. | Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection. |
 | `appraisal_directionally_useful` | Appraisal quality | Early controlled evidence | `3_appraisal_quality` | Appraisal is directionally useful. | The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. | Calibration across models, domains, and languages. | Appraisal robustness study across models, domains, and languages. |
 | `replayable_multi_session_help` | Realistic tasks | Controlled evidence | `4_realistic_tasks` | AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001). | Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED. | General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271; Add. J Pareto sweep Hj1 FAIL — base_weights tuning cannot close the gap) or completed human/ecological validation. | Execute human-evaluation pilot. |
-| `locomo_external_qa_negative` | External benchmarks | Controlled evidence | `4_realistic_tasks` | On the LoCoMo conversational QA benchmark (1986 QA pairs), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 not met). | Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0, p_one=1.0). Add. J Pareto sweep (2026-05-06): 10 weight configs × 200-QA subsample, Hj1 FAIL — no config matches naive_rag on any category. Best: W2 aggregate F1=0.1765 vs naive_rag=0.2092. Per-task base_weights tuning line closed. | Whether architectural changes (per-category routing, query-type classifier) could close the gap. base_weights tuning alone cannot match naive_rag. | Architectural approaches; full-N W2 replication not warranted (Hj1 FAIL). |
+| `locomo_external_qa_negative` | External benchmarks | Controlled evidence | `4_realistic_tasks` | On the LoCoMo conversational QA benchmark (1986 QA pairs), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 not met). | Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0, p_one=1.0). Add. J Pareto sweep (2026-05-06): 10 weight configs × 200-QA subsample, Hj1 FAIL — no config matches naive_rag on any category. Best: W2 aggregate F1=0.1765 vs naive_rag=0.2092. Per-task base_weights tuning line closed. **Addendum L (2026-05-19)**: closed-loop heuristic routing on LoCoMo 200-QA smoke test. Hl1 FAIL (Δ=−0.017, below +0.02 threshold and in wrong direction). Hl2 FAIL (Δ=−0.081 vs naive_rag). Hl3 data-collection issue (classifier log bug). Branch B verdict: routing ships as optional feature. | Whether selective affect suppression or factual/affective dual branching could close the gap. Closed-loop query-type routing also FAIL (Hl1 Branch B). | Architectural approaches beyond weight tuning: selective affect suppression, factual/affective dual-branch retrieval, or hybrid systems. |
 | `resonance_amplification_e5` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Hi3 PASS (N=500, seed=1): e5-small-v2 shows larger resonance interference than SBERT on semantic_confound queries (Δ=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234). The v2 per-challenge finding (post-hoc Δ=+0.100) is confirmed as not a sample-size artefact. | Hi3 confirmatory, Addendum I closure (2026-05-06). Holm m=3 family, paired bootstrap n=10,000 seed=1. Primary PASS: Δ=0.090, d=0.257. | Mechanism: link-count instrumentation shows both embedders saturate top-5 cap (mean≈5.0); Hi2 spreading-activation over-fire hypothesis not yet localised. | Link-type/strength instrumentation to localise the Hi2 mechanism channel. |
 | `Hi3_recency` | Retrieval behavior | Controlled evidence | `2_controlled_retrieval` | Hi3_recency PASS (secondary, Holm-corrected): e5 resonance interference exceeds SBERT on recency_confound queries (Δ=+0.070 [0.020,0.130], d=0.239, Holm-adj p=0.0234, N=500). | Hi3_recency secondary PASS in Holm m=3 family (Addendum I closure, 2026-05-06): Δ=0.070, CI=[0.020,0.130], p_adj=0.0234, d=0.239. | Mechanism; replication on independent dataset. | Contingent on Hi3 mechanism study. |
 | `Hi3_arc` | Retrieval behavior | Not established | `2_controlled_retrieval` | Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size. | Hi3_arc secondary FAIL (Addendum I closure, 2026-05-06): Δ=0.010, p_adj=0.3795, d=0.058. Embedder amplification scoped to semantic_confound and recency_confound. | Whether larger N or different dataset would show signal. | No active follow-up; Hi3_arc FAIL scopes the amplification claim. |
@@ -85,6 +85,7 @@ evidence level, and still-open gaps.
   recency_confound 0.15 vs 0.05. Hd2 confirms the architecture-level advantage;
   S3 shows that the advantage is not isolatable to a single AFT layer.
 - **Negative external result (Gate 1, 2026-04-27)**: On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA. **Add. J Pareto sweep (2026-05-06, Hj1 FAIL)**: 10 weight configs × 200-QA stratified subsample — no config matches naive_rag on any category. Best: W2 aggregate F1=0.1765 vs naive_rag=0.2092. Per-task `base_weights` tuning line closed. See `locomo_external_qa_negative` in `claim_validation_matrix.json`.
+- **Addendum L (query-type routing, 2026-05-19)**: closed-loop heuristic routing on LoCoMo 200-QA smoke test. **Hl1 FAIL** (Δ=−0.017, below +0.02 practical threshold and in wrong direction). **Hl2 FAIL** (Δ=−0.081 vs naive_rag). **Hl3** data-collection issue (classifier log bug — all predictions logged as `"unknown"`). Branch B verdict: routing ships as optional feature; claim status unchanged. The LoCoMo negative result is robust to query-type routing.
 - **Study-readiness improvement**: the human-eval pilot is now operationally
   specified as a 10-scenario, 2-condition (`aft` vs `naive_cosine`) protocol,
   but still awaits real completed ratings.
@@ -165,12 +166,44 @@ advantage is real; per-layer attribution is not (S3 above).
 **Cross-language (Branch C):** Pre-registered power top-up to N=120 on
 multilingual-e5-small (IT + ES) does not establish the effect for either language.
 Cross-language evidence is scoped to a single exploratory Spanish-SBERT result at
-N=80 (Δ=+0.138, p=0.045). See
-[power top-up closure](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
+N=80 (Δ=+0.138, p=0.045). See `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
+
+**FR realistic replay (Addendum M, Branch A PASS):** A sibling study using the `realistic.runner`
+2-session design on a natively-authored French dataset (30 scenarios, 120 queries, me5) shows a
+strong AFT advantage: Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424. This is a *different runner
+and dataset format* from the Hd2 appraisal_confound runs above (single-session). Cross-language
+evidence is conditionally established: the 2-session realistic replay format generalises to FR; the
+single-session Hd2 format does not. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
+
+### Hm1 — French Multilingual Slice (Addendum M, Branch A PASS)
+
+**Claim:** `cross_domain_affect_replication` — **controlled_evidence** (as of Addendum M, 2026-05-16)
+
+Pre-reg: `benchmarks/preregistration_addendum_m_fr.md`
+Closure: `benchmarks/preregistration_addendum_m_fr_closure.md`
+
+| System | N | top1 [95% CI] | hit@k [95% CI] |
+|---|---|---|---|
+| `aft` | 120 | **0.31** [0.23, 0.39] | **0.40** [0.32, 0.49] |
+| `naive_cosine` | 120 | 0.12 [0.07, 0.18] | 0.25 [0.17, 0.33] |
+| `recency` | 120 | 0.21 [0.14, 0.28] | 0.48 [0.39, 0.57] |
+
+| Metric | Δ [95% CI] | p_bootstrap | Hedges g | N discordant |
+|---|---|---|---|---|
+| top1 (AFT vs naive) | **+0.18 [0.11, 0.26]** | **0.0000** | **0.424** | 26 / 120 |
+| hit@k (AFT vs naive) | +0.15 [0.09, 0.22] | 0.0000 | 0.416 | 18 / 120 |
+
+**Branch A confirmed (pre-reg declared expected = FAIL).**
+
+Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.
+
+Per challenge type (AFT top1): affective_arc 0.38, same_topic_distractor 0.42, recency_confound 0.29,
+semantic_confound 0.33, momentum_alignment 0.12. Momentum_alignment remains weak across all
+languages tested.
 
 ### Hk1 — DailyDialog Ecological Replication (Branch B)
 
-**Claim:** `cross_domain_affect_replication` — **not_established**
+**Claim:** `cross_domain_affect_replication` — **controlled_evidence** (Hm1 FR PASS closes retry_planned)
 
 Hk1 FAIL (Branch B, 2026-05-07): AFT does not outperform naive cosine on DailyDialog affect-conditioned retrieval (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000, d=-0.015). The realistic-recall advantage is regime-specific (curated affective benchmarks) and does not extend to naturalistic short-turn dialogue.
 
@@ -209,6 +242,7 @@ vectors, not t-tests.
 | Hd2_ES me5 | 80 | 0.189 | ~52% | Underpowered for this d; FAIL plausibly Type II |
 | Hd2_IT me5 (v120) | 120 | 0.105 | ~38% | Executed at declared power: FAIL; d collapsed vs N=80 |
 | Hd2_ES me5 (v120) | 120 | 0.000 | ~5% | Executed at declared power: FAIL; Δ=0.000 (exact null) |
+| Hm1 FR me5 (realistic.runner) | 120 | 0.424 | >99% | Branch A PASS; strong effect, well-powered |
 | S2 H4 affective_arc SBERT | 40 | ~0.55 (est.) | ~97% | Adequately powered |
 | S2 H5 recency_confound SBERT | 40 | ~0.20 (est.) | ~35% | Underpowered; marginal FAIL expected |
 | S2 H6 momentum_alignment e5 | 40 | ~0.01 (est.) | ~5% | Near-zero true effect or incompatible geometry |
@@ -235,7 +269,7 @@ These figures are generated from the committed benchmark JSON artefacts with
 
 ![S3 ablation study](../images/research/research_ablation_s3.png)
 
-![Multilingual slices (IT + ES)](../images/research/research_multilingual.png)
+![Multilingual slices (IT + ES + FR)](../images/research/research_multilingual.png)
 
 ![LoCoMo negative result](../images/research/research_locomo_negative.png)
 

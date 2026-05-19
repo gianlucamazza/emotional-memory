@@ -45,7 +45,7 @@ All didactic figures use synthetic/hardcoded inputs — no benchmark JSON.
 | `research_realistic_v2_overview` | bar\_with\_ci | `benchmarks/realistic/results.v2.sbert.json` | `replayable_multi_session_help` | README.md, `09_current_evidence.md` |
 | `research_realistic_v2_challenges` | grouped\_bar | `benchmarks/realistic/results.v2.sbert.json` | `replayable_multi_session_help` | README.md, `09_current_evidence.md` |
 | `research_ablation_s3` | bar\_forest | `benchmarks/ablation/results.v2.sbert.json` | `theory_faithful_operationalization` | README.md, `09_current_evidence.md` |
-| `research_multilingual` | grouped\_bar\_with\_ci | `results.v2_{it,es}.{sbert,me5}.json` | `retrieval_affect_aware` | README.md, `09_current_evidence.md` |
+| `research_multilingual` | grouped\_bar\_with\_ci | `results.v2_{it,es}.{sbert,me5}.json` (N=80) + `results.v2_fr.me5.json` (N=120 Hm1) | `retrieval_affect_aware`, `cross_domain_affect_replication` | README.md, `09_current_evidence.md` |
 | `research_locomo_negative` | grouped\_bar\_with\_ci | `benchmarks/locomo/results.json` | `locomo_external_qa_negative` | README.md, `09_current_evidence.md` |
 
 Claim IDs map to `docs/research/claim_validation_matrix.json`.

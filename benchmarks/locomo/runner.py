@@ -23,6 +23,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from tqdm import tqdm
+
 from benchmarks.common.statistics import (
     bootstrap_ci,
     ci_payload,
@@ -134,11 +136,17 @@ def run_benchmark(
 
     system_results: list[dict[str, Any]] = []
 
-    for system_name in systems:
+    for system_name in tqdm(systems, desc="Systems", unit="system", disable=not verbose):
         adapter = _make_adapter(system_name)
         all_predictions: list[dict[str, Any]] = []
 
-        for conv in dataset.conversations:
+        for conv in tqdm(
+            dataset.conversations,
+            desc=f"[{system_name}] conversations",
+            unit="conv",
+            leave=False,
+            disable=not verbose,
+        ):
             key = (system_name, conv.sample_id)
             if key in done:
                 if verbose:
@@ -147,13 +155,17 @@ def run_benchmark(
                 continue
 
             if verbose:
-                print(f"  [{system_name}] {conv.sample_id} — {len(conv.qa_pairs)} QA pairs …")
+                print(
+                    f"  [{system_name}] {conv.sample_id} — {len(conv.qa_pairs)} QA pairs …"
+                )
             preds = adapter.run_conversation(conv)
 
             if run_judge:
                 if verbose:
                     n_non_adv = sum(1 for p in preds if not p.get("is_adversarial"))
-                    print(f"  [{system_name}] {conv.sample_id} — judging {n_non_adv} items …")
+                    print(
+                        f"  [{system_name}] {conv.sample_id} — judging {n_non_adv} items …"
+                    )
                 _run_judge(preds, verbose=verbose)
 
             all_predictions.extend(preds)

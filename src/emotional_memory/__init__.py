@@ -42,6 +42,7 @@ from emotional_memory.interfaces import (
     SequentialEmbedder,
 )
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
+from emotional_memory.logging_config import configure_logging
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
 from emotional_memory.query_classifier import (
@@ -101,6 +102,14 @@ with contextlib.suppress(ImportError):
 
     _sentence_transformers_available = True
 
+with contextlib.suppress(ImportError):
+    from emotional_memory.integrations.mem0 import (
+        EmotionalMemoryMem0Backend as EmotionalMemoryMem0Backend,
+    )
+    from emotional_memory.integrations.mem0 import (
+        messages_to_content as messages_to_content,
+    )
+
 _langchain_available = False
 with contextlib.suppress(ImportError):
     from emotional_memory.integrations.langchain import (
@@ -135,6 +144,7 @@ __all__ = [
     "EmotionalMemory",
     "EmotionalMemoryChatHistory",
     "EmotionalMemoryConfig",
+    "EmotionalMemoryMem0Backend",
     "EmotionalTag",
     "GenericAppraisalVector",
     "HeuristicQueryClassifier",
@@ -172,10 +182,12 @@ __all__ = [
     "as_async",
     "categorize_affect",
     "compute_ape",
+    "configure_logging",
     "consolidation_strength",
     "hebbian_strengthen",
     "label_tag",
     "make_emotional_tag",
+    "messages_to_content",
     "recommended_conversation_policy",
     "spreading_activation",
     "store_all_messages",

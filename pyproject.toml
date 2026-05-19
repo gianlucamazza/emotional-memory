@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "emotional_memory"
-version = "0.10.0"
+version = "0.11.0"
 description = "Emotional memory library for LLMs based on Affective Field Theory"
 requires-python = ">=3.11"
 license = "MIT"
@@ -178,3 +178,8 @@ typeCheckingMode = "standard"
 pythonVersion = "3.11"
 reportMissingImports = "warning"
 reportMissingTypeStubs = false
+
+[dependency-groups]
+dev = [
+    "fakeredis>=2.35.1",
+]

@@ -75,6 +75,7 @@ benchmarks/locomo/results.dryrun.*
 # Checkpoint files: intermediate resume state, not final evidence
 benchmarks/locomo/results.checkpoint.jsonl
 benchmarks/locomo/pareto_results.checkpoint.jsonl
+benchmarks/locomo/routing_results.checkpoint.jsonl
 
 # Editor/OS hygiene
 *~

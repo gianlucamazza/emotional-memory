@@ -119,14 +119,14 @@ make test-llm
 Run a single test:
 
 ```bash
-uv run pytest tests/test_engine.py::test_encode_stores_memory -v
+uv run python -m pytest tests/test_engine.py::test_encode_stores_memory -v
 ```
 
 **SQLite and visualization tests** require their extras and run as separate CI jobs:
 
 ```bash
-uv pip install -e ".[dev,sqlite]" && uv run pytest tests/test_sqlite_store.py -v
-uv pip install -e ".[dev,viz]"    && uv run pytest tests/test_visualization.py -v
+uv pip install -e ".[dev,sqlite]" && uv run python -m pytest tests/test_sqlite_store.py -v
+uv pip install -e ".[dev,viz]"    && uv run python -m pytest tests/test_visualization.py -v
 ```
 
 Coverage must stay above 80%. Check with:

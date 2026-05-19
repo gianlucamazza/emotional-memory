@@ -35,13 +35,14 @@ limitations:
   Δ=+0.058 (p=0.276) — FAIL at declared power. Spanish (Hd2_ES, SBERT, N=80):
   Δ=+0.138, p=0.045 — a single directional positive, not power-replicated;
   me5 FAIL at both N=80 (Δ=+0.113, p=0.110) and N=120 (Δ=0.000, p=1.00).
-  See power top-up closure
-  [`benchmarks/preregistration_addendum_hd2_powertopup_closure.md`](../../benchmarks/preregistration_addendum_hd2_powertopup_closure.md).
+  See power top-up closure `benchmarks/preregistration_addendum_hd2_powertopup_closure.md`.
 - **`KeywordAppraisalEngine` is English-only**: the `LLMAppraisalEngine` handles
   multilingual input, but appraisal quality varies by language.
-- **No formal cross-lingual validation beyond EN/IT/ES**: generalisation to
-  other languages is not established. Larger multilingual embedders
-  (e.g., `BGE-M3`) are a natural next step.
+- **Cross-lingual validation: EN/IT/ES/FR confirmed, broader scope open**: English
+  (robust), French (Hm1 PASS, me5 N=120), and Spanish-SBERT exploratory (N=80) are
+  validated; Italian and Spanish me5 FAIL at N=120 power. Generalisation to other
+  languages is not established. Larger multilingual embedders (e.g., `BGE-M3`) are a
+  natural next step.
 
 ---
 

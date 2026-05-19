@@ -63,6 +63,7 @@ def test_claim_validation_matrix_has_unique_ids_and_required_fields() -> None:
         "claim_area",
         "status",
         "evidence_level",
+        "requires_oracle_affect",
         "allowed_public_wording",
         "current_evidence",
         "not_yet_shown",
@@ -79,6 +80,16 @@ def test_claim_validation_matrix_has_unique_ids_and_required_fields() -> None:
         assert claim_id not in seen_ids
         seen_ids.add(claim_id)
         assert claim["allowed_public_wording"]
+
+
+def test_claim_validation_matrix_oracle_affect_flag_is_bool() -> None:
+    payload = _load_matrix()
+    for claim in payload["claims"]:
+        value = claim["requires_oracle_affect"]
+        assert isinstance(value, bool), (
+            f"requires_oracle_affect must be bool, got {type(value)}"
+            f" for claim '{claim['claim_id']}'"
+        )
 
 
 def test_claim_validation_matrix_references_existing_repo_paths() -> None:

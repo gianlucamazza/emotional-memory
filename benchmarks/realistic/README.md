@@ -83,5 +83,10 @@ Current interpretation (v2, N=200):
   me5-small Δ = +0.16 [p=0.001]. EN-only embedder is the accuracy bottleneck, not AFT.
 - **Spanish slice (Hd2_ES, 20 scenarios / 80 queries)**: SBERT Δ = +0.138 [p=0.045,
   d=0.233] — PASS; me5-small Δ = +0.113 [p=0.110] — FAIL (borderline).
+- **French slice (Hm1, Addendum M, 30 scenarios / 120 queries, me5)**: AFT top1=0.31
+  [0.23, 0.39] vs naive_cosine top1=0.12 [0.07, 0.18], Δ=+0.18 [0.11, 0.26],
+  p_bootstrap<0.0001, Hedges g=0.424, p_McNemar<0.0001 — Branch A PASS. Cross-language
+  signal confirmed: same_topic_distractor (0.42) and affective_arc (0.38) drive the
+  advantage; momentum_alignment weak (0.12) consistent with EN findings.
 - 4 of 5 challenge types in v2 are by construction favourable to affective retrieval —
   aggregate advantage should be read as scope-conditional, not general superiority.

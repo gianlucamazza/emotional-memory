@@ -1,4 +1,4 @@
-"""Tests for query_classifier module: HeuristicQueryClassifier, LLMQueryClassifier, routing integration."""
+"""Tests for query_classifier module: HeuristicQueryClassifier, LLMQueryClassifier, routing."""
 
 from __future__ import annotations
 
@@ -15,7 +15,6 @@ from emotional_memory.query_classifier import (
     LLMQueryClassifier,
     QueryClassifier,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -53,7 +52,7 @@ class TestConstants:
         assert isinstance(QUERY_TYPES, frozenset)
 
     def test_query_types_contains_expected(self) -> None:
-        assert QUERY_TYPES == {"single_hop", "multi_hop", "temporal", "open_domain", "default"}
+        assert {"single_hop", "multi_hop", "temporal", "open_domain", "default"} == QUERY_TYPES
 
     def test_locomo_routing_keys(self) -> None:
         assert set(LOCOMO_ROUTING.keys()) == {

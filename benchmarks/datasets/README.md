@@ -120,3 +120,16 @@ Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
 **v2_es**: 20 scenarios, 80 queries — same schema as v2, translated to Spanish.
 Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
 `semantic_confound`. Used with SBERT bge-small-en-v1.5 and multilingual-e5-small.
+
+## realistic_recall_v2_fr
+
+`realistic_recall_v2_fr.json` is the French-language slice used in Addendum M (Hm1).
+
+**v2_fr**: 30 scenarios, 60 sessions, 210 events, 120 queries — hand-authored in native
+French, 2-session design (session_1 encode, session_2 query). Challenge types:
+`affective_arc`, `momentum_alignment`, `recency_confound`, `same_topic_distractor`,
+`semantic_confound` (24 queries per type). Used with multilingual-e5-small.
+
+Result: Addendum M Branch A PASS — AFT top1=0.31 [0.23, 0.39] vs naive_cosine=0.12
+[0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap<0.0001, Hedges g=0.424.
+See `benchmarks/preregistration_addendum_m_fr_closure.md`.

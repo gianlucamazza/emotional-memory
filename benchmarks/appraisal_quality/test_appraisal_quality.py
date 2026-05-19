@@ -12,7 +12,7 @@ and assertions are evaluated against the median to dampen non-determinism.
 
 Run with:
     EMOTIONAL_MEMORY_LLM_API_KEY=... \
-        uv run pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
+        uv run python -m pytest benchmarks/appraisal_quality/ -v -m appraisal_quality
 """
 
 from __future__ import annotations

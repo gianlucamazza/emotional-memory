@@ -143,12 +143,13 @@
         "benchmarks/realistic/results.v2_it.sbert.json",
         "benchmarks/realistic/results.v2_it.me5.json",
         "benchmarks/realistic/results.v2_es.sbert.json",
-        "benchmarks/realistic/results.v2_es.me5.json"
+        "benchmarks/realistic/results.v2_es.me5.json",
+        "benchmarks/realistic/results.v2_fr.me5.json"
       ],
       "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
       "claim_id": "retrieval_affect_aware",
       "plot_kind": "grouped_bar_with_ci",
-      "description": "Hit@k AFT vs naive_cosine across IT (SBERT/me5) and ES (SBERT/me5) slices."
+      "description": "Top-1 accuracy AFT vs naive_cosine across IT (SBERT/me5 N=80), ES (SBERT/me5 N=80), and FR (me5 N=120 Hm1 PASS) slices."
     },
     {
       "stem": "research_locomo_negative",

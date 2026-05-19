@@ -12,6 +12,31 @@ uv pip install opentelemetry-exporter-otlp        # OTLP (Jaeger, Grafana Tempo,
 uv pip install opentelemetry-exporter-zipkin      # Zipkin
 ```
 
+## Quick setup — structured logging
+
+`emotional_memory` uses the standard `logging` module.  A convenience helper
+configures the root `emotional_memory` logger with sensible defaults:
+
+```python
+from emotional_memory import configure_logging
+
+configure_logging(level="DEBUG")  # or "INFO", "WARNING", "ERROR"
+```
+
+Set the level via environment variable (no code change needed):
+
+```bash
+EMOTIONAL_MEMORY_LOG_LEVEL=DEBUG uv run python my_script.py
+```
+
+For production pipelines that ingest structured logs:
+
+```python
+configure_logging(level="INFO", json_format=True)
+# → {"timestamp": "2026-05-19 10:23:45", "level": "INFO",
+#    "logger": "emotional_memory.engine", "message": "encode start: content_len=42"}
+```
+
 ## Quick setup — console exporter
 
 ```python
