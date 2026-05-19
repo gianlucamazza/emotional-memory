@@ -191,7 +191,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 ### WS3 — New features (WS3a+WS3b closed; WS3c closure pending Addendum L)
 - [x] **WS3a** — `integrations/mem0.py`: `EmotionalMemoryMem0Backend` facade (mem0 API surface, no runtime mem0ai dep), `messages_to_content` helper, 49 tests, `docs/tutorials/mem0.md` tutorial. Exported from integrations subpackage and top-level `emotional_memory`.
 - [x] **WS3b** — French multilingual slice. Addendum M FR me5 N=120 Branch A PASS (Δ=+0.18 top1 [0.11, 0.26], p<0.0001, Hedges g=0.424, 2026-05-16). `cross_domain_affect_replication` → `controlled_evidence`. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
-- [x] **WS3c** — `query_classifier.py` (`HeuristicQueryClassifier`, `LLMQueryClassifier`, `QueryClassifier` protocol, `LOCOMO_ROUTING`); `QueryClassifierConfig` in `retrieval.py`; routing injection in `engine.py` + `async_engine.py`. Addendum L benchmark run + closure pending (Hl1 confirmatory, Hl2 secondary, Hl3 exploratory).
+- [x] **WS3c** — `query_classifier.py` (`HeuristicQueryClassifier`, `LLMQueryClassifier`, `QueryClassifier` protocol, `LOCOMO_ROUTING`); `QueryClassifierConfig` in `retrieval.py`; routing injection in `engine.py` + `async_engine.py`. Addendum L benchmark execution in progress (smoke test 200QA, 5 essential systems). Full 1540QA run + closure pending (Hl1 confirmatory, Hl2 secondary, Hl3 exploratory).
 
 ---
 

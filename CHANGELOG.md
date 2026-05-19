@@ -121,6 +121,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Hl3 exploratory (classifier accuracy vs ground-truth). Decision rule: Branch A
   (Hl1 supported) → feature recommended as default; Branch B → optional feature.
 
+### Changed
+
+- **`benchmarks/locomo/routing_runner.py`**: `aft_routed_llm` moved out of
+  `DEFAULT_SYSTEMS` to an opt-in `--with-llm-classifier` flag.  The LLM-backed
+  classifier issues one LLM call per `retrieve()`, making a full 1 540-QA run
+  impractically slow (~10 h).  The default five systems
+  (`aft_routed_heuristic`, `aft_W0`, `aft_W2`, `naive_rag`, `aft_oracle_routed`)
+  run in ~1 h.  Auto-loading of `.env` via `python-dotenv` added so the runner
+  works when invoked directly, not only through `make`.
+- **`benchmarks/locomo/runner.py`**: `tqdm` progress bars added to the system
+  and conversation loops in `run_benchmark`.
+
+### Fixed
+
+- **`benchmarks/locomo/routing_runner.py`**: checkpoint/resume via JSONL
+  (`--checkpoint`), incremental JSON writes after each system, and `tqdm`
+  progress bars on conversations, QA pairs, and judging.
+
 ### Research
 
 - **Hg1 (`appraisal_llm_real_dual_path`) → `falsified`**: LLM dual-path architecture does
