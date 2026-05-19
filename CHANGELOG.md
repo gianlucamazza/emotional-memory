@@ -149,6 +149,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
+- **Addendum L (query-type routing) → Branch B FAIL** (200-QA LoCoMo smoke test,
+  2026-05-19): closed-loop heuristic routing does not improve aggregate F1 over
+  fixed W2 (Δ=−0.017, below +0.02 practical threshold) and does not close the
+  gap vs naive_rag (Δ=−0.081). Hl3 exploratory data-collection issue
+  (classifier log bug — all predictions logged as `"unknown"`). Closure:
+  `benchmarks/preregistration_addendum_l_query_routing_closure.md`.
 - **Hg1 (`appraisal_llm_real_dual_path`) → `falsified`**: LLM dual-path architecture does
   not outperform naive cosine on N=200 affect-free queries (Δ=−0.010, d=−0.032, p=0.367;
   Addendum G closure 2026-05-07). No retry planned at current effect size. Hg3 PASS
