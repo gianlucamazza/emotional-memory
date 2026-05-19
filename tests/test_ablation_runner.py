@@ -11,6 +11,8 @@ from benchmarks.ablation.runner import (
 )
 from benchmarks.realistic.runner import CHALLENGE_TYPES, DATASET, load_dataset
 
+pytestmark = pytest.mark.slow
+
 
 def test_ablation_study_structure() -> None:
     dataset = load_dataset()

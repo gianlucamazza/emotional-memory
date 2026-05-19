@@ -14,6 +14,6 @@ The library's theoretical basis is documented in the following research papers:
 - [Scientific Quality Bar](10_scientific_quality_bar.md) — Pre-committed gates before upgrading public claims
 - [Dominance Design (G7)](11_dominance_design.md) — Option A: CoreAffect 3D design note (shipped v0.8.2)
 - [Multilingual Follow-up (Addendum H + M)](12_multilingual_followup.md) — Cross-embedder robustness: Italian AFT advantage stable across SBERT and me5-small; French Hm1 PASS (Addendum M, 2026-05-16)
-- [Addendum L — Query-Type Routing](../../benchmarks/preregistration_addendum_l_query_routing_closure.md) — Closed-loop heuristic routing on LoCoMo: Hl1 Branch B FAIL (smoke test, 2026-05-19)
+- [Addendum L — Query-Type Routing](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_l_query_routing_closure.md) — Closed-loop heuristic routing on LoCoMo: Hl1 Branch B FAIL (smoke test, 2026-05-19)
 - [Audit (2026-04)](audit_2026-04.md) — Critical self-review of strengths, gaps, and priority order
 - `claim_validation_matrix.json` — Canonical machine-readable source for public scientific claims

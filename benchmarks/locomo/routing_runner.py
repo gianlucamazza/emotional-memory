@@ -357,9 +357,7 @@ def _run_system(
 
 
 def _judge_predictions(predictions: list[dict[str, Any]], *, verbose: bool = False) -> None:
-    for i, pred in enumerate(
-        tqdm(predictions, desc="Judging", unit="qa", disable=not verbose)
-    ):
+    for i, pred in enumerate(tqdm(predictions, desc="Judging", unit="qa", disable=not verbose)):
         if pred.get("is_adversarial"):
             pred["judge_correct"] = is_adversarial_correct(pred["prediction"])
             continue
@@ -461,18 +459,14 @@ def main(argv: list[str] | None = None) -> None:
         try:
             all_results = json.loads(args.out_json.read_text())
             if args.verbose:
-                print(
-                    f"  Resuming results from {args.out_json} ({len(all_results)} systems)"
-                )
+                print(f"  Resuming results from {args.out_json} ({len(all_results)} systems)")
         except json.JSONDecodeError:
             all_results = {}
 
     for sys_name in systems:
         if sys_name in all_results:
             if args.verbose:
-                print(
-                    f"\n=== {sys_name} ===  (skipped — already in {args.out_json})"
-                )
+                print(f"\n=== {sys_name} ===  (skipped — already in {args.out_json})")
             continue
 
         print(f"\n=== {sys_name} ===")
@@ -507,9 +501,7 @@ def main(argv: list[str] | None = None) -> None:
             result_entry["classifier_predictions"] = [
                 {
                     "qa_id": preds[i]["qa_id"],
-                    "predicted_type": (
-                        clf_entries[i][1] if i < len(clf_entries) else "unknown"
-                    ),
+                    "predicted_type": (clf_entries[i][1] if i < len(clf_entries) else "unknown"),
                     "ground_truth_type": preds[i].get(_QA_TYPE_FIELD, "unknown"),
                 }
                 for i in range(len(preds))

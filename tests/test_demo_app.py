@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.slow
+
 pytest.importorskip("gradio")
 pytest.importorskip("matplotlib")
 pytest.importorskip("PIL")

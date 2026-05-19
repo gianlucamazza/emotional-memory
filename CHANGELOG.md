@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Test suite timeouts**: added `pytest-timeout>=2.3` and a `slow` pytest marker.
+  `test_ablation_runner.py`, `test_human_eval_pipeline.py`, and `test_demo_app.py`
+  are marked `slow` and excluded from the default `make test` run, reducing suite
+  time from ~10 min to ~72 s. Use `make test-all` to include them.
+- **Ruff formatting**: `benchmarks/locomo/runner.py` and
+  `routing_runner.py` reformatted.
+- **Stale arXiv bundle**: `paper/arxiv-submission.tar.gz` regenerated to match
+  current `paper/main.tex`.
+- **Docs strict build**: replaced two broken relative links in `docs/research/`
+  (Addendum L and M closures) with absolute GitHub URLs so `make docs` passes
+  `--strict`.
+- **Makefile mkdocs robustness**: switched `uv run mkdocs` to
+  `uv run python -m mkdocs` in `docs`, `docs-serve`, and `check-all` targets.
+
+### CI
+
+- **Test job coverage**: updated `ci.yml` test job to override `addopts` so
+  slow tests are included in the CI coverage run (matching pre-marking behaviour).
+
 ## [0.11.0] - 2026-05-19
 
 ### CI / Security

@@ -56,6 +56,9 @@ format:
 test:
 	uv run python -m pytest
 
+test-all:
+	uv run python -m pytest --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality'"
+
 cov:
 	uv run python -m pytest --cov --cov-report=term-missing
 
@@ -82,7 +85,7 @@ meta-check-local:
 check: lint typecheck meta-check test bench-fidelity
 
 check-all: check
-	uv run mkdocs build --strict --quiet
+	uv run python -m mkdocs build --strict --quiet
 	uv run python scripts/preflight.py --fast || true  # G6 always fails on feature branches; hard gate is in make release
 	$(MAKE) reproduce-paper-check
 	$(MAKE) check-arxiv-bundle
@@ -353,10 +356,10 @@ paper-figures:
 figures: docs-images research-figures paper-figures
 
 docs:
-	uv run mkdocs build --strict
+	uv run python -m mkdocs build --strict
 
 docs-serve:
-	uv run mkdocs serve
+	uv run python -m mkdocs serve
 
 dist:
 	uv build
@@ -462,7 +465,8 @@ help:
 	@echo "  typecheck                  mypy strict"
 	@echo "  meta-check                 release metadata consistency"
 	@echo "  meta-check-local           release metadata + local .zenodo_doi consistency"
-	@echo "  test                       pytest (unit + integration)"
+	@echo "  test                       pytest (unit + integration, excludes slow)"
+	@echo "  test-all                   pytest (all tests including slow)"
 	@echo "  cov                        pytest with branch coverage"
 	@echo ""
 	@echo "Benchmarks:"

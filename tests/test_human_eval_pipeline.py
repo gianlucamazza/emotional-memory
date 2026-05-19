@@ -15,6 +15,8 @@ from benchmarks.human_eval.pipeline import (
 )
 from benchmarks.realistic.runner import load_dataset, run_benchmark, write_results
 
+pytestmark = pytest.mark.slow
+
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 

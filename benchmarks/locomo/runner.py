@@ -155,17 +155,13 @@ def run_benchmark(
                 continue
 
             if verbose:
-                print(
-                    f"  [{system_name}] {conv.sample_id} — {len(conv.qa_pairs)} QA pairs …"
-                )
+                print(f"  [{system_name}] {conv.sample_id} — {len(conv.qa_pairs)} QA pairs …")
             preds = adapter.run_conversation(conv)
 
             if run_judge:
                 if verbose:
                     n_non_adv = sum(1 for p in preds if not p.get("is_adversarial"))
-                    print(
-                        f"  [{system_name}] {conv.sample_id} — judging {n_non_adv} items …"
-                    )
+                    print(f"  [{system_name}] {conv.sample_id} — judging {n_non_adv} items …")
                 _run_judge(preds, verbose=verbose)
 
             all_predictions.extend(preds)

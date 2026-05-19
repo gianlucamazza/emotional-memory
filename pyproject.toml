@@ -37,6 +37,7 @@ dev = [
   "pytest>=7",
   "pytest-cov>=5",
   "pytest-asyncio>=0.24",
+  "pytest-timeout>=2.3",
   "ruff>=0.4",
   "mypy>=1.10",
   "basedpyright>=1.18",
@@ -70,17 +71,19 @@ release = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --tb=short -m 'not llm and not appraisal_quality'"
+addopts = "-q --tb=short -m 'not llm and not appraisal_quality and not slow'"
 pythonpath = ["tests", "benchmarks", "scripts"]
 python_files = ["test_*.py", "bench_*.py"]
 python_functions = ["test_*", "bench_*"]
 asyncio_mode = "auto"
 strict_markers = true
+timeout = 120
 markers = [
   "fidelity: psychological fidelity benchmarks",
   "perf: performance benchmarks",
   "llm: integration tests requiring a real LLM (skipped without EMOTIONAL_MEMORY_LLM_API_KEY)",
   "appraisal_quality: LLM appraisal prompt quality benchmarks (skipped without EMOTIONAL_MEMORY_LLM_API_KEY)",
+  "slow: slow integration tests (benchmark-level fixtures)",
 ]
 
 [tool.coverage.run]

@@ -2,7 +2,7 @@
 
 > **Update 2026-05-16:** A pre-registered French slice (Hm1, Addendum M) confirms
 > the cross-language effect on me5 at N=120 (Δ=+0.18, p<0.0001, g=0.424, Branch A PASS).
-> Sister closure: [`benchmarks/preregistration_addendum_m_fr_closure.md`](../../benchmarks/preregistration_addendum_m_fr_closure.md).
+> Sister closure: [`benchmarks/preregistration_addendum_m_fr_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_m_fr_closure.md).
 
 This page documents the cross-embedder analysis of the Italian multilingual slice
 (Addendum H). It complements the primary Italian results reported in §G6 of the
