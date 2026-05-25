@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
         with:
           enable-cache: false
 
@@ -65,14 +65,14 @@ jobs:
           upload-release-assets: false
 
       - name: Attest build provenance (SLSA)
-        uses: actions/attest@281a49d4cbb0a72c9575a50d18f6deb515a11deb # v4
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4
         with:
           subject-path: |
             dist/*.whl
             dist/*.tar.gz
 
       - name: Attest SBOM (CycloneDX)
-        uses: actions/attest@281a49d4cbb0a72c9575a50d18f6deb515a11deb # v4
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4
         with:
           subject-path: |
             dist/*.whl
@@ -81,7 +81,7 @@ jobs:
           predicate-path: "dist/sbom.cdx.json"
 
       - name: Upload release artefacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: emotional-memory-${{ steps.version.outputs.version }}-dist
           path: |
