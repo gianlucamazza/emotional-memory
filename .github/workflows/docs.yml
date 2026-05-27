@@ -34,7 +34,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install docs dependencies
-        run: uv pip install -e ".[docs]" --system
+        run: uv sync --extra docs
 
       - name: Configure Git for gh-deploy
         run: |

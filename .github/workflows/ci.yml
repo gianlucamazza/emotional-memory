@@ -44,7 +44,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev]" --system
+        run: uv sync --extra dev
 
       - name: Lint (ruff check)
         run: uv run ruff check .
@@ -92,7 +92,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev]" --system
+        run: uv sync --extra dev
 
       - name: Type check
         run: uv run mypy src/emotional_memory/
@@ -125,7 +125,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev]" --system
+        run: uv sync --extra dev
 
       - name: Run basedpyright
         run: uv run basedpyright src/emotional_memory/
@@ -149,7 +149,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install release dependencies
-        run: uv pip install -e ".[release]" --system
+        run: uv sync --extra release
 
       - name: Check release metadata
         run: uv run python scripts/check_release_metadata.py
@@ -212,7 +212,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,bench]" --system
+        run: uv sync --extra dev --extra bench
 
       - name: Run fidelity benchmarks
         run: uv run python -m pytest benchmarks/fidelity/ -v
@@ -257,7 +257,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,sqlite]" --system
+        run: uv sync --extra dev --extra sqlite
 
       - name: Run SQLite store tests and example smoke tests
         run: uv run python -m pytest tests/test_sqlite_store.py tests/test_examples.py -v
@@ -281,7 +281,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,langchain]" --system
+        run: uv sync --extra dev --extra langchain
 
       - name: Run LangChain adapter tests
         run: uv run python -m pytest tests/test_langchain_adapter.py -v
@@ -305,7 +305,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,sentence-transformers]" --system
+        run: uv sync --extra dev --extra sentence-transformers
 
       - name: Run SentenceTransformerEmbedder tests
         run: uv run python -m pytest tests/test_sentence_transformers_extra.py -v
@@ -329,7 +329,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,viz]" --system
+        run: uv sync --extra dev --extra viz
 
       - name: Run visualization tests
         run: uv run python -m pytest tests/test_visualization.py -v
@@ -353,7 +353,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,dotenv]" --system
+        run: uv sync --extra dev --extra dotenv
 
       - name: Verify python-dotenv is importable
         run: uv run python -c "from dotenv import load_dotenv; print('dotenv OK')"
@@ -383,7 +383,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv pip install -e ".[dev,llm-test]" --system
+        run: uv sync --extra dev --extra llm-test
 
       - name: Validate LLM test files are importable
         run: uv run python -m pytest --collect-only -m llm -q

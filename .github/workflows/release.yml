@@ -32,7 +32,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install release dependencies
-        run: uv pip install -e ".[release]" --system
+        run: uv sync --extra release
 
       - name: Resolve release version
         id: version
