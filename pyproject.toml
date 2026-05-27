@@ -144,7 +144,7 @@ plugins = ["pydantic.mypy"]
 # Optional dependencies without bundled type stubs — ignore missing imports
 # so mypy works whether or not the extra is installed, with no # type: ignore
 # comments needed in source code.
-module = ["sentence_transformers", "sentence_transformers.*"]
+module = ["sentence_transformers"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
@@ -152,15 +152,7 @@ module = ["langchain_core", "langchain_core.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["mem0", "mem0.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = ["matplotlib", "matplotlib.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["tqdm", "tqdm.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

@@ -37,11 +37,9 @@ from __future__ import annotations
 
 import logging
 import uuid
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-import chromadb
 import numpy as np
-from chromadb.config import Settings as _ChromaSettings
 
 from emotional_memory.models import Memory
 
@@ -50,11 +48,6 @@ if TYPE_CHECKING:
     from chromadb.api import ClientAPI as _ChromaClientAPI
 
 logger = logging.getLogger(__name__)
-
-# Shared settings for ephemeral (in-memory) mode.  All ephemeral ChromaStore
-# instances reuse the same underlying System for efficiency, but each gets its
-# own tenant+database namespace so instances don't bleed state into each other.
-_EPHEMERAL_SETTINGS = _ChromaSettings(is_persistent=False, anonymized_telemetry=False)
 
 _SCROLL_PAGE = 1_000
 
@@ -104,6 +97,17 @@ class ChromaStore:
         port: int = 8000,
         collection_name: str = "emotional_memory",
     ) -> None:
+        try:
+            import chromadb
+            from chromadb.config import Settings as _ChromaSettings
+        except ImportError as exc:
+            raise ImportError(
+                "chromadb is required for ChromaStore. "
+                "Install with: pip install 'emotional-memory[chroma]'"
+            ) from exc
+
+        _ephemeral_settings = _ChromaSettings(is_persistent=False, anonymized_telemetry=False)
+
         if path is not None and host is not None:
             raise ValueError("ChromaStore: pass at most one of `path` or `host`, not both")
         if host is not None:
@@ -116,11 +120,11 @@ class ChromaStore:
             # don't share state through chromadb's process-wide SharedSystemClient.
             _tenant = uuid.uuid4().hex
             _db = uuid.uuid4().hex
-            _admin = chromadb.AdminClient(settings=_EPHEMERAL_SETTINGS)
+            _admin = chromadb.AdminClient(settings=_ephemeral_settings)
             _admin.create_tenant(_tenant)
             _admin.create_database(_db, tenant=_tenant)
             self._client = chromadb.EphemeralClient(
-                tenant=_tenant, database=_db, settings=_EPHEMERAL_SETTINGS
+                tenant=_tenant, database=_db, settings=_ephemeral_settings
             )
         self._collection_name = collection_name
         self._collection: _ChromaCollection | None = None
@@ -228,7 +232,7 @@ class ChromaStore:
             return
         # No dim metadata — try to infer from existing embeddings
         results = col.get(limit=1, include=["embeddings"])
-        existing = results.get("embeddings") or []
+        existing: list[Any] = results.get("embeddings") or []
         if existing and existing[0] is not None:
             self._dim = len(existing[0])
             self._collection = col

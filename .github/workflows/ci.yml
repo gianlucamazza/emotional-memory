@@ -111,7 +111,14 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        run: uv sync --extra dev
+        # Install all optional extras whose imports appear at module/TYPE_CHECKING
+        # level, so mypy and basedpyright can fully resolve all type annotations.
+        # sentence-transformers and chromadb are lazy (try/except + TYPE_CHECKING)
+        # but still installed here so the type checkers see zero missing-import
+        # warnings; uv caches the wheels across runs.
+        run: >
+          uv sync --extra dev --extra viz --extra langchain --extra llm-test
+          --extra qdrant --extra chroma --extra sentence-transformers
       - name: Type check (mypy)
         run: uv run mypy src/emotional_memory/
       - name: Verify py.typed marker
