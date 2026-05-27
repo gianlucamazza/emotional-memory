@@ -15,7 +15,6 @@ pytest.importorskip("chromadb")
 from emotional_memory.interfaces import MemoryStore
 from emotional_memory.stores.chroma import ChromaStore
 
-
 # ---------------------------------------------------------------------------
 # Initialisation
 # ---------------------------------------------------------------------------

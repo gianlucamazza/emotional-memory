@@ -15,7 +15,6 @@ pytest.importorskip("qdrant_client")
 from emotional_memory.interfaces import MemoryStore
 from emotional_memory.stores.qdrant import QdrantStore, _uuid_for
 
-
 # ---------------------------------------------------------------------------
 # Initialisation
 # ---------------------------------------------------------------------------
