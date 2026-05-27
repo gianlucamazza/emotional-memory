@@ -89,6 +89,9 @@ markers = [
 [tool.coverage.run]
 source = ["emotional_memory"]
 branch = true
+# Optional-dep store adapters are tested by their dedicated jobs (extra-tests),
+# not by the main matrix which doesn't install qdrant-client/chromadb.
+omit = ["*/stores/qdrant.py", "*/stores/chroma.py"]
 
 [tool.coverage.report]
 show_missing = true
