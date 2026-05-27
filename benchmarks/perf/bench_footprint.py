@@ -40,13 +40,21 @@ def bench_memory_per_record(benchmark):
 
 @pytest.mark.parametrize("n", [100, 1_000, 5_000])
 def bench_store_footprint(benchmark, n):
-    """Measure encode+store throughput for n memories."""
-    engine = make_engine(resonance_threshold=2.0)  # disable resonance
+    """Measure encode+store throughput for n memories.
 
-    def fill_store():
+    Each round uses a fresh engine so the store size is always [0..n) during
+    the benchmark — not [0..n), [n..2n), [2n..3n) — which would inflate later
+    rounds' search_by_embedding cost and produce a misleading (and increasingly
+    slow) measurement.
+    """
+
+    def setup():
+        return (make_engine(resonance_threshold=2.0),), {}
+
+    def fill_store(engine):
         populate_store(engine, n)
 
-    benchmark.pedantic(fill_store, iterations=1, rounds=3)
+    benchmark.pedantic(fill_store, setup=setup, iterations=1, rounds=3)
 
 
 def test_memory_object_size_reasonable():

@@ -222,6 +222,7 @@ jobs:
           --benchmark-only
           --benchmark-sort=mean
           --benchmark-json=benchmark-results.json
+          --override-ini="timeout=0"
 
       - name: Store benchmark results
         uses: benchmark-action/github-action-benchmark@52576c92bccf6ac60c8223ec7eb2565637cae9ba # v1.22.1
