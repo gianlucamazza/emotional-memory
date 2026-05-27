@@ -59,6 +59,8 @@ class AdaptiveWeightsConfig(BaseModel):
     a smooth transition centred at the given point.
     """
 
+    model_config = ConfigDict(frozen=True)
+
     # Negative mood: weight shift from semantic → emotional signals
     negative_mood_strength: float = 0.15
     negative_mood_center: float = -0.5
@@ -150,6 +152,8 @@ class QueryClassifierConfig(BaseModel):
 class RetrievalConfig(BaseModel):
     """Parameters for multi-signal retrieval scoring."""
 
+    model_config = ConfigDict(frozen=True)
+
     base_weights: list[float] = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]
     """Weights for [semantic, mood_congruence, affect_proximity,
     momentum_alignment, recency, resonance_boost]. Must have exactly 6 elements."""
@@ -194,6 +198,8 @@ class RetrievalSignals(BaseModel):
       resonance
     """
 
+    model_config = ConfigDict(frozen=True)
+
     semantic_similarity: float = 0.0
     mood_congruence: float = 0.0
     affect_proximity: float = 0.0
@@ -216,6 +222,8 @@ class RetrievalSignals(BaseModel):
 class RetrievalBreakdown(BaseModel):
     """Structured decomposition of one retrieval score."""
 
+    model_config = ConfigDict(frozen=True)
+
     weights: RetrievalSignals
     raw_signals: RetrievalSignals
     weighted_signals: RetrievalSignals
@@ -230,6 +238,8 @@ class RetrievalExplanation(BaseModel):
     strengthening) are applied. ``memory`` is the post-retrieval memory state.
     """
 
+    model_config = ConfigDict(frozen=True)
+
     memory: Memory
     score: float
     breakdown: RetrievalBreakdown
@@ -243,6 +253,8 @@ class RetrievalExplanation(BaseModel):
 class RankedMemory(BaseModel):
     """A memory plus its retrieval-time score and breakdown."""
 
+    model_config = ConfigDict(frozen=True)
+
     memory: Memory
     score: float
     breakdown: RetrievalBreakdown
@@ -255,6 +267,8 @@ class RetrievalPlan(BaseModel):
     can share one retrieval pipeline and apply their own persistence logic
     afterward.
     """
+
+    model_config = ConfigDict(frozen=True)
 
     weights: RetrievalSignals
     pass1: list[RankedMemory]

@@ -21,7 +21,7 @@ from datetime import datetime
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.models import Memory, ResonanceLink
@@ -29,6 +29,8 @@ from emotional_memory.models import Memory, ResonanceLink
 
 class ResonanceConfig(BaseModel):
     """Parameters for resonance link construction and spreading activation."""
+
+    model_config = ConfigDict(frozen=True)
 
     threshold: float = 0.3
     """Minimum composite resonance score to create a link."""

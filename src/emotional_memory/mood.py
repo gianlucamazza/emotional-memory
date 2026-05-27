@@ -20,7 +20,7 @@ from __future__ import annotations
 import math
 from datetime import UTC, datetime
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from emotional_memory.affect import CoreAffect
 
@@ -34,6 +34,8 @@ class MoodDecayConfig(BaseModel):
     The effective half-life is modulated by inertia so that a rigid mood
     (high inertia) regresses more slowly than a volatile one.
     """
+
+    model_config = ConfigDict(frozen=True)
 
     base_half_life_seconds: float = 3600.0
     """Base half-life in seconds (default 1 hour, must be > 0). Modulated by inertia."""
@@ -68,7 +70,7 @@ class MoodField(BaseModel):
     inertia   : [ 0.0,  1.0] 0=volatile, 1=completely stable
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     valence: float
     arousal: float

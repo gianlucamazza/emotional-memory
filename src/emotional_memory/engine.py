@@ -23,7 +23,7 @@ from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import (
@@ -63,6 +63,8 @@ logger = logging.getLogger(__name__)
 
 
 class EmotionalMemoryConfig(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     decay: DecayConfig = DecayConfig()
     retrieval: RetrievalConfig = RetrievalConfig()
     resonance: ResonanceConfig = ResonanceConfig()

@@ -15,13 +15,15 @@ from datetime import datetime
 
 import numpy as np
 from numpy.typing import NDArray
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from emotional_memory.models import EmotionalTag
 
 
 class DecayConfig(BaseModel):
     """Parameters controlling how consolidation strength decays over time."""
+
+    model_config = ConfigDict(frozen=True)
 
     base_decay: float = 0.5
     """Power-law decay exponent baseline. Higher = faster decay."""

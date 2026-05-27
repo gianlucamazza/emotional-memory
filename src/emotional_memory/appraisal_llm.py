@@ -45,7 +45,7 @@ import threading
 from collections import OrderedDict
 from typing import Any, Protocol, runtime_checkable
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
@@ -143,7 +143,7 @@ class LLMCallable(Protocol):
 class LLMAppraisalConfig(BaseModel):
     """Configuration for LLMAppraisalEngine."""
 
-    model_config = {"arbitrary_types_allowed": True}
+    model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
 
     system_prompt: str = _SYSTEM_PROMPT
     """System prompt describing the appraisal task.
