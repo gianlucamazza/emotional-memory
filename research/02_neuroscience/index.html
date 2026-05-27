@@ -1,0 +1,3104 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Emotional memory for LLMs based on Affective Field Theory">
+      
+      
+      
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/research/02_neuroscience/">
+      
+      
+        <link rel="prev" href="../01_foundations/">
+      
+      
+        <link rel="next" href="../03_computational_models/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Neuroscience - emotional_memory</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#neuroscience-and-cognitive-science-of-emotional-memory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="emotional_memory" class="md-header__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            emotional_memory
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Neuroscience
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gianlucamazza/emotional-memory" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gianlucamazza/emotional-memory
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mental_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Mental Model
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../contributing/ssot-policy/" class="md-tabs__link">
+          
+  
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/async/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/engine/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/2026-04-kickoff/" class="md-tabs__link">
+          
+  
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="emotional_memory" class="md-nav__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    emotional_memory
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gianlucamazza/emotional-memory" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gianlucamazza/emotional-memory
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mental_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mental Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/ssot-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSOT Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Async usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/mem0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mem0 integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/query_routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/byo_appraisal_schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom appraisal schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engine (sync)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/async_engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engine (async)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/stores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/state_stores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State Stores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/appraisal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appraisal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/appraisal_schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appraisal Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/query_classifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/categorize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categorize
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/decay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/resonance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resonance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/mood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/affect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Affect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/visualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophical Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroscience
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroscience
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-fundamental-neural-circuit-amygdalahippocampus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Fundamental Neural Circuit: Amygdala–Hippocampus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The Fundamental Neural Circuit: Amygdala–Hippocampus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ledouxs-dual-pathway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LeDoux's Dual Pathway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hippocampal-modulation-by-the-amygdala-mcgaugh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hippocampal Modulation by the Amygdala (McGaugh)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-somatic-marker-theory-damasio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Somatic Marker Theory (Damasio)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-panksepps-seven-affective-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Panksepp's Seven Affective Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-memory-consolidation-and-emotional-modulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Memory Consolidation and Emotional Modulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Memory Consolidation and Emotional Modulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flashbulb-memory-brown-kulik-1977" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flashbulb Memory (Brown &amp; Kulik, 1977)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stress-hormones-and-the-yerkes-dodson-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stress Hormones and the Yerkes-Dodson Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconsolidation-nader-schiller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconsolidation (Nader, Schiller)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cognitive-appraisal-theories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cognitive Appraisal Theories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cognitive Appraisal Theories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazarus-primary-and-secondary-appraisal-1966-1991" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lazarus — Primary and Secondary Appraisal (1966, 1991)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scherer-component-process-model-cpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scherer — Component Process Model (CPM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-theory-of-constructed-emotion-barrett" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The Theory of Constructed Emotion (Barrett)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-mood-congruent-memory-and-state-dependent-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Mood-Congruent Memory and State-Dependent Learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Mood-Congruent Memory and State-Dependent Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mood-congruent-memory-bower-1981" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mood-Congruent Memory (Bower, 1981)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-dependent-learning-eich-1989" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State-Dependent Learning (Eich, 1989)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-prediction-error-and-affective-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Prediction Error and Affective Learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Prediction Error and Affective Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dopaminergic-reward-prediction-error-schultz-1997" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dopaminergic Reward Prediction Error (Schultz, 1997)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separable-neural-signals-for-rpe-and-affective-prediction-error-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separable Neural Signals for RPE and Affective Prediction Error (2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-recent-developments-20202026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Recent Developments (2020–2026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Recent Developments (2020–2026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generalizable-neural-signatures-of-emotional-memory-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generalizable Neural Signatures of Emotional Memory (2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#affective-computing-state-of-the-art-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Affective Computing: State of the Art 2026
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-from-neuron-to-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis: From Neuron to Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliographic-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliographic Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_computational_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computational Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_state_of_art/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State of the Art
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05_design_principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_related_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_current_evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Current Evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_scientific_quality_bar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scientific Quality Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_dominance_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dominance Design (implemented v0.8.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_multilingual_followup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multilingual Follow-up
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audit_2026-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit (2026-04)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claim_validation_matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claim Validation Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../figure_inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Figure Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_bibliography/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/2026-04-kickoff/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    April 2026 Kickoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-fundamental-neural-circuit-amygdalahippocampus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Fundamental Neural Circuit: Amygdala–Hippocampus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The Fundamental Neural Circuit: Amygdala–Hippocampus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ledouxs-dual-pathway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LeDoux's Dual Pathway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hippocampal-modulation-by-the-amygdala-mcgaugh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hippocampal Modulation by the Amygdala (McGaugh)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-somatic-marker-theory-damasio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Somatic Marker Theory (Damasio)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-panksepps-seven-affective-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Panksepp's Seven Affective Systems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-memory-consolidation-and-emotional-modulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Memory Consolidation and Emotional Modulation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Memory Consolidation and Emotional Modulation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flashbulb-memory-brown-kulik-1977" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flashbulb Memory (Brown &amp; Kulik, 1977)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stress-hormones-and-the-yerkes-dodson-curve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stress Hormones and the Yerkes-Dodson Curve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reconsolidation-nader-schiller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reconsolidation (Nader, Schiller)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cognitive-appraisal-theories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Cognitive Appraisal Theories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Cognitive Appraisal Theories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazarus-primary-and-secondary-appraisal-1966-1991" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lazarus — Primary and Secondary Appraisal (1966, 1991)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scherer-component-process-model-cpm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scherer — Component Process Model (CPM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-theory-of-constructed-emotion-barrett" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The Theory of Constructed Emotion (Barrett)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-mood-congruent-memory-and-state-dependent-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Mood-Congruent Memory and State-Dependent Learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Mood-Congruent Memory and State-Dependent Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mood-congruent-memory-bower-1981" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mood-Congruent Memory (Bower, 1981)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-dependent-learning-eich-1989" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State-Dependent Learning (Eich, 1989)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-prediction-error-and-affective-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Prediction Error and Affective Learning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Prediction Error and Affective Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dopaminergic-reward-prediction-error-schultz-1997" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dopaminergic Reward Prediction Error (Schultz, 1997)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separable-neural-signals-for-rpe-and-affective-prediction-error-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separable Neural Signals for RPE and Affective Prediction Error (2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-recent-developments-20202026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Recent Developments (2020–2026)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Recent Developments (2020–2026)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generalizable-neural-signatures-of-emotional-memory-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generalizable Neural Signatures of Emotional Memory (2025)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#affective-computing-state-of-the-art-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Affective Computing: State of the Art 2026
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-from-neuron-to-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis: From Neuron to Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bibliographic-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bibliographic Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="neuroscience-and-cognitive-science-of-emotional-memory">Neuroscience and Cognitive Science of Emotional Memory<a class="headerlink" href="#neuroscience-and-cognitive-science-of-emotional-memory" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>This document collects the neuroscientific and cognitive foundations that inform the library's
+architecture. Each section ends with the operational implications for the system.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-fundamental-neural-circuit-amygdalahippocampus">1. The Fundamental Neural Circuit: Amygdala–Hippocampus<a class="headerlink" href="#1-the-fundamental-neural-circuit-amygdalahippocampus" title="Permanent link">&para;</a></h2>
+<h3 id="ledouxs-dual-pathway">LeDoux's Dual Pathway<a class="headerlink" href="#ledouxs-dual-pathway" title="Permanent link">&para;</a></h3>
+<p>Joseph LeDoux established the neural architecture of fear memory through Pavlovian conditioning.</p>
+<p><strong>Two parallel pathways</strong>:
+- <strong>Fast path</strong> (<em>low road</em>): Sensory thalamus → Amygdala directly. ~150–200 ms. Coarse processing,
+  sufficient for immediate defensive responses before conscious awareness.
+- <strong>Slow path</strong> (<em>high road</em>): Sensory thalamus → Sensory cortex → Amygdala. Slower but enables
+  detailed, nuanced evaluation. Reduces false alarms.</p>
+<p>The lateral nucleus of the amygdala receives convergent input from both pathways and is critical
+for associating stimuli with threats.</p>
+<p><strong>Implication for encoding</strong>: The system must support dual-speed encoding:
+- <strong>Fast path</strong>: immediate emotional tag (coarse valence + arousal) based on surface patterns
+- <strong>Slow path</strong>: elaborated emotional tag with full post-processing appraisal</p>
+<hr />
+<h3 id="hippocampal-modulation-by-the-amygdala-mcgaugh">Hippocampal Modulation by the Amygdala (McGaugh)<a class="headerlink" href="#hippocampal-modulation-by-the-amygdala-mcgaugh" title="Permanent link">&para;</a></h3>
+<p>James McGaugh demonstrated experimentally that the basolateral amygdala (BLA) mediates the
+modulation of memory consolidation by stress hormones.</p>
+<p><strong>Mechanism</strong>: After emotionally significant learning, extracellular norepinephrine in the
+amygdala rises to ~300% above baseline and correlates with retention performance. The BLA then
+modulates consolidation in downstream regions (caudate, nucleus accumbens, cortex).</p>
+<p><strong>The emotional tagging hypothesis</strong> (Richter-Levin &amp; Akirav): The amygdala, activated by
+emotional arousal, "tags" a hippocampal memory trace by reinforcing synaptic consolidation at
+activated neurons.</p>
+<p><strong>Arousal vs. valence</strong>: Emotionally arousing memories depend on the amygdala-hippocampus
+network; emotionally valenced but non-arousing memories depend on the prefrontal cortex-hippocampus
+network (Kensinger &amp; Corkin, 2004).</p>
+<p><strong>Implication</strong>: The <code>consolidation_strength</code> of each memory is primarily a function of
+<strong>arousal</strong> at encoding time, not valence. High arousal → preferential consolidation →
+slower decay.</p>
+<hr />
+<h2 id="2-the-somatic-marker-theory-damasio">2. The Somatic Marker Theory (Damasio)<a class="headerlink" href="#2-the-somatic-marker-theory-damasio" title="Permanent link">&para;</a></h2>
+<p>Antonio Damasio proposed that emotions, experienced as bodily states ("somatic markers"), play a
+critical role in decisional reasoning under conditions of complexity and uncertainty.</p>
+<p><strong>Core principles</strong>:
+- Somatic markers are changes in bodily state (accelerated heartbeat, visceral sensation)
+  associated with the past emotional outcomes of decisions
+- They are represented and regulated primarily in the ventromedial prefrontal cortex (vmPFC)
+  and the amygdala
+- During decision-making, somatic markers guide choices by reactivating the emotional "tag" of
+  past outcomes, consciously or unconsciously</p>
+<p><strong>Iowa Gambling Task</strong>: Patients with vmPFC damage do not develop somatic markers and make
+systematically disadvantageous choices despite intact logical ability.</p>
+<p><strong>Implication</strong>: <strong>Somatic markers</strong> are the neuroscientific precedent for our <code>EmotionalTag</code>.
+A retrieval system that uses the emotional tags of past memories as a decision-making bias
+computationally implements Damasio's hypothesis.</p>
+<hr />
+<h2 id="3-panksepps-seven-affective-systems">3. Panksepp's Seven Affective Systems<a class="headerlink" href="#3-panksepps-seven-affective-systems" title="Permanent link">&para;</a></h2>
+<p>Jaak Panksepp mapped seven primary emotional command systems through electrical brain stimulation,
+pharmacological challenges, and lesion studies in mammalian brains.</p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Valence</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SEEKING</strong> (Expectancy)</td>
+<td>Positive</td>
+<td>Exploration, curiosity, anticipatory enthusiasm</td>
+</tr>
+<tr>
+<td><strong>RAGE</strong> (Anger)</td>
+<td>Negative</td>
+<td>Frustration, aggression when goals are blocked</td>
+</tr>
+<tr>
+<td><strong>FEAR</strong> (Fear)</td>
+<td>Negative</td>
+<td>Threat detection, freeze/flight responses</td>
+</tr>
+<tr>
+<td><strong>LUST</strong> (Sexual desire)</td>
+<td>Positive</td>
+<td>Reproductive drive</td>
+</tr>
+<tr>
+<td><strong>CARE</strong> (Nurturance)</td>
+<td>Positive</td>
+<td>Attachment, maternal behavior</td>
+</tr>
+<tr>
+<td><strong>PANIC/GRIEF</strong> (Panic/Grief)</td>
+<td>Negative</td>
+<td>Separation distress, loss of social bond</td>
+</tr>
+<tr>
+<td><strong>PLAY</strong> (Social play)</td>
+<td>Positive</td>
+<td>Social bonding, rough-and-tumble play</td>
+</tr>
+</tbody>
+</table>
+<p>Each system is subcortically generated, evolutionarily conserved across species, and evaluative
+(approach for positive, avoidance for negative).</p>
+<p><strong>Implication</strong>: These 7 systems offer a taxonomy of <strong>biologically grounded emotional primitives</strong>
+that can serve as the basis for discrete categorization, distinct from continuous coordinates
+(valence, arousal). The SEEKING system corresponds functionally to Spinozian <em>conatus</em> — the
+fundamental exploratory drive.</p>
+<hr />
+<h2 id="4-memory-consolidation-and-emotional-modulation">4. Memory Consolidation and Emotional Modulation<a class="headerlink" href="#4-memory-consolidation-and-emotional-modulation" title="Permanent link">&para;</a></h2>
+<h3 id="flashbulb-memory-brown-kulik-1977">Flashbulb Memory (Brown &amp; Kulik, 1977)<a class="headerlink" href="#flashbulb-memory-brown-kulik-1977" title="Permanent link">&para;</a></h3>
+<p><em>Flashbulb memories</em> are vivid, detailed, highly confident recollections of the circumstances
+under which one learned a significant, emotionally intense piece of news (e.g. September 11th,
+a personal traumatic event).</p>
+<p><strong>Mechanism</strong>: Amygdala activation triggers the release of stress hormones that potentiate
+hippocampal consolidation — producing unusually durable memory traces.</p>
+<p><strong>Critical limitation</strong>: Despite their subjective vividness, flashbulb memories are <strong>not
+necessarily more accurate</strong> than ordinary memories. They are more consistent and confidently
+held, but subject to distortion over time (Talarico &amp; Rubin, 2003).</p>
+<p><strong>Implication for the library</strong>: High arousal → high <code>consolidation_strength</code> → slow decay →
+high retrieval priority. But not necessarily high <strong>accuracy</strong>. The system must not treat
+high-arousal memories as ground truth.</p>
+<hr />
+<h3 id="stress-hormones-and-the-yerkes-dodson-curve">Stress Hormones and the Yerkes-Dodson Curve<a class="headerlink" href="#stress-hormones-and-the-yerkes-dodson-curve" title="Permanent link">&para;</a></h3>
+<p><strong>Inverted-U relationship</strong> between stress hormone levels and mnemonic performance:
+- Moderate levels of cortisol and norepinephrine <strong>enhance</strong> encoding and consolidation
+- Extreme or chronic stress (elevated cortisol) <strong>impairs</strong> hippocampal function and retrieval</p>
+<p><strong>Timing matters</strong>:
+- Hormones released <strong>during or immediately after</strong> encoding → enhance consolidation
+- Stress <strong>before retrieval</strong> → impairs it</p>
+<p><strong>Implication</strong>: The system must model the non-linear relationship between arousal and
+<code>consolidation_strength</code>. A very high arousal value does not necessarily produce maximum
+consolidation strength.</p>
+<hr />
+<h3 id="reconsolidation-nader-schiller">Reconsolidation (Nader, Schiller)<a class="headerlink" href="#reconsolidation-nader-schiller" title="Permanent link">&para;</a></h3>
+<p>Karim Nader, Glenn Schafe, and Daniela Schiller demonstrated that reactivated memories
+temporarily become labile and must be "reconsolidated" to persist.</p>
+<p><strong>Fundamental finding</strong>: When a consolidated memory is reactivated (retrieved), it enters
+a labile state for a limited time window. During this window:
+- The memory can be <strong>weakened</strong> (amnesic agents such as propranolol or anisomycin)
+- The memory can be <strong>updated</strong> with new information
+- The <strong>emotional tag</strong> can be modified</p>
+<p><strong>Prediction error as trigger</strong>: Prediction error (mismatch between expectation and experience)
+appears to be necessary to trigger reconsolidation.</p>
+<p><strong>Clinical application</strong>: Fear memories can be modified during reconsolidation through behavioral
+interventions (extinction during the reconsolidation window) or pharmacological agents.</p>
+<p><strong>Critical implication for the library</strong>: Retrieval is not a read-only operation — the <strong>Affective
+Prediction Error (APE)</strong> determines whether the emotional tag becomes labile. Only when the APE
+exceeds a configurable threshold does the reconsolidation window open (<code>window_opened_at</code>), during
+which the memory's <code>EmotionalTag</code> can be updated. This APE-gated model is also inspired by
+<strong>Pearce &amp; Hall (1980)</strong>: associability increases after high prediction errors, and decreases
+after accurate predictions.</p>
+<hr />
+<h2 id="5-cognitive-appraisal-theories">5. Cognitive Appraisal Theories<a class="headerlink" href="#5-cognitive-appraisal-theories" title="Permanent link">&para;</a></h2>
+<h3 id="lazarus-primary-and-secondary-appraisal-1966-1991">Lazarus — Primary and Secondary Appraisal (1966, 1991)<a class="headerlink" href="#lazarus-primary-and-secondary-appraisal-1966-1991" title="Permanent link">&para;</a></h3>
+<p>Richard Lazarus proposed that emotions arise not from events themselves but from the <strong>cognitive
+evaluation</strong> of those events.</p>
+<p><strong>Two-phase appraisal</strong>:
+1. <strong>Primary appraisal</strong>: Is this event relevant to me? Is it threatening, beneficial, or
+   irrelevant?
+2. <strong>Secondary appraisal</strong>: Can I cope? What resources do I have?</p>
+<p>The combination determines the specific emotion generated (e.g. threat + low coping =
+fear/anxiety; threat + high coping = challenge).</p>
+<hr />
+<h3 id="scherer-component-process-model-cpm">Scherer — Component Process Model (CPM)<a class="headerlink" href="#scherer-component-process-model-cpm" title="Permanent link">&para;</a></h3>
+<p>Klaus Scherer expanded appraisal theory into a sequential multi-component process model.</p>
+<p><strong>Five Stimulus Evaluation Checks (SECs)</strong>:
+1. <strong>Novelty</strong>: Is something new or unexpected happening?
+2. <strong>Intrinsic pleasantness</strong>: Is it intrinsically pleasant or unpleasant?
+3. <strong>Goal significance</strong>: Does it further or obstruct my goals?
+4. <strong>Coping potential</strong>: Can I handle it?
+5. <strong>Normative significance</strong>: Is it consistent with my norms and self-concept?</p>
+<p>Emotion is defined as the synchronization of five components: cognitive appraisal, physiological
+arousal, motor expression, action tendency, and subjective feeling.</p>
+<p><strong>Implication for Layer 4</strong>: Our <strong>Appraisal Vector</strong> implements a computational version of
+Scherer's SECs. The five appraisal dimensions in our model (novelty, goal_relevance,
+coping_potential, norm_congruence, self_relevance) derive directly from this framework.</p>
+<hr />
+<h2 id="6-the-theory-of-constructed-emotion-barrett">6. The Theory of Constructed Emotion (Barrett)<a class="headerlink" href="#6-the-theory-of-constructed-emotion-barrett" title="Permanent link">&para;</a></h2>
+<p>Lisa Feldman Barrett challenges the classical view of basic emotions with a constructionist account.</p>
+<p><strong>Core claims</strong>:
+- Emotions are not hard-wired, universal categories triggered by dedicated brain circuits.
+  Instead, they are <strong>constructed</strong> in the moment by the brain's predictive machinery.
+- The brain continuously generates predictions about incoming sensory signals based on
+  <strong>interoception</strong> (internal bodily sensing), prior experience, and culturally learned
+  emotional concepts.
+- <strong>Core affect</strong> — a continuous stream of valence (pleasant/unpleasant) and arousal
+  (activated/deactivated) — is the fundamental building block. Discrete emotions (anger,
+  fear, etc.) emerge when the brain categorizes core affect using conceptual knowledge.</p>
+<p><strong>Implication</strong>: There is no single brain signature for any emotion; emotions emerge from
+domain-general brain networks. For the library: discrete emotion labels (joy, fear, anger)
+are <strong>emergent patterns</strong> in the continuous affective space, not hard-wired primitives.
+This justifies a hybrid approach: continuous coordinates + contextual categorization.</p>
+<hr />
+<h2 id="7-mood-congruent-memory-and-state-dependent-learning">7. Mood-Congruent Memory and State-Dependent Learning<a class="headerlink" href="#7-mood-congruent-memory-and-state-dependent-learning" title="Permanent link">&para;</a></h2>
+<h3 id="mood-congruent-memory-bower-1981">Mood-Congruent Memory (Bower, 1981)<a class="headerlink" href="#mood-congruent-memory-bower-1981" title="Permanent link">&para;</a></h3>
+<p>People preferentially encode and retrieve information that matches their current mood state.</p>
+<p><strong>Theoretical basis</strong>: Gordon Bower's <strong>Associative Network Theory</strong> — affect exists as a central
+node in an associative memory network. When a mood is active, it spreads activation to
+mood-congruent nodes, facilitating encoding and retrieval of matching material.</p>
+<p><strong>Empirical evidence</strong>: Happy individuals better recall positive material; sad individuals better
+recall negative material. MCM effects are more robust for positive than negative moods.</p>
+<p><strong>Implication</strong>: The <code>emotional_congruence</code> signal in multi-signal retrieval must measure the
+match between the system's current Mood and the memory's <code>mood_snapshot</code> at encoding time.</p>
+<hr />
+<h3 id="state-dependent-learning-eich-1989">State-Dependent Learning (Eich, 1989)<a class="headerlink" href="#state-dependent-learning-eich-1989" title="Permanent link">&para;</a></h3>
+<p>Retrieval is enhanced when the internal state (mood, physiological arousal, pharmacological state)
+at retrieval matches the state during encoding, independently of the emotional valence of
+the material.</p>
+<p>Distinct from mood-congruent memory: state-dependent memory concerns the <strong>match between
+encoding and retrieval contexts</strong>, not the match between mood and material valence.</p>
+<p><strong>Implication</strong>: The Mood at encoding time must be captured as part of the tag (<code>mood_snapshot</code>).
+Retrieval with a Mood very different from the <code>mood_snapshot</code> may penalize the score of an
+otherwise relevant memory.</p>
+<hr />
+<h2 id="8-prediction-error-and-affective-learning">8. Prediction Error and Affective Learning<a class="headerlink" href="#8-prediction-error-and-affective-learning" title="Permanent link">&para;</a></h2>
+<h3 id="dopaminergic-reward-prediction-error-schultz-1997">Dopaminergic Reward Prediction Error (Schultz, 1997)<a class="headerlink" href="#dopaminergic-reward-prediction-error-schultz-1997" title="Permanent link">&para;</a></h3>
+<p>The dopaminergic reward prediction error (RPE) signal, characterized by Wolfram Schultz, is a
+central mechanism linking emotion to learning:
+- Dopaminergic neurons encode the <strong>difference between expected and received reward</strong>
+- Positive RPE (better than expected) → dopamine increase → reinforces behavior
+- Negative RPE (worse than expected) → dopamine suppression → guides adjustment</p>
+<h3 id="separable-neural-signals-for-rpe-and-affective-prediction-error-2025">Separable Neural Signals for RPE and Affective Prediction Error (2025)<a class="headerlink" href="#separable-neural-signals-for-rpe-and-affective-prediction-error-2025" title="Permanent link">&para;</a></h3>
+<p>Recent research (Nature Communications, 2025) has identified <strong>separable</strong> neural signals for RPE
+and <strong>affective prediction errors</strong> — deviations from emotional expectations that drive learning
+independently of reward value, through striatum-amygdala interactions.</p>
+<p><strong>Implication for reconsolidation</strong>: When a memory is retrieved and the current event generates a
+significant affective prediction error (reality differs from the emotional expectation encoded in
+the memory), the reconsolidation window opens. This is the computational mechanism that triggers
+the update of the <code>EmotionalTag</code>.</p>
+<hr />
+<h2 id="9-recent-developments-20202026">9. Recent Developments (2020–2026)<a class="headerlink" href="#9-recent-developments-20202026" title="Permanent link">&para;</a></h2>
+<h3 id="generalizable-neural-signatures-of-emotional-memory-2025">Generalizable Neural Signatures of Emotional Memory (2025)<a class="headerlink" href="#generalizable-neural-signatures-of-emotional-memory-2025" title="Permanent link">&para;</a></h3>
+<p>A preprint (bioRxiv, 2025) identified cross-individual patterns of brain activity that predict
+emotional memory formation — potentially opening the path toward biomarkers for successful
+emotional encoding.</p>
+<h3 id="affective-computing-state-of-the-art-2026">Affective Computing: State of the Art 2026<a class="headerlink" href="#affective-computing-state-of-the-art-2026" title="Permanent link">&para;</a></h3>
+<p>The systematic review by Fang et al. (2025) demonstrates that multimodal fusion (facial
+expression + speech prosody + text + physiological signals) outperforms unimodal models.
+Cross-modal transformers dominate.</p>
+<p><strong>The MemEmo gap (2026)</strong>: The MemEmo benchmark demonstrated that no current LLM memory system
+correctly handles emotion across extraction, updating, and question-answering. This is the gap
+our library aims to address.</p>
+<hr />
+<h2 id="synthesis-from-neuron-to-architecture">Synthesis: From Neuron to Architecture<a class="headerlink" href="#synthesis-from-neuron-to-architecture" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Neuroscientific phenomenon</th>
+<th>Parameter in the library</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amygdala activation → hippocampal tagging</td>
+<td><code>consolidation_strength = f(arousal_at_encoding)</code></td>
+</tr>
+<tr>
+<td>LeDoux dual pathway (fast/slow)</td>
+<td>Fast encoding (coarse) + Slow encoding (full appraisal)</td>
+</tr>
+<tr>
+<td>Yerkes-Dodson curve</td>
+<td>Non-linear <code>consolidation_strength</code> with respect to arousal</td>
+</tr>
+<tr>
+<td>Reconsolidation at retrieval</td>
+<td><code>EmotionalTag</code> update window post-retrieval</td>
+</tr>
+<tr>
+<td>Somatic Marker Hypothesis</td>
+<td><code>EmotionalTag</code> as decisional navigation bias</td>
+</tr>
+<tr>
+<td>Mood-Congruent Memory</td>
+<td><code>emotional_congruence</code> weight in retrieval scoring</td>
+</tr>
+<tr>
+<td>State-Dependent Learning</td>
+<td><code>mood_snapshot</code> in <code>EmotionalTag</code> + match at retrieval</td>
+</tr>
+<tr>
+<td>Affective Prediction Error</td>
+<td>Trigger for opening the reconsolidation window</td>
+</tr>
+<tr>
+<td>Panksepp 7 systems</td>
+<td>Possible basis for discrete emotion categories</td>
+</tr>
+<tr>
+<td>Barrett constructionism</td>
+<td>Discrete labels as emergent patterns in continuous space</td>
+</tr>
+<tr>
+<td>Scherer's SECs</td>
+<td>Layer 4: Appraisal Vector (5 dimensions)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="bibliographic-notes">Bibliographic Notes<a class="headerlink" href="#bibliographic-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>LeDoux, J.E. (1996). <em>The Emotional Brain</em>. Simon &amp; Schuster.</li>
+<li>LeDoux, J.E. (2000). "Emotion circuits in the brain." <em>Annual Review of Neuroscience</em>, 23, 155-184.</li>
+<li>McGaugh, J.L. (2004). "The amygdala modulates the consolidation of memories of emotionally
+  arousing experiences." <em>Annual Review of Neuroscience</em>.</li>
+<li>McGaugh, J.L. (2013). "Making lasting memories: Remembering the significant." <em>PNAS</em>.</li>
+<li>Kensinger, E.A. &amp; Corkin, S. (2004). "Two routes to emotional memory: Distinct neural processes
+  for valence and arousal." <em>PNAS</em>.</li>
+<li>Richter-Levin, G. (2004). "The Amygdala, the Hippocampus, and Emotional Modulation of Memory."
+  <em>The Neuroscientist</em>.</li>
+<li>Damasio, A.R. (1994). <em>Descartes' Error: Emotion, Reason, and the Human Brain</em>. Putnam.</li>
+<li>Damasio, A.R. (1996). "The somatic marker hypothesis and the possible functions of the prefrontal
+  cortex." <em>Phil. Trans. Royal Society B</em>.</li>
+<li>Panksepp, J. (1998). <em>Affective Neuroscience: The Foundations of Human and Animal Emotions</em>.
+  Oxford University Press.</li>
+<li>Brown, R. &amp; Kulik, J. (1977). "Flashbulb memories." <em>Cognition</em>, 5(1), 73-99.</li>
+<li>Talarico, J.M. &amp; Rubin, D.C. (2003). "Confidence, not consistency, characterizes flashbulb
+  memories." <em>Psychological Science</em>, 14(5), 455-461.</li>
+<li>Nader, K., Schafe, G.E. &amp; LeDoux, J.E. (2000). "Fear memories require protein synthesis in
+  the amygdala for reconsolidation after retrieval." <em>Nature</em>, 406, 722-726.</li>
+<li>Schiller, D. et al. (2010). "Preventing the return of fear in humans using reconsolidation
+  update mechanisms." <em>Nature</em>, 463, 49-53.</li>
+<li>Lee, J.L.C., Nader, K. &amp; Schiller, D. (2017). "An update on memory reconsolidation updating."
+  <em>Trends in Cognitive Sciences</em>, 21(7), 531-545.</li>
+<li>Lazarus, R.S. (1991). <em>Emotion and Adaptation</em>. Oxford University Press.</li>
+<li>Scherer, K.R. (2009). "The dynamic architecture of emotion: Evidence for the component process
+  model." <em>Cognition and Emotion</em>.</li>
+<li>Barrett, L.F. (2017). <em>How Emotions Are Made: The Secret Life of the Brain</em>. Houghton Mifflin
+  Harcourt.</li>
+<li>Barrett, L.F. (2017). "The theory of constructed emotion: an active inference account of
+  interoception and categorization." <em>Social Cognitive and Affective Neuroscience</em>, 12(1), 1-23.</li>
+<li>Bower, G.H. (1981). "Mood and memory." <em>American Psychologist</em>, 36(2), 129-148.</li>
+<li>Eich, E. &amp; Metcalfe, J. (1989). "Mood dependent memory for internal versus external events."
+  <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.</li>
+<li>Schultz, W., Dayan, P. &amp; Montague, P.R. (1997). "A neural substrate of prediction and reward."
+  <em>Science</em>, 275, 1593-1599.</li>
+<li>Nature Communications (2025). "Separable neural signals for reward and emotion prediction errors."</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

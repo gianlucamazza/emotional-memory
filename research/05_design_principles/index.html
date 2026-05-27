@@ -1,0 +1,3326 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Emotional memory for LLMs based on Affective Field Theory">
+      
+      
+      
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/research/05_design_principles/">
+      
+      
+        <link rel="prev" href="../04_state_of_art/">
+      
+      
+        <link rel="next" href="../07_related_work/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design Principles - emotional_memory</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-principles-affective-field-theory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="emotional_memory" class="md-header__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            emotional_memory
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design Principles
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gianlucamazza/emotional-memory" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gianlucamazza/emotional-memory
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../mental_model/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Mental Model
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration Guide
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../contributing/ssot-policy/" class="md-tabs__link">
+          
+  
+  
+  Contributing
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/async/" class="md-tabs__link">
+          
+  
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/engine/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../blog/2026-04-kickoff/" class="md-tabs__link">
+          
+  
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="emotional_memory" class="md-nav__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    emotional_memory
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gianlucamazza/emotional-memory" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gianlucamazza/emotional-memory
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mental_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mental Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/ssot-policy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSOT Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Async usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LangChain integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/mem0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mem0 integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/query_routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/byo_appraisal_schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom appraisal schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engine (sync)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/async_engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engine (async)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/stores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/state_stores/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State Stores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/telemetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/appraisal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appraisal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/appraisal_schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appraisal Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/query_classifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interfaces
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/categorize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categorize
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/decay/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decay
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/resonance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resonance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/mood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/affect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Affect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/state/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/visualization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01_foundations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophical Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02_neuroscience/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroscience
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03_computational_models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computational Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04_state_of_art/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State of the Art
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Principles
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-central-model-affective-field-theory-aft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Central Model: Affective Field Theory (AFT)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-layers-of-the-affective-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Five Layers of the Affective Field
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Five Layers of the Affective Field">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-core-affect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Core Affect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-affective-momentum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Affective Momentum
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-moodfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — MoodField
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-appraisal-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Appraisal Vector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-associative-resonance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Associative Resonance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-emotionaltag-complete-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The EmotionalTag: Complete Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoding-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encoding Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-1-emotional-tagging-is-pervasive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1 — Emotional Tagging Is Pervasive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-2-consolidation-strength-is-a-function-of-arousal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 2 — Consolidation Strength Is a Function of Arousal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-3-dual-speed-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 3 — Dual-Speed Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-4-multi-signal-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 4 — Multi-Signal Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-5-adaptive-weights-modulated-by-mood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 5 — Adaptive Weights Modulated by Mood
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decay-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decay Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decay Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-6-non-linear-decay-modulated-by-arousal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 6 — Non-Linear Decay Modulated by Arousal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-7-reconsolidation-at-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 7 — Reconsolidation at Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-8-appraisal-as-generator-of-emotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 8 — Appraisal as Generator of Emotion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-9-associative-resonance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9 — Associative Resonance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Principle 9 — Associative Resonance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-9b-bidirectional-links-and-spreading-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9b — Bidirectional Links and Spreading Activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-9c-hebbian-co-retrieval-strengthening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9c — Hebbian Co-Retrieval Strengthening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-neuroscience-and-philosophy-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison with Neuroscience and Philosophy Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07_related_work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Related Work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08_limitations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Limitations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09_current_evidence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Current Evidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_scientific_quality_bar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scientific Quality Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11_dominance_design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dominance Design (implemented v0.8.2)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12_multilingual_followup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multilingual Follow-up
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audit_2026-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit (2026-04)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claim_validation_matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claim Validation Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../figure_inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Figure Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06_bibliography/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bibliography
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blog/2026-04-kickoff/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    April 2026 Kickoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-central-model-affective-field-theory-aft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Central Model: Affective Field Theory (AFT)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-layers-of-the-affective-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Five Layers of the Affective Field
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Five Layers of the Affective Field">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-core-affect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — Core Affect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-affective-momentum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — Affective Momentum
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-moodfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — MoodField
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-appraisal-vector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — Appraisal Vector
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-associative-resonance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — Associative Resonance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-emotionaltag-complete-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The EmotionalTag: Complete Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encoding-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encoding Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-1-emotional-tagging-is-pervasive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1 — Emotional Tagging Is Pervasive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-2-consolidation-strength-is-a-function-of-arousal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 2 — Consolidation Strength Is a Function of Arousal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-3-dual-speed-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 3 — Dual-Speed Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-4-multi-signal-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 4 — Multi-Signal Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-5-adaptive-weights-modulated-by-mood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 5 — Adaptive Weights Modulated by Mood
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decay-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decay Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decay Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-6-non-linear-decay-modulated-by-arousal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 6 — Non-Linear Decay Modulated by Arousal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-7-reconsolidation-at-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 7 — Reconsolidation at Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-8-appraisal-as-generator-of-emotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 8 — Appraisal as Generator of Emotion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#principle-9-associative-resonance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9 — Associative Resonance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Principle 9 — Associative Resonance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principle-9b-bidirectional-links-and-spreading-activation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9b — Bidirectional Links and Spreading Activation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#principle-9c-hebbian-co-retrieval-strengthening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 9c — Hebbian Co-Retrieval Strengthening
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-neuroscience-and-philosophy-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison with Neuroscience and Philosophy Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-principles-affective-field-theory">Design Principles: Affective Field Theory<a class="headerlink" href="#design-principles-affective-field-theory" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>This document translates the philosophical and neuroscientific foundations into concrete
+architectural principles for the library. Each principle is traced to its theoretical sources.</p>
+</blockquote>
+<hr />
+<h2 id="the-central-model-affective-field-theory-aft">The Central Model: Affective Field Theory (AFT)<a class="headerlink" href="#the-central-model-affective-field-theory-aft" title="Permanent link">&para;</a></h2>
+<p>The model we propose is an original synthesis that transcends the limitations of all existing
+frameworks. We call it <strong>Affective Field Theory</strong> because emotion is not a point in a space,
+but a <strong>field</strong> — distributed, dynamic, multi-layered, permeating every cognitive operation.</p>
+<p>No existing model (PAD, OCC, Barrett, Plutchik, Panksepp) captures the complexity of emotion in
+memory on its own. AFT integrates them as distinct layers of a unified representation.</p>
+<hr />
+<h2 id="the-five-layers-of-the-affective-field">The Five Layers of the Affective Field<a class="headerlink" href="#the-five-layers-of-the-affective-field" title="Permanent link">&para;</a></h2>
+<h3 id="layer-1-core-affect">Layer 1 — Core Affect<a class="headerlink" href="#layer-1-core-affect" title="Permanent link">&para;</a></h3>
+<p><strong>Inspiration</strong>: Mehrabian &amp; Russell (1974), Russell (1980), Barrett (2017)
+<strong>Structure</strong>: Continuous coordinate <code>(valence: float, arousal: float, dominance: float)</code> in PAD space</p>
+<p>The fundamental affective substrate — always active, like the background hum of the system.
+Corresponds to Barrett's interoception: a continuous stream of valence, arousal, and dominance
+before any categorization.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">CoreAffect</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">valence</span><span class="p">:</span> <span class="nb">float</span>    <span class="c1"># [-1.0, +1.0] from very negative to very positive</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">arousal</span><span class="p">:</span> <span class="nb">float</span>    <span class="c1"># [0.0, 1.0] from completely calm to maximum excitement</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">dominance</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># [0.0, 1.0] from helpless to full control (PAD third axis)</span>
+</code></pre></div>
+<p><strong>Principle</strong>: Discrete emotion labels (joy, fear, anger) are not primitives — they are <strong>regions
+in Core Affect space</strong>. They are computed contextually from the full PAD vector + contextual
+information.</p>
+<hr />
+<h3 id="layer-2-affective-momentum">Layer 2 — Affective Momentum<a class="headerlink" href="#layer-2-affective-momentum" title="Permanent link">&para;</a></h3>
+<p><strong>Inspiration</strong>: Spinoza (<em>Ethica</em>, III: affects as transitions), classical physics (kinematics)
+<strong>Structure</strong>: Temporal derivatives of Core Affect</p>
+<p>Spinoza's fundamental insight: "Laetitia est transitio hominis a minore ad maiorem perfectionem"
+— joy <strong>is</strong> the passage, not the destination. A system in valence=+0.8 and rising is
+qualitatively different from one in valence=+0.8 and falling.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">AffectiveMomentum</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">d_valence</span><span class="p">:</span> <span class="nb">float</span>   <span class="c1"># dv/dt — first derivative of valence</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">d_arousal</span><span class="p">:</span> <span class="nb">float</span>   <span class="c1"># da/dt — first derivative of arousal</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">dd_valence</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># d²v/dt² — acceleration of valence</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">dd_arousal</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># d²a/dt² — acceleration of arousal</span>
+</code></pre></div>
+<p>Momentum informs:
+- <strong>Prediction</strong>: where affect will be at t+1
+- <strong>Retrieval</strong>: memories on a similar trajectory are more congruent
+- <strong>Reconsolidation</strong>: an abrupt change in momentum (emotional surprise) triggers the opening
+  of the reconsolidation window</p>
+<hr />
+<h3 id="layer-3-moodfield">Layer 3 — MoodField<a class="headerlink" href="#layer-3-moodfield" title="Permanent link">&para;</a></h3>
+<p><strong>Inspiration</strong>: Heidegger (<em>Being and Time</em>, §29–30) — <em>Stimmung</em> as a mode of being-in-the-world;
+Bower (1981) mood-congruent memory
+<strong>Structure</strong>: Slowly varying PAD vector — the "background tone" of the system</p>
+<p>Heideggerian <em>Stimmung</em> is not an emotion but a <strong>mode of being-in-the-world</strong> — it does not
+change with individual events but through accumulation. It is the gravitational field that orients
+all cognitive operations. In the library this concept is embodied by <code>MoodField</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">MoodField</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">valence</span><span class="p">:</span> <span class="nb">float</span>         <span class="c1"># [-1.0, +1.0] weighted moving average of affective history</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">arousal</span><span class="p">:</span> <span class="nb">float</span>         <span class="c1"># [0.0, 1.0]</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">dominance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [0.0, 1.0] — PAD extension</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">inertia</span><span class="p">:</span> <span class="nb">float</span>         <span class="c1"># [0.0, 1.0] resistance to change (0=volatile, 1=stable)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>    <span class="c1"># when it was last updated</span>
+</code></pre></div>
+<p><strong>Update</strong>: Exponentially weighted moving average of Core Affect over time:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Mood(t) = α * CoreAffect(t) + (1-α) * Mood(t-1)
+</code></pre></div>
+where <code>α</code> is small (0.05–0.15) — Mood changes slowly.</p>
+<p><strong>Effect on retrieval</strong>: Mood weights all retrieval signals — in a negative Mood state, the bias
+toward negative memories increases (mood-congruent memory).</p>
+<hr />
+<h3 id="layer-4-appraisal-vector">Layer 4 — Appraisal Vector<a class="headerlink" href="#layer-4-appraisal-vector" title="Permanent link">&para;</a></h3>
+<p><strong>Inspiration</strong>: Scherer CPM (2009), Lazarus (1991), Stoics (evaluation as generator of emotion)
+<strong>Structure</strong>: Multi-component evaluation vector of an event</p>
+<p>Emotion is not given — it is <strong>generated</strong> by the evaluation of the event against the system's
+goals and norms. Layer 4 is the engine that produces Core Affect (Layer 1) from semantic input.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AppraisalVector</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">novelty</span><span class="p">:</span> <span class="nb">float</span>              <span class="c1"># [-1.0, +1.0] from completely expected to entirely novel</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">goal_relevance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [-1.0, +1.0] from obstructing goals to furthering them</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">coping_potential</span><span class="p">:</span> <span class="nb">float</span>     <span class="c1"># [0.0, 1.0] from no coping ability to full control</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">norm_congruence</span><span class="p">:</span> <span class="nb">float</span>      <span class="c1"># [-1.0, +1.0] from norm-violating to norm-conforming</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">self_relevance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [0.0, 1.0] how much it concerns the system&#39;s &quot;self&quot;</span>
+</code></pre></div>
+<p><strong>Appraisal → Core Affect mapping</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># coping_potential [0,1] is converted to signed [-1,+1]:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># coping=1 → +1 (confidence), coping=0 → -1 (helplessness)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">coping_signed</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">coping_potential</span> <span class="o">-</span> <span class="mf">1.0</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">valence</span> <span class="o">=</span> <span class="mf">0.4</span><span class="o">*</span><span class="n">goal_relevance</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="n">norm_congruence</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">coping_signed</span> <span class="o">+</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">novelty</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">arousal</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="nb">abs</span><span class="p">(</span><span class="n">novelty</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">coping_potential</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">self_relevance</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># coping_potential maps directly to the dominance (PAD) axis:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">dominance</span> <span class="o">=</span> <span class="n">coping_potential</span>   <span class="c1"># 0 = helpless, 1 = full control</span>
+</code></pre></div></p>
+<p>The mapping is configurable — this is the most empirically open component of the system.</p>
+<hr />
+<h3 id="layer-5-associative-resonance">Layer 5 — Associative Resonance<a class="headerlink" href="#layer-5-associative-resonance" title="Permanent link">&para;</a></h3>
+<p><strong>Inspiration</strong>: Aristotle (associationism by similarity/contiguity/contrast), Hume (sympathy),
+Bower (affective associative network)
+<strong>Structure</strong>: Graph of connections between memories based on emotional resonance</p>
+<p>When a memory is encoded or retrieved, it <strong>resonates</strong> with others through:
+1. <strong>Semantic similarity</strong>: similar content
+2. <strong>Emotional congruence</strong>: similar Core Affect at encoding time
+3. <strong>Temporal contiguity</strong>: temporally proximate event
+4. <strong>Perceived causality</strong>: causally connected event
+5. <strong>Emotional contrast</strong>: affective opposition (anxiety ↔ relief)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ResonanceLink</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">strength</span><span class="p">:</span> <span class="nb">float</span>             <span class="c1"># [0.0, 1.0]</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">link_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;semantic&#39;</span><span class="p">,</span> <span class="s1">&#39;emotional&#39;</span><span class="p">,</span> <span class="s1">&#39;temporal&#39;</span><span class="p">,</span> <span class="s1">&#39;causal&#39;</span><span class="p">,</span> <span class="s1">&#39;contrastive&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p>Resonance links form emotional clusters that mutually reinforce each other during retrieval
+(spreading activation).</p>
+<hr />
+<h2 id="the-emotionaltag-complete-structure">The EmotionalTag: Complete Structure<a class="headerlink" href="#the-emotionaltag-complete-structure" title="Permanent link">&para;</a></h2>
+<p>Every memory carries an <code>EmotionalTag</code> that captures all 5 layers at encoding time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">EmotionalTag</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>  <span class="c1"># Pydantic, frozen=True</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="c1"># Layer 1: Core Affect at encoding time</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span>                   <span class="c1"># (valence, arousal, dominance)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="c1"># Layer 2: Momentum at encoding time</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">momentum</span><span class="p">:</span> <span class="n">AffectiveMomentum</span>               <span class="c1"># (d_valence, d_arousal, dd_valence, dd_arousal)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="c1"># Layer 3: Mood snapshot at encoding time</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="n">mood_snapshot</span><span class="p">:</span> <span class="n">MoodField</span>                  <span class="c1"># (valence, arousal, dominance, inertia, timestamp)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="c1"># Layer 4: Appraisal that generated this emotion</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="n">appraisal</span><span class="p">:</span> <span class="n">AppraisalVector</span> <span class="o">|</span> <span class="kc">None</span>         <span class="c1"># None if exogenous emotion</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>    <span class="c1"># Layer 5: Resonance links with other memories</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    <span class="n">resonance_links</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ResonanceLink</span><span class="p">]</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="c1"># Metadata</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="n">timestamp</span><span class="p">:</span> <span class="n">datetime</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="n">consolidation_strength</span><span class="p">:</span> <span class="nb">float</span>             <span class="c1"># [0.0, 1.0] — modulated by arousal</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="n">last_retrieved</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    <span class="n">retrieval_count</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    <span class="n">reconsolidation_count</span><span class="p">:</span> <span class="nb">int</span>                <span class="c1"># number of reconsolidations that have occurred</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    <span class="c1"># Dual-path encoding (LeDoux, 1996)</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    <span class="n">pending_appraisal</span><span class="p">:</span> <span class="nb">bool</span>                   <span class="c1"># True when fast-path; elaborate() will complete the tag</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    <span class="c1"># APE-gated reconsolidation window (Pearce &amp; Hall, 1980)</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    <span class="n">window_opened_at</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span>         <span class="c1"># window open timestamp; None = closed</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>    <span class="c1"># Pearce-Hall predictive learning</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    <span class="n">expected_affect</span><span class="p">:</span> <span class="n">CoreAffect</span> <span class="o">|</span> <span class="kc">None</span>        <span class="c1"># EMA prediction of future core_affect</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>    <span class="n">prediction_learning_rate</span><span class="p">:</span> <span class="nb">float</span>           <span class="c1"># adaptive rate in [0.05, 0.80]</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>    <span class="c1"># Plutchik discrete emotion label (auto_categorize)</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    <span class="n">emotion_label</span><span class="p">:</span> <span class="n">EmotionLabel</span> <span class="o">|</span> <span class="kc">None</span>        <span class="c1"># None if auto_categorize=False</span>
+</code></pre></div>
+<hr />
+<h2 id="encoding-principles">Encoding Principles<a class="headerlink" href="#encoding-principles" title="Permanent link">&para;</a></h2>
+<h3 id="principle-1-emotional-tagging-is-pervasive">Principle 1 — Emotional Tagging Is Pervasive<a class="headerlink" href="#principle-1-emotional-tagging-is-pervasive" title="Permanent link">&para;</a></h3>
+<p><em>Source: Colombetti (2014), Richter-Levin (2004)</em></p>
+<p>Every memory — without exception — carries an <code>EmotionalTag</code>. There is no "emotionally neutral"
+memory. If there is no explicit appraisal, the tag uses the current Core Affect and Mood as
+a baseline.</p>
+<h3 id="principle-2-consolidation-strength-is-a-function-of-arousal">Principle 2 — Consolidation Strength Is a Function of Arousal<a class="headerlink" href="#principle-2-consolidation-strength-is-a-function-of-arousal" title="Permanent link">&para;</a></h3>
+<p><em>Source: McGaugh (2004), Brown &amp; Kulik (1977), Yerkes-Dodson</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">consolidation_strength</span><span class="p">(</span><span class="n">arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mood_arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="c1"># Inverted-U relationship — non-linear</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="c1"># Peak around arousal=0.7, degradation at extreme values</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">effective_arousal</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">arousal</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">mood_arousal</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="k">return</span> <span class="o">-</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">effective_arousal</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">1.0</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="c1"># or: parametric Yerkes-Dodson curve</span>
+</code></pre></div>
+<p>Memories with high arousal (but not maximum) have the highest consolidation_strength → slower
+decay → higher retrieval priority.</p>
+<h3 id="principle-3-dual-speed-encoding">Principle 3 — Dual-Speed Encoding<a class="headerlink" href="#principle-3-dual-speed-encoding" title="Permanent link">&para;</a></h3>
+<p><em>Source: LeDoux (1996), dual pathway theory</em></p>
+<ul>
+<li><strong>Fast path</strong>: Immediate encoding with coarse affective tag (valence + arousal from current Core
+  Affect, no appraisal). Occurs within the next cycle.</li>
+<li><strong>Slow path</strong>: Tag update with full appraisal (Layer 4) after contextual elaboration. Opens the
+  reconsolidation window.</li>
+</ul>
+<hr />
+<h2 id="retrieval-principles">Retrieval Principles<a class="headerlink" href="#retrieval-principles" title="Permanent link">&para;</a></h2>
+<h3 id="principle-4-multi-signal-retrieval">Principle 4 — Multi-Signal Retrieval<a class="headerlink" href="#principle-4-multi-signal-retrieval" title="Permanent link">&para;</a></h3>
+<p><em>Source: original synthesis, Emotional RAG (2024), Bower (1981)</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">retrieval_score</span><span class="p">(</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">query_embedding</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">query_affect</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>        <span class="c1"># current Core Affect</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">current_mood</span><span class="p">:</span> <span class="n">MoodField</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">current_momentum</span><span class="p">:</span> <span class="n">AffectiveMomentum</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">memory</span><span class="p">:</span> <span class="n">Memory</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="n">activation_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>          <span class="c1"># pre-computed by spreading_activation()</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="n">w</span> <span class="o">=</span> <span class="n">adaptive_weights</span><span class="p">(</span><span class="n">current_mood</span><span class="p">)</span>        <span class="c1"># weights modulated by Mood</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">s1</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">embedding</span><span class="p">)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="n">s2</span> <span class="o">=</span> <span class="n">emotional_congruence</span><span class="p">(</span><span class="n">current_mood</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">mood_snapshot</span><span class="p">)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="n">s3</span> <span class="o">=</span> <span class="n">core_affect_proximity</span><span class="p">(</span><span class="n">query_affect</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="n">s4</span> <span class="o">=</span> <span class="n">momentum_alignment</span><span class="p">(</span><span class="n">current_momentum</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">momentum</span><span class="p">)</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="n">s5</span> <span class="o">=</span> <span class="n">recency_decay</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">consolidation_strength</span><span class="p">)</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="n">s6</span> <span class="o">=</span> <span class="n">activation_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>   <span class="c1"># spreading activation boost</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    <span class="k">return</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">s1</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">s2</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">s3</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">s4</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">s5</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">s6</span>
+</code></pre></div>
+<h3 id="principle-5-adaptive-weights-modulated-by-mood">Principle 5 — Adaptive Weights Modulated by Mood<a class="headerlink" href="#principle-5-adaptive-weights-modulated-by-mood" title="Permanent link">&para;</a></h3>
+<p><em>Source: Heidegger (disclosure through mood), Bower (1981)</em></p>
+<p>The weights <code>w</code> are not fixed — they depend on the current Mood:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">adaptive_weights</span><span class="p">(</span><span class="n">mood</span><span class="p">:</span> <span class="n">MoodField</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">config</span><span class="p">:</span> <span class="n">AdaptiveWeightsConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="c1"># Weights are modulated with smooth sigmoid (tanh) — no hard threshold</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="c1"># Negative Mood → emotional signals dominate (s2, s3 ↑, s1 ↓)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">neg</span> <span class="o">=</span> <span class="n">smooth_gate</span><span class="p">(</span><span class="n">mood</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span> <span class="n">center</span><span class="o">=-</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">sharpness</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>  <span class="c1"># activates below center</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">negative_mood_strength</span> <span class="o">*</span> <span class="n">neg</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>   <span class="c1"># mood congruence</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">negative_mood_strength</span> <span class="o">*</span> <span class="n">neg</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>   <span class="c1"># affect proximity</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">config</span><span class="o">.</span><span class="n">negative_mood_strength</span> <span class="o">*</span> <span class="n">neg</span>           <span class="c1"># semantic</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="c1"># High arousal → momentum alignment dominates (s4 ↑, s1 ↓)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">high_a</span> <span class="o">=</span> <span class="n">smooth_gate</span><span class="p">(</span><span class="n">mood</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">sharpness</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>  <span class="c1"># activates above center</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">high_arousal_strength</span> <span class="o">*</span> <span class="n">high_a</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">config</span><span class="o">.</span><span class="n">high_arousal_strength</span> <span class="o">*</span> <span class="n">high_a</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    <span class="c1"># Calm/neutral Mood → semantic retrieval prevails (s1 ↑, s2, s3 ↓)</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="n">calm</span> <span class="o">=</span> <span class="n">smooth_gate</span><span class="p">(</span><span class="n">mood</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">sharpness</span><span class="o">=-</span><span class="mf">5.0</span><span class="p">)</span> <span class="o">*</span> \
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>           <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mood</span><span class="o">.</span><span class="n">valence</span><span class="p">))</span>  <span class="c1"># low arousal + neutral valence</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">calm_semantic_strength</span> <span class="o">*</span> <span class="n">calm</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">config</span><span class="o">.</span><span class="n">calm_semantic_strength</span> <span class="o">*</span> <span class="n">calm</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>    <span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="n">config</span><span class="o">.</span><span class="n">calm_semantic_strength</span> <span class="o">*</span> <span class="n">calm</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>    <span class="n">w</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># no negative weights</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>    <span class="n">total</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>    <span class="k">return</span> <span class="n">w</span> <span class="o">/</span> <span class="n">total</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>  <span class="c1"># uniform fallback</span>
+</code></pre></div>
+<hr />
+<h2 id="decay-principles">Decay Principles<a class="headerlink" href="#decay-principles" title="Permanent link">&para;</a></h2>
+<h3 id="principle-6-non-linear-decay-modulated-by-arousal">Principle 6 — Non-Linear Decay Modulated by Arousal<a class="headerlink" href="#principle-6-non-linear-decay-modulated-by-arousal" title="Permanent link">&para;</a></h3>
+<p><em>Source: ACT-R (Anderson, 1983), McGaugh (2004), Merleau-Ponty (habits)</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">effective_decay_rate</span><span class="p">(</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">base_decay</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">arousal_at_encoding</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">retrieval_count</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="c1"># Power-law base (ACT-R style)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="c1"># Modulation by arousal: high arousal = slower decay</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">arousal_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">arousal_at_encoding</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="c1"># Retrieval reinforces memory (spacing effect)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">retrieval_factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">retrieval_count</span><span class="p">)</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="k">return</span> <span class="n">base_decay</span> <span class="o">*</span> <span class="n">arousal_factor</span> <span class="o">*</span> <span class="n">retrieval_factor</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="k">def</span><span class="w"> </span><span class="nf">consolidation_at_time_t</span><span class="p">(</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    <span class="n">initial_strength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="n">decay_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="n">time_delta_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    <span class="n">floor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    <span class="c1"># Power-law decay with minimum floor for important memories</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>    <span class="n">decayed</span> <span class="o">=</span> <span class="n">initial_strength</span> <span class="o">*</span> <span class="p">(</span><span class="n">time_delta_seconds</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">decay_rate</span><span class="p">))</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">decayed</span><span class="p">,</span> <span class="n">floor</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Minimum floor</strong>: Memories with arousal above threshold maintain a non-zero minimum
+<code>consolidation_strength</code> — they are never completely forgotten.</p>
+<hr />
+<h2 id="principle-7-reconsolidation-at-retrieval">Principle 7 — Reconsolidation at Retrieval<a class="headerlink" href="#principle-7-reconsolidation-at-retrieval" title="Permanent link">&para;</a></h2>
+<p><em>Source: Nader, Schiller (2000, 2010), prediction error theory</em></p>
+<p>Retrieval does not always open the reconsolidation window — it is the <strong>Affective Prediction Error
+(APE)</strong> that determines it. Only when the APE exceeds a configurable threshold does the window
+open (<code>window_opened_at</code> is set). Any subsequent retrieval during the open window performs
+reconsolidation. Tags are immutable (Pydantic <code>frozen=True</code>): <code>model_copy(update=...)</code> is used
+to produce new instances.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">on_retrieval</span><span class="p">(</span><span class="n">memory</span><span class="p">:</span> <span class="n">Memory</span><span class="p">,</span> <span class="n">current_state</span><span class="p">:</span> <span class="n">AffectiveState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span><span class="p">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="c1"># Update metadata (returns new immutable instance)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">new_tag</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="s2">&quot;last_retrieved&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">),</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="s2">&quot;retrieval_count&quot;</span><span class="p">:</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">retrieval_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="p">})</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="c1"># Compute APE and update prediction (Pearce &amp; Hall, 1980)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">ape</span> <span class="o">=</span> <span class="n">compute_ape</span><span class="p">(</span><span class="n">new_tag</span><span class="p">,</span> <span class="n">current_state</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="n">new_tag</span> <span class="o">=</span> <span class="n">update_prediction</span><span class="p">(</span><span class="n">new_tag</span><span class="p">,</span> <span class="n">current_state</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="c1"># Open window only if APE exceeds threshold</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="k">if</span> <span class="n">ape</span> <span class="o">&gt;=</span> <span class="n">APE_THRESHOLD</span> <span class="ow">and</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">window_opened_at</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        <span class="n">new_tag</span> <span class="o">=</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;window_opened_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)})</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="c1"># Reconsolidate if window is open (any retrieval within the window)</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="k">if</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">window_opened_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>        <span class="n">alpha</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ape</span> <span class="o">*</span> <span class="n">RECONSOLIDATION_LEARNING_RATE</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>        <span class="n">blended</span> <span class="o">=</span> <span class="n">CoreAffect</span><span class="p">(</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>            <span class="n">valence</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">new_tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">*</span><span class="n">current_state</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>            <span class="n">arousal</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">new_tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">*</span><span class="n">current_state</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>        <span class="p">)</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        <span class="n">new_tag</span> <span class="o">=</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>            <span class="s2">&quot;core_affect&quot;</span><span class="p">:</span> <span class="n">blended</span><span class="p">,</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            <span class="s2">&quot;reconsolidation_count&quot;</span><span class="p">:</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">reconsolidation_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            <span class="s2">&quot;window_opened_at&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># window closes after reconsolidation</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>        <span class="p">})</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">return</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">new_tag</span><span class="p">})</span>
+</code></pre></div>
+<hr />
+<h2 id="principle-8-appraisal-as-generator-of-emotion">Principle 8 — Appraisal as Generator of Emotion<a class="headerlink" href="#principle-8-appraisal-as-generator-of-emotion" title="Permanent link">&para;</a></h2>
+<p><em>Source: Lazarus (1991), Scherer (2009), Stoics</em></p>
+<p>Emotion is not an input — it is an <strong>output</strong> of the appraisal of the event against the system's
+goals. The system must be able to define a <strong>goal set</strong> (<em>conatus</em>) that orients the appraisal.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AppraisalEngine</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Duck-typed protocol — no inheritance required.</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="sd">    Available implementations:</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="sd">      - LLMAppraisalEngine  : uses an LLM (OpenAI-compatible) with Scherer CPM prompt</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="sd">      - KeywordAppraisalEngine: keyword-based rules, no external dependency</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="sd">      - StaticAppraisalEngine : returns a fixed vector (for testing)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">appraise</span><span class="p">(</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">event_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AppraisalVector</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<hr />
+<h2 id="principle-9-associative-resonance">Principle 9 — Associative Resonance<a class="headerlink" href="#principle-9-associative-resonance" title="Permanent link">&para;</a></h2>
+<p><em>Source: Aristotle (De Memoria), Hume (association), Bower (spreading activation)</em></p>
+<p>At encoding time, automatically build resonance links:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">build_resonance_links</span><span class="p">(</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="n">new_memory</span><span class="p">:</span> <span class="n">Memory</span><span class="p">,</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">existing_memories</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">],</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ResonanceLink</span><span class="p">]:</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">existing_memories</span><span class="p">:</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="c1"># Semantic similarity</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="n">sem_sim</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">new_memory</span><span class="o">.</span><span class="n">embedding</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">embedding</span><span class="p">)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="c1"># Emotional congruence</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>        <span class="n">emo_sim</span> <span class="o">=</span> <span class="n">emotional_congruence</span><span class="p">(</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>            <span class="n">new_memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">,</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>            <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>        <span class="p">)</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>        <span class="c1"># Temporal contiguity</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>        <span class="n">temporal_prox</span> <span class="o">=</span> <span class="n">temporal_proximity</span><span class="p">(</span><span class="n">new_memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">timestamp</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>        <span class="c1"># Composite score</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>        <span class="n">resonance</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sem_sim</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="n">emo_sim</span> <span class="o">+</span> <span class="mf">0.2</span><span class="o">*</span><span class="n">temporal_prox</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>        <span class="k">if</span> <span class="n">resonance</span> <span class="o">&gt;</span> <span class="n">RESONANCE_THRESHOLD</span><span class="p">:</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>            <span class="n">link_type</span> <span class="o">=</span> <span class="n">classify_link_type</span><span class="p">(</span><span class="n">sem_sim</span><span class="p">,</span> <span class="n">emo_sim</span><span class="p">,</span> <span class="n">temporal_prox</span><span class="p">)</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>            <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ResonanceLink</span><span class="p">(</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>                <span class="n">source_id</span><span class="o">=</span><span class="n">new_memory</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>                <span class="n">target_id</span><span class="o">=</span><span class="n">mem</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>                <span class="n">strength</span><span class="o">=</span><span class="n">resonance</span><span class="p">,</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>                <span class="n">link_type</span><span class="o">=</span><span class="n">link_type</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>            <span class="p">))</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">strength</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top_k</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="principle-9b-bidirectional-links-and-spreading-activation">Principle 9b — Bidirectional Links and Spreading Activation<a class="headerlink" href="#principle-9b-bidirectional-links-and-spreading-activation" title="Permanent link">&para;</a></h3>
+<p><em>Source: Collins &amp; Loftus (1975), "A spreading-activation theory of semantic processing"</em></p>
+<p>Resonance links are <strong>bidirectional</strong>: when memory A connects to memory B, the inverse link on B
+is also created. This ensures that activation propagates in both directions in the associative
+network.</p>
+<p>During retrieval, <strong>spreading activation</strong> BFS multi-hop propagates activation from seed memories
+toward adjacent ones: each hop multiplies the activation by the strength of the traversed link.
+If two paths converge on the same memory, the maximum is taken (not the sum) to avoid artificial
+inflation from the number of converging paths.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">spreading_activation</span><span class="p">(</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="n">seeds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>          <span class="c1"># memory_id -&gt; initial activation</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">store</span><span class="p">:</span> <span class="n">MemoryStore</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">max_hops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>                <span class="c1"># memory_id -&gt; max activation reached</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="o">...</span>
+</code></pre></div>
+<h3 id="principle-9c-hebbian-co-retrieval-strengthening">Principle 9c — Hebbian Co-Retrieval Strengthening<a class="headerlink" href="#principle-9c-hebbian-co-retrieval-strengthening" title="Permanent link">&para;</a></h3>
+<p><em>Source: Hebb (1949), "The Organization of Behavior"</em></p>
+<blockquote>
+<p>"Neurons that fire together, wire together."</p>
+</blockquote>
+<p>Every time a group of memories is retrieved together in the same query, the existing links
+between them are reinforced by a fixed increment (<code>hebbian_increment</code>, default 0.05). This models
+the fact that association consolidates with use: frequently co-activated memories become
+progressively more connected, emerging spontaneously as thematic or emotional clusters without
+explicit supervision.</p>
+<hr />
+<h2 id="system-architecture">System Architecture<a class="headerlink" href="#system-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="memory-lifecycle">Memory Lifecycle<a class="headerlink" href="#memory-lifecycle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>INPUT: event/conversation
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>         |
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>         v
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    [1. Appraisal Engine]
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    Compute AppraisalVector
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>         |
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>         v
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    [2. Core Affect Update]
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    Update the system&#39;s affective state
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>         |
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>         v
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    [3. Momentum Update]
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>    Compute temporal derivatives
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>         |
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>         v
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>    [4. Mood Update]
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>    Weighted moving average (small α)
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>         |
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>         v
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>    [5. Encoding]
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>    Create EmotionalTag with snapshot of all 5 layers
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>    Compute consolidation_strength
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>         |
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>         v
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>    [6. Storage]
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>    Save in vector store with embedding + tag
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>         |
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>         v
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>    [7. Resonance Building]
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>    Build links with existing memories
+<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>         |
+<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>         v
+<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>    OUTPUT: memory with full EmotionalTag
+</code></pre></div>
+<h3 id="retrieval-cycle">Retrieval Cycle<a class="headerlink" href="#retrieval-cycle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>QUERY: text + current affective state
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>         |
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>         v
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    [1. Query Processing]
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    Embedding + current Core Affect + Mood
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>         |
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>         v
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    [2. Adaptive Weights]
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>    Compute weights as a function of Mood
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>         |
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>         v
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    [3. Multi-Signal Scoring]
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>    Compute score for each candidate
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>         |
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>         v
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    [4. Spreading Activation]
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    Multi-hop BFS from seed set (Collins &amp; Loftus 1975)
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>    Build activation_map for Pass 2
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>         |
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>         v
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>    [5. Pass 2 Scoring + Top-K Selection]
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    Re-score with resonance boost from activation_map
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>    Select the most relevant memories
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>         |
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>         v
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    [6. Reconsolidation Check]
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>    For each retrieved memory: open window,
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    compute APE, update tag if necessary
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>         |
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>         v
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>    [7. Hebbian Strengthening]
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>    Reinforce links between co-retrieved memories (Hebb 1949)
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>         |
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>         v
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>    OUTPUT: retrieved memories + updated tags
+</code></pre></div>
+<hr />
+<h2 id="comparison-with-neuroscience-and-philosophy-principles">Comparison with Neuroscience and Philosophy Principles<a class="headerlink" href="#comparison-with-neuroscience-and-philosophy-principles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Theoretical source</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Affect as transition</td>
+<td>Spinoza, <em>Ethica</em> III</td>
+<td>Layer 2: Affective Momentum</td>
+</tr>
+<tr>
+<td><em>Stimmung</em> as global field</td>
+<td>Heidegger, BT §29</td>
+<td>Layer 3: MoodField</td>
+</tr>
+<tr>
+<td>Emotion as appraisal</td>
+<td>Stoics, Scherer, Lazarus</td>
+<td>Layer 4: Appraisal Vector</td>
+</tr>
+<tr>
+<td>Associative resonance</td>
+<td>Aristotle, Hume, Bower</td>
+<td>Layer 5: Resonance Links</td>
+</tr>
+<tr>
+<td>Consolidation ∝ arousal</td>
+<td>McGaugh, LeDoux</td>
+<td><code>consolidation_strength</code> formula</td>
+</tr>
+<tr>
+<td>Reconsolidation</td>
+<td>Nader, Schiller</td>
+<td><code>on_retrieval()</code> with APE</td>
+</tr>
+<tr>
+<td>Mood-congruent retrieval</td>
+<td>Bower (1981)</td>
+<td><code>adaptive_weights()</code></td>
+</tr>
+<tr>
+<td>Non-linear decay</td>
+<td>ACT-R, Yerkes-Dodson</td>
+<td><code>effective_decay_rate()</code></td>
+</tr>
+<tr>
+<td>Dual-speed encoding</td>
+<td>LeDoux dual pathway</td>
+<td>fast path + slow path</td>
+</tr>
+<tr>
+<td>Pervasive tagging</td>
+<td>Colombetti, Memory Bear AI</td>
+<td><code>EmotionalTag</code> on every memory</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
