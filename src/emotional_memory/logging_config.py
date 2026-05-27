@@ -33,7 +33,9 @@ def configure_logging(
     if level is None:
         level = os.environ.get("EMOTIONAL_MEMORY_LOG_LEVEL", "WARNING")
     if isinstance(level, str):
-        level = getattr(logging, level.upper(), logging.WARNING)
+        numeric_level: int = int(getattr(logging, level.upper(), logging.WARNING))
+    else:
+        numeric_level = level
 
     handler = logging.StreamHandler(sys.stdout)
     if json_format:
@@ -61,7 +63,7 @@ def configure_logging(
         )
 
     logger = logging.getLogger("emotional_memory")
-    logger.setLevel(level)
+    logger.setLevel(numeric_level)
     # Avoid duplicate handlers if configure_logging is called twice.
     if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
         logger.addHandler(handler)
