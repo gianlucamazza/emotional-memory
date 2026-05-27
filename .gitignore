@@ -86,3 +86,4 @@ benchmarks/locomo/routing_results.checkpoint.jsonl
 .coverage.*
 Thumbs.db
 desktop.ini
+benchmark-results.json
