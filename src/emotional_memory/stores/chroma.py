@@ -232,7 +232,7 @@ class ChromaStore:
             return
         # No dim metadata — try to infer from existing embeddings
         results = col.get(limit=1, include=["embeddings"])
-        existing: list[Any] = results.get("embeddings") or []
+        existing: Any = results.get("embeddings") or []
         if existing and existing[0] is not None:
             self._dim = len(existing[0])
             self._collection = col
