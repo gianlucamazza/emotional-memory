@@ -248,8 +248,8 @@ jobs:
           uv sync --extra dev
           --extra sqlite --extra langchain --extra sentence-transformers
           --extra viz --extra dotenv
-      - name: Generate figures (docs)
-        run: make docs-images
+      - name: Generate all figures
+        run: make figures
       - name: SQLite store + examples
         run: uv run python -m pytest tests/test_sqlite_store.py tests/test_examples.py -v
       - name: LangChain adapter
