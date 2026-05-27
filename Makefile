@@ -84,7 +84,7 @@ meta-check-local:
 
 check: lint typecheck meta-check test bench-fidelity
 
-check-all: check
+check-all: check install-docs
 	uv run python -m mkdocs build --strict --quiet
 	uv run python scripts/preflight.py --fast || true  # G6 always fails on feature branches; hard gate is in make release
 	$(MAKE) reproduce-paper-check
@@ -355,10 +355,10 @@ paper-figures:
 
 figures: docs-images research-figures paper-figures
 
-docs:
+docs: install-docs
 	uv run python -m mkdocs build --strict
 
-docs-serve:
+docs-serve: install-docs
 	uv run python -m mkdocs serve
 
 dist:

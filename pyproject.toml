@@ -89,9 +89,6 @@ markers = [
 [tool.coverage.run]
 source = ["emotional_memory"]
 branch = true
-# Optional-dep store adapters are tested by their dedicated jobs (extra-tests),
-# not by the main matrix which doesn't install qdrant-client/chromadb.
-omit = ["*/stores/qdrant.py", "*/stores/chroma.py"]
 
 [tool.coverage.report]
 show_missing = true
@@ -122,6 +119,7 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"src/emotional_memory/__init__.py" = ["F401"]
 "tests/**" = ["S101"]
 "benchmarks/**" = ["S101", "T201", "S311", "TCH"]
 "examples/**" = ["T201"]
@@ -161,10 +159,6 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["chromadb", "chromadb.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["opentelemetry", "opentelemetry.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

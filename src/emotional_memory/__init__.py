@@ -1,7 +1,8 @@
 """Emotional memory library for LLMs based on Affective Field Theory."""
 
-import contextlib
+import importlib
 from importlib.metadata import version
+from typing import Any
 
 __version__ = version("emotional_memory")
 
@@ -65,62 +66,71 @@ from emotional_memory.retrieval import (
 )
 from emotional_memory.state import AffectiveState
 from emotional_memory.state_stores.in_memory import InMemoryAffectiveStateStore
-from emotional_memory.state_stores.redis import RedisAffectiveStateStore
 from emotional_memory.stores.in_memory import InMemoryStore
 
-_sqlite_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.stores.sqlite import SQLiteStore as SQLiteStore
+# Optional extras — name → (extra_name, module_path, attr)
+# Loaded at import time when available; __getattr__ provides a clear error otherwise.
+# PEP 562 (module __getattr__/__dir__) allows REPL/IDE discovery of all names.
+_OPTIONAL_EXPORTS: dict[str, tuple[str, str, str]] = {
+    "SQLiteStore": ("sqlite", "emotional_memory.stores.sqlite", "SQLiteStore"),
+    "QdrantStore": ("qdrant", "emotional_memory.stores.qdrant", "QdrantStore"),
+    "ChromaStore": ("chroma", "emotional_memory.stores.chroma", "ChromaStore"),
+    "SQLiteAffectiveStateStore": (
+        "sqlite",
+        "emotional_memory.state_stores.sqlite",
+        "SQLiteAffectiveStateStore",
+    ),
+    "RedisAffectiveStateStore": (
+        "redis",
+        "emotional_memory.state_stores.redis",
+        "RedisAffectiveStateStore",
+    ),
+    "SentenceTransformerEmbedder": (
+        "sentence-transformers",
+        "emotional_memory.embedders.sentence_transformers",
+        "SentenceTransformerEmbedder",
+    ),
+    "EmotionalMemoryMem0Backend": (
+        "mem0",
+        "emotional_memory.integrations.mem0",
+        "EmotionalMemoryMem0Backend",
+    ),
+    "messages_to_content": (
+        "mem0",
+        "emotional_memory.integrations.mem0",
+        "messages_to_content",
+    ),
+    "EmotionalMemoryChatHistory": (
+        "langchain",
+        "emotional_memory.integrations.langchain",
+        "EmotionalMemoryChatHistory",
+    ),
+    "recommended_conversation_policy": (
+        "langchain",
+        "emotional_memory.integrations.langchain",
+        "recommended_conversation_policy",
+    ),
+    "store_all_messages": (
+        "langchain",
+        "emotional_memory.integrations.langchain",
+        "store_all_messages",
+    ),
+}
 
-    _sqlite_available = True
+# Some internal modules are always importable (they lazy-import the external dep);
+# for those, probe the external package directly to decide availability.
+_EXTRA_PROBE: dict[str, str] = {"redis": "redis"}
 
-_qdrant_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.stores.qdrant import QdrantStore as QdrantStore
+for _opt_name, (_opt_extra, _opt_module, _opt_attr) in _OPTIONAL_EXPORTS.items():
+    try:
+        if _opt_probe := _EXTRA_PROBE.get(_opt_extra):
+            importlib.import_module(_opt_probe)
+        globals()[_opt_name] = getattr(importlib.import_module(_opt_module), _opt_attr)
+    except ImportError:
+        pass
 
-    _qdrant_available = True
-
-_chroma_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.stores.chroma import ChromaStore as ChromaStore
-
-    _chroma_available = True
-
-_sqlite_state_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.state_stores.sqlite import (
-        SQLiteAffectiveStateStore as SQLiteAffectiveStateStore,
-    )
-
-    _sqlite_state_available = True
-
-_sentence_transformers_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.embedders.sentence_transformers import (
-        SentenceTransformerEmbedder as SentenceTransformerEmbedder,
-    )
-
-    _sentence_transformers_available = True
-
-with contextlib.suppress(ImportError):
-    from emotional_memory.integrations.mem0 import (
-        EmotionalMemoryMem0Backend as EmotionalMemoryMem0Backend,
-    )
-    from emotional_memory.integrations.mem0 import (
-        messages_to_content as messages_to_content,
-    )
-
-_langchain_available = False
-with contextlib.suppress(ImportError):
-    from emotional_memory.integrations.langchain import (
-        EmotionalMemoryChatHistory,
-        recommended_conversation_policy,
-        store_all_messages,
-    )
-
-    _langchain_available = True
-
-__all__ = [
+_CORE_ALL: tuple[str, ...] = (
+    "__version__",
     "LOCOMO_ROUTING",
     "QUERY_TYPES",
     "SCHERER_CPM_SCHEMA",
@@ -136,15 +146,12 @@ __all__ = [
     "AsyncEmbedder",
     "AsyncEmotionalMemory",
     "AsyncMemoryStore",
-    "ChromaStore",
     "CoreAffect",
     "DecayConfig",
     "Embedder",
     "EmotionLabel",
     "EmotionalMemory",
-    "EmotionalMemoryChatHistory",
     "EmotionalMemoryConfig",
-    "EmotionalMemoryMem0Backend",
     "EmotionalTag",
     "GenericAppraisalVector",
     "HeuristicQueryClassifier",
@@ -160,25 +167,19 @@ __all__ = [
     "MemoryStore",
     "MoodDecayConfig",
     "MoodField",
-    "QdrantStore",
     "QueryClassifier",
     "QueryClassifierConfig",
-    "RedisAffectiveStateStore",
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalBreakdown",
     "RetrievalConfig",
     "RetrievalExplanation",
     "RetrievalSignals",
-    "SQLiteAffectiveStateStore",
-    "SQLiteStore",
-    "SentenceTransformerEmbedder",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",
     "SyncToAsyncEmbedder",
     "SyncToAsyncStore",
-    "__version__",
     "as_async",
     "categorize_affect",
     "compute_ape",
@@ -187,9 +188,24 @@ __all__ = [
     "hebbian_strengthen",
     "label_tag",
     "make_emotional_tag",
-    "messages_to_content",
-    "recommended_conversation_policy",
     "spreading_activation",
-    "store_all_messages",
     "update_prediction",
-]
+)
+
+# Expose only resolvable optional names alongside the always-available core set.
+__all__ = list(_CORE_ALL) + [name for name in _OPTIONAL_EXPORTS if name in globals()]
+
+
+def __getattr__(name: str) -> Any:
+    """PEP 562: raise ImportError with install hint for unavailable optional extras."""
+    if name in _OPTIONAL_EXPORTS:
+        extra, _, _ = _OPTIONAL_EXPORTS[name]
+        raise ImportError(
+            f"{name!r} requires the '{extra}' extra. "
+            f"Install with: pip install 'emotional_memory[{extra}]'"
+        )
+    raise AttributeError(f"module 'emotional_memory' has no attribute {name!r}")
+
+
+def __dir__() -> list[str]:
+    return sorted(set(__all__) | set(_OPTIONAL_EXPORTS))

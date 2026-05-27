@@ -69,6 +69,7 @@ coverage.xml
 # Release artefacts
 .zenodo_doi
 .release_state.json
+.release_state*.bak
 
 # Benchmark dry-run outputs — not evidence, use *.dryrun.* to protect from citation
 benchmarks/locomo/results.dryrun.*

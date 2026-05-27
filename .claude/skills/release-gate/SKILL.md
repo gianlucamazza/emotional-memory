@@ -29,17 +29,24 @@ Do not proceed until all gates pass.
 
 ### 2. Version string consistency
 
-Check that `$version` appears in each of these files:
+The canonical version source is `pyproject.toml` (`[project] version`).
+`src/emotional_memory/__init__.py` resolves `__version__` dynamically via
+`importlib.metadata` — do not grep it for the literal version string.
+
+Run the canonical version scripts:
 
 ```bash
-grep "version" pyproject.toml | head -3
-grep "__version__" src/emotional_memory/__init__.py
-grep "^version:" CITATION.cff
-grep "$version" README.md | head -3
+uv run python scripts/resolve_version.py
+uv run python scripts/check_release_metadata.py
+uv run python scripts/check_metadata_ssot.py
 ```
 
-Any missing or mismatched version string = FAIL. Fix the inconsistency before
-continuing (usually a forgotten bump in one of the four locations).
+`resolve_version.py` must print exactly `$version`.
+`check_release_metadata.py` validates pyproject.toml + CHANGELOG heading.
+`check_metadata_ssot.py` validates CITATION.cff, codemeta.json, and
+.zenodo.json against pyproject.toml as SSOT.
+
+Any mismatch = FAIL. Fix with `make bump VERSION=$version` then re-run.
 
 ### 3. CHANGELOG [Unreleased] non-empty
 
