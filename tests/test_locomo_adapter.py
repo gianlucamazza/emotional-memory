@@ -11,6 +11,9 @@ if TYPE_CHECKING:
 
 import pytest
 
+pytest.importorskip("tqdm")
+pytest.importorskip("httpx")
+
 from benchmarks.locomo.dataset import (
     LoCoMoDataset,
     _parse_conversation,

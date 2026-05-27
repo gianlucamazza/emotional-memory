@@ -89,6 +89,9 @@ markers = [
 [tool.coverage.run]
 source = ["emotional_memory"]
 branch = true
+# Optional-dep store adapters are tested by their dedicated jobs (extra-tests),
+# not by the main matrix which doesn't install qdrant-client/chromadb.
+omit = ["*/stores/qdrant.py", "*/stores/chroma.py"]
 
 [tool.coverage.report]
 show_missing = true
@@ -141,7 +144,7 @@ plugins = ["pydantic.mypy"]
 # Optional dependencies without bundled type stubs — ignore missing imports
 # so mypy works whether or not the extra is installed, with no # type: ignore
 # comments needed in source code.
-module = ["sentence_transformers", "sentence_transformers.*"]
+module = ["sentence_transformers"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
@@ -149,15 +152,7 @@ module = ["langchain_core", "langchain_core.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["mem0", "mem0.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = ["matplotlib", "matplotlib.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["tqdm", "tqdm.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
@@ -172,6 +167,10 @@ ignore_missing_imports = true
 module = ["opentelemetry", "opentelemetry.*"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["httpx"]
+ignore_missing_imports = true
+
 [tool.basedpyright]
 # Secondary type checker complementing mypy. Mypy stays as primary
 # (PEP 484 reference) and basedpyright catches inference / unreachable-code /
@@ -183,6 +182,4 @@ reportMissingImports = "warning"
 reportMissingTypeStubs = false
 
 [dependency-groups]
-dev = [
-    "fakeredis>=2.35.1",
-]
+dev = ["fakeredis>=2.35.1"]

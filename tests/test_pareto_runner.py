@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
+pytest.importorskip("tqdm")
+
 from benchmarks.locomo.dataset import (
     Conversation,
     LoCoMoDataset,

@@ -9,12 +9,11 @@ from __future__ import annotations
 import pytest
 from conftest import make_test_memory
 
-from emotional_memory.interfaces import MemoryStore
-from emotional_memory.stores.chroma import ChromaStore
-
 # Skip entire module if chromadb is not installed.
 pytest.importorskip("chromadb")
 
+from emotional_memory.interfaces import MemoryStore
+from emotional_memory.stores.chroma import ChromaStore
 
 # ---------------------------------------------------------------------------
 # Initialisation

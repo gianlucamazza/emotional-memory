@@ -9,12 +9,11 @@ from __future__ import annotations
 import pytest
 from conftest import make_test_memory
 
-from emotional_memory.interfaces import MemoryStore
-from emotional_memory.stores.qdrant import QdrantStore, _uuid_for
-
 # Skip entire module if qdrant-client is not installed.
 pytest.importorskip("qdrant_client")
 
+from emotional_memory.interfaces import MemoryStore
+from emotional_memory.stores.qdrant import QdrantStore, _uuid_for
 
 # ---------------------------------------------------------------------------
 # Initialisation

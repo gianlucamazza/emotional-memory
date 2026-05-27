@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 
+pytest.importorskip("tqdm")
+
 from benchmarks.ablation.runner import (
     _aggregate_link_stats,
     _collect_link_stats,
