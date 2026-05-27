@@ -40,6 +40,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # persist-credentials: false strips the token; restore it so mkdocs
+          # gh-deploy can push to the gh-pages branch (contents: write is set).
+          git remote set-url origin \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
 
       - name: Deploy docs
         run: uv run mkdocs gh-deploy --force --clean
