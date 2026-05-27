@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import pytest
 
 from emotional_memory.affect import CoreAffect
@@ -57,8 +59,12 @@ def test_sqlite_state_store_round_trip_preserves_history(tmp_path) -> None:
     assert loaded is not None
     assert loaded.core_affect == state.core_affect
 
-    next_original = state.update(CoreAffect(valence=0.8, arousal=0.9))
-    next_loaded = loaded.update(CoreAffect(valence=0.8, arousal=0.9))
+    # Pin `now` so both update() calls use identical timestamps: the momentum
+    # computation is time-normalised and datetime.now() would differ between
+    # the two calls, producing non-equal results (flaky test).
+    t = datetime.now(tz=UTC)
+    next_original = state.update(CoreAffect(valence=0.8, arousal=0.9), now=t)
+    next_loaded = loaded.update(CoreAffect(valence=0.8, arousal=0.9), now=t)
     assert next_loaded.momentum == next_original.momentum
 
 
