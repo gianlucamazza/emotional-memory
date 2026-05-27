@@ -221,14 +221,14 @@ jobs:
           uv run python -m pytest benchmarks/perf/
           --benchmark-only
           --benchmark-sort=mean
-          --benchmark-json=benchmark-results.json
+          --benchmark-json=/tmp/benchmark-results.json
           --override-ini="timeout=0"
 
       - name: Store benchmark results
         uses: benchmark-action/github-action-benchmark@52576c92bccf6ac60c8223ec7eb2565637cae9ba # v1.22.1
         with:
           tool: pytest
-          output-file-path: benchmark-results.json
+          output-file-path: /tmp/benchmark-results.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
           alert-threshold: "150%"
