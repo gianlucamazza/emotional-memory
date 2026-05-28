@@ -89,6 +89,16 @@ markers = [
 [tool.coverage.run]
 source = ["emotional_memory"]
 branch = true
+# Optional-dep store adapters are exercised by their dedicated CI jobs
+# (`extra-tests`, `optional-backends-tests`) which install the matching
+# extras.  The main `test` matrix only installs dev+viz, so including
+# these files in its coverage measurement would yield a misleading
+# under-count.  Re-add an entry here when introducing a new optional-
+# backend adapter that the main matrix can't import.
+omit = [
+  "*/stores/qdrant.py",
+  "*/stores/chroma.py",
+]
 
 [tool.coverage.report]
 show_missing = true
