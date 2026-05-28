@@ -67,6 +67,10 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 | Module | Purpose |
 |--------|---------|
+| `engine.py` | `EmotionalMemory`, `EmotionalMemoryConfig` — sync orchestrator for the full encode/retrieve/observe/elaborate/prune pipeline |
+| `models.py` | `Memory`, `EmotionalTag` — Pydantic data models for stored memories and their affective annotations |
+| `retrieval.py` | 6-signal composite scoring, `build_retrieval_plan()`, `RetrievalConfig`, `AdaptiveWeightsConfig`, `RetrievalSignals/Breakdown/Explanation`, `RankedMemory`, `RetrievalPlan` |
+| `decay.py` | ACT-R power-law decay, `DecayConfig`, `compute_effective_strength()` — arousal modulation (McGaugh 2004) + spacing-effect via retrieval count |
 | `categorize.py` | `EmotionLabel`, `categorize_affect()`, `label_tag()` — Plutchik wheel: maps (valence, arousal) to 8 primary emotions with intensity tiers (Russell 1980 + Plutchik 1980) |
 | `appraisal_schema.py` | `AppraisalSchema`, `AppraisalDimension`, `SCHERER_CPM_SCHEMA` — pluggable appraisal-theory schemas (OCC, GRID, custom) |
 | `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback) |
@@ -74,6 +78,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
 | `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
 | `interfaces.py` | `Embedder`, `MemoryStore`, `AffectiveStateStore` protocols + `SequentialEmbedder` base class |
+| `embedders/` | `SentenceTransformerEmbedder` — production-ready `SequentialEmbedder` backed by `sentence-transformers` (`[sentence-transformers]` extra); top-level re-export via PEP 562 `__getattr__` when the extra is installed |
 | `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions |
 | `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal (submodule-only, not top-level exports; import as `from emotional_memory.llm_http import …`) |
 | `integrations/langchain.py` | LangChain memory integration (optional) |
