@@ -95,10 +95,7 @@ branch = true
 # these files in its coverage measurement would yield a misleading
 # under-count.  Re-add an entry here when introducing a new optional-
 # backend adapter that the main matrix can't import.
-omit = [
-  "*/stores/qdrant.py",
-  "*/stores/chroma.py",
-]
+omit = ["*/stores/qdrant.py", "*/stores/chroma.py"]
 
 [tool.coverage.report]
 show_missing = true
@@ -156,7 +153,7 @@ module = ["sentence_transformers"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["langchain_core", "langchain_core.*"]
+module = ["langchain_core.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
