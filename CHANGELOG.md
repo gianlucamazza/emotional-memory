@@ -22,6 +22,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `--strict`.
 - **Makefile mkdocs robustness**: switched `uv run mkdocs` to
   `uv run python -m mkdocs` in `docs`, `docs-serve`, and `check-all` targets.
+- **Coverage gate regression** (#34): restored the `coverage.run` `omit` for
+  `stores/qdrant.py` and `stores/chroma.py`. The main test matrix does not install
+  qdrant/chroma, so including them dropped total coverage to 79.46% and failed the
+  80% gate; both files remain covered by the dedicated optional-backend CI jobs.
+
+### Changed
+
+- **Frozen-model consistency** (#35): unified every frozen Pydantic value object on
+  `model_config = ConfigDict(frozen=True)`; the six pre-existing models that used the
+  `{"frozen": True}` dict form now match the WS4 sweep. No behavioural change.
+
+### Documentation
+
+- **Embedders API page** (#34): documented the `embedders/` subpackage and
+  `SentenceTransformerEmbedder`, wired it into the mkdocs nav, and completed the
+  `CLAUDE.md` "Additional Modules" table (engine, models, retrieval, decay, embedders).
 
 ### CI
 
