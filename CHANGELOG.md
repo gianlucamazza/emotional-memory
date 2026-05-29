@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Type-checker `__all__` visibility**: the top-level `__all__` is now a static
+  literal, resolving basedpyright's `reportUnsupportedDunderAll` warning, and the
+  optional extra-gated exports (`SQLiteStore`, `QdrantStore`, `ChromaStore`,
+  `SentenceTransformerEmbedder`, the LangChain/mem0 helpers, …) are re-imported
+  under `TYPE_CHECKING` so `from emotional_memory import SQLiteStore` now type-checks.
+  Runtime behaviour is unchanged: unavailable optional names are still filtered out
+  of `__all__`, `from emotional_memory import *` never raises, and `__getattr__`
+  still raises a helpful `ImportError` with an install hint for missing extras.
+
 ## [0.11.1] - 2026-05-29
 
 ### Fixed
