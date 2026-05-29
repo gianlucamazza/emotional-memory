@@ -107,6 +107,8 @@ def main(argv: list[str] | None = None) -> int:
         errors.append("README.md is missing the Zenodo DOI badge")
     if concept_doi not in readme:
         errors.append("README.md Zenodo badge does not match release.toml concept_doi")
+    if version_doi not in readme:
+        errors.append("README.md BibTeX doi does not match release.toml version_doi")
 
     # ── demo/README.md ────────────────────────────────────────────────────────
     if "https://pypi.org/project/emotional-memory/" not in demo_readme:
