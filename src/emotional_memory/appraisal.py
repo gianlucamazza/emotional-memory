@@ -26,7 +26,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any, Protocol, runtime_checkable
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal_schema import AppraisalSchema
@@ -63,7 +63,7 @@ class GenericAppraisalVector:
 class AppraisalVector(BaseModel):
     """Multi-component appraisal of an event (Scherer CPM)."""
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     novelty: float  # [-1.0, +1.0]  fully expected ↔ totally new
     goal_relevance: float  # [-1.0, +1.0]  obstructs ↔ furthers goals
