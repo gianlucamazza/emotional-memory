@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/api/interfaces/">
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/api/embedders/">
       
       
-        <link rel="prev" href="../models/">
+        <link rel="prev" href="../state_stores/">
       
       
-        <link rel="next" href="../categorize/">
+        <link rel="next" href="../telemetry/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Interfaces - emotional_memory</title>
+        <title>Embedders - emotional_memory</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interfaces" class="md-skip">
+        <a href="#embedders" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interfaces
+              Embedders
             
           </span>
         </div>
@@ -1019,10 +1019,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../embedders/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embedders
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1038,6 +1065,98 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sentencetransformerembedder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SentenceTransformerEmbedder
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SentenceTransformerEmbedder
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SentenceTransformerEmbedder">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--class-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_bge_small" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;make_bge_small
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_mpnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;make_mpnet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1187,37 +1306,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Interfaces
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../interfaces/" class="md-nav__link">
         
   
   
@@ -1233,186 +1325,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#sync-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sync Protocols
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.Embedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Embedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.MemoryStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryStore
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.SequentialEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SequentialEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async Protocols
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncMemoryStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncMemoryStore
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncAppraisalEngine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncAppraisalEngine
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async Adapters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncStore
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" SyncToAsyncStore">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncStore.close" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;close
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncAppraisalEngine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncAppraisalEngine
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.as_async" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;as_async
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2270,10 +2182,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sync-protocols" class="md-nav__link">
+  <a href="#sentencetransformerembedder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sync Protocols
+        SentenceTransformerEmbedder
       
     </span>
   </a>
@@ -2281,121 +2193,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.Embedder" class="md-nav__link">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Embedder
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SentenceTransformerEmbedder
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.MemoryStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryStore
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces.SequentialEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SequentialEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async Protocols
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncMemoryStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncMemoryStore
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.interfaces_async.AsyncAppraisalEngine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AsyncAppraisalEngine
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async Adapters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncEmbedder" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncEmbedder
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncStore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncStore
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" SyncToAsyncStore">
+    <nav class="md-nav" aria-label=" SentenceTransformerEmbedder">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncStore.close" class="md-nav__link">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;close
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--class-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_bge_small" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;make_bge_small
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_mpnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;make_mpnet
       
     </span>
   </a>
@@ -2404,28 +2250,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.SyncToAsyncAppraisalEngine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SyncToAsyncAppraisalEngine
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emotional_memory.async_adapters.as_async" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;as_async
-      
-    </span>
-  </a>
   
 </li>
       
@@ -2449,322 +2273,59 @@
   
 
 
-<h1 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">&para;</a></h1>
-<h2 id="sync-protocols">Sync Protocols<a class="headerlink" href="#sync-protocols" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.interfaces.Embedder" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces.Embedder</code>
-
-
-<a href="#emotional_memory.interfaces.Embedder" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Converts text to a dense vector representation.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
+<h1 id="embedders">Embedders<a class="headerlink" href="#embedders" title="Permanent link">&para;</a></h1>
+<p>Embedders convert text into dense vectors used by the retrieval pipeline.
+They implement the <a href="../interfaces/"><code>Embedder</code></a> protocol — duck-typed, no
+inheritance required — but production backends typically subclass
+<code>SequentialEmbedder</code> (in <code>interfaces.py</code>) and override <code>embed_batch()</code> to
+use the backend's native batching.</p>
+<p>See <a href="../interfaces/">Interfaces</a> for the protocol definition and
+<code>AsyncEmbedder</code> for the async variant.</p>
+<h2 id="sentencetransformerembedder">SentenceTransformerEmbedder<a class="headerlink" href="#sentencetransformerembedder" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Requires the <code>sentence-transformers</code> extra:
+<code>uv pip install "emotional-memory[sentence-transformers]"</code></p>
 </div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.interfaces.MemoryStore" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces.MemoryStore</code>
-
-
-<a href="#emotional_memory.interfaces.MemoryStore" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Persistent storage for Memory objects.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.interfaces.SequentialEmbedder" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces.SequentialEmbedder</code>
-
-
-<a href="#emotional_memory.interfaces.SequentialEmbedder" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Base class for Embedder implementations that lack native batching.</p>
-<p>Subclass this and implement <code>embed()</code>; <code>embed_batch()</code> is provided
-automatically by calling <code>embed()</code> for each item in sequence.</p>
-<p>Example::</p>
-<div class="highlight"><pre><span></span><code>class MyEmbedder(SequentialEmbedder):
-    def embed(self, text: str) -&gt; list[float]:
-        return my_model.encode(text).tolist()
+<p>Importable from the top-level package once the extra is installed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmotionalMemory</span><span class="p">,</span> <span class="n">InMemoryStore</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.embedders</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformerEmbedder</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">embedder</span><span class="o">=</span><span class="n">SentenceTransformerEmbedder</span><span class="o">.</span><span class="n">make_bge_small</span><span class="p">(),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
 </code></pre></div>
 
 
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="async-protocols">Async Protocols<a class="headerlink" href="#async-protocols" title="Permanent link">&para;</a></h2>
-
-
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="emotional_memory.interfaces_async.AsyncEmbedder" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces_async.AsyncEmbedder</code>
+<h2 id="emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">embedders</span><span class="o">.</span><span class="n">sentence_transformers</span><span class="o">.</span><span class="n">SentenceTransformerEmbedder</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;all-MiniLM-L6-v2&#39;</span><span class="p">)</span></code>
 
-
-<a href="#emotional_memory.interfaces_async.AsyncEmbedder" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Async variant of the <code>Embedder</code> protocol.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.interfaces_async.AsyncMemoryStore" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces_async.AsyncMemoryStore</code>
-
-
-<a href="#emotional_memory.interfaces_async.AsyncMemoryStore" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Async variant of the <code>MemoryStore</code> protocol.</p>
-<p><code>count()</code> replaces <code>__len__</code> because <code>__len__</code> cannot be declared
-<code>async</code> in Python.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.interfaces_async.AsyncAppraisalEngine" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.interfaces_async.AsyncAppraisalEngine</code>
-
-
-<a href="#emotional_memory.interfaces_async.AsyncAppraisalEngine" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Async variant of the <code>AppraisalEngine</code> protocol.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="async-adapters">Async Adapters<a class="headerlink" href="#async-adapters" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.async_adapters.SyncToAsyncEmbedder" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">async_adapters</span><span class="o">.</span><span class="n">SyncToAsyncEmbedder</span><span class="p">(</span><span class="n">sync_embedder</span><span class="p">:</span> <span class="n">Embedder</span><span class="p">)</span></code>
-
-<a href="#emotional_memory.async_adapters.SyncToAsyncEmbedder" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Wraps a synchronous <code>Embedder</code> for use with <code>AsyncEmotionalMemory</code>.</p>
+              Bases: <code><a class="autorefs autorefs-internal" title="            emotional_memory.interfaces.SequentialEmbedder" href="../interfaces/#emotional_memory.interfaces.SequentialEmbedder">SequentialEmbedder</a></code></p>
+
+
+
+        <p>Wraps a sentence-transformers model as an :class:<code>Embedder</code>.</p>
+<p>Overrides :meth:<code>embed_batch</code> to use the model's native batching (one
+forward pass for all texts) rather than the sequential fallback.</p>
+<h4 id="emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--parameters">Parameters<a class="headerlink" href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--parameters" title="Permanent link">&para;</a></h4>
+<p>model_name:
+    Any model id accepted by :class:<code>sentence_transformers.SentenceTransformer</code>.
+    Default is <code>"all-MiniLM-L6-v2"</code> — 384 dims, fast, multilingual-friendly
+    enough for demos. Pick a larger model for production retrieval quality.</p>
+<h4 id="emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--class-methods">Class methods<a class="headerlink" href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder--class-methods" title="Permanent link">&para;</a></h4>
+<p>:meth:<code>make_bge_small</code> — <code>BAAI/bge-small-en-v1.5</code>, 384 dims, recommended for
+    benchmark and paper runs (2026 MTEB Retrieval tier-2 open-weights baseline).
+:meth:<code>make_mpnet</code> — <code>all-mpnet-base-v2</code>, 768 dims, legacy strong baseline.</p>
 
 
 
@@ -2774,62 +2335,28 @@ automatically by calling <code>embed()</code> for each item in sequence.</p>
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/emotional_memory/async_adapters.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-49">49</a></span>
-<span class="normal"><a href="#__codelineno-0-50">50</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_embedder</span><span class="p">:</span> <span class="n">Embedder</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">sync_embedder</span>
-</code></pre></div></td></tr></table></div>
-                  </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.async_adapters.SyncToAsyncStore" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">async_adapters</span><span class="o">.</span><span class="n">SyncToAsyncStore</span><span class="p">(</span><span class="n">sync_store</span><span class="p">:</span> <span class="n">MemoryStore</span><span class="p">)</span></code>
-
-<a href="#emotional_memory.async_adapters.SyncToAsyncStore" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Wraps a synchronous <code>MemoryStore</code> for use with <code>AsyncEmotionalMemory</code>.</p>
-
-
-
-
-
-
-
-
-                  <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/emotional_memory/async_adapters.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_store</span><span class="p">:</span> <span class="n">MemoryStore</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">sync_store</span>
+                    <summary>Source code in <code>src/emotional_memory/embedders/sentence_transformers.py</code></summary>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span>
+<span class="normal"><a href="#__codelineno-0-51">51</a></span>
+<span class="normal"><a href="#__codelineno-0-52">52</a></span>
+<span class="normal"><a href="#__codelineno-0-53">53</a></span>
+<span class="normal"><a href="#__codelineno-0-54">54</a></span>
+<span class="normal"><a href="#__codelineno-0-55">55</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;all-MiniLM-L6-v2&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a>            <span class="s2">&quot;sentence-transformers is required for SentenceTransformerEmbedder.</span><span class="se">\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a>            <span class="s2">&quot;Install with: pip install &#39;emotional-memory[sentence-transformers]&#39;&quot;</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_model_name</span> <span class="o">=</span> <span class="n">model_name</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -2849,94 +2376,42 @@ automatically by calling <code>embed()</code> for each item in sequence.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="emotional_memory.async_adapters.SyncToAsyncStore.close" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">close</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+<h3 id="emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_bge_small" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">make_bge_small</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SentenceTransformerEmbedder</span></code>
 
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
-<a href="#emotional_memory.async_adapters.SyncToAsyncStore.close" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_bge_small" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
     <div class="doc doc-contents ">
 
-        <p>Proxy <code>close()</code> to the wrapped store if it supports it.</p>
+        <p>Return an instance using <code>BAAI/bge-small-en-v1.5</code> (384 dims).</p>
+<p>Recommended default for benchmark and paper runs: strong MTEB Retrieval
+baseline, fast inference, Apache-2.0 licence.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/emotional_memory/async_adapters.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span>
-<span class="normal"><a href="#__codelineno-0-93">93</a></span>
-<span class="normal"><a href="#__codelineno-0-94">94</a></span>
-<span class="normal"><a href="#__codelineno-0-95">95</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Proxy ``close()`` to the wrapped store if it supports it.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">close</span><span class="p">)</span>
+              <summary>Source code in <code>src/emotional_memory/embedders/sentence_transformers.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-68">68</a></span>
+<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+<span class="normal"><a href="#__codelineno-0-70">70</a></span>
+<span class="normal"><a href="#__codelineno-0-71">71</a></span>
+<span class="normal"><a href="#__codelineno-0-72">72</a></span>
+<span class="normal"><a href="#__codelineno-0-73">73</a></span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_bge_small</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SentenceTransformerEmbedder</span><span class="p">:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an instance using ``BAAI/bge-small-en-v1.5`` (384 dims).</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    Recommended default for benchmark and paper runs: strong MTEB Retrieval</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    baseline, fast inference, Apache-2.0 licence.</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;BAAI/bge-small-en-v1.5&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="emotional_memory.async_adapters.SyncToAsyncAppraisalEngine" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">async_adapters</span><span class="o">.</span><span class="n">SyncToAsyncAppraisalEngine</span><span class="p">(</span><span class="n">sync_engine</span><span class="p">:</span> <span class="n">AppraisalEngine</span><span class="p">)</span></code>
-
-<a href="#emotional_memory.async_adapters.SyncToAsyncAppraisalEngine" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Wraps a synchronous <code>AppraisalEngine</code> for use with <code>AsyncEmotionalMemory</code>.</p>
-
-
-
-
-
-
-
-
-                  <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/emotional_memory/async_adapters.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-106">106</a></span>
-<span class="normal"><a href="#__codelineno-0-107">107</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sync_engine</span><span class="p">:</span> <span class="n">AppraisalEngine</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">sync_engine</span>
-</code></pre></div></td></tr></table></div>
-                  </details>
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
     </div>
 
 </div>
@@ -2944,86 +2419,50 @@ automatically by calling <code>embed()</code> for each item in sequence.</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="emotional_memory.async_adapters.as_async" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">async_adapters</span><span class="o">.</span><span class="n">as_async</span><span class="p">(</span><span class="n">engine</span><span class="p">:</span> <span class="n">EmotionalMemory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncEmotionalMemory</span></code>
+<h3 id="emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_mpnet" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <code class="highlight language-python"><span class="n">make_mpnet</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SentenceTransformerEmbedder</span></code>
 
-<a href="#emotional_memory.async_adapters.as_async" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#emotional_memory.embedders.sentence_transformers.SentenceTransformerEmbedder.make_mpnet" class="headerlink" title="Permanent link">&para;</a></h3>
 
 
-    <div class="doc doc-contents first">
+    <div class="doc doc-contents ">
 
-        <p>Wrap a synchronous <code>EmotionalMemory</code> into an async one.</p>
-<p>All I/O calls (embed, store, appraise) are delegated via
-<code>asyncio.to_thread</code>.  The engine's affective state is <strong>copied</strong> at
-wrap time — the two engines are independent after this point and their
-states diverge as each processes new events.  The underlying store and
-embedder are shared (same object references), so concurrent writes from
-both engines will interleave.</p>
+        <p>Return an instance using <code>all-mpnet-base-v2</code> (768 dims).</p>
+<p>Legacy strong baseline; heavier than bge-small but useful for
+comparison.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/emotional_memory/async_adapters.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-115">115</a></span>
-<span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span>
-<span class="normal"><a href="#__codelineno-0-119">119</a></span>
-<span class="normal"><a href="#__codelineno-0-120">120</a></span>
-<span class="normal"><a href="#__codelineno-0-121">121</a></span>
-<span class="normal"><a href="#__codelineno-0-122">122</a></span>
-<span class="normal"><a href="#__codelineno-0-123">123</a></span>
-<span class="normal"><a href="#__codelineno-0-124">124</a></span>
-<span class="normal"><a href="#__codelineno-0-125">125</a></span>
-<span class="normal"><a href="#__codelineno-0-126">126</a></span>
-<span class="normal"><a href="#__codelineno-0-127">127</a></span>
-<span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span>
-<span class="normal"><a href="#__codelineno-0-130">130</a></span>
-<span class="normal"><a href="#__codelineno-0-131">131</a></span>
-<span class="normal"><a href="#__codelineno-0-132">132</a></span>
-<span class="normal"><a href="#__codelineno-0-133">133</a></span>
-<span class="normal"><a href="#__codelineno-0-134">134</a></span>
-<span class="normal"><a href="#__codelineno-0-135">135</a></span>
-<span class="normal"><a href="#__codelineno-0-136">136</a></span>
-<span class="normal"><a href="#__codelineno-0-137">137</a></span>
-<span class="normal"><a href="#__codelineno-0-138">138</a></span>
-<span class="normal"><a href="#__codelineno-0-139">139</a></span>
-<span class="normal"><a href="#__codelineno-0-140">140</a></span>
-<span class="normal"><a href="#__codelineno-0-141">141</a></span>
-<span class="normal"><a href="#__codelineno-0-142">142</a></span>
-<span class="normal"><a href="#__codelineno-0-143">143</a></span>
-<span class="normal"><a href="#__codelineno-0-144">144</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="k">def</span><span class="w"> </span><span class="nf">as_async</span><span class="p">(</span><span class="n">engine</span><span class="p">:</span> <span class="n">EmotionalMemory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncEmotionalMemory</span><span class="p">:</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap a synchronous ``EmotionalMemory`` into an async one.</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    All I/O calls (embed, store, appraise) are delegated via</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="sd">    ``asyncio.to_thread``.  The engine&#39;s affective state is **copied** at</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">    wrap time — the two engines are independent after this point and their</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    states diverge as each processes new events.  The underlying store and</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">    embedder are shared (same object references), so concurrent writes from</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">    both engines will interleave.</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.async_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncEmotionalMemory</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="n">appraisal_async</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="n">SyncToAsyncAppraisalEngine</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="k">if</span> <span class="n">engine</span><span class="o">.</span><span class="n">_appraisal_engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="k">else</span> <span class="kc">None</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="p">)</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="n">async_engine</span> <span class="o">=</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a>        <span class="n">store</span><span class="o">=</span><span class="n">SyncToAsyncStore</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_store</span><span class="p">),</span>
-<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="n">embedder</span><span class="o">=</span><span class="n">SyncToAsyncEmbedder</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">_embedder</span><span class="p">),</span>
-<a id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="n">appraisal_engine</span><span class="o">=</span><span class="n">appraisal_async</span><span class="p">,</span>
-<a id="__codelineno-0-136" name="__codelineno-0-136"></a>        <span class="n">config</span><span class="o">=</span><span class="n">engine</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="n">state_store</span><span class="o">=</span><span class="n">engine</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a>    <span class="p">)</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a>    <span class="c1"># Share the current AffectiveState reference as the async engine&#39;s starting</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="c1"># point.  AffectiveState is always *replaced* (never mutated) on every</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a>    <span class="c1"># update, so both engines immediately diverge once either processes an event.</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="c1"># There is no aliasing hazard because the object is effectively immutable.</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="n">async_engine</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">_state</span>
-<a id="__codelineno-0-144" name="__codelineno-0-144"></a>    <span class="k">return</span> <span class="n">async_engine</span>
+              <summary>Source code in <code>src/emotional_memory/embedders/sentence_transformers.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-77">77</a></span>
+<span class="normal"><a href="#__codelineno-0-78">78</a></span>
+<span class="normal"><a href="#__codelineno-0-79">79</a></span>
+<span class="normal"><a href="#__codelineno-0-80">80</a></span>
+<span class="normal"><a href="#__codelineno-0-81">81</a></span>
+<span class="normal"><a href="#__codelineno-0-82">82</a></span>
+<span class="normal"><a href="#__codelineno-0-83">83</a></span>
+<span class="normal"><a href="#__codelineno-0-84">84</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_mpnet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SentenceTransformerEmbedder</span><span class="p">:</span>
+<a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an instance using ``all-mpnet-base-v2`` (768 dims).</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="sd">    Legacy strong baseline; heavier than bge-small but useful for</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="sd">    comparison.</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;all-mpnet-base-v2&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
     </div>
 
 </div>
