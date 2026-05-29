@@ -2,7 +2,7 @@
 
 import importlib
 from importlib.metadata import version
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 __version__ = version("emotional_memory")
 
@@ -129,8 +129,45 @@ for _opt_name, (_opt_extra, _opt_module, _opt_attr) in _OPTIONAL_EXPORTS.items()
     except ImportError:
         pass
 
-_CORE_ALL: tuple[str, ...] = (
-    "__version__",
+if TYPE_CHECKING:
+    # Static re-imports give type checkers (mypy/pyright) visibility of the
+    # optional, extra-gated exports, so `from emotional_memory import SQLiteStore`
+    # type-checks. At runtime these names are provided lazily by __getattr__ and
+    # the eager-load loop above; names whose extra is absent are filtered out of
+    # __all__ below. The redundant `as` aliases mark explicit re-exports (PEP 484).
+    from emotional_memory.embedders.sentence_transformers import (
+        SentenceTransformerEmbedder as SentenceTransformerEmbedder,
+    )
+    from emotional_memory.integrations.langchain import (
+        EmotionalMemoryChatHistory as EmotionalMemoryChatHistory,
+    )
+    from emotional_memory.integrations.langchain import (
+        recommended_conversation_policy as recommended_conversation_policy,
+    )
+    from emotional_memory.integrations.langchain import (
+        store_all_messages as store_all_messages,
+    )
+    from emotional_memory.integrations.mem0 import (
+        EmotionalMemoryMem0Backend as EmotionalMemoryMem0Backend,
+    )
+    from emotional_memory.integrations.mem0 import (
+        messages_to_content as messages_to_content,
+    )
+    from emotional_memory.state_stores.redis import (
+        RedisAffectiveStateStore as RedisAffectiveStateStore,
+    )
+    from emotional_memory.state_stores.sqlite import (
+        SQLiteAffectiveStateStore as SQLiteAffectiveStateStore,
+    )
+    from emotional_memory.stores.chroma import ChromaStore as ChromaStore
+    from emotional_memory.stores.qdrant import QdrantStore as QdrantStore
+    from emotional_memory.stores.sqlite import SQLiteStore as SQLiteStore
+
+# Declared public API: always-available core names plus the optional, extra-gated
+# names (the keys of _OPTIONAL_EXPORTS). A static literal is required for type
+# checkers to resolve the export surface (reportUnsupportedDunderAll rejects
+# computed __all__ values); unavailable optional names are filtered out at runtime.
+__all__ = [
     "LOCOMO_ROUTING",
     "QUERY_TYPES",
     "SCHERER_CPM_SCHEMA",
@@ -146,12 +183,15 @@ _CORE_ALL: tuple[str, ...] = (
     "AsyncEmbedder",
     "AsyncEmotionalMemory",
     "AsyncMemoryStore",
+    "ChromaStore",
     "CoreAffect",
     "DecayConfig",
     "Embedder",
     "EmotionLabel",
     "EmotionalMemory",
+    "EmotionalMemoryChatHistory",
     "EmotionalMemoryConfig",
+    "EmotionalMemoryMem0Backend",
     "EmotionalTag",
     "GenericAppraisalVector",
     "HeuristicQueryClassifier",
@@ -167,19 +207,25 @@ _CORE_ALL: tuple[str, ...] = (
     "MemoryStore",
     "MoodDecayConfig",
     "MoodField",
+    "QdrantStore",
     "QueryClassifier",
     "QueryClassifierConfig",
+    "RedisAffectiveStateStore",
     "ResonanceConfig",
     "ResonanceLink",
     "RetrievalBreakdown",
     "RetrievalConfig",
     "RetrievalExplanation",
     "RetrievalSignals",
+    "SQLiteAffectiveStateStore",
+    "SQLiteStore",
+    "SentenceTransformerEmbedder",
     "SequentialEmbedder",
     "StaticAppraisalEngine",
     "SyncToAsyncAppraisalEngine",
     "SyncToAsyncEmbedder",
     "SyncToAsyncStore",
+    "__version__",
     "as_async",
     "categorize_affect",
     "compute_ape",
@@ -188,12 +234,18 @@ _CORE_ALL: tuple[str, ...] = (
     "hebbian_strengthen",
     "label_tag",
     "make_emotional_tag",
+    "messages_to_content",
+    "recommended_conversation_policy",
     "spreading_activation",
+    "store_all_messages",
     "update_prediction",
-)
+]
 
-# Expose only resolvable optional names alongside the always-available core set.
-__all__ = list(_CORE_ALL) + [name for name in _OPTIONAL_EXPORTS if name in globals()]
+if not TYPE_CHECKING:
+    # Runtime: drop optional names whose extra did not resolve at import, so
+    # `from emotional_memory import *` never raises and every advertised name is
+    # importable. Type checkers skip this branch (TYPE_CHECKING is True for them).
+    __all__ = [name for name in __all__ if name not in _OPTIONAL_EXPORTS or name in globals()]
 
 
 def __getattr__(name: str) -> Any:
