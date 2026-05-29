@@ -107,6 +107,18 @@ def sync_release_metadata(
         readme_text,
         "README Zenodo badge",
     )
+    updated_readme = _replace(
+        r"^  version\s+= \{[^}]+\},$",
+        f"  version   = {{{version}}},",
+        updated_readme,
+        "README BibTeX version",
+    )
+    updated_readme = _replace(
+        r"^  doi\s+= \{10\.5281/zenodo\.[0-9]+\},$",
+        f"  doi       = {{{version_doi}}},",
+        updated_readme,
+        "README BibTeX DOI",
+    )
     if updated_readme != readme_text:
         changes.append((readme, updated_readme))
 
