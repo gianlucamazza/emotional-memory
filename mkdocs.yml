@@ -69,6 +69,7 @@ nav:
     - Engine (async): api/async_engine.md
     - Stores: api/stores.md
     - State Stores: api/state_stores.md
+    - Embedders: api/embedders.md
     - Telemetry: api/telemetry.md
     - Appraisal: api/appraisal.md
     - Appraisal Schema: api/appraisal_schema.md
