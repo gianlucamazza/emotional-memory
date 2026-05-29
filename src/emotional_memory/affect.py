@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import math
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class CoreAffect(BaseModel):
@@ -28,7 +28,7 @@ class CoreAffect(BaseModel):
     References: Mehrabian & Russell (1974); Russell (1980).
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     valence: float
     arousal: float
@@ -77,7 +77,7 @@ class AffectiveMomentum(BaseModel):
     dd_valence / dd_arousal / dd_dominance: second derivatives (acceleration)
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     d_valence: float = 0.0
     d_arousal: float = 0.0

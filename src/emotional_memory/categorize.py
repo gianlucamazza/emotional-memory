@@ -32,7 +32,7 @@ from __future__ import annotations
 import math
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 if TYPE_CHECKING:
     from emotional_memory.affect import CoreAffect
@@ -98,7 +98,7 @@ class EmotionLabel(BaseModel):
     confidence — how close the point is to the sector centre [0, 1]
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     primary: PrimaryEmotion
     intensity: Intensity

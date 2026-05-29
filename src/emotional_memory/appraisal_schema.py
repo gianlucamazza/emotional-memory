@@ -34,7 +34,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from typing import Any
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.affect import CoreAffect
 
@@ -49,7 +49,7 @@ class AppraisalDimension(BaseModel):
         description: Human-readable description forwarded to the LLM prompt.
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     name: str
     range: tuple[float, float]

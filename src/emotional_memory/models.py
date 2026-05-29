@@ -39,7 +39,7 @@ class ResonanceLink(BaseModel):
       contrastive — opposing affective valence (anxiety ↔ relief)
     """
 
-    model_config = {"frozen": True}
+    model_config = ConfigDict(frozen=True)
 
     source_id: str
     target_id: str
