@@ -405,49 +405,49 @@ from emotional_memory.visualization import plot_circumplex, plot_decay_curves
 
 Memories plotted on the Russell-Mehrabian PAD model (valence-arousal plane), colored by consolidation strength.
 
-![Circumplex](docs/images/circumplex.png)
+![Circumplex](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/circumplex.png)
 
 ### Decay Curves (ACT-R Power Law)
 
 Family of curves showing how arousal (McGaugh 2004) and retrieval count (spacing effect) modulate memory decay.
 
-![Decay Curves](docs/images/decay_curves.png)
+![Decay Curves](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/decay_curves.png)
 
 ### Yerkes-Dodson Inverted-U
 
 Consolidation strength peaks near effective arousal 0.7, then drops — the classic Yerkes-Dodson curve.
 
-![Yerkes-Dodson](docs/images/yerkes_dodson.png)
+![Yerkes-Dodson](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/yerkes_dodson.png)
 
 ### 6-Signal Retrieval Breakdown
 
 Radar chart of the six retrieval signals: semantic similarity, mood congruence, affect proximity, momentum alignment, recency, and resonance boost.
 
-![Retrieval Radar](docs/images/retrieval_radar.png)
+![Retrieval Radar](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/retrieval_radar.png)
 
 ### Mood Field Evolution
 
 Time series of valence, arousal, and dominance with dashed baselines showing the regression attractors.
 
-![Mood Evolution](docs/images/mood_evolution.png)
+![Mood Evolution](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/mood_evolution.png)
 
 ### Adaptive Retrieval Weights
 
 Heatmap showing how retrieval weights shift across different mood states (valence x arousal grid).
 
-![Adaptive Weights](docs/images/adaptive_weights_heatmap.png)
+![Adaptive Weights](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/adaptive_weights_heatmap.png)
 
 ### Resonance Network
 
 Directed graph with memories as nodes and edges colored by link type (semantic, emotional, temporal, causal, contrastive).
 
-![Resonance Network](docs/images/resonance_network.png)
+![Resonance Network](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/resonance_network.png)
 
 ### Appraisal Radar (Scherer CPM)
 
 Spider chart of the 5 Stimulus Evaluation Check dimensions.
 
-![Appraisal Radar](docs/images/appraisal_radar.png)
+![Appraisal Radar](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/appraisal_radar.png)
 
 ### Generating images
 
@@ -461,15 +461,15 @@ make research-figures   # regenerate benchmark evidence figures
 The research figures below are generated from committed benchmark JSON artefacts,
 not from rerunning long studies.
 
-![Realistic Replay Overview](docs/images/research/research_realistic_v2_overview.png)
+![Realistic Replay Overview](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_realistic_v2_overview.png)
 
-![Realistic Replay Challenge Breakdown](docs/images/research/research_realistic_v2_challenges.png)
+![Realistic Replay Challenge Breakdown](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_realistic_v2_challenges.png)
 
-![S3 Ablation Study](docs/images/research/research_ablation_s3.png)
+![S3 Ablation Study](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_ablation_s3.png)
 
-![Multilingual Slices (IT + ES + FR)](docs/images/research/research_multilingual.png)
+![Multilingual Slices (IT + ES + FR)](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_multilingual.png)
 
-![LoCoMo Negative Result](docs/images/research/research_locomo_negative.png)
+![LoCoMo Negative Result](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_locomo_negative.png)
 
 ## Comparison with Existing Systems
 
