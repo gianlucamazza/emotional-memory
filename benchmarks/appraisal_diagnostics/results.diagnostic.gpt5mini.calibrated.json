@@ -1,0 +1,72 @@
+{
+  "protocol_version": "1.0",
+  "dry_run": false,
+  "n_events": 150,
+  "seed": 42,
+  "n_bootstrap": 10000,
+  "bias_threshold": 0.1,
+  "std_threshold": 0.3,
+  "valence_residuals": {
+    "n": 150,
+    "bias_mean": 0.044300000000000006,
+    "bias_ci_lo": -0.0048008333333333115,
+    "bias_ci_hi": 0.09406833333333331,
+    "std": 0.3076845929272901,
+    "mae": 0.23549999999999996,
+    "pearson_r_with_oracle": 0.8731205233354574
+  },
+  "arousal_residuals": {
+    "n": 150,
+    "bias_mean": -0.11753333333333335,
+    "bias_ci_lo": -0.14176750000000002,
+    "bias_ci_hi": -0.0930325,
+    "std": 0.15221380523984293,
+    "mae": 0.1602,
+    "pearson_r_with_oracle": 0.5552898966292363
+  },
+  "sec_descriptive": {
+    "novelty": {
+      "mean": 0.3213333333333333,
+      "std": 0.32358865815538235,
+      "min": -0.5,
+      "max": 0.9
+    },
+    "goal_relevance": {
+      "mean": 0.16799999999999998,
+      "std": 0.6703269762090416,
+      "min": -1.0,
+      "max": 0.9
+    },
+    "coping_potential": {
+      "mean": 0.5946666666666667,
+      "std": 0.26209959341442896,
+      "min": 0.1,
+      "max": 0.95
+    },
+    "norm_congruence": {
+      "mean": 0.233,
+      "std": 0.4027935171395692,
+      "min": -0.9,
+      "max": 0.8
+    },
+    "self_relevance": {
+      "mean": 0.9176666666666667,
+      "std": 0.13734499092591065,
+      "min": 0.5,
+      "max": 1.0
+    }
+  },
+  "valence_sign_confusion": {
+    "TP": 93,
+    "FP": 8,
+    "TN": 45,
+    "FN": 4,
+    "accuracy": 0.92
+  },
+  "latency": {
+    "mean_ms": 7141.13537366696,
+    "p95_ms": 11203.229671901488,
+    "total_s": 1071.170306050044
+  },
+  "decision": "P1d \u2014 BOTH systematic bias and high variance detected. Zero-shot LLM appraisal is unreliable. Recommended action: document limitation; consider pluggable fine-tuned appraisal (P1d)."
+}

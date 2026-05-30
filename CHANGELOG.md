@@ -22,8 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   as a `commit-msg` hook (mirrors `pr-title.yml`); `default_install_hook_types` wires both via
   a single `pre-commit install`.
 
-### Changed
-
+- **Appraisal mis-calibration diagnosed** (WP-1a / Addendum N): the WP-1a diagnostic
+  (gpt-5-mini, N=750 vs the `realistic_recall_v3` oracle) shows the LLM appraisal signal is
+  correlated but mis-calibrated — valence Pearson r=0.81, sign accuracy=0.86, with a systematic
+  valence bias of +0.19 and an arousal bias of -0.14. A pre-registered prompt-calibration
+  attempt (Addendum N) **failed both hypotheses**: it nearly eliminated the valence bias
+  (+0.169→+0.044 at N=150) but left arousal bias unchanged (Hn1 FAIL, criterion required both
+  axes) and over-saturated `self_relevance`, regressing 1/15 gold-set cases (Hn2 FAIL). The
+  prompt change was **reverted**; the appraisal prompt and the `to_core_affect` mapping are
+  unchanged. Next step: recalibrate the SEC→valence/arousal mapping with a train/test split.
+  Closure: `benchmarks/preregistration_addendum_n_appraisal_calibration_closure.md`.
 - **LLM benchmark runners load `.env` directly**: `appraisal_diagnostics`, `appraisal_confound`
   (Hg1) and `locomo` runners now load `.env` via `python-dotenv` when invoked outside `make`
   (mirrors the existing `realistic`/`comparative` runners), removing a spurious

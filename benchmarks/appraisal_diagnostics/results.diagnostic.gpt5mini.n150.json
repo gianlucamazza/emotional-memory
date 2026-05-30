@@ -1,0 +1,72 @@
+{
+  "protocol_version": "1.0",
+  "dry_run": false,
+  "n_events": 150,
+  "seed": 42,
+  "n_bootstrap": 10000,
+  "bias_threshold": 0.1,
+  "std_threshold": 0.3,
+  "valence_residuals": {
+    "n": 150,
+    "bias_mean": 0.1687266666666667,
+    "bias_ci_lo": 0.12286450000000006,
+    "bias_ci_hi": 0.21537366666666669,
+    "std": 0.2859053885998392,
+    "mae": 0.23579333333333333,
+    "pearson_r_with_oracle": 0.883364463306819
+  },
+  "arousal_residuals": {
+    "n": 150,
+    "bias_mean": -0.11472666666666664,
+    "bias_ci_lo": -0.1405145,
+    "bias_ci_hi": -0.08881983333333333,
+    "std": 0.16155003782221142,
+    "mae": 0.16272666666666663,
+    "pearson_r_with_oracle": 0.48341332383092017
+  },
+  "sec_descriptive": {
+    "novelty": {
+      "mean": 0.2703333333333333,
+      "std": 0.4480043993472072,
+      "min": -0.8,
+      "max": 0.9
+    },
+    "goal_relevance": {
+      "mean": 0.3096666666666666,
+      "std": 0.7298537287185596,
+      "min": -1.0,
+      "max": 1.0
+    },
+    "coping_potential": {
+      "mean": 0.6554666666666668,
+      "std": 0.26841215094337517,
+      "min": 0.1,
+      "max": 0.95
+    },
+    "norm_congruence": {
+      "mean": 0.39479999999999993,
+      "std": 0.5878600938428172,
+      "min": -1.0,
+      "max": 0.95
+    },
+    "self_relevance": {
+      "mean": 0.8404,
+      "std": 0.14236676333334766,
+      "min": 0.2,
+      "max": 1.0
+    }
+  },
+  "valence_sign_confusion": {
+    "TP": 95,
+    "FP": 9,
+    "TN": 44,
+    "FN": 2,
+    "accuracy": 0.9266666666666666
+  },
+  "latency": {
+    "mean_ms": 5829.717026752575,
+    "p95_ms": 7709.263945691054,
+    "total_s": 874.4575540128862
+  },
+  "decision": "P1b \u2014 Systematic bias detected (|mean residual| > threshold). Recommended action: fix LLM appraisal prompt to reduce directional error."
+}
