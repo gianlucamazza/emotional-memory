@@ -60,7 +60,7 @@ jobs:
         with:
           path: .
           format: cyclonedx-json
-          output-file: dist/sbom.cdx.json
+          output-file: sbom.cdx.json
           upload-artifact: false
           upload-release-assets: false
 
@@ -78,7 +78,7 @@ jobs:
             dist/*.whl
             dist/*.tar.gz
           predicate-type: "https://cyclonedx.org/bom"
-          predicate-path: "dist/sbom.cdx.json"
+          predicate-path: "sbom.cdx.json"
 
       - name: Upload release artefacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -87,7 +87,7 @@ jobs:
           path: |
             dist/*.whl
             dist/*.tar.gz
-            dist/sbom.cdx.json
+            sbom.cdx.json
 
       - name: Publish to PyPI
         if: github.event_name == 'push'
