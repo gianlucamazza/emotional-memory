@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   as a `commit-msg` hook (mirrors `pr-title.yml`); `default_install_hook_types` wires both via
   a single `pre-commit install`.
 
+### Changed
+
 - **Appraisal mis-calibration diagnosed** (WP-1a / Addendum N): the WP-1a diagnostic
   (gpt-5-mini, N=750 vs the `realistic_recall_v3` oracle) shows the LLM appraisal signal is
   correlated but mis-calibrated — valence Pearson r=0.81, sign accuracy=0.86, with a systematic
