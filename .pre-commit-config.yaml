@@ -1,3 +1,5 @@
+default_install_hook_types: [pre-commit, pre-push, commit-msg]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -35,3 +37,21 @@ repos:
     rev: v1.22.0
     hooks:
       - id: zizmor
+
+  # Conventional Commit message linting — mirrors pr-title.yml in CI.
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+
+  # Strict type-check on push (kept off per-commit to stay fast).
+  - repo: local
+    hooks:
+      - id: mypy-strict
+        name: mypy (strict)
+        entry: make typecheck
+        language: system
+        pass_filenames: false
+        types: [python]
+        stages: [pre-push]
