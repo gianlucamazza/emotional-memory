@@ -412,9 +412,15 @@ zenodo-publish:
 release-swh:
 	uv run python scripts/swh_client.py
 
+## Hybrid release: PyPI + GitHub release come from the on-tag workflow (Trusted
+## Publishing OIDC), so the local pipeline skips them by default and handles
+## reserve-DOI + Zenodo + HF + SWH. Override to run the full legacy pipeline:
+##   RELEASE_FLAGS="" make release VERSION=0.9.0   # PyPI via uv publish + token
+## Resume a failed run: make release-resume VERSION=0.9.0
+RELEASE_FLAGS ?= --skip-pypi --skip-github-release
+
 ## Full automated release (API-driven, no GitHub webhook needed)
 ## Usage: make release VERSION=0.9.0
-## Resume a failed run: make release VERSION=0.9.0 RELEASE_FLAGS=--resume
 release:
 	@test -n "$(VERSION)" || (echo "Usage: make release VERSION=0.9.0"; exit 1)
 	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
@@ -478,7 +484,7 @@ help:
 	@echo "  cov                        pytest with branch coverage"
 	@echo ""
 	@echo "Benchmarks:"
-	@echo "  bench-fidelity             126 psychological invariant tests"
+	@echo "  bench-fidelity             127 psychological invariant tests"
 	@echo "  bench-perf                 latency / throughput benchmarks"
 	@echo "  bench                      fidelity + performance"
 	@echo "  bench-appraisal            LLM appraisal quality (requires API key)"

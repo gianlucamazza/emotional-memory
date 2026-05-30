@@ -458,6 +458,16 @@ def main(argv: list[str] | None = None) -> int:
         help="Skip Hugging Face Space deploy (phase 7)",
     )
     parser.add_argument(
+        "--skip-pypi",
+        action="store_true",
+        help="Skip PyPI publish (phase 5) — use when the on-tag workflow publishes via OIDC",
+    )
+    parser.add_argument(
+        "--skip-github-release",
+        action="store_true",
+        help="Skip GitHub release (phase 6) — use when the on-tag workflow creates it",
+    )
+    parser.add_argument(
         "--fast-preflight",
         action="store_true",
         help="Run preflight with --fast (skip slow build/install gates)",
@@ -543,14 +553,18 @@ def main(argv: list[str] | None = None) -> int:
         _mark_done(state, "zenodo_publish")
 
     # ── Phase 5: PyPI ─────────────────────────────────────────────────────────
-    if not _skip("pypi"):
+    if not (args.skip_pypi or _skip("pypi")):
         phase5_pypi(state, version)
         _mark_done(state, "pypi")
+    elif args.skip_pypi:
+        print(f"{INFO} PyPI publish skipped (--skip-pypi); on-tag workflow publishes via OIDC")
 
     # ── Phase 6: GitHub Release ───────────────────────────────────────────────
-    if not _skip("github_release"):
+    if not (args.skip_github_release or _skip("github_release")):
         phase6_github_release(state, version)
         _mark_done(state, "github_release")
+    elif args.skip_github_release:
+        print(f"{INFO} GitHub release skipped (--skip-github-release); on-tag workflow creates it")
 
     # ── Phase 7: HF Space ────────────────────────────────────────────────────
     if not (args.skip_space or _skip("hf_space")):
