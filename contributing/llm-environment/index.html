@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/tutorials/async/">
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/contributing/llm-environment/">
       
       
-        <link rel="prev" href="../../contributing/llm-environment/">
+        <link rel="prev" href="../ssot-policy/">
       
       
-        <link rel="next" href="../persistence/">
+        <link rel="next" href="../../tutorials/async/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Async usage - emotional_memory</title>
+        <title>LLM Environment - emotional_memory</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#async-usage" class="md-skip">
+        <a href="#llm-environment-variables" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Async usage
+              LLM Environment
             
           </span>
         </div>
@@ -339,11 +339,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../contributing/ssot-policy/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ssot-policy/" class="md-tabs__link">
           
   
   
@@ -359,13 +361,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tutorials/async/" class="md-tabs__link">
           
   
   
@@ -824,26 +824,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -861,7 +866,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -879,7 +884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/ssot-policy/" class="md-nav__link">
+      <a href="../ssot-policy/" class="md-nav__link">
         
   
   
@@ -904,98 +909,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../../contributing/llm-environment/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Environment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tutorials
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_8">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Tutorials
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
     
   
   
@@ -1015,7 +928,7 @@
   <span class="md-ellipsis">
     
   
-    Async usage
+    LLM Environment
   
 
     
@@ -1033,7 +946,7 @@
   <span class="md-ellipsis">
     
   
-    Async usage
+    LLM Environment
   
 
     
@@ -1059,93 +972,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#two-paths-to-async" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two paths to async
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Two paths to async">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#path-1-as_async-wrapper-recommended-for-migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Path 1 — as_async() wrapper (recommended for migration)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#path-2-native-asyncemotionalmemory-with-async-adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Path 2 — native AsyncEmotionalMemory with async adapters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#batch-encoding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch encoding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-count-and-prune" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance — count and prune
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#state-persistence-sync" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        State persistence (sync)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mood-congruent-retrieval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mood-congruent retrieval
+        Usage
       
     </span>
   </a>
@@ -1172,6 +1002,65 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -1179,7 +1068,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../persistence/" class="md-nav__link">
+      <a href="../../tutorials/async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Async usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/persistence/" class="md-nav__link">
         
   
   
@@ -1207,7 +1124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/" class="md-nav__link">
+      <a href="../../tutorials/observability/" class="md-nav__link">
         
   
   
@@ -1235,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langchain/" class="md-nav__link">
+      <a href="../../tutorials/langchain/" class="md-nav__link">
         
   
   
@@ -1263,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mem0/" class="md-nav__link">
+      <a href="../../tutorials/mem0/" class="md-nav__link">
         
   
   
@@ -1291,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../query_routing/" class="md-nav__link">
+      <a href="../../tutorials/query_routing/" class="md-nav__link">
         
   
   
@@ -1319,7 +1236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../byo_appraisal_schema/" class="md-nav__link">
+      <a href="../../tutorials/byo_appraisal_schema/" class="md-nav__link">
         
   
   
@@ -2559,93 +2476,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#two-paths-to-async" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two paths to async
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Two paths to async">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#path-1-as_async-wrapper-recommended-for-migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Path 1 — as_async() wrapper (recommended for migration)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#path-2-native-asyncemotionalmemory-with-async-adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Path 2 — native AsyncEmotionalMemory with async adapters
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#batch-encoding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch encoding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#maintenance-count-and-prune" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maintenance — count and prune
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#state-persistence-sync" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        State persistence (sync)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mood-congruent-retrieval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mood-congruent retrieval
+        Usage
       
     </span>
   </a>
@@ -2683,125 +2517,85 @@
   
 
 
-<h1 id="async-usage">Async usage<a class="headerlink" href="#async-usage" title="Permanent link">&para;</a></h1>
-<p><code>emotional_memory</code> exposes a full async API via <code>AsyncEmotionalMemory</code> and a
-thin <code>as_async()</code> convenience wrapper.  Both share the same 5-layer AFT
-pipeline as the sync engine — the only difference is that <code>encode</code>,
-<code>retrieve</code>, and I/O-bound store calls are <code>await</code>-able.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>emotional-memory
+<h1 id="llm-environment-variables">LLM Environment Variables<a class="headerlink" href="#llm-environment-variables" title="Permanent link">&para;</a></h1>
+<p>This page is the <strong>single source of truth</strong> for the <code>EMOTIONAL_MEMORY_LLM_*</code>
+environment variables that configure real-LLM integration tests
+(<code>make test-llm</code>) and the appraisal-quality benchmarks (<code>make bench-appraisal</code>).
+Copies elsewhere (README, <code>CLAUDE.md</code>, <code>CONTRIBUTING.md</code>) are mirrors — when you
+change a default here, update them too.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_API_KEY</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>API key for the LLM provider</td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_BASE_URL</code></td>
+<td>No</td>
+<td><code>https://api.openai.com/v1</code></td>
+<td>OpenAI-compatible endpoint (Ollama, vLLM, LiteLLM, …)</td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_MODEL</code></td>
+<td>No</td>
+<td><code>gpt-5-mini</code></td>
+<td>Model name</td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_OUTPUT_MODE</code></td>
+<td>No</td>
+<td><code>plain</code></td>
+<td>Response mode: <code>plain</code> or <code>json_object</code></td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS</code></td>
+<td>No</td>
+<td><code>30</code></td>
+<td>HTTP timeout in seconds</td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_REPEATS</code></td>
+<td>No</td>
+<td><code>3</code></td>
+<td>Repeats per phrase in quality benchmarks</td>
+</tr>
+<tr>
+<td><code>EMOTIONAL_MEMORY_LLM_REASONING_EFFORT</code></td>
+<td>No</td>
+<td><code>""</code></td>
+<td><code>reasoning_effort</code> for o-series / gpt-5 models (<code>minimal</code> / <code>low</code> / <code>medium</code> / <code>high</code>); omitted when empty</td>
+</tr>
+</tbody>
+</table>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p><code>make</code> targets export <code>.env</code> automatically. To have <code>.env</code> auto-loaded when invoking a
+benchmark module directly (e.g. <code>python -m benchmarks.appraisal_diagnostics.runner</code>), run
+<code>make install-dotenv</code> (installs <code>python-dotenv</code>). Real-LLM tests need the HTTP client —
+run <code>make install-llm-test</code> (installs <code>httpx</code>). Verify the resolved config any time with
+<code>make llm-config</code> (prints values, no secrets).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">EMOTIONAL_MEMORY_LLM_API_KEY</span><span class="o">=</span>...<span class="w"> </span>make<span class="w"> </span>test-llm
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">EMOTIONAL_MEMORY_LLM_API_KEY</span><span class="o">=</span>...<span class="w"> </span>make<span class="w"> </span>bench-appraisal
 </code></pre></div>
-<p>No extra extras required for async — it is included in the base package.</p>
-<h2 id="two-paths-to-async">Two paths to async<a class="headerlink" href="#two-paths-to-async" title="Permanent link">&para;</a></h2>
-<h3 id="path-1-as_async-wrapper-recommended-for-migration">Path 1 — <code>as_async()</code> wrapper (recommended for migration)<a class="headerlink" href="#path-1-as_async-wrapper-recommended-for-migration" title="Permanent link">&para;</a></h3>
-<p>Wrap an existing sync engine in one call.  The wrapper shares the live
-<code>_state</code> object, so mood and momentum persist across both sync and async calls.
-Do <strong>not</strong> drive the same engine from multiple threads concurrently.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">EmotionalMemory</span><span class="p">,</span> <span class="n">AsyncEmotionalMemory</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">InMemoryStore</span><span class="p">,</span> <span class="n">CoreAffect</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">SyncToAsyncEmbedder</span><span class="p">,</span> <span class="n">SyncToAsyncStore</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">as_async</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">HashEmbedder</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Deterministic 8-dim embedder — no ML dependencies required.&quot;&quot;&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">DIM</span> <span class="o">=</span> <span class="mi">8</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="n">h</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="n">vec</span> <span class="o">=</span> <span class="p">[((</span><span class="n">h</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DIM</span><span class="p">)]</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">1.0</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="k">return</span> <span class="p">[</span><span class="n">v</span> <span class="o">/</span> <span class="n">total</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vec</span><span class="p">]</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">embed_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="n">sync_em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span> <span class="n">embedder</span><span class="o">=</span><span class="n">HashEmbedder</span><span class="p">())</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    <span class="n">sync_em</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.7</span><span class="p">))</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    <span class="n">aem</span> <span class="o">=</span> <span class="n">as_async</span><span class="p">(</span><span class="n">sync_em</span><span class="p">)</span>          <span class="c1"># wrap — one line</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="n">mem</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Shipped the new feature ahead of schedule.&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">mem</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;feature release&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories.&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</code></pre></div>
-<h3 id="path-2-native-asyncemotionalmemory-with-async-adapters">Path 2 — native <code>AsyncEmotionalMemory</code> with async adapters<a class="headerlink" href="#path-2-native-asyncemotionalmemory-with-async-adapters" title="Permanent link">&para;</a></h3>
-<p>Use <code>SyncToAsyncStore</code> and <code>SyncToAsyncEmbedder</code> to bridge sync I/O objects,
-or supply natively-async implementations of <code>AsyncEmbedder</code> /
-<code>AsyncMemoryStore</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">async_store</span> <span class="o">=</span> <span class="n">SyncToAsyncStore</span><span class="p">(</span><span class="n">InMemoryStore</span><span class="p">())</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">async_embedder</span> <span class="o">=</span> <span class="n">SyncToAsyncEmbedder</span><span class="p">(</span><span class="n">HashEmbedder</span><span class="p">())</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">store</span><span class="o">=</span><span class="n">async_store</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.8</span><span class="p">))</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Breakthrough — the algorithm finally converged.&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=-</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.6</span><span class="p">))</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Critical bug found in production at 2 AM.&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;algorithm bug&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="c1"># close() called automatically by async context manager</span>
-</code></pre></div>
-<h2 id="batch-encoding">Batch encoding<a class="headerlink" href="#batch-encoding" title="Permanent link">&para;</a></h2>
-<p><code>encode_batch()</code> calls <code>embed_batch()</code> once for all texts — more efficient
-than looping over <code>encode()</code> when the embedder supports batching (e.g.
-<code>SentenceTransformerEmbedder</code>).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">async_store</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">&quot;Quarterly OKRs reviewed, on track.&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">&quot;Customer escalation resolved within SLA.&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="s2">&quot;New team member onboarded successfully.&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">]</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">mems</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encoded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mems</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="maintenance-count-and-prune">Maintenance — count and prune<a class="headerlink" href="#maintenance-count-and-prune" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">async_store</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">total</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total memories: </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">removed</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pruned </span><span class="si">{</span><span class="n">removed</span><span class="si">}</span><span class="s2"> weak memories.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p><code>prune()</code> removes memories whose <code>compute_effective_strength()</code> score falls
-below <code>threshold</code> (ACT-R power-law decay — see <a href="../../api/decay/">Decay</a>).</p>
-<h2 id="state-persistence-sync">State persistence (sync)<a class="headerlink" href="#state-persistence-sync" title="Permanent link">&para;</a></h2>
-<p><code>save_state()</code> and <code>load_state()</code> are synchronous — no <code>await</code> required.
-State captures mood, momentum history, and the mood-decay config.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">snapshot</span> <span class="o">=</span> <span class="n">aem</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>   <span class="c1"># returns a JSON-serialisable dict</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># ... across sessions ...</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">aem</span><span class="o">.</span><span class="n">load_state</span><span class="p">(</span><span class="n">snapshot</span><span class="p">)</span>      <span class="c1"># restores valence/arousal/momentum</span>
-</code></pre></div>
-<h2 id="mood-congruent-retrieval">Mood-congruent retrieval<a class="headerlink" href="#mood-congruent-retrieval" title="Permanent link">&para;</a></h2>
-<p>The async engine applies the same 6-signal scoring as the sync engine
-(semantic similarity, mood congruence, core affect proximity, momentum
-alignment, recency, resonance).  Set mood with <code>set_affect()</code> before
-<code>retrieve()</code> to steer results toward emotionally matching memories.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.6</span><span class="p">))</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;team achievement&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Release secrets are separate</p>
+<p><code>PYPI_TOKEN</code>, <code>ZENODO_TOKEN</code>, and <code>ZENODO_BASE</code> are <strong>release</strong> secrets, not LLM
+configuration. They are documented in
+<a href="https://github.com/gianlucamazza/emotional-memory/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+</div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../api/async_engine/"><code>AsyncEmotionalMemory</code> API reference</a></li>
-<li><a href="../../api/engine/"><code>EmotionalMemory</code> (sync)</a></li>
-<li><a href="../persistence/">Persistence tutorial</a></li>
-<li><code>examples/async_usage.py</code> in the repository</li>
+<li><a href="../../benchmarks/">Benchmarks</a> — the appraisal-quality suite that consumes these variables</li>
+<li><a href="../ssot-policy/">SSOT Policy</a> — why this page is canonical</li>
 </ul>
 
 
