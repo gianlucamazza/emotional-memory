@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      contents: read
+      contents: write
       id-token: write
       attestations: write
 
@@ -100,6 +100,36 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
         run: uv run python scripts/verify_pypi_release.py "$RELEASE_VERSION"
+
+      - name: Create GitHub release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Extract the matching version section from CHANGELOG.md as release notes.
+          notes_file="$(mktemp)"
+          awk -v ver="$RELEASE_VERSION" '
+            $0 ~ ("^## \\[" ver "\\]") {grab=1; next}
+            grab && /^## \[/ {exit}
+            grab {print}
+          ' CHANGELOG.md > "$notes_file"
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "**PyPI**: https://pypi.org/project/emotional-memory/${RELEASE_VERSION}/"
+          } >> "$notes_file"
+          if gh release view "v${RELEASE_VERSION}" >/dev/null 2>&1; then
+            echo "::notice::GitHub release v${RELEASE_VERSION} already exists — uploading assets only"
+            gh release upload "v${RELEASE_VERSION}" dist/*.whl dist/*.tar.gz --clobber
+          else
+            gh release create "v${RELEASE_VERSION}" \
+              --title "v${RELEASE_VERSION}" \
+              --notes-file "$notes_file" \
+              --verify-tag \
+              dist/*.whl dist/*.tar.gz
+          fi
 
       - name: Release summary
         if: always()

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI: `release.yml` now creates the GitHub release automatically.** After the PyPI publish +
+  verify steps, an on-tag step extracts the matching `CHANGELOG.md` section as release notes and
+  runs `gh release create` (idempotent: uploads assets if the release already exists), attaching
+  the wheel and sdist. The job's `contents` permission was raised to `write` for this. Previously
+  the GitHub release was created manually after each tag.
+
 ## [0.11.3] - 2026-05-30
 
 ### Fixed
