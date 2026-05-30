@@ -312,10 +312,13 @@
       "evidence_level": "3_appraisal_quality",
       "requires_oracle_affect": false,
       "allowed_public_wording": "Hg1 FAIL: AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on N=200 affect-free queries (Δ=-0.010 [-0.055, 0.035], d=-0.032, p_one=0.367). The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.",
-      "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. Δ=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral Δ=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync Δ=+0.185, d=0.342).",
-      "not_yet_shown": "Whether a larger N, stronger LLM, or different dataset would show signal. The Hg3 PASS (dual-path > sync) is not disputed; only the architecture vs cosine delta is not established.",
-      "next_study": "No retry planned (exploratory, effect size d=-0.032 at N=200). Hg3 PASS (dual-path > synchronous, Δ=+0.185, d=0.342) is not disputed; only the architecture-vs-cosine comparison is falsified.",
-      "evidence_refs": [],
+      "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. Δ=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral Δ=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync Δ=+0.185, d=0.342). Diagnosis refined (WP-1a, 2026-05-30, gpt-5-mini, N=750 on realistic_recall_v3 oracle): the appraisal signal is correlated but mis-calibrated, not absent — valence Pearson r=0.81, sign accuracy=0.86, systematic valence bias +0.19 and arousal bias -0.14. A pre-registered prompt-calibration attempt (Addendum N, N=150) failed both hypotheses: valence bias dropped to +0.044 (Hn1 requires both axes; arousal unchanged at -0.118) and gold-set regressed 1/15; the prompt change was reverted.",
+      "not_yet_shown": "Whether a larger N, stronger LLM, or different dataset would show signal. The Hg3 PASS (dual-path > sync) is not disputed; only the architecture vs cosine delta is not established. Prompt-only calibration is insufficient (Addendum N FAIL); arousal bias is governed by the SEC->arousal mapping, not the prompt.",
+      "next_study": "Recalibrate the SEC->valence/arousal mapping (_scherer_project) with a train/test split, then re-run Hg1 on a scenario set DISJOINT from the calibration set (realistic_recall_v3 and v3_noAF share scenarios -- re-running on v3_noAF after tuning on v3 would be leakage). Hg3 PASS (dual-path > synchronous, Δ=+0.185, d=0.342) is not disputed; only the architecture-vs-cosine comparison is falsified.",
+      "evidence_refs": [
+        "benchmarks/appraisal_diagnostics/results.diagnostic.gpt5mini.json",
+        "benchmarks/preregistration_addendum_n_appraisal_calibration_closure.md"
+      ],
       "benchmark_refs": [
         "benchmarks/appraisal_confound/results.hg1.json",
         "benchmarks/appraisal_confound/results.hg1.md"
