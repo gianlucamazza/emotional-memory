@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **README images on PyPI**: the 13 documentation/research images used repo-relative paths
+  (`docs/images/...`), which 404 on the PyPI project page (PyPI renders the description in
+  isolation, so relative links resolve against `pypi.org`). They now use absolute
+  `raw.githubusercontent.com/.../main/docs/images/...` URLs, which render on both PyPI and GitHub.
+
 ## [0.11.2] - 2026-05-30
 
 ### Added
