@@ -484,7 +484,7 @@ help:
 	@echo "  cov                        pytest with branch coverage"
 	@echo ""
 	@echo "Benchmarks:"
-	@echo "  bench-fidelity             126 psychological invariant tests"
+	@echo "  bench-fidelity             127 psychological invariant tests"
 	@echo "  bench-perf                 latency / throughput benchmarks"
 	@echo "  bench                      fidelity + performance"
 	@echo "  bench-appraisal            LLM appraisal quality (requires API key)"

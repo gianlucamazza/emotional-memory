@@ -69,31 +69,29 @@
 \begin{abstract}
 We present \emph{Affective Field Theory} (AFT), a five-layer computational model
 for emotionally-grounded memory in large language model (LLM) agents. Existing
-memory systems for LLM agents rely primarily on semantic similarity and recency
-for retrieval, neglecting the affective modulation of human memory well-documented
-in cognitive psychology. AFT encodes every memory event with a full affective
-fingerprint comprising: (1)~a Russell circumplex core affect, (2)~affective
-momentum tracking velocity and acceleration of emotional change, (3)~a slow-adapting background mood field (PAD exponential moving average), (4)~a Scherer appraisal vector, and (5)~a resonance
-graph supporting spreading activation and Hebbian strengthening. Retrieval uses a
-six-signal composite scorer with mood-adaptive weights, and a Pearce-Hall
-prediction-error gate controls reconsolidation lability. We validate the model
-through 126 parametrized fidelity test cases covering 20 psychological phenomena,
-and report a comparative benchmark against a semantic-only baseline on a new
-affect-labeled dataset of 258 examples. On a replayable multi-session realistic
-recall benchmark (v2, $N=200$, 5 challenge types), AFT achieves
-\texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only cosine retrieval
-($\Delta=+0.21$, 95\,\% CI [0.15,\,0.27], $p<0.001$, $d=0.49$; SBERT
-bge-small-en-v1.5), with the advantage replicated on a second embedder class
-(e5-small-v2: $\Delta=+0.16$, $p<0.001$). This advantage holds under
-oracle-provided affect labels; with \texttt{LLMAppraisalEngine} in dual-path
-mode on affect-free data (Addendum~G, $N=200$), architecture parity is
-maintained but the pre-registered minimum effect is not reached
-(Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$), scoping the main result to
-preset-affect scenarios. AFT encodes 25$\times$ faster than Mem0
-(45\,ms vs.\ 1130\,ms per item, CPU-only) with no runtime LLM call at
-retrieval, making it practical for latency-sensitive agents. The
-implementation is released as the open-source \texttt{emotional-memory}
-Python library (MIT license).
+LLM memory systems retrieve primarily by semantic similarity and recency,
+neglecting the affective modulation of human memory well-documented in cognitive
+psychology. AFT encodes every memory event with a five-component affective
+fingerprint: a Russell circumplex core affect, affective momentum (velocity and
+acceleration of emotional change), a slow-adapting PAD mood field, a Scherer
+appraisal vector, and a resonance graph with spreading activation and Hebbian
+strengthening. Retrieval uses a six-signal composite scorer with mood-adaptive
+weights, and a Pearce-Hall prediction-error gate controls reconsolidation
+lability. We validate the model through 127 parametrized fidelity test cases
+covering 20 psychological phenomena, and report a comparative benchmark against a
+semantic-only baseline on a new affect-labeled dataset of 258 examples. On a
+replayable multi-session realistic recall benchmark (v2, $N=200$, 5 challenge
+types), AFT achieves \texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only
+cosine retrieval ($\Delta=+0.21$, 95\,\% CI [0.15,\,0.27], $p<0.001$, $d=0.49$;
+SBERT bge-small-en-v1.5), replicated on a second embedder (e5-small-v2:
+$\Delta=+0.16$, $p<0.001$). The advantage holds under oracle-provided affect
+labels; with \texttt{LLMAppraisalEngine} in dual-path mode on affect-free data
+(Addendum~G, $N=200$), architecture parity is maintained but the pre-registered
+minimum effect is not reached (Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$), scoping
+the main result to preset-affect scenarios. AFT encodes 25$\times$ faster than
+Mem0 (45\,ms vs.\ 1130\,ms per item, CPU-only) with no runtime LLM call at
+retrieval. The implementation is released as the open-source MIT-licensed
+\texttt{emotional-memory} Python library.
 \end{abstract}
 
 % ──────────────────────────────────────────────────────────────────────────────
@@ -136,7 +134,7 @@ APE-gated reconsolidation in a single production-ready implementation.
   \item A five-layer theoretical model with formal definitions for each layer (\S\ref{sec:aft}).
   \item A six-signal retrieval scorer with mood-adaptive weights (\S\ref{sec:retrieval}).
   \item An APE-gated reconsolidation mechanism (\S\ref{sec:reconsolidation}).
-  \item 126 parametrized fidelity test cases validating 20 psychological phenomena (\S\ref{sec:fidelity}; intra-theory coherence validation — per-layer retrieval attribution is below detectable effect size at $N=200$, see \S\ref{sec:limitations}).
+  \item 127 parametrized fidelity test cases validating 20 psychological phenomena (\S\ref{sec:fidelity}; intra-theory coherence validation — per-layer retrieval attribution is below detectable effect size at $N=200$, see \S\ref{sec:limitations}).
   \item A new affect-labeled dataset and comparative benchmark (\S\ref{sec:benchmark}).
   \item An open-source Python implementation: \href{\repourl}{\texttt{gianlucamazza/emotional-memory}} (GitHub).
 \end{enumerate}
@@ -320,7 +318,7 @@ Regenerate with \texttt{make bench-perf} and \texttt{make reproduce-paper}.
 \section{Fidelity Validation}
 \label{sec:fidelity}
 
-We validate 20 psychological phenomena through 126 parametrized test cases.
+We validate 20 psychological phenomena through 127 parametrized test cases.
 \begin{sloppypar}
 Table~\ref{tab:fidelity} provides a curated overview; the per-module pass/fail
 breakdown is auto-generated by \texttt{make reproduce-paper} and written to
@@ -330,7 +328,7 @@ under \texttt{benchmarks/fidelity/}.
 
 \begin{table}[ht]
 \centering
-\caption{Fidelity test summary (126 parametrized cases, 100\% pass rate).}
+\caption{Fidelity test summary (127 parametrized cases, 100\% pass rate).}
 \label{tab:fidelity}
 \begin{tabular}{lll}
 \toprule
@@ -347,7 +345,7 @@ Spreading activation         & Collins \& Loftus 1975  & 6  \\
 Emotional enhancement        & \citet{kensinger2004emotional}& 4  \\
 Momentum alignment           & AFT Layer 2             & 4  \\
 Mood adaptive weights        & Bower 1981              & 6  \\
-PAD dominance                & \citet{mehrabian1974approach} & 4  \\
+PAD dominance                & \citet{mehrabian1974approach} & 5  \\
 Dual-path encoding           & LeDoux 1996             & 6  \\
 Appraisal affect mapping     & Scherer 1984            & 8  \\
 Prediction error update      & Pearce \& Hall 1980     & 6  \\
@@ -357,7 +355,7 @@ Arousal floor                & McGaugh 2004            & 4  \\
 Emotional vs cosine          & Bower 1981              & 8  \\
 Design gap validation        & AFT                     & 13 \\
 \bottomrule
-\multicolumn{2}{l}{\textbf{Total}} & \textbf{126} \\
+\multicolumn{2}{l}{\textbf{Total}} & \textbf{127} \\
 \end{tabular}
 \end{table}
 
@@ -829,7 +827,7 @@ All experiments are reproducible via:
 git clone https://github.com/gianlucamazza/emotional-memory
 pip install -e ".[dev,bench]"
 make reproduce-paper        # generates paper/tables/
-make bench-fidelity         # 126 fidelity tests
+make bench-fidelity         # 127 fidelity tests
 make bench-comparative      # recall@k benchmark
 \end{lstlisting}
 
@@ -848,7 +846,7 @@ the comparative benchmark. Requires Python~$\geq$\,3.11.
 
 We presented Affective Field Theory, a five-layer model for emotionally-grounded
 LLM memory, and the \texttt{emotional-memory} Python library that implements it.
-The model is validated through 126 fidelity test cases covering 20 psychological
+The model is validated through 127 fidelity test cases covering 20 psychological
 phenomena, and benchmarked against a semantic-only baseline on a new affect-labeled
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
@@ -904,6 +902,13 @@ Mem0 recall@5\,=\,1.00 vs.\ AFT 0.85) and on \texttt{realistic\_recall\_v2}
 (AFT top1\,=\,0.535 $\gg$ Mem0\,=\,0.330, LangMem\,=\,0.365; see
 \S\ref{sec:benchmark} SOTA reference).
 SOTA replication on the LoCoMo factual QA benchmark remains open work.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\section*{Acknowledgements}
+% TODO(author): add funding sources, institutional support, and individual
+% contributors before camera-ready submission.
+This work builds on the open-source scientific Python ecosystem; we thank the
+maintainers of the libraries on which \texttt{emotional-memory} depends.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}

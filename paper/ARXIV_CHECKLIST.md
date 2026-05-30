@@ -13,7 +13,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | No compilation warnings about missing figures | ✓ | Confirmed in last `latexmk` run |
 | All figures in `figures/` are referenced in `main.tex` | ✓ | `make paper-arxiv` now does selective copy of only referenced figures |
 | All figures are in acceptable format (PDF, PNG, EPS) | ✓ | All 4 figures are PDF |
-| `refs.bib` is included and all citations resolve | ✓ | 14 unique `\cite` keys, 33 entries — all resolve |
+| `refs.bib` is included and all citations resolve | ✓ | 38 unique `\cite` keys, 38 entries — all resolve |
 | No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓ | Confirmed: no `minted` in `main.tex` |
 
 ---
@@ -24,9 +24,9 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 |---|---|---|
 | Title matches repo/Zenodo metadata | ✗ | Check `release.toml` and `CITATION.cff` |
 | Authors and affiliations complete | ✗ | |
-| Abstract ≤ 1920 characters (arXiv limit) | ✗ | Count at submit time |
+| Abstract ≤ 1920 characters (arXiv limit) | ✓ | ≈1820 rendered / 1907 raw after condensing — re-verify at submit time |
 | No placeholders (`XXXX`, `TODO`, `???`) in text | ✗ | `grep -n "TODO\|XXXX\|???"`  in `main.tex` |
-| Acknowledgements section present | ✗ | |
+| Acknowledgements section present | ✓ | Neutral placeholder added before bibliography; fill funding/contributors before camera-ready (`TODO(author)` comment in `main.tex`) |
 | All claims in §Results match committed JSON artifacts | ✓ | `make reproduce-paper-check` passes — zero diff |
 | §Limitations is present and complete | ✓ | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL) |
 | Negative results (LoCoMo Gate 1 FAIL) are disclosed | ✓ | §Limitations §External-benchmark scope |
@@ -79,4 +79,4 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-*Last updated: 2026-05-05. §1 bundle, §6 reproducibility gate, and §2 row L30 confirmed ✓. Remaining ✗ items require user action at submission time.*
+*Last updated: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time.*
