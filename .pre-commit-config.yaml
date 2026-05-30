@@ -20,7 +20,7 @@ repos:
   # The pinned ruff binary is downloaded by pre-commit's own toolchain so
   # contributors don't need uv installed to run pre-commit locally.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.12
+    rev: v0.15.15
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
