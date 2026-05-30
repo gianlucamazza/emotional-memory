@@ -23,6 +23,13 @@ import json
 from pathlib import Path
 from typing import Any
 
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+except ImportError:
+    pass
+
 from tqdm import tqdm
 
 from benchmarks.common.statistics import (

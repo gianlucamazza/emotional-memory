@@ -58,3 +58,15 @@ Evaluated on valence and arousal residuals jointly:
 ## Frozen — 2026-05-13
 
 No changes to thresholds, dataset, or decision tree after this date.
+
+## Post-freeze correction (2026-05-30)
+
+Documentation-only clarification; thresholds, dataset, and decision tree are unchanged.
+
+The "Dataset" section above states "50 scenarios × 2 sessions, ~250 events". The actual
+`realistic_recall_v3.json` the runner loads contains **125 scenarios × 2 sessions = 250
+sessions, 750 events**. The frozen prose under-counted (it matches the *affect-free* sibling
+`realistic_recall_v3_noAF.json`, which has 50 scenarios). The runner has always iterated all
+events in `realistic_recall_v3.json`; only this description was stale. Use `--n` to subsample
+if a smaller run is desired. The "Output" filenames are illustrative — runs use
+per-model names, e.g. `results.diagnostic.gpt5mini.{json,md}`.

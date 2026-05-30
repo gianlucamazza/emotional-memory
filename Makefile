@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-dailydialog bench-dailydialog-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -202,6 +202,14 @@ bench-addendum-g: llm-config-strict
 bench-addendum-g-hash: llm-config-strict
 	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder hash
 
+# WP-1a — Appraisal diagnostics: residuals of LLM appraisal vs oracle affect (requires API key)
+bench-appraisal-diagnostics: llm-config-strict
+	uv run python -m benchmarks.appraisal_diagnostics.runner --seed 42
+
+# Smoke test with a fixed appraisal vector — no LLM key required
+bench-appraisal-diagnostics-dry:
+	uv run python -m benchmarks.appraisal_diagnostics.runner --dry-run --verbose
+
 # Hi3 confirmatory ablation @ N=500 (seed=1 frozen — runs on realistic_recall_v3)
 bench-hi3-sbert:
 	uv run python -m benchmarks.ablation.runner --embedder sbert-bge \
@@ -274,16 +282,16 @@ build-dailydialog-personas-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.persona_builder \
 	    --n 5 --seed 0 --dry-run
 
-bench-locomo:
+bench-locomo: llm-config-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner
 
-bench-locomo-routing:
+bench-locomo-routing: llm-config-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.routing_runner
 
 bench-locomo-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 5 --no-judge
 
-bench-locomo-pareto:
+bench-locomo-pareto: llm-config-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.pareto_runner
 
 bench-locomo-pareto-dry:
@@ -479,6 +487,8 @@ help:
 	@echo "  bench-comparative-sota     Cross-system comparison incl. Mem0+LangMem (requires API key + install-mem0 install-langmem)"
 	@echo "  bench-appraisal-confound   Appraisal confound study (SBERT, no LLM key)"
 	@echo "  bench-appraisal-confound-hash  Appraisal confound study (hash embedder)"
+	@echo "  bench-appraisal-diagnostics  WP-1a — LLM appraisal residuals vs oracle (requires API key)"
+	@echo "  bench-appraisal-diagnostics-dry  WP-1a smoke test (fixed vector, no key)"
 	@echo "  bench-addendum-g           Add. G — Hg1: LLM appraisal affect-free (requires API key)"
 	@echo "  bench-addendum-g-hash      Add. G fast smoke test with hash embedder"
 	@echo "  bench-realistic            Replayable multi-session benchmark with persisted state"

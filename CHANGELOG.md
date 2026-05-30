@@ -7,8 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`make bench-appraisal-diagnostics` / `bench-appraisal-diagnostics-dry`**: Makefile targets
+  for the WP-1a appraisal-residuals study (the diagnostic runner was previously the only
+  benchmark without a target); the full target is gated behind `llm-config-strict`, the dry
+  variant needs no API key.
+- **`benchmarks/appraisal_diagnostics/README.md`**: documents purpose, dataset, decision tree,
+  and how to run the study (was the only sub-benchmark lacking a README).
+- **`.editorconfig`**: aligns non-pre-commit editors with the ruff conventions (utf-8, LF,
+  trimmed trailing whitespace, 4-space Python indent, tab Makefiles).
+- **`CODE_OF_CONDUCT.md`**: Contributor Covenant 2.1 (already linked from `CONTRIBUTING.md`).
+- **pre-commit**: `mypy --strict` as a `pre-push` hook and Conventional-Commit message linting
+  as a `commit-msg` hook (mirrors `pr-title.yml`); `default_install_hook_types` wires both via
+  a single `pre-commit install`.
+
+### Changed
+
+- **LLM benchmark runners load `.env` directly**: `appraisal_diagnostics`, `appraisal_confound`
+  (Hg1) and `locomo` runners now load `.env` via `python-dotenv` when invoked outside `make`
+  (mirrors the existing `realistic`/`comparative` runners), removing a spurious
+  "EMOTIONAL_MEMORY_LLM_API_KEY is not set" failure.
+- **`bench-locomo`, `bench-locomo-routing`, `bench-locomo-pareto`** now declare the
+  `llm-config-strict` prerequisite, consistent with the other LLM-backed bench targets.
+- **`CONTRIBUTING.md`**: notes that real-LLM tests/benchmarks need `make install-llm-test`
+  (httpx) and, for direct module runs, `make install-dotenv`.
+
 ### Fixed
 
+- **Appraisal-diagnostics protocol drift**: a post-freeze note in
+  `benchmarks/appraisal_diagnostics/protocol.md` corrects the dataset description (the runner
+  iterates all 125 scenarios / 750 events of `realistic_recall_v3.json`, not "50 / ~250").
 - **Type-checker `__all__` visibility**: the top-level `__all__` is now a static
   literal, resolving basedpyright's `reportUnsupportedDunderAll` warning, and the
   optional extra-gated exports (`SQLiteStore`, `QdrantStore`, `ChromaStore`,

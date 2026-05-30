@@ -85,6 +85,12 @@ Copy `.env.example` (if present) or set these manually:
 | `ZENODO_TOKEN` | No | — | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
 | `ZENODO_BASE` | No | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs |
 
+Real-LLM tests and benchmarks need the HTTP client — run `make install-llm-test` (installs
+`httpx`). `make` targets export `.env` automatically; to have `.env` auto-loaded when invoking
+a benchmark module directly (e.g. `python -m benchmarks.appraisal_diagnostics.runner`), also
+run `make install-dotenv` (installs `python-dotenv`). Verify the resolved config any time with
+`make llm-config`.
+
 ## Local Secrets
 
 Use `.env` only for local CLI secrets that need to be read by tools in this repo.
