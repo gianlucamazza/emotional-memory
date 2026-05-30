@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the wheel and sdist. The job's `contents` permission was raised to `write` for this. Previously
   the GitHub release was created manually after each tag.
 
+### Documentation
+
+- **Docs-site consolidation**: detailed content was moved out of `README.md`, `CONTRIBUTING.md`
+  and `CLAUDE.md` into dedicated MkDocs pages (getting-started, comparison, benchmarks,
+  production-readiness, architecture), with the top-level files kept lean and pointing to the
+  site as the single source of truth. The LLM environment variables are now documented
+  canonically in `docs/contributing/llm-environment.md` (referenced from CONTRIBUTING/CLAUDE).
+
 ## [0.11.3] - 2026-05-30
 
 ### Fixed

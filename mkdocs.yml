@@ -52,10 +52,18 @@ plugins:
 
 nav:
   - Home: index.md
+  - Getting Started: getting-started.md
   - Mental Model: mental_model.md
+  - Architecture:
+    - Module Overview: architecture/module-overview.md
   - Migration Guide: migration.md
+  - Evaluation:
+    - Comparison: comparison.md
+    - Benchmarks: benchmarks.md
+    - Production Readiness: production-readiness.md
   - Contributing:
     - SSOT Policy: contributing/ssot-policy.md
+    - LLM Environment: contributing/llm-environment.md
   - Tutorials:
     - Async usage: tutorials/async.md
     - Persistence: tutorials/persistence.md

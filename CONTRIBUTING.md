@@ -71,16 +71,15 @@ make check   # lint + typecheck + tests — must pass before any commit
 
 ### Environment variables for LLM tests
 
-Copy `.env.example` (if present) or set these manually:
+The full `EMOTIONAL_MEMORY_LLM_*` surface is documented canonically in
+[docs/contributing/llm-environment.md](../docs/contributing/llm-environment.md) — set
+`EMOTIONAL_MEMORY_LLM_API_KEY` at minimum. Copy `.env.example` (if present) or export the
+variables manually.
+
+Release secrets (not LLM configuration) used by maintainer targets:
 
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
-| `EMOTIONAL_MEMORY_LLM_API_KEY` | Yes | — | API key for real-LLM tests |
-| `EMOTIONAL_MEMORY_LLM_BASE_URL` | No | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
-| `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-5-mini` | Model name |
-| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | No | `""` | Reasoning budget for o-series / gpt-5 models (`minimal` / `low` / `medium` / `high`); omitted when empty |
-| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | No | `plain` | Response mode: `plain` or `json_object` |
-| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | No | `30` | HTTP timeout in seconds |
 | `PYPI_TOKEN` | No | — | Manual PyPI fallback token for `make publish-pypi-manual` |
 | `ZENODO_TOKEN` | No | — | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
 | `ZENODO_BASE` | No | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs |

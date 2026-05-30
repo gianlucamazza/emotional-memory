@@ -6,9 +6,9 @@ If you're a contributor opening a PR, the short version is: **never edit a deriv
 
 ---
 
-## 1. The five SSOT axes
+## 1. The SSOT axes
 
-The project tracks five categories of metadata that must stay consistent:
+The project tracks seven categories of metadata that must stay consistent:
 
 | Axis | Source of truth | Derived files | Sync mechanism |
 |---|---|---|---|
@@ -17,6 +17,8 @@ The project tracks five categories of metadata that must stay consistent:
 | **Python version floor** | `pyproject.toml` `[project].requires-python` | `[tool.ruff].target-version`, `[tool.mypy].python_version`, `[tool.basedpyright].pythonVersion`, `[project].classifiers`, `.github/workflows/ci.yml` matrix | `scripts/check_python_version_consistency.py` (validates only — manual fix) |
 | **Author / license / keywords** | `pyproject.toml` `[project]` | `CITATION.cff`, `codemeta.json`, `.zenodo.json` | `scripts/check_metadata_ssot.py` (validates only — manual fix) |
 | **Positioning hero & comparison** (Why, table, 30-sec example) | `README.md` between `<!-- ssot:positioning-start -->` and `<!-- ssot:positioning-end -->` | `docs/index.md` | `mkdocs-include-markdown-plugin` (build-time inclusion) |
+| **Getting started** (install + quickstart) | `README.md` between `<!-- ssot:getting-started-start -->` and `<!-- ssot:getting-started-end -->` | `docs/getting-started.md` | `mkdocs-include-markdown-plugin` (build-time inclusion) |
+| **LLM environment variables** (`EMOTIONAL_MEMORY_LLM_*`) | `docs/contributing/llm-environment.md` | `README.md` mirror, `CLAUDE.md`, `CONTRIBUTING.md` | manual mirror (validates by review; see §5.4) |
 
 ---
 
@@ -107,6 +109,8 @@ The following files contain machine-managed sections. Each carries a header comm
 - `paper/main.tex` — DOI / URL / arxiv_id macros tagged with `[ssot:*]` comments, managed by `sync_release_metadata.py`
 - `demo/app.py` — constants tagged with `[ssot:*]` comments, managed by `sync_release_metadata.py`
 - `docs/index.md` — positioning hero block included from `README.md` at build time
+- `docs/getting-started.md` — install + quickstart block included from `README.md` at build time
+- `README.md` / `CLAUDE.md` / `CONTRIBUTING.md` — `EMOTIONAL_MEMORY_LLM_*` tables are mirrors of `docs/contributing/llm-environment.md` (kept in sync manually; deliberate duplication per §5.4)
 
 ---
 

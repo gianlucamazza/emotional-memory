@@ -21,43 +21,10 @@ will pick the change up on next build.
   rewrite-relative-urls=true
 %}
 
-## Installation
+## Installation & Quickstart
 
-```bash
-uv pip install emotional-memory
-uv pip install "emotional-memory[sqlite]"   # SQLite persistence
-uv pip install "emotional-memory[viz]"      # matplotlib visualization
-uv pip install "emotional-memory[docs]"     # docs generation (dev)
-```
-
-For local development, prefer the repo targets:
-
-```bash
-make install
-make install-demo   # optional local Gradio demo stack
-make install-docs   # docs toolchain
-```
-
-## Quickstart
-
-```python
-from emotional_memory import (
-    EmotionalMemory, EmotionalMemoryConfig,
-    InMemoryStore, CoreAffect, SequentialEmbedder,
-)
-
-class MyEmbedder(SequentialEmbedder):
-    def embed(self, text: str) -> list[float]:
-        return my_model.encode(text).tolist()
-    # embed_batch() provided automatically
-
-with EmotionalMemory(store=InMemoryStore(), embedder=MyEmbedder()) as em:
-    em.set_affect(CoreAffect(valence=0.8, arousal=0.6))
-    em.encode("Just shipped the feature after three hard weeks.")
-    results = em.retrieve("difficult project success", top_k=3)
-    for mem in results:
-        print(mem.content, mem.tag.core_affect)
-```
+See **[Getting Started](getting-started.md)** for install recipes (extras, dev setup) and a
+runnable quickstart — both sourced from the README so they stay in sync with PyPI.
 
 ## The 5 Layers
 
