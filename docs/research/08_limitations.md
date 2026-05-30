@@ -50,7 +50,7 @@ limitations:
 
 ### 2.1 No validation with human users
 
-The 126 psychological fidelity tests validate that the system behaves
+The 127 psychological fidelity tests validate that the system behaves
 *coherently with the theories* it implements (for example, that retrieval is
 mood-congruent and that decay follows a power law). They do not validate that
 the system's behavior corresponds to how *real human beings* form and retrieve

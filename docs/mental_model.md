@@ -73,7 +73,7 @@ Pass 1 — score all candidates (6 signals, no spreading):
     s3  core affect proximity   (distance in PAD space, 3D, sqrt(6) normalizer)
     s4  momentum alignment      (do affect trajectories point the same way?)
     s5  recency / decay         (ACT-R power-law: strength decays with time)
-    s6  resonance boost         (placeholder; set to 0 in Pass 1)
+    s6  resonance boost         (0 in Pass 1; populated in Pass 2 via spreading activation)
 
 Weights are adaptive: the MoodField shifts w1-w6 based on current arousal.
 High arousal → semantic signal dominates. Low arousal → emotional signals dominate.

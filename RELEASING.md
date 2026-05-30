@@ -22,27 +22,49 @@ covers the manual prerequisites and recovery paths.
 5. Working tree clean, on `main`, up-to-date with `origin/main`
 6. `uv run python scripts/preflight.py VERSION` — all gates green
 
-## Run
+## Run — hybrid flow
+
+PyPI and the GitHub release are published by the **on-tag GitHub Actions workflow**
+(`.github/workflows/release.yml`) via Trusted Publishing (OIDC, no long-lived
+token). `make release` therefore handles only what must happen *before the tag*
+or that the workflow cannot do: Zenodo DOI reservation + deposit, the paper PDF
+rebuild, HF Space, and Software Heritage.
 
 ```bash
+# 1) Local: reserve DOI, sync metadata, rebuild PDF, commit + tag, deposit Zenodo, HF, SWH.
+#    (Skips PyPI + GitHub release by default — see RELEASE_FLAGS in the Makefile.)
 make release VERSION=X.Y.Z
+
+# 2) Push: the tag triggers PyPI (OIDC) + GitHub release.
+git push origin main vX.Y.Z
 ```
 
-The orchestrator (`scripts/release.py`) runs 9 phases and persists state to
-`.release_state.json` (gitignored).
+`scripts/release.py` runs these phases (state persisted to `.release_state.json`,
+gitignored; each phase idempotent, `--resume` skips completed ones):
 
-| Phase | Name | Key action |
-|---|---|---|
-| 0 | preflight | G1–G14 gates |
-| 1 | zenodo_reserve | create draft + prereserve DOI + concept/shadow guards |
-| 2 | doi_sync | write DOI to `release.toml`, `make sync-metadata`, rebuild PDF |
-| 3 | commit_tag | `git commit` SSOT files + annotated tag |
-| 4 | zenodo_publish | upload PDF + source + arXiv tarball, publish deposit |
-| 5 | pypi | `uv publish dist/*` |
-| 6 | github_release | `gh release create` + assets |
-| 7 | hf_space | push demo to Hugging Face Space |
-| 8 | swh | trigger Software Heritage save |
-| 9 | report | print summary table |
+| Phase | Name | Key action | Hybrid default |
+|---|---|---|---|
+| 0 | preflight | G1–G14 gates | run |
+| 1 | zenodo_reserve | create draft + prereserve DOI + concept/shadow guards | run |
+| 2 | doi_sync | write DOI to `release.toml`, `make sync-metadata`, rebuild PDF | run |
+| 3 | commit_tag | `git commit` SSOT files + annotated tag | run |
+| 4 | zenodo_publish | upload PDF + source + arXiv tarball, publish deposit | run |
+| 5 | pypi | `uv publish dist/*` | **skipped** (on-tag OIDC) |
+| 6 | github_release | `gh release create` + assets | **skipped** (on-tag) |
+| 7 | hf_space | push demo to Hugging Face Space | run |
+| 8 | swh | trigger Software Heritage save | run |
+| 9 | report | print summary table | run |
+
+Phases 5–6 are skipped via `RELEASE_FLAGS ?= --skip-pypi --skip-github-release`
+(Makefile). To run the **full** legacy pipeline (PyPI via `uv publish` + token),
+override: `RELEASE_FLAGS="" make release VERSION=X.Y.Z`.
+
+> **Do not** ship a release with just `make bump` + `git push` of a tag: that
+> skips the Zenodo DOI reservation, so the tag would carry the *previous*
+> release's `version_doi`. The on-tag workflow's **DOI-freshness gate**
+> (`scripts/check_doi_freshness.py`) blocks exactly this — it fails if the
+> tag's `release.toml` `version_doi` equals the previous tag's. v0.11.2 and
+> v0.11.3 slipped through before this gate existed.
 
 ## Recovery
 

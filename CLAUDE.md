@@ -13,7 +13,7 @@ make cov            # Tests with branch coverage (80% minimum enforced)
 make typecheck      # mypy strict mode
 make lint           # ruff check
 make format         # ruff format
-make bench-fidelity # Psychological invariant tests (126 tests in benchmarks/)
+make bench-fidelity # Psychological invariant tests (127 tests in benchmarks/)
 make bench-perf     # Performance benchmarks
 make bench          # fidelity + performance benchmarks (combined)
 make install-demo   # Install canonical local Gradio demo stack
@@ -39,15 +39,9 @@ uv run python -m pytest tests/test_engine.py::test_name -v
 
 ### LLM test environment variables
 
-| Variable | Required | Default | Purpose |
-|---|---|---|---|
-| `EMOTIONAL_MEMORY_LLM_API_KEY` | Yes | — | API key for LLM provider |
-| `EMOTIONAL_MEMORY_LLM_BASE_URL` | No | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
-| `EMOTIONAL_MEMORY_LLM_MODEL` | No | `gpt-5-mini` | Model to use |
-| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | No | `plain` | Response mode: `plain` or `json_object` |
-| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | No | `30` | HTTP timeout in seconds |
-| `EMOTIONAL_MEMORY_LLM_REPEATS` | No | `3` | Repeats per phrase in quality benchmarks |
-| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | No | `""` | `reasoning_effort` for o-series/gpt-5 models (`minimal`/`low`/`medium`/`high`); omitted if empty |
+The `EMOTIONAL_MEMORY_LLM_*` variables (API key, base URL, model, output mode, timeout,
+repeats, reasoning effort) are documented canonically in
+`docs/contributing/llm-environment.md` — that page is the SSOT; this file is a pointer.
 
 ## Architecture
 
