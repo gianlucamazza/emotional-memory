@@ -25,13 +25,13 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 - **Dual-path encoding** — fast affective signal precedes slow appraisal (LeDoux 1996)
 - **3D affect** — perceived control (dominance) discriminates fear from anger (Mehrabian & Russell 1974; PAD)
 
-`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (126 fidelity tests) and 12+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
+`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 12+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 ### How it compares
 
 | Library | Memory model | Affective retrieval | Reconsolidation | Decay model | Psychological fidelity tests |
 |---|---|---|---|---|---|
-| **emotional_memory** | 5-layer AFT (semantic + valence/arousal + momentum + mood + appraisal) | ✅ mood-congruent + APE-gated | ✅ Nader & Schiller 2000 | ACT-R power-law + arousal modulation | 126 tests, 20 phenomena |
+| **emotional_memory** | 5-layer AFT (semantic + valence/arousal + momentum + mood + appraisal) | ✅ mood-congruent + APE-gated | ✅ Nader & Schiller 2000 | ACT-R power-law + arousal modulation | 127 tests, 20 phenomena |
 | MemGPT / Letta | Hierarchical context (working + archival) | ❌ | ❌ | None | — |
 | mem0 | Fact extraction + vector store | ❌ | ❌ | None | — |
 | A-MEM | Atomic notes + dynamic links | ❌ | ❌ | None | — |
@@ -276,7 +276,7 @@ above gives the one-line summary.
 
 ## Validation & Benchmarks
 
-AFT is validated against 20 published psychological phenomena (126 fidelity tests) and 12+
+AFT is validated against 20 published psychological phenomena (127 fidelity tests) and 12+
 pre-registered confirmatory studies, **including committed negative results**. On
 affect-discriminative recall the advantage is real and embedder-robust (English N=200, SBERT
 Δ=+0.21, d=0.49; French N=120, me5, Δ=+0.18, p<0.0001) — but it does **not** generalize:

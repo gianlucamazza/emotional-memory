@@ -1,7 +1,13 @@
 # Gap Analysis — Issues to Create
 
+> **Status: planning snapshot (not a live tracker).** This is a point-in-time gap
+> analysis kept for historical reference; it is intentionally not linked from the
+> docs navigation. Items are triaged into GitHub issues as they are picked up
+> (e.g. arXiv submission → #31). Do not treat unchecked items here as the
+> authoritative backlog — the issue tracker is the source of truth.
+
 This document captures the gap analysis performed on the emotional-memory project.
-Issues will be created to track each item.
+Issues are created to track each item as it is prioritized.
 
 ## Priority: HIGH (Visibility & Communication)
 
@@ -90,4 +96,3 @@ Issues will be created to track each item.
 - Link to existing docs where relevant
 - Specify if issue is blocker, dependency, or independent
 - Use labels: `documentation`, `enhancement`, `blocker` (if applicable)
-
