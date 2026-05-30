@@ -44,6 +44,13 @@ jobs:
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Check Zenodo DOI freshness
+        if: github.event_name == 'push'
+        # Fail fast if this tag reuses the previous release's version_doi — the
+        # signature of a tag pushed without running 'make release' (which reserves
+        # a fresh Zenodo DOI before tagging). Pure-git, offline check.
+        run: uv run python scripts/check_doi_freshness.py --current "${GITHUB_REF_NAME}"
+
       - name: Fast release preflight
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
