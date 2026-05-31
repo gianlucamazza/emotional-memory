@@ -134,16 +134,35 @@ distinct concerns:
 - **Operationalization gap**: real-world AFT deployments use `LLMAppraisalEngine`
   or `KeywordAppraisalEngine`, not preset oracle values. The Ha2/Hb2 results show
   that even keyword appraisal collapses performance (Δ = −0.39). The architecture
-  advantage under automatic appraisal is not yet established.
+  advantage under automatic appraisal is now established as **negative** — see the
+  Addendum G / P results below.
 - **Dataset circularity**: affect labels were designed to favor affective
   discrimination. Scenarios where valence is not discriminative would reduce the
   oracle advantage. The proportion of AFT-favorable vs. neutral scenarios has not
   been audited.
 
-Addendum G (future study) will address this by running the architecture comparison
-with `LLMAppraisalEngine` on a dataset designed without preset affect injection.
-Until Addendum G is executed, Hd* results should be read as "architecture potential
-under oracle affect", not "architecture advantage in production".
+**Addendum G (executed, FAIL).** The architecture comparison was run with
+`LLMAppraisalEngine` on an affect-free dataset (`realistic_recall_v3_noAF`, 50
+scenarios, 200 queries, sbert-bge, gpt-5-mini): dual-path AFT did **not** beat naive
+cosine (top1 0.315 vs 0.325, Δ=−0.010, p_one=0.367).
+
+**Addendum O + P (recalibration, then re-run — still FAIL).** WP-1a diagnosed the
+appraisal signal as *mis-calibrated*, not absent (valence Pearson r=0.81). Addendum O
+numerically recalibrated the Scherer SEC→valence/arousal projection (model M1, valence
+bias +0.200→+0.072 on held-out scenarios — a calibration PASS). Addendum P then re-ran
+Hg1 with M1 on a leakage-free affect-free dataset disjoint from the calibration data
+(`realistic_recall_v4_noAF`, 40 scenarios, 160 queries, frozen before the run): naive
+cosine was *significantly* ahead — top1 0.800 vs 0.887 (Δ=−0.0875 [−0.144, −0.031],
+p_one=0.0018, d=−0.242). Exploratory contrasts show the signal is real but not enough:
+LLM affect beats fixed-neutral (Hp2, +0.056, p=0.030) and the deferred dual-path
+schedule is essential (Hp3, +0.512, d=0.95; synchronous appraisal collapses to 0.287).
+A better-calibrated affect signal is a *net distractor* on affect-free queries where
+semantics alone is already highly discriminative.
+
+**Conclusion.** Hd* results should be read as "architecture potential under oracle
+affect", not "architecture advantage in production". The oracle-affect scope is a hard
+boundary; calibration quality does not, by itself, convert into an affect-free retrieval
+gain. See `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
 
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 

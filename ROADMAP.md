@@ -195,6 +195,31 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ---
 
+## v0.11.x — Appraisal-quality research (closed, 2026-05-30 → 2026-05-31)
+
+Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap. No API changes.
+
+- [x] **Addendum N — prompt recalibration (FAIL, reverted).** Diagnosed the Hg1 null as
+  mis-calibration, not blindness (valence Pearson r=0.81). A prompt-only recalibration zeroed
+  the valence bias (+0.169→+0.044) but left arousal bias unchanged and regressed the gold set;
+  Hn1/Hn2 FAIL, prompt reverted. See `benchmarks/preregistration_addendum_n_appraisal_calibration_closure.md`.
+- [x] **Addendum O — mapping recalibration (PASS, calibration only).** Numerically refit the
+  Scherer SEC→valence/arousal projection (`_scherer_project`, model M1) on a by-scenario 70/30
+  split; held-out valence bias +0.200→+0.072, arousal −0.144→−0.023; Ho1/Ho2 PASS. M1 weights
+  live in `main` (#46). A calibration result, not a retrieval result. See
+  `benchmarks/preregistration_addendum_o_mapping_recalibration_closure.md`.
+- [x] **Addendum P — Hg1 re-run with M1 (FAIL).** Re-ran Hg1 on a leakage-free affect-free
+  dataset disjoint from v3 (`realistic_recall_v4_noAF`, 40 scenarios / 160 queries, frozen
+  pre-run). Naive cosine *significantly* ahead: dual-path AFT top1 0.800 vs 0.887 (Δ=−0.0875
+  [−0.144,−0.031], p=0.0018, d=−0.242). Exploratory: Hp2 dual>neutral PASS (the affect signal
+  is real); Hp3 dual>sync PASS, d=0.95 (deferred dual-path is essential). Claim
+  `appraisal_llm_real_dual_path` stays **falsified**; the affect-free architecture-vs-cosine
+  line is closed. Next angle (not scheduled): affect-aware *routing* — apply affect only when
+  the query is affect-discriminative — rather than always blending it. See
+  `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
+
+---
+
 ## v1.0.0 — Stability commitment (target: when above is closed)
 
 - [ ] Public-API freeze; semver-stability commitment for `EmotionalMemory`, `AsyncEmotionalMemory`, all `interfaces.py` protocols, the `EmotionalMemoryConfig` tree, and the persistence formats (`AffectiveState.snapshot`, `Memory.model_dump`).
