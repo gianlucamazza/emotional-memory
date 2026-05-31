@@ -3052,17 +3052,11 @@
     <div class="doc doc-contents ">
 
         <p>Map appraisal dimensions to valence-arousal space.</p>
-<p>Mapping (design doc §05):
-  valence = 0.4<em>goal_relevance + 0.3</em>norm_congruence
-          + 0.2<em>coping_potential_signed + 0.1</em>novelty
-  arousal = 0.5<em>|novelty| + 0.3</em>(1 - coping_potential)
-          + 0.2*self_relevance</p>
+<p>Delegates to the Scherer CPM schema's projection
+(<code>SCHERER_CPM_SCHEMA.project_to_core_affect</code>) so the recalibrated mapping
+weights live in a single place (Addendum O). See
+<code>appraisal_schema._scherer_project</code> for the formula and provenance.</p>
 
-
-<details class="coping_potential_signed" open>
-  <summary>coping=1 → +1 (calm confidence),</summary>
-  <p>coping=0 → -1 (helpless urgency)</p>
-</details>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/appraisal.py</code></summary>
@@ -3082,39 +3076,23 @@
 <span class="normal"><a href="#__codelineno-0-107">107</a></span>
 <span class="normal"><a href="#__codelineno-0-108">108</a></span>
 <span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span>
-<span class="normal"><a href="#__codelineno-0-111">111</a></span>
-<span class="normal"><a href="#__codelineno-0-112">112</a></span>
-<span class="normal"><a href="#__codelineno-0-113">113</a></span>
-<span class="normal"><a href="#__codelineno-0-114">114</a></span>
-<span class="normal"><a href="#__codelineno-0-115">115</a></span>
-<span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_core_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreAffect</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_core_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreAffect</span><span class="p">:</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map appraisal dimensions to valence-arousal space.</span>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    Mapping (design doc §05):</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">      valence = 0.4*goal_relevance + 0.3*norm_congruence</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">              + 0.2*coping_potential_signed + 0.1*novelty</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">      arousal = 0.5*|novelty| + 0.3*(1 - coping_potential)</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">              + 0.2*self_relevance</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">    coping_potential_signed: coping=1 → +1 (calm confidence),</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">                             coping=0 → -1 (helpless urgency)</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="n">coping_signed</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">coping_potential</span> <span class="o">-</span> <span class="mf">1.0</span>  <span class="c1"># [0,1] → [-1,+1]</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="n">valence</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="mf">0.4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_relevance</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_congruence</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>        <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">coping_signed</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">novelty</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="p">)</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>    <span class="n">arousal</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a>        <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">novelty</span><span class="p">)</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">coping_potential</span><span class="p">)</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a>        <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_relevance</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="p">)</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>    <span class="k">return</span> <span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="n">valence</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="n">arousal</span><span class="p">,</span> <span class="n">dominance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">coping_potential</span><span class="p">)</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="sd">    Delegates to the Scherer CPM schema&#39;s projection</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">    (``SCHERER_CPM_SCHEMA.project_to_core_affect``) so the recalibrated mapping</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">    weights live in a single place (Addendum O). See</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">    ``appraisal_schema._scherer_project`` for the formula and provenance.</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="k">return</span> <span class="n">SCHERER_CPM_SCHEMA</span><span class="o">.</span><span class="n">project_to_core_affect</span><span class="p">(</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>        <span class="p">{</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>            <span class="s2">&quot;novelty&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">novelty</span><span class="p">,</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>            <span class="s2">&quot;goal_relevance&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_relevance</span><span class="p">,</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="s2">&quot;coping_potential&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">coping_potential</span><span class="p">,</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>            <span class="s2">&quot;norm_congruence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_congruence</span><span class="p">,</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>            <span class="s2">&quot;self_relevance&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_relevance</span><span class="p">,</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="p">}</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3207,9 +3185,9 @@ other strategy. The library ships only StaticAppraisalEngine for testing.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/emotional_memory/appraisal.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-147">147</a></span>
-<span class="normal"><a href="#__codelineno-0-148">148</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">:</span> <span class="n">AppraisalVector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span> <span class="ow">or</span> <span class="n">AppraisalVector</span><span class="o">.</span><span class="n">neutral</span><span class="p">()</span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-139">139</a></span>
+<span class="normal"><a href="#__codelineno-0-140">140</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">:</span> <span class="n">AppraisalVector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_vector</span> <span class="o">=</span> <span class="n">vector</span> <span class="ow">or</span> <span class="n">AppraisalVector</span><span class="o">.</span><span class="n">neutral</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3256,37 +3234,37 @@ would get zero strength and be immediately prunable.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/appraisal.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-157">157</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-149">149</a></span>
+<span class="normal"><a href="#__codelineno-0-150">150</a></span>
+<span class="normal"><a href="#__codelineno-0-151">151</a></span>
+<span class="normal"><a href="#__codelineno-0-152">152</a></span>
+<span class="normal"><a href="#__codelineno-0-153">153</a></span>
+<span class="normal"><a href="#__codelineno-0-154">154</a></span>
+<span class="normal"><a href="#__codelineno-0-155">155</a></span>
+<span class="normal"><a href="#__codelineno-0-156">156</a></span>
+<span class="normal"><a href="#__codelineno-0-157">157</a></span>
 <span class="normal"><a href="#__codelineno-0-158">158</a></span>
 <span class="normal"><a href="#__codelineno-0-159">159</a></span>
 <span class="normal"><a href="#__codelineno-0-160">160</a></span>
 <span class="normal"><a href="#__codelineno-0-161">161</a></span>
 <span class="normal"><a href="#__codelineno-0-162">162</a></span>
 <span class="normal"><a href="#__codelineno-0-163">163</a></span>
-<span class="normal"><a href="#__codelineno-0-164">164</a></span>
-<span class="normal"><a href="#__codelineno-0-165">165</a></span>
-<span class="normal"><a href="#__codelineno-0-166">166</a></span>
-<span class="normal"><a href="#__codelineno-0-167">167</a></span>
-<span class="normal"><a href="#__codelineno-0-168">168</a></span>
-<span class="normal"><a href="#__codelineno-0-169">169</a></span>
-<span class="normal"><a href="#__codelineno-0-170">170</a></span>
-<span class="normal"><a href="#__codelineno-0-171">171</a></span>
-<span class="normal"><a href="#__codelineno-0-172">172</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="k">def</span><span class="w"> </span><span class="nf">consolidation_strength</span><span class="p">(</span><span class="n">arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mood_arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Arousal-modulated consolidation strength (Yerkes-Dodson inverted-U).</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    Effective arousal blends encoding arousal (70%) with background</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">    mood arousal (30%). Peak consolidation near effective_arousal=0.7.</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="sd">    A floor of 0.1 ensures even calm, mundane memories have a minimum</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">    consolidation chance — otherwise events with effective_arousal &lt; 0.2</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    would get zero strength and be immediately prunable.</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    Returns a value in [0.1, 1.0].</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="n">effective</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">arousal</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mood_arousal</span><span class="p">))</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="c1"># Inverted parabola with peak=1.0 at x=0.7</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">effective</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">1.0</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">raw</span><span class="p">))</span>
+<span class="normal"><a href="#__codelineno-0-164">164</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="k">def</span><span class="w"> </span><span class="nf">consolidation_strength</span><span class="p">(</span><span class="n">arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mood_arousal</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Arousal-modulated consolidation strength (Yerkes-Dodson inverted-U).</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="sd">    Effective arousal blends encoding arousal (70%) with background</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">    mood arousal (30%). Peak consolidation near effective_arousal=0.7.</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a><span class="sd">    A floor of 0.1 ensures even calm, mundane memories have a minimum</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a><span class="sd">    consolidation chance — otherwise events with effective_arousal &lt; 0.2</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="sd">    would get zero strength and be immediately prunable.</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="sd">    Returns a value in [0.1, 1.0].</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">effective</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">arousal</span><span class="p">))</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">mood_arousal</span><span class="p">))</span>
+<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="c1"># Inverted parabola with peak=1.0 at x=0.7</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="o">-</span><span class="mf">4.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">effective</span> <span class="o">-</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a>    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">raw</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
