@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Scherer SEC→valence/arousal mapping recalibrated (Addendum O).** `_scherer_project`
+  in `appraisal_schema.py` now uses least-squares-fitted coefficients (model M1) calibrated
+  against oracle affect on a held-out scenario split (gpt-5-mini, N=750 SEC dump, by-scenario
+  70/30 split). The Scherer feature basis is preserved (`coping_signed`, `|novelty|`,
+  `1-coping_potential`) and the valence intercept is constrained to 0 so a neutral appraisal
+  still maps to valence 0; neutral arousal shifts 0.15 → 0.20775. On the held-out test set the
+  systematic biases drop (valence +0.200→+0.072, arousal -0.144→-0.023) with MAE improving on
+  both axes. `AppraisalVector.to_core_affect()` now delegates to the schema projection, so the
+  recalibrated weights live in a single place. See
+  `benchmarks/preregistration_addendum_o_mapping_recalibration_closure.md`.
+
 - **CI: `release.yml` now creates the GitHub release automatically.** After the PyPI publish +
   verify steps, an on-tag step extracts the matching `CHANGELOG.md` section as release notes and
   runs `gh release create` (idempotent: uploads assets if the release already exists), attaching

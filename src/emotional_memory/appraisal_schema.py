@@ -137,18 +137,29 @@ Return ONLY valid JSON with these exact keys. No explanation, no markdown.\
 
 
 def _scherer_project(dims: Mapping[str, float]) -> CoreAffect:
-    """Scherer CPM → valence/arousal projection (design doc §05)."""
+    """Scherer CPM → valence/arousal projection.
+
+    Weights recalibrated against oracle affect on a held-out scenario split
+    (Addendum O, gpt-5-mini, N=750; closure:
+    benchmarks/preregistration_addendum_o_mapping_recalibration_closure.md). The
+    Scherer feature basis is preserved (``coping_signed``, ``|novelty|``,
+    ``1 - coping_potential``); only the coefficients changed, fitted least-squares
+    on the train scenarios. The valence intercept is held at 0 so a neutral
+    appraisal still maps to valence 0; the arousal intercept (0.1399) is the
+    free-fit offset. ``CoreAffect`` validators clamp the outputs to range.
+    """
     coping_signed = 2.0 * dims["coping_potential"] - 1.0  # [0,1] → [-1,+1]
     valence = (
-        0.4 * dims["goal_relevance"]
-        + 0.3 * dims["norm_congruence"]
-        + 0.2 * coping_signed
-        + 0.1 * dims["novelty"]
+        0.4805 * dims["goal_relevance"]
+        + 0.1862 * dims["norm_congruence"]
+        + 0.1643 * coping_signed
+        + 0.0179 * dims["novelty"]
     )
     arousal = (
-        0.5 * abs(dims["novelty"])
-        + 0.3 * (1.0 - dims["coping_potential"])
-        + 0.2 * dims["self_relevance"]
+        0.3694 * abs(dims["novelty"])
+        + 0.1357 * (1.0 - dims["coping_potential"])
+        + 0.2208 * dims["self_relevance"]
+        + 0.1399
     )
     return CoreAffect(valence=valence, arousal=arousal, dominance=dims["coping_potential"])
 

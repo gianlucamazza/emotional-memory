@@ -99,9 +99,10 @@ class TestAppraisalVector:
 
     def test_neutral_appraisal_neutral_affect(self):
         ca = AppraisalVector.neutral().to_core_affect()
-        # coping=0.5 → coping_signed=0, all others=0 → valence=0, arousal=0.15 (from coping)
+        # coping=0.5 -> coping_signed=0, all others=0 -> valence=0 (G1 invariant);
+        # arousal = intercept 0.1399 + 0.1357*(1-0.5) = 0.20775 (Addendum O M1 mapping).
         assert ca.valence == 0.0
-        assert ca.arousal >= 0.0
+        assert ca.arousal == pytest.approx(0.20775)
 
 
 class TestConsolidationStrength:

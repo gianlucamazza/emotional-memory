@@ -204,7 +204,85 @@ def run(dump: Path, split: Path) -> dict[str, Any]:
             pred = _predict_axis(model, axis, train, test)
             entry[model] = _metrics(pred, oracle, sign=(axis == "valence"))
         results["axes"][axis] = entry
+
+    results["m1_coefficients"] = _m1_coefficients(train)
+    results["cv_m1"] = _cv_m1(rows, sp["train"])
     return results
+
+
+def _m1_coefficients(train: list[dict[str, Any]]) -> dict[str, Any]:
+    """Fitted M1 weights for promotion. Valence intercept constrained to 0 (G1)."""
+    yv = np.array([r["oracle_valence"] for r in train])
+    ya = np.array([r["oracle_arousal"] for r in train])
+    cv = _fit(_valence_theory_features(train), yv, intercept=False)
+    ca = _fit(_arousal_theory_features(train), ya, intercept=True)
+    return {
+        "valence": {
+            "goal_relevance": float(cv[0]),
+            "norm_congruence": float(cv[1]),
+            "coping_signed": float(cv[2]),
+            "novelty": float(cv[3]),
+            "intercept": 0.0,
+        },
+        "arousal": {
+            "abs_novelty": float(ca[0]),
+            "one_minus_coping": float(ca[1]),
+            "self_relevance": float(ca[2]),
+            "intercept": float(ca[3]),
+        },
+    }
+
+
+def _cv_m1(rows: list[dict[str, Any]], train_ids: list[str]) -> dict[str, Any]:
+    """5-fold CV by scenario on the train split: mean±sd of M1 test-fold metrics + coef sd."""
+    rng = np.random.default_rng(_SEED)
+    ids = sorted(train_ids)
+    perm = list(rng.permutation(len(ids)))
+    folds = [[ids[i] for i in perm[k::5]] for k in range(5)]
+    by_sid: dict[str, list[dict[str, Any]]] = {}
+    for r in rows:
+        by_sid.setdefault(r["scenario_id"], []).append(r)
+
+    agg: dict[str, list[float]] = {
+        f"{ax}_{m}": [] for ax in ("valence", "arousal") for m in ("bias", "mae", "r")
+    }
+    coef_v: list[np.ndarray] = []
+    coef_a: list[np.ndarray] = []
+    for k in range(5):
+        hold = set(folds[k])
+        tr = [r for sid in ids if sid not in hold for r in by_sid[sid]]
+        te = [r for sid in folds[k] for r in by_sid[sid]]
+        for axis in ("valence", "arousal"):
+            pred = _predict_axis("M1", axis, tr, te)
+            oracle = np.array([r[f"oracle_{axis}"] for r in te])
+            res = pred - oracle
+            agg[f"{axis}_bias"].append(float(np.mean(res)))
+            agg[f"{axis}_mae"].append(float(np.mean(np.abs(res))))
+            agg[f"{axis}_r"].append(_pearson(pred, oracle))
+        coef_v.append(
+            _fit(
+                _valence_theory_features(tr),
+                np.array([r["oracle_valence"] for r in tr]),
+                intercept=False,
+            )
+        )
+        coef_a.append(
+            _fit(
+                _arousal_theory_features(tr),
+                np.array([r["oracle_arousal"] for r in tr]),
+                intercept=True,
+            )
+        )
+
+    def _ms(xs: list[float]) -> dict[str, float]:
+        a = np.array(xs)
+        return {"mean": float(np.mean(a)), "sd": float(np.std(a, ddof=1))}
+
+    return {
+        "metrics": {k: _ms(v) for k, v in agg.items()},
+        "coef_sd_valence": [float(s) for s in np.std(np.array(coef_v), axis=0, ddof=1)],
+        "coef_sd_arousal": [float(s) for s in np.std(np.array(coef_a), axis=0, ddof=1)],
+    }
 
 
 def render_md(res: dict[str, Any]) -> str:
