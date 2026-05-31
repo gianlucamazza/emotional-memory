@@ -1,0 +1,42 @@
+{
+  "study": "addendum_g_hg1",
+  "pre_registration": "benchmarks/preregistration_addendum_g.md",
+  "dataset": "realistic_recall_v4_noAF",
+  "dataset_version": "1.0.0",
+  "dataset_note": "realistic_recall_v3_noAF \u2014 derived from v2 with valence/arousal fields removed from events and state removed from queries. Affect must be inferred entirely by the appraisal engine.",
+  "embedder": "sbert-bge",
+  "systems": [
+    "aft_llm_dual",
+    "naive_cosine",
+    "aft_neutral",
+    "aft_llm_sync"
+  ],
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "hypotheses": {
+    "Hg1": {
+      "description": "aft_llm_dual.top1 > naive_cosine.top1 (\u0394 > 0.05, one-tailed alpha=0.05)",
+      "result": "FAIL",
+      "confirmatory": true
+    },
+    "Hg2": {
+      "description": "aft_llm_dual.top1 > aft_neutral.top1 (exploratory)",
+      "result": "PASS",
+      "confirmatory": false
+    },
+    "Hg3": {
+      "description": "aft_llm_dual.top1 > aft_llm_sync.top1 (exploratory)",
+      "result": "PASS",
+      "confirmatory": false
+    }
+  },
+  "interpretation_notes": [
+    "Hg1 is confirmatory; result reported regardless of outcome (pre-reg rule 1).",
+    "Hg2 and Hg3 are exploratory; labeled as such (pre-reg rule 2).",
+    "seed=0 is frozen; no re-seeding after results are known (pre-reg rule 3).",
+    "One-tailed p = p_two_sided / 2 (bootstrap symmetric, direction fixed at pre-reg).",
+    "No Holm correction: Hg1 is the sole confirmatory hypothesis (no family).",
+    "If Hg1 FAIL: LLM appraisal adds no net positive over naive cosine on N=200 affect-free scenarios at \u0394>0.05. See \u00a77 Limitations (oracle-affect paragraph).",
+    "If Hg1 PASS: oracle-affect limitation (Add. D) is partially resolved for the dual-path LLM configuration."
+  ]
+}
