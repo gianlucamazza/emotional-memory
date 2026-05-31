@@ -1,0 +1,3968 @@
+{
+  "name": "realistic_recall_v4_noAF",
+  "version": "1.0.0",
+  "description": "Affect-free scenarios for Addendum P (Hg1 re-run with the recalibrated SEC->affect mapping). Scenario ids use the pNN_ namespace, thematically disjoint from realistic_recall_v3 to avoid train/test leakage with the Addendum O calibration set. No preset valence/arousal; LLM must infer affect.",
+  "default_top_k": 2,
+  "scenarios": [
+    {
+      "scenario_id": "p01_adopting_a_rescue_dog",
+      "description": "A two-session emotional arc about adopting a rescue dog with a difficult past, moving from fear and setbacks to a fragile trust and relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Initial rescue and the fragile first nights: meeting, a fearful reaction on the drive home, and the first slow sign of trust.",
+          "events": [
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e1",
+              "content": "I walked into the shelter and froze at the sight of a matted dog pressed against the far cage, his eyes tracking me like a hunted thing; volunteers warned he snapped at new hands, but I filled out the adoption papers anyway.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e2",
+              "content": "On the drive home he hunched on the back seat and then flinched and snapped when I reached to adjust his harness, teeth flashing so close I sucked in a breath and my hand hovered.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e3",
+              "content": "That night, after hours of silence, he crawled onto the couch and slowly rested his head in my lap, and I held my breath as he finally let my hand lie on his neck without pulling away.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A return visit and life at home: a relapse at a loud trigger, a tense rainy evening where progress creeps forward, and quiet settling into a new routine.",
+          "events": [
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e4",
+              "content": "A week later the doorbell rang and he bolted under the bed, shaking so hard he knocked my coffee over, and I sat on the floor calling until my voice cracked.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e5",
+              "content": "On a rainy evening, thunder rattling the windows, he trembled but instead of fleeing he inched toward me and let me stroke behind his ears for the first time in the house.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p01_adopting_a_rescue_dog_e6",
+              "content": "The next morning he waited at the door as if on cue, greeted me with a small, deliberate wag, and curled into a nap on my feet while sunlight warmed his tangled fur.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p01_adopting_a_rescue_dog_q1",
+              "query": "Describe the earlier moment in the car when he flinched and snapped as you reached to adjust his harness on the drive home.",
+              "expected_memory_ids": [
+                "p01_adopting_a_rescue_dog_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p01_adopting_a_rescue_dog_q2",
+              "query": "Which moment that night marked the shift from fear to the first sign of trust, when silence broke and you held your breath while he didn't pull away?",
+              "expected_memory_ids": [
+                "p01_adopting_a_rescue_dog_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p01_adopting_a_rescue_dog_q3",
+              "query": "What did the scene inside the shelter look like the first time you saw him cowering in the cage, not the later reactions at home?",
+              "expected_memory_ids": [
+                "p01_adopting_a_rescue_dog_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p01_adopting_a_rescue_dog_q4",
+              "query": "During the rainy, thunderous evening when tension built instead of breaking, what did he do as you reached toward him?",
+              "expected_memory_ids": [
+                "p01_adopting_a_rescue_dog_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p02_restoring_a_flooded_community",
+      "description": "A flooded community library rallies neighbors and experts through panic, a desperate salvage, and a careful restoration that uncovers a fragile treasure and steady recovery.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Dawn reveals the flood and neighbors scramble in a tense, improvised salvage that slowly steadies into purposeful work.",
+          "events": [
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e1",
+              "content": "The head librarian flings open the back door and freezes at the children's story corner ankle-deep in murky water, picture books bobbing like startled ducks.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e2",
+              "content": "Neighbors arrive with buckets and plastic sheeting, forming a shaky human chain to ferry sodden stacks—children's picture bins are passed along first, slipping and dripping between hands.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e3",
+              "content": "A retired carpenter wades in with a battered tool chest and a steady smile, and the room quiets as hands find purpose and the frantic scramble steadies into methodical work.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A second-day restoration brings focused salvage, an astonishing find from an old chest, and the arrival of conservation plans that finally calm the crowd.",
+          "events": [
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e4",
+              "content": "At dawn the librarian pries a rusted archive chest open and cradles the intact centennial photograph album she finds inside, cupping it like a relic protected from the flood.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e5",
+              "content": "Volunteers heap damp novels and local histories onto tarps in long wet ridges, the pile growing as everyone holds their breath before someone moves toward the sealed glass case of rare volumes.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p02_restoring_a_flooded_community_e6",
+              "content": "When the conservator arrives with drying cabinets and a calm checklist, volunteers separate pages, box moldy pamphlets, and prioritize the centennial album and a handful of fragile items for careful drying, the room finally settling into steady motion.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p02_restoring_a_flooded_community_q1",
+              "query": "Which moment describes the librarian prying open a rusted archive chest at dawn and cradling the intact centennial photograph album she found inside?",
+              "expected_memory_ids": [
+                "p02_restoring_a_flooded_community_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p02_restoring_a_flooded_community_q2",
+              "query": "Which moment marks when the group's mood shifted from frantic scrambling to focused determination?",
+              "expected_memory_ids": [
+                "p02_restoring_a_flooded_community_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p02_restoring_a_flooded_community_q3",
+              "query": "Which moment describes the head librarian flinging open the back door and finding the children's story corner ankle-deep with picture books bobbing?",
+              "expected_memory_ids": [
+                "p02_restoring_a_flooded_community_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p02_restoring_a_flooded_community_q4",
+              "query": "Which moment shows volunteers heaping damp novels and local histories onto tarps as the pile grows and everyone holds their breath before checking the sealed glass case of rare volumes?",
+              "expected_memory_ids": [
+                "p02_restoring_a_flooded_community_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p03_a_first_pottery_exhibition",
+      "description": "A debut pottery exhibition that nearly failed to open, tracking late-night work, technical disasters, and a last-minute rescue.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Tense final preparations: solitary glazing, a collapsing display, and storm-drenched deliveries threaten the show.",
+          "events": [
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e1",
+              "content": "The night before the show she sat under a single lamp, smearing the final glaze onto the centerpiece with trembling fingers as distant thunder rolled past.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e2",
+              "content": "During a dry run in the empty gallery the display stand groaned and gave way, sending the central vase spinning onto concrete with a splintering crack.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e3",
+              "content": "A delivery van limped in soaked from the storm; crates hunched on the dock while muddy water seeped into torn padding around fragile pieces.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Dawn brings a blackout, a neighbor's improvised fix becomes a turning point, and the opening finally unfolds.",
+          "events": [
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e4",
+              "content": "At dawn they found the building had lost power overnight: security lights were dead and the main electrical panel sat open in a cold, silent room.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e5",
+              "content": "A neighbor arrived hauling a clattering generator, they threaded cables through the alley and, once the lights, kiln and heat lamps hummed awake, they warmed and re-adhered the hairline fracture on the central vase.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p03_a_first_pottery_exhibition_e6",
+              "content": "By mid-morning the gallery smelled of hot clay and coffee; the first guest stepped inside, cradled the rescued vase, and conversation began to ripple through the room.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p03_a_first_pottery_exhibition_q1",
+              "query": "What exactly happened when they first discovered the building would be without power on opening day?",
+              "expected_memory_ids": [
+                "p03_a_first_pottery_exhibition_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p03_a_first_pottery_exhibition_q2",
+              "query": "Which earlier description recounts the display stand groaning and the central vase cracking during the rehearsal?",
+              "expected_memory_ids": [
+                "p03_a_first_pottery_exhibition_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p03_a_first_pottery_exhibition_q3",
+              "query": "Which sentence describes the artist alone the night before, applying the final glaze to the centerpiece with trembling hands?",
+              "expected_memory_ids": [
+                "p03_a_first_pottery_exhibition_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p03_a_first_pottery_exhibition_q4",
+              "query": "What occurred when the neighbor arrived with a clattering generator and they raced to bring lights, kiln and heat lamps back to life?",
+              "expected_memory_ids": [
+                "p03_a_first_pottery_exhibition_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p04_learning_to_sail_after",
+      "description": "A learner faces a capsizing scare, then returns to practice righting the boat and ultimately steadies the sail.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First session: an anxious first sail, a sudden capsize into cold water, and an instructor-led recovery that nudges panic toward hope.",
+          "events": [
+            {
+              "memory_id": "p04_learning_to_sail_after_e1",
+              "content": "I climbed into the small dinghy for my very first sail, palms slick as the instructor rattled off tacks and safety checks I only half followed.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p04_learning_to_sail_after_e2",
+              "content": "A sudden gust slammed the sail; the hull flipped and I tumbled into cold water, coughing and disoriented as the boat lay inverted beside me.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p04_learning_to_sail_after_e3",
+              "content": "My instructor waded in, hands sure on the hull and centerboard as he showed me how to kick the boat upright; when it righted, the panic loosened into a shaky thread of hope.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Second session: deliberate recovery practice, a tense gust that tests resolve, and finally a steady solo leg that releases the buildup.",
+          "events": [
+            {
+              "memory_id": "p04_learning_to_sail_after_e4",
+              "content": "On my return lesson the instructor had me deliberately tip the dinghy so I could practice righting it, timing my breaths as I flipped it and he coached each movement.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p04_learning_to_sail_after_e5",
+              "content": "Mid-lesson a gust sheared across the bay and memories of swallowing water spiked my chest as I braced the tiller and leaned in, every muscle coiled for a possible capsize.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p04_learning_to_sail_after_e6",
+              "content": "When I finally steadied the boat alone and sailed the leeward leg without hesitation, a bright, disbelieving laugh slipped out and the day felt smaller than the fear had been.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p04_learning_to_sail_after_q1",
+              "query": "Which event describes the moment I intentionally tipped the dinghy under my instructor's direction to practice righting it, as opposed to an accidental heel from a gust?",
+              "expected_memory_ids": [
+                "p04_learning_to_sail_after_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p04_learning_to_sail_after_q2",
+              "query": "In session one, what happened during the initial capsize—the earlier moment when the boat flipped and I went into the water?",
+              "expected_memory_ids": [
+                "p04_learning_to_sail_after_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p04_learning_to_sail_after_q3",
+              "query": "Which moment marks when my panic began to ease and a shaky hope replaced dread during the first session?",
+              "expected_memory_ids": [
+                "p04_learning_to_sail_after_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p04_learning_to_sail_after_q4",
+              "query": "Which moment shows the tense build-up when a sudden gust and the memory of the earlier scare made me brace every muscle and push toward a risky maneuver?",
+              "expected_memory_ids": [
+                "p04_learning_to_sail_after_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p05_mediating_a_long_feud",
+      "description": "A two-session mediation between longfeuding neighbors moves from sharp confrontation to a shared repair that mends more than a fence.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 heats up: the mediator arrives, tempers flare and a brittle photograph forces a stunned silence.",
+          "events": [
+            {
+              "memory_id": "p05_mediating_a_long_feud_e1",
+              "content": "I step onto the narrow path between their houses; Mrs. Kline greets me with a trembling, clipped hello while Mr. Peters glares over the sagging fence as I offer to record the meeting to keep the facts straight.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p05_mediating_a_long_feud_e2",
+              "content": "A ceramic birdbath shatters against the gravel when Mr. Peters hurls the rock he’d been clutching, and each of them erupts into old accusations about smashed property and broken promises.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p05_mediating_a_long_feud_e3",
+              "content": "I unfold a brittle, sun-faded photograph of a street picnic where both of them are young and laughing; their faces fall, voices stop, and the room slides from furious shouting into stunned, heavy silence.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 shifts the mood: a small keepsake unlocks a confession, objects cross the table, and they rebuild the birdbath together.",
+          "events": [
+            {
+              "memory_id": "p05_mediating_a_long_feud_e4",
+              "content": "For a long minute no one moves; then Mr. Peters slides a small, creased bus ticket across the table—the one he'd kept from the day he covered Mrs. Kline's groceries when she was stranded—and his hands tremble as he speaks that memory aloud.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p05_mediating_a_long_feud_e5",
+              "content": "He swallows, blurts that he was the one who broke the birdbath months ago, awkwardly slides an old brass house key across the table, and Mrs. Kline, embarrassed and relieved, pulls out her phone and starts to record his promise to rebuild it.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p05_mediating_a_long_feud_e6",
+              "content": "They kneel in the afternoon light with muddy hands, pressing fresh mortar into the birdbath's cracked base while, between crooked smiles, they laugh at how small the feud looks from a soil-stained bench.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p05_mediating_a_long_feud_q1",
+              "query": "What small item did Mr. Peters slide across the table when he invoked the day he covered Mrs. Kline's groceries after she was stranded?",
+              "expected_memory_ids": [
+                "p05_mediating_a_long_feud_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p05_mediating_a_long_feud_q2",
+              "query": "At the start of the mediation, who threw the rock that shattered the birdbath?",
+              "expected_memory_ids": [
+                "p05_mediating_a_long_feud_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p05_mediating_a_long_feud_q3",
+              "query": "Which moment forced the room to slide from furious shouting into stunned, heavy silence?",
+              "expected_memory_ids": [
+                "p05_mediating_a_long_feud_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p05_mediating_a_long_feud_q4",
+              "query": "Who offered, right at the beginning of the meeting, to record the conversation to keep the facts straight?",
+              "expected_memory_ids": [
+                "p05_mediating_a_long_feud_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p06_a_botched_home_renovation",
+      "description": "A botched renovation spirals from shock and panic into a makeshift refuge built by frantic effort and a small, decisive pivot.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Immediate discovery of chaos, a desperate first night, and a sudden pivot where they begin to carve out a livable corner.",
+          "events": [
+            {
+              "memory_id": "p06_a_botched_home_renovation_e1",
+              "content": "They pried up a loose floorboard and found the contractor's invoice shoved inside, the total circled; their breath hitched as dust drifted down around the numbers.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p06_a_botched_home_renovation_e2",
+              "content": "On the first night they shoved a damp mattress into the gutted living room and fell asleep amid tile dust and exposed wires, whispering promises to keep watch.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p06_a_botched_home_renovation_e3",
+              "content": "At dawn someone pulled an old armchair into a corner, draped a tarp over it and, for the first time since the chaos began, they laughed and started making lists of what to salvage and repair.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Grimy repair work and a storm-driven scramble culminate in a cozy nook and a final, awkward reconciliation with the contractor.",
+          "events": [
+            {
+              "memory_id": "p06_a_botched_home_renovation_e4",
+              "content": "They spent days stripping plaster and stringing shaky fairy lights, hands raw but steady as they carved a small, warm nook out of ruin.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p06_a_botched_home_renovation_e5",
+              "content": "When a sudden storm flooded the street at night they wrestled wet boxes and clattered furniture into the nook, breath quickening as every rescued photo felt like a lifeline.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p06_a_botched_home_renovation_e6",
+              "content": "After the rain eased they lit the fairy lights and sank into the salvaged armchair wrapped in a quilt, the house finally feeling like somewhere to sleep; the contractor knocked at the door with a corrected invoice and they tucked a copy back under the floorboard while they laughed through exhaustion.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p06_a_botched_home_renovation_q1",
+              "query": "What happened earlier—the first time they slept in the gutted house, before the later night when the house finally felt like somewhere to sleep?",
+              "expected_memory_ids": [
+                "p06_a_botched_home_renovation_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p06_a_botched_home_renovation_q2",
+              "query": "Which moment marked the shift from panic to determined action, the instant they stopped collapsing and began trying to make a corner livable?",
+              "expected_memory_ids": [
+                "p06_a_botched_home_renovation_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p06_a_botched_home_renovation_q3",
+              "query": "What happened when they first discovered the contractor's invoice hidden under the floorboard, not the later time someone returned with a corrected bill?",
+              "expected_memory_ids": [
+                "p06_a_botched_home_renovation_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p06_a_botched_home_renovation_q4",
+              "query": "Which tense, rising moment shows them racing to salvage soaked boxes and photos as a storm pushed toward a breakthrough?",
+              "expected_memory_ids": [
+                "p06_a_botched_home_renovation_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p07_volunteering_at_a_wildfire",
+      "description": "A two-session emotional arc following volunteers at a wildfire evacuation shelter as panic, a setback, and small acts of order lead into a nighttime crisis and fragile resolution.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First day at the shelter: buses arrive, chaos and a power failure spark tension until a weary leader imposes a shaky order.",
+          "events": [
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e1",
+              "content": "The first evacuation buses roar into the school gym, doors fling open to reveal soot-streaked faces and backpacks, and volunteers stand frozen at the sudden flood of bodies.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e2",
+              "content": "When the lights flicker and the generator sputters to silence, the intake line stretches and tempers flare as two families erupt into a shouting match over assignments.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e3",
+              "content": "An exhausted shift lead climbs onto a folding chair, raises a trembling hand, and organizes the crowd into calm lines while older volunteers begin handing out thermoses—the first brittle note of order.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "The next shift brings urgent reunions and a race to find a missing diabetic's insulin, ending in a exhausted, communal release.",
+          "events": [
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e4",
+              "content": "Hours later a volunteer squints at the paper registry, suddenly calls the exact name of a small girl and lunges forward to scoop her into a damp, tearful hug, reuniting child and mother.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e5",
+              "content": "A frantic nurse realizes a diabetic evacuee's insulin is missing and volunteers fan out through sleeping rows, voices rising as they check bags and scan numbers, racing the coming night.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p07_volunteering_at_a_wildfire_e6",
+              "content": "Someone finds the insulin hidden beneath a blanket; the nurse injects the dose and the shelter exhales as exhausted hands clasp in a shaky circle around the cot.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p07_volunteering_at_a_wildfire_q1",
+              "query": "At which moment did a volunteer call out the child's name from the registry and pull the child into a hug?",
+              "expected_memory_ids": [
+                "p07_volunteering_at_a_wildfire_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p07_volunteering_at_a_wildfire_q2",
+              "query": "Which moment marked the shift from mounting anxiety to a brittle, fragile sense of hope at the shelter?",
+              "expected_memory_ids": [
+                "p07_volunteering_at_a_wildfire_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p07_volunteering_at_a_wildfire_q3",
+              "query": "Which moment described the very first buses pulling into the school gym, with soot-streaked faces and volunteers frozen at the sudden flood of bodies?",
+              "expected_memory_ids": [
+                "p07_volunteering_at_a_wildfire_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p07_volunteering_at_a_wildfire_q4",
+              "query": "Which moment accelerated the shelter's rising panic as volunteers fanned out to search sleeping rows for a missing diabetic's insulin?",
+              "expected_memory_ids": [
+                "p07_volunteering_at_a_wildfire_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p08_reconnecting_with_an_estranged",
+      "description": "A grown grandchild attempts to reconnect with an estranged grandmother through a series of letters that move from anxious hope to a fragile reunion.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Finding old letters sparks a decision to confess and send a first letter, followed by a painful silence.",
+          "events": [
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e1",
+              "content": "In the attic I found a stack of her letters tied with blue ribbon; the top postcard, yellowed, read in her small slanted script: 'Meet me under the old sycamore.'",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e2",
+              "content": "That night I tore out a page and wrote, 'I'm sorry I left with nothing but a red scarf and a slammed door; I was afraid and I'm trying to come home.'",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e3",
+              "content": "I folded the confession into an envelope, addressed it to 'Miriam Bennett, 14 Rose Lane,' slapped on a hummingbird stamp, and dropped it into the mailbox with my hands trembling; days later the mailbox stayed stubbornly empty.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A brief acknowledgement arrives, then a longer, revealing letter that leads to a scheduled meeting beneath the sycamore.",
+          "events": [
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e4",
+              "content": "Two weeks later a short, formal postcard arrived with her steady handwriting: 'Received your letter — I will write back properly soon,' stamped and dated in the corner.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e5",
+              "content": "A heavier envelope came a day after, its pages full of cramped sentences that tumbled from a memory about a sycamore, the sound of a pocket watch, and the night she waited on the porch while I left; she confessed she had been terrified and sorry for years.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p08_reconnecting_with_an_estranged_e6",
+              "content": "In the last paragraph she wrote a time and place — next Sunday at two, the bench beneath the old sycamore — and signed her name with a shaky flourish that felt like an invitation to begin again.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p08_reconnecting_with_an_estranged_q1",
+              "query": "Which brief, dated postcard sentence acknowledged receipt of your letter and promised a proper reply?",
+              "expected_memory_ids": [
+                "p08_reconnecting_with_an_estranged_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p08_reconnecting_with_an_estranged_q2",
+              "query": "What exact phrase did you write on the tear-out page apologizing for leaving with the red scarf?",
+              "expected_memory_ids": [
+                "p08_reconnecting_with_an_estranged_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p08_reconnecting_with_an_estranged_q3",
+              "query": "What line was on the yellowed postcard tied with blue ribbon that you found in the attic?",
+              "expected_memory_ids": [
+                "p08_reconnecting_with_an_estranged_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p08_reconnecting_with_an_estranged_q4",
+              "query": "Which passage in the heavier envelope built up the memory of the sycamore and culminated in her confessing years of fear and regret?",
+              "expected_memory_ids": [
+                "p08_reconnecting_with_an_estranged_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p09_a_communitygarden_harvest_threatened",
+      "description": "A community garden races overnight to protect a threatened harvest from an unexpected frost, moving from busy optimism through alarm to a fragile triumph.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning bustle and an alarming midday frost warning set volunteers on edge until a small spark of hope appears by late afternoon.",
+          "events": [
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e1",
+              "content": "Saturday morning smelled of turned earth and tomato leaves as a dozen volunteers laughed between baskets, hands stained and baskets overflowing with bright peppers and cherry tomatoes.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e2",
+              "content": "Midday, a terse city weather alert pinged every phone: overnight frost expected, with temperatures plunging by midnight.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e3",
+              "content": "By late afternoon a white rim crept over basil and lettuce; panic flared until Rosa, wiping soil from her palms, sprinted to the old tool shed and announced a stack of spare blankets and a small propane heater.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "As dusk falls the team scrambles with tarps and blankets, mounting momentum leads to a tense night of improvisation and a relieved dawn.",
+          "events": [
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e4",
+              "content": "At dusk Maria grabbed a damp blue tarp and flung it over the raised tomato beds, knotting the corners to the chain-link fence while wind tried to pry it away.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e5",
+              "content": "Others surged into motion, forming a human chain to pass quilts, stakes, and lanterns down the rows, voices speeding as they tied ropes and bunched covers into improvised greenhouses.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p09_a_communitygarden_harvest_threatened_e6",
+              "content": "When dawn spilled pale light across the beds, silver crusted the grass but the covered plots were dark and warm; exhausted hands cheered as the tomatoes gleamed with melted beads, still intact.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p09_a_communitygarden_harvest_threatened_q1",
+              "query": "At which moment did someone fling a blue tarp over the raised tomato beds and knot its corners to the fence?",
+              "expected_memory_ids": [
+                "p09_a_communitygarden_harvest_threatened_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p09_a_communitygarden_harvest_threatened_q2",
+              "query": "What did the initial weather alert say when it first pinged the gardeners' phones?",
+              "expected_memory_ids": [
+                "p09_a_communitygarden_harvest_threatened_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p09_a_communitygarden_harvest_threatened_q3",
+              "query": "Which moment marks when the group's dread first shifted into a thread of hope, as someone found a practical way to fight the cold?",
+              "expected_memory_ids": [
+                "p09_a_communitygarden_harvest_threatened_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p09_a_communitygarden_harvest_threatened_q4",
+              "query": "Which moment captures the mounting momentum as volunteers formed a human chain, passing quilts, stakes, and lanterns down the rows?",
+              "expected_memory_ids": [
+                "p09_a_communitygarden_harvest_threatened_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p10_coaching_a_kids_chess",
+      "description": "A coach hustles a kids' chess team through a nerve-wracking district qualifier and a controversial semifinal on the way to the regional final.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "At the school gym during the district qualifier the coach confronts jittery players, a shocking blunder, and a quick tactical regroup.",
+          "events": [
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e1",
+              "content": "Under the harsh gym lights before the first round, the coach tacks the tournament bracket to the bulletin board while players fidget, whispering and tracing opening lines on their palms.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e2",
+              "content": "Midway through the game, Sam overlooks a simple mate in two, his shoulders folding as the clock ticks and the room fills with stunned silence.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e3",
+              "content": "In the timeout the coach kneels beside Sam, feverishly sketching a defensive pattern on a scrap of paper, and the team's faces change from panic to a hard, determined focus.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Two days later at the semifinal the team faces a late accusation, an intimidating inspection, and a decisive game that will decide the regional final berth.",
+          "events": [
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e4",
+              "content": "At the semifinal table the coach quietly slides a folded note with opening lines across to Maya just before she takes her seat, a furtive action that draws eyes later.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e5",
+              "content": "An opposing coach storms over to the table, slamming a hand on the board and accusing the team of cheating, pointing at the folded note and demanding an inspection.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p10_coaching_a_kids_chess_e6",
+              "content": "After a tense review clears them, Maya plays a calm final game and wins with a clever endgame, and the coach lets out a trembling, relieved laugh as the team erupts.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p10_coaching_a_kids_chess_q1",
+              "query": "Describe the physical act the coach performed right before Maya took her seat at the semifinal board.",
+              "expected_memory_ids": [
+                "p10_coaching_a_kids_chess_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p10_coaching_a_kids_chess_q2",
+              "query": "In the earlier district qualifier at the school gym, what simple tactical win did Sam miss that caused him to slump during the match?",
+              "expected_memory_ids": [
+                "p10_coaching_a_kids_chess_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p10_coaching_a_kids_chess_q3",
+              "query": "Which moment marked the turning point when the team's mood shifted from dread to focused determination?",
+              "expected_memory_ids": [
+                "p10_coaching_a_kids_chess_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p10_coaching_a_kids_chess_q4",
+              "query": "What did the coach pin to the gym wall before the team's very first match, as opposed to the folded note that appears later?",
+              "expected_memory_ids": [
+                "p10_coaching_a_kids_chess_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p11_a_beekeeping_season_disrupted",
+      "description": "A beekeeping season where small signs of trouble escalate into a swarm loss and a tense search that ends in rescue.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Early-season checks move from hopeful routine to a sudden scare and an unexpected moment of reassurance.",
+          "events": [
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e1",
+              "content": "On a warm morning I pried open the top and went through my spring ritual, scraping propolis and marking the queen with a careful puff of smoke as the garden buzzed around me.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e2",
+              "content": "At midday I stood at the hive entrance and watched only a handful of bees return, the usual river of workers reduced to nervous droplets.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e3",
+              "content": "Fear flared as I peered through a tiny gap, then dissolved when a single unmistakable queen profile threaded through the comb and I laughed aloud with sudden, ridiculous relief.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A later discovery of abandonment triggers a tense search through the orchard that culminates in finding the swarm.",
+          "events": [
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e4",
+              "content": "A week later I arrived at dawn to sticky, empty supers and the top cluster gone; the silence over the boxes made my chest drop.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e5",
+              "content": "Two days after that I crossed the orchard following a sparse trickle of workers heading back toward the hives, each flutter and gap in their line knotting my hope tighter as I moved toward the trees.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p11_a_beekeeping_season_disrupted_e6",
+              "content": "High in a wind-bent treetop a ragged cluster clung to a limb; I eased them into a capture box and, cradling the cage on the drive home, an aching fatigue softened into a quiet, close gratitude.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p11_a_beekeeping_season_disrupted_q1",
+              "query": "Earlier in the season, when did I first notice only a handful of bees returning to the hive entrance?",
+              "expected_memory_ids": [
+                "p11_a_beekeeping_season_disrupted_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p11_a_beekeeping_season_disrupted_q2",
+              "query": "At which moment did the fear of having lost the colony flip into a sudden, breath-out relief when I recognized the queen?",
+              "expected_memory_ids": [
+                "p11_a_beekeeping_season_disrupted_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p11_a_beekeeping_season_disrupted_q3",
+              "query": "Which moment described my initial spring ritual of opening hives and marking the queen on a warm morning, rather than the later time I spotted the queen through a gap?",
+              "expected_memory_ids": [
+                "p11_a_beekeeping_season_disrupted_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p11_a_beekeeping_season_disrupted_q4",
+              "query": "When did I follow a small, anxious trickle of workers across the orchard, each step tightening the sense that something big was about to happen?",
+              "expected_memory_ids": [
+                "p11_a_beekeeping_season_disrupted_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p12_organising_a_surprise_reunion",
+      "description": "Two-session arc of organizing a surprise reunion that almost leaked, following rising tension, a close call, a determined pivot, a last-minute scare, and final relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Planning and escalating worry as a mistaken message threatens to expose the surprise, followed by a decisive move to contain the leak.",
+          "events": [
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e1",
+              "content": "At a corner table in a dim café I scribbled the guest list and assigned coded nicknames, slipping the paper under a napkin whenever someone glanced our way.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e2",
+              "content": "That evening my phone exploded with a group-chat image of the venue and a laughing emoji; my chest tightened as a casual comment suddenly felt like an exposed thread.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e3",
+              "content": "I swallowed panic, called the sender, and begged them to delete the photo and switch to code names—steadying my hands I rewrote alibis and changed the meeting time in whispers to keep the plan alive.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A day-of scramble with another near-miss outside the venue before the final tense moments that lead into the reveal and relief.",
+          "events": [
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e4",
+              "content": "The day before my younger sister burst through the door carrying a cake box labeled 'REUNION 7PM,' humming the host's name and nearly handing it to the landlord, forcing me to snatch it away and invent a cover story.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e5",
+              "content": "Outside the venue on arrival a friend started a live story showing string lights and balloons, thumb hovering over 'post' before they deleted it and mouthed 'sorry' when I grabbed their phone, the reveal hanging by a thread.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p12_organising_a_surprise_reunion_e6",
+              "content": "The lights went out and everyone jumped up—when we screamed 'Surprise!' the room flooded with hugs, laughter, and the sudden, disbelieving smiles that washed away every frayed nerve.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p12_organising_a_surprise_reunion_q1",
+              "query": "Who walked into the apartment holding a cake box that risked revealing the '7PM' date?",
+              "expected_memory_ids": [
+                "p12_organising_a_surprise_reunion_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p12_organising_a_surprise_reunion_q2",
+              "query": "What decisive action ended the panic and marked the turning point when secrecy was restored?",
+              "expected_memory_ids": [
+                "p12_organising_a_surprise_reunion_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p12_organising_a_surprise_reunion_q3",
+              "query": "Where did the organizer first write the guest list and assign the coded nicknames, as distinct from the later messages that used those nicknames?",
+              "expected_memory_ids": [
+                "p12_organising_a_surprise_reunion_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p12_organising_a_surprise_reunion_q4",
+              "query": "Who nearly broadcast the decorations by starting a live story just before the reveal, creating the final building tension?",
+              "expected_memory_ids": [
+                "p12_organising_a_surprise_reunion_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p13_recovering_a_lost_wedding",
+      "description": "A two-session emotional arc about losing and recovering a wedding ring on a hiking trail, moving from panic to relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning on the trailhead as she realizes the ring is missing and frantically searches.",
+          "events": [
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e1",
+              "content": "At the trailhead picnic table she slammed her palm to her forehead when she realized the wedding ring had slipped off, breath catching as she scanned the wooden slats.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e2",
+              "content": "She retraced the first quarter mile, crouching to check pebbles and grass and calling the ring's nickname aloud in a voice that trembled through the pines.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e3",
+              "content": "Dusk brought a sudden rain that slicked the path and washed away footprints, leaving her stomach hollow with the thought that the ring had vanished into the mud.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A return to the creek the next day leads to a tense discovery and eventual recovery.",
+          "events": [
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e4",
+              "content": "The next morning she followed the creek's bank and froze when a tiny, unmistakable glint bounced off a mossy rock just beyond ankle-deep water.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e5",
+              "content": "She reached under a fallen log into a shallow puddle, feeling cold mud slick over her fingers before brushing metal and dragging the ring out, disbelief and a fierce hope tightening her chest.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p13_recovering_a_lost_wedding_e6",
+              "content": "With muddy hands she eased the ring back onto her finger and exhaled, tears blurring the trail as a strange, weightless calm settled over her.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p13_recovering_a_lost_wedding_q1",
+              "query": "At the creek the next morning, where did she freeze when that tiny glint caught her eye?",
+              "expected_memory_ids": [
+                "p13_recovering_a_lost_wedding_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p13_recovering_a_lost_wedding_q2",
+              "query": "During her initial retrace of the trail, what did she do while searching the first quarter mile?",
+              "expected_memory_ids": [
+                "p13_recovering_a_lost_wedding_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p13_recovering_a_lost_wedding_q3",
+              "query": "Where at the trailhead did she slam her palm to her forehead when she first realized the wedding ring was gone?",
+              "expected_memory_ids": [
+                "p13_recovering_a_lost_wedding_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p13_recovering_a_lost_wedding_q4",
+              "query": "What tightening sensation did she feel as she brushed through cold mud and pulled metal from a shallow puddle, the surge just before the turning point?",
+              "expected_memory_ids": [
+                "p13_recovering_a_lost_wedding_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p14_a_neighbourhood_bakery_surviving",
+      "description": "A neighbourhood bakery weathers an inspector scare across two sessions, moving from mounting tension to a final conditional reprieve.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning panic as an inspector looms, a frantic arrival, and a sudden discovery that briefly shifts the mood.",
+          "events": [
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e1",
+              "content": "Lola's hands freeze when she listens to a terse voicemail: someone reported a pest sighting to the health department and an inspector might arrive any moment.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e2",
+              "content": "A sharp tap on the front door reveals a uniformed inspector, clipboard in hand, and the bakers freeze as flour dust hangs in the air and unswept corners feel unbearable.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e3",
+              "content": "Maya yanks open a recipe book and triumphantly slaps a crumpled temporary permit onto the counter, forcing the inspector to stop and read as the kitchen exhales around her.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A renewed inspection finds a new sanitation alarm, a burst of panic, and a negotiated conditional fix that spares the shop.",
+          "events": [
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e4",
+              "content": "Midway through checking the ovens, the inspector taps a thin hairline crack near the fryer and gestures at a sour smell that has everyone falling silent.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e5",
+              "content": "An apprentice's panicked shout that she'd seen droppings in the back alley ignites a fresh wave of alarm, voices rising as hands scramble for brooms and trays.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p14_a_neighbourhood_bakery_surviving_e6",
+              "content": "Outside, neighbors press faces to the window and, after a tense corridor of whispered negotiating, the inspector hands over a conditional notice giving a week to fix minor issues, sending the staff into trembling laughter and urgent relief.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p14_a_neighbourhood_bakery_surviving_q1",
+              "query": "At what exact moment did the inspector tap the thin hairline crack near the fryer while mentioning the sour smell?",
+              "expected_memory_ids": [
+                "p14_a_neighbourhood_bakery_surviving_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p14_a_neighbourhood_bakery_surviving_q2",
+              "query": "What happened when the inspector first arrived and knocked on the bakery door?",
+              "expected_memory_ids": [
+                "p14_a_neighbourhood_bakery_surviving_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p14_a_neighbourhood_bakery_surviving_q3",
+              "query": "Which specific moment in the first session marked the shift from dread to relief?",
+              "expected_memory_ids": [
+                "p14_a_neighbourhood_bakery_surviving_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p14_a_neighbourhood_bakery_surviving_q4",
+              "query": "Which moment built the new wave of panic by someone shouting about droppings in the back alley?",
+              "expected_memory_ids": [
+                "p14_a_neighbourhood_bakery_surviving_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p15_fostering_twins_through_a",
+      "description": "A two-session arc following new foster parents navigating a turbulent first month with newborn twins, from fraught arrival through a turning point to eventual relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The first days at home are a whirl of exhaustion, feeding failures, and a midnight turning point when outside help changes everything.",
+          "events": [
+            {
+              "memory_id": "p15_fostering_twins_through_a_e1",
+              "content": "They pushed twin carriers through the front door at dusk, two tiny bundles trembling in swaddles while the parents stared at the quiet house and all the how-to videos on their phones.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p15_fostering_twins_through_a_e2",
+              "content": "That first night both refused the breast and the mother tried every hold from her notes as one twin screamed like thunder and the father paced, helpless.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p15_fostering_twins_through_a_e3",
+              "content": "At 3 a.m., a neighbor midwife knocked, showed a single latch-and-hold trick, and within minutes both babies quieted into small, exhausted breaths—everything felt like it shifted.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Two weeks on brings small miracles, confusing setbacks, and a final easing after medical reassurance and a new routine.",
+          "events": [
+            {
+              "memory_id": "p15_fostering_twins_through_a_e4",
+              "content": "Two weeks later, a morning miracle: for the first time both twins slept an unbroken stretch long enough for the parents to stand at the sink and eat cold cereal together.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p15_fostering_twins_through_a_e5",
+              "content": "A few days on, a nap looked deceptively calm—one twin slept deeply while the other fussed intermittently beside him, leaving the parents unsure what had changed.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p15_fostering_twins_through_a_e6",
+              "content": "After a pediatrician visit and a new feeding schedule that afternoon, the couple sat on the couch trading whispered jokes about names, suddenly able to breathe and laugh together.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p15_fostering_twins_through_a_q1",
+              "query": "Which event describes the moment when both twins finally slept the same long, unbroken stretch that let the parents eat cereal at the sink?",
+              "expected_memory_ids": [
+                "p15_fostering_twins_through_a_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p15_fostering_twins_through_a_q2",
+              "query": "What happened during the earlier night at home when breastfeeding failed and the parents frantically tried every hold, before later improvements?",
+              "expected_memory_ids": [
+                "p15_fostering_twins_through_a_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p15_fostering_twins_through_a_q3",
+              "query": "Which moment was the emotional turning point when frantic dread gave way to sudden calm after a neighbor showed a simple technique and both babies settled?",
+              "expected_memory_ids": [
+                "p15_fostering_twins_through_a_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p15_fostering_twins_through_a_q4",
+              "query": "Which moment describes arriving home at dusk with the twin carriers through the front door, not the later scene on the couch when they could finally breathe?",
+              "expected_memory_ids": [
+                "p15_fostering_twins_through_a_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p16_a_choir_preparing_for",
+      "description": "A choir prepares for a cathedral debut across two rehearsal sessions, moving from pressure and mistakes to a charged recovery and a triumphant dress run.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 covers the shock of the announcement, a missed entrance, and the small, tense recovery that steadies the group.",
+          "events": [
+            {
+              "memory_id": "p16_a_choir_preparing_for_e1",
+              "content": "At the first rehearsal the conductor stood beneath the rafters and declared the cathedral debut in six weeks, and the room hummed with stunned excitement and immediate pressure.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p16_a_choir_preparing_for_e2",
+              "content": "Halfway through a complex anthem, the lead soprano's throat closed and she missed her soft entrance, leaving a hollow silence and dozens of turned faces.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p16_a_choir_preparing_for_e3",
+              "content": "The conductor's baton slammed and fury filled the room, but a shy tenor began a low, steady hum that slowly pulled everyone back into focus.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 follows rehearsals at the cathedral as the choir faces echoing acoustics, builds momentum in sectionals, and completes a flawless dress run.",
+          "events": [
+            {
+              "memory_id": "p16_a_choir_preparing_for_e4",
+              "content": "At the cathedral for the first full run-through, the cavernous space swallowed their tentative opening and every flaw stretched like an echo.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p16_a_choir_preparing_for_e5",
+              "content": "In a tense sectional the soprano line finally held a vulnerable long note—Miriam breathed, steadied, and the part swelled into a hair-raising surge of resolve.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p16_a_choir_preparing_for_e6",
+              "content": "On the dress run the anthem sailed without a missed entrance, the choir releasing a held breath as the conductor's shoulders sagged in quiet relief.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p16_a_choir_preparing_for_q1",
+              "query": "Describe the earlier moment when the lead soprano first missed her soft entrance in rehearsal—what happened then?",
+              "expected_memory_ids": [
+                "p16_a_choir_preparing_for_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p16_a_choir_preparing_for_q2",
+              "query": "At what moment during that opening rehearsal did the mood pivot from shocked pressure to renewed focus?",
+              "expected_memory_ids": [
+                "p16_a_choir_preparing_for_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p16_a_choir_preparing_for_q3",
+              "query": "What happened when the conductor first announced the cathedral debut at the opening rehearsal?",
+              "expected_memory_ids": [
+                "p16_a_choir_preparing_for_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p16_a_choir_preparing_for_q4",
+              "query": "During the sectional that built toward the turning point, what change in the soprano line signaled the rising momentum?",
+              "expected_memory_ids": [
+                "p16_a_choir_preparing_for_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p17_repairing_a_vintage_motorcycle",
+      "description": "You inherit a battered vintage motorcycle from a friend and, across two sessions, move from careful tinkering through a crushing setback to a discovery that brings the engine roaring back to life.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 covers the unveiling and first attempts: pulling the tarp, beginning to strip parts while memories surface, and then hitting a bad mechanical failure that drains your confidence.",
+          "events": [
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e1",
+              "content": "You pull the tarp off and freeze: faded chrome under dust, a cracked leather seat, the keys still turned in the ignition and a sticky handwritten note draped over the grip.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e2",
+              "content": "You roll the bike onto stands and start stripping the carburetor, oil-slick hands wrestling seized bolts while your mind keeps hearing your friend's laugh and the way he taught you to listen to a motor.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e3",
+              "content": "A rear bolt snaps with a sickening ping and a rusted bracket crumbles in your fist, and for the first time the finish line you imagined all night feels suddenly out of reach.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 pivots: you find a hidden personal hint from your friend, follow it to coax the engine into a ragged cough, and on the next try the bike finally roars, flooding the garage with memory.",
+          "events": [
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e4",
+              "content": "Under the rickety saddle you find a folded Polaroid of your friend grinning, and on the back a cramped repair tip in his handwriting: 'check the float height—use a shim from the old strip.'",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e5",
+              "content": "Following that exact tip you shim the float and reassemble the carburetor, and on the third kick the engine coughed twice in a ragged cadence, the garage thick with the sense that the real test was imminent.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p17_repairing_a_vintage_motorcycle_e6",
+              "content": "On the next try the motor surged into a steady roar that shook the workbench, and you laughed through a choke as oil smoke and memory filled the room and his presence felt oddly close.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p17_repairing_a_vintage_motorcycle_q1",
+              "query": "Which moment did you find the folded Polaroid with your friend's grin and the repair tip scrawled on the back beneath the saddle?",
+              "expected_memory_ids": [
+                "p17_repairing_a_vintage_motorcycle_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p17_repairing_a_vintage_motorcycle_q2",
+              "query": "Which moment marked the point where your earlier optimism about finishing the bike in one stretch collapsed into a chilling certainty that the job might be beyond you?",
+              "expected_memory_ids": [
+                "p17_repairing_a_vintage_motorcycle_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p17_repairing_a_vintage_motorcycle_q3",
+              "query": "Which moment was the first time you uncovered the bike and saw the keys still turned in the ignition with a handwritten note draped over the grip?",
+              "expected_memory_ids": [
+                "p17_repairing_a_vintage_motorcycle_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p17_repairing_a_vintage_motorcycle_q4",
+              "query": "Which moment gave you the rush of near-success when, after applying the tip you found, the engine coughed twice in a ragged cadence and left you poised on the edge before the final attempt?",
+              "expected_memory_ids": [
+                "p17_repairing_a_vintage_motorcycle_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p18_a_tidepool_research_trip",
+      "description": "A planned tide-pool research outing spirals off-schedule when the tide turns, forcing improvisation and a tense rescue that ends in weary relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "A dawn low-tide survey turns urgent as an unexpected swell closes in and gear is swept away.",
+          "events": [
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e1",
+              "content": "They clambered over slick barnacled rocks at dawn, breathless as they bent to photograph a vivid purple sea star clinging to a sun-warmed pool.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e2",
+              "content": "A sudden swell slid under their boots as the tide crept in faster than the forecast, and someone shouted when labeled vials began bobbing and tilting in the shallows.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e3",
+              "content": "Before they could pack, a crashing wave flipped the plastic cooler, scattering samples and a soaked notebook into foamy water while dread tightened across faces.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Later they spot a distant skiff and nervously test a makeshift crossing that leads to a sodden but hopeful return.",
+          "events": [
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e4",
+              "content": "From the stranded ledge an hour later, Mara's hand went white on the lens as she spotted a lone skiff tied to a mossy outcrop across the narrow channel, its single oar glinting in a patch of sunlight.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e5",
+              "content": "They fashioned a makeshift ferry, looping a climbing sling through the skiff's bow and testing a shaky pull as waves slapped the rocks, everyone holding their breath as the craft inched toward them.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p18_a_tidepool_research_trip_e6",
+              "content": "At low light they finally hauled the sodden samples and the shaken team aboard the skiff; Mara scooped a purple sea star off a floating kelp frond as wet laughter and exhausted relief broke when the shore came into view.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p18_a_tidepool_research_trip_q1",
+              "query": "When did Mara first spot the lone skiff with its oar glinting across the narrow channel?",
+              "expected_memory_ids": [
+                "p18_a_tidepool_research_trip_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p18_a_tidepool_research_trip_q2",
+              "query": "What happened at the first sign of the tide creeping in during their morning exploration?",
+              "expected_memory_ids": [
+                "p18_a_tidepool_research_trip_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p18_a_tidepool_research_trip_q3",
+              "query": "Where was the sea star they photographed at dawn clinging?",
+              "expected_memory_ids": [
+                "p18_a_tidepool_research_trip_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p18_a_tidepool_research_trip_q4",
+              "query": "What makeshift method did they nervously test to pull the skiff toward the ledge as waves slapped the rocks?",
+              "expected_memory_ids": [
+                "p18_a_tidepool_research_trip_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p19_rescuing_a_stalled_foodtruck",
+      "description": "A food-truck team tries to salvage a stalled festival launch through panic, neighborly help, improvisation, and a last-minute relaunch.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning setup tightens into unease as the crew races to open while a hungry line grows and technical trouble looms.",
+          "events": [
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e1",
+              "content": "Dawn: the team hustles to finish plating while a swelling line presses at the windows, voices buzzing and expectations pressing on the crew.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e2",
+              "content": "On the first sizzle a breaker snapped and the truck's lights dipped, a stunned silence replacing the excited chatter as oil cooled in the fryer.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e3",
+              "content": "Moments later the generator went dead and the festival manager threatened to pull their permit, leaving cooks frozen with the smell of uncooked food and a sudden, heavy hopelessness.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "After power collapses, frantic improvisation and a neighbor's aid ignite a coordinated push that turns the stall into a frantic relaunch and then release.",
+          "events": [
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e4",
+              "content": "A neighboring brewer dashed over carrying a compact inverter with a faded blue sticker—the only adapter that matched the truck's odd plug—and they watched it whir when he clipped it on.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e5",
+              "content": "Rallying, the crew stripped the line into a tight choreography, one cook rolled out a portable gas burner while others practiced rapid plating, their movements snapping into sync as the crowd count swelled.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p19_rescuing_a_stalled_foodtruck_e6",
+              "content": "When the inverter held and the new routine sent the first full orders steaming out, the crowd erupted and the manager nodded, leaving the team soaked in exhausted triumph as the truck finally roared to life.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p19_rescuing_a_stalled_foodtruck_q1",
+              "query": "Who brought the compact inverter with the faded blue sticker that fit the truck's odd plug?",
+              "expected_memory_ids": [
+                "p19_rescuing_a_stalled_foodtruck_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p19_rescuing_a_stalled_foodtruck_q2",
+              "query": "What first happened to the truck's equipment when they began cooking, before any later improvisations?",
+              "expected_memory_ids": [
+                "p19_rescuing_a_stalled_foodtruck_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p19_rescuing_a_stalled_foodtruck_q3",
+              "query": "At which moment did the crew's anxious hope suddenly collapse into stunned disbelief while the manager threatened to shut them down?",
+              "expected_memory_ids": [
+                "p19_rescuing_a_stalled_foodtruck_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p19_rescuing_a_stalled_foodtruck_q4",
+              "query": "Which moment shows the team shifting into a precise, urgent rhythm—rolling out a gas burner and syncing movements—to push orders forward?",
+              "expected_memory_ids": [
+                "p19_rescuing_a_stalled_foodtruck_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p20_learning_sign_language_to",
+      "description": "Two short sessions record my anxious attempts to learn sign language with a new colleague, moving from fumbling greetings to a scheduled signed meeting.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First session: awkward first attempts, a misunderstanding, and a private correction that begins to change things.",
+          "events": [
+            {
+              "memory_id": "p20_learning_sign_language_to_e1",
+              "content": "I fumbled the first hello sign, fingers trembling as I tried to spell my colleague's name and felt the room close in for a heartbeat.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p20_learning_sign_language_to_e2",
+              "content": "I swept my hand the wrong way while attempting the sign for 'meet', and my colleague looked puzzled before pointing to their calendar with a polite smile.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p20_learning_sign_language_to_e3",
+              "content": "After a private correction, I suddenly formed the sign correctly, and the knot in my chest eased as my colleague mirrored it back—something shifted in the air.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Second session: cafe breakthroughs, targeted practice, and finally scheduling and executing a signed meeting.",
+          "events": [
+            {
+              "memory_id": "p20_learning_sign_language_to_e4",
+              "content": "At the cafe break, I finally signed 'coffee' and my colleague cupped their hands like a steaming mug before laughing, sealing the joke between us.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p20_learning_sign_language_to_e5",
+              "content": "Later I practiced spelling their name with flashcards, and when I got it right they clapped softly and offered a thumbs-up that made me beam.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p20_learning_sign_language_to_e6",
+              "content": "By the end of the week we scheduled a signed meeting and executed the sign for 'meet' smoothly, laughing at how different it felt.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p20_learning_sign_language_to_q1",
+              "query": "Which moment describes when my colleague cupped their hands like a steaming mug after I formed the sign for 'coffee'?",
+              "expected_memory_ids": [
+                "p20_learning_sign_language_to_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p20_learning_sign_language_to_q2",
+              "query": "What happened the first time I attempted the sign for 'meet', when I swept my hand the wrong way and my colleague pointed to their calendar?",
+              "expected_memory_ids": [
+                "p20_learning_sign_language_to_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p20_learning_sign_language_to_q3",
+              "query": "Which moment was the turning point where the knot in my chest eased after a private correction and my colleague mirrored the sign, marking the shift from dread to relief?",
+              "expected_memory_ids": [
+                "p20_learning_sign_language_to_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p20_learning_sign_language_to_q4",
+              "query": "Which moment describes my very first hello attempt when my fingers trembled as I tried to spell my colleague's name and I felt the room close in, not the later flashcard practice?",
+              "expected_memory_ids": [
+                "p20_learning_sign_language_to_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p21_a_glassblowing_apprenticeship_and",
+      "description": "A glassblowing apprenticeship unfolds across two sessions as a novice shapes a first piece that nearly shatters and must be remade to hold.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The apprentice's first day at the bench builds pressure, delivers a fragile success, and then pivots on a near-disaster that is narrowly averted.",
+          "events": [
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e1",
+              "content": "The furnace heat pressed at my forehead as the master slid me the blowpipe and everyone at the bench leaned in while I gathered my first bubble.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e2",
+              "content": "With a sudden steadiness I sealed the punty and pinched the neck; the glass thinned into an elegant lip as it yielded under my tool.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e3",
+              "content": "A spider crack raced across the side and my stomach dropped—every eye went still as I braced for it to fail. The master wiped a cloth, cooled the edge by hand, and the fissure quieted enough that the shape held, and something in the room relaxed.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Haunted by the crack, the apprentice returns determined, mounting a tense second attempt that culminates in a triumphant hold.",
+          "events": [
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e4",
+              "content": "That night I couldn't stop replaying the crack, and I returned to the bench with my palms still clammy and a plan to remake the piece stronger.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e5",
+              "content": "Back at the pipe I breathed slow, the glass glowing like a hot ember as I steadied the neck and prepared the decisive pinch that would determine the piece's fate.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p21_a_glassblowing_apprenticeship_and_e6",
+              "content": "This time the punty came off clean, the form held in my hands, and the bench broke into low, astonished murmurs as I set the finished piece on the table.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p21_a_glassblowing_apprenticeship_and_q1",
+              "query": "Earlier in the first session (not the later attempt), what exactly did I do when I sealed the punty and formed the lip?",
+              "expected_memory_ids": [
+                "p21_a_glassblowing_apprenticeship_and_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p21_a_glassblowing_apprenticeship_and_q2",
+              "query": "Which moment marked the shift from dread to relief when the crack appeared and the room's mood changed?",
+              "expected_memory_ids": [
+                "p21_a_glassblowing_apprenticeship_and_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p21_a_glassblowing_apprenticeship_and_q3",
+              "query": "On the first day, when the master slid me the blowpipe and everyone leaned in at the bench, what was happening as I began shaping that first bubble?",
+              "expected_memory_ids": [
+                "p21_a_glassblowing_apprenticeship_and_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p21_a_glassblowing_apprenticeship_and_q4",
+              "query": "On the return attempt at the bench, which moment felt like the held breath just before the decisive pinch that would decide the piece's fate?",
+              "expected_memory_ids": [
+                "p21_a_glassblowing_apprenticeship_and_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p22_saving_a_dying_orchard",
+      "description": "A community fights to save a dying orchard through risky grafting experiments that move from desperate urgency to fragile revival.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 follows the discovery of the orchard's decline and the team's frantic grafting attempts that end in a painful setback.",
+          "events": [
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e1",
+              "content": "At dawn she walked the oldest row and found leaves curled like paper, a thin black sap streaking down trunks where bark had split open, and the sight stole the night's sleep from her chest.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e2",
+              "content": "She and a young horticulturist worked through the afternoon, slicing scions and binding them to stubborn rootstocks with trembling hands, whispering old nursery prayers as they tied each wrap.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e3",
+              "content": "Two weeks later every tied graft blackened; budwood rotted and a sour smell rose from the root collars, and the team's clenched optimism unspooled into numb, hollow silence.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 traces a fragile turning point: a lone success that fans out into hopeful shoots and, finally, quiet restoration.",
+          "events": [
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e4",
+              "content": "At dawn one tiny scion on the original test tree had a single swollen bud, pale and stubborn against the dead bark, a pinpoint of life in the quiet row.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e5",
+              "content": "Within days the next bed answered in kind—row after row sent trembling green pins that seemed to march out from that one stubborn bud, and the team began to hold their breath anew as momentum built.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p22_saving_a_dying_orchard_e6",
+              "content": "By harvest the orchard carried a chorus of small apples and she walked between the rows laughing and crying at once as trees leaned into a future she had almost let die.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p22_saving_a_dying_orchard_q1",
+              "query": "Which moment described the lone scion on the original test tree producing a single swollen bud against dead bark, rather than the later mass of green pins across the beds?",
+              "expected_memory_ids": [
+                "p22_saving_a_dying_orchard_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p22_saving_a_dying_orchard_q2",
+              "query": "During session 1, at which moment did the team's initial optimism collapse into despair?",
+              "expected_memory_ids": [
+                "p22_saving_a_dying_orchard_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p22_saving_a_dying_orchard_q3",
+              "query": "Which moment described her first discovery at dawn of curled, browned leaves and dark sap at the orchard's edge, distinct from later mornings when any buds appeared?",
+              "expected_memory_ids": [
+                "p22_saving_a_dying_orchard_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p22_saving_a_dying_orchard_q4",
+              "query": "Which moment carried the mounting sense that the grafting work was tipping toward a breakthrough, as rows began to answer that first stubborn bud?",
+              "expected_memory_ids": [
+                "p22_saving_a_dying_orchard_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p23_a_podcast_episode_that",
+      "description": "A podcast episode exposes a long-hidden personal secret, unfolding across two tense recording sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session one raises tension with a discovered envelope, a hinting voicemail, and a sharp on-air confrontation.",
+          "events": [
+            {
+              "memory_id": "p23_a_podcast_episode_that_e1",
+              "content": "The episode begins with the host discovering a sealed envelope on the producer's desk; hands trembling, they read a single line accusing them of hiding a years-old affair.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p23_a_podcast_episode_that_e2",
+              "content": "Minutes later they play a calm prerecorded voicemail from a longtime listener that, in a measured tone, hints at 'the nights you left' and forces the host to swallow hard.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p23_a_podcast_episode_that_e3",
+              "content": "Before anyone can steady the room, the producer bursts onto the mic to defend themselves, voice cracking as they insist it was an accident, and the host slams a mug in a stunned, angry beat.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session two escalates as old audio is unearthed, a live call slices the air just before a name, and a final clip forces the truth into the open.",
+          "events": [
+            {
+              "memory_id": "p23_a_podcast_episode_that_e4",
+              "content": "At the start of the second session the host fumbles an old phone and presses play on a buried voicemail whose ragged voice says only 'I can't hold it anymore,' making the studio go icy silent.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p23_a_podcast_episode_that_e5",
+              "content": "A guest then dials the host's ex live; the line clicks, a whispering breath seems to rush toward a name, and the call cuts off mid-syllable, leaving everyone leaning forward as if about to fall.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p23_a_podcast_episode_that_e6",
+              "content": "Finally, a producer, refusing to stay silent, plays a clipped recording that plainly names the person at the center of the rumor, and the host lets out a single sharp laugh that breaks into something like release.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p23_a_podcast_episode_that_q1",
+              "query": "Which moment describes the host pressing play on a buried voicemail from an old phone that said 'I can't hold it anymore'?",
+              "expected_memory_ids": [
+                "p23_a_podcast_episode_that_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p23_a_podcast_episode_that_q2",
+              "query": "Which earlier moment in the first session featured a calm prerecorded voicemail from a longtime listener that hinted 'the nights you left'?",
+              "expected_memory_ids": [
+                "p23_a_podcast_episode_that_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p23_a_podcast_episode_that_q3",
+              "query": "Which moment describes the host finding a sealed envelope on the producer's desk at the episode's very start and reading an accusatory line?",
+              "expected_memory_ids": [
+                "p23_a_podcast_episode_that_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p23_a_podcast_episode_that_q4",
+              "query": "Which moment escalated the tension by dialing the host's ex live, letting the line click and cut off just before a name was spoken?",
+              "expected_memory_ids": [
+                "p23_a_podcast_episode_that_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p24_training_a_horse_spooked",
+      "description": "A two-session emotional arc following a trainer working with a horse spooked by thunderstorms.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 moves from initial alarm to a frightening setback and a small breakthrough in trust.",
+          "events": [
+            {
+              "memory_id": "p24_training_a_horse_spooked_e1",
+              "content": "Dark clouds rolled over the paddock as low rumbles threaded the air; the mare's ears flattened and she danced on her hooves, eyes wide as the first distant lightning split the sky.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p24_training_a_horse_spooked_e2",
+              "content": "I tightened the lead and whispered the usual cue, but at a sudden crack she lunged, the rope snapping through my hands and sending wood chips skittering.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p24_training_a_horse_spooked_e3",
+              "content": "After catching my breath I dropped the rope and let her find me instead; she inched forward, nostrils twitching, and pressed her forehead against my chest, the frantic trembling slackening.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 escalates the challenge with closer thunder, builds deliberate pressure, and ends with steadiness as the storm passes.",
+          "events": [
+            {
+              "memory_id": "p24_training_a_horse_spooked_e4",
+              "content": "Two nights later, thunder shook the barn, so I led her into the stall and placed a heavy blanket across her back to shelter her; she froze under the weight while the storm rattled the walls.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p24_training_a_horse_spooked_e5",
+              "content": "Later we walked into the arena as lightning danced beyond the trees; each clap made her coil, so I matched her breath and counted slow steps while a flapping tarp brushed past, trying to steady the rising tension toward a test.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p24_training_a_horse_spooked_e6",
+              "content": "When the biggest clap rolled directly overhead she stood and lowered her head, rain tapping the roof while I kept a hand on her neck until she stood quiet as the storm moved on.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p24_training_a_horse_spooked_q1",
+              "query": "What specifically happened when the trainer sheltered the horse inside the stall by placing a heavy blanket across her back?",
+              "expected_memory_ids": [
+                "p24_training_a_horse_spooked_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p24_training_a_horse_spooked_q2",
+              "query": "During the first session, what earlier action occurred when a sudden crack startled the horse and the lead slipped through my hands?",
+              "expected_memory_ids": [
+                "p24_training_a_horse_spooked_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p24_training_a_horse_spooked_q3",
+              "query": "Which moment marked the emotional shift from mounting dread to the first easing, when the horse approached and pressed her forehead against the trainer?",
+              "expected_memory_ids": [
+                "p24_training_a_horse_spooked_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p24_training_a_horse_spooked_q4",
+              "query": "When did the trainer deliberately build pressure by walking into the arena amid lightning, matching the horse's breath and counting slow steps as a prelude to a turning point?",
+              "expected_memory_ids": [
+                "p24_training_a_horse_spooked_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p25_a_museum_nighttour_that",
+      "description": "A night museum tour that briefly loses a child, moving from wonder to panic and then relief across two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The evening tour begins in dim galleries, a child wanders off and the group realizes the child is missing, prompting an immediate search.",
+          "events": [
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e1",
+              "content": "The group drifted through dim galleries; the child squealed at a glowing dinosaur skeleton and tugged a parent's hand toward the fossil.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e2",
+              "content": "When the guide announced a photo stop, the parent glanced down to button a coat and only then realized the child was no longer between the hushed columns.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e3",
+              "content": "Voices rose and the parent's voice cracked as they shouted the child's name, the group fanning out beneath statue shadows with fear hardening into determined searching.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Clues and false leads prolong the search until a volunteer locates the child under a bench, ending the ordeal.",
+          "events": [
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e4",
+              "content": "Half an hour later a security guard found a single small sneaker by the interactive sea tank and called out, \"Is someone missing a shoe?\"",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e5",
+              "content": "From the mezzanine a visiting family waved frantically, insisting they'd just seen a little figure by the gift shop, which sent everyone rushing in the wrong direction.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p25_a_museum_nighttour_that_e6",
+              "content": "A volunteer finally crouched under a butterfly-room bench and lifted out the child, asleep and clutching a dinosaur toy; the parent's sobs broke into trembling laughter.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p25_a_museum_nighttour_that_q1",
+              "query": "Which moment described a staff member calling out after finding a lone sneaker by the interactive sea tank?",
+              "expected_memory_ids": [
+                "p25_a_museum_nighttour_that_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p25_a_museum_nighttour_that_q2",
+              "query": "In the earlier moment of the event where the parent first realized the child was missing, what did the parent do just before noticing the empty space?",
+              "expected_memory_ids": [
+                "p25_a_museum_nighttour_that_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p25_a_museum_nighttour_that_q3",
+              "query": "At which moment did the group's fear shift into determined searching, prompting them to fan out under the statue-lined halls?",
+              "expected_memory_ids": [
+                "p25_a_museum_nighttour_that_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p25_a_museum_nighttour_that_q4",
+              "query": "At the start of the tour, what did the child do when they reached the glowing dinosaur skeleton?",
+              "expected_memory_ids": [
+                "p25_a_museum_nighttour_that_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p26_building_an_accessible_ramp",
+      "description": "Two sessions chart a fraught, intimate effort to build a ramp for a stubborn relative, moving from confrontation to a fragile turning point and finally to relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First afternoon and evening: the painful discovery, a sharp refusal, and a small, surprising crack of cooperation.",
+          "events": [
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e1",
+              "content": "You noticed the deep polished groove on the front steps and your aunt habitually stepping around the top, a cold knot forming as you realized she had been avoiding them.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e2",
+              "content": "When you gently offered to build a ramp she snapped, slammed the door, and insisted she wasn't a burden, the words cutting sharper than the bang.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e3",
+              "content": "That evening she left a single tool by the door and, shy and awkward, agreed to let you 'try something small,' the first crack of hope after the blow.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A later day: plans falter, then a pivotal concession shifts momentum and the ramp is finally finished.",
+          "events": [
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e4",
+              "content": "The next morning the temporary lumber warped in the rain and the contractor you called couldn't come, and for a while the plan threatened to dissolve into helplessness.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e5",
+              "content": "As you were packing up she caught your eye, silently picked up a hammer, admitted she didn't want to be stuck on the porch forever, and reached out a hand to help lift the first plank.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p26_building_an_accessible_ramp_e6",
+              "content": "When the ramp finally sat firm she hesitated on the top step, then breathed out, walked down it with tears in her eyes, and the room exhaled with her.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p26_building_an_accessible_ramp_q1",
+              "query": "Describe the earlier moment when she slammed the door and refused any help — the instance before she later helped with the hammer.",
+              "expected_memory_ids": [
+                "p26_building_an_accessible_ramp_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p26_building_an_accessible_ramp_q2",
+              "query": "During the first evening, which moment marked the shift from anger and rejection to a fragile hope?",
+              "expected_memory_ids": [
+                "p26_building_an_accessible_ramp_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p26_building_an_accessible_ramp_q3",
+              "query": "What was the first sign you noticed on the front steps that made you realize she had been avoiding them?",
+              "expected_memory_ids": [
+                "p26_building_an_accessible_ramp_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p26_building_an_accessible_ramp_q4",
+              "query": "What small, tense action built momentum toward the turning point when she finally joined in lifting the plank?",
+              "expected_memory_ids": [
+                "p26_building_an_accessible_ramp_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p27_a_kitesurfing_trip_interrupted",
+      "description": "A kite-surfing trip is upended by a startling bloom of jellyfish, producing a tense emotional arc across two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Dawn launches and growing unease as translucent jellyfish appear and a tangled lines scare forces immediate help.",
+          "events": [
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e1",
+              "content": "We launched at dawn, the wind throwing the kite like a living thing and the board skimming over glassy blue; the first drop tightened my chest and made me grin at once.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e2",
+              "content": "Half a mile out the water shifted into a trembling field of translucent bells—hundreds of jellyfish glinting in the sun like a moving skin over the swell.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e3",
+              "content": "When Jasper's lines snagged and he spluttered, choking on salt, the group froze; I dove in to untangle him and his shaking hands finally eased as panic narrowed into focused, practical movement.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A return to a thicker bloom turns into a tense, coordinated push toward shore and a wounded, shaky relief at a safe inlet.",
+          "events": [
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e4",
+              "content": "The next morning the sea was a nightmare mirror: standing up to step off the board I felt dozens of glassy bodies brush my calves as if the ocean itself had grown skin.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e5",
+              "content": "We huddled, edging a narrow channel carved by the tide, inching the boards shoulder to shoulder and timing each shove toward the shore like a single held breath before a sprint.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p27_a_kitesurfing_trip_interrupted_e6",
+              "content": "A shallow rocky inlet broke the bloom and we tumbled ashore, scraping salty hands and letting out a brittle, salt-tasting laugh that felt like relief.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p27_a_kitesurfing_trip_interrupted_q1",
+              "query": "At which moment did he first feel dozens of jellyfish brush his calves as he rose to stand on the board?",
+              "expected_memory_ids": [
+                "p27_a_kitesurfing_trip_interrupted_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p27_a_kitesurfing_trip_interrupted_q2",
+              "query": "Which moment marks when the group's panic shifted into focused help, the instant the emotional tide turned?",
+              "expected_memory_ids": [
+                "p27_a_kitesurfing_trip_interrupted_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p27_a_kitesurfing_trip_interrupted_q3",
+              "query": "What happened during the very first launch from shore when the kite snapped them onto the swell?",
+              "expected_memory_ids": [
+                "p27_a_kitesurfing_trip_interrupted_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p27_a_kitesurfing_trip_interrupted_q4",
+              "query": "Which moment captures the tense inching and synchronized breaths as they threaded a narrow corridor toward the beach, building up to a decisive move?",
+              "expected_memory_ids": [
+                "p27_a_kitesurfing_trip_interrupted_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p28_reviving_a_shuttered_village",
+      "description": "A small village fights to reopen its shuttered cinema, moving from anxious plans and a crushing refusal to a last-ditch community push that brings the projector back to life.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The first meeting and early efforts, ending with a demoralizing refusal from the council.",
+          "events": [
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e1",
+              "content": "They push open the warped cinema doors and stand in the dust-choked lobby, fingers tracing the cracked poster frames as an anxious hush settles over them.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e2",
+              "content": "On the village green they strap a handmade 'Save the Reel' banner to a table and sell steaming tea from a chipped urn, counting coins under a streetlamp's thin glow.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e3",
+              "content": "A crisp envelope arrives with the council's blunt refusal of a permit, the cold list of safety costs laying the volunteers' plans flat on the kitchen table.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A dusk discovery sparks a hurried community workday that culminates in the projector roaring to life and the first screening.",
+          "events": [
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e4",
+              "content": "An elderly man appears at dusk with a battered tin box and, with a conspiratorial grin, pulls out a polished metal lamp that fits the cinema's old projection stand.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e5",
+              "content": "Neighbors arrive next morning in muddy boots, hoisting paint cans and a tarpaulin as laughter and shouted plans stitch together a frantic, determined workday.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p28_reviving_a_shuttered_village_e6",
+              "content": "By evening the faded screen hangs straight, the projector clicks to life, and the first grainy frame throws a trembling image that makes the room gasp and then cheer.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p28_reviving_a_shuttered_village_q1",
+              "query": "Who brought the small polished metal lamp that fit the cinema's old projection stand at dusk?",
+              "expected_memory_ids": [
+                "p28_reviving_a_shuttered_village_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p28_reviving_a_shuttered_village_q2",
+              "query": "What did they strap to the table on the village green during the campaign's first outdoor sale?",
+              "expected_memory_ids": [
+                "p28_reviving_a_shuttered_village_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p28_reviving_a_shuttered_village_q3",
+              "query": "What did they find themselves tracing inside the dark auditorium on the first night they returned?",
+              "expected_memory_ids": [
+                "p28_reviving_a_shuttered_village_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p28_reviving_a_shuttered_village_q4",
+              "query": "Which items did neighbors hoist that morning, turning the day into a frantic, determined workday?",
+              "expected_memory_ids": [
+                "p28_reviving_a_shuttered_village_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p29_an_amateur_astronomy_night",
+      "description": "An amateur astronomy group climbs to a mountain peak to observe the night but faces clouds, producing a tense arc from hope through setback to a fleeting, charged glimpse and quiet acceptance.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Arrival and setup at dusk filled with excitement that sours as thin clouds thicken into resigned silence.",
+          "events": [
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e1",
+              "content": "We arrived at the peak at dusk, breathless and giddy, hauling telescopes and blankets while the first stars blinked into view.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e2",
+              "content": "As we balanced a scope on uneven rock, a thin veil of cloud drifted over the Milky Way and someone hushed, noting the sky's softening outline.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e3",
+              "content": "Excitement curdled into low, resigned silence as the clouds thickened into a gray wall and people sank onto cool stones, staring at the blank sky.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "After a long wait a ragged opening sparks a burst of anticipation and a brief glimpse before the clouds return and the group settles into bittersweet contentment.",
+          "events": [
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e4",
+              "content": "Hours later, a single ragged hole opened above the southern horizon and one person shouted as they pointed, the telescope pivoting to seize that exact patch.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e5",
+              "content": "We leaned forward, whispering and tightening eyepieces, hearts quickening as the hole stretched into the sweep of a familiar constellation—everything felt poised on the brink of a glimpse.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p29_an_amateur_astronomy_night_e6",
+              "content": "The clouds closed back moments later, but someone who had caught a fleeting spatter of meteor clapped and the group laughed, trading stories under the returning gray until they accepted the night's imperfect magic.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p29_an_amateur_astronomy_night_q1",
+              "query": "Which moment described the single ragged hole that opened above the southern horizon and prompted someone to shout as they pivoted the telescope to that exact patch?",
+              "expected_memory_ids": [
+                "p29_an_amateur_astronomy_night_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p29_an_amateur_astronomy_night_q2",
+              "query": "Before anyone sat down in silence, what did someone notice while they were balancing a scope on the uneven rock?",
+              "expected_memory_ids": [
+                "p29_an_amateur_astronomy_night_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p29_an_amateur_astronomy_night_q3",
+              "query": "At which moment did the group's excitement curdle into low, resigned silence as the clouds thickened into a gray wall?",
+              "expected_memory_ids": [
+                "p29_an_amateur_astronomy_night_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p29_an_amateur_astronomy_night_q4",
+              "query": "Which moment felt like the breath before the reveal—when everyone hushed, tightened eyepieces, and their hearts quickened as the hole stretched into the sweep of a familiar constellation?",
+              "expected_memory_ids": [
+                "p29_an_amateur_astronomy_night_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p30_a_cheesemaking_batch_ruined",
+      "description": "A cheese batch appears ruined but is unexpectedly saved through a late-night discovery and frantic fixes across two sessions.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning preparation gives way to a mid-day contamination scare and a tense decision to test rather than discard.",
+          "events": [
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e1",
+              "content": "At dawn we sealed the copper vats, proud rows of milk humming with ritual; the kitchen smelled warm and yeasty as we began.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e2",
+              "content": "By mid-afternoon a sour sting filled the room as a sticky film and specks of green appeared on the surface, and my chest tightened when I realized the starter culture had been overtaken.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e3",
+              "content": "We nearly voted to dump everything, panic ripping through the crew, until someone insisted on testing pH and scalding points to pinpoint the failure.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A late-night technical discovery leads to hands-on rescue efforts and a relieved dawn with saved wheels.",
+          "events": [
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e4",
+              "content": "Late that night we traced the root cause to a loose temperature probe: the thermostat showed normal but the vat had cooled, so we reattached the connector and raised the heat.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e5",
+              "content": "After that we knelt at the vats, pinching and tasting curds and adding a careful measure of rennet to coax the solids back together by hand.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p30_a_cheesemaking_batch_ruined_e6",
+              "content": "At dawn the feared batch had become glossy, firm wheels; we laughed through exhausted tears as the cellar filled with an earthy, living smell.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p30_a_cheesemaking_batch_ruined_q1",
+              "query": "Which moment describes reattaching a disconnected temperature probe that had been reporting normal readings while the vat was actually cold, rather than the later hands-on treatment of the curds?",
+              "expected_memory_ids": [
+                "p30_a_cheesemaking_batch_ruined_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p30_a_cheesemaking_batch_ruined_q2",
+              "query": "Early on the first day, what did they observe clinging to the milk's surface that showed the starter culture had been overtaken?",
+              "expected_memory_ids": [
+                "p30_a_cheesemaking_batch_ruined_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p30_a_cheesemaking_batch_ruined_q3",
+              "query": "At which moment did the mood shift from panic to a plan—specifically when someone proposed testing pH and scald points?",
+              "expected_memory_ids": [
+                "p30_a_cheesemaking_batch_ruined_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p30_a_cheesemaking_batch_ruined_q4",
+              "query": "What happened during the initial sealing at dawn when the kitchen smelled warm and yeasty, not the later dawn when glossy wheels appeared?",
+              "expected_memory_ids": [
+                "p30_a_cheesemaking_batch_ruined_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p31_teaching_a_parent_to",
+      "description": "Teaching a parent to swim later in life, following a tense first lesson, a setback, and a second-lesson breakthrough and relief.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First lesson: nervous approach to the pool, a brief first float, then a sudden panic that requires the coach's calming breaths.",
+          "events": [
+            {
+              "memory_id": "p31_teaching_a_parent_to_e1",
+              "content": "She shuffled to the pool edge with trembling hands, watching the water sparkle while her adult child offered a tentative smile from the deck.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p31_teaching_a_parent_to_e2",
+              "content": "With the coach's steady hands at her back she let go of the wall and bobbed on her back for a few breathless seconds, eyes wide as the surface held her weight.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p31_teaching_a_parent_to_e3",
+              "content": "A sudden gulp of water sent her instinctively clawing for the lane rope, chest collapsing into panic until the coach lifted her and guided three slow breaths to steady her.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Second lesson: practicing breathing and steady kicks builds momentum into an unassisted glide and an emotional release at the far side.",
+          "events": [
+            {
+              "memory_id": "p31_teaching_a_parent_to_e4",
+              "content": "Back at the pool two days later she clung to rehearsed breathing drills, jaw tight but following the coach's count until her limbs stopped flailing.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p31_teaching_a_parent_to_e5",
+              "content": "After a steady rhythm of exhale and gentle kicks she eased her head back, let her hands float free, and for the first time pushed off and glided across the shallow lane without support, a long held-in exhale trailing behind her.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p31_teaching_a_parent_to_e6",
+              "content": "Emerging at the far side, tears streaked down her face as her child wrapped an arm around her and the coach clapped, the poolside crowd breaking into relieved laughter.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p31_teaching_a_parent_to_q1",
+              "query": "In the first session, what exact moment did she first let go of the wall and float on her back?",
+              "expected_memory_ids": [
+                "p31_teaching_a_parent_to_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p31_teaching_a_parent_to_q2",
+              "query": "During session 1, when did things shift from rising hope to sudden panic—the turning moment where calm unraveled?",
+              "expected_memory_ids": [
+                "p31_teaching_a_parent_to_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p31_teaching_a_parent_to_q3",
+              "query": "What happened on the pool deck before any practice began when she first approached the water and her adult child watched?",
+              "expected_memory_ids": [
+                "p31_teaching_a_parent_to_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p31_teaching_a_parent_to_q4",
+              "query": "In session 2, what specific moment of steady breath and gentle kicking led directly into the breakthrough glide across the shallow lane?",
+              "expected_memory_ids": [
+                "p31_teaching_a_parent_to_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p32_a_streetmural_project_stalled",
+      "description": "A community street-mural project becomes entangled in a permit dispute, driving a two-session emotional arc from hopeful beginnings through conflict and a dramatic, civic resolution.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1 follows the pre-dawn painting and the sudden arrival of a complaint that leads to an inspector's stop-work order and the artists' deciding moment to fight back.",
+          "events": [
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e1",
+              "content": "Before dawn, the artists crept into the boarded storefront and sketched riotous, colorful outlines across the plywood, whispering and laughing beneath a yellow streetlight.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e2",
+              "content": "A neighbor stormed up, slapping a stapled city notice on the wood and saying an official complaint had been filed and an inspector would arrive by noon.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e3",
+              "content": "When the inspector hammered a stop-work order to the boards, the team collapsed into a fierce huddle and, in a sudden burst of resolve, vowed to appeal every line of the notice.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2 traces a tense mediation and a conditional signing, a later act of defiance during a midnight repaint, and a final council reversal that lets the mural be completed publicly.",
+          "events": [
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e4",
+              "content": "At the community center the mediator slid a single-page conditional permit across the table and each artist, faces tight with compromise, physically signed to allow partial repairs under strict content rules.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e5",
+              "content": "That night the lead painter brushed away the mandated imagery with thick black strokes and rallied a small crew in a tense, fast repaint that felt like a dare.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p32_a_streetmural_project_stalled_e6",
+              "content": "After neighbors flooded social media and a marathon council meeting, officials reversed the enforcement, and the artists finished the mural openly as volunteers cheered.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p32_a_streetmural_project_stalled_q1",
+              "query": "Which moment described the artists physically signing the conditional permit at the community center, as opposed to times when they were repainting or protesting?",
+              "expected_memory_ids": [
+                "p32_a_streetmural_project_stalled_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p32_a_streetmural_project_stalled_q2",
+              "query": "Which event marked the instant the group's mood flipped from stunned shock at the stop-work order to a determined vow to appeal?",
+              "expected_memory_ids": [
+                "p32_a_streetmural_project_stalled_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p32_a_streetmural_project_stalled_q3",
+              "query": "Which event described the artists sneaking in before sunrise to sketch colorful outlines on the boarded storefront?",
+              "expected_memory_ids": [
+                "p32_a_streetmural_project_stalled_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p32_a_streetmural_project_stalled_q4",
+              "query": "Which moment captured the mounting defiance as the lead painter began erasing the mandated imagery and mobilized a small crew for a risky late-night repaint?",
+              "expected_memory_ids": [
+                "p32_a_streetmural_project_stalled_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p33_fostering_reconciliation_after_a",
+      "description": "A family fractures over an unexpected will, then slowly rebuilds trust through mediated memories and a concrete offer to share the home.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "The will is read, accusations erupt, and one sibling storms out, leaving raw anger and distance.",
+          "events": [
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e1",
+              "content": "At the family lawyer's office the envelope was slit open and the lawyer read that the estate left the house to Maya and a modest sum to Tom, producing a stunned, heavy silence.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e2",
+              "content": "Tom slammed his fist on the table and accused Maya of manipulating their late father's memory to hoard the property, his voice trembling with betrayal.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e3",
+              "content": "Jasmine snapped that Tom had long suspected hidden assets and stalked out, doors slamming behind her while the room echoed with tension.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A mediator leads memory-sharing that softens defenses, a surprising proposal shifts momentum, and an uneasy reconciliation begins.",
+          "events": [
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e4",
+              "content": "In mediation the neutral facilitator asked each sibling to name one childhood memory they still cherished, prompting hesitant, soft recollections around the circle.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e5",
+              "content": "Moved by the memories, Maya cleared her throat and offered to redraw the plan so Tom could keep the family home if they all signed a written agreement to share upkeep costs, her voice gaining steadier resolve.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p33_fostering_reconciliation_after_a_e6",
+              "content": "Tom's eyes shone as he accepted her proposal and the siblings embraced awkwardly but sincerely, the room seeming to breathe out a fragile, tentative peace.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p33_fostering_reconciliation_after_a_q1",
+              "query": "Which precise moment involved the neutral facilitator asking each sibling to name a childhood memory they still cherished?",
+              "expected_memory_ids": [
+                "p33_fostering_reconciliation_after_a_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p33_fostering_reconciliation_after_a_q2",
+              "query": "What accusation did Tom make at the first meeting when he slammed his fist on the table, before any later offers of compromise?",
+              "expected_memory_ids": [
+                "p33_fostering_reconciliation_after_a_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p33_fostering_reconciliation_after_a_q3",
+              "query": "Who slit open the envelope and read the will aloud at the start of the lawyer's meeting?",
+              "expected_memory_ids": [
+                "p33_fostering_reconciliation_after_a_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p33_fostering_reconciliation_after_a_q4",
+              "query": "Which moment built from the memory-sharing into an explicit proposal to revise the estate so one sibling could keep the family home under a written agreement?",
+              "expected_memory_ids": [
+                "p33_fostering_reconciliation_after_a_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p34_a_longdistance_cycling_charity",
+      "description": "A long-distance charity cycling ride through a heatwave that moves from anxious beginnings through a medical scare to a cooling aid, a hard push, and a cathartic finish.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Morning miles under an unforgiving sun, an early heat-induced setback, then a small intervention that shifts resolve.",
+          "events": [
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e1",
+              "content": "At the starting line the sun already felt like a furnace, and my chest tightened watching the peloton fan out under a sky that tasted of heat.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e2",
+              "content": "Halfway into the morning my throat went cotton-dry and my legs seized with sudden cramps, and I stumbled to the roadside gulping the last of my bottle as teammates fussed.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e3",
+              "content": "A medic's cool towel on my neck and a teammate's quiet, stubborn joke snapped something in me, turning the nausea into grim determination to keep pedaling.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Afternoon aid and recovery, a grueling climb that rebuilds momentum, and a final downhill release into the finish.",
+          "events": [
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e4",
+              "content": "At the mid-ride aid station a volunteer tipped a cup of icy water over my helmet while another pressed a cold pack to the base of my skull, and that sharp chill cut through the daze.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e5",
+              "content": "Back on the road the gradient steepened and my whole body locked with each pedal stroke, yet the sight of a distant banner and the steady rhythm of a teammate beside me built a fierce, resurgent drive to push higher.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p34_a_longdistance_cycling_charity_e6",
+              "content": "On the final descent, wind and a last burst of speed washed the heat away and the finish-line arch surged up until we crossed it together, collapsing into stunned, laughing exhaustion.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p34_a_longdistance_cycling_charity_q1",
+              "query": "Which moment describes a volunteer tipping icy water over my helmet and another pressing a cold pack to the base of my skull?",
+              "expected_memory_ids": [
+                "p34_a_longdistance_cycling_charity_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p34_a_longdistance_cycling_charity_q2",
+              "query": "Which moment first describes my throat going cotton-dry and my legs seizing with sudden cramps?",
+              "expected_memory_ids": [
+                "p34_a_longdistance_cycling_charity_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p34_a_longdistance_cycling_charity_q3",
+              "query": "Which moment marks when nausea shifted into a grim determination to keep pedaling after a medic's cool towel and a teammate's quiet joke?",
+              "expected_memory_ids": [
+                "p34_a_longdistance_cycling_charity_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p34_a_longdistance_cycling_charity_q4",
+              "query": "Which moment shows the steep gradient and locking body where the sight of a distant banner and a teammate's steady rhythm built a fierce, resurgent drive to push higher?",
+              "expected_memory_ids": [
+                "p34_a_longdistance_cycling_charity_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p35_rescuing_seedlings_after_a",
+      "description": "A greenhouse heater fails overnight and the team scrambles across two sessions to save fragile seedlings, moving from panic to improvised fixes to recovery.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Nighttime discovery and frantic first attempts to diagnose and improvise a warming solution.",
+          "events": [
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e1",
+              "content": "At 2:30 a.m. you burst into the foggy greenhouse, heart hammering, and called the night supervisor, Tom, yelling that the heater had died while your sleeves brushed frozen trays.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e2",
+              "content": "You pried open the heater's control box and found the digital thermostat frozen and a smear of frost across the wiring; the dial wouldn't budge as cold seeped from the vent.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e3",
+              "content": "Huddled under a single grow light, Ana sketched a desperate fix and rigged a coil from lab hot water to warm the benches, and for the first time in hours the seedlings blinked upright as if exhaling.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Dawn rescue actions, moving trays to temporary warmth and watching seedlings recover by midday.",
+          "events": [
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e4",
+              "content": "Maria, teeth chattering, scooped the basil flats and darted them into the staff office, collapsing a tray onto the warm radiator to stop the leaves from wilting.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e5",
+              "content": "Back in the greenhouse the team wrapped the basil trays in bubble wrap, clicked on portable heating mats, and someone called maintenance to report the failed heater while a thermometer's needle crept upward.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p35_rescuing_seedlings_after_a_e6",
+              "content": "By noon the seedlings stood perked and crowded under temporary lights, the head gardener laughed, locked the greenhouse, and vowed to replace the heater before another night like this.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p35_rescuing_seedlings_after_a_q1",
+              "query": "Who carried the basil flats into the staff office to lay them on the warm radiator?",
+              "expected_memory_ids": [
+                "p35_rescuing_seedlings_after_a_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p35_rescuing_seedlings_after_a_q2",
+              "query": "During the initial sweep that night, what did you find when you opened the heater's control box?",
+              "expected_memory_ids": [
+                "p35_rescuing_seedlings_after_a_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p35_rescuing_seedlings_after_a_q3",
+              "query": "Which moment marked the shift from frantic panic to a fragile sense that the seedlings might survive?",
+              "expected_memory_ids": [
+                "p35_rescuing_seedlings_after_a_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p35_rescuing_seedlings_after_a_q4",
+              "query": "Who did you call right after bursting into the greenhouse at 2:30 a.m.?",
+              "expected_memory_ids": [
+                "p35_rescuing_seedlings_after_a_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p36_a_debut_standup_set",
+      "description": "A debut comedian bombs on opening night, stews in shame, then returns the next night, leans into tension, and finally wins the room.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Night one: backstage nervous rehearsals, a mic-squeal and a dead room, then a raw pep talk that flips shame into resolve.",
+          "events": [
+            {
+              "memory_id": "p36_a_debut_standup_set_e1",
+              "content": "Backstage before the first set, they paced with a friend and mouthed a tightened family-dinner gag about always arriving late, laughing nervously at the refined cadence.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p36_a_debut_standup_set_e2",
+              "content": "Onstage for the debut, the microphone squealed and they shot out a self-deprecating line about being new that collapsed into a heavy, unbroken silence and a sinking chest.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p36_a_debut_standup_set_e3",
+              "content": "In the dim greenroom after the set, an older comic pulled them aside with blunt, stinging praise that snapped their shame into a fierce determination to come back swinging.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Night two: a retooled opening, building momentum as they face heckles, and a punchline that breaks the room into applause.",
+          "events": [
+            {
+              "memory_id": "p36_a_debut_standup_set_e4",
+              "content": "On the second night they opened with the same family-dinner gag but sharper and quicker, and a few tentative snickers from the front tables told them the rewrite was working.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p36_a_debut_standup_set_e5",
+              "content": "Midway through the second set the host tossed a light heckle; instead of shrinking they leaned in, raised their voice and began stacking callbacks so the room's tension tilted toward something charged.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p36_a_debut_standup_set_e6",
+              "content": "The next punchline detonated: the room finally released, people laughed and applauded in waves, and the comedian stood there breathless and strangely vindicated.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p36_a_debut_standup_set_q1",
+              "query": "On the first night, what did they say immediately after the microphone squealed during their debut performance?",
+              "expected_memory_ids": [
+                "p36_a_debut_standup_set_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p36_a_debut_standup_set_q2",
+              "query": "Which moment after bombing marked the shift from crushing shame into a sudden, fierce determination to try again?",
+              "expected_memory_ids": [
+                "p36_a_debut_standup_set_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p36_a_debut_standup_set_q3",
+              "query": "What specific family-dinner gag did they rehearse backstage with a friend before stepping onstage that first night?",
+              "expected_memory_ids": [
+                "p36_a_debut_standup_set_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p36_a_debut_standup_set_q4",
+              "query": "What happened when they leaned into the host's light heckle and began stringing callbacks, just before the set reached its turning point?",
+              "expected_memory_ids": [
+                "p36_a_debut_standup_set_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p37_restoring_an_old_rowing",
+      "description": "Two-session emotional arc of a community restoring an old rowing club after vandalism, moving from shock and despair to collective momentum and a triumphant relaunch.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session 1: discovery of vandalism, initial despair and a turning moment of renewed hope when a veteran reveals a motivating relic and plan.",
+          "events": [
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e1",
+              "content": "At dawn the crew pushed open the boathouse to shattered windows, sprayed slogans across wooden doors and oars scattered like broken ribs on the floor.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e2",
+              "content": "Volunteers lashed together splints for snapped oars and hammered mismatched planks, exhaustion and quiet fury rubbing against each other as the first makeshift fixes frayed.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e3",
+              "content": "In the boathouse's hush the elderly coach held up a sun-faded team photo and a decades-old ledger with a scrawled repair plan—faces softened and a collective exhale spread, the first spark of real resolve.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session 2: small, gritty repairs escalate into broad community effort and culminate in a charged reopening of the boathouse.",
+          "events": [
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e4",
+              "content": "Two members crept to the locked supply shed at midnight and pried up tarps to find a single dusty can of primer tucked beneath, a tiny, vital treasure for the first coat of repair.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e5",
+              "content": "By dawn neighbors arrived with ladders and tins of bright paint; everyone fell into a rhythm, scrubbing graffiti and rolling color in a mounting, almost musical push toward the unveiling.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p37_restoring_an_old_rowing_e6",
+              "content": "At sunset the newly painted shell slid out of the boathouse and cut a bright wake while the gathered community cheered and the coach pressed the sun-faded photo to his chest as if closing a long, raw loop.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p37_restoring_an_old_rowing_q1",
+              "query": "Which moment describes the midnight break-in to the locked supply shed where they uncovered a single, dusty can of primer hidden beneath tarps?",
+              "expected_memory_ids": [
+                "p37_restoring_an_old_rowing_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p37_restoring_an_old_rowing_q2",
+              "query": "Which event describes the moment when the group's mood shifted from dread to relief, the instant the turning spark of hope arrived?",
+              "expected_memory_ids": [
+                "p37_restoring_an_old_rowing_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p37_restoring_an_old_rowing_q3",
+              "query": "Which moment describes the very first discovery at dawn of shattered windows and scattered oars before any repairs had begun?",
+              "expected_memory_ids": [
+                "p37_restoring_an_old_rowing_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p37_restoring_an_old_rowing_q4",
+              "query": "Which moment shows the work becoming a rising collective push—neighbors arriving with ladders and paint and everyone scrubbing the graffiti in a mounting rhythm toward a public reveal?",
+              "expected_memory_ids": [
+                "p37_restoring_an_old_rowing_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p38_a_search_for_a",
+      "description": "A two-session search for a runaway cat through a roaring snowstorm that moves from mounting tension to a desperate setback and finally to a charged recovery and quiet closure.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Session one follows her stepping into blinding snow, finding a fragile trail of pawprints, and then watching that trail vanish in a gust.",
+          "events": [
+            {
+              "memory_id": "p38_a_search_for_a_e1",
+              "content": "She stepped into a white roar, snow slicing the streetlights into halos and her breath frosting as she called the cat’s name.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p38_a_search_for_a_e2",
+              "content": "By the curb she crouched over a neat line of tiny pawprints that threaded toward the frozen park gate, each print a faint compass point in the drifts.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p38_a_search_for_a_e3",
+              "content": "A sudden gust scoured the delicate tracks and flung cold into her gloves; she pressed her palms to her face as the trail vanished into falling snow.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Session two resumes with a sudden sighting under a porch light, a meow from a nearby balcony that propels her upward, and the final retrieval as the storm thins.",
+          "events": [
+            {
+              "memory_id": "p38_a_search_for_a_e4",
+              "content": "Under the crooked blue porch light of Mrs. Kline's stoop she caught a flash of tabby fur and whispered the cat's name, the animal frozen in the pale circle of light.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p38_a_search_for_a_e5",
+              "content": "From a nearby balcony a muffled, thin meow answered, the sound coming from a mound of drifted laundry, and she reached up on tiptoe toward the noise.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p38_a_search_for_a_e6",
+              "content": "She hauled the cat free, its muddy paws smudging her coat, and cradled the shivering animal against her chest as the storm thinned into a scattered, cold quiet.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p38_a_search_for_a_q1",
+              "query": "Under which light did she first see the cat's fur flash?",
+              "expected_memory_ids": [
+                "p38_a_search_for_a_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p38_a_search_for_a_q2",
+              "query": "What did she find by the curb that led toward the frozen park gate?",
+              "expected_memory_ids": [
+                "p38_a_search_for_a_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p38_a_search_for_a_q3",
+              "query": "When she first stepped into the street, what happened to the streetlights?",
+              "expected_memory_ids": [
+                "p38_a_search_for_a_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            },
+            {
+              "query_id": "p38_a_search_for_a_q4",
+              "query": "What sound prompted her to reach up toward the balcony's drifted laundry?",
+              "expected_memory_ids": [
+                "p38_a_search_for_a_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p39_an_apprenticeship_in_a",
+      "description": "An apprentice's time in a blacksmith's forge moves from trembling awe through a damaging mistake and secret practice to a gifted token, a mounting trial, and a decisive test.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "First week: arrival at the forge, a costly blunder under the master's gaze, then a late-night breakthrough that shifts his fear.",
+          "events": [
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e1",
+              "content": "On his first morning the apprentice lingered at the forge's mouth, coal smoke stinging his eyes as the steady ring of hammer on anvil made his hands go clammy with awe and nerves.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e2",
+              "content": "During his first attempt to temper a blade he misread the steel's color and the edge bubbled; the master snapped, slamming a palm on the anvil and calling his hands clumsy.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e3",
+              "content": "That night he stayed past closing, each strike a tight, held breath, and when the warped steel at last straightened under his hammer a quiet, shocked exhale pushed the dread out of his chest.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "Return for the trials: the master offers a quiet token, momentum builds at the hearth, and the final blade faces its test.",
+          "events": [
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e4",
+              "content": "At the second session's start the master, who rarely showed softness, pressed a soot-dark pendant into the apprentice's palm and said it came from the first scrap he'd ever forged.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e5",
+              "content": "Word of the town smith's test had spread and before noon the hearth roared higher, the apprentice's hands found a steady rhythm, and anticipation coalesced into something taut and electric.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p39_an_apprenticeship_in_a_e6",
+              "content": "When the final blade resisted the bending and the master knocked twice on the anvil, the workshop seemed to breathe as the apprentice collapsed into stunned, trembling relief.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p39_an_apprenticeship_in_a_q1",
+              "query": "Which moment described the master pressing a soot-dark pendant into the apprentice's palm?",
+              "expected_memory_ids": [
+                "p39_an_apprenticeship_in_a_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p39_an_apprenticeship_in_a_q2",
+              "query": "In the earlier part of the first time the apprentice ruined a blade under the master's eye, what happened before the master's scolding?",
+              "expected_memory_ids": [
+                "p39_an_apprenticeship_in_a_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p39_an_apprenticeship_in_a_q3",
+              "query": "Which moment shows the instant when the apprentice's dread turned to relief as the steel finally held its shape under his hammer?",
+              "expected_memory_ids": [
+                "p39_an_apprenticeship_in_a_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p39_an_apprenticeship_in_a_q4",
+              "query": "Which moment captures the growing momentum—how the hearth roared louder, his hands steadied, and tension built just before the decisive test?",
+              "expected_memory_ids": [
+                "p39_an_apprenticeship_in_a_e5"
+              ],
+              "challenge_type": "momentum_alignment",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "p40_a_family_recipe_lost",
+      "description": "A family struggles to rebuild a lost heirloom recipe, moving from panic through failed trials to a reconstructed, shared memory.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Discovery of the missing recipe, a first failed bake, and a small clue that shifts the mood.",
+          "events": [
+            {
+              "memory_id": "p40_a_family_recipe_lost_e1",
+              "content": "While sorting trunks in the attic, Maria opened the rusty tin and realized the yellowed recipe card was gone; her hands went cold and she mouthed her grandmother's name.",
+              "metadata": {
+                "slot": "e1"
+              }
+            },
+            {
+              "memory_id": "p40_a_family_recipe_lost_e2",
+              "content": "They mixed flour, sugar, and two eggs in a trembling hurry but forgot to cream the butter, and the loaf came out dense and heavy, the kitchen falling into stunned silence.",
+              "metadata": {
+                "slot": "e2"
+              }
+            },
+            {
+              "memory_id": "p40_a_family_recipe_lost_e3",
+              "content": "Grandpa, leafing through a stained cookbook, found a crumb-smeared scrap with the single word \"vanilla\" scrawled across it, and the room inhaled as if hope had been handed back to them.",
+              "metadata": {
+                "slot": "e3"
+              }
+            }
+          ],
+          "queries": []
+        },
+        {
+          "session_id": "session_2",
+          "description": "A remembered flourish, a near-miss confusion over a citrus step, and the final successful bake that stitches the fragments together.",
+          "events": [
+            {
+              "memory_id": "p40_a_family_recipe_lost_e4",
+              "content": "At the kitchen table, Aunt Rosa suddenly recited the final secret step exactly as her mother used to do — a quick, theatrical flourish of lemon rind over the batter — and everyone held their breath.",
+              "metadata": {
+                "slot": "e4"
+              }
+            },
+            {
+              "memory_id": "p40_a_family_recipe_lost_e5",
+              "content": "At the stove, Grandpa muttered while zesting a lemon into a bubbling sauce, more low-headed concentration than performance, and a spoon clacked against the pan in frustration.",
+              "metadata": {
+                "slot": "e5"
+              }
+            },
+            {
+              "memory_id": "p40_a_family_recipe_lost_e6",
+              "content": "They followed the patched-together instructions that evening and pulled a golden loaf from the oven whose steam seemed to make the room laugh and cry at once as slices were passed around.",
+              "metadata": {
+                "slot": "e6"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "p40_a_family_recipe_lost_q1",
+              "query": "Who performed the specific flourish of lemon rind over the batter at the kitchen table, the precise final step that made everyone hold their breath?",
+              "expected_memory_ids": [
+                "p40_a_family_recipe_lost_e4"
+              ],
+              "challenge_type": "semantic_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p40_a_family_recipe_lost_q2",
+              "query": "Describe the earlier attempt when they mixed flour, sugar and two eggs but forgot to cream the butter, producing a dense loaf.",
+              "expected_memory_ids": [
+                "p40_a_family_recipe_lost_e2"
+              ],
+              "challenge_type": "recency_confound",
+              "top_k": null
+            },
+            {
+              "query_id": "p40_a_family_recipe_lost_q3",
+              "query": "Which moment marks the point when the mood shifted from despair about the lost recipe to real hope that they could rebuild it from fragments?",
+              "expected_memory_ids": [
+                "p40_a_family_recipe_lost_e3"
+              ],
+              "challenge_type": "affective_arc",
+              "top_k": null
+            },
+            {
+              "query_id": "p40_a_family_recipe_lost_q4",
+              "query": "Who noticed the yellowed recipe card missing from the rusty tin in the attic while sorting family things?",
+              "expected_memory_ids": [
+                "p40_a_family_recipe_lost_e1"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "top_k": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

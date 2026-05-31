@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum P (Hg1 re-run, leakage-free):** re-ran the Hg1 confound benchmark (AFT LLM
+  dual-path appraisal vs naive cosine on affect-free retrieval) with the Addendum O
+  recalibrated SEC->affect mapping (M1), on a new leakage-free dataset
+  `realistic_recall_v4_noAF` (40 scenarios / 160 queries, `pNN_` namespace, zero overlap with
+  `realistic_recall_v3`). **Hp1 FAIL:** `aft_llm_dual` top1 0.800 vs `naive_cosine` 0.887,
+  delta=-0.0875, CI[-0.144,-0.031], one-tailed p=0.0018, d=-0.242 -- naive cosine is
+  *significantly* ahead; recalibration did not rescue affect-free retrieval (gap widened vs
+  Hg1's -0.010 and became significant). Exploratory Hp2 (dual>neutral) PASS (delta=+0.056,
+  p=0.030) and Hp3 (dual>sync) PASS (delta=+0.512, d=0.95): the LLM affect carries signal and
+  the deferred dual-path schedule is essential (synchronous appraisal collapses to top1 0.287),
+  but the full system still trails pure cosine on affect-free queries. Claim
+  `appraisal_llm_real_dual_path` remains falsified; Hd1/Hd2 (oracle-affect) and Addendum O
+  (mapping calibration) are unaffected. Adds pre-registration + closure, frozen dataset +
+  generator, and result artifacts (`results.hg1_v4.{json,md,protocol.json}`).
+
 ### Changed
 
 - **Scherer SEC→valence/arousal mapping recalibrated (Addendum O).** `_scherer_project`
