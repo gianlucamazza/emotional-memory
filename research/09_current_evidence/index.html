@@ -2853,8 +2853,8 @@ evidence level, and still-open gaps.</p>
 <td><code>1_theory_fidelity</code></td>
 <td>The implementation is faithful to the theories it operationalizes.</td>
 <td>127 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms; the 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. Hi3 PASS (Addendum I closure, 2026-05-06, N=500): cross-embedder amplification on <code>semantic_confound</code> confirmed (Δ=+0.090, d=0.257, p_adj=0.0234); Hi3_recency PASS; Hi3_arc FAIL.</td>
-<td>Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G pending). Hi2 mechanism for amplification not localised at link-count instrumentation level.</td>
-<td>Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection.</td>
+<td>Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage on affect-free data is falsified (Addendum G/P — see <code>appraisal_llm_real_dual_path</code>). Hi2 mechanism for amplification not localised at link-count instrumentation level.</td>
+<td>Human and behavioral validation.</td>
 </tr>
 <tr>
 <td><code>appraisal_directionally_useful</code></td>
@@ -2939,12 +2939,12 @@ evidence level, and still-open gaps.</p>
 <tr>
 <td><code>appraisal_llm_real_dual_path</code></td>
 <td>Appraisal quality</td>
-<td>Not established</td>
+<td>Falsified</td>
 <td><code>3_appraisal_quality</code></td>
-<td>Hg1 FAIL: AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on N=200 affect-free queries (Δ=-0.010 [-0.055, 0.035], d=-0.032, p_one=0.367). The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.</td>
-<td>Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, oracle-free. Hg1 FAIL.</td>
-<td>Whether larger N, stronger LLM, or different dataset would show signal.</td>
-<td>Larger N replication (N≥400) or stronger LLM appraisal.</td>
+<td>Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC-&gt;affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.</td>
+<td>Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual&gt;neutral PASS (+0.056, p=0.030); Hp3 dual&gt;sync PASS (+0.512, d=0.95).</td>
+<td>Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path &gt; synchronous (Hp3) reaffirmed.</td>
+<td>None planned for affect-free architecture-vs-cosine; claim falsified (Addendum P).</td>
 </tr>
 </tbody>
 </table>
