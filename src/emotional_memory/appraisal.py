@@ -29,7 +29,7 @@ from typing import Any, Protocol, runtime_checkable
 from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.affect import CoreAffect
-from emotional_memory.appraisal_schema import AppraisalSchema
+from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
 
 
 class GenericAppraisalVector:
@@ -94,28 +94,20 @@ class AppraisalVector(BaseModel):
     def to_core_affect(self) -> CoreAffect:
         """Map appraisal dimensions to valence-arousal space.
 
-        Mapping (design doc §05):
-          valence = 0.4*goal_relevance + 0.3*norm_congruence
-                  + 0.2*coping_potential_signed + 0.1*novelty
-          arousal = 0.5*|novelty| + 0.3*(1 - coping_potential)
-                  + 0.2*self_relevance
-
-        coping_potential_signed: coping=1 → +1 (calm confidence),
-                                 coping=0 → -1 (helpless urgency)
+        Delegates to the Scherer CPM schema's projection
+        (``SCHERER_CPM_SCHEMA.project_to_core_affect``) so the recalibrated mapping
+        weights live in a single place (Addendum O). See
+        ``appraisal_schema._scherer_project`` for the formula and provenance.
         """
-        coping_signed = 2.0 * self.coping_potential - 1.0  # [0,1] → [-1,+1]
-        valence = (
-            0.4 * self.goal_relevance
-            + 0.3 * self.norm_congruence
-            + 0.2 * coping_signed
-            + 0.1 * self.novelty
+        return SCHERER_CPM_SCHEMA.project_to_core_affect(
+            {
+                "novelty": self.novelty,
+                "goal_relevance": self.goal_relevance,
+                "coping_potential": self.coping_potential,
+                "norm_congruence": self.norm_congruence,
+                "self_relevance": self.self_relevance,
+            }
         )
-        arousal = (
-            0.5 * abs(self.novelty)
-            + 0.3 * (1.0 - self.coping_potential)
-            + 0.2 * self.self_relevance
-        )
-        return CoreAffect(valence=valence, arousal=arousal, dominance=self.coping_potential)
 
     @property
     def schema_name(self) -> str:
