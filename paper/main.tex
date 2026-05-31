@@ -56,7 +56,7 @@
 % ── Release metadata (managed by scripts/sync_release_metadata.py) ─────────────
 % Edit release.toml, then run: make sync-metadata
 \newcommand{\zenodoconceptdoi}{10.5281/zenodo.19972258}% [ssot:concept_doi]
-\newcommand{\zenodoversiondoi}{10.5281/zenodo.20440996}% [ssot:version_doi]
+\newcommand{\zenodoversiondoi}{10.5281/zenodo.20475352}% [ssot:version_doi]
 \newcommand{\repourl}{https://github.com/gianlucamazza/emotional-memory}% [ssot:repo_url]
 \newcommand{\arxivid}{}% [ssot:arxiv_id]
 \newcommand{\zenodoconcepturl}{https://doi.org/\zenodoconceptdoi}
@@ -87,7 +87,9 @@ SBERT bge-small-en-v1.5), replicated on a second embedder (e5-small-v2:
 $\Delta=+0.16$, $p<0.001$). The advantage holds under oracle-provided affect
 labels; with \texttt{LLMAppraisalEngine} in dual-path mode on affect-free data
 (Addendum~G, $N=200$), architecture parity is maintained but the pre-registered
-minimum effect is not reached (Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$), scoping
+minimum effect is not reached (Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$); a
+recalibrated appraisal mapping re-tested on a leakage-free set reaffirms this
+boundary more sharply (Addendum~P, $N=160$: $\Delta=-0.087$, $p=0.002$), scoping
 the main result to preset-affect scenarios. AFT encodes 25$\times$ faster than
 Mem0 (45\,ms vs.\ 1130\,ms per item, CPU-only) with no runtime LLM call at
 retrieval. The implementation is released as the open-source MIT-licensed
@@ -798,6 +800,19 @@ a dataset not pre-seeded with oracle affect values.
 \textbf{Hg1 FAIL}: $\Delta=-0.010$ [$-0.055$, $0.035$], $d=-0.032$,
 $p_{\text{one}}=0.367$---the architecture advantage does not extend to
 LLM dual-path appraisal at this sample size.
+A follow-up recalibrated the SEC$\to$valence/arousal mapping (Addendum~O;
+held-out calibration PASS, cutting valence bias $+0.200\to+0.072$) and re-ran the
+affect-free test on \texttt{realistic\_recall\_v4\_noAF}, a leakage-free set
+disjoint from the calibration data ($N=160$; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_p\_hg1\_rerun\_closure.md}%
+{\texttt{preregistration\_addendum\_p\_hg1\_rerun\_closure.md}}.}).
+The boundary holds, more sharply: \texttt{naive\_cosine}~$=0.887$ significantly
+outperforms \texttt{aft\_llm\_dual}~$=0.800$ (\textbf{Hp1 FAIL}: $\Delta=-0.087$
+[$-0.144$, $-0.031$], $p=0.0018$, $d=-0.24$). Two exploratory contrasts isolate
+why: dual\,$>$\,neutral ($\Delta=+0.056$, $p=0.030$) shows the LLM-inferred affect
+carries genuine signal, and dual\,$>$\,sync ($\Delta=+0.512$, $d=0.95$) confirms
+the deferred dual-path schedule is essential---yet the affect channel is a net
+distractor when queries are affect-free and semantics already discriminate.
 The oracle-affect circularity remains the operative scope boundary of the
 $H_{d1}$/$H_{d2}$ claims.
 
@@ -851,8 +866,8 @@ phenomena, and benchmarked against a semantic-only baseline on a new affect-labe
 dataset. The library is MIT-licensed, fully typed, and available for immediate use
 in LangChain pipelines and custom LLM agents.
 
-A staged evidence programme has produced twelve pre-registered studies
-(Addenda A--K, Hd2-PowerTopUp, and Addendum~M) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+A staged evidence programme has produced a series of pre-registered studies
+(Addenda A--P, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
