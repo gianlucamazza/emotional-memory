@@ -118,8 +118,8 @@
       "requires_oracle_affect": true,
       "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
       "current_evidence": "127 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. Hi3 PASS (Addendum I closure, 2026-05-06, N=500, seed=1): the per-challenge embedder amplification on semantic_confound is confirmed \u2014 e5 resonance interference exceeds SBERT by \u0394=+0.090 [0.030,0.160] (d=0.257, Holm-adj p=0.0234). Secondary Hi3_recency also PASS (\u0394=+0.070, p_adj=0.0234); Hi3_arc FAIL (\u0394=+0.010). Mechanism channel (Hi2: link-set density) not differentiated at link-count level \u2014 both embedders saturate top-5 cap.",
-      "not_yet_shown": "Ecological correspondence to human emotional memory. LLM-appraisal dual-path advantage (requires non-destructive appraisal dataset; Addendum G pending). Mechanism for embedder-dependent amplification not localised at link-count instrumentation level (Hi2 still exploratory).",
-      "next_study": "Human and behavioral validation. Addendum G: dual-path ablation with LLMAppraisalEngine on dataset without preset affect injection.",
+      "not_yet_shown": "Ecological correspondence to human emotional memory. The LLM-appraisal dual-path advantage on affect-free data is falsified (Addendum G/P, see appraisal_llm_real_dual_path). Mechanism for embedder-dependent amplification not localised at link-count instrumentation level (Hi2 still exploratory).",
+      "next_study": "Human and behavioral validation. The automatic-appraisal dual-path question is closed (Addendum G/P, falsified).",
       "evidence_refs": [
         "benchmarks/fidelity/test_appraisal_affect.py",
         "benchmarks/fidelity/test_mood_adaptive.py",
