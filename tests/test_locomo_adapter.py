@@ -500,3 +500,42 @@ def test_compute_hypothesis_tests_structure() -> None:
     assert "diff" in h1
     assert "p_adj_holm" in h1
     assert "pass" in h1
+
+
+# ---------------------------------------------------------------------------
+# Hl3 classifier-log alignment (routing_runner)
+# ---------------------------------------------------------------------------
+
+
+def test_classifier_predictions_match_by_query_text() -> None:
+    """Hl3 regression: resumed predictions must not shift the log alignment."""
+    from benchmarks.locomo.routing_runner import (
+        _classifier_predictions,
+        _LoggingClassifier,
+    )
+
+    class _FixedCLF:
+        def classify(self, query: str) -> str:
+            return "temporal" if "when" in query else "single_hop"
+
+    clf = _LoggingClassifier(_FixedCLF())
+    # Simulate: first conversation resumed from checkpoint (classifier never
+    # ran for it this run), second conversation classified live.
+    clf.classify("when did Bob move?")
+    clf.classify("what does Alice do?")
+
+    preds = [
+        # Restored from checkpoint — no classify() call this run.
+        {"qa_id": "conv0_0", "question": "where is Carol?", "question_type": "single_hop"},
+        # Classified live.
+        {"qa_id": "conv1_0", "question": "when did Bob move?", "question_type": "temporal"},
+        {"qa_id": "conv1_1", "question": "what does Alice do?", "question_type": "single_hop"},
+    ]
+    records = _classifier_predictions(clf, preds)
+
+    assert records[0]["predicted_type"] == "unknown"  # genuinely unclassified
+    assert records[1]["predicted_type"] == "temporal"
+    assert records[2]["predicted_type"] == "single_hop"
+    # Pre-fix behaviour aligned by index: records[1] would have read the
+    # log entry for preds[0]'s position and come back wrong/unknown.
+    assert [r["qa_id"] for r in records] == ["conv0_0", "conv1_0", "conv1_1"]

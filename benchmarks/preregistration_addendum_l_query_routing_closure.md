@@ -151,3 +151,39 @@ line.
 | `benchmarks/locomo/routing_results.json` | Raw results (200-QA smoke test) |
 | `benchmarks/locomo/routing_results.md` | Human-readable report |
 | `benchmarks/locomo/routing_results.md` | Human-readable report (pending) |
+
+---
+
+## Post-closure addendum — Hl3 follow-up resolved (2026-06-11)
+
+**Root cause of the data-collection bug.** `routing_runner.py` matched the
+`_LoggingClassifier` log to the prediction list **by index**. Predictions
+restored from the resume checkpoint never hit the classifier in the resumed
+run, so the log and the prediction list did not align positionally and every
+record fell into the `"unknown"` fallback. Fixed by matching on query text
+(`_classifier_predictions()`); classifiers are deterministic per query, so
+text collisions are harmless. Regression test:
+`tests/test_locomo_adapter.py::test_classifier_predictions_match_by_query_text`.
+
+**Ground-truth classifier accuracy (offline, deterministic re-measurement).**
+The required follow-up ("re-run `aft_routed_heuristic` on a clean state") is
+satisfied without an LLM run: `HeuristicQueryClassifier` is pure and
+deterministic, so classifying the exact 200-QA stratified subset (seed=42)
+offline reproduces what a clean live run would have logged.
+
+| | n | accuracy |
+|---|---:|---:|
+| All 200 QA | 200 | **0.465** |
+| Excluding `adversarial` (no routable class exists) | 155 | **0.600** |
+
+Per-type (gt → top predictions): `temporal` 25/32 correct; `single_hop`
+60/85; `open_domain` 6/10; `multi_hop` **2/28** (mostly misread as
+`single_hop`); `adversarial` (n=45) unroutable by construction — falls to
+`single_hop`/`open_domain`.
+
+**Reading.** The heuristic classifier is far from oracle (and essentially
+blind to `multi_hop`), which compounds the Hl1 weight-routing FAIL: even
+perfect per-type weights could not have been applied to the right queries
+~40% of the time. Any follow-up routing study (e.g. Addendum Q affect-gating)
+must either (a) measure and report classifier accuracy on its own corpus, or
+(b) include an oracle-routed arm to bound the classifier-induced loss.

@@ -112,6 +112,30 @@ class _LoggingClassifier:
         return pred
 
 
+def _classifier_predictions(
+    logging_clf: _LoggingClassifier,
+    preds: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Build Hl3 classifier-accuracy records by matching log entries to predictions.
+
+    Match by query text, not list index: predictions restored from a resume
+    checkpoint never hit the classifier in this run, so the log and the
+    prediction list do not align positionally (Hl3 data-collection bug —
+    every entry fell into the "unknown" fallback on resumed runs).
+    Classifiers are deterministic per query, so text collisions are harmless:
+    same query -> same prediction.
+    """
+    predicted_by_query = dict(logging_clf.log)
+    return [
+        {
+            "qa_id": pred["qa_id"],
+            "predicted_type": predicted_by_query.get(str(pred["question"]), "unknown"),
+            "ground_truth_type": pred.get(_QA_TYPE_FIELD, "unknown"),
+        }
+        for pred in preds
+    ]
+
+
 class _AFTRoutedAdapter(LoCoMoAdapter):
     """AFT adapter with optional query-type classifier routing."""
 
@@ -497,15 +521,7 @@ def main(argv: list[str] | None = None) -> None:
         # B3: persist classifier log for Hl3 accuracy measurement.
         logging_clf = getattr(system, "_logging_clf", None)
         if logging_clf is not None:
-            clf_entries = logging_clf.log
-            result_entry["classifier_predictions"] = [
-                {
-                    "qa_id": preds[i]["qa_id"],
-                    "predicted_type": (clf_entries[i][1] if i < len(clf_entries) else "unknown"),
-                    "ground_truth_type": preds[i].get(_QA_TYPE_FIELD, "unknown"),
-                }
-                for i in range(len(preds))
-            ]
+            result_entry["classifier_predictions"] = _classifier_predictions(logging_clf, preds)
 
         all_results[sys_name] = result_entry
         print(f"  Weighted F1: {scores['aggregate_weighted_f1']:.3f}")
