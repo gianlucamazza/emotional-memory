@@ -29,6 +29,28 @@ e5-small-v2 embedders. Step **5** remains open research work.
 
 ---
 
+## Terminology — the two senses of "affect-free"
+
+The research documents use "affect-free" in two distinct senses; conflating them
+misreads the falsified claims:
+
+- **Affect-free dataset (`noAF`)** — events carry **no preset valence/arousal
+  fields** and queries no `state` field. The *content* is still affect-rich; the
+  affect signal must be inferred end-to-end by the appraisal engine. This is a
+  property of the *annotation*, not of the content (`realistic_recall_v3_noAF`,
+  `v4_noAF`).
+- **Affect-free query** — a query whose target is **determinable from semantics
+  alone** (the wording uniquely identifies the correct event). This is a property
+  of the *query*, and it is the regime where naive cosine is hard to beat
+  (Addendum P: cosine 0.887).
+
+The falsified claim `appraisal_llm_real_dual_path` combines both senses: LLM-inferred
+affect (noAF annotation) evaluated on semantically determinable (affect-free)
+queries. It does **not** speak to affect-discriminative queries, where semantics
+ties and the affect dimension must break the tie — that regime is covered by the
+oracle-affect claims (Hd1/Hd2) and, for LLM-inferred affect, by Addendum Q
+(`realistic_recall_v5_gate`, per-query `gate_label`).
+
 ## Claim matrix
 
 Canonical source: [`claim_validation_matrix.json`](claim_validation_matrix.json).

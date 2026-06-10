@@ -75,8 +75,13 @@ Pass 1 — score all candidates (6 signals, no spreading):
     s5  recency / decay         (ACT-R power-law: strength decays with time)
     s6  resonance boost         (0 in Pass 1; populated in Pass 2 via spreading activation)
 
-Weights are adaptive: the MoodField shifts w1-w6 based on current arousal.
-High arousal → semantic signal dominates. Low arousal → emotional signals dominate.
+Weights are adaptive: `adaptive_weights()` modulates w1-w6 with the current
+MoodField *before* scoring. Calm/neutral mood → semantic (s1) dominates; negative
+mood → mood congruence (s2) and affect proximity (s3) rise at semantic's expense;
+high arousal → momentum (s4) rises. This applies to whatever base vector is in
+effect — **including per-query routed weights** (`QueryClassifierConfig.routed_weights`):
+a routed vector is a starting point, not the final weights. A routed
+`[1, 0, 0, 0, 0, 0]` is pure-semantic only under a neutral mood.
     │
     ▼
 Top-k seeds
@@ -108,6 +113,18 @@ hebbian_strengthen() on co-retrieved ResonanceLinks
     ▼
 return top-k Memory objects
 ```
+
+> **The query is never appraised.** Of the six signals, only s1 (semantic
+> similarity) reads the query text — the embedding is all the query contributes.
+> s2-s4 compare each memory's stored `EmotionalTag` against the *current runtime
+> affective state* (the mood, core affect and momentum the engine is in when
+> `retrieve()` is called); s5 is time-based; s6 is graph-based. An emotionally
+> phrased query ("when did I feel relieved?") does not, by itself, activate the
+> affect channel: its emotion words only shift the embedding. Affective retrieval
+> is **state-dependent** (Bower 1981) — it favours memories congruent with how the
+> agent feels *now*, not with what the query asks about. To bias retrieval toward
+> a feeling, change the state first (`observe()` / `set_affect()`) or route the
+> query (`QueryClassifierConfig`).
 
 There are now two retrieval entrypoints:
 
