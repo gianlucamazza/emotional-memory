@@ -55,6 +55,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Paper: Addendum O/P folded into the Hg1 scope discussion (#48).** `paper/main.tex`
+  abstract, oracle-affect operationalization paragraph and conclusion now record the
+  recalibrated mapping (Addendum O) and the leakage-free Hg1 re-run (Addendum P, Hp1 FAIL with
+  naive cosine significantly ahead; Hp2/Hp3 PASS). arXiv bundle regenerated to match.
+- **Zenodo version DOI for v0.11.3 minted retroactively (#49).** Record `20475352`
+  (`10.5281/zenodo.20475352`) reserved, published, and propagated via `sync-metadata` to
+  `release.toml`, `CITATION.cff`, `README.md`, `demo/README.md`, `paper/SUBMISSION.md` and
+  `paper/main.tex`. Closes the v0.11.2/v0.11.3 gap where `version_doi` still pointed at
+  v0.11.1 (`20440996`).
 - **Docs-site consolidation**: detailed content was moved out of `README.md`, `CONTRIBUTING.md`
   and `CLAUDE.md` into dedicated MkDocs pages (getting-started, comparison, benchmarks,
   production-readiness, architecture), with the top-level files kept lean and pointing to the
