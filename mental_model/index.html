@@ -2706,39 +2706,57 @@
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    s5  recency / decay         (ACT-R power-law: strength decays with time)
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    s6  resonance boost         (0 in Pass 1; populated in Pass 2 via spreading activation)
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Weights are adaptive: the MoodField shifts w1-w6 based on current arousal.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>High arousal → semantic signal dominates. Low arousal → emotional signals dominate.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    ▼
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Top-k seeds
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    ▼
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>spreading_activation(seeds)  ← multi-hop BFS on ResonanceGraph
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    │                           returns activation_map: memory_id → score
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    ▼
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Pass 2 — re-score seeds with resonance boost (s6 = activation_map[id])
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    ▼
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Ranking plan available via retrieve_with_explanations()
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    │   breakdown.raw_signals      → ranking-time signal values
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    │   breakdown.weighted_signals → score contributions after adaptive weights
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    │   pass1_rank / pass2_rank    → how resonance changed ordering
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    ▼
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Per memory: compute_ape() — Affective Prediction Error
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    │         &quot;How surprising is this memory given the current context?&quot;
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    ▼
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>APE-gated reconsolidation:
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    high APE → open lability window → memory becomes reconsolidatable
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    retrieval within open window → update EmotionalTag with current state
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Weights are adaptive: `adaptive_weights()` modulates w1-w6 with the current
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>MoodField *before* scoring. Calm/neutral mood → semantic (s1) dominates; negative
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mood → mood congruence (s2) and affect proximity (s3) rise at semantic&#39;s expense;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>high arousal → momentum (s4) rises. This applies to whatever base vector is in
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>effect — **including per-query routed weights** (`QueryClassifierConfig.routed_weights`):
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>a routed vector is a starting point, not the final weights. A routed
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>`[1, 0, 0, 0, 0, 0]` is pure-semantic only under a neutral mood.
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    ▼
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>Top-k seeds
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    ▼
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>spreading_activation(seeds)  ← multi-hop BFS on ResonanceGraph
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    │                           returns activation_map: memory_id → score
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    ▼
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Pass 2 — re-score seeds with resonance boost (s6 = activation_map[id])
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    ▼
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Ranking plan available via retrieve_with_explanations()
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    │   breakdown.raw_signals      → ranking-time signal values
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    │   breakdown.weighted_signals → score contributions after adaptive weights
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    │   pass1_rank / pass2_rank    → how resonance changed ordering
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    ▼
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Per memory: compute_ape() — Affective Prediction Error
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    │         &quot;How surprising is this memory given the current context?&quot;
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    ▼
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>hebbian_strengthen() on co-retrieved ResonanceLinks
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    ▼
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>return top-k Memory objects
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>APE-gated reconsolidation:
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    high APE → open lability window → memory becomes reconsolidatable
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    retrieval within open window → update EmotionalTag with current state
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    ▼
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>hebbian_strengthen() on co-retrieved ResonanceLinks
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    ▼
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>return top-k Memory objects
 </code></pre></div>
+<blockquote>
+<p><strong>The query is never appraised.</strong> Of the six signals, only s1 (semantic
+similarity) reads the query text — the embedding is all the query contributes.
+s2-s4 compare each memory's stored <code>EmotionalTag</code> against the <em>current runtime
+affective state</em> (the mood, core affect and momentum the engine is in when
+<code>retrieve()</code> is called); s5 is time-based; s6 is graph-based. An emotionally
+phrased query ("when did I feel relieved?") does not, by itself, activate the
+affect channel: its emotion words only shift the embedding. Affective retrieval
+is <strong>state-dependent</strong> (Bower 1981) — it favours memories congruent with how the
+agent feels <em>now</em>, not with what the query asks about. To bias retrieval toward
+a feeling, change the state first (<code>observe()</code> / <code>set_affect()</code>) or route the
+query (<code>QueryClassifierConfig</code>).</p>
+</blockquote>
 <p>There are now two retrieval entrypoints:</p>
 <ul>
 <li><code>retrieve()</code> returns the post-retrieval <code>Memory</code> objects and is the normal runtime path.</li>

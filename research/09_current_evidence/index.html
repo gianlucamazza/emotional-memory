@@ -2140,6 +2140,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#terminology-the-two-senses-of-affect-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminology — the two senses of "affect-free"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#claim-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2614,6 +2625,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#terminology-the-two-senses-of-affect-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminology — the two senses of "affect-free"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#claim-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2796,6 +2818,26 @@ controlled evidence: the v2 realistic replay benchmark (N=200, 5 challenge
 types × 40) shows a decisive advantage over <code>naive_cosine</code> on both SBERT and
 e5-small-v2 embedders. Step <strong>5</strong> remains open research work.</p>
 <hr />
+<h2 id="terminology-the-two-senses-of-affect-free">Terminology — the two senses of "affect-free"<a class="headerlink" href="#terminology-the-two-senses-of-affect-free" title="Permanent link">&para;</a></h2>
+<p>The research documents use "affect-free" in two distinct senses; conflating them
+misreads the falsified claims:</p>
+<ul>
+<li><strong>Affect-free dataset (<code>noAF</code>)</strong> — events carry <strong>no preset valence/arousal
+  fields</strong> and queries no <code>state</code> field. The <em>content</em> is still affect-rich; the
+  affect signal must be inferred end-to-end by the appraisal engine. This is a
+  property of the <em>annotation</em>, not of the content (<code>realistic_recall_v3_noAF</code>,
+  <code>v4_noAF</code>).</li>
+<li><strong>Affect-free query</strong> — a query whose target is <strong>determinable from semantics
+  alone</strong> (the wording uniquely identifies the correct event). This is a property
+  of the <em>query</em>, and it is the regime where naive cosine is hard to beat
+  (Addendum P: cosine 0.887).</li>
+</ul>
+<p>The falsified claim <code>appraisal_llm_real_dual_path</code> combines both senses: LLM-inferred
+affect (noAF annotation) evaluated on semantically determinable (affect-free)
+queries. It does <strong>not</strong> speak to affect-discriminative queries, where semantics
+ties and the affect dimension must break the tie — that regime is covered by the
+oracle-affect claims (Hd1/Hd2) and, for LLM-inferred affect, by Addendum Q
+(<code>realistic_recall_v5_gate</code>, per-query <code>gate_label</code>).</p>
 <h2 id="claim-matrix">Claim matrix<a class="headerlink" href="#claim-matrix" title="Permanent link">&para;</a></h2>
 <p>Canonical source: <a href="../claim_validation_matrix.json"><code>claim_validation_matrix.json</code></a>.
 This JSON file is the repo's versioned source of truth for claim wording,
