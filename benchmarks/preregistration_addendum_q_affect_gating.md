@@ -192,3 +192,32 @@ same order as Addendum P (~$1–2).
 - [ ] Run `runner_hq.py --embedder sbert-bge` → `results.hq.{json,md,protocol.json}`
 - [ ] Write closure `benchmarks/preregistration_addendum_q_affect_gating_closure.md`
 - [ ] Update `docs/research/claim_validation_matrix.json`, `ROADMAP.md`, `CHANGELOG.md`
+
+---
+
+## Amendment 1 (pre-execution, 2026-06-11) — gating implemented as a front-router
+
+**Discovery (before any dataset generation or benchmark run):** the engine-level routing path
+(`QueryClassifierConfig.routed_weights`) feeds the routed vector through `adaptive_weights()`,
+which modulates weights by the *current mood* (`retrieval.py`). With a non-neutral mood — the
+normal condition mid-arc — a routed `[1,0,0,0,0,0]` acquires non-zero mood-congruence /
+affect-proximity components. The gate-off arm would therefore NOT coincide with `naive_cosine`,
+breaking the pre-registered dry-run assert and contaminating the Hq2/Hq3 contrasts.
+
+**Revised implementation (replaces the "existing public routing API" paragraph):** the gated
+adapters implement gating as a **front-router at the adapter level**:
+
+- every event is encoded into the AFT engine exactly as in `aft_llm_dual` (and, in parallel,
+  into a local cosine index identical to `naive_cosine`'s — same embedder instance, same
+  content strings);
+- at retrieve time the gate classifies the query: `affect_free` → answer from the local cosine
+  index (code path shared with `naive_cosine`, equivalence by construction); `affective` →
+  `engine.retrieve` with configuration **identical** to `aft_llm_dual`.
+
+**Disclosed consequence:** in the gated arms, affect-free retrievals bypass the engine and so
+skip its retrieval side effects (reconsolidation, Hebbian strengthening); `aft_llm_dual`
+performs them on every query. This is an intrinsic property of the gated architecture (fewer
+state mutations), not a confound introduced by measurement.
+
+Hypotheses, dataset, statistics, seeds and decision rules are **unchanged**. This amendment is
+committed before `generate_v5_gate.py` exists and before any data are generated.
