@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (mapping calibration) are unaffected. Adds pre-registration + closure, frozen dataset +
   generator, and result artifacts (`results.hg1_v4.{json,md,protocol.json}`).
 
+- **Addendum L Hl3 follow-up resolved (PR #52).** The classifier-log alignment bug in
+  `benchmarks/locomo/routing_runner.py` is fixed: the `_LoggingClassifier` log was matched to
+  predictions by list index, but predictions restored from the resume checkpoint never hit the
+  classifier in the resumed run, so every Hl3 record fell into the `"unknown"` fallback. The
+  log is now matched by query text (`_classifier_predictions()`, regression-tested). The
+  required follow-up is satisfied offline (the heuristic classifier is pure and deterministic):
+  ground-truth accuracy on the exact 200-QA stratified subset (seed=42) is 0.465 overall and
+  0.600 excluding `adversarial` (no routable class exists), with `multi_hop` essentially
+  undetected (2/28). Documented as a post-closure addendum in the Addendum L closure.
+
 ### Changed
 
 - **Scherer SEC→valence/arousal mapping recalibrated (Addendum O).** `_scherer_project`
@@ -45,6 +55,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Paper: Addendum O/P folded into the Hg1 scope discussion (#48).** `paper/main.tex`
+  abstract, oracle-affect operationalization paragraph and conclusion now record the
+  recalibrated mapping (Addendum O) and the leakage-free Hg1 re-run (Addendum P, Hp1 FAIL with
+  naive cosine significantly ahead; Hp2/Hp3 PASS). arXiv bundle regenerated to match.
+- **Zenodo version DOI for v0.11.3 minted retroactively (#49).** Record `20475352`
+  (`10.5281/zenodo.20475352`) reserved, published, and propagated via `sync-metadata` to
+  `release.toml`, `CITATION.cff`, `README.md`, `demo/README.md`, `paper/SUBMISSION.md` and
+  `paper/main.tex`. Closes the v0.11.2/v0.11.3 gap where `version_doi` still pointed at
+  v0.11.1 (`20440996`).
 - **Docs-site consolidation**: detailed content was moved out of `README.md`, `CONTRIBUTING.md`
   and `CLAUDE.md` into dedicated MkDocs pages (getting-started, comparison, benchmarks,
   production-readiness, architecture), with the top-level files kept lean and pointing to the
