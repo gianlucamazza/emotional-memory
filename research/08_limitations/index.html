@@ -3185,6 +3185,18 @@ semantics alone is already highly discriminative.</p>
 affect", not "architecture advantage in production". The oracle-affect scope is a hard
 boundary; calibration quality does not, by itself, convert into an affect-free retrieval
 gain. See <code>benchmarks/preregistration_addendum_p_hg1_rerun_closure.md</code>.</p>
+<p><strong>State-injection boundary (Addendum Q, 2026-06-11).</strong> The oracle-affect boundary is
+sharper than calibration: in the Hd-family protocols each query carries a <code>state</code> field
+injected into the engine <em>before</em> retrieval, i.e. the benchmark performs the
+query↔state alignment. Addendum Q tested whether the session trajectory supplies that
+alignment for free on affect-discriminative queries (LLM-inferred affect, gated
+front-router, <code>realistic_recall_v5_gate</code>): it does not — the affect channel loses to
+cosine even there (tiebreak 0.160 vs 0.280, Hq1 FAIL), and even a perfect gate stays
+below cosine (Hq4, Δ=−0.045, p=0.0024). Gating only neutralizes the always-on penalty
+(Hq2 PASS, +0.080; gated == cosine on affect-free queries). Because retrieval signals
+are state-based and the query is never appraised, query-driven affect questions are
+architecturally out of reach for the current signal set; the affect-routing line is
+closed. See <code>benchmarks/preregistration_addendum_q_affect_gating_closure.md</code>.</p>
 <h3 id="25-resonance-magnitude-amplification-on-e5-small-v2">2.5 Resonance magnitude amplification on e5-small-v2<a class="headerlink" href="#25-resonance-magnitude-amplification-on-e5-small-v2" title="Permanent link">&para;</a></h3>
 <p>S3 ablation (<code>no_resonance</code> variant, e5-small-v2) found that removing the
 <code>ResonanceLink</code> layer <strong>improves</strong> top1 accuracy: Δ = +0.075 [0.040, 0.115],

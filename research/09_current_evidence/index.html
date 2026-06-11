@@ -2250,6 +2250,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#addendum-q-affect-aware-gating-branch-c-2026-06-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addendum Q — Affect-Aware Gating (Branch C, 2026-06-11)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2735,6 +2746,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#addendum-q-affect-aware-gating-branch-c-2026-06-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addendum Q — Affect-Aware Gating (Branch C, 2026-06-11)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2984,9 +3006,9 @@ evidence level, and still-open gaps.</p>
 <td>Falsified</td>
 <td><code>3_appraisal_quality</code></td>
 <td>Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC-&gt;affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.</td>
-<td>Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual&gt;neutral PASS (+0.056, p=0.030); Hp3 dual&gt;sync PASS (+0.512, d=0.95).</td>
-<td>Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path &gt; synchronous (Hp3) reaffirmed.</td>
-<td>None planned for affect-free architecture-vs-cosine; claim falsified (Addendum P).</td>
+<td>Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual&gt;neutral PASS (+0.056, p=0.030); Hp3 dual&gt;sync PASS (+0.512, d=0.95). <strong>Addendum Q (2026-06-11)</strong>: affect-aware gating on realistic_recall_v5_gate (200 q, 100/100 gate-labelled). Hq1 FAIL (dual vs cosine on affective subset, Δ=−0.050; tiebreak type 0.160 vs 0.280), Hq3 FAIL (gated vs cosine, Δ=−0.025), Hq4 oracle-gate also below cosine (Δ=−0.045, p=0.0024); Hq2 PASS (gated &gt; always-on, Δ=+0.080, p_holm=0.0009; gated == cosine on affect-free half, Hq5 Δ=0.000). Branch C: routing line closed.</td>
+<td>Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path &gt; synchronous (Hp3) reaffirmed. Gating recovers the always-on penalty but cannot exceed cosine (Addendum Q); the bottleneck is the state-based channel, not the gate.</td>
+<td>Affect-routing line closed (Addendum Q, Branch C). Residual (not scheduled): retrieve-time query appraisal as a new signal.</td>
 </tr>
 </tbody>
 </table>
@@ -3406,6 +3428,33 @@ The prompt is the wrong lever for arousal, whose bias is driven by the
 SEC→arousal <em>mapping</em> rather than prompt wording. Closure:
 <code>benchmarks/preregistration_addendum_n_appraisal_calibration_closure.md</code>;
 diagnostics in <code>benchmarks/appraisal_diagnostics/</code>.</p>
+<h3 id="addendum-q-affect-aware-gating-branch-c-2026-06-11">Addendum Q — Affect-Aware Gating (Branch C, 2026-06-11)<a class="headerlink" href="#addendum-q-affect-aware-gating-branch-c-2026-06-11" title="Permanent link">&para;</a></h3>
+<p>The synthesis named in the Addendum P closure — apply affect only when the query is
+affect-discriminative — was pre-registered (Hq1–Hq3, Holm m=3) and executed on
+<code>realistic_recall_v5_gate</code> (50 scenarios / 200 queries, 100 affective / 100 affect-free
+with ground-truth <code>gate_label</code>, frozen pre-run). Gating was implemented as an
+adapter-level front-router (Amendment 1): affect-free → cosine index identical to the
+baseline; affective → engine identical to <code>aft_llm_dual</code>.</p>
+<p><strong>Branch C confirmed.</strong> Hq1 FAIL: LLM-inferred affect loses to cosine on the affective
+subset itself (0.090 vs 0.140; on the anchored <code>affect_congruent_tiebreak</code> type, 0.160 vs
+0.280). Hq3 FAIL and Hq4 (perfect-gate arm) significantly below cosine (Δ=−0.045,
+p=0.0024): no routing scheme can rescue a channel that loses in its own regime. The one
+confirmatory PASS is <strong>Hq2</strong> (+0.080, p_holm=0.0009): the front-router recovers the entire
+always-on penalty — the gated arms score <em>exactly</em> cosine on the affect-free half (Hq5
+Δ=0.000). Gating is a safe wrapper, not an advantage. Gate classifier: LLM gate accuracy
+0.844 (affective recall 0.69); the oracle gate scores <em>worse</em> overall than the imperfect
+LLM gate (0.450 vs 0.470) because misrouting affective queries to cosine accidentally
+helps — the bottleneck is the channel, not the classifier.</p>
+<p><strong>Mechanistic reading.</strong> AFT retrieval signals are state-based: the query is never
+appraised. The Hd1/Hd2 oracle-affect PASSes inject each query's <code>state</code> before retrieval —
+the benchmark performs the query↔state alignment that real usage lacks. Addendum Q shows
+the session trajectory does not supply that alignment for free: the oracle-affect boundary
+is also a <strong>state-injection boundary</strong>. Construction limitation, disclosed:
+<code>affective_arc_blind</code> queries hit a floor for every system (≤0.02 including cosine) under
+cross-scenario accumulation (50 same-shape arcs make trajectory-only queries
+under-determined); the verdict stands on the anchored tiebreak queries.</p>
+<p>Closure: <code>benchmarks/preregistration_addendum_q_affect_gating_closure.md</code>;
+results: <code>benchmarks/appraisal_confound/results.hq.{json,md,protocol.json}</code>.</p>
 <hr />
 <h2 id="power-notes-ex-post">Power notes (ex-post)<a class="headerlink" href="#power-notes-ex-post" title="Permanent link">&para;</a></h2>
 <p>Observed power estimates for results with d &lt; 0.30 or p near α, using the
