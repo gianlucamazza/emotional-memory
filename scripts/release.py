@@ -225,6 +225,11 @@ def phase2_doi_sync(state: dict[str, object], version: str) -> None:
         sys.exit(rc)
     print(f"{OK} Paper PDF rebuilt with DOI {reserved_doi}")
 
+    # Regenerate the arXiv bundle so it matches the DOI-patched main.tex
+    # (check-arxiv-bundle gate compares the tarball against paper/main.tex).
+    _run(["make", "paper-arxiv"])
+    print(f"{OK} arXiv bundle regenerated")
+
     state["concept_doi_confirmed"] = concept_doi
     _save_state(state)
 
@@ -239,8 +244,11 @@ def phase3_commit_tag(state: dict[str, object], version: str) -> None:
         "CITATION.cff",
         ".zenodo.json",
         "codemeta.json",
+        "README.md",
         "paper/main.tex",
         "paper/SUBMISSION.md",
+        "paper/arxiv-submission.tar.gz",
+        "paper/arxiv-submission.sha256",
         "demo/README.md",
         "demo/requirements.txt",
         "demo/app.py",
