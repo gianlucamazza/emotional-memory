@@ -214,9 +214,18 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
   [−0.144,−0.031], p=0.0018, d=−0.242). Exploratory: Hp2 dual>neutral PASS (the affect signal
   is real); Hp3 dual>sync PASS, d=0.95 (deferred dual-path is essential). Claim
   `appraisal_llm_real_dual_path` stays **falsified**; the affect-free architecture-vs-cosine
-  line is closed. Next angle (not scheduled): affect-aware *routing* — apply affect only when
-  the query is affect-discriminative — rather than always blending it. See
-  `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
+  line is closed. The "next angle" (affect-aware routing) was executed as Addendum Q —
+  see below. See `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
+- [x] **Addendum Q — affect-aware gating (Branch C, 2026-06-11).** Pre-registered the
+  routing synthesis (Hq1–Hq3, Holm m=3; front-router per Amendment 1) on
+  `realistic_recall_v5_gate` (50 scenarios / 200 queries, 100/100 gate-labelled, frozen
+  pre-run). **Hq1 FAIL**: LLM-inferred affect loses to cosine on the affective subset
+  itself (tiebreak 0.160 vs 0.280); **Hq3 FAIL**, Hq4 — even the oracle-gate arm is
+  significantly below cosine (Δ=−0.045). **Hq2 PASS** (+0.080, p_holm=0.0009): gating
+  recovers the entire always-on penalty exactly (gated == cosine on affect-free queries,
+  Hq5 Δ=0.000) — a safe wrapper, not an advantage. The affect-routing line is **closed**;
+  residual hypothesis (not scheduled): retrieve-time query appraisal as a new signal.
+  See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
 
 ---
 

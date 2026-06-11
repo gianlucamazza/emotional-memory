@@ -164,6 +164,19 @@ affect", not "architecture advantage in production". The oracle-affect scope is 
 boundary; calibration quality does not, by itself, convert into an affect-free retrieval
 gain. See `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
 
+**State-injection boundary (Addendum Q, 2026-06-11).** The oracle-affect boundary is
+sharper than calibration: in the Hd-family protocols each query carries a `state` field
+injected into the engine *before* retrieval, i.e. the benchmark performs the
+query↔state alignment. Addendum Q tested whether the session trajectory supplies that
+alignment for free on affect-discriminative queries (LLM-inferred affect, gated
+front-router, `realistic_recall_v5_gate`): it does not — the affect channel loses to
+cosine even there (tiebreak 0.160 vs 0.280, Hq1 FAIL), and even a perfect gate stays
+below cosine (Hq4, Δ=−0.045, p=0.0024). Gating only neutralizes the always-on penalty
+(Hq2 PASS, +0.080; gated == cosine on affect-free queries). Because retrieval signals
+are state-based and the query is never appraised, query-driven affect questions are
+architecturally out of reach for the current signal set; the affect-routing line is
+closed. See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
+
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the

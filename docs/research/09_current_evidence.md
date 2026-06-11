@@ -82,7 +82,7 @@ evidence level, and still-open gaps.
 | `Hi3_arc` | Retrieval behavior | Not established | `2_controlled_retrieval` | Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size. | Hi3_arc secondary FAIL (Addendum I closure, 2026-05-06): Δ=0.010, p_adj=0.3795, d=0.058. Embedder amplification scoped to semantic_confound and recency_confound. | Whether larger N or different dataset would show signal. | No active follow-up; Hi3_arc FAIL scopes the amplification claim. |
 | `models_human_emotional_memory` | Ecological validity | Not established | `5_human_ecological` | The system is theory-inspired, but does not yet have human or ecological validation. | Theory-inspired design only. | Human behavioral correspondence. | Pilot human evaluation with completed ratings and external benchmarks. |
 | `realistic_replay_vs_sota` | Retrieval behavior vs SOTA | Controlled evidence | `4_realistic_tasks` | On the realistic multi-session replay benchmark, AFT with preset affect labels achieves top1_accuracy = 0.535 vs Mem0 = 0.330 and LangMem = 0.365 — an advantage of Δ +0.21 (d=0.51) with non-overlapping 95% CIs. Neither LLM-backed system outperforms naive cosine on this benchmark. | H_v2_sota PASS (exploratory, 2026-05-07, gpt-4.1-mini, sbert-bge, N=200, n_bootstrap=10000, seed=0). AFT top1=0.535 vs Mem0=0.330 and LangMem=0.365; both SOTA systems below naive_cosine=0.325. | Advantage without oracle-affect (Hg1 FAIL). Advantage on factual QA (LoCoMo S1 FAIL). | SOTA replication with automatic appraisal engine (would require non-circular affect-free dataset). |
-| `appraisal_llm_real_dual_path` | Appraisal quality | Falsified | `3_appraisal_quality` | Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC->affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims. | Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual>neutral PASS (+0.056, p=0.030); Hp3 dual>sync PASS (+0.512, d=0.95). | Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path > synchronous (Hp3) reaffirmed. | None planned for affect-free architecture-vs-cosine; claim falsified (Addendum P). |
+| `appraisal_llm_real_dual_path` | Appraisal quality | Falsified | `3_appraisal_quality` | Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC->affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims. | Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual>neutral PASS (+0.056, p=0.030); Hp3 dual>sync PASS (+0.512, d=0.95). **Addendum Q (2026-06-11)**: affect-aware gating on realistic_recall_v5_gate (200 q, 100/100 gate-labelled). Hq1 FAIL (dual vs cosine on affective subset, Δ=−0.050; tiebreak type 0.160 vs 0.280), Hq3 FAIL (gated vs cosine, Δ=−0.025), Hq4 oracle-gate also below cosine (Δ=−0.045, p=0.0024); Hq2 PASS (gated > always-on, Δ=+0.080, p_holm=0.0009; gated == cosine on affect-free half, Hq5 Δ=0.000). Branch C: routing line closed. | Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path > synchronous (Hp3) reaffirmed. Gating recovers the always-on penalty but cannot exceed cosine (Addendum Q); the bottleneck is the state-based channel, not the gate. | Affect-routing line closed (Addendum Q, Branch C). Residual (not scheduled): retrieve-time query appraisal as a new signal. |
 
 ---
 
@@ -264,6 +264,38 @@ The prompt is the wrong lever for arousal, whose bias is driven by the
 SEC→arousal *mapping* rather than prompt wording. Closure:
 `benchmarks/preregistration_addendum_n_appraisal_calibration_closure.md`;
 diagnostics in `benchmarks/appraisal_diagnostics/`.
+
+### Addendum Q — Affect-Aware Gating (Branch C, 2026-06-11)
+
+The synthesis named in the Addendum P closure — apply affect only when the query is
+affect-discriminative — was pre-registered (Hq1–Hq3, Holm m=3) and executed on
+`realistic_recall_v5_gate` (50 scenarios / 200 queries, 100 affective / 100 affect-free
+with ground-truth `gate_label`, frozen pre-run). Gating was implemented as an
+adapter-level front-router (Amendment 1): affect-free → cosine index identical to the
+baseline; affective → engine identical to `aft_llm_dual`.
+
+**Branch C confirmed.** Hq1 FAIL: LLM-inferred affect loses to cosine on the affective
+subset itself (0.090 vs 0.140; on the anchored `affect_congruent_tiebreak` type, 0.160 vs
+0.280). Hq3 FAIL and Hq4 (perfect-gate arm) significantly below cosine (Δ=−0.045,
+p=0.0024): no routing scheme can rescue a channel that loses in its own regime. The one
+confirmatory PASS is **Hq2** (+0.080, p_holm=0.0009): the front-router recovers the entire
+always-on penalty — the gated arms score *exactly* cosine on the affect-free half (Hq5
+Δ=0.000). Gating is a safe wrapper, not an advantage. Gate classifier: LLM gate accuracy
+0.844 (affective recall 0.69); the oracle gate scores *worse* overall than the imperfect
+LLM gate (0.450 vs 0.470) because misrouting affective queries to cosine accidentally
+helps — the bottleneck is the channel, not the classifier.
+
+**Mechanistic reading.** AFT retrieval signals are state-based: the query is never
+appraised. The Hd1/Hd2 oracle-affect PASSes inject each query's `state` before retrieval —
+the benchmark performs the query↔state alignment that real usage lacks. Addendum Q shows
+the session trajectory does not supply that alignment for free: the oracle-affect boundary
+is also a **state-injection boundary**. Construction limitation, disclosed:
+`affective_arc_blind` queries hit a floor for every system (≤0.02 including cosine) under
+cross-scenario accumulation (50 same-shape arcs make trajectory-only queries
+under-determined); the verdict stands on the anchored tiebreak queries.
+
+Closure: `benchmarks/preregistration_addendum_q_affect_gating_closure.md`;
+results: `benchmarks/appraisal_confound/results.hq.{json,md,protocol.json}`.
 
 ---
 
