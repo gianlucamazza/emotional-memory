@@ -76,6 +76,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 | `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions |
 | `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal (submodule-only, not top-level exports; import as `from emotional_memory.llm_http import …`) |
 | `integrations/langchain.py` | LangChain memory integration (optional) |
+| `integrations/mem0.py` | `EmotionalMemoryMem0Backend` — mem0-compatible facade (mem0 API surface, no runtime `mem0ai` dep) + `messages_to_content` helper; exported top-level |
 | `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
 | `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
 | `stores/chroma.py` | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra) |

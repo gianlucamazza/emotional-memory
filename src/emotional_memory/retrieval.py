@@ -124,6 +124,14 @@ class QueryClassifierConfig(BaseModel):
     ``routed_weights`` maps query-type labels to 6-element weight vectors (same
     order as ``RetrievalConfig.base_weights``).  ``LOCOMO_ROUTING`` from
     ``emotional_memory.query_classifier`` is a ready-to-use routing table.
+
+    Routing selects the *starting* weights, it does not bypass adaptive
+    weighting: the routed vector replaces ``base_weights`` and is then still
+    modulated by the current mood via ``adaptive_weights()`` (and by the
+    ablation mask).  A routed ``[1, 0, 0, 0, 0, 0]`` therefore yields a
+    pure-semantic ranking only under a neutral/calm mood; to gate signals off
+    unconditionally, disable them via the ``enable_*`` ablation flags or route
+    *in front of* the engine instead.
     """
 
     model_config = ConfigDict(frozen=True)

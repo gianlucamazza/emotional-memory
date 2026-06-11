@@ -53,3 +53,28 @@ make bench-appraisal-confound-hash   # hash embedder (sanity check)
 | PASS | PASS | Architecture drives the advantage; appraisal engine is neutral on this dataset |
 | PASS | FAIL | Both architecture and appraisal inference contribute |
 | FAIL | — | No AFT advantage even with keyword appraisal; examine retrieval config |
+
+## Runner inventory
+
+| Runner | Studies | Protocol |
+|---|---|---|
+| `runner.py` | Addendum A/B/C, Hd2 (oracle/keyword confound) | per-scenario isolation (`reset()` inside the scenario loop) |
+| `runner_hg1.py` | Addendum G, Addendum P (LLM dual-path on noAF sets) | cross-scenario accumulation (`reset()` once per system) |
+| `runner_hq.py` | Addendum Q (affect-aware gating, mixed-gate set) | cross-scenario accumulation (front-router per Amendment 1) |
+
+## Protocol note — cross-scenario accumulation
+
+In `runner_hg1.py` and `runner_hq.py`, `reset()` runs **once per system**, before
+the scenario loop: memories accumulate across scenarios (the candidate pool grows
+to ~240 on `v4_noAF` and ~300 on `v5_gate` by the last scenario, with
+cross-scenario distractors) and the affective state evolves as **one continuous
+trajectory** over the whole dataset. `runner.py` instead resets per scenario
+(isolated pools of ≤ a dozen memories). Two consequences:
+
+- **Absolute accuracies are not comparable across the two runner families** —
+  only within-study deltas against the same-protocol baseline are meaningful.
+- Reported accuracies in the accumulation runners are measured under a growing
+  pool (per-query `candidate_count` is recorded in the results JSON), which is
+  substantially harder than per-scenario isolation.
+
+All systems within a study face the same pool, so paired comparisons are unaffected.
