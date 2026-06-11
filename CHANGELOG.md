@@ -34,6 +34,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   0.600 excluding `adversarial` (no routable class exists), with `multi_hop` essentially
   undetected (2/28). Documented as a post-closure addendum in the Addendum L closure.
 
+- **Addendum Q (affect-aware gating, Branch C):** pre-registered and executed the routing
+  synthesis named in the Addendum P closure — apply the affect channel only when the query
+  is affect-discriminative. New frozen dataset `realistic_recall_v5_gate` (50 scenarios /
+  200 queries, 100 affective + 100 affect-free with ground-truth `gate_label`, qNN_
+  namespace disjoint from v3/v4, mechanical lexical-leakage gate); gating implemented as an
+  adapter-level front-router (pre-execution Amendment 1: `adaptive_weights()` mood-modulates
+  routed vectors, so engine-level weight gating is not pure cosine). **Hq1 FAIL** (LLM
+  affect vs cosine on the affective subset: delta=-0.050; anchored tiebreak type 0.160 vs
+  0.280), **Hq3 FAIL** (gated vs cosine, delta=-0.025), Hq4 -- even the perfect-gate arm is
+  significantly below cosine (delta=-0.045, p=0.0024). **Hq2 PASS** (gated > always-on
+  dual, delta=+0.080, p_holm=0.0009): the front-router recovers the entire always-on
+  penalty exactly (gated == cosine on affect-free queries, Hq5 delta=0.000 exact). Gate
+  classifier accuracy 0.844 reported with confusion matrix (Hl3 lesson). Pre-specified
+  Branch C: the affect-routing line is closed; the oracle-affect boundary is also a
+  state-injection boundary (the query is never appraised). Adds pre-registration +
+  amendment + closure, generator + frozen dataset, runner with no-LLM oracle-equivalence
+  dry-run, and result artifacts (`results.hq.{json,md,protocol.json}`).
+
 ### Changed
 
 - **Scherer SEC→valence/arousal mapping recalibrated (Addendum O).** `_scherer_project`

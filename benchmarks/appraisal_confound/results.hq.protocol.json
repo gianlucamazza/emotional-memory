@@ -1,0 +1,54 @@
+{
+  "study": "addendum_q_hq",
+  "pre_registration": "benchmarks/preregistration_addendum_q_affect_gating.md",
+  "amendments": [
+    "Amendment 1 (pre-execution): gating as adapter-level front-router"
+  ],
+  "dataset": "realistic_recall_v5_gate",
+  "dataset_version": "1.0.0",
+  "embedder": "sbert-bge",
+  "systems": [
+    "naive_cosine",
+    "aft_llm_dual",
+    "aft_gated_oracle",
+    "aft_gated_llm"
+  ],
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "hypotheses": {
+    "Hq1": {
+      "description": "aft_llm_dual.top1 > naive_cosine.top1 on the affective subset (\u0394 > 0.05, one-tailed, Holm m=3)",
+      "result": "FAIL",
+      "confirmatory": true
+    },
+    "Hq2": {
+      "description": "aft_gated_llm.top1 > aft_llm_dual.top1 on the full corpus (\u0394 > 0.05, one-tailed, Holm m=3)",
+      "result": "PASS",
+      "confirmatory": true
+    },
+    "Hq3": {
+      "description": "aft_gated_llm.top1 > naive_cosine.top1 on the full corpus (\u0394 > 0.05, one-tailed, Holm m=3)",
+      "result": "FAIL",
+      "confirmatory": true
+    },
+    "Hq4": {
+      "description": "aft_gated_oracle vs naive_cosine, full corpus (exploratory upper bound)",
+      "result": "FAIL",
+      "confirmatory": false
+    },
+    "Hq5": {
+      "description": "aft_gated_llm vs naive_cosine on the affect-free subset (exploratory: gate false-positive cost; expected \u2248 0)",
+      "result": "REPORTED",
+      "confirmatory": false
+    }
+  },
+  "interpretation_notes": [
+    "Hq1-Hq3 are the confirmatory family; Holm-Bonferroni m=3 on one-sided p-values.",
+    "PASS rule per hypothesis: delta > 0.05 AND Holm-adjusted one-sided p < 0.05.",
+    "Hq4 (oracle upper bound) and Hq5 (gate false-positive cost) are exploratory.",
+    "Hq6 (gate classifier accuracy + confusion) is a mandatory report (Hl3 lesson).",
+    "seed=0 frozen; no re-seeding after results are known.",
+    "Shared appraisal engine across AFT arms: identical inferred affect by design.",
+    "Branches A/B/C interpretations are pre-specified in the pre-registration."
+  ]
+}
