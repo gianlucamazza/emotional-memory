@@ -90,7 +90,11 @@ labels; with \texttt{LLMAppraisalEngine} in dual-path mode on affect-free data
 minimum effect is not reached (Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$); a
 recalibrated appraisal mapping re-tested on a leakage-free set reaffirms this
 boundary more sharply (Addendum~P, $N=160$: $\Delta=-0.087$, $p=0.002$), scoping
-the main result to preset-affect scenarios. AFT encodes 25$\times$ faster than
+the main result to preset-affect scenarios; a pre-registered gating study
+(Addendum~Q, $N=200$ mixed-gate queries) closes the affect-routing line---gating
+the affect channel per query recovers the always-on penalty exactly, yet neither
+gated nor always-on AFT exceeds cosine, locating the boundary at retrieve-time
+state injection rather than appraisal calibration. AFT encodes 25$\times$ faster than
 Mem0 (45\,ms vs.\ 1130\,ms per item, CPU-only) with no runtime LLM call at
 retrieval. The implementation is released as the open-source MIT-licensed
 \texttt{emotional-memory} Python library.
@@ -815,6 +819,27 @@ the deferred dual-path schedule is essential---yet the affect channel is a net
 distractor when queries are affect-free and semantics already discriminate.
 The oracle-affect circularity remains the operative scope boundary of the
 $H_{d1}$/$H_{d2}$ claims.
+A final pre-registered study (Addendum~Q; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_q\_affect\_gating\_closure.md}%
+{\texttt{preregistration\_addendum\_q\_affect\_gating\_closure.md}}.})
+tested the remaining routing synthesis---apply the affect channel only when the
+query is affect-discriminative---on \texttt{realistic\_recall\_v5\_gate}
+($N=200$: 100 affect-free + 100 affective queries with ground-truth gate labels,
+frozen pre-run), with gating implemented as a front-router (affect-free queries
+answered from a cosine index identical to the baseline; affective queries by the
+full engine). \textbf{Hq2 PASS} ($\Delta=+0.080$, $p_{\text{Holm}}=0.0009$):
+gating recovers the \emph{entire} always-on penalty---the gated system scores
+exactly cosine on affect-free queries. But \textbf{Hq1/Hq3 FAIL}: LLM-inferred
+affect loses to cosine on the affective subset itself (anchored tie-break
+challenge: $0.160$ vs.\ $0.280$), and even a ground-truth-gated arm stays
+significantly below cosine ($\Delta=-0.045$, $p=0.0024$)---the bottleneck is the
+channel, not the gate classifier. This sharpens the oracle-affect boundary into a
+\emph{state-injection} boundary: AFT's affective signals compare memories against
+the runtime state and the query itself is never appraised, so the $H_{d}$-family
+protocols---which inject each query's \texttt{state} before retrieval---perform an
+alignment the session trajectory does not supply for free. The affect-routing
+line is closed; the residual hypothesis, retrieve-time query appraisal as a new
+retrieval signal, is left unscheduled.
 
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
@@ -898,8 +923,10 @@ personas, 396 affect-conditioned queries) did not replicate the advantage
 is naturalistic affect density rather than dataset size.
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
-beyond the English/Italian/Spanish/French slices validated here; architectural approaches
-to LoCoMo factual QA (per-category weight routing, query-type classification);
+beyond the English/Italian/Spanish/French slices validated here; retrieve-time
+query appraisal as a candidate new retrieval signal (per-category weight routing,
+query-type classification, and per-query affect gating are now closed negatives,
+Addenda~J/L/Q);
 and identifying naturalistic corpora with sufficient affect density (e.g.\
 affective-trajectory proportion $>$30\%) where the DailyDialog-style replication
 could be expected to pass.

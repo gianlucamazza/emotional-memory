@@ -281,7 +281,8 @@ pre-registered confirmatory studies, **including committed negative results**. O
 affect-discriminative recall the advantage is real and embedder-robust (English N=200, SBERT
 Δ=+0.21, d=0.49; French N=120, me5, Δ=+0.18, p<0.0001) — but it does **not** generalize:
 external QA (LoCoMo F1 0.168 vs 0.271), naturalistic dialogue (DailyDialog), end-to-end LLM
-appraisal (Hg1), and query-type routing (Addendum L) all **FAIL**. The AFT advantage is
+appraisal (Hg1/Addendum P), query-type routing (Addendum L), and per-query affect gating
+(Addendum Q — gating recovers the always-on penalty but cannot exceed cosine) all **FAIL**. The AFT advantage is
 regime-specific to affect-discriminative recall, not a general superiority claim.
 
 > **Oracle-affect boundary**: results measured with preset valence/arousal injected at encode
