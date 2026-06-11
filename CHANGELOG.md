@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.4] - 2026-06-11
+
 ### Research
 
 - **Addendum P (Hg1 re-run, leakage-free):** re-ran the Hg1 confound benchmark (AFT LLM
@@ -87,6 +89,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   production-readiness, architecture), with the top-level files kept lean and pointing to the
   site as the single source of truth. The LLM environment variables are now documented
   canonically in `docs/contributing/llm-environment.md` (referenced from CONTRIBUTING/CLAUDE).
+- **Concept clarifications (#54).** `docs/mental_model.md` gains the "The query is never
+  appraised" callout (retrieval affect signals are state-based; Bower state-dependent recall)
+  and fixes an inverted description of `adaptive_weights()` (the doc claimed high arousal →
+  semantic dominates; the code does the opposite). `QueryClassifierConfig` docstring now states
+  that routed weights are still mood-modulated. `docs/research/09_current_evidence.md` gains a
+  terminology box on the two senses of "affect-free". `benchmarks/appraisal_confound/README.md`
+  gains the runner inventory and the cross-scenario accumulation protocol note (absolute
+  accuracies are not comparable across runner families).
+- **Paper refresh (#57).** Addendum Q folded into the abstract, the Hg1 scope discussion
+  (state-injection boundary) and the open-work list (routing/gating are closed negatives);
+  arXiv bundle regenerated. README committed-negatives list updated accordingly.
+
+### Security
+
+- **Dependency lock refresh (#56).** Targeted `uv.lock` upgrade resolving 8 of 10 open
+  Dependabot alerts (urllib3 2.7.0, langchain-core 1.4.4, langsmith 0.8.14, python-multipart
+  0.0.32, idna 3.18, pymdown-extensions 10.21.3, starlette 1.2.1). chromadb (critical
+  CVE-2026-45829) and torch (low CVE-2025-3000) have no patched upstream release yet and stay
+  open. All are optional-extra/dev dependency chains, not runtime deps of the published wheel.
 
 ## [0.11.3] - 2026-05-30
 
@@ -1487,7 +1508,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.3...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.4...HEAD
+[0.11.4]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.0...v0.11.1
