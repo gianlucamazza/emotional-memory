@@ -298,6 +298,45 @@ These are larger architectural changes outside v0.10 scope. Full-N (all
 result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
 `benchmarks/preregistration_addendum_j_closure.md` for the full numerical record.
 
+### 2.9 Cross-seed robustness: characterized (retrieval is deterministic)
+
+The confirmatory studies pin a single random seed each (ablation `seed=0`, Hi3
+`seed=1`, the Pareto sweep `seed=42`), and the confidence intervals reported
+throughout are **bootstrap CIs resampled within a single run**, not variance
+*across* seeds. To check whether that single-seed convention hides cross-run
+instability, `benchmarks/realistic/multiseed_runner.py` (`make bench-multiseed`)
+re-runs the realistic replay benchmark across seeds `{0, 1, 7, 42, 123}`, each in
+an **isolated subprocess** invoking the canonical runner, and reports the
+cross-seed mean/stdev/min/max of `top1_accuracy` and of the AFT−baseline Δ.
+
+Result (`benchmarks/realistic/multiseed_results.md`, `realistic_recall_v2`, hash
+embedder): **cross-seed stdev and spread are exactly 0.0000** — the per-query
+top-1 outcomes are identical across all five seeds. This is expected and now
+verified rather than assumed: over a *fixed* dataset with a *deterministic*
+embedder, AFT retrieval is a deterministic function of the inputs, so the only
+seed-sensitive quantity is the bootstrap CI resampling. The genuine residual
+stochasticity therefore lives in (a) dataset *generation* seeds (frozen and
+committed) and (b) bootstrap RNG (already reflected in the reported CIs), not in
+retrieval.
+
+Two caveats. First, the determinism is exact under the canonical
+one-run-per-process execution model (which is how the benchmark is run and
+reported, and what the sweep isolates via subprocesses). Running *several* full
+benchmarks back-to-back inside a single Python process can flip the occasional
+near-tie query. The root cause is benign and well understood: the engine stamps
+encode/retrieve with real wall-clock time (`datetime.now(tz=UTC)`, see
+`engine.py`), and ACT-R decay is a function of `now − encoded_at`; without an
+injected clock, the sub-millisecond timing of back-to-back in-process runs
+perturbs decay just enough to tip a ranking that is already at a numerical tie.
+This is *correct production behaviour* (decay should track real time), not a
+library defect, and it stays within the reported bootstrap CIs. A fully
+time-deterministic benchmark would require threading an injected clock through
+`encode`/`retrieve`; that is deliberately not done here, as it would expand the
+core API and disturb the 127 fidelity benchmarks for a sub-CI, benchmark-only
+effect. Second, the sweep would surface genuine variance for a *stochastic*
+embedder or a regenerated dataset; extending it to those cases is straightforward
+future work.
+
 ---
 
 ## 3. Architectural Limits
