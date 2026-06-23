@@ -570,6 +570,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#30-second-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2332,6 +2343,62 @@
   
   
     <li class="md-nav__item">
+      <a href="research/review_response_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Review Response (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="research/problem_register_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Problem Register (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="research/claim_validation_matrix/" class="md-nav__link">
         
   
@@ -2553,6 +2620,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When NOT to use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#30-second-example" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2719,7 +2797,19 @@ will pick the change up on next build.
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>✅ means the feature is <em>implemented and theory-faithful</em> — it is <strong>not</strong> a head-to-head performance result. The <em>measured</em> retrieval advantage is regime-specific to affect-discriminative recall under oracle-affect labeling (see <a href="#when-not-to-use">When NOT to use</a>); under end-to-end automatic appraisal it does not transfer. ❌ marks a feature absent, not a quality judgment.</p>
+</blockquote>
 <p>This is <strong>not</strong> a replacement for those tools — <code>emotional_memory</code> is a focused primitive that can plug into any of them via the <code>MemoryStore</code> protocol (LangChain adapter included).</p>
+<h3 id="when-not-to-use">When NOT to use<a class="headerlink" href="#when-not-to-use" title="Permanent link">&para;</a></h3>
+<p><code>emotional_memory</code> is a focused primitive for <strong>affect-discriminative recall</strong>, not a general-purpose memory system. Its measured advantage holds only when affective context discriminates among candidate memories <em>and</em> affect is supplied at encode time (oracle affect). Pre-registered studies show it does <strong>not</strong> help — and can hurt — outside that regime:</p>
+<ul>
+<li><strong>Factual / open-domain QA</strong> — on LoCoMo (1986 QA pairs) AFT underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 FAIL).</li>
+<li><strong>End-to-end automatic appraisal</strong> — when affect comes from <code>LLMAppraisalEngine</code> rather than oracle labels, AFT does not beat cosine on affect-free queries (Hg1 FAIL, Δ=−0.010; recalibrated re-run Addendum P, Δ=−0.087, p=0.002). The gain has <strong>not</strong> transferred to automatic appraisal, calibrated or not.</li>
+<li><strong>Short-turn naturalistic dialogue</strong> — on DailyDialog (120 personas, 396 queries) there is no advantage over cosine (Hk1 FAIL, Δ=−0.008).</li>
+<li><strong>Query-type routing as a fix</strong> — heuristic routing does not close the LoCoMo gap (Addendum L FAIL).</li>
+</ul>
+<p><strong>Recommended for:</strong> multi-session episodic memory where mood-congruent retrieval matters and affect is available at encode time (e.g. journaling, long-horizon conversational agents). For the full record see the <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json">claim-validation matrix</a> and <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md">current evidence</a>.</p>
 <h3 id="30-second-example">30-second example<a class="headerlink" href="#30-second-example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmotionalMemory</span><span class="p">,</span> <span class="n">InMemoryStore</span><span class="p">,</span> <span class="n">CoreAffect</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
