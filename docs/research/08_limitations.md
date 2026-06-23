@@ -298,19 +298,33 @@ These are larger architectural changes outside v0.10 scope. Full-N (all
 result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
 `benchmarks/preregistration_addendum_j_closure.md` for the full numerical record.
 
-### 2.9 Single-seed runs; cross-seed variance not characterized
+### 2.9 Cross-seed robustness: characterized (retrieval is deterministic)
 
 The confirmatory studies pin a single random seed each (ablation `seed=0`, Hi3
-`seed=1`, the Pareto sweep `seed=42`). The confidence intervals reported
+`seed=1`, the Pareto sweep `seed=42`), and the confidence intervals reported
 throughout are **bootstrap CIs resampled within a single run**, not variance
-*across* seeds. We therefore have not characterized how much the headline effects
-(e.g. realistic_recall_v2 Δ=+0.205, FR Δ=+0.18) move under reseeding of dataset
-generation, embedder non-determinism, or bootstrap RNG. The bootstrap CIs are
-non-overlapping and the effects replicate across two embedders and two languages,
-which bounds the risk, but a dedicated multi-seed robustness sweep — cheap to add
-on top of the existing `benchmarks/common/statistics.py` utilities — remains open
-future work. Until then, single-run CIs should not be read as cross-seed
-stability claims.
+*across* seeds. To check whether that single-seed convention hides cross-run
+instability, `benchmarks/realistic/multiseed_runner.py` (`make bench-multiseed`)
+re-runs the realistic replay benchmark across seeds `{0, 1, 7, 42, 123}`, each in
+an **isolated subprocess** invoking the canonical runner, and reports the
+cross-seed mean/stdev/min/max of `top1_accuracy` and of the AFT−baseline Δ.
+
+Result (`benchmarks/realistic/multiseed_results.md`, `realistic_recall_v2`, hash
+embedder): **cross-seed stdev and spread are exactly 0.0000** — the per-query
+top-1 outcomes are identical across all five seeds. This is expected and now
+verified rather than assumed: over a *fixed* dataset with a *deterministic*
+embedder, AFT retrieval is a deterministic function of the inputs, so the only
+seed-sensitive quantity is the bootstrap CI resampling. The genuine residual
+stochasticity therefore lives in (a) dataset *generation* seeds (frozen and
+committed) and (b) bootstrap RNG (already reflected in the reported CIs), not in
+retrieval.
+
+Two caveats. First, the determinism holds per process: running several full
+benchmarks inside a *single* process leaks accumulated global state across runs,
+so the sweep deliberately isolates each seed in its own subprocess (the canonical
+one-run-per-process execution model). Second, the sweep would surface real
+variance for a *stochastic* embedder or a regenerated dataset; extending it to
+those cases is straightforward future work.
 
 ---
 

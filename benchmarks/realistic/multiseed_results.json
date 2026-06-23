@@ -1,0 +1,140 @@
+{
+  "benchmark": "realistic_recall_v2",
+  "version": "2.0",
+  "embedder": "hash",
+  "seeds": [
+    0,
+    1,
+    7,
+    42,
+    123
+  ],
+  "n_bootstrap": 2000,
+  "isolation": "subprocess-per-seed",
+  "retrieval_deterministic": true,
+  "per_seed": [
+    {
+      "seed": 0,
+      "systems": {
+        "aft": {
+          "top1_accuracy": 0.125,
+          "hit_at_k": 0.155
+        },
+        "naive_cosine": {
+          "top1_accuracy": 0.045,
+          "hit_at_k": 0.065
+        }
+      },
+      "top1_diff": {
+        "aft_vs_naive_cosine": 0.08
+      }
+    },
+    {
+      "seed": 1,
+      "systems": {
+        "aft": {
+          "top1_accuracy": 0.125,
+          "hit_at_k": 0.155
+        },
+        "naive_cosine": {
+          "top1_accuracy": 0.045,
+          "hit_at_k": 0.065
+        }
+      },
+      "top1_diff": {
+        "aft_vs_naive_cosine": 0.08
+      }
+    },
+    {
+      "seed": 7,
+      "systems": {
+        "aft": {
+          "top1_accuracy": 0.125,
+          "hit_at_k": 0.155
+        },
+        "naive_cosine": {
+          "top1_accuracy": 0.045,
+          "hit_at_k": 0.065
+        }
+      },
+      "top1_diff": {
+        "aft_vs_naive_cosine": 0.08
+      }
+    },
+    {
+      "seed": 42,
+      "systems": {
+        "aft": {
+          "top1_accuracy": 0.125,
+          "hit_at_k": 0.155
+        },
+        "naive_cosine": {
+          "top1_accuracy": 0.045,
+          "hit_at_k": 0.065
+        }
+      },
+      "top1_diff": {
+        "aft_vs_naive_cosine": 0.08
+      }
+    },
+    {
+      "seed": 123,
+      "systems": {
+        "aft": {
+          "top1_accuracy": 0.125,
+          "hit_at_k": 0.155
+        },
+        "naive_cosine": {
+          "top1_accuracy": 0.045,
+          "hit_at_k": 0.065
+        }
+      },
+      "top1_diff": {
+        "aft_vs_naive_cosine": 0.08
+      }
+    }
+  ],
+  "cross_seed": {
+    "top1_accuracy": {
+      "aft": {
+        "mean": 0.125,
+        "stdev": 0.0,
+        "min": 0.125,
+        "max": 0.125,
+        "spread": 0.0
+      },
+      "naive_cosine": {
+        "mean": 0.045,
+        "stdev": 0.0,
+        "min": 0.045,
+        "max": 0.045,
+        "spread": 0.0
+      }
+    },
+    "hit_at_k": {
+      "aft": {
+        "mean": 0.155,
+        "stdev": 0.0,
+        "min": 0.155,
+        "max": 0.155,
+        "spread": 0.0
+      },
+      "naive_cosine": {
+        "mean": 0.065,
+        "stdev": 0.0,
+        "min": 0.065,
+        "max": 0.065,
+        "spread": 0.0
+      }
+    },
+    "top1_diff": {
+      "aft_vs_naive_cosine": {
+        "mean": 0.08,
+        "stdev": 0.0,
+        "min": 0.08,
+        "max": 0.08,
+        "spread": 0.0
+      }
+    }
+  }
+}

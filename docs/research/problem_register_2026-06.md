@@ -9,8 +9,10 @@ The resolution philosophy here is **honest re-scoping**: where a problem is not
 solvable in the short term, the correct resolution is to *bound or correct the
 claims* rather than fake a fix. Technical issues that are fixable are listed with
 their real fix; issues with no upstream fix are documented and monitored.
-Research-execution items (human ratings, a downstream task, a multi-seed sweep)
-are recorded as explicitly-scoped **future work**, not silently implied as done.
+Research-execution items that need external resources (human ratings, an LLM
+judge for a downstream task) are recorded as explicitly-scoped **future work**,
+not silently implied as done. The one item completable in-repo without external
+resources — the multi-seed robustness sweep (A7) — has been implemented and run.
 
 This document is a companion to [`review_response_2026-06.md`](review_response_2026-06.md)
 (which maps the external review point-by-point) and defers to
@@ -29,7 +31,7 @@ claim status. Where the two disagree, the matrix wins.
 | A4 | No human / ecological validation | Science | High | Keep `not_established`; future work |
 | A5 | Affect-signal construct validity unproven vs human gold | Science | Medium | Bound appraisal wording; future work |
 | A6 | Cross-lingual generalization limited (IT/ES FAIL) | Science | Medium | Already scoped; keep current |
-| A7 | Single-seed; cross-run variance uncharacterized | Method | Medium | Add limitation note; sweep is future work |
+| A7 | Single-seed; cross-run variance uncharacterized | Method | Medium | **Resolved** — sweep added; retrieval verified deterministic |
 | B1 | Response doc conflates *scoped* with *solved* | Meta | Medium | Add 3-state legend; relabel |
 | B2 | "Five already addressed" snapshot overstates | Meta | Low | Re-word |
 | C1 | README comparison ✅ implies general superiority | Public claim | Medium | Footnote on the table |
@@ -146,18 +148,26 @@ Spanish (Δ=0.000, p=1.000) both **FAIL**; only English-SBERT and French-me5
 **Correct resolution.** Already honestly scoped in README line 15 and the matrix
 (`cross_domain_affect_replication`). No change beyond keeping numbers current.
 
-### A7 — Single-seed; cross-run variance uncharacterized
+### A7 — Single-seed; cross-run variance uncharacterized — *Resolved*
 
 **Problem.** Most runners pin one seed (ablation seed=0, Hi3 seed=1, Pareto
-seed=42); there is no automated multi-seed sweep reporting cross-run variance.
-Reported CIs are bootstrap CIs *within* a single run, not across seeds.
+seed=42); there was no automated multi-seed sweep reporting cross-run variance,
+and the reported CIs are bootstrap CIs *within* a single run, not across seeds.
 
 **Root cause.** No multi-seed wrapper around the existing runners.
 
-**Correct resolution (scoping).** Add a one-line limitation note (see
-[`08_limitations.md`](08_limitations.md) §2.9). A multi-seed robustness sweep is
-cheap, optional future work; the statistics utilities to support it already exist
-in `benchmarks/common/statistics.py`.
+**Resolution (done).** Added `benchmarks/realistic/multiseed_runner.py`
+(`make bench-multiseed`): it re-runs the realistic benchmark across seeds
+`{0, 1, 7, 42, 123}`, each in an isolated subprocess invoking the canonical
+runner, and reports cross-seed mean/stdev/min/max. Committed result
+(`benchmarks/realistic/multiseed_results.md`, hash embedder on v2): **cross-seed
+stdev = spread = 0.0000** — per-query top-1 outcomes are identical across seeds.
+This *verifies* (rather than assumes) that retrieval is deterministic given a
+fixed dataset + deterministic embedder; the only seed-sensitive quantity is the
+bootstrap CI resampling. See [`08_limitations.md`](08_limitations.md) §2.9.
+A by-product finding: running several full benchmarks in one process leaks global
+state, so the harness isolates each seed in its own subprocess — the canonical
+one-run-per-process model.
 
 ---
 
@@ -270,9 +280,10 @@ silent `xfail`/skip in tests (skips are env/feature-gated).
 In priority order, the items whose *correct* resolution is execution rather than
 re-scoping — none claimed as done:
 
-1. **Run the human-eval pilot** (A4) — the highest-value gap (Gate 2).
+1. **Run the human-eval pilot** (A4) — the highest-value gap (Gate 2); needs raters.
 2. **Human-gold appraisal comparison** (A5) — validate the affect signal against
-   people, not LLM-derived gold.
+   people, not LLM-derived gold; needs annotations.
 3. **Minimal downstream task** (A3) — encode→retrieve→generate→judge, to test
-   whether ranking gains convert to end-to-end value.
-4. **Multi-seed robustness sweep** (A7) — characterize cross-run variance.
+   whether ranking gains convert to end-to-end value; needs an LLM judge.
+
+(A7, the multi-seed robustness sweep, is **done** — see §A7 above.)
