@@ -10,11 +10,14 @@ was never characterized. This harness closes that gap.
 
 Each seed is executed in an **isolated subprocess** that invokes the canonical
 ``benchmarks.realistic.runner`` — i.e. exactly how the benchmark is normally run
-and reported (one process per run). This is deliberate: running several full
-benchmarks inside a *single* process leaks accumulated module/global state across
-runs and would contaminate the comparison. Subprocess isolation makes the
-determinism verdict trustworthy and reuses the canonical runner verbatim (no
-divergent scoring logic).
+and reported (one process per run). This is deliberate: the engine stamps
+encode/retrieve with real wall-clock time and ACT-R decay tracks
+``now - encoded_at``, so running several full benchmarks back-to-back inside a
+*single* process can perturb decay enough to flip a near-tie query (correct
+production behaviour, not a defect; see docs/research/08_limitations.md sec 2.9).
+Subprocess isolation matches the canonical execution model, makes the determinism
+verdict trustworthy, and reuses the canonical runner verbatim (no divergent
+scoring logic).
 
 Empirically, with a deterministic embedder (``hash``, ``sbert-bge``, …) over a
 fixed dataset the retrieval is deterministic: per-query outcomes — and therefore

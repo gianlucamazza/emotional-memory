@@ -319,12 +319,23 @@ stochasticity therefore lives in (a) dataset *generation* seeds (frozen and
 committed) and (b) bootstrap RNG (already reflected in the reported CIs), not in
 retrieval.
 
-Two caveats. First, the determinism holds per process: running several full
-benchmarks inside a *single* process leaks accumulated global state across runs,
-so the sweep deliberately isolates each seed in its own subprocess (the canonical
-one-run-per-process execution model). Second, the sweep would surface real
-variance for a *stochastic* embedder or a regenerated dataset; extending it to
-those cases is straightforward future work.
+Two caveats. First, the determinism is exact under the canonical
+one-run-per-process execution model (which is how the benchmark is run and
+reported, and what the sweep isolates via subprocesses). Running *several* full
+benchmarks back-to-back inside a single Python process can flip the occasional
+near-tie query. The root cause is benign and well understood: the engine stamps
+encode/retrieve with real wall-clock time (`datetime.now(tz=UTC)`, see
+`engine.py`), and ACT-R decay is a function of `now − encoded_at`; without an
+injected clock, the sub-millisecond timing of back-to-back in-process runs
+perturbs decay just enough to tip a ranking that is already at a numerical tie.
+This is *correct production behaviour* (decay should track real time), not a
+library defect, and it stays within the reported bootstrap CIs. A fully
+time-deterministic benchmark would require threading an injected clock through
+`encode`/`retrieve`; that is deliberately not done here, as it would expand the
+core API and disturb the 127 fidelity benchmarks for a sub-CI, benchmark-only
+effect. Second, the sweep would surface genuine variance for a *stochastic*
+embedder or a regenerated dataset; extending it to those cases is straightforward
+future work.
 
 ---
 

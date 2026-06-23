@@ -165,9 +165,13 @@ stdev = spread = 0.0000** — per-query top-1 outcomes are identical across seed
 This *verifies* (rather than assumes) that retrieval is deterministic given a
 fixed dataset + deterministic embedder; the only seed-sensitive quantity is the
 bootstrap CI resampling. See [`08_limitations.md`](08_limitations.md) §2.9.
-A by-product finding: running several full benchmarks in one process leaks global
-state, so the harness isolates each seed in its own subprocess — the canonical
-one-run-per-process model.
+By-product finding (root cause analyzed): back-to-back in-process runs can flip a
+near-tie query because the engine stamps encode/retrieve with real wall-clock time
+(`datetime.now`) and ACT-R decay tracks `now − encoded_at` — correct production
+behaviour, not a defect, and within the bootstrap CIs. The harness therefore
+isolates each seed in its own subprocess (the canonical one-run-per-process
+model); threading an injected clock through the core API was judged disproportionate
+for a sub-CI, benchmark-only effect (see [`08_limitations.md`](08_limitations.md) §2.9).
 
 ---
 
