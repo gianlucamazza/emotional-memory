@@ -33,3 +33,18 @@ It does **not** cover:
 - Third-party optional dependencies (`sentence-transformers`, `sqlite-vec`,
   `langchain-core`, etc.) — report those to the respective upstream projects
 - Demonstration code in `examples/` or `demo/`
+
+## Known advisories (optional / dev dependencies)
+
+These affect **optional or development dependencies only** — the published
+runtime wheel does not import them and is unaffected. They have no upstream patch
+at time of writing; we monitor PyPI and bump `uv.lock` as soon as one ships.
+
+| Dependency | Advisory | Severity | Exposure |
+| ---------- | -------- | -------- | -------- |
+| `chromadb` (≤ 1.5.9) | CVE-2026-45829 | Critical | Optional `chroma` extra + dev/test installs only; not in the runtime wheel |
+| `torch` (≤ 2.12.0) | CVE-2025-3000 | Low | Optional dev dependency chain only |
+
+A recent `uv.lock` refresh already resolved 8 of 10 Dependabot alerts (e.g.
+`urllib3`, `langchain-core`, `starlette`, `idna`); the two above are the
+remaining unpatched items.

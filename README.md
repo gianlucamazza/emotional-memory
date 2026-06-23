@@ -38,7 +38,20 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 | LangMem | Hot/cold memory tiers | ❌ | ❌ | Time-based eviction | — |
 | Generative Agents (Park et al.) | Importance + recency + relevance | Partial (importance only) | ❌ | Exponential | — |
 
+> ✅ means the feature is *implemented and theory-faithful* — it is **not** a head-to-head performance result. The *measured* retrieval advantage is regime-specific to affect-discriminative recall under oracle-affect labeling (see [When NOT to use](#when-not-to-use)); under end-to-end automatic appraisal it does not transfer. ❌ marks a feature absent, not a quality judgment.
+
 This is **not** a replacement for those tools — `emotional_memory` is a focused primitive that can plug into any of them via the `MemoryStore` protocol (LangChain adapter included).
+
+### When NOT to use
+
+`emotional_memory` is a focused primitive for **affect-discriminative recall**, not a general-purpose memory system. Its measured advantage holds only when affective context discriminates among candidate memories *and* affect is supplied at encode time (oracle affect). Pre-registered studies show it does **not** help — and can hurt — outside that regime:
+
+- **Factual / open-domain QA** — on LoCoMo (1986 QA pairs) AFT underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 FAIL).
+- **End-to-end automatic appraisal** — when affect comes from `LLMAppraisalEngine` rather than oracle labels, AFT does not beat cosine on affect-free queries (Hg1 FAIL, Δ=−0.010; recalibrated re-run Addendum P, Δ=−0.087, p=0.002). The gain has **not** transferred to automatic appraisal, calibrated or not.
+- **Short-turn naturalistic dialogue** — on DailyDialog (120 personas, 396 queries) there is no advantage over cosine (Hk1 FAIL, Δ=−0.008).
+- **Query-type routing as a fix** — heuristic routing does not close the LoCoMo gap (Addendum L FAIL).
+
+**Recommended for:** multi-session episodic memory where mood-congruent retrieval matters and affect is available at encode time (e.g. journaling, long-horizon conversational agents). For the full record see the [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json) and [current evidence](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md).
 
 ### 30-second example
 

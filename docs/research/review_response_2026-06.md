@@ -26,25 +26,33 @@ external negative,"** and the negative results the review fears a hostile review
 would raise (LoCoMo, DailyDialog, end-to-end appraisal) are all committed FAILs
 with closures.
 
-Of the seven review criticisms (§3.1–§3.7), five are **already addressed**, and
-two (§3.4 construct validity, §3.5 multi-seed) are **partially open**. The real
-residue is four items, tracked in §5 below.
+Of the seven review criticisms (§3.1–§3.7), five are **resolved or honestly
+scoped** and two (§3.4 construct validity, §3.5 multi-seed) are **partially
+open**. Importantly, "honestly scoped" is *not* the same as "solved": §3.1's
+underlying downstream gap is a committed FAIL that has been bounded, not closed.
+The real residue is four items, tracked in §5 below and itemized in the companion
+[`problem_register_2026-06.md`](problem_register_2026-06.md).
 
 ## 2. Verdict at a glance
 
+**Status legend.** **Resolved** = the criticism no longer applies.
+**Honestly scoped** = the underlying problem is a committed FAIL / open gap that is
+documented and claim-bounded, *not* fixed. **Partially open** = some of it is
+addressed, some is open.
+
 | Review point | Severity (as filed) | Repo status | Primary evidence |
 |---|---|---|---|
-| §3.1 embedding→downstream / LoCoMo | CRITICA | **Already addressed** (as scope/framing) | `08_limitations.md`, `benchmarks/locomo/`, Addenda J/L/Q closures |
-| §3.2 ablation of the mechanism | ALTA | **Already addressed** | `benchmarks/ablation/runner.py` (8 variants), `runner_hi3.py` |
-| §3.3 "field" framing earns its place | ALTA | **Already addressed** (theory + honest ceiling) | `01_foundations.md`, `05_design_principles.md`, `10_scientific_quality_bar.md` |
+| §3.1 embedding→downstream / LoCoMo | CRITICA | **Honestly scoped, not solved** (downstream FAIL committed) | `08_limitations.md`, `benchmarks/locomo/`, Addenda J/L/Q closures |
+| §3.2 ablation of the mechanism | ALTA | **Resolved** | `benchmarks/ablation/runner.py` (8 variants), `runner_hi3.py` |
+| §3.3 "field" framing earns its place | ALTA | **Resolved** (by under-claiming: capped "prototype" ceiling) | `01_foundations.md`, `05_design_principles.md`, `10_scientific_quality_bar.md` |
 | §3.4 construct validity of affect signal | MEDIA | **Partially open** | Addenda N/O/P; `human_eval/` built, never run |
-| §3.5 power / seeds / CIs | MEDIA | **Mostly addressed; one open edge** | `benchmarks/common/statistics.py`; multi-seed sweep absent |
-| §3.6 positioning vs prior art | BASSA | **Already addressed** | `07_related_work.md` (29 systems), `comparison.md` |
+| §3.5 power / seeds / CIs | MEDIA | **Partially open** (CIs done; multi-seed sweep absent) | `benchmarks/common/statistics.py` |
+| §3.6 positioning vs prior art | BASSA | **Resolved** | `07_related_work.md` (29 systems), `comparison.md` |
 | §3.7 bus-factor / sustainability | BASSA | **Acknowledged** (out of scope for evidence) | CI/supply-chain hardening as partial mitigation |
 
 ## 3. Point-by-point response
 
-### §3.1 — embedding-space → downstream (the LoCoMo FAIL) — *Already addressed as scope*
+### §3.1 — embedding-space → downstream (the LoCoMo FAIL) — *Honestly scoped, not solved*
 
 This is the review's CRITICA, and it is the axis the project has worked hardest
 on. The gap is not undiscovered — it is **committed, externally validated, and
@@ -70,7 +78,7 @@ The review's "prudent path" (§4.1 — claim the embedding-space level explicitl
 frame LoCoMo as scope) is therefore **already the adopted position**. The
 "ambitious path" (a downstream end-to-end task) remains genuinely open — see §5.
 
-### §3.2 — ablation of the mechanism — *Already addressed*
+### §3.2 — ablation of the mechanism — *Resolved*
 
 The review asks whether AFT adds anything over recency/salience weighting. The
 ablation harness exists and isolates every affective layer:
@@ -87,7 +95,7 @@ ablation harness exists and isolates every affective layer:
   resonance amplification on `semantic_confound` Δ = +0.090, d = 0.257,
   Holm p = 0.0234 (`preregistration_addendum_i_closure.md`).
 
-### §3.3 — does "Affective Field Theory" earn the name? — *Already addressed*
+### §3.3 — does "Affective Field Theory" earn the name? — *Resolved (by under-claiming)*
 
 The framing decision the review asks for (§4.3: formalize the field *or* demote
 it to declared metaphor) has effectively been made on the side of **disciplined,
@@ -128,7 +136,7 @@ So the review is right that this link is the weakest — but the work has advanc
 from "undocumented" to "diagnosed and quantified," and the remaining task is
 human annotation, not analysis. Tracked in §5.
 
-### §3.5 — power, seeds, confidence intervals — *Mostly addressed*
+### §3.5 — power, seeds, confidence intervals — *Partially open*
 
 The statistical machinery the review asks for already exists and is used
 throughout:
@@ -147,7 +155,7 @@ throughout:
   robustness sweep* reporting cross-run variance. This is the one concrete piece
   of §3.5 still worth doing (§5).
 
-### §3.6 — positioning vs prior art — *Already addressed*
+### §3.6 — positioning vs prior art — *Resolved*
 
 [`07_related_work.md`](07_related_work.md) is a 29-system comparative table
 (MemGPT/Letta, Mem0, Generative Agents, A-MEM, SYNAPSE, Emotional RAG, LUFY,

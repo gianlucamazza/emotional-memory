@@ -298,6 +298,20 @@ These are larger architectural changes outside v0.10 scope. Full-N (all
 result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
 `benchmarks/preregistration_addendum_j_closure.md` for the full numerical record.
 
+### 2.9 Single-seed runs; cross-seed variance not characterized
+
+The confirmatory studies pin a single random seed each (ablation `seed=0`, Hi3
+`seed=1`, the Pareto sweep `seed=42`). The confidence intervals reported
+throughout are **bootstrap CIs resampled within a single run**, not variance
+*across* seeds. We therefore have not characterized how much the headline effects
+(e.g. realistic_recall_v2 Δ=+0.205, FR Δ=+0.18) move under reseeding of dataset
+generation, embedder non-determinism, or bootstrap RNG. The bootstrap CIs are
+non-overlapping and the effects replicate across two embedders and two languages,
+which bounds the risk, but a dedicated multi-seed robustness sweep — cheap to add
+on top of the existing `benchmarks/common/statistics.py` utilities — remains open
+future work. Until then, single-run CIs should not be read as cross-seed
+stability claims.
+
 ---
 
 ## 3. Architectural Limits
