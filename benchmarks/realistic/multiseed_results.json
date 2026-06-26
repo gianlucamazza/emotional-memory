@@ -17,8 +17,8 @@
       "seed": 0,
       "systems": {
         "aft": {
-          "top1_accuracy": 0.125,
-          "hit_at_k": 0.155
+          "top1_accuracy": 0.12,
+          "hit_at_k": 0.15
         },
         "naive_cosine": {
           "top1_accuracy": 0.045,
@@ -26,15 +26,15 @@
         }
       },
       "top1_diff": {
-        "aft_vs_naive_cosine": 0.08
+        "aft_vs_naive_cosine": 0.075
       }
     },
     {
       "seed": 1,
       "systems": {
         "aft": {
-          "top1_accuracy": 0.125,
-          "hit_at_k": 0.155
+          "top1_accuracy": 0.12,
+          "hit_at_k": 0.15
         },
         "naive_cosine": {
           "top1_accuracy": 0.045,
@@ -42,15 +42,15 @@
         }
       },
       "top1_diff": {
-        "aft_vs_naive_cosine": 0.08
+        "aft_vs_naive_cosine": 0.075
       }
     },
     {
       "seed": 7,
       "systems": {
         "aft": {
-          "top1_accuracy": 0.125,
-          "hit_at_k": 0.155
+          "top1_accuracy": 0.12,
+          "hit_at_k": 0.15
         },
         "naive_cosine": {
           "top1_accuracy": 0.045,
@@ -58,15 +58,15 @@
         }
       },
       "top1_diff": {
-        "aft_vs_naive_cosine": 0.08
+        "aft_vs_naive_cosine": 0.075
       }
     },
     {
       "seed": 42,
       "systems": {
         "aft": {
-          "top1_accuracy": 0.125,
-          "hit_at_k": 0.155
+          "top1_accuracy": 0.12,
+          "hit_at_k": 0.15
         },
         "naive_cosine": {
           "top1_accuracy": 0.045,
@@ -74,15 +74,15 @@
         }
       },
       "top1_diff": {
-        "aft_vs_naive_cosine": 0.08
+        "aft_vs_naive_cosine": 0.075
       }
     },
     {
       "seed": 123,
       "systems": {
         "aft": {
-          "top1_accuracy": 0.125,
-          "hit_at_k": 0.155
+          "top1_accuracy": 0.12,
+          "hit_at_k": 0.15
         },
         "naive_cosine": {
           "top1_accuracy": 0.045,
@@ -90,17 +90,17 @@
         }
       },
       "top1_diff": {
-        "aft_vs_naive_cosine": 0.08
+        "aft_vs_naive_cosine": 0.075
       }
     }
   ],
   "cross_seed": {
     "top1_accuracy": {
       "aft": {
-        "mean": 0.125,
+        "mean": 0.12,
         "stdev": 0.0,
-        "min": 0.125,
-        "max": 0.125,
+        "min": 0.12,
+        "max": 0.12,
         "spread": 0.0
       },
       "naive_cosine": {
@@ -113,10 +113,10 @@
     },
     "hit_at_k": {
       "aft": {
-        "mean": 0.155,
+        "mean": 0.15,
         "stdev": 0.0,
-        "min": 0.155,
-        "max": 0.155,
+        "min": 0.15,
+        "max": 0.15,
         "spread": 0.0
       },
       "naive_cosine": {
@@ -129,10 +129,10 @@
     },
     "top1_diff": {
       "aft_vs_naive_cosine": {
-        "mean": 0.08,
+        "mean": 0.075,
         "stdev": 0.0,
-        "min": 0.08,
-        "max": 0.08,
+        "min": 0.075,
+        "max": 0.075,
         "spread": 0.0
       }
     }
