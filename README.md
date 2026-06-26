@@ -303,6 +303,7 @@ regime-specific to affect-discriminative recall, not a general superiority claim
 > The `requires_oracle_affect` field in the claim-validation matrix encodes this per claim.
 
 - [Current Evidence](docs/research/09_current_evidence.md) — study ladder and claim-to-evidence matrix
+- [Limitations](docs/research/08_limitations.md) — scoped boundaries, failed regimes, and open gaps
 - [Benchmarks](docs/benchmarks.md) — fidelity (20 phenomena), performance, and appraisal-quality suites
 - Machine-readable claims: [`docs/research/claim_validation_matrix.json`](docs/research/claim_validation_matrix.json)
 
