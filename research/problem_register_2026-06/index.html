@@ -3088,7 +3088,7 @@ claim status. Where the two disagree, the matrix wins.</p>
 <td>No downstream / agent-level benefit</td>
 <td>Science</td>
 <td>High</td>
-<td>Scope to retrieval ranking; surface FAILs</td>
+<td><strong>Downstream task executed</strong> (Add. R PASS, oracle regime); naturalistic FAIL stands; scope by regime</td>
 </tr>
 <tr>
 <td>A4</td>
@@ -3217,11 +3217,20 @@ also FAIL (Addendum J Pareto sweep; Addendum L query routing Δ=−0.017 / −0.
 <p><strong>Root cause.</strong> The advantage is regime-specific to <em>affect-discriminative</em>
 retrieval, where valence/arousal distinguishes the target from distractors — a
 property of the curated v2/FR benchmarks, not of factual QA or natural dialogue.</p>
-<p><strong>Correct resolution.</strong> No "better memory for agents / downstream" wording. Scope
-the claim to "affect-discriminative retrieval ranking." The <code>locomo_external_qa_negative</code>
-claim is committed; the correct user-facing action is to <strong>surface</strong> these FAIL
-regimes in the README so adopters meet them before integration (C3). An actual
-downstream encode→retrieve→generate→judge task is <strong>future work</strong>.</p>
+<p><strong>Correct resolution.</strong> No "better memory for agents / downstream" wording in the
+<em>naturalistic</em> regime. Scope downstream claims by regime, and surface the FAIL
+regimes (LoCoMo) in the README so adopters meet them before integration (C3).</p>
+<p><strong>Update — downstream task now executed (Addendum R, 2026-06-26).</strong> The
+encode→retrieve→generate→judge task that was future work has been run on the
+affect-discriminative regime (<code>realistic_recall_v2</code>, N=200, gpt-5-mini judge).
+<strong>Hr1/Hr2 PASS</strong>: AFT judge-accuracy 0.595 vs cosine 0.440 (Δ=+0.155 [0.095,
+0.220], p&lt;0.001), token-F1 Δ=+0.152 — the +0.205 ranking edge converts ~1:1 to a
++0.155 answer-quality edge (<code>benchmarks/preregistration_addendum_r_downstream_closure.md</code>).
+This is <strong>bounded by the A2 oracle-affect + state-injection boundary</strong> and does
+<strong>not</strong> contradict the LoCoMo negative: AFT converts ranking→answers <em>when affect
+is discriminative and supplied</em> (oracle), and loses <em>when it is not</em> (naturalistic,
+automatic appraisal). New matrix claim: <code>downstream_value</code> = <code>early_controlled_evidence</code>,
+<code>requires_oracle_affect=true</code>. The <code>locomo_external_qa_negative</code> claim stands.</p>
 <h3 id="a4-no-human-ecological-validation-gate-2-open">A4 — No human / ecological validation (Gate 2 OPEN)<a class="headerlink" href="#a4-no-human-ecological-validation-gate-2-open" title="Permanent link">&para;</a></h3>
 <p><strong>Problem.</strong> The <code>benchmarks/human_eval/</code> kit (protocol, rater instructions,
 packets, Krippendorff-α pipeline) has <strong>zero collected ratings</strong>. All validation

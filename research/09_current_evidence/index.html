@@ -3007,6 +3007,16 @@ evidence level, and still-open gaps.</p>
 <td>Architectural approaches beyond weight tuning: selective affect suppression, factual/affective dual-branch retrieval, or hybrid systems.</td>
 </tr>
 <tr>
+<td><code>downstream_value</code></td>
+<td>Downstream tasks</td>
+<td>Early controlled evidence</td>
+<td><code>4_realistic_tasks</code></td>
+<td>In the affect-discriminative regime (oracle affect + query-time state injection), AFT's retrieval-ranking advantage converts to higher LLM-judged answer quality: on realistic_recall_v2 (N=200, sbert-bge, gpt-5-mini judge) AFT judge-accuracy 0.595 vs cosine 0.440 (Δ=+0.155 [0.095, 0.220], p&lt;0.001), token-F1 Δ=+0.152. No downstream benefit is shown in the naturalistic, automatic-appraisal regime (see locomo_external_qa_negative).</td>
+<td>Pre-registered Addendum R (Hr1/Hr2) executed 2026-06-26. encode→retrieve→generate→judge on realistic_recall_v2 (200 queries), identical generator + judge for both systems; only retrieval differs. Hr1 judge_correct AFT 0.595 vs cosine 0.440, Δ=+0.155 [+0.095, +0.220], p&lt;0.001, Holm&lt;0.001, McNemar&lt;0.001 — PASS. Hr2 token-F1 Δ=+0.152 [+0.100, +0.205] — PASS. Ranking ref top1 Δ=+0.205 matches Hd2; the +0.205 ranking edge converts ~1:1 to a +0.155 answer-quality edge. Positive across all 5 challenge types.</td>
+<td>Downstream value in the oracle-free / automatic-appraisal regime (LoCoMo shows AFT loses there). Bounded by the A2 oracle-affect + state-injection boundary.</td>
+<td>A downstream task that is both affect-discriminative AND oracle-free (automatic appraisal supplying the affect).</td>
+</tr>
+<tr>
 <td><code>resonance_amplification_e5</code></td>
 <td>Retrieval behavior</td>
 <td>Controlled evidence</td>
@@ -3600,14 +3610,16 @@ vectors, not t-tests.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Implications:</strong>
-- Hd2_ES me5 FAIL (p=0.110) at N=80 was consistent with Type II error (d≈0.19 at N=80 → ~52% power). Pre-registered power top-up to N=120 was executed (2026-05-07): Δ=0.000, p=1.00. The original miss was not Type II; the true d is near zero at this test configuration.
-- S2 H5 recency_confound (SBERT) at N=40 is substantially underpowered. The marginal
+<p><strong>Implications:</strong></p>
+<ul>
+<li>Hd2_ES me5 FAIL (p=0.110) at N=80 was consistent with Type II error (d≈0.19 at N=80 → ~52% power). Pre-registered power top-up to N=120 was executed (2026-05-07): Δ=0.000, p=1.00. The original miss was not Type II; the true d is near zero at this test configuration.</li>
+<li>S2 H5 recency_confound (SBERT) at N=40 is substantially underpowered. The marginal
   p_adj=0.054 is consistent with a real but small effect (d≈0.20). Confirming H5 would
-  require N≥100 per challenge type.
-- S2 H6 momentum_alignment (e5) shows near-zero effect (Δ=0.025), suggesting the
-  signal is absent for this embedder rather than underpowered.
-- Results with high power (Hd2 EN SBERT, H3, H4) are robust to replication.</p>
+  require N≥100 per challenge type.</li>
+<li>S2 H6 momentum_alignment (e5) shows near-zero effect (Δ=0.025), suggesting the
+  signal is absent for this embedder rather than underpowered.</li>
+<li>Results with high power (Hd2 EN SBERT, H3, H4) are robust to replication.</li>
+</ul>
 <hr />
 <h2 id="evidence-figures">Evidence figures<a class="headerlink" href="#evidence-figures" title="Permanent link">&para;</a></h2>
 <p>These figures are generated from the committed benchmark JSON artefacts with
