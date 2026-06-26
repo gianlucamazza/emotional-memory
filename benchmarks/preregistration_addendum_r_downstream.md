@@ -1,6 +1,7 @@
 # Pre-registration Addendum R — Hr1: Downstream answer quality (encode→retrieve→generate→judge)
 
-**Status:** PENDING*EXECUTION
+**Status:** EXECUTED (2026-06-26) — Hr1 **PASS**, Hr2 **PASS**. See
+`preregistration_addendum_r_downstream_closure.md`.
 **Date (pre-reg):** 2026-06-26
 **Embedder:** `sbert-bge` (bge-small-en-v1.5)
 **Dataset:** `realistic_recall_v2` (50 scenarios, 200 queries; **oracle affect**)

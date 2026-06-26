@@ -10,11 +10,12 @@
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just *what* happened, but *how it felt*, *how that feeling was moving*, and *what mood colored the moment*.
+Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just _what_ happened, but _how it felt_, _how that feeling was moving_, and _what mood colored the moment_.
 
 Pre-registered evaluation on `realistic_recall_v2`: English (N=200, SBERT Δ=+0.21, d=0.49) and French (N=120, me5, Δ=+0.18, p<0.0001, Hedges g=0.42 — Addendum M Branch A PASS). Italian/Spanish me5 at declared power (N=120) FAIL; English-SBERT and SBERT-Spanish (N=80) hold. External-QA evaluation (LoCoMo) and naturalistic dialogue (DailyDialog) FAIL — the AFT advantage is regime-specific to affect-discriminative recall, not general superiority. Full [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 <!-- ssot:positioning-start -->
+
 ## Why emotional_memory?
 
 Most LLM memory libraries treat retrieval as semantic-only: vector similarity over text. Real human recall is driven by more:
@@ -29,22 +30,22 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 
 ### How it compares
 
-| Library | Memory model | Affective retrieval | Reconsolidation | Decay model | Psychological fidelity tests |
-|---|---|---|---|---|---|
-| **emotional_memory** | 5-layer AFT (semantic + valence/arousal + momentum + mood + appraisal) | ✅ mood-congruent + APE-gated | ✅ Nader & Schiller 2000 | ACT-R power-law + arousal modulation | 127 tests, 20 phenomena |
-| MemGPT / Letta | Hierarchical context (working + archival) | ❌ | ❌ | None | — |
-| mem0 | Fact extraction + vector store | ❌ | ❌ | None | — |
-| A-MEM | Atomic notes + dynamic links | ❌ | ❌ | None | — |
-| LangMem | Hot/cold memory tiers | ❌ | ❌ | Time-based eviction | — |
-| Generative Agents (Park et al.) | Importance + recency + relevance | Partial (importance only) | ❌ | Exponential | — |
+| Library                         | Memory model                                                           | Affective retrieval           | Reconsolidation          | Decay model                          | Psychological fidelity tests |
+| ------------------------------- | ---------------------------------------------------------------------- | ----------------------------- | ------------------------ | ------------------------------------ | ---------------------------- |
+| **emotional_memory**            | 5-layer AFT (semantic + valence/arousal + momentum + mood + appraisal) | ✅ mood-congruent + APE-gated | ✅ Nader & Schiller 2000 | ACT-R power-law + arousal modulation | 127 tests, 20 phenomena      |
+| MemGPT / Letta                  | Hierarchical context (working + archival)                              | ❌                            | ❌                       | None                                 | —                            |
+| mem0                            | Fact extraction + vector store                                         | ❌                            | ❌                       | None                                 | —                            |
+| A-MEM                           | Atomic notes + dynamic links                                           | ❌                            | ❌                       | None                                 | —                            |
+| LangMem                         | Hot/cold memory tiers                                                  | ❌                            | ❌                       | Time-based eviction                  | —                            |
+| Generative Agents (Park et al.) | Importance + recency + relevance                                       | Partial (importance only)     | ❌                       | Exponential                          | —                            |
 
-> ✅ means the feature is *implemented and theory-faithful* — it is **not** a head-to-head performance result. The *measured* retrieval advantage is regime-specific to affect-discriminative recall under oracle-affect labeling (see [When NOT to use](#when-not-to-use)); under end-to-end automatic appraisal it does not transfer. ❌ marks a feature absent, not a quality judgment.
+> ✅ means the feature is _implemented and theory-faithful_ — it is **not** a head-to-head performance result. The _measured_ retrieval advantage is regime-specific to affect-discriminative recall under oracle-affect labeling (see [When NOT to use](#when-not-to-use)); under end-to-end automatic appraisal it does not transfer. ❌ marks a feature absent, not a quality judgment.
 
 This is **not** a replacement for those tools — `emotional_memory` is a focused primitive that can plug into any of them via the `MemoryStore` protocol (LangChain adapter included).
 
 ### When NOT to use
 
-`emotional_memory` is a focused primitive for **affect-discriminative recall**, not a general-purpose memory system. Its measured advantage holds only when affective context discriminates among candidate memories *and* affect is supplied at encode time (oracle affect). Pre-registered studies show it does **not** help — and can hurt — outside that regime:
+`emotional_memory` is a focused primitive for **affect-discriminative recall**, not a general-purpose memory system. Its measured advantage holds only when affective context discriminates among candidate memories _and_ affect is supplied at encode time (oracle affect). _Within_ that regime the ranking advantage does convert end-to-end: in a pre-registered encode→retrieve→generate→judge task (Addendum R, N=200, gpt-5-mini judge) AFT's LLM-judged answer accuracy is 0.595 vs 0.440 for cosine (Δ=+0.155 [0.095, 0.220], p<0.001). But pre-registered studies show it does **not** help — and can hurt — outside that regime:
 
 - **Factual / open-domain QA** — on LoCoMo (1986 QA pairs) AFT underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 FAIL).
 - **End-to-end automatic appraisal** — when affect comes from `LLMAppraisalEngine` rather than oracle labels, AFT does not beat cosine on affect-free queries (Hg1 FAIL, Δ=−0.010; recalibrated re-run Addendum P, Δ=−0.087, p=0.002). The gain has **not** transferred to automatic appraisal, calibrated or not.
@@ -70,9 +71,11 @@ em.set_affect(CoreAffect(valence=-0.5, arousal=0.6))   # similar mood later
 results = em.retrieve("yesterday", top_k=2)
 # → deployment memory ranks higher than sunset, even with equal semantic distance.
 ```
+
 <!-- ssot:positioning-end -->
 
 <!-- ssot:getting-started-start -->
+
 ## Installation
 
 ```bash
@@ -160,19 +163,20 @@ asyncio.run(main())
 
 For native async embedders or stores, construct `AsyncEmotionalMemory` directly with
 `SyncToAsyncEmbedder`, `SyncToAsyncStore`, or your own `AsyncEmbedder`/`AsyncMemoryStore`.
+
 <!-- ssot:getting-started-end -->
 
 ## Affective Field Theory
 
 AFT models emotion as a **field** — distributed, dynamic, multi-layer — rather than a discrete label or a single coordinate. Five layers are captured at encoding time:
 
-| Layer | Model | What it captures |
-|---|---|---|
-| **CoreAffect** | Russell-Mehrabian PAD model | Continuous `(valence, arousal, dominance)` — the emotional substrate |
-| **AffectiveMomentum** | Spinoza — affect as transition | Velocity and acceleration of affect change |
-| **MoodField** | Heidegger — *Stimmung* as attunement | Slow-moving global mood with inertia (EMA) |
-| **AppraisalVector** | Scherer/Lazarus/Stoics | Emotion derived from evaluation: novelty, goal-relevance, coping, norm-congruence, self-relevance |
-| **ResonanceLinks** | Aristotle/Hume/Bower/Collins & Loftus/Hebb | Associative bidirectional graph: semantic, emotional, temporal, causal, contrastive links; multi-hop spreading activation + Hebbian co-retrieval strengthening |
+| Layer                 | Model                                      | What it captures                                                                                                                                               |
+| --------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **CoreAffect**        | Russell-Mehrabian PAD model                | Continuous `(valence, arousal, dominance)` — the emotional substrate                                                                                           |
+| **AffectiveMomentum** | Spinoza — affect as transition             | Velocity and acceleration of affect change                                                                                                                     |
+| **MoodField**         | Heidegger — _Stimmung_ as attunement       | Slow-moving global mood with inertia (EMA)                                                                                                                     |
+| **AppraisalVector**   | Scherer/Lazarus/Stoics                     | Emotion derived from evaluation: novelty, goal-relevance, coping, norm-congruence, self-relevance                                                              |
+| **ResonanceLinks**    | Aristotle/Hume/Bower/Collins & Loftus/Hebb | Associative bidirectional graph: semantic, emotional, temporal, causal, contrastive links; multi-hop spreading activation + Hebbian co-retrieval strengthening |
 
 Full theoretical foundations: [`docs/research/`](docs/research/index.md)
 
@@ -457,21 +461,21 @@ The [`examples/`](examples/) directory contains runnable scripts covering the fu
 All scripts are self-contained and use a deterministic `HashEmbedder` so they run without
 any ML dependencies.
 
-| Script | Description | Extra |
-|--------|-------------|-------|
-| `basic_usage.py` | Encode/retrieve, reconsolidation, resonance links | — |
-| `advanced_config.py` | ACT-R decay, mood regression, adaptive weights | — |
-| `appraisal_engines.py` | Keyword, static, and custom appraisal rules | — |
-| `reconsolidation.py` | Two-retrieval lability window (Nader & Schiller 2000) | — |
-| `async_usage.py` | `as_async()`, `SyncToAsync*` adapters, `encode_batch` | — |
-| `persistence.py` | SQLiteStore, save/load state, export/import, prune | `[sqlite]` |
-| `emotional_journal.py` | Multi-session journaling with full lifecycle | `[sqlite]` |
-| `llm_appraisal.py` | LLM-backed appraisal via OpenAI-compatible API | `openai` |
-| `httpx_llm_integration.py` | httpx LLMCallable, `.env` config, 7 API deep-dives | `httpx` |
-| `sentence_transformers_embedder.py` | `SequentialEmbedder` with real embeddings | `sentence-transformers` |
-| `visualization.py` | All 8 matplotlib plot types | `[viz]` |
-| `resonance_network.py` | Resonance graph and link-type distribution | `[viz]` |
-| `retrieval_signals.py` | 6-signal decomposition, radar chart, weight heatmap | `[viz]` |
+| Script                              | Description                                           | Extra                   |
+| ----------------------------------- | ----------------------------------------------------- | ----------------------- |
+| `basic_usage.py`                    | Encode/retrieve, reconsolidation, resonance links     | —                       |
+| `advanced_config.py`                | ACT-R decay, mood regression, adaptive weights        | —                       |
+| `appraisal_engines.py`              | Keyword, static, and custom appraisal rules           | —                       |
+| `reconsolidation.py`                | Two-retrieval lability window (Nader & Schiller 2000) | —                       |
+| `async_usage.py`                    | `as_async()`, `SyncToAsync*` adapters, `encode_batch` | —                       |
+| `persistence.py`                    | SQLiteStore, save/load state, export/import, prune    | `[sqlite]`              |
+| `emotional_journal.py`              | Multi-session journaling with full lifecycle          | `[sqlite]`              |
+| `llm_appraisal.py`                  | LLM-backed appraisal via OpenAI-compatible API        | `openai`                |
+| `httpx_llm_integration.py`          | httpx LLMCallable, `.env` config, 7 API deep-dives    | `httpx`                 |
+| `sentence_transformers_embedder.py` | `SequentialEmbedder` with real embeddings             | `sentence-transformers` |
+| `visualization.py`                  | All 8 matplotlib plot types                           | `[viz]`                 |
+| `resonance_network.py`              | Resonance graph and link-type distribution            | `[viz]`                 |
+| `retrieval_signals.py`              | 6-signal decomposition, radar chart, weight heatmap   | `[viz]`                 |
 
 Run any script: `uv run python examples/<script>.py`
 
@@ -492,15 +496,15 @@ make bench-appraisal          # Scherer CPM prompt quality benchmarks
 
 <!-- mirror of docs/contributing/llm-environment.md (SSOT) — keep in sync -->
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `EMOTIONAL_MEMORY_LLM_API_KEY` | — | API key (required) |
-| `EMOTIONAL_MEMORY_LLM_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint |
-| `EMOTIONAL_MEMORY_LLM_MODEL` | `gpt-5-mini` | Model |
-| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | `""` | Reasoning budget for o-series / gpt-5 models (`minimal` / `low` / `medium` / `high`); omitted when empty |
-| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE` | `plain` | LLM response mode: `plain` or `json_object` |
-| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS` | `30` | HTTP timeout for OpenAI-compatible calls |
-| `EMOTIONAL_MEMORY_LLM_REPEATS` | `3` | Repeats per phrase in quality benchmarks |
+| Variable                                | Default                     | Purpose                                                                                                  |
+| --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `EMOTIONAL_MEMORY_LLM_API_KEY`          | —                           | API key (required)                                                                                       |
+| `EMOTIONAL_MEMORY_LLM_BASE_URL`         | `https://api.openai.com/v1` | OpenAI-compatible endpoint                                                                               |
+| `EMOTIONAL_MEMORY_LLM_MODEL`            | `gpt-5-mini`                | Model                                                                                                    |
+| `EMOTIONAL_MEMORY_LLM_REASONING_EFFORT` | `""`                        | Reasoning budget for o-series / gpt-5 models (`minimal` / `low` / `medium` / `high`); omitted when empty |
+| `EMOTIONAL_MEMORY_LLM_OUTPUT_MODE`      | `plain`                     | LLM response mode: `plain` or `json_object`                                                              |
+| `EMOTIONAL_MEMORY_LLM_TIMEOUT_SECONDS`  | `30`                        | HTTP timeout for OpenAI-compatible calls                                                                 |
+| `EMOTIONAL_MEMORY_LLM_REPEATS`          | `3`                         | Repeats per phrase in quality benchmarks                                                                 |
 
 Full reference: [LLM Environment Variables](docs/contributing/llm-environment.md).
 
@@ -521,7 +525,7 @@ If you use `emotional-memory` in research, please cite:
 ```
 
 - **Concept DOI** (all versions): [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
-- **Paper draft** ([PDF](https://github.com/gianlucamazza/emotional-memory/blob/main/paper/main.tex)) — *Affective Field Theory: A Multi-Layer Model for Emotion-Aware Memory in LLMs*
+- **Paper draft** ([PDF](https://github.com/gianlucamazza/emotional-memory/blob/main/paper/main.tex)) — _Affective Field Theory: A Multi-Layer Model for Emotion-Aware Memory in LLMs_
 - **arXiv-ready bundle**: [`paper/arxiv-submission.tar.gz`](https://github.com/gianlucamazza/emotional-memory/blob/main/paper/arxiv-submission.tar.gz)
 - **Pre-registration corpus**: [`benchmarks/preregistration*.md`](https://github.com/gianlucamazza/emotional-memory/tree/main/benchmarks)
 
