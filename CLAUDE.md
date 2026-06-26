@@ -19,6 +19,8 @@ make bench          # fidelity + performance benchmarks (combined)
 make install-demo   # Install canonical local Gradio demo stack
 make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)
 make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMORY_LLM_API_KEY)
+make bench-a3        # A3 downstream encode→retrieve→generate→judge (Addendum R; requires LLM key)
+make bench-human-gold # A5 appraisal vs human-gold EmoBank (Addendum S; requires LLM key)
 make install        # Install package in editable mode with dev deps
 make install-llm-test # Install llm-test dependencies (httpx)
 make install-dotenv  # Install dotenv dependencies (python-dotenv)
@@ -33,6 +35,7 @@ make publish        # Build and publish to PyPI
 ```
 
 Single test:
+
 ```bash
 uv run python -m pytest tests/test_engine.py::test_name -v
 ```
@@ -49,40 +52,40 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 ### 5-Layer Emotional Model
 
-| Layer | Class | Theory |
-|-------|-------|--------|
-| 1 | `CoreAffect` (affect.py) | Russell 1980 valence-arousal circumplex |
-| 2 | `AffectiveMomentum` (affect.py) | Spinozist velocity + acceleration over 3-point history |
-| 3 | `MoodField` (mood.py) | Heidegger's slow-moving PAD mood background (EMA) |
-| 4 | `AppraisalVector` (appraisal.py) | Scherer's 5 Stimulus Evaluation Checks → CoreAffect |
-| 5 | `ResonanceLink` (resonance.py) | Bidirectional associative graph: 5 link types, top-5 per memory; spreading activation (Collins & Loftus 1975) + Hebbian strengthening (Hebb 1949) |
+| Layer | Class                            | Theory                                                                                                                                            |
+| ----- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | `CoreAffect` (affect.py)         | Russell 1980 valence-arousal circumplex                                                                                                           |
+| 2     | `AffectiveMomentum` (affect.py)  | Spinozist velocity + acceleration over 3-point history                                                                                            |
+| 3     | `MoodField` (mood.py)            | Heidegger's slow-moving PAD mood background (EMA)                                                                                                 |
+| 4     | `AppraisalVector` (appraisal.py) | Scherer's 5 Stimulus Evaluation Checks → CoreAffect                                                                                               |
+| 5     | `ResonanceLink` (resonance.py)   | Bidirectional associative graph: 5 link types, top-5 per memory; spreading activation (Collins & Loftus 1975) + Hebbian strengthening (Hebb 1949) |
 
 ### Additional Modules
 
-| Module | Purpose |
-|--------|---------|
-| `engine.py` | `EmotionalMemory`, `EmotionalMemoryConfig` — sync orchestrator for the full encode/retrieve/observe/elaborate/prune pipeline |
-| `models.py` | `Memory`, `EmotionalTag` — Pydantic data models for stored memories and their affective annotations |
-| `retrieval.py` | 6-signal composite scoring, `build_retrieval_plan()`, `RetrievalConfig`, `AdaptiveWeightsConfig`, `RetrievalSignals/Breakdown/Explanation`, `RankedMemory`, `RetrievalPlan` |
-| `decay.py` | ACT-R power-law decay, `DecayConfig`, `compute_effective_strength()` — arousal modulation (McGaugh 2004) + spacing-effect via retrieval count |
-| `categorize.py` | `EmotionLabel`, `categorize_affect()`, `label_tag()` — Plutchik wheel: maps (valence, arousal) to 8 primary emotions with intensity tiers (Russell 1980 + Plutchik 1980) |
-| `appraisal_schema.py` | `AppraisalSchema`, `AppraisalDimension`, `SCHERER_CPM_SCHEMA` — pluggable appraisal-theory schemas (OCC, GRID, custom) |
-| `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback) |
-| `async_engine.py` | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory` |
-| `async_adapters.py` | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper |
-| `interfaces_async.py` | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols |
-| `interfaces.py` | `Embedder`, `MemoryStore`, `AffectiveStateStore` protocols + `SequentialEmbedder` base class |
-| `embedders/` | `SentenceTransformerEmbedder` — production-ready `SequentialEmbedder` backed by `sentence-transformers` (`[sentence-transformers]` extra); top-level re-export via PEP 562 `__getattr__` when the extra is installed |
-| `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions |
-| `llm_http.py` | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal (submodule-only, not top-level exports; import as `from emotional_memory.llm_http import …`) |
-| `integrations/langchain.py` | LangChain memory integration (optional) |
-| `integrations/mem0.py` | `EmotionalMemoryMem0Backend` — mem0-compatible facade (mem0 API surface, no runtime `mem0ai` dep) + `messages_to_content` helper; exported top-level |
-| `stores/sqlite.py` | `SQLiteStore` — persistent store with sqlite-vec ANN search |
-| `stores/qdrant.py` | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra) |
-| `stores/chroma.py` | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra) |
-| `telemetry.py` | `traced_span()` context manager — OTel spans, no-op when `[otel]` extra absent |
-| `query_classifier.py` | `QueryClassifier` protocol, `HeuristicQueryClassifier`, `LLMQueryClassifier`, `LOCOMO_ROUTING`, `QUERY_TYPES` — pluggable query-type routing; drives per-type weight selection in retrieval (Addendum L confirmatory study) |
-| `visualization.py` | 8 matplotlib plotting functions (optional `viz` extra) |
+| Module                      | Purpose                                                                                                                                                                                                                     |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `engine.py`                 | `EmotionalMemory`, `EmotionalMemoryConfig` — sync orchestrator for the full encode/retrieve/observe/elaborate/prune pipeline                                                                                                |
+| `models.py`                 | `Memory`, `EmotionalTag` — Pydantic data models for stored memories and their affective annotations                                                                                                                         |
+| `retrieval.py`              | 6-signal composite scoring, `build_retrieval_plan()`, `RetrievalConfig`, `AdaptiveWeightsConfig`, `RetrievalSignals/Breakdown/Explanation`, `RankedMemory`, `RetrievalPlan`                                                 |
+| `decay.py`                  | ACT-R power-law decay, `DecayConfig`, `compute_effective_strength()` — arousal modulation (McGaugh 2004) + spacing-effect via retrieval count                                                                               |
+| `categorize.py`             | `EmotionLabel`, `categorize_affect()`, `label_tag()` — Plutchik wheel: maps (valence, arousal) to 8 primary emotions with intensity tiers (Russell 1980 + Plutchik 1980)                                                    |
+| `appraisal_schema.py`       | `AppraisalSchema`, `AppraisalDimension`, `SCHERER_CPM_SCHEMA` — pluggable appraisal-theory schemas (OCC, GRID, custom)                                                                                                      |
+| `appraisal_llm.py`          | `LLMAppraisalEngine` (LLM-backed, thread-safe LRU cache) + `KeywordAppraisalEngine` (rule-based fallback)                                                                                                                   |
+| `async_engine.py`           | `AsyncEmotionalMemory` — async facade, mirrors `EmotionalMemory`                                                                                                                                                            |
+| `async_adapters.py`         | `SyncToAsync*` bridge adapters + `as_async()` convenience wrapper                                                                                                                                                           |
+| `interfaces_async.py`       | `AsyncEmbedder`, `AsyncMemoryStore`, `AsyncAppraisalEngine` protocols                                                                                                                                                       |
+| `interfaces.py`             | `Embedder`, `MemoryStore`, `AffectiveStateStore` protocols + `SequentialEmbedder` base class                                                                                                                                |
+| `embedders/`                | `SentenceTransformerEmbedder` — production-ready `SequentialEmbedder` backed by `sentence-transformers` (`[sentence-transformers]` extra); top-level re-export via PEP 562 `__getattr__` when the extra is installed        |
+| `state_stores/`             | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — pluggable backends for persisting the runtime affective state across sessions                                                      |
+| `llm_http.py`               | `OpenAICompatibleLLMConfig`, `make_httpx_llm()` — thin httpx-based LLM client for appraisal (submodule-only, not top-level exports; import as `from emotional_memory.llm_http import …`)                                    |
+| `integrations/langchain.py` | LangChain memory integration (optional)                                                                                                                                                                                     |
+| `integrations/mem0.py`      | `EmotionalMemoryMem0Backend` — mem0-compatible facade (mem0 API surface, no runtime `mem0ai` dep) + `messages_to_content` helper; exported top-level                                                                        |
+| `stores/sqlite.py`          | `SQLiteStore` — persistent store with sqlite-vec ANN search                                                                                                                                                                 |
+| `stores/qdrant.py`          | `QdrantStore` — Qdrant vector-database adapter (`[qdrant]` extra)                                                                                                                                                           |
+| `stores/chroma.py`          | `ChromaStore` — ChromaDB adapter, ephemeral or persistent (`[chroma]` extra)                                                                                                                                                |
+| `telemetry.py`              | `traced_span()` context manager — OTel spans, no-op when `[otel]` extra absent                                                                                                                                              |
+| `query_classifier.py`       | `QueryClassifier` protocol, `HeuristicQueryClassifier`, `LLMQueryClassifier`, `LOCOMO_ROUTING`, `QUERY_TYPES` — pluggable query-type routing; drives per-type weight selection in retrieval (Addendum L confirmatory study) |
+| `visualization.py`          | 8 matplotlib plotting functions (optional `viz` extra)                                                                                                                                                                      |
 
 ### Key Data Flow
 
@@ -111,6 +114,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 ### 6-Signal Retrieval Scoring (retrieval.py)
 
 Composite score weighted by current mood (adaptive weights):
+
 1. Semantic similarity (cosine)
 2. Mood congruence (Bower 1981 mood-congruent retrieval)
 3. Core affect proximity
@@ -153,3 +157,5 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 - mypy strict is enforced — all new code must be fully annotated.
 - Fidelity benchmarks in `benchmarks/fidelity/` validate psychological phenomena — run after logic changes to retrieval, decay, or resonance.
 - Appraisal quality benchmarks in `benchmarks/appraisal_quality/` validate LLM prompt output — run after changes to the Scherer CPM prompt in `appraisal_llm.py`.
+- Downstream benchmark in `benchmarks/downstream/` (Addendum R, `make bench-a3`) measures end-to-end answer quality (encode→retrieve→generate→judge) AFT vs cosine in the oracle-affect regime.
+- Human-gold appraisal benchmark in `benchmarks/human_gold_appraisal/` (Addendum S, `make bench-human-gold`) validates the appraisal signal against EmoBank human VAD labels (`benchmarks/datasets/emobank_v1.json`, CC-BY-SA 4.0).
