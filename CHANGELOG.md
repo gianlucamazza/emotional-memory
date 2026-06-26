@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
+- **Addendum U (B.1) — circularity audit of `realistic_recall_v2`.** Pre-registered,
+  deterministic (no LLM) audit (`benchmarks/circularity_audit/`, `make bench-circularity-audit`)
+  quantifying §2.4's "AFT-favorable vs neutral" split. SBERT, N=200: **62.5% of queries are
+  AFT-favorable by construction** (gold not cosine-top-1 _and_ affect-closest to the query
+  state). The aggregate top-1 advantage is concentrated there (Δ=+0.304 [+0.224, +0.384]) and
+  is **null on the neutral 37.5%** (Δ=+0.013 [0.000, +0.040], p=0.63) — **Hu1 PASS**. The
+  advantage is real where affect discriminates but confined to that regime; the +0.205/+0.18
+  headline figures are scoped to a ~62%-affect-discriminative benchmark, not regime-independent.
+  Bounds `replayable_multi_session_help` / `realistic_replay_vs_sota`; `08_limitations` §2.4
+  updated from "not audited" to these numbers.
+
 - **Addendum R (A3, Hr1/Hr2) — downstream task PASS.** Pre-registered
   encode→retrieve→generate→judge benchmark (`benchmarks/downstream/`, `make bench-a3`) on
   `realistic_recall_v2` (N=200, oracle affect, `sbert-bge`, `gpt-5-mini` generator + judge).
@@ -393,10 +404,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   queries (Δ=+0.010, d=0.058, Holm-adj p=0.3795, N=500; Addendum I closure 2026-05-06).
   Amplification claim scoped to `semantic_confound` and `recency_confound` channels.
 - **Hk1 (`cross_domain_affect_replication`) → `retry_planned`**: Aggregate FAIL on
-  DailyDialog (Branch B, Δ=−0.008, p_holm=1.000; confirmed), but `affective_trajectory`
+  DailyDialog (Branch B, Δ=−0.008, p*holm=1.000; confirmed), but `affective_trajectory`
   sub-claim shows exploratory signal (d=0.186, N=39, underpowered). Retry planned at
-  N≥120 on an affect-richer naturalistic corpus. _Closed by Addendum M (FR) below →
-  `controlled_evidence`._
+  N≥120 on an affect-richer naturalistic corpus. \_Closed by Addendum M (FR) below →
+  `controlled_evidence`.*
 - **Addendum M FR (`cross_domain_affect_replication`) → `controlled_evidence`**: FR
   realistic_recall_v2 (me5, N=120, 30 hand-authored native French scenarios, 2-session design)
   Branch A PASS — AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001,

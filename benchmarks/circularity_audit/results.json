@@ -1,0 +1,1682 @@
+{
+  "benchmark": "circularity_audit_u",
+  "dataset": "realistic_recall_v2",
+  "version": "2.0",
+  "embedder": "sbert-bge",
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "n_queries": 200,
+  "favorable_fraction": 0.625,
+  "partition_2x2": {
+    "cosine_solvable=True,affect_separating=False": 6,
+    "cosine_solvable=False,affect_separating=True": 125,
+    "cosine_solvable=False,affect_separating=False": 10,
+    "cosine_solvable=True,affect_separating=True": 59
+  },
+  "by_cell": {
+    "affect_only_can_help": {
+      "n": 125,
+      "aft_top1": 0.304,
+      "cosine_top1": 0.0,
+      "delta": {
+        "point": 0.304,
+        "ci_lower": 0.224,
+        "ci_upper": 0.384,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    },
+    "neutral": {
+      "n": 75,
+      "aft_top1": 0.88,
+      "cosine_top1": 0.8667,
+      "delta": {
+        "point": 0.0133,
+        "ci_lower": 0.0,
+        "ci_upper": 0.04,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.6265
+    },
+    "overall": {
+      "n": 200,
+      "aft_top1": 0.52,
+      "cosine_top1": 0.325,
+      "delta": {
+        "point": 0.195,
+        "ci_lower": 0.145,
+        "ci_upper": 0.25,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    }
+  },
+  "hu1_advantage_concentrated_in_favorable": true,
+  "hu2_affect_separating_by_challenge_type": {
+    "semantic_confound": {
+      "separating": 32,
+      "not": 8
+    },
+    "affective_arc": {
+      "separating": 39,
+      "not": 1
+    },
+    "recency_confound": {
+      "separating": 39,
+      "not": 1
+    },
+    "same_topic_distractor": {
+      "separating": 35,
+      "not": 5
+    },
+    "momentum_alignment": {
+      "separating": 39,
+      "not": 1
+    }
+  },
+  "per_query": [
+    {
+      "query_id": "q_actual_outage",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_late_fix_mood",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_night_recovery",
+      "challenge_type": "recency_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_cto_wellwish",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_injury_vs_comment",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_highest_low",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_coping",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_physio_clearance",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_text_vs_dinner",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_deepest_pain",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_earlier_processing",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_ex_coffee",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_spiral_vs_offer",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_lowest_confidence",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_mentor_before_accept",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_meeting",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_shock_vs_paperwork",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_peak_fear",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_vigil_before_milestone",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_word",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_miss_vs_hotel",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_lowest_travel",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_bakery_before_dawn",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_teacher_tour",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_hostile_vs_crash",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_peak_stress",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_supervisor_nod",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_examiner_email",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_runway_vs_fight",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_darkest_startup",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_customer_insight_pre_pivot",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_revenue",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_news_vs_funeral",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_grief_break",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_caf\u00e9_before_concert",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_tribute_event",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_flood_vs_denial",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_worst_moment",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_neighbour_before_appeal",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_appeal_win",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_peak_transition_fear",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_monday_before_commission",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_commission_vs_gallery",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_financial_dip_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_smile_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_night_before_rhythm",
+      "challenge_type": "recency_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_park_vs_checkup",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_conflict_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_failure_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_mentor_before_plan",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_pass_vs_frame",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_dissolution_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_arc_highest_isolation",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_kind_gesture_before_meal",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_language_vs_citizenship",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_bureaucracy_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_deepest_block",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_notebook_before_page",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_agent_vs_completion",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_rejection_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_eruption_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_mediation_agreed_before_breakthrough",
+      "challenge_type": "recency_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_mediation_vs_joint",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_complaint_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_farewell_arc_emotion",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_packing_before_discovery",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_market_vs_partner_settled",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_disorientation_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_void_emotional_low",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_hobby_before_exhibition",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_exhibition_vs_mentoring",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_last_day_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_hate_wave_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_rally_before_return",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_return_vs_policy",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_suspended_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_inheritance_news_arc",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_grief_before_legal",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_investment_vs_letter",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_dispute_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_cower_before_walk",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_tail_wag_vs_sofa",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_vet_news_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_cower_vs_vet",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_wrong_turn_before_summit",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_ford_vs_summit",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_weather_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_wrong_turn_vs_weather",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_first_meeting_before_dinners",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_tea_vs_dedication",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_noise_complaint_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_awkward_vs_tea",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_teacher_harsh_before_interview",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_meeting_vs_novel",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_food_order_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_error_vs_teacher",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_outbid_before_offer_accepted",
+      "challenge_type": "recency_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_keys_vs_weekend",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_bank_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_outbid_vs_mortgage",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_diagnosis_before_flare",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_support_group_vs_adaptation",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_medication_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_diagnosis_vs_context",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_letter_before_meeting",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_cafe_vs_apology",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_therapist_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_letter_vs_phone",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_anxiety_before_concert",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_bread_vs_novel",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_lockdown_onset_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_news_vs_day1",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_frozen_moment_before_workshop",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_workshop_vs_keynote",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_silence_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_panic_vs_silence",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_doubt_before_harvest",
+      "challenge_type": "recency_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_harvest_vs_lead_offer",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_seedling_shame_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_doubt_vs_seedling",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_speech_vs_aisle",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_perfectionism_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_anxiety_vs_parent",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_ceremony_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_report_vs_investigation",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_confrontation_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_discovery_vs_confrontation",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_moral_courage_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_loss_event_vs_mentor",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_shortlist_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_loss_vs_review",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_deepest_disappointment",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_job_offer_vs_speaking",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_letting_go_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_revenue_vs_team",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_lowest_entrepreneurial_point",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_reversal_vs_leader",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_petition_rejection_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_rejection_vs_first_meeting",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_highest_victory",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_success_vs_friendship",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_meeting_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_first_vs_vulnerability",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_mentorship_warmth_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_cycling_vs_marathon",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_post_op_spike_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_surgery_vs_spike",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_physical_triumph_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_published_vs_mentoring",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_dismissal_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_seminar_vs_dismissal",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_imposter_arc_lowest",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_rebuild_vs_prepared",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_evacuation_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_evacuation_vs_unknown",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_peak_disaster_fear",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_choice_vs_five_years",
+      "challenge_type": "same_topic_distractor",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_regret_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_vigil_vs_lesson",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_wisdom_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_heartbreak_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_pattern_vs_heartbreak",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_deepest_loss_arc",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_boundary_before_sustained",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_lab_tension_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_disproved_vs_tension",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_dissonance_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_collaborator_before_paper",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_intervention_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_hospital_vs_intervention",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_recovery_triumph_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_aa_meeting_before_chip",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_night_class_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_rejection_vs_suppression",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_dream_deferred_lowest",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_award_before_firm_offer",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_open_mic_tremor_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_last_gig_vs_avoidance",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_comeback_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_open_mic_before_album",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_documentary_despair_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_despair_vs_dismissed",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_grief_arc_emotional_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_protest_before_initiative",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_family_clash_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_language_loss_vs_clash",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_cultural_identity_pain",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_exchange_before_class",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_rehab_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_vision_event_vs_rehab",
+      "challenge_type": "semantic_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_peak_crisis_disability",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_tech_before_work_return",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_burnout_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_lecture_vs_question",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_calling_arc_joy_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_contract_before_full_time",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_health_scare_momentum",
+      "challenge_type": "momentum_alignment",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": false,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_turning_fifty_vs_scare",
+      "challenge_type": "semantic_confound",
+      "aft_hit": true,
+      "cosine_hit": true,
+      "affect_separating": true,
+      "cell": "neutral"
+    },
+    {
+      "query_id": "q_reinvention_arc_peak",
+      "challenge_type": "affective_arc",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    },
+    {
+      "query_id": "q_sabbatical_before_documentary",
+      "challenge_type": "recency_confound",
+      "aft_hit": false,
+      "cosine_hit": false,
+      "affect_separating": true,
+      "cell": "affect_only_can_help"
+    }
+  ]
+}
