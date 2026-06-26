@@ -2585,10 +2585,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-recommended-follow-ups-not-applied-need-maintainer-decision" class="md-nav__link">
+  <a href="#6-recommended-follow-ups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Recommended follow-ups (not applied — need maintainer decision)
+        6. Recommended follow-ups
       
     </span>
   </a>
@@ -2624,6 +2624,14 @@ re-verification of every entry in
 validation snapshot</em>; where it disagrees with the register, the discrepancy is
 recorded here as a finding. The canonical claim status remains
 <a href="../claim_validation_matrix.json"><code>claim_validation_matrix.json</code></a>.</p>
+<p><strong>Update (2026-06-26) — the three findings this report raised are now resolved.</strong>
+F2/A7 re-scoped to "near-deterministic" (PR #64, #60 closed). A3 downstream task
+<strong>executed and PASSED</strong> (Addendum R, #61 closed):
+<a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_r_downstream_closure.md"><code>preregistration_addendum_r_downstream_closure.md</code></a>.
+A5 human-gold comparison <strong>executed</strong> (Addendum S, #62 closed):
+<a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md"><code>preregistration_addendum_s_human_gold_appraisal_closure.md</code></a>.
+The verdicts below are preserved as the point-in-time snapshot; resolution status is
+annotated inline.</p>
 </blockquote>
 <h2 id="executive-summary">Executive summary<a class="headerlink" href="#executive-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -2672,7 +2680,7 @@ recorded here as a finding. The canonical claim status remains
 </tr>
 <tr>
 <td>Multi-seed robustness (A7)</td>
-<td>🔴 <strong>determinism claim does not reproduce</strong> — see Finding F2</td>
+<td>🟢 <strong>re-scoped to near-deterministic</strong> (PR #64; was 🔴 F2)</td>
 </tr>
 <tr>
 <td>Security (pip-audit)</td>
@@ -2826,8 +2834,8 @@ bounded) · <strong>Open</strong> (future work) · <strong>Stale</strong> (regis
 <tr>
 <td>A3</td>
 <td>Scope to ranking</td>
-<td>✅ <strong>Honestly scoped</strong></td>
-<td><code>locomo_external_qa_negative</code> = <code>controlled_evidence</code>; README documents F1 0.168 vs 0.271; downstream-task gap tracked by <strong>#61</strong></td>
+<td>✅ <strong>Scoped + downstream PASS</strong></td>
+<td><code>locomo_external_qa_negative</code> stands; <strong>downstream task executed</strong> (Addendum R, #61 closed): AFT judge-acc 0.595 vs 0.440, Δ+0.155 p&lt;0.001 in the oracle-affect regime; new claim <code>downstream_value</code></td>
 </tr>
 <tr>
 <td>A4</td>
@@ -2838,8 +2846,8 @@ bounded) · <strong>Open</strong> (future work) · <strong>Stale</strong> (regis
 <tr>
 <td>A5</td>
 <td>Bound; future work</td>
-<td>✅ <strong>Open</strong></td>
-<td>Appraisal bounded as not human-validated; tracked by <strong>#62</strong></td>
+<td>✅ <strong>Human-gold executed</strong></td>
+<td><strong>Addendum S (#62 closed):</strong> LLM valence human-validated vs EmoBank r=0.70 [0.66,0.75]; arousal/dominance weak; +0.15 bias stands; keyword not validated; new claim <code>appraisal_human_validated</code></td>
 </tr>
 <tr>
 <td>A6</td>
@@ -2850,8 +2858,8 @@ bounded) · <strong>Open</strong> (future work) · <strong>Stale</strong> (regis
 <tr>
 <td>A7</td>
 <td><strong>Resolved — deterministic</strong></td>
-<td>🔴 <strong>Does not reproduce</strong></td>
-<td>Fresh sweep shows cross-seed variance — see <strong>Finding F2</strong>; tracked by <strong>#60</strong></td>
+<td>✅ <strong>Re-scoped (#60 closed)</strong></td>
+<td>F2 actioned (PR #64): re-scoped to "near-deterministic; sub-CI timing-driven variance on near-ties"; artifact regenerated with standing caveat</td>
 </tr>
 <tr>
 <td>B1</td>
@@ -3035,13 +3043,17 @@ or shrink the largest <code>store_size</code> parameter. Low priority.</p>
 <p>Verified: <code>make docs</code> (strict) and <code>make meta-check</code> pass after the edits; all README
 doc links resolve (no dead links — gap #9 clean); the bump is targeted (only torch +
 triton wheel entries change in the lock).</p>
-<h2 id="6-recommended-follow-ups-not-applied-need-maintainer-decision">6. Recommended follow-ups (not applied — need maintainer decision)<a class="headerlink" href="#6-recommended-follow-ups-not-applied-need-maintainer-decision" title="Permanent link">&para;</a></h2>
+<h2 id="6-recommended-follow-ups">6. Recommended follow-ups<a class="headerlink" href="#6-recommended-follow-ups" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>F2 / A7</strong>: re-scope the determinism claim and regenerate <code>multiseed_results.md</code>
-  (scientific-framing change across 3 files).</li>
-<li><strong>Issues</strong>: A4 and arXiv are already tracked (#27, #31). New issues filed this pass
-  for the untracked gaps: <strong>#61</strong> (A3 minimal downstream task), <strong>#62</strong> (A5 human-gold
-  appraisal comparison), and <strong>#60</strong> (F2 / A7 reproducibility finding).</li>
+<li>✅ <strong>F2 / A7 (DONE, PR #64, #60 closed)</strong>: determinism claim re-scoped to
+  "near-deterministic; sub-CI timing-driven variance" and <code>multiseed_results.{md,json}</code>
+  regenerated with a standing caveat.</li>
+<li>✅ <strong>#61 A3 downstream task (DONE)</strong>: Addendum R executed — downstream PASS in the
+  oracle-affect regime (Δ judge-acc +0.155, p&lt;0.001).</li>
+<li>✅ <strong>#62 A5 human-gold appraisal (DONE)</strong>: Addendum S executed — LLM valence
+  human-validated vs EmoBank (r=0.70); +0.15 bias stands.</li>
+<li>⏳ <strong>Still external (open):</strong> A4 / Gate 2 human evaluation (#27) and arXiv submission
+  (#31) — both require user action.</li>
 <li><strong>F4</strong>: raise the perf-suite timeout or cap the 10k <code>store_size</code> parameter.</li>
 </ul>
 

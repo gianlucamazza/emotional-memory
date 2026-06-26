@@ -2813,6 +2813,16 @@ deployed to a public demo. No peer review, no external benchmark results
 committed, no human rater data collected.</p>
 </blockquote>
 <p>This is the correct public claim until all three mandatory gates below are passed.</p>
+<blockquote>
+<p><strong>Update (2026-06-26).</strong> The evidence ladder has advanced since the April snapshot,
+though the headline claim above still holds. Two pre-registered studies landed:
+downstream end-to-end value now has early controlled evidence in the oracle-affect
+regime (Addendum R: AFT judge-accuracy 0.595 vs cosine 0.440, Δ=+0.155, p&lt;0.001), and
+the appraisal <em>signal</em> is now validated against human affect labels (Addendum S,
+EmoBank: LLM valence r=0.70). Gate 2 below — human <em>perceived utility</em> — remains
+<strong>open</strong>: that requires recruited raters, which Addendum S (signal-level validation)
+does not substitute for.</p>
+</blockquote>
 <hr />
 <h2 id="three-mandatory-gates-before-upgrading-the-claim">Three mandatory gates before upgrading the claim<a class="headerlink" href="#three-mandatory-gates-before-upgrading-the-claim" title="Permanent link">&para;</a></h2>
 <h3 id="gate-1-external-benchmark-ecological-validity">Gate 1 — External benchmark (ecological validity)<a class="headerlink" href="#gate-1-external-benchmark-ecological-validity" title="Permanent link">&para;</a></h3>
@@ -2833,12 +2843,14 @@ Wilcoxon signed-rank test AFT &gt; baseline, p &lt; 0.05 on the primary dimensio
 <p><strong>What it proves:</strong> The emotional-memory layer improves the quality of a
 conversation as <em>perceived by people</em>, not just as measured by automated metrics.</p>
 <p><strong>Status:</strong> Packet ready (<code>benchmarks/human_eval/</code>). Raters not recruited.</p>
-<p><strong>Minimum rater requirements:</strong>
-- ≥5 raters (3 is insufficient for α reliability with disagreement resolution)
-- Blind to condition (system label hidden)
-- Failure cases must be logged: any item scored 1 by ≥3 raters is a failure case
-  and must appear in the paper's limitations section
-- Krippendorff α is a publishability criterion, not an optional statistic</p>
+<p><strong>Minimum rater requirements:</strong></p>
+<ul>
+<li>≥5 raters (3 is insufficient for α reliability with disagreement resolution)</li>
+<li>Blind to condition (system label hidden)</li>
+<li>Failure cases must be logged: any item scored 1 by ≥3 raters is a failure case
+  and must appear in the paper's limitations section</li>
+<li>Krippendorff α is a publishability criterion, not an optional statistic</li>
+</ul>
 <hr />
 <h3 id="gate-3-architecture-attribution-appraisal-confound-resolved">Gate 3 — Architecture attribution (appraisal confound resolved)<a class="headerlink" href="#gate-3-architecture-attribution-appraisal-confound-resolved" title="Permanent link">&para;</a></h3>
 <p><strong>Criterion:</strong> Study <code>benchmarks/appraisal_confound/</code> shows that
@@ -2870,9 +2882,11 @@ framing <code>aft_noAppraisal &gt; naive_cosine</code> as the primary hypothesis
 <p>These are not blocking gates but must be satisfied before journal / main-track
 conference submission (workshop submission can proceed at Gate 1 + partial Gate 2):</p>
 <h3 id="cross-embedder-validation">Cross-embedder validation<a class="headerlink" href="#cross-embedder-validation" title="Permanent link">&para;</a></h3>
-<p>Results must be reported on ≥2 meaningfully different embedder classes:
-- Class A: dense sentence embedding (e.g. <code>bge-small-en-v1.5</code>, <code>e5-small</code>)
-- Class B: sparse / hash (current <code>TokenHashEmbedder</code>)</p>
+<p>Results must be reported on ≥2 meaningfully different embedder classes:</p>
+<ul>
+<li>Class A: dense sentence embedding (e.g. <code>bge-small-en-v1.5</code>, <code>e5-small</code>)</li>
+<li>Class B: sparse / hash (current <code>TokenHashEmbedder</code>)</li>
+</ul>
 <p>If the advantage disappears on Class B, the claim must be scoped to
 "dense-embedding settings".</p>
 <h3 id="multilingual-slice">Multilingual slice<a class="headerlink" href="#multilingual-slice" title="Permanent link">&para;</a></h3>
@@ -2881,10 +2895,12 @@ preferred; at least 20 scenarios). If performance degrades significantly, the
 paper's scope must be stated as "English conversational text".</p>
 <h3 id="failure-case-disclosure">Failure case disclosure<a class="headerlink" href="#failure-case-disclosure" title="Permanent link">&para;</a></h3>
 <p>Every submitted version of the paper must include a failure cases section with
-at minimum:
-- Cases where AFT retrieval score &lt; naive_cosine (adversarial to AFT)
-- Human eval items that scored 1 from ≥3 raters
-- Category or challenge type with the largest negative gap</p>
+at minimum:</p>
+<ul>
+<li>Cases where AFT retrieval score &lt; naive_cosine (adversarial to AFT)</li>
+<li>Human eval items that scored 1 from ≥3 raters</li>
+<li>Category or challenge type with the largest negative gap</li>
+</ul>
 <p>Omitting failure cases is not acceptable, even if overall aggregate is positive.</p>
 <hr />
 <h2 id="claim-upgrade-path">Claim upgrade path<a class="headerlink" href="#claim-upgrade-path" title="Permanent link">&para;</a></h2>

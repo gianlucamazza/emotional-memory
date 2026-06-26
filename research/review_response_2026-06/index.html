@@ -3083,21 +3083,27 @@ pickup and reproduction.</p>
 </tbody>
 </table>
 <h2 id="5-what-is-genuinely-open-the-real-residue">5. What is genuinely open (the real residue)<a class="headerlink" href="#5-what-is-genuinely-open-the-real-residue" title="Permanent link">&para;</a></h2>
-<p>In priority order, the items the review identifies that are <strong>not</strong> already
-closed:</p>
+<p><strong>Executed since this response was written (June 2026):</strong> items 2, 3 and 4 below
+have been carried out.</p>
+<ul>
+<li>✅ <strong>Construct validity vs human-gold (Addendum S, #62 closed).</strong> The appraisal
+  signal was validated against human-annotated affect (EmoBank, N=300): LLM valence
+  is human-validated (r=0.70 [0.66, 0.75]); arousal/dominance are weak-positive; the
+  +0.15 valence bias persists; the keyword engine is not human-validated.</li>
+<li>✅ <strong>Downstream end-to-end value (Addendum R, #61 closed).</strong> The
+  encode→retrieve→generate→judge task moved an end-to-end metric in the
+  affect-discriminative (oracle-affect) regime: AFT judge-accuracy 0.595 vs cosine
+  0.440 (Δ=+0.155, p&lt;0.001). It does <strong>not</strong> reframe the LoCoMo narrative — that FAIL
+  is the oracle-free regime, and the two coexist.</li>
+<li>✅ <strong>Multi-seed robustness sweep (#60 closed).</strong> <code>make bench-multiseed</code> ships; the
+  result is characterized as near-deterministic (sub-CI, timing-driven variance).</li>
+</ul>
+<p>The single highest-value gap that remains genuinely open:</p>
 <ol>
-<li><strong>Ecological / human validation (Gate 2).</strong> Execute the existing
-   <code>benchmarks/human_eval/</code> kit to collect real ratings and report
-   inter-rater agreement. This is the single highest-value gap.</li>
-<li><strong>Construct validity vs human-gold affect labels.</strong> Extend Addenda N/O/P with
-   a human-annotated affect set (e.g. EmoBank/DailyDialog subset) to validate the
-   appraisal signal against people, not only against the LLM-derived gold.</li>
-<li><strong>Downstream end-to-end value.</strong> The "ambitious path" of §4.1: a minimal
-   encode→retrieve→generate→judge task where AFT-weighted retrieval moves an
-   end-to-end metric, not just ranking. A single positive here reframes the
-   LoCoMo narrative.</li>
-<li><strong>Automated multi-seed robustness sweep.</strong> Wrap the existing runners to report
-   cross-seed variance on the headline benchmarks.</li>
+<li><strong>Ecological / human validation (Gate 2, #27).</strong> Execute the existing
+   <code>benchmarks/human_eval/</code> kit to collect real ratings and report inter-rater
+   agreement. (Note: this is human <em>perceived utility</em> — distinct from Addendum S,
+   which validates the appraisal <em>signal</em> against human affect labels.)</li>
 </ol>
 <h2 id="6-closing">6. Closing<a class="headerlink" href="#6-closing" title="Permanent link">&para;</a></h2>
 <p>The review's strongest advice — <em>let epistemic honesty be the protagonist</em> — is
