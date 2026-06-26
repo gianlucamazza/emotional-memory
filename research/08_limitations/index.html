@@ -3243,8 +3243,15 @@ distinct concerns:</p>
   Addendum G / P results below.</li>
 <li><strong>Dataset circularity</strong>: affect labels were designed to favor affective
   discrimination. Scenarios where valence is not discriminative would reduce the
-  oracle advantage. The proportion of AFT-favorable vs. neutral scenarios has not
-  been audited.</li>
+  oracle advantage. <strong>This proportion is now audited (Addendum U, 2026-06-27,
+  SBERT, N=200):</strong> 62.5% of queries are AFT-favorable by construction (the gold is
+  not cosine-top-1 <em>and</em> is the affect-closest candidate to the query state). The
+  entire aggregate advantage lives there (Δ=+0.304 [+0.224, +0.384] in that cell)
+  and is <strong>null on the neutral 37.5%</strong> (Δ=+0.013 [0.000, +0.040], p=0.63). The
+  advantage is real where affect discriminates but is <strong>confined to that regime</strong>;
+  the +0.205/+0.18 headline figures are scoped to a benchmark that is ~62%
+  affect-discriminative by construction, not a regime-independent effect.
+  See <code>benchmarks/preregistration_addendum_u_circularity_audit_closure.md</code>.</li>
 </ul>
 <p><strong>Addendum G (executed, FAIL).</strong> The architecture comparison was run with
 <code>LLMAppraisalEngine</code> on an affect-free dataset (<code>realistic_recall_v3_noAF</code>, 50
