@@ -301,6 +301,12 @@ external QA (LoCoMo F1 0.168 vs 0.271), naturalistic dialogue (DailyDialog), end
 appraisal (Hg1/Addendum P), query-type routing (Addendum L), and per-query affect gating
 (Addendum Q — gating recovers the always-on penalty but cannot exceed cosine) all **FAIL**. The AFT advantage is
 regime-specific to affect-discriminative recall, not a general superiority claim.
+Within that affect-discriminative regime, two pre-registered results are positive:
+the ranking edge **converts downstream** (Addendum R: encode→retrieve→generate→judge,
+N=200, AFT LLM-judged answer accuracy 0.595 vs cosine 0.440, Δ=+0.155, p<0.001), and
+the appraisal signal is **validated against human labels** (Addendum S: LLM valence
+r=0.70 [0.66, 0.75] vs EmoBank human VAD; arousal/dominance weaker; keyword engine not
+human-validated).
 
 > **Oracle-affect boundary**: results measured with preset valence/arousal injected at encode
 > time (oracle affect, appraisal bypassed) measure a different regime from end-to-end runs.

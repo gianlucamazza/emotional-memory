@@ -1,12 +1,15 @@
 # Benchmark Datasets
 
-This directory currently contains two dataset families:
+This directory contains:
 
 - `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe
 - `realistic_recall_v1.json`: scripted multi-session replay scenarios
+- `emobank_v1.json`: **human-annotated** VAD affect subset (third-party,
+  CC-BY-SA 4.0) for appraisal construct validity — see its own section below
 
-The first is strongest for controlled retrieval behavior. The second is a
-small but more realistic bridge toward multi-session evaluation.
+The first is strongest for controlled retrieval behavior. The second is a small
+but more realistic bridge toward multi-session evaluation. The third is the only
+third-party, human-labeled set and carries a different license (CC-BY-SA 4.0).
 
 ## affect_reference_v1
 
@@ -21,36 +24,36 @@ Each line is a JSON object:
 
 ```json
 {
-  "id":             "sv1_0000",
-  "text":           "I just got the promotion I've been working toward for years!",
-  "valence":        0.823,
-  "arousal":        0.871,
-  "dominance":      0.614,
-  "expected_label": "joy",
-  "source":         "synthetic-v1"
+    "id": "sv1_0000",
+    "text": "I just got the promotion I've been working toward for years!",
+    "valence": 0.823,
+    "arousal": 0.871,
+    "dominance": 0.614,
+    "expected_label": "joy",
+    "source": "synthetic-v1"
 }
 ```
 
-| Field | Type | Range | Description |
-|---|---|---|---|
-| `id` | string | — | Unique identifier |
-| `text` | string | — | Natural-language expression |
-| `valence` | float | [-1, 1] | Negative ↔ positive affect (Russell 1980) |
-| `arousal` | float | [0, 1] | Calm ↔ excited |
-| `dominance` | float | [-1, 1] | Submissive ↔ dominant (Mehrabian 1980) |
-| `expected_label` | string | Plutchik 8 | Expected Plutchik primary emotion |
-| `source` | string | — | Provenance tag |
+| Field            | Type   | Range      | Description                               |
+| ---------------- | ------ | ---------- | ----------------------------------------- |
+| `id`             | string | —          | Unique identifier                         |
+| `text`           | string | —          | Natural-language expression               |
+| `valence`        | float  | [-1, 1]    | Negative ↔ positive affect (Russell 1980) |
+| `arousal`        | float  | [0, 1]     | Calm ↔ excited                            |
+| `dominance`      | float  | [-1, 1]    | Submissive ↔ dominant (Mehrabian 1980)    |
+| `expected_label` | string | Plutchik 8 | Expected Plutchik primary emotion         |
+| `source`         | string | —          | Provenance tag                            |
 
 ## Distribution
 
 Examples span all four Russell circumplex quadrants:
 
-| Quadrant | Valence | Arousal | Primary emotions | ~Count |
-|---|---|---|---|---|
-| Q1 | + | high | joy, excitement | 62 |
-| Q2 | − | high | fear, anger, anxiety | 45 |
-| Q3 | − | low | sadness, depression | 75 |
-| Q4 | + | low | calm, contentment, trust | 76 |
+| Quadrant | Valence | Arousal | Primary emotions         | ~Count |
+| -------- | ------- | ------- | ------------------------ | ------ |
+| Q1       | +       | high    | joy, excitement          | 62     |
+| Q2       | −       | high    | fear, anger, anxiety     | 45     |
+| Q3       | −       | low     | sadness, depression      | 75     |
+| Q4       | +       | low     | calm, contentment, trust | 76     |
 
 Each quadrant has three intensity tiers (strong / moderate / mild).
 Two independent PAD-jittered samples are generated per seed text.
@@ -70,9 +73,9 @@ Texts are original synthetic compositions. Dataset is released under **CC0 1.0**
 
 ## Version history
 
-| Version | Examples | Notes |
-|---|---|---|
-| v1 | 258 | Initial release — synthetic, 12 buckets, 2 samples/text |
+| Version | Examples | Notes                                                   |
+| ------- | -------- | ------------------------------------------------------- |
+| v1      | 258      | Initial release — synthetic, 12 buckets, 2 samples/text |
 
 ## realistic_recall_v1
 
@@ -133,3 +136,31 @@ French, 2-session design (session_1 encode, session_2 query). Challenge types:
 Result: Addendum M Branch A PASS — AFT top1=0.31 [0.23, 0.39] vs naive_cosine=0.12
 [0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap<0.0001, Hedges g=0.424.
 See `benchmarks/preregistration_addendum_m_fr_closure.md`.
+
+## emobank_v1
+
+`emobank_v1.json` is a **human-annotated** affect subset used to validate the
+appraisal signal against human labels (Addendum S, A5). Unlike the synthetic and
+hand-authored sets above, this is **third-party data** and is **not** original to
+this project.
+
+**emobank_v1**: 300 rows sampled (`seed=42`, filtered to ≥4 words) from EmoBank.
+Each row carries the original human Valence/Arousal/Dominance ratings (1–5 scale)
+plus a normalized `human` block mapped to `CoreAffect` ranges
+(`valence=(V−3)/2 ∈ [−1,1]`, `arousal=(A−1)/4 ∈ [0,1]`, `dominance=(D−1)/4 ∈ [0,1]`).
+
+Result: Addendum S — `LLMAppraisalEngine` valence human-validated (Pearson
+r=0.70 [0.66, 0.75]); arousal (r=0.28) and dominance (r=0.33) weak-to-moderate;
++0.15 valence bias persists; `KeywordAppraisalEngine` not human-validated (r=0.07).
+See `benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md`.
+
+### Source & License
+
+- **Source:** EmoBank — JULIELab/EmoBank (<https://github.com/JULIELab/EmoBank>);
+  texts from the Manually Annotated Sub-Corpus (MASC).
+- **Citation:** Buechel, S., & Hahn, U. (2017). _EmoBank: Studying the Impact of
+  Annotation Perspective and Representation Format on Dimensional Emotion
+  Analysis._ EACL 2017, 578–585.
+- **License:** **CC-BY-SA 4.0** (share-alike). This applies to `emobank_v1.json`
+  only; it does **not** change the MIT license of the project's code. Redistribution
+  of this file or derivatives must preserve attribution and the CC-BY-SA 4.0 terms.
