@@ -1,0 +1,107 @@
+{
+  "benchmark": "human_gold_appraisal_a5",
+  "dataset": "emobank_v1",
+  "version": "1.0",
+  "license": "CC-BY-SA 4.0",
+  "source": "EmoBank (JULIELab/EmoBank), texts from MASC. Buechel & Hahn 2017, EACL.",
+  "n": 300,
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "llm_enabled": true,
+  "systems": {
+    "keyword": {
+      "valence": {
+        "n": 300,
+        "pearson_r": 0.0703,
+        "pearson_ci": [
+          -0.0096,
+          0.1484
+        ],
+        "bias": 0.018,
+        "bias_ci": [
+          -0.0055,
+          0.0407
+        ],
+        "mae": 0.1433,
+        "human_validated": false
+      },
+      "arousal": {
+        "n": 300,
+        "pearson_r": 0.1058,
+        "pearson_ci": [
+          0.0116,
+          0.1998
+        ],
+        "bias": -0.2882,
+        "bias_ci": [
+          -0.2964,
+          -0.2803
+        ],
+        "mae": 0.2883,
+        "human_validated": true
+      },
+      "dominance": {
+        "n": 300,
+        "pearson_r": -0.0112,
+        "pearson_ci": [
+          -0.1443,
+          0.1104
+        ],
+        "bias": -0.023,
+        "bias_ci": [
+          -0.0326,
+          -0.0139
+        ],
+        "mae": 0.0524,
+        "human_validated": false
+      }
+    },
+    "llm": {
+      "valence": {
+        "n": 300,
+        "pearson_r": 0.7029,
+        "pearson_ci": [
+          0.6552,
+          0.7455
+        ],
+        "bias": 0.1517,
+        "bias_ci": [
+          0.1145,
+          0.1901
+        ],
+        "mae": 0.3193,
+        "human_validated": true
+      },
+      "arousal": {
+        "n": 300,
+        "pearson_r": 0.2757,
+        "pearson_ci": [
+          0.1719,
+          0.373
+        ],
+        "bias": -0.0578,
+        "bias_ci": [
+          -0.0712,
+          -0.0445
+        ],
+        "mae": 0.1082,
+        "human_validated": true
+      },
+      "dominance": {
+        "n": 300,
+        "pearson_r": 0.3327,
+        "pearson_ci": [
+          0.2244,
+          0.4321
+        ],
+        "bias": 0.1298,
+        "bias_ci": [
+          0.1022,
+          0.1581
+        ],
+        "mae": 0.2563,
+        "human_validated": true
+      }
+    }
+  }
+}

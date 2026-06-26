@@ -1,6 +1,8 @@
 # Pre-registration Addendum S — Hs1: Appraisal construct validity vs human-gold affect (EmoBank)
 
-**Status:** PENDING*EXECUTION
+**Status:** EXECUTED (2026-06-26) — LLM valence **human-validated** (r=0.70);
+arousal/dominance weak-positive; keyword engine not validated. See
+`preregistration_addendum_s_human_gold_appraisal_closure.md`.
 **Date (pre-reg):** 2026-06-26
 **Dataset:** `benchmarks/datasets/emobank_v1.json` (300 rows sampled seed=42 from
 EmoBank, ≥4 words; human VAD on a 1–5 scale mapped to CoreAffect ranges)
