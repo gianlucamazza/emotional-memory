@@ -68,36 +68,30 @@
 
 \begin{abstract}
 We present \emph{Affective Field Theory} (AFT), a five-layer computational model
-for emotionally-grounded memory in large language model (LLM) agents. Existing
-LLM memory systems retrieve primarily by semantic similarity and recency,
-neglecting the affective modulation of human memory well-documented in cognitive
-psychology. AFT encodes every memory event with a five-component affective
-fingerprint: a Russell circumplex core affect, affective momentum (velocity and
-acceleration of emotional change), a slow-adapting PAD mood field, a Scherer
-appraisal vector, and a resonance graph with spreading activation and Hebbian
-strengthening. Retrieval uses a six-signal composite scorer with mood-adaptive
-weights, and a Pearce-Hall prediction-error gate controls reconsolidation
-lability. We validate the model through 127 parametrized fidelity test cases
-covering 20 psychological phenomena, and report a comparative benchmark against a
-semantic-only baseline on a new affect-labeled dataset of 258 examples. On a
-replayable multi-session realistic recall benchmark (v2, $N=200$, 5 challenge
-types), AFT achieves \texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only
-cosine retrieval ($\Delta=+0.21$, 95\,\% CI [0.15,\,0.27], $p<0.001$, $d=0.49$;
-SBERT bge-small-en-v1.5), replicated on a second embedder (e5-small-v2:
-$\Delta=+0.16$, $p<0.001$). The advantage holds under oracle-provided affect
-labels; with \texttt{LLMAppraisalEngine} in dual-path mode on affect-free data
-(Addendum~G, $N=200$), architecture parity is maintained but the pre-registered
-minimum effect is not reached (Hg1 FAIL, $\Delta=-0.010$, $d=-0.032$); a
-recalibrated appraisal mapping re-tested on a leakage-free set reaffirms this
-boundary more sharply (Addendum~P, $N=160$: $\Delta=-0.087$, $p=0.002$), scoping
-the main result to preset-affect scenarios; a pre-registered gating study
-(Addendum~Q, $N=200$ mixed-gate queries) closes the affect-routing line---gating
-the affect channel per query recovers the always-on penalty exactly, yet neither
-gated nor always-on AFT exceeds cosine, locating the boundary at retrieve-time
-state injection rather than appraisal calibration. AFT encodes 25$\times$ faster than
-Mem0 (45\,ms vs.\ 1130\,ms per item, CPU-only) with no runtime LLM call at
-retrieval. The implementation is released as the open-source MIT-licensed
-\texttt{emotional-memory} Python library.
+for emotionally-grounded memory in large language model (LLM) agents. Existing LLM
+memory systems retrieve by semantic similarity and recency, neglecting the
+affective modulation of human memory. AFT encodes every event with a five-component
+affective fingerprint---Russell circumplex core affect, affective momentum, a
+slow-adapting PAD mood field, a Scherer appraisal vector, and a resonance graph with
+spreading activation and Hebbian strengthening---and retrieves with a six-signal
+mood-adaptive scorer gated by a Pearce-Hall prediction-error term. We validate it
+through 127 fidelity cases over 20 psychological phenomena. On a
+multi-session recall benchmark (v2, $N=200$), AFT reaches
+\texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only cosine ($\Delta=+0.21$
+[0.15, 0.27], $p<0.001$, $d=0.49$; SBERT), replicated on e5-small-v2
+($\Delta=+0.16$, $p<0.001$). The advantage holds under oracle-provided affect; with
+automatic \texttt{LLMAppraisalEngine} appraisal on affect-free data it does not
+(Addendum~P FAIL, $\Delta=-0.087$, $p=0.002$), and a pre-registered gating study
+(Addendum~Q) locates the boundary at retrieve-time state injection rather than
+appraisal calibration. Within the affect-discriminative (oracle-affect) regime the
+ranking edge converts end-to-end: a pre-registered
+encode$\to$retrieve$\to$generate$\to$judge task (Addendum~R, $N=200$) gives higher
+LLM-judged answer accuracy than cosine (0.595 vs.\ 0.440, $\Delta=+0.155$,
+$p<0.001$). Against human-annotated affect (Addendum~S, EmoBank, $N=300$), LLM
+appraisal valence is human-validated ($r=0.70$); arousal and dominance correlate
+only weakly. AFT encodes 25$\times$ faster than Mem0 (45 vs.\ 1130\,ms/item,
+CPU-only) with no retrieval-time LLM call. The implementation is released as the
+MIT-licensed \texttt{emotional-memory} Python library.
 \end{abstract}
 
 % ──────────────────────────────────────────────────────────────────────────────
@@ -637,10 +631,20 @@ power over the two-dimensional baseline. Richer discrete models
 Geneva Emotion Wheel \citep{scherer2005emotions}) may better capture
 fine-grained emotional distinctions.
 
-\paragraph{No human evaluation.}
+\paragraph{Human validation: signal yes, perceived utility not yet.}
 Fidelity tests validate psychological invariants from the literature against the
-model's own behavior (intra-theory validation). We have not yet compared
-human affective judgements against the system's EmotionalTag predictions.
+model's own behavior (intra-theory validation). The \emph{appraisal signal} has now
+been compared against human affect labels (Addendum~S; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_s\_human\_gold\_appraisal\_closure.md}%
+{\texttt{preregistration\_addendum\_s\_human\_gold\_appraisal\_closure.md}}.}): on
+EmoBank \citep{buechel2017emobank} (human VAD, $N=300$), \texttt{LLMAppraisalEngine}
+valence is human-validated (Pearson $r=0.70$ [$0.66$, $0.75$]), while arousal
+($r=0.28$) and dominance ($r=0.33$) are only weak-to-moderately positive and a
+$+0.15$ positive valence bias persists; the rule-based \texttt{KeywordAppraisalEngine}
+is \emph{not} human-validated ($r=0.07$). This validates the first link of the
+``text $\to$ affect signal $\to$ retrieval'' chain against people, but \emph{perceived
+utility} of the retrieved memories by human raters (Gate~2) remains future work---a
+signal-level correlation is not a substitute for recruited raters.
 
 \paragraph{Synthetic benchmark.}
 affect\_reference\_v1 was generated synthetically. A benchmark derived from
@@ -858,6 +862,23 @@ similarity (DailyDialog short turns, $\approx$17\% emotion-bearing turns before
 density filtering). Scenarios with valence-neutral discrimination criteria are
 under-represented in v2, and their effect on aggregate accuracy is unknown.
 
+\paragraph{Downstream value (oracle-affect regime).}
+A pre-registered end-to-end study (Addendum~R; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_r\_downstream\_closure.md}%
+{\texttt{preregistration\_addendum\_r\_downstream\_closure.md}}.}) tested whether the
+retrieval-ranking advantage converts to \emph{answer quality} once a generator consumes
+the retrieved memories. On \texttt{realistic\_recall\_v2} ($N=200$, oracle affect), an
+\mbox{encode$\to$retrieve$\to$generate$\to$judge} pipeline---identical generator and
+LLM judge for both systems, only the retrieval stage differing---yields
+\textbf{Hr1/Hr2 PASS}: AFT LLM-judged answer accuracy $0.595$ vs.\ cosine $0.440$
+($\Delta=+0.155$ [$+0.095$, $+0.220$], $p<0.001$, Holm- and McNemar-corrected),
+token-F1 $\Delta=+0.152$. The $+0.205$ ranking edge converts roughly one-to-one to a
+$+0.155$ answer-quality edge. This is the affect-discriminative, oracle-affect regime
+and is therefore \emph{bounded by the same state-injection boundary} as the
+$H_{d}$-family results; it does \emph{not} contradict the LoCoMo negative, which is the
+oracle-free, naturalistic regime. The two coexist: AFT converts ranking into answers
+when affect is discriminative and supplied, and loses when it is not.
+
 % ──────────────────────────────────────────────────────────────────────────────
 \section{Reproducibility}
 \label{sec:reproducibility}
@@ -892,7 +913,7 @@ dataset. The library is MIT-licensed, fully typed, and available for immediate u
 in LangChain pipelines and custom LLM agents.
 
 A staged evidence programme has produced a series of pre-registered studies
-(Addenda A--P, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+(Addenda A--S, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
