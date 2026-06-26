@@ -51,9 +51,9 @@ limitations:
 ### 2.1 No validation with human users
 
 The 127 psychological fidelity tests validate that the system behaves
-*coherently with the theories* it implements (for example, that retrieval is
+_coherently with the theories_ it implements (for example, that retrieval is
 mood-congruent and that decay follows a power law). They do not validate that
-the system's behavior corresponds to how *real human beings* form and retrieve
+the system's behavior corresponds to how _real human beings_ form and retrieve
 emotional memories.
 
 This is the critical distinction between **intra-theoretical validation**
@@ -116,13 +116,13 @@ artefact in `benchmarks/realistic/challenge_subset_pairwise.json`. The
 benchmark still does not support strong claims of general superiority over
 semantic-only retrieval in fully naturalistic multi-turn scenarios.
 
-### 2.4 Oracle-affect circularity in Hd* studies
+### 2.4 Oracle-affect circularity in Hd\* studies
 
 The primary architecture comparison studies (Hd1, Hd2, Hd2_IT, Hd2_ES) compare
 `aft_noAppraisal` — AFT using **preset valence/arousal values from the benchmark
 dataset** — against `naive_cosine` which has no access to any affective signal.
 
-This means the Hd* numbers do **not** test whether AFT with automatic appraisal
+This means the Hd\* numbers do **not** test whether AFT with automatic appraisal
 beats naive cosine. They test: "given a perfect oracle of affect, does the AFT
 retrieval architecture (mood field, momentum, resonance, decay) utilize that oracle
 better than a pure cosine baseline?"
@@ -147,26 +147,26 @@ scenarios, 200 queries, sbert-bge, gpt-5-mini): dual-path AFT did **not** beat n
 cosine (top1 0.315 vs 0.325, Δ=−0.010, p_one=0.367).
 
 **Addendum O + P (recalibration, then re-run — still FAIL).** WP-1a diagnosed the
-appraisal signal as *mis-calibrated*, not absent (valence Pearson r=0.81). Addendum O
+appraisal signal as _mis-calibrated_, not absent (valence Pearson r=0.81). Addendum O
 numerically recalibrated the Scherer SEC→valence/arousal projection (model M1, valence
 bias +0.200→+0.072 on held-out scenarios — a calibration PASS). Addendum P then re-ran
 Hg1 with M1 on a leakage-free affect-free dataset disjoint from the calibration data
 (`realistic_recall_v4_noAF`, 40 scenarios, 160 queries, frozen before the run): naive
-cosine was *significantly* ahead — top1 0.800 vs 0.887 (Δ=−0.0875 [−0.144, −0.031],
-p_one=0.0018, d=−0.242). Exploratory contrasts show the signal is real but not enough:
+cosine was _significantly_ ahead — top1 0.800 vs 0.887 (Δ=−0.0875 [−0.144, −0.031],
+p*one=0.0018, d=−0.242). Exploratory contrasts show the signal is real but not enough:
 LLM affect beats fixed-neutral (Hp2, +0.056, p=0.030) and the deferred dual-path
 schedule is essential (Hp3, +0.512, d=0.95; synchronous appraisal collapses to 0.287).
-A better-calibrated affect signal is a *net distractor* on affect-free queries where
+A better-calibrated affect signal is a \_net distractor* on affect-free queries where
 semantics alone is already highly discriminative.
 
-**Conclusion.** Hd* results should be read as "architecture potential under oracle
+**Conclusion.** Hd\* results should be read as "architecture potential under oracle
 affect", not "architecture advantage in production". The oracle-affect scope is a hard
 boundary; calibration quality does not, by itself, convert into an affect-free retrieval
 gain. See `benchmarks/preregistration_addendum_p_hg1_rerun_closure.md`.
 
 **State-injection boundary (Addendum Q, 2026-06-11).** The oracle-affect boundary is
 sharper than calibration: in the Hd-family protocols each query carries a `state` field
-injected into the engine *before* retrieval, i.e. the benchmark performs the
+injected into the engine _before_ retrieval, i.e. the benchmark performs the
 query↔state alignment. Addendum Q tested whether the session trajectory supplies that
 alignment for free on affect-discriminative queries (LLM-inferred affect, gated
 front-router, `realistic_recall_v5_gate`): it does not — the affect channel loses to
@@ -188,7 +188,7 @@ types, concentrated in `semantic_confound` (e5 Δ=+0.125 vs SBERT Δ=+0.025).
 
 The SBERT embedder shows Δ = +0.030 (raw p_boot=0.022, family-corrected NS
 p_holm=0.109) for the same ablation — a non-significant result under Holm
-correction.  The effect is thus **embedder-dependent**: statistically significant
+correction. The effect is thus **embedder-dependent**: statistically significant
 on e5 but not on SBERT.
 
 **Hi3 confirmatory closure (2026-05-06, N=500, seed=1, Holm m=3):** the
@@ -207,6 +207,7 @@ is not yet localised at link-density granularity; link-type and link-strength
 distributions remain unmeasured.
 
 Potential explanations:
+
 1. **Geometry incompatibility**: e5-small-v2's distance space clusters semantically
    related items more aggressively than SBERT. Spreading activation over this geometry
    may amplify noise rather than signal, causing resonance links to hurt rather than help.
@@ -294,48 +295,50 @@ The remaining options are architectural rather than parametric:
   affect signal exceeds a confidence threshold.
 
 These are larger architectural changes outside v0.10 scope. Full-N (all
-1500 LoCoMo queries) replication of W2 was *not* warranted given the 200-QA
+1500 LoCoMo queries) replication of W2 was _not_ warranted given the 200-QA
 result already closes Hj1. See `benchmarks/locomo/pareto_results.md` and
 `benchmarks/preregistration_addendum_j_closure.md` for the full numerical record.
 
-### 2.9 Cross-seed robustness: characterized (retrieval is deterministic)
+### 2.9 Cross-seed robustness: characterized (retrieval is near-deterministic)
 
 The confirmatory studies pin a single random seed each (ablation `seed=0`, Hi3
 `seed=1`, the Pareto sweep `seed=42`), and the confidence intervals reported
 throughout are **bootstrap CIs resampled within a single run**, not variance
-*across* seeds. To check whether that single-seed convention hides cross-run
+_across_ seeds. To check whether that single-seed convention hides cross-run
 instability, `benchmarks/realistic/multiseed_runner.py` (`make bench-multiseed`)
 re-runs the realistic replay benchmark across seeds `{0, 1, 7, 42, 123}`, each in
 an **isolated subprocess** invoking the canonical runner, and reports the
 cross-seed mean/stdev/min/max of `top1_accuracy` and of the AFT−baseline Δ.
 
 Result (`benchmarks/realistic/multiseed_results.md`, `realistic_recall_v2`, hash
-embedder): **cross-seed stdev and spread are exactly 0.0000** — the per-query
-top-1 outcomes are identical across all five seeds. This is expected and now
-verified rather than assumed: over a *fixed* dataset with a *deterministic*
-embedder, AFT retrieval is a deterministic function of the inputs, so the only
-seed-sensitive quantity is the bootstrap CI resampling. The genuine residual
-stochasticity therefore lives in (a) dataset *generation* seeds (frozen and
-committed) and (b) bootstrap RNG (already reflected in the reported CIs), not in
-retrieval.
+embedder): retrieval is **near-deterministic — not exactly deterministic**. The
+RNG seed itself moves nothing; the genuine residual stochasticity lives in (a)
+dataset _generation_ seeds (frozen and committed) and (b) bootstrap RNG (already
+reflected in the reported CIs). But the per-query top-1 outcome is **not bit-stable
+across fresh sweeps**: repeating `make bench-multiseed` six times gave
+`retrieval_deterministic=True` in 5/6 runs and `False` in 1/6 (cross-seed stdev
+0.0024), and the absolute `aft` mean drifted across sweeps (0.120–0.125).
 
-Two caveats. First, the determinism is exact under the canonical
-one-run-per-process execution model (which is how the benchmark is run and
-reported, and what the sweep isolates via subprocesses). Running *several* full
-benchmarks back-to-back inside a single Python process can flip the occasional
-near-tie query. The root cause is benign and well understood: the engine stamps
-encode/retrieve with real wall-clock time (`datetime.now(tz=UTC)`, see
-`engine.py`), and ACT-R decay is a function of `now − encoded_at`; without an
-injected clock, the sub-millisecond timing of back-to-back in-process runs
-perturbs decay just enough to tip a ranking that is already at a numerical tie.
-This is *correct production behaviour* (decay should track real time), not a
-library defect, and it stays within the reported bootstrap CIs. A fully
-time-deterministic benchmark would require threading an injected clock through
-`encode`/`retrieve`; that is deliberately not done here, as it would expand the
-core API and disturb the 127 fidelity benchmarks for a sub-CI, benchmark-only
-effect. Second, the sweep would surface genuine variance for a *stochastic*
-embedder or a regenerated dataset; extending it to those cases is straightforward
-future work.
+> An earlier version of this section asserted "cross-seed stdev and spread are
+> exactly 0.0000 — identical across all five seeds." A fresh validation pass
+> falsified that headline; the corrected scope is **near-deterministic, with sub-CI,
+> timing-driven variance on near-ties**.
+
+The cause is a timing effect, not RNG. The engine stamps encode/retrieve with real
+wall-clock time (`datetime.now(tz=UTC)`, see `engine.py`), and ACT-R decay is a
+function of `now − encoded_at`. Because each seed's subprocess is launched at a
+slightly different instant, a ranking that is already at a numerical tie can tip
+between seeds **even with subprocess isolation** — the isolation removes RNG
+coupling but not wall-clock timing. (Running several benchmarks back-to-back inside
+a single process amplifies the same effect.) This is _correct production behaviour_
+(decay should track real time), not a library defect, and the resulting variance
+stays within the reported bootstrap CIs — AFT still clears `naive_cosine` by far
+more than the spread (Δ ≈ +0.075). A fully time-deterministic benchmark would
+require threading an injected clock through `encode`/`retrieve`; that is
+deliberately not done here, as it would expand the core API and disturb the 127
+fidelity benchmarks for a sub-CI, benchmark-only effect. Finally, the sweep would
+surface larger variance for a _stochastic_ embedder or a regenerated dataset;
+extending it to those cases is straightforward future work.
 
 ---
 
@@ -395,11 +398,11 @@ welcome.
 
 ### 4.1 Partial operationalization of Heidegger
 
-`MoodField` operationalizes *Stimmung* (background emotional tonality) as an
+`MoodField` operationalizes _Stimmung_ (background emotional tonality) as an
 EMA over valence–arousal with decay parameters. This is a necessary
 computational simplification of a phenomenological concept that in Heidegger
 is pre-cognitive and structurally tied to being-in-the-world. The mapping is
-*inspired*, not *faithful*.
+_inspired_, not _faithful_.
 
 ### 4.2 AFT novelty credentials are not peer-reviewed
 
@@ -415,21 +418,20 @@ have not yet been validated by the scientific community.
 
 ### Recently shipped (v0.9)
 
-| Feature | Status |
-|---|---|
+| Feature                                           | Status          |
+| ------------------------------------------------- | --------------- |
 | Qdrant vector-database adapter (`[qdrant]` extra) | ✅ shipped v0.9 |
-| ChromaDB adapter (`[chroma]` extra) | ✅ shipped v0.9 |
-| OpenTelemetry spans (`[otel]` extra) | ✅ shipped v0.9 |
+| ChromaDB adapter (`[chroma]` extra)               | ✅ shipped v0.9 |
+| OpenTelemetry spans (`[otel]` extra)              | ✅ shipped v0.9 |
 
 ### Open limits (not tied to a specific release)
 
-| Limit | Indicative horizon |
-|---|---|
-| Broader, comparative affect-aware realistic benchmark | ongoing research |
-| Execute the human-eval pilot with real ratings | research track |
-| BYO appraisal schema (OCC, GRID, custom taxonomies) | v0.10 |
-
+| Limit                                                 | Indicative horizon |
+| ----------------------------------------------------- | ------------------ |
+| Broader, comparative affect-aware realistic benchmark | ongoing research   |
+| Execute the human-eval pilot with real ratings        | research track     |
+| BYO appraisal schema (OCC, GRID, custom taxonomies)   | v0.10              |
 
 ---
 
-*Document added in v0.5.1. Last updated: v0.9 (2026-05-06).*
+_Document added in v0.5.1. Last updated: v0.9 (2026-05-06)._

@@ -20,11 +20,18 @@ verdict trustworthy, and reuses the canonical runner verbatim (no divergent
 scoring logic).
 
 Empirically, with a deterministic embedder (``hash``, ``sbert-bge``, …) over a
-fixed dataset the retrieval is deterministic: per-query outcomes — and therefore
-the point estimates — do not move across seeds; only the bootstrap CI bounds
-jitter. The sweep verifies this (``retrieval_deterministic``) rather than
-assuming it, and would surface genuine variance for a stochastic embedder or a
-regenerated dataset.
+fixed dataset the retrieval is *near*-deterministic: the RNG seed itself moves
+nothing (only the bootstrap CI bounds jitter), but the result is **not** bit-stable
+across fresh sweeps. Because each subprocess is launched at a slightly different
+wall-clock moment and ACT-R decay tracks ``now - encoded_at``, a query sitting at a
+numerical tie can flip between seeds *even with subprocess isolation* — so a fresh
+``make bench-multiseed`` reports ``retrieval_deterministic=True`` most of the time
+but occasionally ``False`` (cross-seed stdev up to ~0.0025), and the absolute mean
+drifts a little across sweeps. This residual variance is timing-driven, sits well
+inside the bootstrap CIs, and does not change the scientific conclusion (AFT still
+clears the baseline by far more than the spread). The sweep ``verifies`` this
+(``retrieval_deterministic``) per run rather than assuming exact determinism; it
+would surface larger variance for a stochastic embedder or a regenerated dataset.
 
 Offline: with ``--embedder hash`` this runs with no model download and no network.
 """
@@ -198,14 +205,27 @@ def _render_markdown(report: dict[str, Any]) -> str:
         f"bootstrap n={report['n_bootstrap']} · isolation: {report['isolation']}.",
         "",
         (
-            "**Retrieval determinism:** "
+            "**Retrieval determinism (this run):** "
             + (
-                "✅ per-query top-1 outcomes are identical across all seeds — point "
-                "estimates do not move; only bootstrap CI bounds jitter."
+                "✅ per-query top-1 outcomes were identical across all seeds in this "
+                "sweep — point estimates did not move; only bootstrap CI bounds jittered."
                 if det
-                else "⚠️ per-query outcomes differ across seeds — genuine cross-seed "
-                "variance is present (see table)."
+                else "⚠️ per-query outcomes differed across seeds in this sweep — a "
+                "near-tie query flipped (see table)."
             )
+        ),
+        "",
+        (
+            "**Caveat — near-deterministic, not bit-stable.** The RNG seed moves nothing, "
+            "but the engine stamps encode/retrieve with real wall-clock time and ACT-R "
+            "decay tracks `now - encoded_at`. Each seed runs in its own subprocess launched "
+            "at a slightly different instant, so a query at a numerical tie can flip *even "
+            "with subprocess isolation*. A fresh `make bench-multiseed` therefore reports "
+            "`retrieval_deterministic=True` most of the time but occasionally `False` "
+            "(observed cross-seed stdev up to ~0.0025), and the absolute mean drifts a "
+            "little across sweeps. This variance is timing-driven, sits well inside the "
+            "bootstrap CIs, and does not change the AFT-vs-baseline conclusion. See "
+            "`docs/research/08_limitations.md` §2.9."
         ),
         "",
         "## Cross-seed `top1_accuracy`",
