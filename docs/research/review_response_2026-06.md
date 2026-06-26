@@ -160,7 +160,7 @@ throughout:
 [`07_related_work.md`](07_related_work.md) is a 29-system comparative table
 (MemGPT/Letta, Mem0, Generative Agents, A-MEM, SYNAPSE, Emotional RAG, LUFY,
 DAM-LLM, …) on the exact axes the review requests (importance model, decay,
-reconsolidation, affect layer); [`comparison.md`](comparison.md) and
+reconsolidation, affect layer); [`comparison.md`](../comparison.md) and
 [`04_state_of_art.md`](04_state_of_art.md) cover the systems-level comparison.
 The review's §4.6 "positioning table" already exists.
 
