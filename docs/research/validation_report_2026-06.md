@@ -22,7 +22,7 @@
 | Preflight (`--fast --ci`) | 🟢 7/7 gates |
 | Performance benchmarks | 🟡 25/26 (one 10k-scale setup hits the 120 s pytest timeout) |
 | Multi-seed robustness (A7) | 🔴 **determinism claim does not reproduce** — see Finding F2 |
-| Security (pip-audit) | 🟢 runtime clean · 🟡 D1 chromadb CVE stands · D2 torch patch now available |
+| Security (pip-audit) | 🟢 runtime clean · 🟡 D1 chromadb CVE stands · 🟢 D2 torch bumped to 2.12.1 (fixed) |
 | LLM-dependent suites | ⚪ **Blocked** — `EMOTIONAL_MEMORY_LLM_API_KEY` not set |
 
 **Headline:** the engineering quality gates are green and the core scientific FAILs
@@ -76,11 +76,11 @@ bounded) · **Open** (future work) · **Stale** (register text no longer matches
 |---|---|---|---|
 | A1 | Falsified / bound | ✅ **Honestly scoped** | `appraisal_llm_real_dual_path` = `falsified` in matrix; ablation reproduces the synchronous-appraisal penalty (Δ=−0.13) |
 | A2 | Bound every citation | ✅ **Honestly scoped** | 15 claims carry `requires_oracle_affect`; README oracle-affect boundary note present (L301–303) |
-| A3 | Scope to ranking | ✅ **Honestly scoped** | `locomo_external_qa_negative` = `controlled_evidence` (committed negative); README documents F1 0.168 vs 0.271 |
+| A3 | Scope to ranking | ✅ **Honestly scoped** | `locomo_external_qa_negative` = `controlled_evidence`; README documents F1 0.168 vs 0.271; downstream-task gap tracked by **#61** |
 | A4 | `not_established`; future work | ✅ **Open** | `models_human_emotional_memory` = `not_established`; tracked by **open issue #27** |
-| A5 | Bound; future work | ✅ **Open** | Appraisal bounded as not human-validated; **untracked** (candidate issue) |
+| A5 | Bound; future work | ✅ **Open** | Appraisal bounded as not human-validated; tracked by **#62** |
 | A6 | Already scoped | ✅ **Honestly scoped** | `cross_domain_affect_replication` = `controlled_evidence`; README documents IT/ES FAIL |
-| A7 | **Resolved — deterministic** | 🔴 **Does not reproduce** | Fresh sweep shows cross-seed variance — see **Finding F2** |
+| A7 | **Resolved — deterministic** | 🔴 **Does not reproduce** | Fresh sweep shows cross-seed variance — see **Finding F2**; tracked by **#60** |
 | B1 | Add 3-state legend | ✅ **Resolved** | Legend present in `review_response_2026-06.md` L38–39; §3.1 relabelled "Honestly scoped, not solved" |
 | B2 | Re-word snapshot | ✅ **Resolved** | — |
 | C1 | **Open** — needs footnote | ✅ **Done (register stale)** | Footnote already under "How it compares" (README L41) |
@@ -133,7 +133,7 @@ subprocess runs). The scientific conclusion is unaffected: AFT still beats cosin
 a fresh run falsifies.** Honest fix: re-scope A7 from "Resolved (deterministic)" to
 "near-deterministic; sub-CI timing-driven variance on near-ties," and regenerate the
 committed artifact. This changes scientific framing across three files, so it is
-flagged for the maintainer's decision rather than applied unilaterally.
+**tracked as issue #60** rather than rewritten in this pass.
 
 ### F3 — Register stale on C1/C3 and D2
 
@@ -142,9 +142,9 @@ flagged for the maintainer's decision rather than applied unilaterally.
   register's §1 severity snapshot is simply behind reality. Tracking issue #32 is no
   longer open.
 - **D2**: the register says "torch ≤2.12.0 affected; no patched version published."
-  torch **2.12.1 is now on PyPI** and `pip-audit` reports it clean. `uv.lock` still
-  pins 2.12.0. Recommend `uv lock --upgrade-package torch` (→ 2.12.1) and refresh
-  `SECURITY.md` once confirmed.
+  torch **2.12.1 is now on PyPI** and `pip-audit` reports it clean. **Fixed in this
+  pass** — `uv.lock` bumped to torch 2.12.1 (triton 3.7.1 carried along) and
+  `SECURITY.md` updated; the test suite had already run against 2.12.1.
 
 ### F4 — 10k-scale perf benchmark hits the global timeout *(environment)*
 
@@ -175,16 +175,18 @@ or shrink the largest `store_size` parameter. Low priority.
 2. **Gap #4** — `README.md`: added a **Limitations** link
    (`docs/research/08_limitations.md`) to the "Validation & Benchmarks" list so the
    scoped-boundaries doc is discoverable from the hero.
+3. **F3 / D2** — `uv.lock` bumped torch 2.12.0 → 2.12.1 (clears CVE-2025-3000);
+   `SECURITY.md` advisories table updated to mark it resolved.
 
-Both verified: `make docs` (strict) and `make meta-check` pass after the edits; all
-README doc links resolve (no dead links — gap #9 clean).
+Verified: `make docs` (strict) and `make meta-check` pass after the edits; all README
+doc links resolve (no dead links — gap #9 clean); the bump is targeted (only torch +
+triton wheel entries change in the lock).
 
 ## 6. Recommended follow-ups (not applied — need maintainer decision)
 
 - **F2 / A7**: re-scope the determinism claim and regenerate `multiseed_results.md`
   (scientific-framing change across 3 files).
-- **F3 / D2**: bump `uv.lock` torch 2.12.0 → 2.12.1; update `SECURITY.md`.
-- **Issues**: A4 and arXiv are already tracked (#27, #31). Untracked gaps worth an
-  issue: **A3** minimal downstream task (encode→retrieve→generate→judge), **A5**
-  human-gold appraisal comparison, and **F2** the A7 reproducibility finding.
+- **Issues**: A4 and arXiv are already tracked (#27, #31). New issues filed this pass
+  for the untracked gaps: **#61** (A3 minimal downstream task), **#62** (A5 human-gold
+  appraisal comparison), and **#60** (F2 / A7 reproducibility finding).
 - **F4**: raise the perf-suite timeout or cap the 10k `store_size` parameter.
