@@ -1,0 +1,4514 @@
+{
+  "name": "emobank_v1",
+  "version": "1.0",
+  "description": "Human-annotated VAD affect subset for appraisal construct-validity (A5). 300 rows sampled (seed=42) from EmoBank, filtered to >=4 words.",
+  "source": "EmoBank (JULIELab/EmoBank), texts from MASC. Buechel & Hahn 2017, EACL.",
+  "source_url": "https://github.com/JULIELab/EmoBank",
+  "license": "CC-BY-SA 4.0",
+  "citation": "Buechel, S., & Hahn, U. (2017). EmoBank: Studying the Impact of Annotation Perspective and Representation Format on Dimensional Emotion Analysis. EACL 2017.",
+  "scale_mapping": "EmoBank VAD on 1-5 (midpoint 3) -> CoreAffect: valence=(V-3)/2 in [-1,1], arousal=(A-1)/4 in [0,1], dominance=(D-1)/4 in [0,1].",
+  "n": 300,
+  "sample_seed": 42,
+  "items": [
+    {
+      "id": "Fermentation_Eminent-Domain_42_93",
+      "split": "train",
+      "text": "Eminent Domain Used To Usurp Wine Label Real Estate",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "116CUL032_1922_2054",
+      "split": "train",
+      "text": "As it has been an exciting year for all of us, MCCOY, Inc. cannot do its part without the support of organizations like yours.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.3,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "SemEval_1370",
+      "split": "test",
+      "text": "Siestas may cut heart disease risk",
+      "human": {
+        "valence": 0.215,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.43,
+        "A": 3.14,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Ohio_Steel_7452_7599",
+      "split": "dev",
+      "text": "However, the representatives were shunted to the side and ignored in Washington, since Youngstown’s political influence had died with its industry.",
+      "human": {
+        "valence": -0.07,
+        "arousal": 0.465,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.86,
+        "A": 2.86,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_45926_45965",
+      "split": "train",
+      "text": "Isis collapsed on the fur, strings cut.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.6,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.4,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_148_278",
+      "split": "train",
+      "text": "He's also a very astute individual who understands how to use the media -- and various communication channels -- to his advantage.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.45,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.8,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "Black_and_white_15404_15803",
+      "split": "train",
+      "text": "This led to the idea of writing = rationality = production that confined images, especially images in color, to the emerging field of “art”, which was understood as an essential activity but one that was essentially unproductive, while it assigned to the two-toned and orderly world of printed paper the role of a daily guide to existence”",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wsj_0173_984_1110",
+      "split": "train",
+      "text": "The plan was filed jointly with unsecured creditors in federal bankruptcy court in New York and must be approved by the court.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Ant_Robot_51389_51606",
+      "split": "train",
+      "text": "For the purposes of modeling Antie, I will assume that the switches between these behaviors are permanent, irreversible and partly a function of age, with new foragers being activated by returning successful foragers.",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.4375,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 2.75,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "captured_moments_12994_13054",
+      "split": "dev",
+      "text": "how does one speak to one's future self?",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.2,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "118CWL050_140_228",
+      "split": "train",
+      "text": "\"The urgency you feel to make changes is just the extent that change will be made.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.3,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "118CWL048_1550_1608",
+      "split": "train",
+      "text": "It's the perfect time to make a world of difference.",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.29,
+        "A": 3.29,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "Bartok_14696_14879",
+      "split": "train",
+      "text": "Rather, we can consider this occurrence of E♭ as a middleground-level whole-tone descent that foreshadows the structural descent to E♭ at measure 131 that is represented in Example 2.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_41308_41365",
+      "split": "train",
+      "text": "“And I am Isis,” said the woman, offering her hand to me.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_56635_56672",
+      "split": "train",
+      "text": "I must have fallen to the floor then.",
+      "human": {
+        "valence": -0.35,
+        "arousal": 0.5,
+        "dominance": 0.35
+      },
+      "raw_vad_1to5": {
+        "V": 2.3,
+        "A": 3.0,
+        "D": 2.4
+      }
+    },
+    {
+      "id": "hotel-california_7111_7157",
+      "split": "test",
+      "text": "It was time to find out what hell looked like.",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.65,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 2.4,
+        "A": 3.6,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "116CUL034_1603_1818",
+      "split": "train",
+      "text": "One concrete example is a joint project undertaken in the United Northwest Area in partnership with The Junior League of Indianapolis and Community Partnerships with Youth from Fort Wayne, Indiana.",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.405,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 2.62,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_2113_2251",
+      "split": "train",
+      "text": "It seemed like tonight’s darkness was small and personal, cupped hands offering a place for two, not the burning, open darkness of a rave.",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.5425,
+        "dominance": 0.4175
+      },
+      "raw_vad_1to5": {
+        "V": 2.67,
+        "A": 3.17,
+        "D": 2.67
+      }
+    },
+    {
+      "id": "wsj_0172_727_931",
+      "split": "train",
+      "text": "But it said that severance payments to those executives not staying with the company will reduce First of America's operating results for 1989 by $3 million to $4 million, or 15 cents to 20 cents a share.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.88,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "cable_spool_fort_8413_8465",
+      "split": "train",
+      "text": "Chad stepped back away from Tucker's open-eyed face.",
+      "human": {
+        "valence": -0.09,
+        "arousal": 0.4775,
+        "dominance": 0.455
+      },
+      "raw_vad_1to5": {
+        "V": 2.82,
+        "A": 2.91,
+        "D": 2.82
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42854_42890",
+      "split": "train",
+      "text": "She has good blood under her cheeks.",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.22,
+        "A": 2.89,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "defenders5_986_1142",
+      "split": "train",
+      "text": "Unfortunately, this practice will begin after the first snow ... this September ... when wolves will be “can’t-miss” targets against Alaska’s snowy terrain.",
+      "human": {
+        "valence": -0.145,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.71,
+        "A": 3.14,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_1419",
+      "split": "train",
+      "text": "Beyonce in a bikini as SI's swimsuit cover model",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.575,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.3,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "110CYL071_55_94",
+      "split": "train",
+      "text": "Think of your greatest accomplishments.",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.5,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.44,
+        "A": 3.0,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "NYTnewswire1_2612_2727",
+      "split": "train",
+      "text": "--It's because of Molina: The Angels felt they could part with Fabregas because of the play of catcher Jose Molina.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.1,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "captured_moments_14272_14429",
+      "split": "train",
+      "text": "Tasha said she woke up one morning convinced that if she spent another day studying vegetables, she would become one.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.0,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "Uprooted_Bike_2653_2725",
+      "split": "train",
+      "text": "Tools are available, and volunteers will help with advice and knowledge.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_1414",
+      "split": "train",
+      "text": "Trolley Square shooting leaves 6 dead, including gunman",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.5625,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.0,
+        "A": 3.25,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "Madame_White_Snake_8666_9267",
+      "split": "train",
+      "text": "In another traditional vernacular story, “Tsu Shih-Niang Sinks the Jewel Box in Anger, “Tu Shih-Niang Sinks the Jew Box in Anger,” trans, Richard M. W. Ho, in Y. W. Ma and Joseph S. M. Lau. Traditional Chinese Stories : Themes and Variations. Boston: Zheng & Zui Co, 1986, 358. ” the male protagonist breaks a promise he made to his concubine lover, and suffers for it, suggesting that traditionally, loyalty and keeping ones word was valued on the man’s part as well as a woman’s.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.9,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_37978_38046",
+      "split": "train",
+      "text": "“Not if you named it already, you ninny, and I’m sure that you have!",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.625,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 2.25,
+        "A": 3.5,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "The_Black_Willow_9628_9676",
+      "split": "train",
+      "text": "Never again shall it see the rosy-fingered dawn!",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.65,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.6,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Black_and_white_14588_14665",
+      "split": "train",
+      "text": "This simplicity of dress was seen as a mark of the modern man.",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5,
+        "dominance": 0.555
+      },
+      "raw_vad_1to5": {
+        "V": 3.11,
+        "A": 3.0,
+        "D": 3.22
+      }
+    },
+    {
+      "id": "Bartok_12055_12190",
+      "split": "train",
+      "text": "This is in strict metric dissonance with the triple meter of the melody (with its own “hiccups” occurring in the written 2/8 measures).",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.3875,
+        "dominance": 0.4775
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.55,
+        "D": 2.91
+      }
+    },
+    {
+      "id": "WhereToHongKong_56281_56446",
+      "split": "dev",
+      "text": "Guangzhou, with a population of more than 5 million, straddles the Pearl River — China’s fifth longest — which links the city to the South China Sea.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Bartok_21701_21944",
+      "split": "dev",
+      "text": "Both B♭ and A♭ are chromatic neighbors to A, which intensifies the arrival on A, and brings out the fact that the appearance of A continues the large-scale whole-tone descent that has been left stranded on B for the entire development section.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.88,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "WhereToHongKong_11220_11380",
+      "split": "test",
+      "text": "There are still bars and clubs here, but the area has become almost mainstream, and office towers are replacing many of the sinful old premises.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.445,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.78,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "Uprooted_Farming-on-Sand_1360_1442",
+      "split": "train",
+      "text": "David points out a patch of sand with a thin strip of fertile loam along the edge.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "SemEval_1202",
+      "split": "train",
+      "text": "A personal plea for HPV vaccine plan",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.525,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.1,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "20020731-nyt_22221_22257",
+      "split": "train",
+      "text": "every day full of joy and energized.",
+      "human": {
+        "valence": 0.415,
+        "arousal": 0.6675,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.83,
+        "A": 3.67,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "detroit_6155_6401",
+      "split": "train",
+      "text": "Most poignantly, it talks about Hurricane Katrina, which focused attention on rebuilding another city with this level of devastation, and how without a single catastrophic event to blame for it, Detroit's decay has gone unsympathetically ignored.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.0,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "wsj_0127_928_1005",
+      "split": "train",
+      "text": "Earnings were hurt by disposal of operations in its restructuring, Reed said.",
+      "human": {
+        "valence": -0.28,
+        "arousal": 0.5,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.44,
+        "A": 3.0,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "HistoryLasVegas_1664_1837",
+      "split": "train",
+      "text": "This permitted the Anasazi to achieve a benchmark of advanced society — the ability to live in permanent shelters year-round without need to follow wildlife.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.9,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "WhereToHongKong_53329_53408",
+      "split": "train",
+      "text": "The ingredients, especially the fresh fish and seafood, are first-rate.",
+      "human": {
+        "valence": 0.375,
+        "arousal": 0.6875,
+        "dominance": 0.5925
+      },
+      "raw_vad_1to5": {
+        "V": 3.75,
+        "A": 3.75,
+        "D": 3.37
+      }
+    },
+    {
+      "id": "Ant_Robot_10575_10869",
+      "split": "test",
+      "text": "Ants themselves rely primarily on chemical information taken in through their antennae, and to mimic this, Antie will have chemical sensing and emitting “stalks” with which to both interact with other ants (who may be surprised to find an ant without antennae) and take in chemical information.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wsj_2465_4289_4454",
+      "split": "train",
+      "text": "President Bush has agreed to meet within 90 days with Mr. Barco, President Alan Garcia of Peru and President Jaime Paz Zamora of Bolivia to discuss the drug problem.",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.14,
+        "A": 3.14,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "SemEval_527",
+      "split": "train",
+      "text": "Bears fan loses bet and changes name",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 3.0,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "WhereToHongKong_17085_17244",
+      "split": "train",
+      "text": "The Oceanarium is said to be the largest in the world, and the Ocean Theatre features displays by dolphins, killer whales, seals, and pelicans.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.3,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_13518_13543",
+      "split": "train",
+      "text": "That’s why we came here.”",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_25689_25727",
+      "split": "dev",
+      "text": "11) Heston's allegedly implied racism.",
+      "human": {
+        "valence": -0.145,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.71,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "20020731-nyt_25556_25718",
+      "split": "train",
+      "text": "\"This is the Mona Lisa of coins,\" said Beth Deisher, editor of Coin World, the largest weekly coin publication in the United States, with a circulation of 85,000.",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5275,
+        "dominance": 0.555
+      },
+      "raw_vad_1to5": {
+        "V": 3.11,
+        "A": 3.11,
+        "D": 3.22
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_50835_50919",
+      "split": "train",
+      "text": "The creature blocking my vision moved back, but I had seen all that I needed to see.",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.53,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 3.12,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "SemEval_248",
+      "split": "train",
+      "text": "Italy drops Sicily bridge plans",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.47,
+        "dominance": 0.4375
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 2.88,
+        "D": 2.75
+      }
+    },
+    {
+      "id": "Ant_Robot_1544_1685",
+      "split": "train",
+      "text": "The red harvester ant lives in hot, dry deserts, building its nests in light yellowy sand and foraging for seeds deposited by winds and rain.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4375,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.75,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_56759_56816",
+      "split": "train",
+      "text": "I thought I heard Rachel’s voice blearily calling for me.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Black_and_white_10483_10957",
+      "split": "train",
+      "text": "“In the white painted room the clarity of spatial sensation and disposition was surest and most convincing, all the details of the form and color of the furnishings could be developed undisturbed in front of this background…In this a form was discovered which was completely convincing in its simplicity and which could be seen as one of the essential formulas for wall treatment in “closed” spaces”",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.445,
+        "dominance": 0.555
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.78,
+        "D": 3.22
+      }
+    },
+    {
+      "id": "WhereToHongKong_56684_56816",
+      "split": "train",
+      "text": "The river also irrigates the carefully tended surrounding farmlands, creating a beautifully lush, subtropical scene.",
+      "human": {
+        "valence": 0.445,
+        "arousal": 0.5275,
+        "dominance": 0.555
+      },
+      "raw_vad_1to5": {
+        "V": 3.89,
+        "A": 3.11,
+        "D": 3.22
+      }
+    },
+    {
+      "id": "SemEval_1416",
+      "split": "train",
+      "text": "Mother, daughter stabbed near school",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.6075,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.0,
+        "A": 3.43,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "detroit_15156_15206",
+      "split": "train",
+      "text": "The patient is earth, and it's not getting better.",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "WhereToHongKong_23799_23917",
+      "split": "train",
+      "text": "Near Boundary Street, off Prince Edward Street West, is the Yuen Po Street Bird Garden (open 8am–7pm).",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.425,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.7,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "NYTnewswire2_4607_4733",
+      "split": "dev",
+      "text": "He appears to have moved to France in 1989, according to news media reports, and is reported to have Israeli citizenship also.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "WhereToHongKong_35992_36078",
+      "split": "train",
+      "text": "Fish (heads discreetly wrapped in paper) are still hung out to dry in the sun.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.8,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "WhatToHongKong_4598_4714",
+      "split": "train",
+      "text": "Hong Kong is no longer a factory outlet center since much of its clothing manufacturing has moved elsewhere.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.9,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_31729_31781",
+      "split": "train",
+      "text": "The natives are still here, but so is everyone else.",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_1246",
+      "split": "dev",
+      "text": "Man gets second chance at space ride",
+      "human": {
+        "valence": 0.19,
+        "arousal": 0.4675,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.38,
+        "A": 2.87,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_3432_3534",
+      "split": "train",
+      "text": "It is no surprise, however, that US (and European) media do not question their own propaganda of fear.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5625,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.25,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "NYTnewswire5_1109_1261",
+      "split": "test",
+      "text": "HOW TO SELECT As the gourd ripens, its color changes from near white-pale green to vivid green, often flecked with yellow, and eventually bright orange.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.53,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.12,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "wsj_0120_4024_4092",
+      "split": "train",
+      "text": "DIAPER SERVICES make a comeback amid growing environmental concerns.",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.67,
+        "A": 2.78,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "Ohio_Steel_7193_7237",
+      "split": "test",
+      "text": "“to get up a petition to stop the shutdown,”",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "NYTnewswire2_6132_6222",
+      "split": "train",
+      "text": "A week later, after Berezhnaya and Sikharulidze's pairs victory, the mobsters spoke again.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "detroit_9954_10030",
+      "split": "train",
+      "text": "But its not going to happen with the investment of $100 into a single house.",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 3.1,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "WhereToHongKong_5512_5631",
+      "split": "dev",
+      "text": "The Peak Tram, originally steam-powered, was built to speed the wealthy taipans to their mountainside retreats.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.9,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_1292",
+      "split": "train",
+      "text": "Howard slams Obama on Iraq policy",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.61,
+        "dominance": 0.64
+      },
+      "raw_vad_1to5": {
+        "V": 2.67,
+        "A": 3.44,
+        "D": 3.56
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42176_42333",
+      "split": "train",
+      "text": "The wine’s rich scent had a touch of something chemical that I recognized from the bar, but it filled my mouth and sank into my veins with reassuring warmth.",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.5325,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.37,
+        "A": 3.13,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "The_Black_Willow_11330_11437",
+      "split": "train",
+      "text": "Your stories strike a chord with the deepest, most ancient stories of mankind, the tales basic to humanity.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "20020731-nyt_47439_47698",
+      "split": "train",
+      "text": "Indeed, Bush has already made clear his intention to roll back one of the most important of these regulations, a provision known as new source review that compels utilities to install modern pollution controls whenever they significantly upgrade older plants.",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5,
+        "dominance": 0.61
+      },
+      "raw_vad_1to5": {
+        "V": 3.11,
+        "A": 3.0,
+        "D": 3.44
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_51860_51877",
+      "split": "train",
+      "text": "It’s a dumb idea.",
+      "human": {
+        "valence": -0.31,
+        "arousal": 0.5,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 2.38,
+        "A": 3.0,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "118CWL050_1926_2046",
+      "split": "train",
+      "text": "I have become more open-minded, more responsible, and, most importantly, I have gained a lot more self-confidence.",
+      "human": {
+        "valence": 0.35,
+        "arousal": 0.575,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.7,
+        "A": 3.3,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "SemEval_878",
+      "split": "train",
+      "text": "Tracking down hi-tech crime",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.47,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 2.88,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "att2_1849_1904",
+      "split": "test",
+      "text": "Save on calls with the AT&T One Rate Calling Card Plan.",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.4375,
+        "dominance": 0.5325
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 2.75,
+        "D": 3.13
+      }
+    },
+    {
+      "id": "SemEval_1258",
+      "split": "test",
+      "text": "Bomb kills 18 on military bus in Iran",
+      "human": {
+        "valence": -0.35,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.3,
+        "A": 3.2,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_1924_2035",
+      "split": "train",
+      "text": "If violent movies and violent videogames cannot cause violence -- then how can newscasts about violence do so?\"",
+      "human": {
+        "valence": -0.315,
+        "arousal": 0.6575,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 2.37,
+        "A": 3.63,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_33266_33288",
+      "split": "train",
+      "text": "“Well, what about you?",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.14,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_864",
+      "split": "train",
+      "text": "North Korea ready to discuss first steps to nuclear resolution",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_35013_35093",
+      "split": "train",
+      "text": "Immediately, I felt it grow warm and knew that I had done something very stupid.",
+      "human": {
+        "valence": -0.45,
+        "arousal": 0.575,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.1,
+        "A": 3.3,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "hotel-california_32145_32174",
+      "split": "train",
+      "text": "The one thing that was known.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4075,
+        "dominance": 0.4775
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.63,
+        "D": 2.91
+      }
+    },
+    {
+      "id": "appalachian1_5401_5622",
+      "split": "train",
+      "text": "Last year more than 1,000 members contributed more than 70,000 hours to our challenging and rewarding pro bono activities, in cooperation with state and municipal agencies, and other nonprofit groups that share our goals.",
+      "human": {
+        "valence": 0.35,
+        "arousal": 0.475,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.7,
+        "A": 2.9,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "detroit_5560_5663",
+      "split": "train",
+      "text": "Cheers to Toby Barlow , who inspired my trek to Detroit, and who believes in a happier, greener future.",
+      "human": {
+        "valence": 0.5,
+        "arousal": 0.6125,
+        "dominance": 0.5225
+      },
+      "raw_vad_1to5": {
+        "V": 4.0,
+        "A": 3.45,
+        "D": 3.09
+      }
+    },
+    {
+      "id": "IFAW1_3847_3908",
+      "split": "train",
+      "text": "I thought you would enjoy our 2001 Animal Sanctuary Calendar.",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_1209",
+      "split": "train",
+      "text": "Uganda parliament votes to send troops to Somalia",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.1,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_1576_1671",
+      "split": "dev",
+      "text": "By making his announcement in this public way, Lebron has only heaped more pressure on himself.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.625,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.5,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "Seedbombing_1296_1372",
+      "split": "dev",
+      "text": "If the fertilizer in the mix is what I think it is, that wouldn't be pretty.",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 2.8,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wsj_0152_252_408",
+      "split": "train",
+      "text": "Dow Jones, which owns about 64 million of Telerate's 95 million common shares outstanding, said that about 24,000 shares have been tendered under its offer.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.2,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "SemEval_1172",
+      "split": "train",
+      "text": "'Grey's,' 'Betty,' 'Scrubs' get boost",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.5,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.6,
+        "A": 3.0,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "captured_moments_22463_22573",
+      "split": "train",
+      "text": "Months earlier, we might have sought a bed, a couch, or a comfortable chair at this point.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.425,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.7,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "aspca1_2973_2997",
+      "split": "train",
+      "text": "And we don’t stop there.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.3,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "WhereToHongKong_17902_17983",
+      "split": "train",
+      "text": "The next inlet is Repulse Bay, a roomy, sandy crescent, with green hills.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_41903_41945",
+      "split": "train",
+      "text": "I hope I can start by offering some wine.”",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "How_soon-Fans_3248_3323",
+      "split": "train",
+      "text": "As a reward for people who have engaged with the brand in a meaningful way.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 2.9,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "hsus4_5637_5756",
+      "split": "train",
+      "text": "In New York, the Office of the Attorney General, Department of Law, Charities Bureau, 120 Broadway, New York, NY 10271.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.375,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.5,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "hotel-california_26163_26206",
+      "split": "train",
+      "text": "“You think that,” he said, “but is it true?",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "Anti-Terrorist_4412_4509",
+      "split": "train",
+      "text": "If the terrorist loses faith in the righteousness of his acts, he is less likely to perform them.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "20020731-nyt_28016_28125",
+      "split": "train",
+      "text": "Presumably after being stolen by a mint employee, nine double eagles surfaced during the mid-1940s and 1950s.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.8,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_1311_1383",
+      "split": "train",
+      "text": "County, consumers learn absolutely nothing about the wine in the bottle.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.0,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "Madame_White_Snake_3061_3191",
+      "split": "train",
+      "text": "It refers to a woman who is dangerously attractive, and lures men to their downfall with her sexual attractiveness.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.625,
+        "dominance": 0.4075
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.5,
+        "D": 2.63
+      }
+    },
+    {
+      "id": "NYTnewswire1_3167_3223",
+      "split": "train",
+      "text": "I'm very excited we'll be on the same team for a while.\"",
+      "human": {
+        "valence": 0.6,
+        "arousal": 0.8,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 4.2,
+        "A": 4.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "captured_moments_13277_13416",
+      "split": "train",
+      "text": "I made some small joke afterward, about approving of her firm's business incentives, and she cried.",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.5625,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 3.25,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_1353_1435",
+      "split": "train",
+      "text": "His documentary is full of subtle humor, jaw-dropping dialogue and dark contrasts.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.2,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "WhereToHongKong_66026_66113",
+      "split": "train",
+      "text": "You can use your Hong Kong dollars here, so there’s no need to change currency.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "WhereToHongKong_59648_59721",
+      "split": "train",
+      "text": "Dr. Sun Yat-sen (1866–1925) began his political career in Canton.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.3325,
+        "dominance": 0.4575
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.33,
+        "D": 2.83
+      }
+    },
+    {
+      "id": "easy_money_240_287",
+      "split": "train",
+      "text": "He said he had a \"business proposition\" for me.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "wildelifewatch1_2108_2305",
+      "split": "train",
+      "text": "But membership carries many tangible benefits as well ... benefits that will keep you up-to-date on the latest wildlife news, and benefits designed to enhance your own personal enjoyment of nature.",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.6,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.4,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "Seedbombing_7_93",
+      "split": "dev",
+      "text": "This is the first in a series of articles by guest blogger The Apocalyptic Housewife .",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.465,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.86,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wwf12_3238_3286",
+      "split": "test",
+      "text": "The challenges we face are daunting, to be sure.",
+      "human": {
+        "valence": -0.22,
+        "arousal": 0.555,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.56,
+        "A": 3.22,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "112C-L014_1144_1226",
+      "split": "test",
+      "text": "They leave Pleasant Run, generally, ready and able to contribute to society.",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.5,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.0,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_10252_10300",
+      "split": "train",
+      "text": "I urge all readers to sign up for those emails .",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 2.9,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "wsj_0135_464_545",
+      "split": "train",
+      "text": "The company's stock fell $1.125 to $13.625 in over-the-counter trading yesterday.",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.4,
+        "dominance": 0.4
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 2.6,
+        "D": 2.6
+      }
+    },
+    {
+      "id": "SemEval_1243",
+      "split": "train",
+      "text": "Can North Korea be trusted?",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5425
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.17
+      }
+    },
+    {
+      "id": "Uprooted_Bike_2559_2592",
+      "split": "train",
+      "text": "TBR hosts workshops twice a week.",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.14,
+        "A": 3.14,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_4527_4654",
+      "split": "train",
+      "text": "This is a case of over-reaching government regulation, costing business unnecessarily and burdening them with more regulations.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "SemEval_531",
+      "split": "train",
+      "text": "Really?: The claim: the pill can make you put on weight",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.575,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.3,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "captured_moments_30431_30466",
+      "split": "train",
+      "text": "Malaquez glanced away, embarrassed.",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.4,
+        "A": 3.2,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "NYTnewswire1_1032_1159",
+      "split": "train",
+      "text": "In Ochoa, 30, the Angels get an experienced major-league outfielder who is hitting .256 with six homers and 21 RBI this season.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "detroit_15584_15660",
+      "split": "test",
+      "text": "Just ask the Palestinians who left after the first war to cry over the past.",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.4,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "110CYL069_3238_3328",
+      "split": "train",
+      "text": "The people who can benefit most directly from your generosity have no time to waste.",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.5625,
+        "dominance": 0.595
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 3.25,
+        "D": 3.38
+      }
+    },
+    {
+      "id": "SemEval_1185",
+      "split": "train",
+      "text": "Japan: Whaling activists 'terrorists'",
+      "human": {
+        "valence": -0.44,
+        "arousal": 0.595,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 2.12,
+        "A": 3.38,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "hotel-california_33068_33156",
+      "split": "train",
+      "text": "After all of it, as much as we feared being alone, we feared being vulnerable even more.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.375
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.0,
+        "D": 2.5
+      }
+    },
+    {
+      "id": "NYTnewswire7_567_697",
+      "split": "train",
+      "text": "(UNDATED) Chefs and seafood retailers are wading into one of the hottest natural resource issues of the day: fisheries management.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.8,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "hsus4_1520_1565",
+      "split": "train",
+      "text": "needless deaths that could have been stopped!",
+      "human": {
+        "valence": -0.65,
+        "arousal": 0.725,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 1.7,
+        "A": 3.9,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "Black_and_white_6393_6693",
+      "split": "dev",
+      "text": "For [Charles Blanc] color also represents a kind of ruination. color for him signifies the mythical savage state out of which civilization, the nobility of the human spirit, slowly, heroically, has lifted itself – but back into which it could always slide",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.14,
+        "A": 3.29,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "SemEval_610",
+      "split": "train",
+      "text": "UK letter bombs may be from extremist drivers",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.55,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 3.2,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_21165_21227",
+      "split": "test",
+      "text": "Please, let yourselves breathe the fine scent of these herbs.”",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.29,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "WhereToHongKong_43634_43830",
+      "split": "train",
+      "text": "Continuing around the peninsula in a clockwise direction brings you to the Rua da Praia Grande (Big Beach Street) — a pleasant promenade with shaded benches under the banyan trees.",
+      "human": {
+        "valence": 0.165,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.33,
+        "A": 2.89,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "NYTnewswire2_2636_2795",
+      "split": "train",
+      "text": "The FBI cited a vivid conversation with Anissina's mother in which Tokhtakhounov assured her that even if her daughter \"falls, we will make sure she is No. 1.\"",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "wsj_0157_408_470",
+      "split": "train",
+      "text": "Previously, it offered $13.65 a share in cash, or $29 million.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.9,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "wildelifewatch1_626_690",
+      "split": "train",
+      "text": "This is why we decided to send you your special sheet of labels.",
+      "human": {
+        "valence": 0.165,
+        "arousal": 0.5275,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.33,
+        "A": 3.11,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "110CYL068_1811_1946",
+      "split": "dev",
+      "text": "He trained in desktop publishing and combined his enthusiastic work ethic with new-found skills in a burgeoning industry. \"",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.25,
+        "A": 2.88,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "The_Black_Willow_11043_11084",
+      "split": "train",
+      "text": "Ignoring the statement, Nathan continued.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "hotel-california_22465_22497",
+      "split": "train",
+      "text": "I resolved to break the pattern.",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.5,
+        "dominance": 0.5725
+      },
+      "raw_vad_1to5": {
+        "V": 3.14,
+        "A": 3.0,
+        "D": 3.29
+      }
+    },
+    {
+      "id": "114CUL059_864_910",
+      "split": "train",
+      "text": "That \"we\" includes the Youth Leadership teens.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_5349_5372",
+      "split": "train",
+      "text": "And I am really pissed.",
+      "human": {
+        "valence": -0.6,
+        "arousal": 0.75,
+        "dominance": 0.75
+      },
+      "raw_vad_1to5": {
+        "V": 1.8,
+        "A": 4.0,
+        "D": 4.0
+      }
+    },
+    {
+      "id": "WhereToHongKong_19787_19894",
+      "split": "train",
+      "text": "The interior is a comfortable amalgam of Chinese and Western design, with an impressive main lobby.",
+      "human": {
+        "valence": 0.215,
+        "arousal": 0.5,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.43,
+        "A": 3.0,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "SemEval_755",
+      "split": "train",
+      "text": "Hands on 'Doomsday Clock' move forward",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.5425,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 2.67,
+        "A": 3.17,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "Ohio_Steel_14047_14126",
+      "split": "train",
+      "text": "People became excited and waited for the mills to reappear, but they never did.",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.5825,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.89,
+        "A": 3.33,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "20020731-nyt_9314_9417",
+      "split": "train",
+      "text": "But he has had to balance that goal with longstanding concerns about human rights abuses in the region.",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 2.89,
+        "A": 2.89,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "Ohio_Steel_17098_17291",
+      "split": "train",
+      "text": "For example, Struthers is a poor town with a large Slovak population, where education is generally better than in surrounding towns, but unemployment is much higher and pollution is widespread.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.425,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.7,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Ant_Robot_10438_10549",
+      "split": "train",
+      "text": "The e-vector (heading) returned from the two polarization-sensitive photodiodes (1, 2) follows a cos2-function.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Ant_Robot_46013_46137",
+      "split": "train",
+      "text": "The integers nestpatrol_age and trailpatrol_age will represent the ages at which it is appropriate to switch to these tasks.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.8,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "hotel-california_20821_20845",
+      "split": "train",
+      "text": "“How long ago was that?”",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.4375
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.62,
+        "D": 2.75
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_24951_25019",
+      "split": "train",
+      "text": "He buys several boxes of ammunition without a question being raised.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.2,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wsj_0120_1571_1623",
+      "split": "train",
+      "text": "\"There is finally some sort of sense in the market,\"",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.4275,
+        "dominance": 0.5725
+      },
+      "raw_vad_1to5": {
+        "V": 3.29,
+        "A": 2.71,
+        "D": 3.29
+      }
+    },
+    {
+      "id": "HistoryLasVegas_222_339",
+      "split": "train",
+      "text": "During this period, the indigenous people lived in caves, hunting the mammals that gathered at the shoreline.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5225
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.09
+      }
+    },
+    {
+      "id": "HistoryLasVegas_7205_7355",
+      "split": "train",
+      "text": "Businesses sprang up overnight, and wooden houses were erected to replace the tent city in which many of the early settlers had lived.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "guidedogs1_2450_2489",
+      "split": "train",
+      "text": "For one thing, people are nicer to you.",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.1,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "wsj_1640_2878_3106",
+      "split": "test",
+      "text": "W. Mark Goode, president of Micronyx Inc., a Richardson, Texas, firm that makes computer-security products, provided a new definition for Mikhail Gorbachev's campaign for greater openness, known commonly as glasnost.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.8,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "NYTnewswire2_8753_8912",
+      "split": "dev",
+      "text": "That Russian organized crime may have infiltrated international sport at the Olympics stunned Phyllis Howard, president of the U.S. Figure Skating Association.",
+      "human": {
+        "valence": -0.28,
+        "arousal": 0.61,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.44,
+        "A": 3.44,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_1211",
+      "split": "dev",
+      "text": "Murphys rule box office with 'Norbit'",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 2.9,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "warner1_2252_2328",
+      "split": "train",
+      "text": "Plus, you’ll receive your choice of a multichannel premium FREE.",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.12,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "captured_moments_15104_15155",
+      "split": "train",
+      "text": "Even The Terran Times has only praise for his work.",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.5,
+        "dominance": 0.5925
+      },
+      "raw_vad_1to5": {
+        "V": 3.37,
+        "A": 3.0,
+        "D": 3.37
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_34187_34243",
+      "split": "train",
+      "text": "“A little walking should get the stuff into your system.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "wsj_0152_656_806",
+      "split": "train",
+      "text": "Dow Jones publishes The Wall Street Journal, Barron's magazine, and community newspapers and operates financial news services and computer data bases.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_23574_23616",
+      "split": "train",
+      "text": "I can hear your heartbeat from over here.”",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.6575,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.37,
+        "A": 3.63,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "SemEval_819",
+      "split": "train",
+      "text": "Carter was a disaster, said Ford",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.5625,
+        "dominance": 0.5925
+      },
+      "raw_vad_1to5": {
+        "V": 2.25,
+        "A": 3.25,
+        "D": 3.37
+      }
+    },
+    {
+      "id": "aspca1_2236_2374",
+      "split": "train",
+      "text": "Every day, our officers rescue animals like Sammy, a 10-month-old kitten who was deliberately thrown from a high-rise window by teenagers.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "WhereToHongKong_42376_42539",
+      "split": "dev",
+      "text": "Outside the terminal, you will find taxis as well as buses to all points (take 3, 3A, 10, or 10A to the historic center; exact change is required).",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.8,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "captured_moments_34600_34866",
+      "split": "train",
+      "text": "Malaquez was not prepared for me to react so quickly, or perhaps he waited too long for an expression I would not have, a gesture I would not make, a poignant moment of repentence, wonder, despair, or love.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.2,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "lw1_2047_2206",
+      "split": "train",
+      "text": "She watched the psi bob her head, unaware of the rest of the bridge, shaking blonde curls as she chattered away with the approaching psi relay on Mason's ship.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.88,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "detroit_13261_13294",
+      "split": "train",
+      "text": "What, exactly did we win in Iraq?",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.2,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_8586_8627",
+      "split": "train",
+      "text": "This is the big lie the wholesalers tell.",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.5625,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 3.25,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "Seedbombing_2628_2661",
+      "split": "test",
+      "text": "And the last lesson -- have fun .",
+      "human": {
+        "valence": 0.5,
+        "arousal": 0.535,
+        "dominance": 0.6775
+      },
+      "raw_vad_1to5": {
+        "V": 4.0,
+        "A": 3.14,
+        "D": 3.71
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_47156_47247",
+      "split": "train",
+      "text": "When we got there, another pale servant was waiting for us with a box of dark stained wood.",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.89,
+        "A": 2.78,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_14398_14508",
+      "split": "train",
+      "text": "If Moore wanted to deceive his viewers, why would he say this, and show the month the interview was published?",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 3.12,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Tupelo-Honey-Cafe_2785_2895",
+      "split": "train",
+      "text": "On another topic, I made a discovery there in the Tupelo Honey Cafe, one which I'd like to share with you now.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "115CVL035_1342_1444",
+      "split": "train",
+      "text": "The Summer Enrichment Program will conclude with a celebration that includes family and friends.",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.25,
+        "A": 3.12,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "wwf12_501_591",
+      "split": "train",
+      "text": "That’s why I want to extend my appreciation for your last membership contribution of $500.",
+      "human": {
+        "valence": 0.4,
+        "arousal": 0.6,
+        "dominance": 0.65
+      },
+      "raw_vad_1to5": {
+        "V": 3.8,
+        "A": 3.4,
+        "D": 3.6
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_53204_53295",
+      "split": "train",
+      "text": "The vampire glanced up when he saw the crowd split and his eyes flashed when he noticed us.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.65,
+        "dominance": 0.4
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.6,
+        "D": 2.6
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42717_42764",
+      "split": "train",
+      "text": "“She may be at that,” said Isis, gazing at her.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4575,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.83,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "110CYL072_413_518",
+      "split": "train",
+      "text": "Last year, Goodwill placed 511 people in jobs, more than double the number we placed in 1993.",
+      "human": {
+        "valence": 0.4,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.8,
+        "A": 3.3,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_28679_28768",
+      "split": "train",
+      "text": "It is unlikely, however, that the unfair attacks against him will have much of an impact.",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.4675,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.25,
+        "A": 2.87,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "602CZL285_37_62",
+      "split": "train",
+      "text": "Name Address City, ST Zip",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.6,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_51839_51859",
+      "split": "train",
+      "text": "“Don’t do this, kid!",
+      "human": {
+        "valence": -0.32,
+        "arousal": 0.7725,
+        "dominance": 0.5925
+      },
+      "raw_vad_1to5": {
+        "V": 2.36,
+        "A": 4.09,
+        "D": 3.37
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_21389_21540",
+      "split": "train",
+      "text": "In reality, what Moore describes here is the most vivid example of what can only be called wage slavery I have ever seen, to the detriment of families.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.475,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 2.9,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "118CWL050_1092_1209",
+      "split": "train",
+      "text": "A recent study by Public/Private Ventures (PPV) showed that girls who had a Big Sister for just one year:",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "The_Black_Willow_21152_21274",
+      "split": "dev",
+      "text": "Indeed, if he still could not, he could at any time follow Arthur's advice and seek a profession more grounded in reality.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_28181_28423",
+      "split": "train",
+      "text": "According to the LA Times, the documentary genre \"owes a huge debt to Michael Moore\" -- after Bowling's success, films like \"Spellbound\" and \"Capturing the Friedmans\" were taken seriously and shown in many more theatres than otherwise likely.",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.5,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.25,
+        "A": 3.0,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "lessig_blog-carbon_6746_6867",
+      "split": "train",
+      "text": "Carbon offsets 'harm environment' http://news.bbc.co.uk/1/hi/uk_politics/6378471.stm Tuesday, 20 February 2007, 17:31 GMT",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Ohio_Steel_11205_11319",
+      "split": "train",
+      "text": "Youngstown was perhaps hit harder than any other town by the collapse of the steel industry, but it was not alone.",
+      "human": {
+        "valence": -0.4,
+        "arousal": 0.6,
+        "dominance": 0.4
+      },
+      "raw_vad_1to5": {
+        "V": 2.2,
+        "A": 3.4,
+        "D": 2.6
+      }
+    },
+    {
+      "id": "SemEval_1424",
+      "split": "train",
+      "text": "Mexican navy helps in hunt for U.S. engineer",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.3,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "hotel-california_20342_20395",
+      "split": "test",
+      "text": "Emily emily em-ill-ee em-i-lee eh-mill-ee eh-mih-lee.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.9,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_36746_36762",
+      "split": "train",
+      "text": "I was at a loss.",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.4575,
+        "dominance": 0.335
+      },
+      "raw_vad_1to5": {
+        "V": 2.0,
+        "A": 2.83,
+        "D": 2.34
+      }
+    },
+    {
+      "id": "wsj_0152_593_655",
+      "split": "train",
+      "text": "Telerate provides an electronic financial information network.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.1,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "Homosexuality_15624_15791",
+      "split": "train",
+      "text": "“I also believe everyone has at least one homosexual attraction. It’s not black and white [homosexual vs. heterosexual]; it’s a spectrum”",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.8,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "easy_money_8459_8601",
+      "split": "train",
+      "text": "Stunned I watched as he made several ridiculous passes with his hands paused and nodded then did a sort of sign language stutter of some sort.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.1,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "Ohio_Steel_3612_3754",
+      "split": "train",
+      "text": "In fact, “More rail cars passed under the Center Street Bridge [a major bridge in Youngstown] per day than any other location in the country.”",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "easy_money_8858_8922",
+      "split": "train",
+      "text": "There's a long history of Polynesian gesture and dance language.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "audubon2_4177_4256",
+      "split": "dev",
+      "text": "All of us are excited about sending you your magazine and membership materials.",
+      "human": {
+        "valence": 0.45,
+        "arousal": 0.7,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.9,
+        "A": 3.8,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_1163_1228",
+      "split": "train",
+      "text": "My girlfriend Rachel and I would go to the clubs near our school.",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.53,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.25,
+        "A": 3.12,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "Bartok_15911_15998",
+      "split": "train",
+      "text": "The return to B in measure 210 is also filled-in in this way by F♯ in measures 208-209.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.6,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Bartok_22435_22598",
+      "split": "train",
+      "text": "It is worth pointing out that the arrival on G at measure 425 is led into by D, which constitutes another “filling in” of the whole-step by the intervening fourth.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "captured_moments_25936_26048",
+      "split": "test",
+      "text": "The side of Malaquez's parcel gave way to reveal a greenmunk caught in a sheen of solid air.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5275,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.11,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "WhatToHongKong_24374_24580",
+      "split": "train",
+      "text": "If you plan to visit during May, the carnival atmosphere of the Cheung Chau Bun Festival, with its high bamboo-and-paper towers covered in sticky buns, will fascinate the young ones.",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.625,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.5,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "captured_moments_15904_16123",
+      "split": "test",
+      "text": "They say the cubes will outlast planets and suns, that when the universe dies, the works of Malaquez and his followers will be the last things seen in the final wink of God's eye.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.4,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "blog-monastery_5839_5867",
+      "split": "train",
+      "text": "Ever onward and ever upward.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.2,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "easy_money_15382_15465",
+      "split": "train",
+      "text": "I figure it can't be worse than the lethal injection that's waiting for me at dawn.",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.575,
+        "dominance": 0.25
+      },
+      "raw_vad_1to5": {
+        "V": 2.0,
+        "A": 3.3,
+        "D": 2.0
+      }
+    },
+    {
+      "id": "20020731-nyt_43908_44080",
+      "split": "test",
+      "text": "Pataki openly questioned the Port Authority's requirement that any plan for the site replace all the office, hotel and retail square footage lost in the attack on Sept. 11.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.6575
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.63
+      }
+    },
+    {
+      "id": "Bartok_3489_3616",
+      "split": "train",
+      "text": "Using this interpretation, we can map out the local tonics (tonal centers) used throughout the movement, as shown in Example 2.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.375,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.5,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "AMC2_2170_2286",
+      "split": "test",
+      "text": "Find a nearby hidden gem and start planning your next weekend or fam­ily vacation with all three superlative guides.",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.6,
+        "A": 3.2,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "audubon1_2237_2287",
+      "split": "train",
+      "text": "It’s time to tell the USDA, in no uncertain terms:",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4725,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.89,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "Uprooted_Bike_1004_1090",
+      "split": "train",
+      "text": "It started in 2001, when Andrew would ride around town pulling bikes out of dumpsters.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.425,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.7,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_12123_12214",
+      "split": "train",
+      "text": "So the answer seems pretty clear to me: just add \"Sonoma County\" to the government warning.",
+      "human": {
+        "valence": -0.17,
+        "arousal": 0.4725,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.66,
+        "A": 2.89,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Seedbombing_3941_4038",
+      "split": "dev",
+      "text": "Yes, yes, I know, you know of much better places to never throw those seedbombs you haven't made.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.14,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_12890_12932",
+      "split": "train",
+      "text": "The hunchbacked man came up to my stomach.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.9,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_11531_11577",
+      "split": "train",
+      "text": "“You’ll be used to the sensation in a moment.”",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.53,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 3.12,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "wsj_0132_1031_1129",
+      "split": "train",
+      "text": "Sales, however, were little changed at 2.46 billion guilders, compared with 2.42 billion guilders.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "defenders5_7141_7210",
+      "split": "train",
+      "text": "So, please take out your pen right now and sign your absentee ballot.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.2,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_2328_2460",
+      "split": "train",
+      "text": "Not live prime time press conferences, not self-aggrandizing twitter hashtags and not quitting on his teammates during the playoffs.",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "raw_vad_1to5": {
+        "V": 2.78,
+        "A": 2.78,
+        "D": 2.89
+      }
+    },
+    {
+      "id": "NYTnewswire9_2266_2500",
+      "split": "train",
+      "text": "The story of the 509th is a tale of an elite outfit that lived in a bubble of secrecy and endured the taunts of other war-weary U.S. units that resented sharing a small Pacific island with the 509th, which appeared exempt from combat.",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.47,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.88,
+        "A": 2.88,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "SemEval_1425",
+      "split": "train",
+      "text": "Smith baby may not be pot of gold",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4575,
+        "dominance": 0.4575
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.83,
+        "D": 2.83
+      }
+    },
+    {
+      "id": "easy_money_1035_1073",
+      "split": "train",
+      "text": "he wasn't the sort you'd call \"Chuck.\"",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.4,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.6,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Seedbombing_4949_5056",
+      "split": "train",
+      "text": "I used to see this old scary dude walking around checking the trees in Griffith Park for Dutch Elm Disease.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.53,
+        "dominance": 0.47
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.12,
+        "D": 2.88
+      }
+    },
+    {
+      "id": "Acephalous-Cant-believe_1818_2022",
+      "split": "train",
+      "text": "I'd read Watchmen a short while before and appreciated its narrative complexity, but not being used to reading comics, hadn't registered all the technical tricks that the artist was using to achieve this.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "captured_moments_6813_6908",
+      "split": "train",
+      "text": "Her wrist, when I grabbed it, was smooth and strong and warm in my fingers.",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.625,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.5,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "wsj_2465_102_269",
+      "split": "train",
+      "text": "Over the past six months, six journalists have been killed and 10 kidnapped by drug traffickers or leftist guerrillas -- who often are one and the same -- in Colombia.",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.4275
+      },
+      "raw_vad_1to5": {
+        "V": 2.43,
+        "A": 3.29,
+        "D": 2.71
+      }
+    },
+    {
+      "id": "Bartok_25987_26078",
+      "split": "train",
+      "text": "To do so was the goal of this analysis of the first movement of the Concerto for Orchestra.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.8,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "20020731-nyt_36070_36307",
+      "split": "train",
+      "text": "For one, it counters the high name recognition of Andrew M. Cuomo, McCall's opponent, by offering voters a straightforward introduction to the candidate, emphasizing his long list of high-level jobs in both the public and private sector.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.62,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "wsj_0158_467_591",
+      "split": "train",
+      "text": "No successor was named, and Mr. Reupke's duties will be split among three other senior Reuters executives, the company said.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "113CWL017_1233_1378",
+      "split": "train",
+      "text": "Please make camp possible for all deserving Indianapolis children and send in a tax deductible contribution today in the enclosed envelope.",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5275,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.11,
+        "A": 3.11,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "Bartok_13279_13451",
+      "split": "train",
+      "text": "The trombone motive in measures 134-141, shown in Example 12, is the subject of the fugato section in part 3 of the development, although its importance is downplayed here.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4175,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.67,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_9086_9116",
+      "split": "train",
+      "text": "Really, don’t worry about me.”",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.9,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "NYTnewswire3_2855_2913",
+      "split": "train",
+      "text": "\"To play to win in technology, you innovate and you lead,\"",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.1,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "audubon2_3290_3488",
+      "split": "train",
+      "text": "What’s more, you’ll receive FREE MEMBERSHIP in your local chapter -there are more than 500 Audubon chapters nationwide — with access to field trips and activities everyone in your family will enjoy.",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.2,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "hotel-california_2041_2086",
+      "split": "train",
+      "text": "These signals were the heralds of my saviors.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "hotel-california_16690_16735",
+      "split": "train",
+      "text": "“All the luxuries money can buy,” she echoed.",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.61,
+        "dominance": 0.61
+      },
+      "raw_vad_1to5": {
+        "V": 3.44,
+        "A": 3.44,
+        "D": 3.44
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_36298_36360",
+      "split": "test",
+      "text": "When she didn’t move, I knelt down and put a hand to her brow.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.6,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.4,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "att2_1619_1712",
+      "split": "train",
+      "text": "·Personal Identification Number (PIN) Choose your own PIN to use for cash access and calling.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.35,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.4,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "602CZL285_1740_1852",
+      "split": "train",
+      "text": "Should you have questions or if I can be of assistance in any way, please call me: 317.923.1331, ext. 248.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 2.9,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "NYTnewswire2_7844_8043",
+      "split": "train",
+      "text": "On or about March 7, in a conversation between Tokhtakhounov and Anissina, she said she would have won the event without his assistance because the Russian judge did not vote for her and her partner.",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.1,
+        "A": 3.2,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "WhereToHongKong_53994_54241",
+      "split": "train",
+      "text": "Since the construction of the New Macau-Taipa Bridge has allowed easy access to the airport, the population has grown to more than 30,000, with industrial development, new apartment blocks, and luxury resort hotels.",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.5,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 3.12,
+        "A": 3.0,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "110CYL069_1793_1857",
+      "split": "dev",
+      "text": "A Goodwill staff member addresses a group of welfare recipients:",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.62,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "anth_essay_4_2820_2942",
+      "split": "train",
+      "text": "The impoverished plight of the native populations was first recognized by the Marxist movements of the early 20th century.",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.29,
+        "A": 3.14,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_1215",
+      "split": "train",
+      "text": "Miss Brazil wins lawsuit competition",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.4,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "detroit_16658_16785",
+      "split": "test",
+      "text": "However, the main reason I wanted to post was to say to \"Lumpy\", \"the democrats have the unmidas touch\", LMAO, that is classic.",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.4,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_183",
+      "split": "train",
+      "text": "'Deep regret' for ex-HP exec",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "raw_vad_1to5": {
+        "V": 2.4,
+        "A": 3.0,
+        "D": 2.8
+      }
+    },
+    {
+      "id": "captured_moments_14909_14962",
+      "split": "train",
+      "text": "I often told her too many things.",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.475,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 2.9,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "hotel-california_21234_21280",
+      "split": "train",
+      "text": "She looked across the circle of couches at me.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.12,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Madame_White_Snake_7597_7650",
+      "split": "test",
+      "text": "But are the morals of these stories entirely sincere?",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_11343_11411",
+      "split": "train",
+      "text": "I got a strange feeling that we weren’t supposed to be driving here.",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.465
+      },
+      "raw_vad_1to5": {
+        "V": 2.43,
+        "A": 3.29,
+        "D": 2.86
+      }
+    },
+    {
+      "id": "SemEval_583",
+      "split": "train",
+      "text": "Deadly bird flu confirmed in British Turkeys",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.4,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_40157_40312",
+      "split": "train",
+      "text": "Nepthys lead us down a hallway that matched the building’s façade, a vaulted, ribbed intestine of a hallway, whose black walls looked unsettlingly organic.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "602CZL285_1461_1654",
+      "split": "train",
+      "text": "In joining SCS, you join the ranks of those who believe that bringing art and art education to the city makes life better, richer, and more rewarding for the entire community.",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.5,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 3.6,
+        "A": 3.0,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "wsj_0161_167_431",
+      "split": "train",
+      "text": "The Oklahoma City energy and defense concern said it will record a $7.5 million reserve for its defense group, including a $4.7 million charge related to problems under a fixed-price development contract and $2.8 million in overhead costs that won't be reimbursed.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.41,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.64,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "AMC2_2930_2953",
+      "split": "train",
+      "text": "Membership in a Bottle!",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.4,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_849",
+      "split": "dev",
+      "text": "French right nominates Sarkozy",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "20020731-nyt_7158_7339",
+      "split": "train",
+      "text": "The senator's belief \"that such items were of little value or were not gifts to you under the circumstances\" displayed poor judgment and violated Senate gift rules, the panel found.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "20020731-nyt_35252_35325",
+      "split": "train",
+      "text": "This advertisement is long on introductions and short on claims of merit.",
+      "human": {
+        "valence": -0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 2.86,
+        "A": 3.14,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "hotel-california_10471_10502",
+      "split": "train",
+      "text": "I wondered at the ship instead.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4325,
+        "dominance": 0.4775
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.73,
+        "D": 2.91
+      }
+    },
+    {
+      "id": "hotel-california_3849_3867",
+      "split": "train",
+      "text": "“You fit the bill.",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.45,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 2.8,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "wsj_0032_376_452",
+      "split": "dev",
+      "text": "Montedison currently owns about 72% of Erbamont's common shares outstanding.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "NWF1_4265_4369",
+      "split": "train",
+      "text": "Reintroducing the grizzly bear into the Selway-Bitterroot wilderness area of Idaho and Montana.",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.5825,
+        "dominance": 0.61
+      },
+      "raw_vad_1to5": {
+        "V": 3.22,
+        "A": 3.33,
+        "D": 3.44
+      }
+    },
+    {
+      "id": "20020731-nyt_6431_6549",
+      "split": "train",
+      "text": "But it said the senator had showed \"poor judgment\" by failing to reimburse him for the full market value of the gifts.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 2.8,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "hsus4_2172_2348",
+      "split": "train",
+      "text": "We also work hard and lobby for better animal welfare laws at the local, state and federal government levels and we insist they enforce existing laws to prevent animal cruelty.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.6425
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.14,
+        "D": 3.57
+      }
+    },
+    {
+      "id": "Ant_Robot_18474_18619",
+      "split": "train",
+      "text": "A third motor will lift and lower the grippers, allowing Antie to raise and lower gripped items as an ant would by raising and lowering its head.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "NYTnewswire9_5717_5815",
+      "split": "train",
+      "text": "A noncommittal \"mmm-mm,\" was the most Karnes could ever get out of Tibbets on matters of the bomb.",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 2.78,
+        "A": 2.89,
+        "D": 3.11
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_23628_23886",
+      "split": "train",
+      "text": "The gun homicide rates for the countries Moore mentioned, according to guncite, are: Japan: 0.02 per 100,000 (1994)England/Wales: 0.11 per 100,000 (1997)Germany: 0.22 per 100,000 (1994)Australia: 0.44 per 100,000 (1994)United States: 3.72 per 100,000 (1999)",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 2.8,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_22479_22604",
+      "split": "train",
+      "text": "Never mind that this very argument has been used by hawks in opposition to sending humanitarian aid to Iraq's Saddam Hussein.",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 2.9,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_7898_7944",
+      "split": "train",
+      "text": "A cold front must have hit while I was inside.",
+      "human": {
+        "valence": -0.09,
+        "arousal": 0.4775,
+        "dominance": 0.4775
+      },
+      "raw_vad_1to5": {
+        "V": 2.82,
+        "A": 2.91,
+        "D": 2.91
+      }
+    },
+    {
+      "id": "audubon1_4813_4861",
+      "split": "train",
+      "text": "·Conserve America’s remaining grassland habitat.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_6974_7055",
+      "split": "train",
+      "text": "Heald supreme court decision that did away with protectionist state alcohol laws.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4375,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.75,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "Ohio_Steel_9797_9952",
+      "split": "test",
+      "text": "This meant that foreign facilities were more modern and efficient than any plants in America, and therefore were able to export a more competitive product.",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.78,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "20020731-nyt_17194_17240",
+      "split": "train",
+      "text": "Song is a 22-year-old right-hander from Pusan.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.88,
+        "D": 3.12
+      }
+    },
+    {
+      "id": "Ant_Robot_28855_28950",
+      "split": "train",
+      "text": "To avoid bumping into things (including other ants), Antie be provided with an escape function.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.41,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.64,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "cable_spool_fort_7728_7784",
+      "split": "dev",
+      "text": "Roy stood expressionless as ever as Chad turned to look.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.5625
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.88,
+        "D": 3.25
+      }
+    },
+    {
+      "id": "sucker_673_828",
+      "split": "train",
+      "text": "She chronicled her experiences making drug deliveries for gang leaders at age 13 and how she was given her first gun as a birthday present when she was 14.",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 3.1,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_892",
+      "split": "train",
+      "text": "Roddick overcomes Federer in final",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.2,
+        "D": 3.2
+      }
+    },
+    {
+      "id": "SemEval_1142",
+      "split": "train",
+      "text": "Bruce revells in upset",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 3.2,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_27056_27079",
+      "split": "train",
+      "text": "“This is a slave shop,”",
+      "human": {
+        "valence": -0.315,
+        "arousal": 0.5325,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.37,
+        "A": 3.13,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_857",
+      "split": "dev",
+      "text": "Ballerina sparks anti-fascist row",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.2,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Ohio_Steel_12380_12451",
+      "split": "train",
+      "text": "But the Campaign was bogged down heavily by the lack of proper funding.",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.425,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.6,
+        "A": 2.7,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "SemEval_1220",
+      "split": "train",
+      "text": "Group: Video shows chopper go down",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.575,
+        "dominance": 0.425
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 3.3,
+        "D": 2.7
+      }
+    },
+    {
+      "id": "appalachian1_5690_5839",
+      "split": "train",
+      "text": "Pursue your special interests or prepare yourself for a variety of recreational activities and/or conservation projects by attending an AMC Workshop:",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.555,
+        "dominance": 0.61
+      },
+      "raw_vad_1to5": {
+        "V": 3.44,
+        "A": 3.22,
+        "D": 3.44
+      }
+    },
+    {
+      "id": "Homosexuality_12930_13477",
+      "split": "train",
+      "text": "When discussing the role of parents and upbringing in a child’s sexuality, he commented “They can bring you up [to be] open minded to [homosexuality], but they don’t bring you up [to be a homosexual]… I grew up in a place where [homosexuality is accepted], so that’s why I’m so open about being gay; I accept myself… [Whether or not you accept homosexuality and can be honest with yourself if you are homosexual] depends on how you’re brought up” (Dobbens).",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "SemEval_636",
+      "split": "train",
+      "text": "Test cricketer jailed over killing",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.55,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 2.5,
+        "A": 3.2,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "detroit_3925_3986",
+      "split": "train",
+      "text": "It \"needed some work, a hole patched, some windows replaced.\"",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.7,
+        "A": 3.1,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "SemEval_889",
+      "split": "train",
+      "text": "Ice storm brings chaos in U.S.",
+      "human": {
+        "valence": -0.4,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 2.2,
+        "A": 2.9,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_5408_5490",
+      "split": "train",
+      "text": "It is also a licensed firearms dealer which can perform its own background checks.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "112C-L012_312_402",
+      "split": "dev",
+      "text": "Many need furniture, linens and other basic necessities to begin lives on their own.",
+      "human": {
+        "valence": -0.19,
+        "arousal": 0.47,
+        "dominance": 0.375
+      },
+      "raw_vad_1to5": {
+        "V": 2.62,
+        "A": 2.88,
+        "D": 2.5
+      }
+    },
+    {
+      "id": "detroit_5012_5137",
+      "split": "train",
+      "text": "There will be a green movement here ; in fact it's already being cultivated by forward-thinking groups and intrepid locals .",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.3,
+        "A": 3.1,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Bartok_8345_8415",
+      "split": "train",
+      "text": "This motion is exemplified in Example 2 in the second theme group (mm.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_6523_6769",
+      "split": "train",
+      "text": "The silly criticisms of the scene obscure the real obscenity of the situation: a bank handing out guns to its customers, higlighting the utter laxness of how Americans deal with deadly weapons and a love of firearms that borders on the religious.",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "raw_vad_1to5": {
+        "V": 2.43,
+        "A": 3.29,
+        "D": 3.14
+      }
+    },
+    {
+      "id": "wsj_0144_374_508",
+      "split": "train",
+      "text": "Travelers estimated that the California earthquake last month will result in a fourth-quarter pre-tax charge of less than $10 million.",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 2.78,
+        "A": 2.89,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_35629_35693",
+      "split": "train",
+      "text": "Nepthys was saying something that looked like, “I have no idea!”",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5275,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.11,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "hotel-california_7951_8058",
+      "split": "train",
+      "text": "Luxurious, even compared to the fare one would find in the high-class space stations and pleasure cruisers.",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.2,
+        "A": 3.3,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "Homosexuality_15882_16052",
+      "split": "dev",
+      "text": "According to Darwin’s theory of natural selection, the advantageous traits are passed on, while the disadvantageous ones eventually die out.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 2.9,
+        "D": 3.1
+      }
+    },
+    {
+      "id": "WhatToHongKong_12943_13027",
+      "split": "train",
+      "text": "Hong Kong Diary published weekly by HKTA tells what’s happening in the arts.",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.4725,
+        "dominance": 0.5825
+      },
+      "raw_vad_1to5": {
+        "V": 3.11,
+        "A": 2.89,
+        "D": 3.33
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_24446_24593",
+      "split": "dev",
+      "text": "The gun control movement, on the other hand, distracts from the real causes of violence -- poverty, paranoia, the \"war on drugs\" and antisexuality.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5725,
+        "dominance": 0.5
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.29,
+        "D": 3.0
+      }
+    },
+    {
+      "id": "Ohio_Steel_6375_6506",
+      "split": "train",
+      "text": "The closings meant the end of Youngstown’s only real industry, the end of its population growth, and then end of economic progress.",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.4675
+      },
+      "raw_vad_1to5": {
+        "V": 2.75,
+        "A": 3.0,
+        "D": 2.87
+      }
+    },
+    {
+      "id": "WhereToHongKong_3433_3564",
+      "split": "train",
+      "text": "In 1904, the narrow, double-decker trams ran along the waterfront, but land reclamation has placed them far inland.",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.475
+      },
+      "raw_vad_1to5": {
+        "V": 3.0,
+        "A": 3.0,
+        "D": 2.9
+      }
+    },
+    {
+      "id": "SemEval_18",
+      "split": "train",
+      "text": "Women in their 60s 'are perfectly good mothers'",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "raw_vad_1to5": {
+        "V": 3.5,
+        "A": 3.1,
+        "D": 3.4
+      }
+    },
+    {
+      "id": "NWF1_480_629",
+      "split": "train",
+      "text": "The wrapping paper and matching gift cards feature delightful holiday wildlife images that will come in handy for wrapping your last minute presents.",
+      "human": {
+        "valence": 0.44,
+        "arousal": 0.655,
+        "dominance": 0.625
+      },
+      "raw_vad_1to5": {
+        "V": 3.88,
+        "A": 3.62,
+        "D": 3.5
+      }
+    },
+    {
+      "id": "captured_moments_34867_34910",
+      "split": "train",
+      "text": "Had he been faster, he could have had rage.",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.6,
+        "dominance": 0.575
+      },
+      "raw_vad_1to5": {
+        "V": 2.8,
+        "A": 3.4,
+        "D": 3.3
+      }
+    },
+    {
+      "id": "wsj_0168_207_383",
+      "split": "train",
+      "text": "The McAlpine family, which operates a number of multinational companies, including a London-based engineering and construction company, also lent to Meridian National $500,000.",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.5,
+        "dominance": 0.5275
+      },
+      "raw_vad_1to5": {
+        "V": 3.22,
+        "A": 3.0,
+        "D": 3.11
+      }
+    }
+  ]
+}
