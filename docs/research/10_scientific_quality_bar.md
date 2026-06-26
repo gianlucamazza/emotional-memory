@@ -22,6 +22,15 @@ evidence exists, and frozen in git for provenance.
 
 This is the correct public claim until all three mandatory gates below are passed.
 
+> **Update (2026-06-26).** The evidence ladder has advanced since the April snapshot,
+> though the headline claim above still holds. Two pre-registered studies landed:
+> downstream end-to-end value now has early controlled evidence in the oracle-affect
+> regime (Addendum R: AFT judge-accuracy 0.595 vs cosine 0.440, Δ=+0.155, p<0.001), and
+> the appraisal _signal_ is now validated against human affect labels (Addendum S,
+> EmoBank: LLM valence r=0.70). Gate 2 below — human _perceived utility_ — remains
+> **open**: that requires recruited raters, which Addendum S (signal-level validation)
+> does not substitute for.
+
 ---
 
 ## Three mandatory gates before upgrading the claim
@@ -49,11 +58,12 @@ See `benchmarks/locomo/results.json` for full hypothesis test record.
 Wilcoxon signed-rank test AFT > baseline, p < 0.05 on the primary dimension.
 
 **What it proves:** The emotional-memory layer improves the quality of a
-conversation as *perceived by people*, not just as measured by automated metrics.
+conversation as _perceived by people_, not just as measured by automated metrics.
 
 **Status:** Packet ready (`benchmarks/human_eval/`). Raters not recruited.
 
 **Minimum rater requirements:**
+
 - ≥5 raters (3 is insufficient for α reliability with disagreement resolution)
 - Blind to condition (system label hidden)
 - Failure cases must be logged: any item scored 1 by ≥3 raters is a failure case
@@ -77,15 +87,15 @@ Without this, the claim "AFT improves retrieval" could be explained away as
 testable and either falsifies or confirms it.
 
 **Status:** Executed 2026-04-26. Results in
-`benchmarks/appraisal_confound/results.json` (SBERT, N=100, n\_bootstrap=10 000,
+`benchmarks/appraisal_confound/results.json` (SBERT, N=100, n_bootstrap=10 000,
 seed=42, one-tailed alpha=0.05).
 
-**Finding:** Pre-registered Ha2 (aft\_keyword > naive\_cosine) **FAILS** —
+**Finding:** Pre-registered Ha2 (aft_keyword > naive_cosine) **FAILS** —
 Δ = −0.39, p ≈ 0. Keyword appraisal overrides hand-curated preset
 valence/arousal and degrades retrieval. Hb2 also fails (Δ = −0.62).
 
-**Architecture attribution (descriptive):** aft\_noAppraisal (no appraisal
-engine) vs naive\_cosine — Δ ≈ +0.23, CI [+0.12, +0.33]. Combined with S2
+**Architecture attribution (descriptive):** aft_noAppraisal (no appraisal
+engine) vs naive_cosine — Δ ≈ +0.23, CI [+0.12, +0.33]. Combined with S2
 (which also used no appraisal engine), this is the cleanest evidence that
 the architecture drives the retrieval advantage, not appraisal signal
 injection. Gate 3 is **partially closed**: the architecture-only advantage
@@ -105,6 +115,7 @@ conference submission (workshop submission can proceed at Gate 1 + partial Gate 
 ### Cross-embedder validation
 
 Results must be reported on ≥2 meaningfully different embedder classes:
+
 - Class A: dense sentence embedding (e.g. `bge-small-en-v1.5`, `e5-small`)
 - Class B: sparse / hash (current `TokenHashEmbedder`)
 
@@ -121,6 +132,7 @@ paper's scope must be stated as "English conversational text".
 
 Every submitted version of the paper must include a failure cases section with
 at minimum:
+
 - Cases where AFT retrieval score < naive_cosine (adversarial to AFT)
 - Human eval items that scored 1 from ≥3 raters
 - Category or challenge type with the largest negative gap
@@ -131,13 +143,13 @@ Omitting failure cases is not acceptable, even if overall aggregate is positive.
 
 ## Claim upgrade path
 
-| Evidence level | Correct public claim |
-|---|---|
-| Current (only controlled synthetic) | "Strong theory-driven prototype with early controlled evidence" |
-| Gate 1 passed | + "with confirmed external benchmark advantage on LoCoMo" |
-| Gate 1 + Gate 3 passed | + "with architecture attribution (advantage persists without LLM appraisal)" |
-| All 3 gates + cross-embedder | "Scientifically grounded emotional memory system" |
-| All 3 gates + multilingual + peer review | "Scientifically validated" |
+| Evidence level                           | Correct public claim                                                         |
+| ---------------------------------------- | ---------------------------------------------------------------------------- |
+| Current (only controlled synthetic)      | "Strong theory-driven prototype with early controlled evidence"              |
+| Gate 1 passed                            | + "with confirmed external benchmark advantage on LoCoMo"                    |
+| Gate 1 + Gate 3 passed                   | + "with architecture attribution (advantage persists without LLM appraisal)" |
+| All 3 gates + cross-embedder             | "Scientifically grounded emotional memory system"                            |
+| All 3 gates + multilingual + peer review | "Scientifically validated"                                                   |
 
 ---
 
