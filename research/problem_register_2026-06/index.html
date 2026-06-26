@@ -2386,10 +2386,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a7-single-seed-cross-run-variance-uncharacterized-resolved" class="md-nav__link">
+  <a href="#a7-single-seed-cross-run-variance-uncharacterized-characterized-near-deterministic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A7 — Single-seed; cross-run variance uncharacterized — Resolved
+        A7 — Single-seed; cross-run variance uncharacterized — Characterized (near-deterministic)
       
     </span>
   </a>
@@ -2854,10 +2854,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#a7-single-seed-cross-run-variance-uncharacterized-resolved" class="md-nav__link">
+  <a href="#a7-single-seed-cross-run-variance-uncharacterized-characterized-near-deterministic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A7 — Single-seed; cross-run variance uncharacterized — Resolved
+        A7 — Single-seed; cross-run variance uncharacterized — Characterized (near-deterministic)
       
     </span>
   </a>
@@ -3116,7 +3116,7 @@ claim status. Where the two disagree, the matrix wins.</p>
 <td>Single-seed; cross-run variance uncharacterized</td>
 <td>Method</td>
 <td>Medium</td>
-<td><strong>Resolved</strong> — sweep added; retrieval verified deterministic</td>
+<td><strong>Characterized</strong> — sweep added; retrieval <em>near</em>-deterministic (sub-CI, timing-driven variance on near-ties)</td>
 </tr>
 <tr>
 <td>B1</td>
@@ -3193,9 +3193,9 @@ automatic-appraisal benefit (see C1, C3). Note the one genuinely positive
 contrast that must <em>not</em> be inflated: dual-path scheduling beats synchronous
 appraisal (Hp3, d≈0.95) — that is a <em>within-AFT</em> result, not a win over cosine.</p>
 <h3 id="a2-the-headline-advantage-requires-oracle-affect-and-query-time-state-injection">A2 — The headline advantage requires oracle affect <em>and</em> query-time state injection<a class="headerlink" href="#a2-the-headline-advantage-requires-oracle-affect-and-query-time-state-injection" title="Permanent link">&para;</a></h3>
-<p><strong>Problem.</strong> The strongest PASSes — realistic_recall_v2 (SBERT Δ=+0.205 [0.150,
+<p><strong>Problem.</strong> The strongest PASSes — realistic<em>recall_v2 (SBERT Δ=+0.205 [0.150,
 0.265], d=0.49; e5 Δ=+0.155, d=0.31) and French (me5 Δ=+0.18 [0.11, 0.26],
-g=0.424) — all inject preset valence/arousal at encode time <em>and</em> align the
+g=0.424) — all inject preset valence/arousal at encode time _and</em> align the
 query's affective state before retrieval. Addendum Q showed that real sessions do
 not supply that query↔state alignment for free: gating recovers the always-on
 penalty (Hq2 +0.080, p_holm=0.0009) but neither gated nor always-on AFT exceeds
@@ -3250,7 +3250,7 @@ Spanish (Δ=0.000, p=1.000) both <strong>FAIL</strong>; only English-SBERT and F
 <p><strong>Root cause.</strong> Small per-language N and language-specific scenario authoring.</p>
 <p><strong>Correct resolution.</strong> Already honestly scoped in README line 15 and the matrix
 (<code>cross_domain_affect_replication</code>). No change beyond keeping numbers current.</p>
-<h3 id="a7-single-seed-cross-run-variance-uncharacterized-resolved">A7 — Single-seed; cross-run variance uncharacterized — <em>Resolved</em><a class="headerlink" href="#a7-single-seed-cross-run-variance-uncharacterized-resolved" title="Permanent link">&para;</a></h3>
+<h3 id="a7-single-seed-cross-run-variance-uncharacterized-characterized-near-deterministic">A7 — Single-seed; cross-run variance uncharacterized — <em>Characterized (near-deterministic)</em><a class="headerlink" href="#a7-single-seed-cross-run-variance-uncharacterized-characterized-near-deterministic" title="Permanent link">&para;</a></h3>
 <p><strong>Problem.</strong> Most runners pin one seed (ablation seed=0, Hi3 seed=1, Pareto
 seed=42); there was no automated multi-seed sweep reporting cross-run variance,
 and the reported CIs are bootstrap CIs <em>within</em> a single run, not across seeds.</p>
@@ -3258,19 +3258,27 @@ and the reported CIs are bootstrap CIs <em>within</em> a single run, not across 
 <p><strong>Resolution (done).</strong> Added <code>benchmarks/realistic/multiseed_runner.py</code>
 (<code>make bench-multiseed</code>): it re-runs the realistic benchmark across seeds
 <code>{0, 1, 7, 42, 123}</code>, each in an isolated subprocess invoking the canonical
-runner, and reports cross-seed mean/stdev/min/max. Committed result
-(<code>benchmarks/realistic/multiseed_results.md</code>, hash embedder on v2): <strong>cross-seed
-stdev = spread = 0.0000</strong> — per-query top-1 outcomes are identical across seeds.
-This <em>verifies</em> (rather than assumes) that retrieval is deterministic given a
-fixed dataset + deterministic embedder; the only seed-sensitive quantity is the
-bootstrap CI resampling. See <a href="../08_limitations/"><code>08_limitations.md</code></a> §2.9.
-By-product finding (root cause analyzed): back-to-back in-process runs can flip a
-near-tie query because the engine stamps encode/retrieve with real wall-clock time
-(<code>datetime.now</code>) and ACT-R decay tracks <code>now − encoded_at</code> — correct production
-behaviour, not a defect, and within the bootstrap CIs. The harness therefore
-isolates each seed in its own subprocess (the canonical one-run-per-process
-model); threading an injected clock through the core API was judged disproportionate
-for a sub-CI, benchmark-only effect (see <a href="../08_limitations/"><code>08_limitations.md</code></a> §2.9).</p>
+runner, and reports cross-seed mean/stdev/min/max.</p>
+<p><strong>Finding — near-deterministic, <em>not</em> exactly deterministic (corrected).</strong> An
+earlier version of this entry claimed "cross-seed stdev = spread = 0.0000 —
+per-query outcomes identical across seeds, retrieval verified deterministic."
+A fresh validation sweep falsified that headline: the RNG seed itself moves
+nothing, but the result is <strong>not bit-stable across runs</strong>. Repeating
+<code>make bench-multiseed</code> six times gave <code>retrieval_deterministic=True</code> in 5/6 runs
+and <code>False</code> in 1/6 (cross-seed stdev 0.0024), and the absolute <code>aft</code> mean drifted
+across sweeps (0.120–0.125). The cause is the timing effect already documented:
+the engine stamps encode/retrieve with real wall-clock time (<code>datetime.now</code>) and
+ACT-R decay tracks <code>now − encoded_at</code>; because each seed's subprocess is launched
+at a slightly different instant, a query at a numerical tie can flip <strong>even with
+subprocess isolation</strong> — the isolation removes RNG coupling but not wall-clock
+timing. This is correct production behaviour (decay should track real time), not a
+defect: the variance is sub-CI (inside the reported bootstrap CIs) and does not
+change the scientific conclusion — AFT still clears <code>naive_cosine</code> by far more than
+the spread (Δ ≈ +0.075). The committed <code>multiseed_results.md</code> now carries a standing
+caveat to this effect. Threading an injected clock through the core API to make the
+benchmark time-deterministic was again judged disproportionate for a sub-CI,
+benchmark-only effect. Correct scope: <strong>near-deterministic; sub-CI, timing-driven
+variance on near-ties.</strong> See <a href="../08_limitations/"><code>08_limitations.md</code></a> §2.9.</p>
 <hr />
 <h2 id="3-b-response-doc-self-corrections">3. B — Response-doc self-corrections<a class="headerlink" href="#3-b-response-doc-self-corrections" title="Permanent link">&para;</a></h2>
 <h3 id="b1-already-addressed-conflates-scoped-with-solved">B1 — "Already addressed" conflates <em>scoped</em> with <em>solved</em><a class="headerlink" href="#b1-already-addressed-conflates-scoped-with-solved" title="Permanent link">&para;</a></h3>

@@ -2240,10 +2240,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#29-cross-seed-robustness-characterized-retrieval-is-deterministic" class="md-nav__link">
+  <a href="#29-cross-seed-robustness-characterized-retrieval-is-near-deterministic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.9 Cross-seed robustness: characterized (retrieval is deterministic)
+        2.9 Cross-seed robustness: characterized (retrieval is near-deterministic)
       
     </span>
   </a>
@@ -2943,10 +2943,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#29-cross-seed-robustness-characterized-retrieval-is-deterministic" class="md-nav__link">
+  <a href="#29-cross-seed-robustness-characterized-retrieval-is-near-deterministic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.9 Cross-seed robustness: characterized (retrieval is deterministic)
+        2.9 Cross-seed robustness: characterized (retrieval is near-deterministic)
       
     </span>
   </a>
@@ -3225,7 +3225,7 @@ semantic-only retrieval in fully naturalistic multi-turn scenarios.</p>
 <p>The primary architecture comparison studies (Hd1, Hd2, Hd2_IT, Hd2_ES) compare
 <code>aft_noAppraisal</code> — AFT using <strong>preset valence/arousal values from the benchmark
 dataset</strong> — against <code>naive_cosine</code> which has no access to any affective signal.</p>
-<p>This means the Hd<em> numbers do </em><em>not</em>* test whether AFT with automatic appraisal
+<p>This means the Hd* numbers do <strong>not</strong> test whether AFT with automatic appraisal
 beats naive cosine. They test: "given a perfect oracle of affect, does the AFT
 retrieval architecture (mood field, momentum, resonance, decay) utilize that oracle
 better than a pure cosine baseline?"</p>
@@ -3254,10 +3254,10 @@ bias +0.200→+0.072 on held-out scenarios — a calibration PASS). Addendum P t
 Hg1 with M1 on a leakage-free affect-free dataset disjoint from the calibration data
 (<code>realistic_recall_v4_noAF</code>, 40 scenarios, 160 queries, frozen before the run): naive
 cosine was <em>significantly</em> ahead — top1 0.800 vs 0.887 (Δ=−0.0875 [−0.144, −0.031],
-p_one=0.0018, d=−0.242). Exploratory contrasts show the signal is real but not enough:
+p<em>one=0.0018, d=−0.242). Exploratory contrasts show the signal is real but not enough:
 LLM affect beats fixed-neutral (Hp2, +0.056, p=0.030) and the deferred dual-path
 schedule is essential (Hp3, +0.512, d=0.95; synchronous appraisal collapses to 0.287).
-A better-calibrated affect signal is a <em>net distractor</em> on affect-free queries where
+A better-calibrated affect signal is a _net distractor</em> on affect-free queries where
 semantics alone is already highly discriminative.</p>
 <p><strong>Conclusion.</strong> Hd* results should be read as "architecture potential under oracle
 affect", not "architecture advantage in production". The oracle-affect scope is a hard
@@ -3284,7 +3284,7 @@ this is <strong>magnitude amplification, not sign reversal</strong>: Δ≥0 on a
 types, concentrated in <code>semantic_confound</code> (e5 Δ=+0.125 vs SBERT Δ=+0.025).</p>
 <p>The SBERT embedder shows Δ = +0.030 (raw p_boot=0.022, family-corrected NS
 p_holm=0.109) for the same ablation — a non-significant result under Holm
-correction.  The effect is thus <strong>embedder-dependent</strong>: statistically significant
+correction. The effect is thus <strong>embedder-dependent</strong>: statistically significant
 on e5 but not on SBERT.</p>
 <p><strong>Hi3 confirmatory closure (2026-05-06, N=500, seed=1, Holm m=3):</strong> the
 cross-embedder amplification on <code>semantic_confound</code> is confirmed at the
@@ -3299,17 +3299,19 @@ saturate the top-5 link cap (mean ≈ 5.0), so link density alone does not
 differentiate the embedders. The Hi2 spreading-activation over-fire hypothesis
 is not yet localised at link-density granularity; link-type and link-strength
 distributions remain unmeasured.</p>
-<p>Potential explanations:
-1. <strong>Geometry incompatibility</strong>: e5-small-v2's distance space clusters semantically
+<p>Potential explanations:</p>
+<ol>
+<li><strong>Geometry incompatibility</strong>: e5-small-v2's distance space clusters semantically
    related items more aggressively than SBERT. Spreading activation over this geometry
-   may amplify noise rather than signal, causing resonance links to hurt rather than help.
-2. <strong>Resonance as amplifier</strong>: if the spreading-activation BFS traverses links that
+   may amplify noise rather than signal, causing resonance links to hurt rather than help.</li>
+<li><strong>Resonance as amplifier</strong>: if the spreading-activation BFS traverses links that
    connect semantically similar but contextually incorrect memories, it boosts
-   distractors in e5's tighter cluster geometry.
-3. <strong>Benchmark-specific</strong>: <code>realistic_recall_v2</code> contains challenge types (semantic
+   distractors in e5's tighter cluster geometry.</li>
+<li><strong>Benchmark-specific</strong>: <code>realistic_recall_v2</code> contains challenge types (semantic
    confound, same-topic distractor) explicitly designed to create confusable neighbors.
    Resonance may be counterproductive when the primary challenge is distractor
-   rejection rather than recall.</p>
+   rejection rather than recall.</li>
+</ol>
 <p>This finding does not refute resonance's theoretical role, but it indicates that
 the interaction between the spreading-activation mechanism and the embedder's
 distance geometry is non-trivial and embedder-dependent. It is disclosed in
@@ -3381,7 +3383,7 @@ The remaining options are architectural rather than parametric:</p>
 1500 LoCoMo queries) replication of W2 was <em>not</em> warranted given the 200-QA
 result already closes Hj1. See <code>benchmarks/locomo/pareto_results.md</code> and
 <code>benchmarks/preregistration_addendum_j_closure.md</code> for the full numerical record.</p>
-<h3 id="29-cross-seed-robustness-characterized-retrieval-is-deterministic">2.9 Cross-seed robustness: characterized (retrieval is deterministic)<a class="headerlink" href="#29-cross-seed-robustness-characterized-retrieval-is-deterministic" title="Permanent link">&para;</a></h3>
+<h3 id="29-cross-seed-robustness-characterized-retrieval-is-near-deterministic">2.9 Cross-seed robustness: characterized (retrieval is near-deterministic)<a class="headerlink" href="#29-cross-seed-robustness-characterized-retrieval-is-near-deterministic" title="Permanent link">&para;</a></h3>
 <p>The confirmatory studies pin a single random seed each (ablation <code>seed=0</code>, Hi3
 <code>seed=1</code>, the Pareto sweep <code>seed=42</code>), and the confidence intervals reported
 throughout are <strong>bootstrap CIs resampled within a single run</strong>, not variance
@@ -3391,31 +3393,34 @@ re-runs the realistic replay benchmark across seeds <code>{0, 1, 7, 42, 123}</co
 an <strong>isolated subprocess</strong> invoking the canonical runner, and reports the
 cross-seed mean/stdev/min/max of <code>top1_accuracy</code> and of the AFT−baseline Δ.</p>
 <p>Result (<code>benchmarks/realistic/multiseed_results.md</code>, <code>realistic_recall_v2</code>, hash
-embedder): <strong>cross-seed stdev and spread are exactly 0.0000</strong> — the per-query
-top-1 outcomes are identical across all five seeds. This is expected and now
-verified rather than assumed: over a <em>fixed</em> dataset with a <em>deterministic</em>
-embedder, AFT retrieval is a deterministic function of the inputs, so the only
-seed-sensitive quantity is the bootstrap CI resampling. The genuine residual
-stochasticity therefore lives in (a) dataset <em>generation</em> seeds (frozen and
-committed) and (b) bootstrap RNG (already reflected in the reported CIs), not in
-retrieval.</p>
-<p>Two caveats. First, the determinism is exact under the canonical
-one-run-per-process execution model (which is how the benchmark is run and
-reported, and what the sweep isolates via subprocesses). Running <em>several</em> full
-benchmarks back-to-back inside a single Python process can flip the occasional
-near-tie query. The root cause is benign and well understood: the engine stamps
-encode/retrieve with real wall-clock time (<code>datetime.now(tz=UTC)</code>, see
-<code>engine.py</code>), and ACT-R decay is a function of <code>now − encoded_at</code>; without an
-injected clock, the sub-millisecond timing of back-to-back in-process runs
-perturbs decay just enough to tip a ranking that is already at a numerical tie.
-This is <em>correct production behaviour</em> (decay should track real time), not a
-library defect, and it stays within the reported bootstrap CIs. A fully
-time-deterministic benchmark would require threading an injected clock through
-<code>encode</code>/<code>retrieve</code>; that is deliberately not done here, as it would expand the
-core API and disturb the 127 fidelity benchmarks for a sub-CI, benchmark-only
-effect. Second, the sweep would surface genuine variance for a <em>stochastic</em>
-embedder or a regenerated dataset; extending it to those cases is straightforward
-future work.</p>
+embedder): retrieval is <strong>near-deterministic — not exactly deterministic</strong>. The
+RNG seed itself moves nothing; the genuine residual stochasticity lives in (a)
+dataset <em>generation</em> seeds (frozen and committed) and (b) bootstrap RNG (already
+reflected in the reported CIs). But the per-query top-1 outcome is <strong>not bit-stable
+across fresh sweeps</strong>: repeating <code>make bench-multiseed</code> six times gave
+<code>retrieval_deterministic=True</code> in 5/6 runs and <code>False</code> in 1/6 (cross-seed stdev
+0.0024), and the absolute <code>aft</code> mean drifted across sweeps (0.120–0.125).</p>
+<blockquote>
+<p>An earlier version of this section asserted "cross-seed stdev and spread are
+exactly 0.0000 — identical across all five seeds." A fresh validation pass
+falsified that headline; the corrected scope is <strong>near-deterministic, with sub-CI,
+timing-driven variance on near-ties</strong>.</p>
+</blockquote>
+<p>The cause is a timing effect, not RNG. The engine stamps encode/retrieve with real
+wall-clock time (<code>datetime.now(tz=UTC)</code>, see <code>engine.py</code>), and ACT-R decay is a
+function of <code>now − encoded_at</code>. Because each seed's subprocess is launched at a
+slightly different instant, a ranking that is already at a numerical tie can tip
+between seeds <strong>even with subprocess isolation</strong> — the isolation removes RNG
+coupling but not wall-clock timing. (Running several benchmarks back-to-back inside
+a single process amplifies the same effect.) This is <em>correct production behaviour</em>
+(decay should track real time), not a library defect, and the resulting variance
+stays within the reported bootstrap CIs — AFT still clears <code>naive_cosine</code> by far
+more than the spread (Δ ≈ +0.075). A fully time-deterministic benchmark would
+require threading an injected clock through <code>encode</code>/<code>retrieve</code>; that is
+deliberately not done here, as it would expand the core API and disturb the 127
+fidelity benchmarks for a sub-CI, benchmark-only effect. Finally, the sweep would
+surface larger variance for a <em>stochastic</em> embedder or a regenerated dataset;
+extending it to those cases is straightforward future work.</p>
 <hr />
 <h2 id="3-architectural-limits">3. Architectural Limits<a class="headerlink" href="#3-architectural-limits" title="Permanent link">&para;</a></h2>
 <h3 id="31-appraisal-depends-on-an-external-llm">3.1 Appraisal depends on an external LLM<a class="headerlink" href="#31-appraisal-depends-on-an-external-llm" title="Permanent link">&para;</a></h3>
