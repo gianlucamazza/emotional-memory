@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum R (A3, Hr1/Hr2) — downstream task PASS.** Pre-registered
+  encode→retrieve→generate→judge benchmark (`benchmarks/downstream/`, `make bench-a3`) on
+  `realistic_recall_v2` (N=200, oracle affect, `sbert-bge`, `gpt-5-mini` generator + judge).
+  AFT's retrieval-ranking advantage converts to downstream answer quality: judge-accuracy
+  AFT 0.595 vs naive-cosine 0.440 (Δ=+0.155 [0.095, 0.220], p<0.001, Holm+McNemar); token-F1
+  Δ=+0.152. The +0.205 ranking edge converts ~1:1 to a +0.155 answer-quality edge. **Bounded to
+  the oracle-affect regime (A2 boundary); does not contradict the LoCoMo oracle-free FAIL.** New
+  matrix claim `downstream_value` = `early_controlled_evidence`. Closes #61.
+- **Addendum S (A5, Hs1) — appraisal construct validity vs human gold.** Pre-registered
+  comparison (`benchmarks/human_gold_appraisal/`, `make bench-human-gold`) against EmoBank
+  (`benchmarks/datasets/emobank_v1.json`, human VAD, N=300, CC-BY-SA 4.0). LLM appraisal **valence
+  is human-validated** (Pearson r=0.703 [0.655, 0.746]); arousal (r=0.276) and dominance
+  (r=0.333) are weak-to-moderately positive; the +0.15 positive valence bias persists vs human
+  gold. The rule-based `KeywordAppraisalEngine` is **not** human-validated (valence r=0.07). New
+  matrix claim `appraisal_human_validated` = `early_controlled_evidence`. Closes #62.
+
+### Changed
+
+- **A7 multi-seed determinism re-scoped (corrected overclaim).** A fresh `make bench-multiseed`
+  falsified the committed "cross-seed stdev = 0.0000, retrieval is exactly deterministic" headline
+  (6 sweeps: 5 `True` / 1 `False`, stdev 0.0024; absolute mean drifts 0.120–0.125). The variance
+  is timing-driven (wall-clock `datetime.now` + ACT-R decay) and tips near-ties **even with
+  subprocess isolation**; it is sub-CI and does not change the AFT-vs-baseline conclusion. Re-scoped
+  to "near-deterministic; sub-CI, timing-driven variance on near-ties" in `problem_register §A7`,
+  `08_limitations §2.9`, and the regenerated `multiseed_results.{md,json}` (standing caveat). Closes #60.
+
 ## [0.11.4] - 2026-06-11
 
 ### Research
@@ -17,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `realistic_recall_v4_noAF` (40 scenarios / 160 queries, `pNN_` namespace, zero overlap with
   `realistic_recall_v3`). **Hp1 FAIL:** `aft_llm_dual` top1 0.800 vs `naive_cosine` 0.887,
   delta=-0.0875, CI[-0.144,-0.031], one-tailed p=0.0018, d=-0.242 -- naive cosine is
-  *significantly* ahead; recalibration did not rescue affect-free retrieval (gap widened vs
+  _significantly_ ahead; recalibration did not rescue affect-free retrieval (gap widened vs
   Hg1's -0.010 and became significant). Exploratory Hp2 (dual>neutral) PASS (delta=+0.056,
   p=0.030) and Hp3 (dual>sync) PASS (delta=+0.512, d=0.95): the LLM affect carries signal and
   the deferred dual-path schedule is essential (synchronous appraisal collapses to top1 0.287),
@@ -39,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Addendum Q (affect-aware gating, Branch C):** pre-registered and executed the routing
   synthesis named in the Addendum P closure — apply the affect channel only when the query
   is affect-discriminative. New frozen dataset `realistic_recall_v5_gate` (50 scenarios /
-  200 queries, 100 affective + 100 affect-free with ground-truth `gate_label`, qNN_
+  200 queries, 100 affective + 100 affect-free with ground-truth `gate_label`, qNN\_
   namespace disjoint from v3/v4, mechanical lexical-leakage gate); gating implemented as an
   adapter-level front-router (pre-execution Amendment 1: `adaptive_weights()` mood-modulates
   routed vectors, so engine-level weight gating is not pure cosine). **Hq1 FAIL** (LLM
@@ -334,11 +362,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **`benchmarks/locomo/routing_runner.py`**: `aft_routed_llm` moved out of
-  `DEFAULT_SYSTEMS` to an opt-in `--with-llm-classifier` flag.  The LLM-backed
+  `DEFAULT_SYSTEMS` to an opt-in `--with-llm-classifier` flag. The LLM-backed
   classifier issues one LLM call per `retrieve()`, making a full 1 540-QA run
-  impractically slow (~10 h).  The default five systems
+  impractically slow (~10 h). The default five systems
   (`aft_routed_heuristic`, `aft_W0`, `aft_W2`, `naive_rag`, `aft_oracle_routed`)
-  run in ~1 h.  Auto-loading of `.env` via `python-dotenv` added so the runner
+  run in ~1 h. Auto-loading of `.env` via `python-dotenv` added so the runner
   works when invoked directly, not only through `make`.
 - **`benchmarks/locomo/runner.py`**: `tqdm` progress bars added to the system
   and conversation loops in `run_benchmark`.
@@ -367,8 +395,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hk1 (`cross_domain_affect_replication`) → `retry_planned`**: Aggregate FAIL on
   DailyDialog (Branch B, Δ=−0.008, p_holm=1.000; confirmed), but `affective_trajectory`
   sub-claim shows exploratory signal (d=0.186, N=39, underpowered). Retry planned at
-  N≥120 on an affect-richer naturalistic corpus. *Closed by Addendum M (FR) below →
-  `controlled_evidence`.*
+  N≥120 on an affect-richer naturalistic corpus. _Closed by Addendum M (FR) below →
+  `controlled_evidence`._
 - **Addendum M FR (`cross_domain_affect_replication`) → `controlled_evidence`**: FR
   realistic_recall_v2 (me5, N=120, 30 hand-authored native French scenarios, 2-session design)
   Branch A PASS — AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001,
@@ -452,8 +480,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Pluggable `AppraisalSchema`** (`src/emotional_memory/appraisal_schema.py`): inject
   any appraisal theory (OCC, GRID, custom) into `LLMAppraisalEngine` without forking.
   `AppraisalDimension` defines each axis; `AppraisalSchema` bundles dimensions, an LLM
-  prompt, and a `project_to_core_affect` callable.  `SCHERER_CPM_SCHEMA` wraps the
-  existing 5-SEC formula as the default — all back-compat paths intact.  `GenericAppraisalVector`
+  prompt, and a `project_to_core_affect` callable. `SCHERER_CPM_SCHEMA` wraps the
+  existing 5-SEC formula as the default — all back-compat paths intact. `GenericAppraisalVector`
   carries arbitrary dimensions and delegates `to_core_affect()` to the schema's projection.
   `LLMAppraisalConfig.appraisal_schema` drives prompt and JSON-schema generation.
   Exported from the top-level package; documented in `docs/api/appraisal_schema.md`.
@@ -461,8 +489,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Multilingual figure extended to IT + ES** (`scripts/generate_research_figures.py`):
   `_figure_multilingual` now plots four slices — Italian × SBERT, Italian × me5, Spanish × SBERT,
-  Spanish × me5 — with AFT vs naive_cosine bars and 95% CI error bars.  Output renamed from
-  `research_multilingual_it` to `research_multilingual`.  Closes #30 (Spanish dataset and results
+  Spanish × me5 — with AFT vs naive_cosine bars and 95% CI error bars. Output renamed from
+  `research_multilingual_it` to `research_multilingual`. Closes #30 (Spanish dataset and results
   were already present from v0.8.2; this closes the figure gap).
 
 ## [0.9.0] - 2026-05-05
@@ -577,16 +605,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Multilingual ES — Spanish benchmark** (`realistic_recall_v2_es.json`, 20 scenarios,
-  158 memories, 80 queries).  Hd2_ES: sbert-bge **PASS** Δ=0.138 p=0.045 d=0.233;
-  me5 borderline FAIL Δ=0.113 p=0.110.  Architecture generalisation confirmed for
+  158 memories, 80 queries). Hd2_ES: sbert-bge **PASS** Δ=0.138 p=0.045 d=0.233;
+  me5 borderline FAIL Δ=0.113 p=0.110. Architecture generalisation confirmed for
   a second non-English language (Spanish) with sbert; me5 marginal.
 
 - **G7 — CoreAffect promoted to 3D PAD space** (valence × arousal × dominance).
-  `CoreAffect` now carries a `dominance` field ([0, 1], default 0.5).  This
+  `CoreAffect` now carries a `dominance` field ([0, 1], default 0.5). This
   makes perceived control a primary retrieval signal (`s3` affect-proximity now
-  operates in full PAD space, `_MAX_AFFECT_DIST` → √6).  `AffectiveMomentum`
+  operates in full PAD space, `_MAX_AFFECT_DIST` → √6). `AffectiveMomentum`
   gains `d_dominance` / `dd_dominance` derivatives; `AffectiveState` history
-  tuples extend to 4-elements.  `AppraisalVector.to_core_affect()` maps
+  tuples extend to 4-elements. `AppraisalVector.to_core_affect()` maps
   `coping_potential → dominance`; `MoodField.update()` uses
   `core_affect.dominance` directly instead of the old valence×arousal heuristic.
   `test_dominance_retrieval_gap.py` promoted from xfail to passing.
@@ -600,13 +628,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `make research-figures` / `make figures` — regenerate research-only or all
   project figures from repo data.
 - `scripts/preflight.py` — gate G14 verifies the GitHub→Zenodo webhook is
-  disabled before release.  Queries `gh api repos/.../hooks` and fails if any
-  active hook points at `zenodo.org`.  Skipped gracefully if `gh` is
-  unavailable.  Prevents shadow duplicate deposits like the v0.8.1 incident.
-- `scripts/release.py` — Phase 1 anti-shadow guard.  After concept-DOI
+  disabled before release. Queries `gh api repos/.../hooks` and fails if any
+  active hook points at `zenodo.org`. Skipped gracefully if `gh` is
+  unavailable. Prevents shadow duplicate deposits like the v0.8.1 incident.
+- `scripts/release.py` — Phase 1 anti-shadow guard. After concept-DOI
   verification, queries the Zenodo public API for published records under the
   concept and aborts if any record matches the current version (other than the
-  fresh draft).  Catches duplicate deposits even when both records sit under
+  fresh draft). Catches duplicate deposits even when both records sit under
   the same concept umbrella.
 
 ### Changed
@@ -682,13 +710,13 @@ support and adds progress bars.
 
 ### Research verdicts (S3 + Hd2)
 
-| Study | Hypothesis | Verdict |
-|---|---|---|
-| S3 | Ha (no_mood < full) | FAIL — both embedders |
-| S3 | Hb (no_resonance < full) | FAIL — both embedders (e5: opposite direction, SIG) |
-| S3 | Hc (no_appraisal invariant) | PASS — both embedders |
-| Hd2 | aft_noAppraisal > naive_cosine, Δ>0.10, v2 EN | PASS (Δ=0.125, p<0.001) |
-| Hd2_IT | aft_noAppraisal > naive_cosine, Δ>0.10, v2 IT | PASS (Δ=0.163, p=0.012) |
+| Study  | Hypothesis                                    | Verdict                                             |
+| ------ | --------------------------------------------- | --------------------------------------------------- |
+| S3     | Ha (no_mood < full)                           | FAIL — both embedders                               |
+| S3     | Hb (no_resonance < full)                      | FAIL — both embedders (e5: opposite direction, SIG) |
+| S3     | Hc (no_appraisal invariant)                   | PASS — both embedders                               |
+| Hd2    | aft_noAppraisal > naive_cosine, Δ>0.10, v2 EN | PASS (Δ=0.125, p<0.001)                             |
+| Hd2_IT | aft_noAppraisal > naive_cosine, Δ>0.10, v2 IT | PASS (Δ=0.163, p=0.012)                             |
 
 ## [0.7.1] - 2026-05-04
 
@@ -745,11 +773,11 @@ disclosure).
 - `paper/SUBMISSION.md` — affiliation clarified to "Independent Researcher".
 - `paper/main.tex` — §Limitations "Component ablations" rewritten to fix two
   BLOCKER errors introduced in the previous pass: (1) metric label corrected
-  from "hit@k" to "top1\_accuracy" (0.70/0.35 are top1, not hit@k); (2) N
+  from "hit@k" to "top1_accuracy" (0.70/0.35 are top1, not hit@k); (2) N
   corrected from 200 to 100 (ablation runs on v1.4, not v2). Disclosure
-  expanded to cover all pre-registered S3 ablations: Ha (no\_mood), Hb
-  (no\_resonance), Hc (no\_appraisal), Hd (no\_momentum) — all null
-  (|Δ|≤0.01, p\_adj=1.000) — previously omitted. Addendum F (Hf1: deferring
+  expanded to cover all pre-registered S3 ablations: Ha (no_mood), Hb
+  (no_resonance), Hc (no_appraisal), Hd (no_momentum) — all null
+  (|Δ|≤0.01, p_adj=1.000) — previously omitted. Addendum F (Hf1: deferring
   keyword appraisal partially recovers signal, Δ=+0.28, PASS) added as the
   nuance that makes He1 honest.
 - `paper/main.tex` — §Limitations "External-benchmark scope" expanded to
@@ -757,7 +785,7 @@ disclosure).
   co-primary hypothesis omitted from the previous pass; N=1540 scored pairs
   added for transparency.
 - `paper/main.tex` — §Conclusion Hd1 numbers added as footnote (Addendum D:
-  aft\_noAppraisal=0.78 vs naive\_cosine=0.55, Δ=+0.23 [+0.12,+0.34],
+  aft_noAppraisal=0.78 vs naive_cosine=0.55, Δ=+0.23 [+0.12,+0.34],
   d=0.52, N=100, v1.4, seed=1) — previously Gate 3 was cited as "CLOSED"
   without verifiable numbers.
 - `paper/main.tex` — date updated from April 2026 to May 2026 (release
@@ -766,7 +794,7 @@ disclosure).
   (v1.4 pilot; benchmarks/realistic/results.md).
 - `README.md` — "External benchmark" comparison table cell updated from
   "❌ not yet evaluated" to "✅ LoCoMo (FAIL: F1 0.168 vs 0.271)", consistent
-  with §Limitations and audit\_2026-04.md.
+  with §Limitations and audit_2026-04.md.
 
 ## [0.7.0] - 2026-05-02
 
@@ -792,9 +820,9 @@ disclosure).
   `--out-protocol` flag on IT targets writes to dedicated `results.protocol.v2_it.*.json`
   files (prevents canonical English v1 protocol from being overwritten).
 - `benchmarks/appraisal_confound/results.{json,md,protocol.json}` — G3
-  evidence committed (2026-04-26, SBERT, N=100, n\_bootstrap=10 000, seed=42):
-  aft\_noAppraisal = 0.78 vs naive\_cosine = 0.55 (Δ ≈ +0.23, architecture
-  attribution descriptive); Ha2 (aft\_keyword vs naive\_cosine) FAIL Δ = −0.39
+  evidence committed (2026-04-26, SBERT, N=100, n_bootstrap=10 000, seed=42):
+  aft_noAppraisal = 0.78 vs naive_cosine = 0.55 (Δ ≈ +0.23, architecture
+  attribution descriptive); Ha2 (aft_keyword vs naive_cosine) FAIL Δ = −0.39
   (keyword appraisal destructively overrides preset affect); Hb2 FAIL Δ = −0.62.
 - `benchmarks/appraisal_confound/results.confirmatory.{json,md}` — Hd1
   confirmatory run (Addendum D, SBERT, seed=1): aft_noAppraisal=0.78 >
@@ -827,10 +855,10 @@ disclosure).
   engines gate the reconsolidation block on this flag.
 - `benchmarks/ablation/results.sbert.{json,md,protocol.json}` — G9 confirmatory
   ablation results (SBERT, N=100, seed=0, 7 variants):
-  - He2 (`no_reconsolidation`): Δ=0.00, p_adj=1.000 — **FAIL** (null result;
-    benchmark doesn't exercise reconsolidation triggers).
-  - He1 (`dual_path`): Δ=−0.35, p_adj≈0 — **FAIL** (expected: keyword
-    appraisal degrades affect, same destructive-override as G3/Addendum A).
+    - He2 (`no_reconsolidation`): Δ=0.00, p_adj=1.000 — **FAIL** (null result;
+      benchmark doesn't exercise reconsolidation triggers).
+    - He1 (`dual_path`): Δ=−0.35, p_adj≈0 — **FAIL** (expected: keyword
+      appraisal degrades affect, same destructive-override as G3/Addendum A).
 - `benchmarks/ablation/results.{json,md,protocol.json}` — re-generated hash
   sensitivity check with 7 variants (Holm denominator updated to 6).
 - `make bench-ablation-sbert` — new Makefile target for paper-canonical SBERT
@@ -866,7 +894,7 @@ disclosure).
 
 - `docs/research/audit_2026-04.md` G3 — replaced "unresolved" with actual
   results and honest interpretation: Ha2/Hb2 FAIL; architecture attribution
-  holds descriptively via aft\_noAppraisal comparison and S2. After Hd1
+  holds descriptively via aft_noAppraisal comparison and S2. After Hd1
   confirmatory, Gate 3 status updated to CLOSED.
 - `docs/research/audit_2026-04.md` Q1 — updated reviewer-anticipation answer
   with closed status and Hd1 result.
@@ -1077,10 +1105,10 @@ disclosure).
 - `demo/README.md`: `python_version: "3.11"` pinned in HF Space front-matter
 - HuggingFace Space deployed to https://huggingface.co/spaces/homen3/emotional-memory-demo
 - **Comparative baselines — Mem0 and LangMem adapters** (`benchmarks/comparative/adapters/`):
-  - `mem0_adapter.py` — wraps `mem0ai>=2.0` with local qdrant backend; recall@5 = **0.95**, encode 1364 ms/item, p50 161 ms
-  - `langmem_adapter.py` — wraps `langmem>=0.0.30` + `langgraph InMemoryStore`; recall@5 = **0.90**, encode 143 ms/item, p50 170 ms
-  - `letta_adapter.py` — availability-guarded stub (cloud-only, requires `LETTA_API_KEY`); reports `not_evaluated` without key
-  - `[mem0]` and `[langmem]` optional extras in `pyproject.toml`; `install-mem0` / `install-langmem` Makefile targets
+    - `mem0_adapter.py` — wraps `mem0ai>=2.0` with local qdrant backend; recall@5 = **0.95**, encode 1364 ms/item, p50 161 ms
+    - `langmem_adapter.py` — wraps `langmem>=0.0.30` + `langgraph InMemoryStore`; recall@5 = **0.90**, encode 143 ms/item, p50 170 ms
+    - `letta_adapter.py` — availability-guarded stub (cloud-only, requires `LETTA_API_KEY`); reports `not_evaluated` without key
+    - `[mem0]` and `[langmem]` optional extras in `pyproject.toml`; `install-mem0` / `install-langmem` Makefile targets
 - `benchmarks/comparative/runner.py`: `python-dotenv` integration + `EMOTIONAL_MEMORY_LLM_API_KEY → OPENAI_API_KEY` bridge for adapter compatibility
 
 ### Fixed
@@ -1186,7 +1214,7 @@ disclosure).
   untouched by a rule were previously diluted when averaging over all firing rules. Each
   dimension is now averaged only over rules that contributed to it.
 - **`as_async()` docstring clarified** (`async_adapters.py`) — `AffectiveState` reference
-  sharing is safe because the object is always *replaced* (never mutated) on update.
+  sharing is safe because the object is always _replaced_ (never mutated) on update.
 - **`SQLiteStore` excluded from `__all__` when unavailable** (`__init__.py`) — previously
   declared in `__all__` even when `sqlite-vec` was absent, causing `AttributeError` on
   wildcard imports.
@@ -1484,11 +1512,11 @@ disclosure).
   contrastive link types (Aristotle / Bower 1981 spreading activation)
 - `EmotionalTag` — immutable snapshot of all 5 layers at encoding time + consolidation metadata
 - `EmotionalMemory` — main facade:
-  - `encode(content, appraisal, metadata)` — single-item encode with full AFT pipeline
-  - `encode_batch(contents, metadata)` — batched encode via `embed_batch()`, per-item appraisal
-  - `retrieve(query, top_k)` — two-pass spreading activation with mood-adaptive weights
-  - `delete(memory_id)` — remove a memory from the store
-  - `get_state()` / `set_affect()` — read and write the runtime affective state
+    - `encode(content, appraisal, metadata)` — single-item encode with full AFT pipeline
+    - `encode_batch(contents, metadata)` — batched encode via `embed_batch()`, per-item appraisal
+    - `retrieve(query, top_k)` — two-pass spreading activation with mood-adaptive weights
+    - `delete(memory_id)` — remove a memory from the store
+    - `get_state()` / `set_affect()` — read and write the runtime affective state
 - `InMemoryStore` — dict-backed `MemoryStore` with brute-force cosine search
 - `Embedder` and `MemoryStore` — `typing.Protocol` interfaces for dependency injection (PEP 544)
 - Power-law memory decay (ACT-R, Anderson 1983), arousal-modulated, with configurable `power`

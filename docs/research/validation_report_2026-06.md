@@ -3,27 +3,36 @@
 > **Scope.** A full execution of the project's validation suite plus a point-by-point
 > re-verification of every entry in
 > [`problem_register_2026-06.md`](problem_register_2026-06.md), run on branch
-> `claude/project-validation-issues-njkdxx` against `v0.11.4`. This is a *point-in-time
-> validation snapshot*; where it disagrees with the register, the discrepancy is
+> `claude/project-validation-issues-njkdxx` against `v0.11.4`. This is a _point-in-time
+> validation snapshot_; where it disagrees with the register, the discrepancy is
 > recorded here as a finding. The canonical claim status remains
 > [`claim_validation_matrix.json`](claim_validation_matrix.json).
 
+> **Update (2026-06-26) — the three findings this report raised are now resolved.**
+> F2/A7 re-scoped to "near-deterministic" (PR #64, #60 closed). A3 downstream task
+> **executed and PASSED** (Addendum R, #61 closed):
+> [`preregistration_addendum_r_downstream_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_r_downstream_closure.md).
+> A5 human-gold comparison **executed** (Addendum S, #62 closed):
+> [`preregistration_addendum_s_human_gold_appraisal_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md).
+> The verdicts below are preserved as the point-in-time snapshot; resolution status is
+> annotated inline.
+
 ## Executive summary
 
-| Area | Result |
-|---|---|
-| Lint / format (ruff) | 🟢 pass |
-| Type checking (mypy strict) | 🟢 pass — 37 files, no issues |
-| Release-metadata / claim-ref integrity | 🟢 pass — 122/122 refs resolve |
-| Unit + integration tests | 🟢 992 passed, 3 skipped; **branch coverage 91.52%** (≥80%) |
-| Fidelity benchmarks | 🟢 127 passed |
-| Paper-table reproduction | 🟢 no diff (tables fresh) |
-| Docs build (`mkdocs --strict`) | 🟡→🟢 **broken link fixed** (was failing; now passes) |
-| Preflight (`--fast --ci`) | 🟢 7/7 gates |
-| Performance benchmarks | 🟡 25/26 (one 10k-scale setup hits the 120 s pytest timeout) |
-| Multi-seed robustness (A7) | 🔴 **determinism claim does not reproduce** — see Finding F2 |
-| Security (pip-audit) | 🟢 runtime clean · 🟡 D1 chromadb CVE stands · 🟢 D2 torch bumped to 2.12.1 (fixed) |
-| LLM-dependent suites | ⚪ **Blocked** — `EMOTIONAL_MEMORY_LLM_API_KEY` not set |
+| Area                                   | Result                                                                              |
+| -------------------------------------- | ----------------------------------------------------------------------------------- |
+| Lint / format (ruff)                   | 🟢 pass                                                                             |
+| Type checking (mypy strict)            | 🟢 pass — 37 files, no issues                                                       |
+| Release-metadata / claim-ref integrity | 🟢 pass — 122/122 refs resolve                                                      |
+| Unit + integration tests               | 🟢 992 passed, 3 skipped; **branch coverage 91.52%** (≥80%)                         |
+| Fidelity benchmarks                    | 🟢 127 passed                                                                       |
+| Paper-table reproduction               | 🟢 no diff (tables fresh)                                                           |
+| Docs build (`mkdocs --strict`)         | 🟡→🟢 **broken link fixed** (was failing; now passes)                               |
+| Preflight (`--fast --ci`)              | 🟢 7/7 gates                                                                        |
+| Performance benchmarks                 | 🟡 25/26 (one 10k-scale setup hits the 120 s pytest timeout)                        |
+| Multi-seed robustness (A7)             | 🟢 **re-scoped to near-deterministic** (PR #64; was 🔴 F2)                          |
+| Security (pip-audit)                   | 🟢 runtime clean · 🟡 D1 chromadb CVE stands · 🟢 D2 torch bumped to 2.12.1 (fixed) |
+| LLM-dependent suites                   | ⚪ **Blocked** — `EMOTIONAL_MEMORY_LLM_API_KEY` not set                             |
 
 **Headline:** the engineering quality gates are green and the core scientific FAILs
 are honestly recorded in the claim matrix exactly as the register states. Three things
@@ -39,22 +48,22 @@ is now published).
 
 All commands run with `uv` in a Python 3.11.15 venv after `make install-all`.
 
-| Gate | Command | Result | Notes |
-|---|---|---|---|
-| Lint | `make lint` | 🟢 | ruff check + `format --check` (224 files) |
-| Typecheck | `make typecheck` | 🟢 | mypy strict, 37 files, 0 issues |
-| Metadata | `make meta-check` | 🟢 | `release metadata OK for 0.11.4`; 122 claim refs exist |
-| Coverage | `make cov` | 🟢 | 992 passed / 3 skipped / 41 deselected; **TOTAL 91.52%** |
-| Fidelity | `make bench-fidelity` | 🟢 | 127 passed in 0.25 s |
-| Paper repro | `make reproduce-paper-check` | 🟢 | `git diff --exit-code paper/tables/` clean |
-| Docs | `make docs` (strict) | 🟢¹ | ¹passed **after** the F1 link fix |
-| Preflight | `preflight.py --fast --ci` | 🟢 | G1–G3b, G7–G9 pass; git/build gates skipped by flags |
-| Perf | `make bench-perf` | 🟡 | 25 passed, 1 timeout (F4) |
-| Multiseed | `make bench-multiseed` | 🔴 | non-deterministic (F2) |
-| Comparative | `make bench-comparative` (hash) | 🟢 | aft recall@5 0.50 > cosine 0.45 > recency 0.25 |
-| Ablation | `make bench-ablation` (hash) | 🟢 | synchronous keyword appraisal harmful (Δ=−0.13, p_mc<0.001) — confirms A1/Hp3 |
-| Security | `pip-audit` | 🟢/🟡 | runtime deps clean; D1 stands, D2 patch available (F3) |
-| LLM tests | `make test-llm`, `make bench-appraisal` | ⚪ | Blocked — no API key |
+| Gate        | Command                                 | Result | Notes                                                                         |
+| ----------- | --------------------------------------- | ------ | ----------------------------------------------------------------------------- |
+| Lint        | `make lint`                             | 🟢     | ruff check + `format --check` (224 files)                                     |
+| Typecheck   | `make typecheck`                        | 🟢     | mypy strict, 37 files, 0 issues                                               |
+| Metadata    | `make meta-check`                       | 🟢     | `release metadata OK for 0.11.4`; 122 claim refs exist                        |
+| Coverage    | `make cov`                              | 🟢     | 992 passed / 3 skipped / 41 deselected; **TOTAL 91.52%**                      |
+| Fidelity    | `make bench-fidelity`                   | 🟢     | 127 passed in 0.25 s                                                          |
+| Paper repro | `make reproduce-paper-check`            | 🟢     | `git diff --exit-code paper/tables/` clean                                    |
+| Docs        | `make docs` (strict)                    | 🟢¹    | ¹passed **after** the F1 link fix                                             |
+| Preflight   | `preflight.py --fast --ci`              | 🟢     | G1–G3b, G7–G9 pass; git/build gates skipped by flags                          |
+| Perf        | `make bench-perf`                       | 🟡     | 25 passed, 1 timeout (F4)                                                     |
+| Multiseed   | `make bench-multiseed`                  | 🔴     | non-deterministic (F2)                                                        |
+| Comparative | `make bench-comparative` (hash)         | 🟢     | aft recall@5 0.50 > cosine 0.45 > recency 0.25                                |
+| Ablation    | `make bench-ablation` (hash)            | 🟢     | synchronous keyword appraisal harmful (Δ=−0.13, p_mc<0.001) — confirms A1/Hp3 |
+| Security    | `pip-audit`                             | 🟢/🟡  | runtime deps clean; D1 stands, D2 patch available (F3)                        |
+| LLM tests   | `make test-llm`, `make bench-appraisal` | ⚪     | Blocked — no API key                                                          |
 
 ### Coverage note (ordering dependency)
 
@@ -72,22 +81,22 @@ but a local-vs-CI ordering trap worth a one-line note in the contributor docs.
 Legend: **Resolved** · **Honestly scoped** (committed FAIL / open gap, correctly
 bounded) · **Open** (future work) · **Stale** (register text no longer matches reality).
 
-| ID | Register status | Verified status | Evidence |
-|---|---|---|---|
-| A1 | Falsified / bound | ✅ **Honestly scoped** | `appraisal_llm_real_dual_path` = `falsified` in matrix; ablation reproduces the synchronous-appraisal penalty (Δ=−0.13) |
-| A2 | Bound every citation | ✅ **Honestly scoped** | 15 claims carry `requires_oracle_affect`; README oracle-affect boundary note present (L301–303) |
-| A3 | Scope to ranking | ✅ **Honestly scoped** | `locomo_external_qa_negative` = `controlled_evidence`; README documents F1 0.168 vs 0.271; downstream-task gap tracked by **#61** |
-| A4 | `not_established`; future work | ✅ **Open** | `models_human_emotional_memory` = `not_established`; tracked by **open issue #27** |
-| A5 | Bound; future work | ✅ **Open** | Appraisal bounded as not human-validated; tracked by **#62** |
-| A6 | Already scoped | ✅ **Honestly scoped** | `cross_domain_affect_replication` = `controlled_evidence`; README documents IT/ES FAIL |
-| A7 | **Resolved — deterministic** | 🔴 **Does not reproduce** | Fresh sweep shows cross-seed variance — see **Finding F2**; tracked by **#60** |
-| B1 | Add 3-state legend | ✅ **Resolved** | Legend present in `review_response_2026-06.md` L38–39; §3.1 relabelled "Honestly scoped, not solved" |
-| B2 | Re-word snapshot | ✅ **Resolved** | — |
-| C1 | **Open** — needs footnote | ✅ **Done (register stale)** | Footnote already under "How it compares" (README L41) |
-| C2 | Optional suffix | ⚪ **No action** | README L15 already scopes the one-liner; not forced |
-| C3 | **Open** — add section | ✅ **Done (register stale)** | "When NOT to use" section present (README L45) with "Recommended for"; tracking issue #32 closed |
-| D1 | Document + monitor | ✅ **Open / accurate** | `pip-audit` confirms chromadb 1.5.9 still carries CVE-2026-45829; optional `[chroma]` only, not in runtime wheel |
-| D2 | No upstream fix | 🟡 **Patch now available** | torch **2.12.1** published and audits clean; `uv.lock` still pins 2.12.0 — see **Finding F3** |
+| ID  | Register status                | Verified status                 | Evidence                                                                                                                                                                                             |
+| --- | ------------------------------ | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | Falsified / bound              | ✅ **Honestly scoped**          | `appraisal_llm_real_dual_path` = `falsified` in matrix; ablation reproduces the synchronous-appraisal penalty (Δ=−0.13)                                                                              |
+| A2  | Bound every citation           | ✅ **Honestly scoped**          | 15 claims carry `requires_oracle_affect`; README oracle-affect boundary note present (L301–303)                                                                                                      |
+| A3  | Scope to ranking               | ✅ **Scoped + downstream PASS** | `locomo_external_qa_negative` stands; **downstream task executed** (Addendum R, #61 closed): AFT judge-acc 0.595 vs 0.440, Δ+0.155 p<0.001 in the oracle-affect regime; new claim `downstream_value` |
+| A4  | `not_established`; future work | ✅ **Open**                     | `models_human_emotional_memory` = `not_established`; tracked by **open issue #27**                                                                                                                   |
+| A5  | Bound; future work             | ✅ **Human-gold executed**      | **Addendum S (#62 closed):** LLM valence human-validated vs EmoBank r=0.70 [0.66,0.75]; arousal/dominance weak; +0.15 bias stands; keyword not validated; new claim `appraisal_human_validated`      |
+| A6  | Already scoped                 | ✅ **Honestly scoped**          | `cross_domain_affect_replication` = `controlled_evidence`; README documents IT/ES FAIL                                                                                                               |
+| A7  | **Resolved — deterministic**   | ✅ **Re-scoped (#60 closed)**   | F2 actioned (PR #64): re-scoped to "near-deterministic; sub-CI timing-driven variance on near-ties"; artifact regenerated with standing caveat                                                       |
+| B1  | Add 3-state legend             | ✅ **Resolved**                 | Legend present in `review_response_2026-06.md` L38–39; §3.1 relabelled "Honestly scoped, not solved"                                                                                                 |
+| B2  | Re-word snapshot               | ✅ **Resolved**                 | —                                                                                                                                                                                                    |
+| C1  | **Open** — needs footnote      | ✅ **Done (register stale)**    | Footnote already under "How it compares" (README L41)                                                                                                                                                |
+| C2  | Optional suffix                | ⚪ **No action**                | README L15 already scopes the one-liner; not forced                                                                                                                                                  |
+| C3  | **Open** — add section         | ✅ **Done (register stale)**    | "When NOT to use" section present (README L45) with "Recommended for"; tracking issue #32 closed                                                                                                     |
+| D1  | Document + monitor             | ✅ **Open / accurate**          | `pip-audit` confirms chromadb 1.5.9 still carries CVE-2026-45829; optional `[chroma]` only, not in runtime wheel                                                                                     |
+| D2  | No upstream fix                | 🟡 **Patch now available**      | torch **2.12.1** published and audits clean; `uv.lock` still pins 2.12.0 — see **Finding F3**                                                                                                        |
 
 Net: of 13 register entries, **9 are accurate**, **2 are stale-but-already-fixed**
 (C1, C3 — good news), **1 needs a dependency bump** (D2), and **1 fails to reproduce**
@@ -97,7 +106,7 @@ Net: of 13 register entries, **9 are accurate**, **2 are stale-but-already-fixed
 
 ## 3. Findings
 
-### F1 — Broken docs link broke the strict build *(fixed in this pass)*
+### F1 — Broken docs link broke the strict build _(fixed in this pass)_
 
 `make docs` (mkdocs strict) aborted on:
 
@@ -111,18 +120,18 @@ The target lives at `docs/comparison.md`; the link from `docs/research/` must be
 exits 0. Because `docs.yml` deploys on every push to `main`, this would have failed
 the docs deploy.
 
-### F2 — A7 "retrieval is deterministic" does not reproduce *(needs a decision)*
+### F2 — A7 "retrieval is deterministic" does not reproduce _(needs a decision)_
 
 `make bench-multiseed` (hash embedder, seeds {0,1,7,42,123}, subprocess-isolated)
 reports `retrieval_deterministic=False`. The committed artifact and prose claim the
 opposite:
 
-| Source | `aft` top1 mean | stdev | spread | verdict |
-|---|---:|---:|---:|---|
-| Committed `multiseed_results.md` | 0.1250 | **0.0000** | 0.0000 | "✅ identical across all seeds" |
-| `problem_register` §A7 | — | **0.0000** | 0.0000 | "retrieval verified deterministic" |
-| `08_limitations` §2.9 | — | **0.0000** | 0.0000 | "exactly 0.0000" |
-| **This re-run** | 0.1210 | **0.0020** | 0.0050 | "⚠️ genuine cross-seed variance" |
+| Source                           | `aft` top1 mean |      stdev | spread | verdict                            |
+| -------------------------------- | --------------: | ---------: | -----: | ---------------------------------- |
+| Committed `multiseed_results.md` |          0.1250 | **0.0000** | 0.0000 | "✅ identical across all seeds"    |
+| `problem_register` §A7           |               — | **0.0000** | 0.0000 | "retrieval verified deterministic" |
+| `08_limitations` §2.9            |               — | **0.0000** | 0.0000 | "exactly 0.0000"                   |
+| **This re-run**                  |          0.1210 | **0.0020** | 0.0050 | "⚠️ genuine cross-seed variance"   |
 
 The variance is **not** seed/RNG driven — it is the wall-clock timing effect the
 register itself documents (the engine stamps encode/retrieve with `datetime.now`, and
@@ -146,7 +155,7 @@ committed artifact. This changes scientific framing across three files, so it is
   pass** — `uv.lock` bumped to torch 2.12.1 (triton 3.7.1 carried along) and
   `SECURITY.md` updated; the test suite had already run against 2.12.1.
 
-### F4 — 10k-scale perf benchmark hits the global timeout *(environment)*
+### F4 — 10k-scale perf benchmark hits the global timeout _(environment)_
 
 `bench_retrieve_top5[10000]` times out: the `populate_store` setup encodes 10 000
 memories while building resonance links, exceeding the 120 s `pytest-timeout` ceiling
@@ -158,13 +167,13 @@ or shrink the largest `store_size` parameter. Low priority.
 
 ## 4. Blocked / not run
 
-| Item | Why | How to unblock |
-|---|---|---|
-| `make test-llm` | `EMOTIONAL_MEMORY_LLM_API_KEY` unset | export key (see `docs/contributing/llm-environment.md`), re-run |
-| `make bench-appraisal` | same | same |
-| Full LoCoMo re-run | dataset downloads on demand; the fetch came back incomplete through the sandbox proxy | run where the snap-research LoCoMo JSON is reachable; committed A3 FAIL (F1 0.168 vs 0.271) stands |
-| Optional backends (qdrant/chroma/redis) | not pulled by `install-all`; chroma deliberately not installed (D1 CVE) | `make install-redis` / targeted extras, then per-backend tests |
-| Full sbert/me5 comparative & multilingual reruns | long-running + model downloads | committed EN/FR/IT/ES numbers stand; qualitative story reproduced on the hash embedder |
+| Item                                             | Why                                                                                   | How to unblock                                                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `make test-llm`                                  | `EMOTIONAL_MEMORY_LLM_API_KEY` unset                                                  | export key (see `docs/contributing/llm-environment.md`), re-run                                    |
+| `make bench-appraisal`                           | same                                                                                  | same                                                                                               |
+| Full LoCoMo re-run                               | dataset downloads on demand; the fetch came back incomplete through the sandbox proxy | run where the snap-research LoCoMo JSON is reachable; committed A3 FAIL (F1 0.168 vs 0.271) stands |
+| Optional backends (qdrant/chroma/redis)          | not pulled by `install-all`; chroma deliberately not installed (D1 CVE)               | `make install-redis` / targeted extras, then per-backend tests                                     |
+| Full sbert/me5 comparative & multilingual reruns | long-running + model downloads                                                        | committed EN/FR/IT/ES numbers stand; qualitative story reproduced on the hash embedder             |
 
 ---
 
@@ -182,11 +191,15 @@ Verified: `make docs` (strict) and `make meta-check` pass after the edits; all R
 doc links resolve (no dead links — gap #9 clean); the bump is targeted (only torch +
 triton wheel entries change in the lock).
 
-## 6. Recommended follow-ups (not applied — need maintainer decision)
+## 6. Recommended follow-ups
 
-- **F2 / A7**: re-scope the determinism claim and regenerate `multiseed_results.md`
-  (scientific-framing change across 3 files).
-- **Issues**: A4 and arXiv are already tracked (#27, #31). New issues filed this pass
-  for the untracked gaps: **#61** (A3 minimal downstream task), **#62** (A5 human-gold
-  appraisal comparison), and **#60** (F2 / A7 reproducibility finding).
+- ✅ **F2 / A7 (DONE, PR #64, #60 closed)**: determinism claim re-scoped to
+  "near-deterministic; sub-CI timing-driven variance" and `multiseed_results.{md,json}`
+  regenerated with a standing caveat.
+- ✅ **#61 A3 downstream task (DONE)**: Addendum R executed — downstream PASS in the
+  oracle-affect regime (Δ judge-acc +0.155, p<0.001).
+- ✅ **#62 A5 human-gold appraisal (DONE)**: Addendum S executed — LLM valence
+  human-validated vs EmoBank (r=0.70); +0.15 bias stands.
+- ⏳ **Still external (open):** A4 / Gate 2 human evaluation (#27) and arXiv submission
+  (#31) — both require user action.
 - **F4**: raise the perf-suite timeout or cap the 10k `store_size` parameter.
