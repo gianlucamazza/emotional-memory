@@ -23,22 +23,22 @@ claim status. Where the two disagree, the matrix wins.
 
 ## 1. Severity snapshot
 
-| ID  | Problem                                                 | Category     | Severity | Resolution mode                                                                                               |
-| --- | ------------------------------------------------------- | ------------ | -------- | ------------------------------------------------------------------------------------------------------------- |
-| A1  | End-to-end LLM appraisal loses to cosine                | Science      | High     | Already falsified; bound wording                                                                              |
-| A2  | Top results need oracle affect + state injection        | Science      | High     | Bound every public citation                                                                                   |
-| A3  | No downstream / agent-level benefit                     | Science      | High     | **Downstream task executed** (Add. R PASS, oracle regime); naturalistic FAIL stands; scope by regime          |
-| A4  | No human / ecological validation                        | Science      | High     | Keep `not_established`; future work                                                                           |
-| A5  | Affect-signal construct validity unproven vs human gold | Science      | Medium   | Bound appraisal wording; future work                                                                          |
-| A6  | Cross-lingual generalization limited (IT/ES FAIL)       | Science      | Medium   | Already scoped; keep current                                                                                  |
-| A7  | Single-seed; cross-run variance uncharacterized         | Method       | Medium   | **Characterized** — sweep added; retrieval _near_-deterministic (sub-CI, timing-driven variance on near-ties) |
-| B1  | Response doc conflates _scoped_ with _solved_           | Meta         | Medium   | Add 3-state legend; relabel                                                                                   |
-| B2  | "Five already addressed" snapshot overstates            | Meta         | Low      | Re-word                                                                                                       |
-| C1  | README comparison ✅ implies general superiority        | Public claim | Medium   | Footnote on the table                                                                                         |
-| C2  | Bare "Emotional memory" one-liners                      | Public claim | Low      | Optional light suffix                                                                                         |
-| C3  | No consolidated "When NOT to use" section               | Public claim | High     | Add section (issue #32)                                                                                       |
-| D1  | chromadb CVE-2026-45829 (critical, optional/dev)        | Security     | Medium   | No upstream fix; document + monitor                                                                           |
-| D2  | torch CVE-2025-3000 (low, dev-only)                     | Security     | Low      | No upstream fix; document + monitor                                                                           |
+| ID  | Problem                                                 | Category     | Severity | Resolution mode                                                                                                |
+| --- | ------------------------------------------------------- | ------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
+| A1  | End-to-end LLM appraisal loses to cosine                | Science      | High     | Already falsified; bound wording                                                                               |
+| A2  | Top results need oracle affect + state injection        | Science      | High     | Bound every public citation                                                                                    |
+| A3  | No downstream / agent-level benefit                     | Science      | High     | **Downstream task executed** (Add. R PASS, oracle regime); naturalistic FAIL stands; scope by regime           |
+| A4  | No human / ecological validation                        | Science      | High     | Keep `not_established`; future work                                                                            |
+| A5  | Affect-signal construct validity unproven vs human gold | Science      | Medium   | **Human-gold executed** (Add. S): LLM valence human-validated r=0.70; +0.15 bias stands; keyword not validated |
+| A6  | Cross-lingual generalization limited (IT/ES FAIL)       | Science      | Medium   | Already scoped; keep current                                                                                   |
+| A7  | Single-seed; cross-run variance uncharacterized         | Method       | Medium   | **Characterized** — sweep added; retrieval _near_-deterministic (sub-CI, timing-driven variance on near-ties)  |
+| B1  | Response doc conflates _scoped_ with _solved_           | Meta         | Medium   | Add 3-state legend; relabel                                                                                    |
+| B2  | "Five already addressed" snapshot overstates            | Meta         | Low      | Re-word                                                                                                        |
+| C1  | README comparison ✅ implies general superiority        | Public claim | Medium   | Footnote on the table                                                                                          |
+| C2  | Bare "Emotional memory" one-liners                      | Public claim | Low      | Optional light suffix                                                                                          |
+| C3  | No consolidated "When NOT to use" section               | Public claim | High     | Add section (issue #32)                                                                                        |
+| D1  | chromadb CVE-2026-45829 (critical, optional/dev)        | Security     | Medium   | No upstream fix; document + monitor                                                                            |
+| D2  | torch CVE-2025-3000 (low, dev-only)                     | Security     | Low      | No upstream fix; document + monitor                                                                            |
 
 The headline is that the **core scientific problems are already resolved in the
 honest sense** — they are pre-registered FAILs with committed closures and the
@@ -142,10 +142,19 @@ gold but +0.169 bias; prompt recalibration Hn1/Hn2 FAIL) and _partly fixed_
 far is itself LLM-derived.
 
 **Correct resolution.** Scope appraisal claims to "directionally correct,
-mis-calibration partially corrected, **not human-validated**." No "accurate
-appraisal" wording anywhere (this corrects a phrase carried in the issue-#32
-template — see C3). A human-gold comparison (e.g. EmoBank / DailyDialog affect
-subset) is future work.
+mis-calibration partially corrected." No "accurate appraisal" wording anywhere
+(this corrects a phrase carried in the issue-#32 template — see C3).
+
+**Update — human-gold comparison now executed (Addendum S, 2026-06-26).** Run on
+**EmoBank** (human VAD, N=300, CC-BY-SA 4.0). **LLM appraisal valence is now
+human-validated**: Pearson r=0.703 [0.655, 0.746] against human labels (the first
+non-circular validation; lower than the r≈0.88 vs LLM-gold, as expected). Arousal
+(r=0.276) and dominance (r=0.333) are weak-to-moderate positive (CIs exclude 0).
+The **+0.169 positive valence bias persists vs human gold (+0.152)** — a standing
+limitation, since Addendum O's recalibration is not wired into the production path.
+The rule-based `KeywordAppraisalEngine` is **not** human-validated (valence r=0.07).
+New matrix claim `appraisal_human_validated` = `early_controlled_evidence`
+(`benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md`).
 
 ### A6 — Cross-lingual generalization is limited
 
