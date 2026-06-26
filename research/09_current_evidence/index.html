@@ -2982,9 +2982,19 @@ evidence level, and still-open gaps.</p>
 <td>Early controlled evidence</td>
 <td><code>3_appraisal_quality</code></td>
 <td>Appraisal is directionally useful.</td>
-<td>The appraisal-quality benchmark provides early controlled evidence on natural-language inputs.</td>
+<td>The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. Human-gold construct validity now measured (Addendum S, EmoBank N=300): LLM valence r=0.70 vs human labels — see <code>appraisal_human_validated</code>.</td>
 <td>Calibration across models, domains, and languages.</td>
 <td>Appraisal robustness study across models, domains, and languages.</td>
+</tr>
+<tr>
+<td><code>appraisal_human_validated</code></td>
+<td>Appraisal quality</td>
+<td>Early controlled evidence</td>
+<td><code>3_appraisal_quality</code></td>
+<td>Against human-annotated affect (EmoBank, N=300), LLM appraisal valence is human-validated (Pearson r=0.70 [0.66, 0.75]); arousal (r=0.28 [0.17, 0.37]) and dominance (r=0.33 [0.22, 0.43]) are weakly-to-moderately positive (CIs exclude 0). A persistent positive valence bias (+0.15) remains. The rule-based KeywordAppraisalEngine is not human-validated (valence r=0.07).</td>
+<td>Pre-registered Addendum S executed 2026-06-26 on EmoBank (human VAD, N=300, CC-BY-SA 4.0). LLM engine: valence r=0.703 [0.655, 0.746] bias +0.152; arousal r=0.276 [0.172, 0.373]; dominance r=0.333 [0.224, 0.432]. Keyword engine not human-validated (valence r=0.070).</td>
+<td>Strong validity on arousal/dominance; correction of the +0.15 valence bias in the production path; non-English corpora.</td>
+<td>Wire Addendum O recalibration into the appraisal path and re-measure; extend to a second human corpus.</td>
 </tr>
 <tr>
 <td><code>replayable_multi_session_help</code></td>

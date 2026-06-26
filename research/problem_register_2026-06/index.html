@@ -3102,7 +3102,7 @@ claim status. Where the two disagree, the matrix wins.</p>
 <td>Affect-signal construct validity unproven vs human gold</td>
 <td>Science</td>
 <td>Medium</td>
-<td>Bound appraisal wording; future work</td>
+<td><strong>Human-gold executed</strong> (Add. S): LLM valence human-validated r=0.70; +0.15 bias stands; keyword not validated</td>
 </tr>
 <tr>
 <td>A6</td>
@@ -3248,10 +3248,18 @@ gold but +0.169 bias; prompt recalibration Hn1/Hn2 FAIL) and <em>partly fixed</e
 <p><strong>Root cause.</strong> No human-gold affect benchmark exists in-repo; the "gold" used so
 far is itself LLM-derived.</p>
 <p><strong>Correct resolution.</strong> Scope appraisal claims to "directionally correct,
-mis-calibration partially corrected, <strong>not human-validated</strong>." No "accurate
-appraisal" wording anywhere (this corrects a phrase carried in the issue-#32
-template — see C3). A human-gold comparison (e.g. EmoBank / DailyDialog affect
-subset) is future work.</p>
+mis-calibration partially corrected." No "accurate appraisal" wording anywhere
+(this corrects a phrase carried in the issue-#32 template — see C3).</p>
+<p><strong>Update — human-gold comparison now executed (Addendum S, 2026-06-26).</strong> Run on
+<strong>EmoBank</strong> (human VAD, N=300, CC-BY-SA 4.0). <strong>LLM appraisal valence is now
+human-validated</strong>: Pearson r=0.703 [0.655, 0.746] against human labels (the first
+non-circular validation; lower than the r≈0.88 vs LLM-gold, as expected). Arousal
+(r=0.276) and dominance (r=0.333) are weak-to-moderate positive (CIs exclude 0).
+The <strong>+0.169 positive valence bias persists vs human gold (+0.152)</strong> — a standing
+limitation, since Addendum O's recalibration is not wired into the production path.
+The rule-based <code>KeywordAppraisalEngine</code> is <strong>not</strong> human-validated (valence r=0.07).
+New matrix claim <code>appraisal_human_validated</code> = <code>early_controlled_evidence</code>
+(<code>benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md</code>).</p>
 <h3 id="a6-cross-lingual-generalization-is-limited">A6 — Cross-lingual generalization is limited<a class="headerlink" href="#a6-cross-lingual-generalization-is-limited" title="Permanent link">&para;</a></h3>
 <p><strong>Problem.</strong> At declared power (N=120, me5), Italian (Δ=+0.058, p=0.276) and
 Spanish (Δ=0.000, p=1.000) both <strong>FAIL</strong>; only English-SBERT and French-me5
