@@ -27,7 +27,7 @@ claim status. Where the two disagree, the matrix wins.
 | --- | ------------------------------------------------------- | ------------ | -------- | ------------------------------------------------------------------------------------------------------------- |
 | A1  | End-to-end LLM appraisal loses to cosine                | Science      | High     | Already falsified; bound wording                                                                              |
 | A2  | Top results need oracle affect + state injection        | Science      | High     | Bound every public citation                                                                                   |
-| A3  | No downstream / agent-level benefit                     | Science      | High     | Scope to retrieval ranking; surface FAILs                                                                     |
+| A3  | No downstream / agent-level benefit                     | Science      | High     | **Downstream task executed** (Add. R PASS, oracle regime); naturalistic FAIL stands; scope by regime          |
 | A4  | No human / ecological validation                        | Science      | High     | Keep `not_established`; future work                                                                           |
 | A5  | Affect-signal construct validity unproven vs human gold | Science      | Medium   | Bound appraisal wording; future work                                                                          |
 | A6  | Cross-lingual generalization limited (IT/ES FAIL)       | Science      | Medium   | Already scoped; keep current                                                                                  |
@@ -102,11 +102,21 @@ also FAIL (Addendum J Pareto sweep; Addendum L query routing Δ=−0.017 / −0.
 retrieval, where valence/arousal distinguishes the target from distractors — a
 property of the curated v2/FR benchmarks, not of factual QA or natural dialogue.
 
-**Correct resolution.** No "better memory for agents / downstream" wording. Scope
-the claim to "affect-discriminative retrieval ranking." The `locomo_external_qa_negative`
-claim is committed; the correct user-facing action is to **surface** these FAIL
-regimes in the README so adopters meet them before integration (C3). An actual
-downstream encode→retrieve→generate→judge task is **future work**.
+**Correct resolution.** No "better memory for agents / downstream" wording in the
+_naturalistic_ regime. Scope downstream claims by regime, and surface the FAIL
+regimes (LoCoMo) in the README so adopters meet them before integration (C3).
+
+**Update — downstream task now executed (Addendum R, 2026-06-26).** The
+encode→retrieve→generate→judge task that was future work has been run on the
+affect-discriminative regime (`realistic_recall_v2`, N=200, gpt-5-mini judge).
+**Hr1/Hr2 PASS**: AFT judge-accuracy 0.595 vs cosine 0.440 (Δ=+0.155 [0.095,
+0.220], p<0.001), token-F1 Δ=+0.152 — the +0.205 ranking edge converts ~1:1 to a
++0.155 answer-quality edge (`benchmarks/preregistration_addendum_r_downstream_closure.md`).
+This is **bounded by the A2 oracle-affect + state-injection boundary** and does
+**not** contradict the LoCoMo negative: AFT converts ranking→answers _when affect
+is discriminative and supplied_ (oracle), and loses _when it is not_ (naturalistic,
+automatic appraisal). New matrix claim: `downstream_value` = `early_controlled_evidence`,
+`requires_oracle_affect=true`. The `locomo_external_qa_negative` claim stands.
 
 ### A4 — No human / ecological validation (Gate 2 OPEN)
 
