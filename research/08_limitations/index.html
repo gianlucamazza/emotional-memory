@@ -3180,8 +3180,11 @@ expected direction, but it has important limits:</p>
 <ul>
 <li><strong>Small and synthetic setup</strong>: it does not represent multi-session
   conversations or realistic agentic tasks.</li>
-<li><strong>Protocol oriented to affect-aware retrieval</strong>: it measures recall@k per
-  affective quadrant, not downstream answer quality.</li>
+<li><strong>Protocol oriented to affect-aware retrieval</strong>: this comparative benchmark
+  measures recall@k per affective quadrant, not downstream answer quality.
+  (Downstream answer quality <em>has</em> since been measured separately, in the
+  affect-discriminative oracle-affect regime — Addendum R, §"Downstream value":
+  AFT LLM-judged answer accuracy 0.595 vs cosine 0.440, Δ=+0.155, p&lt;0.001.)</li>
 <li><strong>Explicit affect for affect-aware adapters</strong>: AFT receives the query's
   affective context via <code>valence/arousal</code>; generalist baselines can ignore it
   entirely.</li>
