@@ -3140,7 +3140,13 @@ limitations:</p>
   Schadenfreude, awe) have no direct representation.</li>
 <li><strong>Dominance estimation</strong>: <code>KeywordAppraisalEngine</code> infers dominance from
   <code>coping_potential</code> vocabulary; <code>LLMAppraisalEngine</code> delegates to the Scherer
-  CPM prompt. Cross-cultural validity of dominance estimates is not evaluated.</li>
+  CPM prompt. Cross-cultural validity of dominance estimates is not evaluated.
+  <strong>Update (Addendum V, 2026-06-27):</strong> against human gold (EmoBank, N=300) the
+  production SEC→linear-projection is the bottleneck on the non-valence axes
+  (arousal r=0.23, dominance r=0.31). Asking the LLM for V/A/D <strong>directly</strong> lifts
+  arousal to r=0.58 (Δr +0.354), dominance to r=0.43, and valence to r=0.79 with
+  near-zero bias — adopting a direct-VAD appraisal schema is recommended as a
+  follow-up. See <code>benchmarks/preregistration_addendum_v_direct_vad_closure.md</code>.</li>
 </ul>
 <h3 id="12-language-dependence">1.2 Language dependence<a class="headerlink" href="#12-language-dependence" title="Permanent link">&para;</a></h3>
 <ul>
