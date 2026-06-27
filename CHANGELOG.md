@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-06-27
+
 ### Security
 
 - Refreshed `uv.lock` to pull patched transitive versions of optional/dev
@@ -1659,7 +1661,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.4...v0.12.0
 [0.11.4]: https://github.com/gianlucamazza/emotional-memory/compare/v0.11.3...v0.11.4
