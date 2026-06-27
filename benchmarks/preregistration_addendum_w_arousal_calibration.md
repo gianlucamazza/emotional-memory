@@ -1,10 +1,10 @@
 # Pre-registration Addendum W — Hw1/Hw2: Affine calibration of direct-VAD arousal
 
-**Status:** PRE-REGISTERED (2026-06-27) — not yet executed. Awaiting the per-item
-prediction dump from the Addendum V harness (`benchmarks/appraisal_vad/runner.py
---dump-predictions`, one LLM pass, needs `EMOTIONAL_MEMORY_LLM_API_KEY`). The calibration
-analysis itself is deterministic and offline (no LLM). This file is registered **before**
-the result is observed, per the project's pre-registration discipline.
+**Status:** EXECUTED (2026-06-27) — **adopt calibration = YES** (Hw1 PASS, Hw2 PASS, Gw OK).
+See `preregistration_addendum_w_arousal_calibration_closure.md` and
+`benchmarks/arousal_calibration/results.{json,md}`. Registered (with harness) **before** the
+result was observed, per the project's pre-registration discipline; the LLM dump and the
+deterministic offline calibration were run afterward.
 **Date (pre-reg):** 2026-06-27
 **Dataset:** `benchmarks/datasets/emobank_v1.json` (EmoBank human VAD, N=300, CC-BY-SA 4.0;
 native splits train=250 / dev=27 / test=23)

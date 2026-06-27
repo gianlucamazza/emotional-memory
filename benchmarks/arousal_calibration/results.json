@@ -1,0 +1,107 @@
+{
+  "benchmark": "arousal_affine_calibration_w",
+  "dataset": "emobank_v1",
+  "version": "1.0",
+  "dimension": "arousal",
+  "n": 300,
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "deployable_coefficients": {
+    "a": 0.1627,
+    "b": 0.4491
+  },
+  "protocols": {
+    "native_split": {
+      "raw": {
+        "n": 50,
+        "mae": 0.1998,
+        "bias": -0.0938,
+        "pearson_r": 0.5226
+      },
+      "calibrated": {
+        "n": 50,
+        "mae": 0.0396,
+        "bias": 0.0015,
+        "pearson_r": 0.5226
+      },
+      "scherer_m1": {
+        "n": 50,
+        "mae": 0.1054,
+        "bias": -0.0493,
+        "pearson_r": 0.3492
+      },
+      "Hw1_cal_beats_raw": {
+        "mean_abs_err_reduction": 0.1603,
+        "ci": [
+          0.1254,
+          0.1941
+        ],
+        "p": 0.0,
+        "improves": true
+      },
+      "Hw2_cal_beats_scherer": {
+        "mean_abs_err_reduction": 0.0658,
+        "ci": [
+          0.0474,
+          0.0857
+        ],
+        "p": 0.0,
+        "improves": true
+      },
+      "Gw_r_preserved": true,
+      "coefficients": {
+        "a": 0.1696,
+        "b": 0.4465
+      },
+      "n_fit": 250,
+      "n_eval": 50
+    },
+    "kfold_cv": {
+      "raw": {
+        "n": 300,
+        "mae": 0.1972,
+        "bias": -0.1027,
+        "pearson_r": 0.5724
+      },
+      "calibrated": {
+        "n": 300,
+        "mae": 0.0407,
+        "bias": 0.0002,
+        "pearson_r": 0.5651
+      },
+      "scherer_m1": {
+        "n": 300,
+        "mae": 0.1156,
+        "bias": -0.0598,
+        "pearson_r": 0.2072
+      },
+      "Hw1_cal_beats_raw": {
+        "mean_abs_err_reduction": 0.1565,
+        "ci": [
+          0.1438,
+          0.1687
+        ],
+        "p": 0.0,
+        "improves": true
+      },
+      "Hw2_cal_beats_scherer": {
+        "mean_abs_err_reduction": 0.075,
+        "ci": [
+          0.0661,
+          0.0841
+        ],
+        "p": 0.0,
+        "improves": true
+      },
+      "Gw_r_preserved": true,
+      "k": 5,
+      "n_eval": 300
+    }
+  },
+  "verdicts": {
+    "Hw1_cal_reduces_mae": true,
+    "Hw2_cal_beats_scherer": true,
+    "Gw_slope_positive_and_r_preserved": true,
+    "adopt_calibration": true
+  }
+}
