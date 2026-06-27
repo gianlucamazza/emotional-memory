@@ -11,6 +11,8 @@ from pathlib import Path
 from statistics import mean
 from typing import Any, Literal
 
+from benchmarks.common.statistics import DEFAULT_N_BOOTSTRAP, paired_bootstrap_diff
+
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -251,6 +253,55 @@ def _classify_rating_record(record: dict[str, Any]) -> tuple[str, dict[str, Any]
     return "complete", payload
 
 
+def _paired_condition_significance(
+    dim_item_rater: dict[str, dict[tuple[str, str], dict[str, float]]],
+    *,
+    treatment: str = DEFAULT_CONDITIONS[0],
+    baseline: str = DEFAULT_CONDITIONS[1],
+    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
+    seed: int = 0,
+) -> dict[str, Any]:
+    """Per-dimension paired significance of ``treatment - baseline``, paired by (scenario, rater).
+
+    Operationalizes the Gate 2 significance criterion (does AFT-backed recall score higher than
+    the baseline?). Uses the repo-standard paired bootstrap (``benchmarks.common.statistics``)
+    rather than scipy/Wilcoxon, matching the project's numpy-only stats convention. Reports the
+    mean rating difference, its 95% bootstrap CI, a two-sided p-value, and a directional flag
+    (positive Δ with p<0.05 favours the treatment).
+    """
+    out: dict[str, Any] = {}
+    for dim, item_rater in dim_item_rater.items():
+        scenarios = {scenario for (scenario, _condition) in item_rater}
+        treat: list[float] = []
+        base: list[float] = []
+        for scenario in sorted(scenarios):
+            t_raters = item_rater.get((scenario, treatment), {})
+            b_raters = item_rater.get((scenario, baseline), {})
+            for rater in sorted(set(t_raters) & set(b_raters)):
+                treat.append(t_raters[rater])
+                base.append(b_raters[rater])
+        if len(treat) < 2:
+            out[dim] = {
+                "contrast": f"{treatment} - {baseline}",
+                "n_pairs": len(treat),
+                "mean_diff": None,
+                "ci": [None, None],
+                "p": None,
+                "significant_favoring_treatment": False,
+            }
+            continue
+        diff, lo, hi, p = paired_bootstrap_diff(treat, base, n_bootstrap=n_bootstrap, seed=seed)
+        out[dim] = {
+            "contrast": f"{treatment} - {baseline}",
+            "n_pairs": len(treat),
+            "mean_diff": round(diff, 4),
+            "ci": [round(lo, 4), round(hi, 4)],
+            "p": round(p, 4),
+            "significant_favoring_treatment": bool(diff > 0 and p < 0.05),
+        }
+    return out
+
+
 def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
     condition_dimension_scores: dict[str, dict[str, list[float]]] = defaultdict(
         lambda: defaultdict(list)
@@ -349,6 +400,7 @@ def summarize_ratings(ratings: list[dict[str, Any]]) -> dict[str, Any]:
         ],
         "notes": notes,
         "krippendorff_alpha_by_dimension": krippendorff_by_dim,
+        "condition_significance_by_dimension": _paired_condition_significance(_dim_item_rater),
     }
 
 
@@ -394,6 +446,27 @@ def write_summary(
         for dim, alpha_val in sorted(alpha_by_dim.items()):
             val_str = f"{alpha_val:.3f}" if alpha_val is not None else "—"
             lines.append(f"| `{dim}` | {val_str} |")
+
+    sig_by_dim = summary.get("condition_significance_by_dimension", {})
+    if sig_by_dim:
+        contrast = next(iter(sig_by_dim.values()), {}).get("contrast", "treatment - baseline")
+        lines += [
+            "",
+            f"## Condition significance (paired bootstrap, `{contrast}`)",
+            "",
+            "| Dimension | n pairs | mean Δ | 95% CI | p | favours AFT (p<0.05) |",
+            "|---|---:|---:|---|---:|:---:|",
+        ]
+        for dim, s in sorted(sig_by_dim.items()):
+            if s["mean_diff"] is None:
+                lines.append(f"| `{dim}` | {s['n_pairs']} | — | — | — | — |")
+            else:
+                ci = s["ci"]
+                flag = "✅" if s["significant_favoring_treatment"] else "—"
+                lines.append(
+                    f"| `{dim}` | {s['n_pairs']} | {s['mean_diff']:+.3f} | "
+                    f"[{ci[0]:+.3f}, {ci[1]:+.3f}] | {s['p']:.4f} | {flag} |"
+                )
 
     if summary["incomplete_records"]:
         lines.extend(["", "## Incomplete Records", ""])
