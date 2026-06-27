@@ -2,6 +2,7 @@
 
 import json
 from datetime import UTC, datetime, timedelta
+from typing import ClassVar
 
 import pytest
 from conftest import FixedEmbedder
@@ -219,6 +220,104 @@ class TestRetrieve:
         assert explanation.breakdown.weights.total() == pytest.approx(1.0)
         assert explanation.breakdown.total_score == pytest.approx(explanation.score)
         assert explanation.breakdown.weighted_signals.total() == pytest.approx(explanation.score)
+
+
+class TestQueryAffect:
+    """query_affect parameter + retrieve_with_query_appraisal (Addendum T API)."""
+
+    # Both memories share one embedding so the semantic signal (s1) ties; with
+    # mood/momentum/resonance ablated, the affect-proximity signal (s3) decides.
+    _EMB: ClassVar[dict[str, list[float]]] = {
+        "query": [1.0, 0.0, 0.0, 0.0],
+        "pos": [1.0, 0.0, 0.0, 0.0],
+        "neg": [1.0, 0.0, 0.0, 0.0],
+    }
+    _ABLATE: ClassVar[dict[str, bool]] = {
+        "enable_mood_signal": False,
+        "enable_momentum": False,
+        "enable_resonance": False,
+    }
+
+    @classmethod
+    def _engine_two_affects(cls, *, appraisal_engine=None, enable_appraisal=True):
+        config = EmotionalMemoryConfig(enable_appraisal=enable_appraisal, **cls._ABLATE)
+        em = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=IndexEmbedder(cls._EMB),
+            appraisal_engine=appraisal_engine,
+            config=config,
+        )
+        em.set_affect(CoreAffect(valence=0.9, arousal=0.6))
+        em.encode("pos")
+        em.set_affect(CoreAffect(valence=-0.9, arousal=0.6))
+        em.encode("neg")
+        em.set_affect(CoreAffect(valence=0.0, arousal=0.0))  # neutral runtime baseline
+        return em
+
+    def test_query_affect_flips_top1(self):
+        em = self._engine_two_affects()
+        pos_first = em.retrieve(
+            "query", top_k=2, query_affect=CoreAffect(valence=0.9, arousal=0.6)
+        )
+        assert pos_first[0].content == "pos"
+
+        em2 = self._engine_two_affects()
+        neg_first = em2.retrieve(
+            "query", top_k=2, query_affect=CoreAffect(valence=-0.9, arousal=0.6)
+        )
+        assert neg_first[0].content == "neg"
+
+    def test_query_affect_none_matches_runtime_state(self):
+        # retrieve(query_affect=X) must equal retrieve() when runtime state == X.
+        em = self._engine_two_affects()
+        em.set_affect(CoreAffect(valence=0.9, arousal=0.6))
+        default = [m.content for m in em.retrieve("query", top_k=2)]
+
+        em2 = self._engine_two_affects()  # runtime left neutral
+        explicit = [
+            m.content
+            for m in em2.retrieve(
+                "query", top_k=2, query_affect=CoreAffect(valence=0.9, arousal=0.6)
+            )
+        ]
+        assert default == explicit == ["pos", "neg"]
+
+    def test_retrieve_with_explanations_accepts_query_affect(self):
+        em = self._engine_two_affects()
+        exps = em.retrieve_with_explanations(
+            "query", top_k=2, query_affect=CoreAffect(valence=-0.9, arousal=0.6)
+        )
+        assert exps[0].memory.content == "neg"
+
+    def test_retrieve_with_query_appraisal_requires_engine(self):
+        em = self._engine_two_affects()  # no appraisal_engine
+        with pytest.raises(RuntimeError, match="appraisal_engine"):
+            em.retrieve_with_query_appraisal("query")
+
+    def test_retrieve_with_query_appraisal_routes_appraised_affect(self):
+        # enable_appraisal=False so encode() uses set_affect state (controllable);
+        # retrieve_with_query_appraisal still calls the engine directly.
+        fixed = AppraisalVector(
+            novelty=0.3,
+            goal_relevance=0.9,
+            coping_potential=0.9,
+            norm_congruence=0.6,
+            self_relevance=0.6,
+        )
+        via_method = [
+            m.content
+            for m in self._engine_two_affects(
+                appraisal_engine=StaticAppraisalEngine(fixed), enable_appraisal=False
+            ).retrieve_with_query_appraisal("query", top_k=2)
+        ]
+        qa = StaticAppraisalEngine(fixed).appraise("query").to_core_affect()
+        via_param = [
+            m.content
+            for m in self._engine_two_affects(
+                appraisal_engine=StaticAppraisalEngine(fixed), enable_appraisal=False
+            ).retrieve("query", top_k=2, query_affect=qa)
+        ]
+        assert via_method == via_param
 
 
 class TestDelete:

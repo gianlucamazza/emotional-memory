@@ -328,10 +328,13 @@ class AsyncEmotionalMemory:
             )
         return memory
 
-    async def retrieve(self, query: str, top_k: int = 5) -> list[Memory]:
+    async def retrieve(
+        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+    ) -> list[Memory]:
         """Retrieve the top-k most relevant memories for the query (async).
 
-        Mirrors ``EmotionalMemory.retrieve`` with awaited I/O calls.
+        Mirrors ``EmotionalMemory.retrieve`` with awaited I/O calls. ``query_affect``
+        overrides the affect-proximity signal source (default: runtime state).
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
@@ -370,7 +373,7 @@ class AsyncEmotionalMemory:
             )
             plan = build_retrieval_plan(
                 query_embedding=query_embedding,
-                query_affect=self._state.core_affect,
+                query_affect=query_affect or self._state.core_affect,
                 current_mood=self._state.mood,
                 current_momentum=self._state.momentum,
                 candidates=candidates,
@@ -391,8 +394,14 @@ class AsyncEmotionalMemory:
         self,
         query: str,
         top_k: int = 5,
+        *,
+        query_affect: CoreAffect | None = None,
     ) -> list[RetrievalExplanation]:
-        """Async retrieval variant that exposes the ranking breakdown."""
+        """Async retrieval variant that exposes the ranking breakdown.
+
+        ``query_affect`` overrides the affect-proximity signal source (default:
+        runtime state), as in ``retrieve()``.
+        """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
         now = datetime.now(tz=UTC)
@@ -420,7 +429,7 @@ class AsyncEmotionalMemory:
         )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
-            query_affect=self._state.core_affect,
+            query_affect=query_affect or self._state.core_affect,
             current_mood=self._state.mood,
             current_momentum=self._state.momentum,
             candidates=candidates,
@@ -456,6 +465,25 @@ class AsyncEmotionalMemory:
             len(candidates),
         )
         return explanations
+
+    async def retrieve_with_query_appraisal(self, query: str, top_k: int = 5) -> list[Memory]:
+        """Retrieve using the query's own appraised affect (Addendum T, async).
+
+        Mirrors ``EmotionalMemory.retrieve_with_query_appraisal``: appraises the
+        query text and uses the resulting affect as ``query_affect`` without
+        mutating runtime state. Pairs best with ``DIRECT_VAD_SCHEMA``.
+
+        Raises:
+            RuntimeError: if no appraisal engine is configured.
+        """
+        if self._appraisal_engine is None:
+            raise RuntimeError(
+                "retrieve_with_query_appraisal requires an appraisal_engine; "
+                "none is configured. Pass appraisal_engine=... to AsyncEmotionalMemory, "
+                "or call retrieve(query, query_affect=...) with an explicit affect."
+            )
+        appraisal = await self._appraisal_engine.appraise(query)
+        return await self.retrieve(query, top_k=top_k, query_affect=appraisal.to_core_affect())
 
     async def _apply_retrieval_updates(self, top: list[Memory], now: datetime) -> list[Memory]:
         """Apply retrieval side effects after ranking has been computed."""
