@@ -6,15 +6,15 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 
 ## 1. Source bundle
 
-| Item                                                                 | Status | Notes                                                                        |
-| -------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------- |
-| `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates |
-| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 13pp, ~497KB — only benign hyperref warnings                                 |
-| No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                              |
-| All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures        |
-| All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                        |
-| `refs.bib` is included and all citations resolve                     | ✓      | 38 unique `\cite` keys, 38 entries — all resolve                             |
-| No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                         |
+| Item                                                                 | Status | Notes                                                                            |
+| -------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------- |
+| `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates     |
+| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 18pp, ~533KB (grew with addenda R/S/U/V/T/T2A/W) — only benign hyperref warnings |
+| No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
+| All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
+| All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
+| `refs.bib` is included and all citations resolve                     | ✓      | 38 unique `\cite` keys, 38 entries — all resolve                                 |
+| No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                             |
 
 ---
 
