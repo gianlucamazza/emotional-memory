@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Retrieve-time query appraisal API (Addendum T, production path).**
+  `retrieve()` and `retrieve_with_explanations()` (sync + async) now accept an
+  optional keyword-only `query_affect: CoreAffect | None`. When provided, it
+  feeds the affect-proximity signal (s3) instead of the runtime affective state,
+  **without mutating that state** — the clean public form of the
+  save/set/restore workaround used by the Addendum T benchmark. Default `None`
+  preserves the previous behaviour (uses runtime state).
+- **`retrieve_with_query_appraisal(query, top_k=5)`** (sync + async) — convenience
+  method that appraises the query text with the configured appraisal engine and
+  retrieves with that affect as `query_affect` (no oracle, no state mutation).
+  Raises `RuntimeError` if no appraisal engine is configured. Pairs best with
+  `DIRECT_VAD_SCHEMA` (Addendum V). This is the production-reachable mechanism
+  validated in Addendum T.
+
 ## [0.12.0] - 2026-06-27
 
 ### Research

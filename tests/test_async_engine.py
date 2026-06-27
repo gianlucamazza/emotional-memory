@@ -4,6 +4,7 @@ import asyncio
 import json
 import warnings
 from datetime import UTC, datetime, timedelta
+from typing import ClassVar
 
 import pytest
 from conftest import DeterministicEmbedder, FixedEmbedder
@@ -211,6 +212,102 @@ class TestAsyncRetrieve:
         assert explanation.breakdown.weights.total() == pytest.approx(1.0)
         assert explanation.breakdown.total_score == pytest.approx(explanation.score)
         assert explanation.breakdown.weighted_signals.total() == pytest.approx(explanation.score)
+
+
+class _TiedEmbedder:
+    """Maps query/pos/neg to one shared vector so the semantic signal ties."""
+
+    _map: ClassVar[dict[str, list[float]]] = {
+        "query": [1.0, 0.0, 0.0, 0.0],
+        "pos": [1.0, 0.0, 0.0, 0.0],
+        "neg": [1.0, 0.0, 0.0, 0.0],
+    }
+
+    def embed(self, text: str) -> list[float]:
+        return self._map.get(text, [0.0, 0.0, 0.0, 0.0])
+
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
+        return [self.embed(t) for t in texts]
+
+
+class TestAsyncQueryAffect:
+    """query_affect parameter + retrieve_with_query_appraisal (async, Addendum T)."""
+
+    _ABLATE: ClassVar[dict[str, bool]] = {
+        "enable_mood_signal": False,
+        "enable_momentum": False,
+        "enable_resonance": False,
+    }
+
+    @classmethod
+    async def _engine_two_affects(cls, *, appraisal_engine=None, enable_appraisal=True):
+        config = EmotionalMemoryConfig(enable_appraisal=enable_appraisal, **cls._ABLATE)
+        em = AsyncEmotionalMemory(
+            store=SyncToAsyncStore(_sync_store()),
+            embedder=SyncToAsyncEmbedder(_TiedEmbedder()),
+            appraisal_engine=appraisal_engine,
+            config=config,
+        )
+        em.set_affect(CoreAffect(valence=0.9, arousal=0.6))
+        await em.encode("pos")
+        em.set_affect(CoreAffect(valence=-0.9, arousal=0.6))
+        await em.encode("neg")
+        em.set_affect(CoreAffect(valence=0.0, arousal=0.0))
+        return em
+
+    async def test_query_affect_flips_top1(self):
+        em = await self._engine_two_affects()
+        pos_first = await em.retrieve(
+            "query", top_k=2, query_affect=CoreAffect(valence=0.9, arousal=0.6)
+        )
+        assert pos_first[0].content == "pos"
+
+        em2 = await self._engine_two_affects()
+        neg_first = await em2.retrieve(
+            "query", top_k=2, query_affect=CoreAffect(valence=-0.9, arousal=0.6)
+        )
+        assert neg_first[0].content == "neg"
+
+    async def test_query_affect_none_matches_runtime_state(self):
+        em = await self._engine_two_affects()
+        em.set_affect(CoreAffect(valence=0.9, arousal=0.6))
+        default = [m.content for m in await em.retrieve("query", top_k=2)]
+
+        em2 = await self._engine_two_affects()
+        explicit = [
+            m.content
+            for m in await em2.retrieve(
+                "query", top_k=2, query_affect=CoreAffect(valence=0.9, arousal=0.6)
+            )
+        ]
+        assert default == explicit == ["pos", "neg"]
+
+    async def test_retrieve_with_query_appraisal_requires_engine(self):
+        em = await self._engine_two_affects()
+        with pytest.raises(RuntimeError, match="appraisal_engine"):
+            await em.retrieve_with_query_appraisal("query")
+
+    async def test_retrieve_with_query_appraisal_routes_appraised_affect(self):
+        fixed = AppraisalVector(
+            novelty=0.3,
+            goal_relevance=0.9,
+            coping_potential=0.9,
+            norm_congruence=0.6,
+            self_relevance=0.6,
+        )
+        em = await self._engine_two_affects(
+            appraisal_engine=SyncToAsyncAppraisalEngine(StaticAppraisalEngine(fixed)),
+            enable_appraisal=False,
+        )
+        via_method = [m.content for m in await em.retrieve_with_query_appraisal("query", top_k=2)]
+
+        em2 = await self._engine_two_affects(
+            appraisal_engine=SyncToAsyncAppraisalEngine(StaticAppraisalEngine(fixed)),
+            enable_appraisal=False,
+        )
+        qa = StaticAppraisalEngine(fixed).appraise("query").to_core_affect()
+        via_param = [m.content for m in await em2.retrieve("query", top_k=2, query_affect=qa)]
+        assert via_method == via_param
 
 
 # ---------------------------------------------------------------------------

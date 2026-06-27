@@ -358,7 +358,9 @@ class EmotionalMemory:
 
         return memory
 
-    def retrieve(self, query: str, top_k: int = 5) -> list[Memory]:
+    def retrieve(
+        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+    ) -> list[Memory]:
         """Retrieve the top-k most relevant memories for the query.
 
         Scoring uses all 6 AFT signals with mood-adaptive weights.
@@ -374,6 +376,14 @@ class EmotionalMemory:
 
         Reconsolidation (D1): only triggered if the memory was last retrieved
         within the reconsolidation_window_seconds lability window.
+
+        Query affect: by default the affect-proximity signal (s3) uses the
+        current runtime affective state (``self._state.core_affect``). Pass an
+        explicit ``query_affect`` to score against the query's own affect instead
+        — e.g. the appraised affect of the query text — without mutating the
+        runtime state. This is the production-reachable path validated in
+        Addendum T (retrieve-time query appraisal); see
+        ``retrieve_with_query_appraisal``.
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
@@ -412,7 +422,7 @@ class EmotionalMemory:
             )
             plan = build_retrieval_plan(
                 query_embedding=query_embedding,
-                query_affect=self._state.core_affect,
+                query_affect=query_affect or self._state.core_affect,
                 current_mood=self._state.mood,
                 current_momentum=self._state.momentum,
                 candidates=candidates,
@@ -429,7 +439,9 @@ class EmotionalMemory:
             logger.debug("retrieve done: returned=%d candidates=%d", len(result), len(candidates))
         return result
 
-    def retrieve_with_explanations(self, query: str, top_k: int = 5) -> list[RetrievalExplanation]:
+    def retrieve_with_explanations(
+        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+    ) -> list[RetrievalExplanation]:
         """Retrieve memories plus a structured score decomposition.
 
         Ranking is computed by the same two-pass retrieval pipeline used by
@@ -437,6 +449,9 @@ class EmotionalMemory:
         state before retrieval-side updates such as reconsolidation and Hebbian
         strengthening; the returned ``memory`` objects reflect the post-
         retrieval stored state.
+
+        ``query_affect`` overrides the affect-proximity signal source exactly as
+        in ``retrieve()`` (default: current runtime state).
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
@@ -464,7 +479,7 @@ class EmotionalMemory:
         )
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
-            query_affect=self._state.core_affect,
+            query_affect=query_affect or self._state.core_affect,
             current_mood=self._state.mood,
             current_momentum=self._state.momentum,
             candidates=candidates,
@@ -500,6 +515,31 @@ class EmotionalMemory:
             len(candidates),
         )
         return explanations
+
+    def retrieve_with_query_appraisal(self, query: str, top_k: int = 5) -> list[Memory]:
+        """Retrieve using the query's own appraised affect (Addendum T).
+
+        Appraises the query text with the configured appraisal engine and uses
+        the resulting :class:`CoreAffect` as ``query_affect`` for retrieval,
+        without mutating the runtime affective state. This is the
+        production-reachable retrieve-time query-appraisal path: it does not
+        require an oracle affect to be injected.
+
+        Pairs best with an appraisal engine using ``DIRECT_VAD_SCHEMA`` (the LLM
+        rates valence/arousal/dominance directly), which Addendum V found
+        estimates query affect more faithfully than the Scherer SEC projection.
+
+        Raises:
+            RuntimeError: if no appraisal engine is configured.
+        """
+        if self._appraisal_engine is None:
+            raise RuntimeError(
+                "retrieve_with_query_appraisal requires an appraisal_engine; "
+                "none is configured. Pass appraisal_engine=... to EmotionalMemory, "
+                "or call retrieve(query, query_affect=...) with an explicit affect."
+            )
+        query_affect = self._appraisal_engine.appraise(query).to_core_affect()
+        return self.retrieve(query, top_k=top_k, query_affect=query_affect)
 
     def _apply_retrieval_updates(self, top: list[Memory], now: datetime) -> list[Memory]:
         """Apply retrieval side effects after ranking has been computed."""
