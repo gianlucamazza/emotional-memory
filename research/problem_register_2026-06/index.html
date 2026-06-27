@@ -3374,15 +3374,20 @@ silent <code>xfail</code>/skip in tests (skips are env/feature-gated).</p>
 <p><strong>Executed since this register was written (June 2026):</strong> the in-repo items are done —
 A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
 (Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
-audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), and retrieve-time
-query appraisal (Addendum T, production-reachable). See the per-item §A* sections.</p>
+audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), retrieve-time
+query appraisal (Addendum T, production-reachable), and its naturalistic re-test
+(Addendum T2A, FAIL — the recovery is regime-bound). See the per-item §A* sections.</p>
 <p>The genuinely open items (execution, not re-scoping), in priority order:</p>
 <ol>
 <li><strong>Run the human-eval pilot</strong> (A4 / Gate 2) — the highest-value gap; needs raters
    (external, tracked by issue #27).</li>
-<li><strong>Naturalistic query-appraisal re-test</strong> — Addendum T showed query appraisal is
-   production-reachable in the affect-discriminative regime; whether it helps on
-   oracle-free naturalistic QA (LoCoMo/DailyDialog) is untested (the "T2A" follow-up).</li>
+<li><strong>Naturalistic query-appraisal re-test</strong> — <strong>EXECUTED (Addendum T2A, 2026-06-27): FAIL.</strong>
+   Retrieve-time query appraisal on DailyDialog (N=120/396, multilingual-e5-small) does not
+   beat cosine (aft_query_appraised 0.212 vs cosine 0.220, Δ−0.008, p_holm=1.000, 0/3 types),
+   despite a faithful diagnostic (valence r=0.69, arousal r=0.74). Addendum T's
+   production-reachable recovery is <strong>bounded to the affect-discriminative regime</strong> (Addendum U)
+   and does not extend to naturalistic dialogue. LoCoMo bound-confirmation de-scoped (expected
+   FAIL). See <code>preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md</code>.</li>
 <li><strong>Independent affect-discriminative + oracle-free corpus</strong> — external-validity test
    for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).</li>
 <li><strong>Arousal affine calibration</strong> for direct-VAD (Addendum V follow-up: r improved, MAE

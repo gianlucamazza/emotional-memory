@@ -38,9 +38,7 @@
       ],
       "benchmark_refs": [],
       "protocol_refs": [],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "retrieval_affect_aware",
@@ -81,9 +79,7 @@
         "benchmarks/preregistration_addendum_m_fr.md",
         "benchmarks/preregistration_addendum_m_fr_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "realistic_replay_vs_sota",
@@ -105,9 +101,7 @@
         "benchmarks/comparative/protocol.sota.v2.md",
         "benchmarks/preregistration_addendum_v2_sota.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "theory_faithful_operationalization",
@@ -137,9 +131,7 @@
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "appraisal_directionally_useful",
@@ -159,9 +151,7 @@
         "benchmarks/appraisal_quality/test_appraisal_quality.py"
       ],
       "protocol_refs": [],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "appraisal_human_validated",
@@ -184,9 +174,7 @@
         "benchmarks/preregistration_addendum_s_human_gold_appraisal.md",
         "benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "replayable_multi_session_help",
@@ -223,9 +211,7 @@
         "benchmarks/preregistration_addendum_m_fr.md",
         "benchmarks/preregistration_addendum_m_fr_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "locomo_external_qa_negative",
@@ -254,9 +240,7 @@
         "benchmarks/preregistration_addendum_l_query_routing.md",
         "benchmarks/preregistration_addendum_l_query_routing_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "downstream_value",
@@ -267,7 +251,7 @@
       "requires_oracle_affect": true,
       "allowed_public_wording": "In the affect-discriminative regime (oracle affect + query-time state injection), AFT's retrieval-ranking advantage converts to higher LLM-judged answer quality: on realistic_recall_v2 (N=200, sbert-bge, gpt-5-mini judge) AFT judge-accuracy 0.595 vs cosine 0.440 (\u0394=+0.155 [0.095, 0.220], p<0.001), token-F1 \u0394=+0.152. No downstream benefit is shown in the naturalistic, automatic-appraisal regime (see locomo_external_qa_negative).",
       "current_evidence": "Pre-registered Addendum R (Hr1/Hr2) executed 2026-06-26. encode\u2192retrieve\u2192generate\u2192judge on realistic_recall_v2 (200 queries), identical generator + LLM judge (gpt-5-mini) for both systems; only retrieval differs (full 6-signal AFT vs embedding cosine). Hr1 judge_correct: AFT 0.595 vs cosine 0.440, \u0394=+0.155 [+0.095, +0.220], paired bootstrap n=2000 seed=42 p<0.001, Holm<0.001, McNemar<0.001 \u2014 PASS. Hr2 token-F1: \u0394=+0.152 [+0.100, +0.205], p<0.001 \u2014 PASS. Retrieval-ranking reference top1 \u0394=+0.205 [0.150,0.265] matches Hd2. Positive across all 5 challenge types (weakest recency_confound +0.075, strongest same_topic_distractor / momentum_alignment +0.200). The +0.205 ranking edge converts ~1:1 to a +0.155 answer-quality edge.",
-      "not_yet_shown": "Downstream value in the oracle-free / automatic-appraisal regime: LoCoMo (oracle-free) shows AFT loses downstream (judge 0.279 vs 0.441). The Addendum R PASS is bounded by the A2 oracle-affect + state-injection boundary; production appraisal is not tested here. Addendum T (2026-06-27, retrieve-time query appraisal): the advantage is largely PRODUCTION-REACHABLE without oracle affect \u2014 appraising the query text (direct-VAD) and injecting it as the state beats cosine (\u0394+0.115 [0.055,0.180], p<0.001) and recovers ~59% of the oracle advantage (~82% on the affect-discriminative subset). The state-injection boundary is partially dissolved, not closed; naturalistic QA (LoCoMo/DailyDialog) with query appraisal remains untested.",
+      "not_yet_shown": "Downstream value in the oracle-free / automatic-appraisal regime: LoCoMo (oracle-free) shows AFT loses downstream (judge 0.279 vs 0.441). The Addendum R PASS is bounded by the A2 oracle-affect + state-injection boundary; production appraisal is not tested here. Addendum T (2026-06-27, retrieve-time query appraisal): the advantage is largely PRODUCTION-REACHABLE without oracle affect \u2014 appraising the query text (direct-VAD) and injecting it as the state beats cosine (\u0394+0.115 [0.055,0.180], p<0.001) and recovers ~59% of the oracle advantage (~82% on the affect-discriminative subset). The state-injection boundary is partially dissolved, not closed. Addendum T2A (2026-06-27) NOW TESTS the naturalistic regime: retrieve-time query appraisal on DailyDialog (N=120, 396 q, multilingual-e5-small) does NOT beat cosine (aft_query_appraised 0.212 vs cosine 0.220, Δ−0.008 [−0.056,+0.040], p_holm=1.000, 0/3 types — Ht2a FAIL), reproducing the Hk1 null. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so this is a regime limit, not an appraisal-quality failure: the production-reachable recovery is BOUNDED to the affect-discriminative regime (Addendum U) and does not extend to naturalistic affect-conditioned dialogue.",
       "next_study": "A downstream task that is both affect-discriminative AND oracle-free (automatic appraisal supplying the affect), to test whether the conversion survives without preset affect.",
       "evidence_refs": [],
       "benchmark_refs": [
@@ -278,9 +262,7 @@
         "benchmarks/preregistration_addendum_r_downstream.md",
         "benchmarks/preregistration_addendum_r_downstream_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "resonance_amplification_e5",
@@ -303,9 +285,7 @@
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "Hi3_recency",
@@ -319,16 +299,12 @@
       "not_yet_shown": "Mechanism; replication on independent dataset.",
       "next_study": "Part of Hi3 family \u2014 follow-up contingent on mechanism study.",
       "evidence_refs": [],
-      "benchmark_refs": [
-        "benchmarks/ablation/results.hi3.md"
-      ],
+      "benchmark_refs": ["benchmarks/ablation/results.hi3.md"],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "Hi3_arc",
@@ -342,16 +318,12 @@
       "not_yet_shown": "Whether a larger N or different dataset would show signal.",
       "next_study": "No active follow-up planned; Hi3_arc FAIL scopes the amplification claim to semantic/recency channels.",
       "evidence_refs": [],
-      "benchmark_refs": [
-        "benchmarks/ablation/results.hi3.md"
-      ],
+      "benchmark_refs": ["benchmarks/ablation/results.hi3.md"],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "appraisal_llm_real_dual_path",
@@ -385,9 +357,7 @@
         "benchmarks/preregistration_addendum_o_mapping_recalibration.md",
         "benchmarks/preregistration_addendum_p_hg1_rerun.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "cross_domain_affect_replication",
@@ -397,25 +367,27 @@
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": false,
       "allowed_public_wording": "Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication \u2014 AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; \u0394=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, \u0394=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.",
-      "current_evidence": "Hk1 pre-registered and executed 2026-05-07. Synthetic personas from DailyDialog train+validation (12118 dialogs, 2580 after \u226530% emotion-density filter). 4 programmatic query types from Ekman labels (no LLM). Paired bootstrap n=10000 seed=0, Holm m=4. Aggregate: AFT top1=0.212 vs naive_cosine=0.220 (\u0394=-0.008, CI=[-0.056,+0.043], p_holm=1.000, d=-0.015). Only affective_trajectory shows positive trend (\u0394=+0.103, d=0.186, N=39) but underpowered (p_holm=0.734). All directional query types FAIL Holm threshold. Branch B confirmed. \u2014 FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries \u00d7 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], \u0394=+0.18 [0.11, 0.26], p_bootstrap=0.0000, p_McNemar=0.0000, Hedges g=0.424. Effect concentrated on same_topic_distractor (top1=0.42) and affective_arc (top1=0.38); momentum_alignment remains weak (top1=0.12). Prior expectation was FAIL; evidence diverges from prior without post-hoc reframing.",
+      "current_evidence": "Hk1 pre-registered and executed 2026-05-07. Synthetic personas from DailyDialog train+validation (12118 dialogs, 2580 after \u226530% emotion-density filter). 4 programmatic query types from Ekman labels (no LLM). Paired bootstrap n=10000 seed=0, Holm m=4. Aggregate: AFT top1=0.212 vs naive_cosine=0.220 (\u0394=-0.008, CI=[-0.056,+0.043], p_holm=1.000, d=-0.015). Only affective_trajectory shows positive trend (\u0394=+0.103, d=0.186, N=39) but underpowered (p_holm=0.734). All directional query types FAIL Holm threshold. Branch B confirmed. Addendum T2A (2026-06-27): re-ran the same personas adding an aft_query_appraised arm (direct-VAD query appraisal via the public query_affect API; encode path unchanged). Still FAIL: aft_query_appraised top1=0.212 vs cosine 0.220 (\u0394=-0.008 [-0.056,+0.040], p_holm=1.000, 0/3 types); +0.010 (ns) over stale-state AFT. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so even retrieve-time query affect \u2014 the mechanism that worked on curated realistic_recall_v2 (Addendum T) \u2014 does NOT extend to naturalistic short-turn dialogue. This is a stronger negative for cross-domain replication. \u2014 FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries \u00d7 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], \u0394=+0.18 [0.11, 0.26], p_bootstrap=0.0000, p_McNemar=0.0000, Hedges g=0.424. Effect concentrated on same_topic_distractor (top1=0.42) and affective_arc (top1=0.38); momentum_alignment remains weak (top1=0.12). Prior expectation was FAIL; evidence diverges from prior without post-hoc reframing.",
       "not_yet_shown": "Cross-domain replication on an affect-rich naturalistic corpus (>30% affect-bearing turns). Whether longer multi-turn sessions with richer emotion vocabulary would show signal consistent with affective_trajectory trend (d=0.186). Cross-language replication in non-Romance languages. IT/ES cross-language replication in 2-session realistic replay format (current IT/ES data uses appraisal_confound single-session runner).",
-      "next_study": "Retry targeted affective_trajectory sub-claim at N\u2265120 on a naturalistic corpus with >30% affect-bearing turns (DailyDialog affect density too low). Pre-register before executing. Gate 2 human eval (kit ready, zero ratings \u2014 v1.0 scope).",
+      "next_study": "Retry targeted affective_trajectory sub-claim at N\u2265120 on a naturalistic corpus with >30% affect-bearing turns (DailyDialog affect density too low). Query appraisal already tested (Addendum T2A) and did not help. Pre-register before executing. Gate 2 human eval (kit ready, zero ratings \u2014 v1.0 scope).",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/dailydialog/results.json",
         "benchmarks/dailydialog/results.md",
+        "benchmarks/dailydialog/t2a_results.json",
+        "benchmarks/dailydialog/t2a_results.md",
         "benchmarks/realistic/results.v2_fr.me5.json",
         "benchmarks/realistic/results.v2_fr.me5.md"
       ],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_k_dailydialog.md",
         "benchmarks/preregistration_addendum_k_dailydialog_closure.md",
+        "benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal.md",
+        "benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md",
         "benchmarks/preregistration_addendum_m_fr.md",
         "benchmarks/preregistration_addendum_m_fr_closure.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     },
     {
       "claim_id": "models_human_emotional_memory",
@@ -428,17 +400,13 @@
       "current_evidence": "Theory-inspired design only.",
       "not_yet_shown": "Human behavioral correspondence.",
       "next_study": "Gate 2 (human eval): kit ready (benchmarks/human_eval/), zero ratings collected. Tracking continues on roadmap v1.0; does not block the v0.11.x line.",
-      "evidence_refs": [
-        "benchmarks/human_eval/README.md"
-      ],
+      "evidence_refs": ["benchmarks/human_eval/README.md"],
       "benchmark_refs": [],
       "protocol_refs": [
         "benchmarks/human_eval/README.md",
         "benchmarks/human_eval/protocol.md"
       ],
-      "limitations_refs": [
-        "docs/research/08_limitations.md"
-      ]
+      "limitations_refs": ["docs/research/08_limitations.md"]
     }
   ]
 }
