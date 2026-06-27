@@ -1,6 +1,7 @@
 # Pre-registration Addendum V — Hv1/Hv2/Hv3: Direct-VAD appraisal vs the SEC→projection
 
-**Status:** PENDING*EXECUTION
+**Status:** EXECUTED (2026-06-27) — **adopt direct-VAD = YES** (Hv1 PASS, Hv3 PASS, Gv OK;
+Hv2 dominance positive but CI touches 0). See `preregistration_addendum_v_direct_vad_closure.md`.
 **Date (pre-reg):** 2026-06-27
 **Dataset:** `benchmarks/datasets/emobank_v1.json` (EmoBank human VAD, N=300, CC-BY-SA 4.0)
 **LLM:** resolved from `EMOTIONAL_MEMORY_LLM*\*` (`.env`pins`gpt-5-mini`)

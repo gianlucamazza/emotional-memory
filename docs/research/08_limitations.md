@@ -25,6 +25,12 @@ limitations:
 - **Dominance estimation**: `KeywordAppraisalEngine` infers dominance from
   `coping_potential` vocabulary; `LLMAppraisalEngine` delegates to the Scherer
   CPM prompt. Cross-cultural validity of dominance estimates is not evaluated.
+  **Update (Addendum V, 2026-06-27):** against human gold (EmoBank, N=300) the
+  production SEC→linear-projection is the bottleneck on the non-valence axes
+  (arousal r=0.23, dominance r=0.31). Asking the LLM for V/A/D **directly** lifts
+  arousal to r=0.58 (Δr +0.354), dominance to r=0.43, and valence to r=0.79 with
+  near-zero bias — adopting a direct-VAD appraisal schema is recommended as a
+  follow-up. See `benchmarks/preregistration_addendum_v_direct_vad_closure.md`.
 
 ### 1.2 Language dependence
 

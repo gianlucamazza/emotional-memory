@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
+- **Addendum V (C) — direct-VAD appraisal beats the SEC→projection.** Pre-registered
+  comparison (`benchmarks/appraisal_vad/`, `make bench-appraisal-vad`) on EmoBank (N=300,
+  paired bootstrap). Asking the LLM for valence/arousal/dominance **directly** (a custom
+  `AppraisalSchema`, no engine change) beats the production Scherer-SEC→Addendum-O projection
+  on human gold across all axes: valence r 0.70→0.79 (bias +0.157→−0.013), **arousal r
+  0.23→0.58** (Δr +0.354 [0.251, 0.457]), dominance r 0.31→0.43. **Hv1/Hv3 PASS, Gv OK**
+  (Hv2 dominance positive but CI touches 0) → **adopt direct-VAD recommended** (follow-up to
+  wire it as a selectable schema). The SEC→linear-projection was the bottleneck on the weak
+  arousal/dominance axes Addendum S flagged. Bounds `appraisal_human_validated`; `08_limitations`
+  §1.1 updated.
+
 - **Addendum U (B.1) — circularity audit of `realistic_recall_v2`.** Pre-registered,
   deterministic (no LLM) audit (`benchmarks/circularity_audit/`, `make bench-circularity-audit`)
   quantifying §2.4's "AFT-favorable vs neutral" split. SBERT, N=200: **62.5% of queries are
