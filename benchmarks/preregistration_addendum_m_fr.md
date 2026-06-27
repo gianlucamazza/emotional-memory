@@ -7,6 +7,7 @@
 **Dataset:** `benchmarks/datasets/realistic_recall_v2_fr.json` (NEW — hand-authored native FR)
 **Runner:** `benchmarks.realistic.runner`
 **Parent closures:**
+
 - `benchmarks/preregistration_addendum_bc_closure.md` (multilingual scope established)
 - `benchmarks/preregistration_addendum_hd2_powertopup_closure.md` (IT/ES at N=120 — prior outcomes)
 
@@ -15,6 +16,7 @@
 ## Motivation
 
 The `preregistration_addendum_hd2_powertopup_closure.md` reports:
+
 - **IT (me5, N=120):** AFT top1=0.617 vs naive 0.467, Δ=+0.150, p_holm=0.016 (PASS — Branch A).
 - **ES (me5, N=120):** AFT top1=0.500 vs naive 0.367, Δ=+0.133, p_holm=0.041 (borderline PASS — Branch A by pre-reg criteria).
 
@@ -62,17 +64,17 @@ with IT and ES. No Hm2 secondary — this slice is a coverage milestone, not a m
 30 scenarios hand-authored natively in French by the researcher. Each scenario follows the
 schema of `realistic_recall_v2_it.json` identically:
 
-| Property | Value |
-|---|---|
-| Scenarios | 30 |
-| Sessions per scenario | 2 |
-| Queries per scenario | 4 (all in session_2) |
-| Total queries | 120 |
-| Events total | ~228 (3–5 per session) |
-| Challenge types | 5 × 24 queries each |
+| Property               | Value                                                 |
+| ---------------------- | ----------------------------------------------------- |
+| Scenarios              | 30                                                    |
+| Sessions per scenario  | 2                                                     |
+| Queries per scenario   | 4 (all in session_2)                                  |
+| Total queries          | 120                                                   |
+| Events total           | ~228 (3–5 per session)                                |
+| Challenge types        | 5 × 24 queries each                                   |
 | Oracle valence/arousal | Pre-assigned (identical numerical structure to IT/ES) |
-| Session IDs | `session_1`, `session_2` |
-| Top-level `language` | `"fr"` |
+| Session IDs            | `session_1`, `session_2`                              |
+| Top-level `language`   | `"fr"`                                                |
 
 ### Why hand-authored (not translated from IT)
 
@@ -88,20 +90,20 @@ Mirrors IT/ES exactly: each of the 5 challenge types appears in 24 queries (4 qu
 6 scenarios per challenge type, distributed across the 30 scenarios following the same
 per-scenario pattern as IT/ES).
 
-| Challenge type | Queries |
-|---|---:|
-| `affective_arc` | 24 |
-| `semantic_confound` | 24 |
-| `same_topic_distractor` | 24 |
-| `momentum_alignment` | 24 |
-| `recency_confound` | 24 |
-| **Total** | **120** |
+| Challenge type          | Queries |
+| ----------------------- | ------: |
+| `affective_arc`         |      24 |
+| `semantic_confound`     |      24 |
+| `same_topic_distractor` |      24 |
+| `momentum_alignment`    |      24 |
+| `recency_confound`      |      24 |
+| **Total**               | **120** |
 
 ### Out of scope
 
 - French keyword appraisal rules in `KeywordAppraisalEngine.make_multilingual_fr()` —
-  deferred to v0.12. This run uses oracle valence/arousal from the dataset, not LLM or
-  keyword appraisal.
+  deferred (not yet implemented as of v0.13.0). This run uses oracle valence/arousal
+  from the dataset, not LLM or keyword appraisal.
 - `bge-small-en-v1.5` embedder — English-only; running it on FR would replicate a known
   limitation rather than provide new information.
 - A second me5 tier (e.g., `multilingual-e5-base`) — designated exploratory; not counted
@@ -111,17 +113,17 @@ per-scenario pattern as IT/ES).
 
 ## Statistical plan
 
-| Parameter | Value |
-|---|---|
-| Primary metric | `top1_accuracy` (same as all Hd2 / powertopup closures) |
-| Test | Paired bootstrap |
-| n_bootstrap | 10,000 |
-| seed | 0 (consistency with `realistic.runner` default across all prior closures) |
-| Paired on | (scenario_id, query_id) |
-| Alternative | One-tailed: Δ(AFT − naive_cosine) > 0 |
-| α | 0.05 |
-| Holm family | m=1 (FR-only slice; no family correction with IT/ES — those are separate pre-regs) |
-| Report | Δ, 95% CI (paired bootstrap), p_bootstrap (one-tailed), p_mcnemar, d Cohen, n_discordant, per-challenge breakdown |
+| Parameter      | Value                                                                                                             |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Primary metric | `top1_accuracy` (same as all Hd2 / powertopup closures)                                                           |
+| Test           | Paired bootstrap                                                                                                  |
+| n_bootstrap    | 10,000                                                                                                            |
+| seed           | 0 (consistency with `realistic.runner` default across all prior closures)                                         |
+| Paired on      | (scenario_id, query_id)                                                                                           |
+| Alternative    | One-tailed: Δ(AFT − naive_cosine) > 0                                                                             |
+| α              | 0.05                                                                                                              |
+| Holm family    | m=1 (FR-only slice; no family correction with IT/ES — those are separate pre-regs)                                |
+| Report         | Δ, 95% CI (paired bootstrap), p_bootstrap (one-tailed), p_mcnemar, d Cohen, n_discordant, per-challenge breakdown |
 
 ---
 
@@ -135,9 +137,9 @@ No threshold adjustment is permitted after observing results.
 
 ### Branch declarations
 
-| Outcome | Verdict | Claim matrix action | Notes |
-|---|---|---|---|
-| **A (PASS)** | Cross-language replication to FR confirmed | Append FR PASS to `retrieval_affect_aware` and `replayable_multi_session_help` `current_evidence`; add `results.v2_fr.me5.*` to `benchmark_refs` | Unexpected positive; update §12 multilingual followup |
+| Outcome      | Verdict                                           | Claim matrix action                                                                                                                                   | Notes                                                                           |
+| ------------ | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **A (PASS)** | Cross-language replication to FR confirmed        | Append FR PASS to `retrieval_affect_aware` and `replayable_multi_session_help` `current_evidence`; add `results.v2_fr.me5.*` to `benchmark_refs`      | Unexpected positive; update §12 multilingual followup                           |
 | **B (FAIL)** | FR does not reach significance — publishable null | Append FR FAIL to `retrieval_affect_aware` `current_evidence`; add note on cross-language heterogeneity (IT/ES PASS, FR FAIL); update `not_yet_shown` | Consistent with prior FAIL expectation; characterizes AFT as language-selective |
 
 Both branches are honest and publishable. Branch B is the expected outcome.

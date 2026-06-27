@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Refreshed `uv.lock` to pull patched transitive versions of optional/dev
+  dependencies, clearing all fixable advisories: `cryptography` 49.0.0,
+  `langsmith` 0.9.3, `starlette` 1.3.1, `pydantic-settings` 2.14.2, `gradio`
+  6.19.0 (PYSEC-2026-211). A full-lock `pip-audit` (`uv export --all-extras`)
+  now reports **only** `chromadb` ≤ 1.5.9 (CVE-2026-45829, CRITICAL, no upstream
+  fix, optional `chroma` extra only — not in the runtime wheel). The runtime
+  wheel still depends on `numpy` + `pydantic` only; no end-user exposure.
+
+### Docs
+
+- New tutorial: retrieve-time query appraisal (`query_affect` /
+  `retrieve_with_query_appraisal`), including the Addendum T2A regime-bound caveat.
+- Research index lists Addenda U, V, T, T2A; `make help` documents the
+  `bench-t2a-dailydialog` targets; SECURITY.md supported-versions table → 0.13.x.
+
 ## [0.13.0] - 2026-06-27
 
 ### Research

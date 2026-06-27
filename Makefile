@@ -530,6 +530,8 @@ help:
 	@echo "  bench-realistic            Replayable multi-session benchmark with persisted state"
 	@echo "  bench-dailydialog          DailyDialog affect-conditioned retrieval (Hk1, no API key)"
 	@echo "  bench-dailydialog-dry      DailyDialog dry run (5 personas)"
+	@echo "  bench-t2a-dailydialog      Add. T2A — retrieve-time query appraisal on DailyDialog (requires API key)"
+	@echo "  bench-t2a-dailydialog-dry  Add. T2A dry run (5 personas, requires API key)"
 	@echo "  build-dailydialog-personas Build synthetic-persona JSON (requires: pip install datasets)"
 	@echo "  bench-locomo               LoCoMo benchmark (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
 	@echo "  bench-locomo-dry           LoCoMo dry run: 2 conversations, 5 QA each, no judge"
