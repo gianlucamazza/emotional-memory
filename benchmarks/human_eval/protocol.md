@@ -30,6 +30,16 @@ from completed multi-rater rating files.
 - Strong agreement: alpha ≥ 0.80
 - Minimum raters: 3 (alpha is undefined with fewer than 2 raters)
 
+## Condition significance
+
+`make human-eval-summary` also reports, per dimension, a **paired significance test**
+of the `aft − naive_cosine` rating difference (pairs formed by shared `(scenario, rater)`).
+It uses the project-standard paired bootstrap (`benchmarks/common/statistics.py`,
+n=2000, seed=0) rather than scipy/Wilcoxon, to keep the numpy-only stats convention:
+mean Δ, 95% CI, and a two-sided p-value. The Gate 2 effectiveness criterion is met for a
+dimension when the mean Δ is positive **and** p < 0.05 (AFT rated higher than the baseline).
+Agreement (α) and effect (Δ, p) are distinct gates, both reported.
+
 ## Minimum reporting
 
 - scenario identifier
