@@ -75,21 +75,19 @@ affective fingerprint---Russell circumplex core affect, affective momentum, a
 slow-adapting PAD mood field, a Scherer appraisal vector, and a resonance graph with
 spreading activation and Hebbian strengthening---and retrieves with a six-signal
 mood-adaptive scorer gated by a Pearce-Hall prediction-error term. We validate it
-through 127 fidelity cases over 20 psychological phenomena. On a
-multi-session recall benchmark (v2, $N=200$), AFT reaches
-\texttt{top1\_accuracy}=0.53 vs.\ 0.33 for semantic-only cosine ($\Delta=+0.21$
-[0.15, 0.27], $p<0.001$, $d=0.49$; SBERT), replicated on e5-small-v2
-($\Delta=+0.16$, $p<0.001$). The advantage holds under oracle-provided affect; with
-automatic \texttt{LLMAppraisalEngine} appraisal on affect-free data it does not
-(Addendum~P FAIL, $\Delta=-0.087$, $p=0.002$), and a pre-registered gating study
-(Addendum~Q) locates the boundary at retrieve-time state injection rather than
-appraisal calibration. Within the affect-discriminative (oracle-affect) regime the
-ranking edge converts end-to-end: a pre-registered
-encode$\to$retrieve$\to$generate$\to$judge task (Addendum~R, $N=200$) gives higher
-LLM-judged answer accuracy than cosine (0.595 vs.\ 0.440, $\Delta=+0.155$,
-$p<0.001$). Against human-annotated affect (Addendum~S, EmoBank, $N=300$), LLM
-appraisal valence is human-validated ($r=0.70$); arousal and dominance correlate
-only weakly. AFT encodes 25$\times$ faster than Mem0 (45 vs.\ 1130\,ms/item,
+through 127 fidelity cases over 20 psychological phenomena. On a multi-session recall
+benchmark (v2, $N=200$, SBERT), AFT reaches \texttt{top1\_accuracy}=0.53 vs.\ 0.33 for
+semantic-only cosine ($\Delta=+0.21$ [0.15, 0.27], $p<0.001$, $d=0.49$; replicated on
+e5-small-v2). A pre-registered circularity audit bounds this: ${\sim}62\%$ of queries
+are affect-discriminative by construction and the advantage concentrates there (null on
+the rest). With automatic appraisal on affect-free data the advantage disappears
+($\Delta=-0.087$, $p=0.002$), locating the boundary at retrieve-time state injection.
+Crucially, appraising the query \emph{at retrieve time} (no oracle) recovers most of
+it---AFT still beats cosine ($\Delta=+0.115$, $p<0.001$; ${\sim}59\%$ recovery,
+${\sim}82\%$ on the affect-discriminative subset)---so the advantage is largely
+production-reachable. The ranking edge also converts end-to-end (LLM-judged answer
+accuracy 0.595 vs.\ 0.440, $p<0.001$), and direct-LLM valence is human-validated against
+EmoBank ($r=0.79$). AFT encodes 25$\times$ faster than Mem0 (45 vs.\ 1130\,ms/item,
 CPU-only) with no retrieval-time LLM call. The implementation is released as the
 MIT-licensed \texttt{emotional-memory} Python library.
 \end{abstract}
@@ -646,6 +644,16 @@ is \emph{not} human-validated ($r=0.07$). This validates the first link of the
 utility} of the retrieved memories by human raters (Gate~2) remains future work---a
 signal-level correlation is not a substitute for recruited raters.
 
+The weak arousal/dominance axes are largely an artifact of the SEC$\to$projection, not a
+ceiling: a pre-registered comparison (Addendum~V; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_v\_direct\_vad\_closure.md}%
+{\texttt{preregistration\_addendum\_v\_direct\_vad\_closure.md}}.}) shows that asking the LLM
+for valence/arousal/dominance \emph{directly} (a custom \texttt{AppraisalSchema}, no engine
+change) beats the SEC$\to$projection on every axis vs.\ EmoBank---valence $r=0.79$ (bias
+${\approx}0$), arousal $r=0.58$, dominance $r=0.43$ vs.\ $0.70/0.23/0.31$. This direct-VAD
+schema ships opt-in (\texttt{DIRECT\_VAD\_SCHEMA}); the Scherer SEC schema remains the default
+for theory fidelity and SEC-dependent features.
+
 \paragraph{Synthetic benchmark.}
 affect\_reference\_v1 was generated synthetically. A benchmark derived from
 real emotional corpora (EmpatheticDialogues, GoEmotions) would provide stronger
@@ -842,8 +850,20 @@ channel, not the gate classifier. This sharpens the oracle-affect boundary into 
 the runtime state and the query itself is never appraised, so the $H_{d}$-family
 protocols---which inject each query's \texttt{state} before retrieval---perform an
 alignment the session trajectory does not supply for free. The affect-routing
-line is closed; the residual hypothesis, retrieve-time query appraisal as a new
-retrieval signal, is left unscheduled.
+line (reshaping the channel while keeping the oracle state) is closed.
+
+A pre-registered study then \emph{moved} this boundary (Addendum~T; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_t\_query\_appraisal\_closure.md}%
+{\texttt{preregistration\_addendum\_t\_query\_appraisal\_closure.md}}.}). Replacing the
+oracle \texttt{state} with the query's affect \emph{appraised at retrieve-time}
+(direct-VAD on the query text, then injected as the state) makes AFT beat cosine
+\textbf{without any oracle}: $\Delta=+0.115$ [$+0.055$, $+0.180$], $p<0.001$ on
+\texttt{realistic\_recall\_v2} ($N=200$, SBERT), recovering ${\sim}59\%$ of the oracle
+advantage overall and ${\sim}82\%$ on the affect-discriminative subset; the appraised
+query affect tracks the oracle state (valence $r=0.80$, arousal $r=0.56$). The
+affect-discriminative advantage is therefore \textbf{largely production-reachable}---the
+oracle is not required---though this remains bounded to that regime; query appraisal on
+naturalistic, affect-sparse QA (LoCoMo/DailyDialog) is untested.
 
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
@@ -860,7 +880,16 @@ In both cases, either affect is non-discriminative (LoCoMo) or the affective
 content per turn is too sparse for the 6-signal scorer to outperform semantic
 similarity (DailyDialog short turns, $\approx$17\% emotion-bearing turns before
 density filtering). Scenarios with valence-neutral discrimination criteria are
-under-represented in v2, and their effect on aggregate accuracy is unknown.
+under-represented in v2. A pre-registered circularity audit (Addendum~U; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_u\_circularity\_audit\_closure.md}%
+{\texttt{preregistration\_addendum\_u\_circularity\_audit\_closure.md}}.}) quantifies this:
+computing per query, from the data alone, whether the gold is cosine-unsolvable \emph{and}
+the affect-closest candidate to the query state, \textbf{62.5\% of v2 queries are
+affect-favorable by construction}. The aggregate advantage is concentrated there
+($\Delta=+0.304$ [$+0.224$, $+0.384$]) and is \textbf{null on the neutral 37.5\%}
+($\Delta=+0.013$ [$0.000$, $+0.040$], $p=0.63$). The $+0.205$/$+0.18$ headline figures
+should thus be read as the advantage on a benchmark that is ${\sim}62\%$
+affect-discriminative \emph{by construction}, not a regime-independent effect size.
 
 \paragraph{Downstream value (oracle-affect regime).}
 A pre-registered end-to-end study (Addendum~R; closure:\footnote{%
@@ -913,7 +942,7 @@ dataset. The library is MIT-licensed, fully typed, and available for immediate u
 in LangChain pipelines and custom LLM agents.
 
 A staged evidence programme has produced a series of pre-registered studies
-(Addenda A--S, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+(Addenda A--V, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
