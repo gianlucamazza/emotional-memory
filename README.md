@@ -524,7 +524,7 @@ If you use `emotional-memory` in research, please cite:
   title     = {{emotional-memory: Affective Field Theory for LLM Memory}},
   year      = {2026},
   version   = {0.13.0},
-  doi       = {10.5281/zenodo.20959964},
+  doi       = {10.5281/zenodo.20962443},
   url       = {https://github.com/gianlucamazza/emotional-memory},
   license   = {MIT},
 }
