@@ -71,6 +71,7 @@ nav:
     - LangChain integration: tutorials/langchain.md
     - Mem0 integration: tutorials/mem0.md
     - Query routing: tutorials/query_routing.md
+    - Retrieve-time query appraisal: tutorials/query_appraisal_retrieval.md
     - Custom appraisal schema: tutorials/byo_appraisal_schema.md
   - API Reference:
     - Engine (sync): api/engine.md
