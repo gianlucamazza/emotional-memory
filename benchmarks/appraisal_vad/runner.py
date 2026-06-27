@@ -109,7 +109,50 @@ def _delta_r(
     }
 
 
-def run(dataset: dict[str, Any], *, n_bootstrap: int, seed: int) -> dict[str, Any]:
+def _write_predictions_dump(
+    path: Path,
+    *,
+    items: list[dict[str, Any]],
+    human: dict[str, list[float]],
+    pred_scherer: dict[str, list[float]],
+    pred_direct: dict[str, list[float]],
+    dataset: dict[str, Any],
+    seed: int,
+) -> None:
+    """Persist paired per-item predictions for downstream offline analysis (Addendum W).
+
+    The Addendum V run is the only LLM pass; this dump lets deterministic studies
+    (e.g. affine arousal calibration) run with no further LLM calls.
+    """
+    records = [
+        {
+            "id": it.get("id"),
+            "split": it.get("split"),
+            "human": {d: human[d][i] for d in DIMENSIONS},
+            "scherer_m1": {d: pred_scherer[d][i] for d in DIMENSIONS},
+            "direct_vad": {d: pred_direct[d][i] for d in DIMENSIONS},
+        }
+        for i, it in enumerate(items)
+    ]
+    payload = {
+        "source_benchmark": "appraisal_direct_vad_v",
+        "dataset": dataset["name"],
+        "version": dataset["version"],
+        "n": len(records),
+        "seed": seed,
+        "items": records,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def run(
+    dataset: dict[str, Any],
+    *,
+    n_bootstrap: int,
+    seed: int,
+    dump_predictions: Path | None = None,
+) -> dict[str, Any]:
     items = dataset["items"]
     texts = [it["text"] for it in items]
     human = {d: [it["human"][d] for it in items] for d in DIMENSIONS}
@@ -130,6 +173,17 @@ def run(dataset: dict[str, Any], *, n_bootstrap: int, seed: int) -> dict[str, An
 
     pred_scherer = _appraise_all(scherer, texts, label="scherer_m1")
     pred_direct = _appraise_all(direct, texts, label="direct_vad")
+
+    if dump_predictions is not None:
+        _write_predictions_dump(
+            dump_predictions,
+            items=items,
+            human=human,
+            pred_scherer=pred_scherer,
+            pred_direct=pred_direct,
+            dataset=dataset,
+            seed=seed,
+        )
 
     stats = {
         "scherer_m1": {
@@ -239,13 +293,24 @@ def main() -> None:
     parser.add_argument("--n-bootstrap", type=int, default=DEFAULT_N_BOOTSTRAP)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--limit", type=int, default=None, help="Cap rows (quick check).")
+    parser.add_argument(
+        "--dump-predictions",
+        type=Path,
+        default=None,
+        help="Also write paired per-item predictions to this path (for Addendum W).",
+    )
     args = parser.parse_args()
 
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
     if args.limit is not None:
         dataset = {**dataset, "items": dataset["items"][: args.limit], "n": args.limit}
 
-    report = run(dataset, n_bootstrap=args.n_bootstrap, seed=args.seed)
+    report = run(
+        dataset,
+        n_bootstrap=args.n_bootstrap,
+        seed=args.seed,
+        dump_predictions=args.dump_predictions,
+    )
     args.out_json.parent.mkdir(parents=True, exist_ok=True)
     args.out_json.write_text(json.dumps(report, indent=2), encoding="utf-8")
     args.out_md.write_text(_render_markdown(report), encoding="utf-8")
