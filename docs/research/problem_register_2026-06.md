@@ -309,13 +309,20 @@ silent `xfail`/skip in tests (skips are env/feature-gated).
 
 ## 7. Future work (scoped, not faked)
 
-In priority order, the items whose _correct_ resolution is execution rather than
-re-scoping — none claimed as done:
+**Executed since this register was written (June 2026):** the in-repo items are done —
+A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
+(Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
+audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), and retrieve-time
+query appraisal (Addendum T, production-reachable). See the per-item §A\* sections.
 
-1. **Run the human-eval pilot** (A4) — the highest-value gap (Gate 2); needs raters.
-2. **Human-gold appraisal comparison** (A5) — validate the affect signal against
-   people, not LLM-derived gold; needs annotations.
-3. **Minimal downstream task** (A3) — encode→retrieve→generate→judge, to test
-   whether ranking gains convert to end-to-end value; needs an LLM judge.
+The genuinely open items (execution, not re-scoping), in priority order:
 
-(A7, the multi-seed robustness sweep, is **done** — see §A7 above.)
+1. **Run the human-eval pilot** (A4 / Gate 2) — the highest-value gap; needs raters
+   (external, tracked by issue #27).
+2. **Naturalistic query-appraisal re-test** — Addendum T showed query appraisal is
+   production-reachable in the affect-discriminative regime; whether it helps on
+   oracle-free naturalistic QA (LoCoMo/DailyDialog) is untested (the "T2A" follow-up).
+3. **Independent affect-discriminative + oracle-free corpus** — external-validity test
+   for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).
+4. **Arousal affine calibration** for direct-VAD (Addendum V follow-up: r improved, MAE
+   not yet — a held-out affine fit).
