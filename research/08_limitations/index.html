@@ -3174,7 +3174,15 @@ limitations:</p>
   (arousal r=0.23, dominance r=0.31). Asking the LLM for V/A/D <strong>directly</strong> lifts
   arousal to r=0.58 (Δr +0.354), dominance to r=0.43, and valence to r=0.79 with
   near-zero bias — adopting a direct-VAD appraisal schema is recommended as a
-  follow-up. See <code>benchmarks/preregistration_addendum_v_direct_vad_closure.md</code>.</li>
+  follow-up. See <code>benchmarks/preregistration_addendum_v_direct_vad_closure.md</code>.
+  <strong>Update (Addendum W, 2026-06-27):</strong> the one residual direct-VAD caveat — arousal had
+  the better <em>correlation</em> but a worse <em>MAE</em> than the projection (0.19 vs 0.11) — is
+  resolved by an affine calibration (<code>arousal_cal = 0.16·arousal_direct + 0.45</code>, fit vs
+  EmoBank): held-out arousal MAE drops to 0.04, so calibrated direct-VAD now dominates the
+  production projection on <strong>both</strong> r (0.57 vs 0.21) and MAE (0.04 vs 0.11) (Hw1/Hw2 PASS,
+  Gw OK). Caveat: the large MAE cut partly reflects EmoBank's narrow arousal variance
+  (shrink-to-mean); the durable claim is dominance-on-both-axes via r-preservation, not the
+  absolute 0.04. See <code>benchmarks/preregistration_addendum_w_arousal_calibration_closure.md</code>.</li>
 </ul>
 <h3 id="12-language-dependence">1.2 Language dependence<a class="headerlink" href="#12-language-dependence" title="Permanent link">&para;</a></h3>
 <ul>
