@@ -1,0 +1,134 @@
+{
+  "benchmark": "appraisal_direct_vad_v",
+  "dataset": "emobank_v1",
+  "version": "1.0",
+  "n": 300,
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "stats": {
+    "scherer_m1": {
+      "valence": {
+        "n": 300,
+        "pearson_r": 0.6954,
+        "pearson_ci": [
+          0.6445,
+          0.7399
+        ],
+        "bias": 0.1572,
+        "bias_ci": [
+          0.1193,
+          0.1964
+        ],
+        "mae": 0.3241,
+        "human_validated": true
+      },
+      "arousal": {
+        "n": 300,
+        "pearson_r": 0.2279,
+        "pearson_ci": [
+          0.129,
+          0.3238
+        ],
+        "bias": -0.0604,
+        "bias_ci": [
+          -0.0742,
+          -0.0476
+        ],
+        "mae": 0.1122,
+        "human_validated": true
+      },
+      "dominance": {
+        "n": 300,
+        "pearson_r": 0.3066,
+        "pearson_ci": [
+          0.1923,
+          0.4109
+        ],
+        "bias": 0.1346,
+        "bias_ci": [
+          0.1063,
+          0.1646
+        ],
+        "mae": 0.2602,
+        "human_validated": true
+      }
+    },
+    "direct_vad": {
+      "valence": {
+        "n": 300,
+        "pearson_r": 0.79,
+        "pearson_ci": [
+          0.7504,
+          0.8241
+        ],
+        "bias": -0.0133,
+        "bias_ci": [
+          -0.0571,
+          0.0318
+        ],
+        "mae": 0.329,
+        "human_validated": true
+      },
+      "arousal": {
+        "n": 300,
+        "pearson_r": 0.5817,
+        "pearson_ci": [
+          0.5098,
+          0.6516
+        ],
+        "bias": -0.093,
+        "bias_ci": [
+          -0.1145,
+          -0.0701
+        ],
+        "mae": 0.1928,
+        "human_validated": true
+      },
+      "dominance": {
+        "n": 300,
+        "pearson_r": 0.4282,
+        "pearson_ci": [
+          0.3252,
+          0.5212
+        ],
+        "bias": -0.0181,
+        "bias_ci": [
+          -0.0376,
+          0.0022
+        ],
+        "mae": 0.1424,
+        "human_validated": true
+      }
+    }
+  },
+  "paired_delta_r_directvad_minus_scherer": {
+    "valence": {
+      "delta_r": 0.0946,
+      "ci": [
+        0.0521,
+        0.1409
+      ]
+    },
+    "arousal": {
+      "delta_r": 0.3538,
+      "ci": [
+        0.2506,
+        0.4572
+      ]
+    },
+    "dominance": {
+      "delta_r": 0.1216,
+      "ci": [
+        -0.0077,
+        0.2431
+      ]
+    }
+  },
+  "verdicts": {
+    "Hv1_arousal_r_improved": true,
+    "Hv2_dominance_r_improved": false,
+    "Hv3_valence_bias_reduced": true,
+    "Gv_valence_not_regressed": true,
+    "adopt_direct_vad": true
+  }
+}
