@@ -1,6 +1,8 @@
 # Pre-registration Addendum T — Ht1/Ht2: Retrieve-time query appraisal vs oracle state-injection
 
-**Status:** PENDING*EXECUTION
+**Status:** EXECUTED (2026-06-27) — **Ht1 PASS** (query appraisal beats cosine without oracle;
+recovery fraction 0.59, ~0.82 on the affect-favorable subset). See
+`preregistration_addendum_t_query_appraisal_closure.md`.
 **Date (pre-reg):** 2026-06-27
 **Embedder:** `sbert-bge` (bge-small-en-v1.5) — matches the headline +0.205 claim
 **Dataset:** `realistic_recall_v2` (50 scenarios, 200 queries, oracle affect)
