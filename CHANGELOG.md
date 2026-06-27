@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum T2A — the query-appraisal advantage is regime-bound (naturalistic FAIL).**
+  Pre-registered (`benchmarks/dailydialog/t2a_runner.py`, `make bench-t2a-dailydialog`) on
+  DailyDialog (N=120 personas / 396 queries, multilingual-e5-small). Adding an
+  `aft_query_appraised` arm (direct-VAD query appraisal at retrieve-time via the new
+  `query_affect` API; encode path unchanged) does **not** beat cosine: top1 0.212 vs 0.220,
+  Δ=−0.008 [−0.056, +0.040], p_holm=1.000, 0/3 directional types — **Ht2a FAIL**, reproducing
+  the Hk1 null and recovering only +0.010 (ns) over the stale-state AFT arm. The query
+  appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so this is a **regime
+  limit, not an appraisal-quality failure**: Addendum T's production-reachable recovery is
+  confined to the affect-discriminative regime (Addendum U) and does not extend to
+  naturalistic affect-conditioned dialogue. `08_limitations` §2.4 updated.
+
 ### Added
 
 - **Retrieve-time query appraisal API (Addendum T, production path).**

@@ -1,11 +1,13 @@
 # Pre-registration Addendum T2A — Ht2a: Retrieve-time query appraisal on naturalistic dialogue (DailyDialog)
 
-**Status:** PENDING_EXECUTION
+**Status:** EXECUTED (2026-06-27) — **Ht2a FAIL** (query appraisal does not extend to naturalistic
+dialogue: appraised vs cosine Δ−0.008, p*holm=1.000; faithful diagnostic valence r=0.69, arousal
+r=0.74). See `preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
 **Date (pre-reg):** 2026-06-27
 **Embedder:** `multilingual-e5-small` (matches Addendum K, so the only changed factor vs Hk1 is the query-affect channel)
-**Dataset:** `benchmarks/datasets/dailydialog_personas_v1.json` (N=120 personas, 480 queries — identical to Addendum K Hk1)
-**LLM:** direct-VAD appraisal of the query text (`DIRECT_VAD_SCHEMA`, Addendum V), resolved from `EMOTIONAL_MEMORY_LLM_*` (`.env`). ~480 calls (one per query, cached).
-**Parent closures:** `preregistration_addendum_k_dailydialog_closure.md` (Hk1 FAIL, Δ−0.008 ns) · `preregistration_addendum_t_query_appraisal_closure.md` (Ht1 PASS on curated `realistic_recall_v2`)
+**Dataset:** `benchmarks/datasets/dailydialog_personas_v1.json` (N=120 personas, 396 queries — identical to Addendum K Hk1)
+**LLM:** direct-VAD appraisal of the query text (`DIRECT_VAD_SCHEMA`, Addendum V), resolved from `EMOTIONAL_MEMORY_LLM*\*` (`.env`). ~480 calls (one per query, cached).
+**Parent closures:** `preregistration_addendum_k_dailydialog_closure.md`(Hk1 FAIL, Δ−0.008 ns) ·`preregistration_addendum_t_query_appraisal_closure.md`(Ht1 PASS on curated`realistic_recall_v2`)
 
 ---
 
@@ -20,7 +22,7 @@ favorable), and it was **never tested on naturalistic, affect-sparse QA**.
 
 Addendum K (Hk1) tested AFT on DailyDialog (real dialogue + synthetic personas) and found
 **no advantage** over cosine (Δ−0.008, ns). But Hk1's AFT arm got its query-side affect from
-the *leftover runtime state* (the last ingested session's affect) — it never appraised the
+the _leftover runtime state_ (the last ingested session's affect) — it never appraised the
 query. The mechanism that moved the boundary in Addendum T was never applied here.
 
 **The question:** does retrieve-time query appraisal — the production-reachable mechanism that
@@ -89,6 +91,7 @@ adjustment. Result stands as measured; no post-hoc reframing.
 Retrieve-time query appraisal **generalises** the Addendum T mechanism to naturalistic
 affect-conditioned dialogue: AFT (with query appraisal) beats cosine where stale-state AFT
 (Hk1) did not.
+
 - Paper: boundary/limitations section reports T2A PASS as evidence the production-reachable
   mechanism extends beyond the curated benchmark (still affect-conditioned, not factual).
 - `claim_validation_matrix.json`: note on A2/`downstream_value` — naturalistic generalisation
@@ -97,6 +100,7 @@ affect-conditioned dialogue: AFT (with query appraisal) beats cosine where stale
 ### Branch B — FAIL
 
 Any pass condition unmet.
+
 - Paper: boundary/limitations states the query-appraisal advantage **does not extend** to
   naturalistic affect-conditioned dialogue under this protocol (Δ={observed}, p_holm={observed});
   the Addendum T recovery is bounded to the curated affect-discriminative regime (Addendum U).

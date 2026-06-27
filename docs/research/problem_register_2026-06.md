@@ -312,16 +312,21 @@ silent `xfail`/skip in tests (skips are env/feature-gated).
 **Executed since this register was written (June 2026):** the in-repo items are done —
 A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
 (Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
-audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), and retrieve-time
-query appraisal (Addendum T, production-reachable). See the per-item §A\* sections.
+audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), retrieve-time
+query appraisal (Addendum T, production-reachable), and its naturalistic re-test
+(Addendum T2A, FAIL — the recovery is regime-bound). See the per-item §A\* sections.
 
 The genuinely open items (execution, not re-scoping), in priority order:
 
 1. **Run the human-eval pilot** (A4 / Gate 2) — the highest-value gap; needs raters
    (external, tracked by issue #27).
-2. **Naturalistic query-appraisal re-test** — Addendum T showed query appraisal is
-   production-reachable in the affect-discriminative regime; whether it helps on
-   oracle-free naturalistic QA (LoCoMo/DailyDialog) is untested (the "T2A" follow-up).
+2. **Naturalistic query-appraisal re-test** — **EXECUTED (Addendum T2A, 2026-06-27): FAIL.**
+   Retrieve-time query appraisal on DailyDialog (N=120/396, multilingual-e5-small) does not
+   beat cosine (aft_query_appraised 0.212 vs cosine 0.220, Δ−0.008, p_holm=1.000, 0/3 types),
+   despite a faithful diagnostic (valence r=0.69, arousal r=0.74). Addendum T's
+   production-reachable recovery is **bounded to the affect-discriminative regime** (Addendum U)
+   and does not extend to naturalistic dialogue. LoCoMo bound-confirmation de-scoped (expected
+   FAIL). See `preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
 3. **Independent affect-discriminative + oracle-free corpus** — external-validity test
    for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).
 4. **Arousal affine calibration** for direct-VAD (Addendum V follow-up: r improved, MAE
