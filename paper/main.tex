@@ -85,7 +85,7 @@ the rest). With automatic appraisal on affect-free data the advantage disappears
 Crucially, appraising the query \emph{at retrieve time} (no oracle) recovers most of
 it---AFT still beats cosine ($\Delta=+0.115$, $p<0.001$; ${\sim}59\%$ recovery,
 ${\sim}82\%$ on the affect-discriminative subset)---so the advantage is largely
-production-reachable. The ranking edge also converts end-to-end (LLM-judged answer
+production-reachable within the affect-discriminative regime. The ranking edge also converts end-to-end (LLM-judged answer
 accuracy 0.595 vs.\ 0.440, $p<0.001$), and direct-LLM valence is human-validated against
 EmoBank ($r=0.79$). AFT encodes 25$\times$ faster than Mem0 (45 vs.\ 1130\,ms/item,
 CPU-only) with no retrieval-time LLM call. The implementation is released as the
@@ -862,8 +862,15 @@ oracle \texttt{state} with the query's affect \emph{appraised at retrieve-time}
 advantage overall and ${\sim}82\%$ on the affect-discriminative subset; the appraised
 query affect tracks the oracle state (valence $r=0.80$, arousal $r=0.56$). The
 affect-discriminative advantage is therefore \textbf{largely production-reachable}---the
-oracle is not required---though this remains bounded to that regime; query appraisal on
-naturalistic, affect-sparse QA (LoCoMo/DailyDialog) is untested.
+oracle is not required---but this recovery is \emph{regime-bound}. A pre-registered
+naturalistic re-test (Addendum~T2A; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_t2a\_naturalistic\_query\_appraisal\_closure.md}%
+{\texttt{preregistration\_addendum\_t2a\_naturalistic\_query\_appraisal\_closure.md}}.}) applied
+the same retrieve-time query appraisal to DailyDialog ($N=120$, 396 queries, multilingual-e5-small)
+and did \emph{not} beat cosine ($\Delta=-0.008$, $p_{\mathrm{holm}}=1.000$, 0/3 directional
+types), reproducing the $H_{k1}$ null---even though the query appraisal is faithful here too
+(valence $r=0.69$, arousal $r=0.74$). The production-reachable recovery is thus confined to the
+affect-discriminative regime and does not extend to naturalistic, affect-sparse dialogue.
 
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
@@ -942,7 +949,7 @@ dataset. The library is MIT-licensed, fully typed, and available for immediate u
 in LangChain pipelines and custom LLM agents.
 
 A staged evidence programme has produced a series of pre-registered studies
-(Addenda A--V, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+(Addenda A--V and T2A, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
