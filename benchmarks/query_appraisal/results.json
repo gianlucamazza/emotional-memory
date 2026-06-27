@@ -1,0 +1,85 @@
+{
+  "benchmark": "query_appraisal_t",
+  "dataset": "realistic_recall_v2",
+  "version": "2.0",
+  "embedder": "sbert-bge",
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "n_queries": 200,
+  "arms": {
+    "appraised_vs_cosine": {
+      "n": 200,
+      "a_top1": 0.44,
+      "b_top1": 0.325,
+      "delta": {
+        "point": 0.115,
+        "ci_lower": 0.055,
+        "ci_upper": 0.18,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0005
+    },
+    "oracle_vs_cosine": {
+      "n": 200,
+      "a_top1": 0.52,
+      "b_top1": 0.325,
+      "delta": {
+        "point": 0.195,
+        "ci_lower": 0.145,
+        "ci_upper": 0.25,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    },
+    "appraised_vs_oracle": {
+      "n": 200,
+      "a_top1": 0.44,
+      "b_top1": 0.52,
+      "delta": {
+        "point": -0.08,
+        "ci_lower": -0.125,
+        "ci_upper": -0.04,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    }
+  },
+  "favorable_subset": {
+    "n": 125,
+    "appraised_vs_cosine": {
+      "n": 125,
+      "a_top1": 0.248,
+      "b_top1": 0.0,
+      "delta": {
+        "point": 0.248,
+        "ci_lower": 0.168,
+        "ci_upper": 0.32,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    },
+    "oracle_vs_cosine": {
+      "n": 125,
+      "a_top1": 0.304,
+      "b_top1": 0.0,
+      "delta": {
+        "point": 0.304,
+        "ci_lower": 0.224,
+        "ci_upper": 0.384,
+        "ci_method": "bootstrap_percentile",
+        "n_bootstrap": 2000
+      },
+      "p_two_sided": 0.0
+    }
+  },
+  "recovery_fraction": 0.5897,
+  "diagnostic_appraised_vs_oracle_state_r": {
+    "valence_r": 0.8024,
+    "arousal_r": 0.5581
+  },
+  "ht1_appraised_beats_cosine": true
+}

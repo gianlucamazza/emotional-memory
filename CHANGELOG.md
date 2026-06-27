@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum T (A) — retrieve-time query appraisal is production-reachable.** Pre-registered
+  (`benchmarks/query_appraisal/`, `make bench-query-appraisal`) on realistic_recall_v2 (N=200,
+  SBERT). Replacing the oracle `query.state` with the query's affect **appraised at retrieve-time**
+  (direct-VAD on the query text) makes AFT beat cosine **without any oracle**: Δ=+0.115 [0.055,
+  0.180], p<0.001 — **Ht1 PASS**, recovering **~59%** of the oracle advantage overall and **~82%**
+  on the affect-discriminative subset (oracle Δ+0.304 → appraised Δ+0.248). The appraised query
+  affect tracks the oracle state (valence r=0.80, arousal r=0.56). First mechanism to **move** the
+  state-injection boundary (A2) rather than only characterize it (tuning/routing/gating all failed).
+  Caveats: bounded to the affect-discriminative regime (Addendum U); naturalistic QA with query
+  appraisal untested. Bounds `downstream_value`; `08_limitations` §2.4 updated.
+
 ### Added
 
 - **`DIRECT_VAD_SCHEMA`** — opt-in appraisal schema where the LLM rates

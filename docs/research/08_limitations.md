@@ -193,6 +193,17 @@ are state-based and the query is never appraised, query-driven affect questions 
 architecturally out of reach for the current signal set; the affect-routing line is
 closed. See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
 
+**Update (Addendum T, 2026-06-27) — the boundary is partially dissolved.** Replacing the
+oracle `query.state` with the query's affect **appraised at retrieve-time** (direct-VAD on
+the query text, then injected as the state) makes AFT beat cosine **without any oracle**:
+Δ=+0.115 [0.055, 0.180], p<0.001 on `realistic_recall_v2` (N=200, SBERT), recovering ~59%
+of the oracle advantage overall and ~82% on the affect-discriminative subset. The appraised
+query affect tracks the oracle state (valence r=0.80, arousal r=0.56). So the headline
+advantage is **largely production-reachable** — the oracle is not required for the
+affect-discriminative regime. Caveats: bounded to that regime (Addendum U); naturalistic,
+affect-sparse QA (LoCoMo/DailyDialog) with query appraisal remains untested.
+See `benchmarks/preregistration_addendum_t_query_appraisal_closure.md`.
+
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the
