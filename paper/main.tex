@@ -659,6 +659,17 @@ change) beats the SEC$\to$projection on every axis vs.\ EmoBank---valence $r=0.7
 ${\approx}0$), arousal $r=0.58$, dominance $r=0.43$ vs.\ $0.70/0.23/0.31$. This direct-VAD
 schema ships opt-in (\texttt{DIRECT\_VAD\_SCHEMA}); the Scherer SEC schema remains the default
 for theory fidelity and SEC-dependent features.
+Direct-VAD arousal wins on correlation but, in Addendum~V, loses on absolute error
+(MAE $0.19$ vs.\ the projection's $0.11$); a pre-registered affine calibration
+(Addendum~W; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_w\_arousal\_calibration\_closure.md}%
+{\texttt{preregistration\_addendum\_w\_arousal\_calibration\_closure.md}}.}) closes that gap:
+fitting \texttt{arousal\_cal}${=}0.16\,{\cdot}\,$\texttt{arousal\_direct}${+}0.45$ on held-out
+EmoBank cuts arousal MAE to $0.04$ while preserving $r$, so calibrated direct-VAD
+\emph{dominates} the projection on \emph{both} $r$ ($0.57$ vs.\ $0.21$) and MAE
+($0.04$ vs.\ $0.11$). The large MAE drop partly reflects EmoBank's narrow arousal variance
+(shrink-to-mean); the durable claim is the dual-axis dominance via $r$-preservation, with the
+calibration coefficients refittable per corpus.
 
 \paragraph{Synthetic benchmark.}
 affect\_reference\_v1 was generated synthetically. A benchmark derived from
