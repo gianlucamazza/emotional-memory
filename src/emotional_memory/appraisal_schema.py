@@ -201,3 +201,57 @@ SCHERER_CPM_SCHEMA: AppraisalSchema = AppraisalSchema(
     system_prompt=_SCHERER_SYSTEM_PROMPT,
     project_to_core_affect=_scherer_project,
 )
+
+
+_DIRECT_VAD_SYSTEM_PROMPT = """\
+You are an affect rating system. Given an event description, rate the emotion it
+expresses on three dimensions and return ONLY a JSON object (no explanation, no markdown):
+- valence   [-1, 1]  unpleasant/negative -> pleasant/positive
+- arousal   [0, 1]   calm/subdued -> excited/activated
+- dominance [0, 1]   controlled/submissive -> in-control/dominant
+Return ONLY valid JSON with these exact keys.\
+"""
+
+
+DIRECT_VAD_SCHEMA: AppraisalSchema = AppraisalSchema(
+    name="direct_vad",
+    dimensions=(
+        AppraisalDimension(
+            name="valence",
+            range=(-1.0, 1.0),
+            neutral=0.0,
+            description="Pleasantness: -1=unpleasant/negative, 0=neutral, 1=pleasant/positive",
+        ),
+        AppraisalDimension(
+            name="arousal",
+            range=(0.0, 1.0),
+            neutral=0.5,
+            description="Activation: 0=calm/subdued, 1=excited/activated",
+        ),
+        AppraisalDimension(
+            name="dominance",
+            range=(0.0, 1.0),
+            neutral=0.5,
+            description="Control: 0=controlled/submissive, 1=in-control/dominant",
+        ),
+    ),
+    system_prompt=_DIRECT_VAD_SYSTEM_PROMPT,
+    project_to_core_affect=lambda d: CoreAffect(
+        valence=d["valence"], arousal=d["arousal"], dominance=d["dominance"]
+    ),
+)
+"""Direct valence/arousal/dominance appraisal — the LLM rates V/A/D directly
+(identity projection) instead of the 5 Scherer SECs.
+
+Opt-in alternative to the default ``SCHERER_CPM_SCHEMA``. Against human-annotated
+affect (EmoBank, N=300) it is better correlated on every axis — valence r=0.79
+(near-zero bias), arousal r=0.58, dominance r=0.43 — vs the SEC->projection's
+0.70 / 0.23 / 0.31 (Addendum V,
+``benchmarks/preregistration_addendum_v_direct_vad_closure.md``). Trade-offs: it
+yields a ``GenericAppraisalVector`` (no Scherer SEC fields), so the dual-path
+``elaborate()`` SEC-appraisal storage and any SEC-reading feature require the
+default schema; and its arousal absolute scale is less calibrated (higher MAE)
+than its correlation. Use when you only need ``CoreAffect`` and want stronger
+human-gold agreement. Select via
+``LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA)``.
+"""

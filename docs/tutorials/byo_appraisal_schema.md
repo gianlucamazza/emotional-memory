@@ -17,7 +17,7 @@ An `AppraisalSchema` bundles:
 ## Example: OCC mini-schema
 
 The OCC model (Ortony, Clore & Collins 1988) evaluates events on two primary axes:
-*desirability* (how good/bad an outcome is) and *praiseworthiness* (whether an agent's
+_desirability_ (how good/bad an outcome is) and _praiseworthiness_ (whether an agent's
 action deserves credit or blame).
 
 ```python
@@ -105,6 +105,33 @@ appraisal_engine = LLMAppraisalEngine(
     fallback=KeywordAppraisalEngine(),  # activates if LLM call fails
 )
 ```
+
+## Built-in alternative: `DIRECT_VAD_SCHEMA`
+
+A ready-made opt-in schema ships with the library: instead of the 5 Scherer SECs,
+the LLM rates **valence / arousal / dominance directly** (identity projection).
+
+```python
+from emotional_memory import DIRECT_VAD_SCHEMA, LLMAppraisalConfig
+from emotional_memory.appraisal_llm import LLMAppraisalEngine
+
+appraisal_engine = LLMAppraisalEngine(
+    llm=make_httpx_llm_from_env(),
+    config=LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA),
+)
+```
+
+Against human-annotated affect (EmoBank, N=300) direct-VAD is **better correlated on
+every axis** than the default SEC→projection — valence r=0.79 (near-zero bias), arousal
+r=0.58, dominance r=0.43, vs 0.70 / 0.23 / 0.31 (Addendum V). Choose it when you only
+need `CoreAffect` and want stronger human-gold agreement.
+
+**Caveats (why SEC remains the default).** Any custom schema — `DIRECT_VAD_SCHEMA`
+included — produces a `GenericAppraisalVector`, not the Scherer `AppraisalVector`.
+Consequently: the dual-path `elaborate()` slow path consumes its blended affect but does
+**not** persist the appraisal on the tag (`tag.appraisal` stays `None`), and any feature
+that reads the 5 SEC fields requires the default `SCHERER_CPM_SCHEMA`. Direct-VAD's
+arousal _absolute scale_ is also less calibrated (higher MAE) than its correlation.
 
 ## API reference
 

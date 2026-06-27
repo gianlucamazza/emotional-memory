@@ -22,6 +22,7 @@ from emotional_memory.appraisal_llm import (
     LLMCallable,
 )
 from emotional_memory.appraisal_schema import (
+    DIRECT_VAD_SCHEMA,
     SCHERER_CPM_SCHEMA,
     AppraisalDimension,
     AppraisalSchema,
@@ -168,6 +169,7 @@ if TYPE_CHECKING:
 # checkers to resolve the export surface (reportUnsupportedDunderAll rejects
 # computed __all__ values); unavailable optional names are filtered out at runtime.
 __all__ = [
+    "DIRECT_VAD_SCHEMA",
     "LOCOMO_ROUTING",
     "QUERY_TYPES",
     "SCHERER_CPM_SCHEMA",

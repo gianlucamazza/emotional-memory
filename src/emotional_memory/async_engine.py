@@ -653,6 +653,12 @@ class AsyncEmotionalMemory:
 
         appraisal = await self._appraisal_engine.appraise(mem.content)
         appraised_affect = appraisal.to_core_affect()
+        # Persist the appraisal only when it is the Scherer ``AppraisalVector``;
+        # a custom-schema ``GenericAppraisalVector`` is used for its affect but
+        # not stored (mirrors the encode() path / sync engine).
+        stored_appraisal: AppraisalVector | None = (
+            appraisal if isinstance(appraisal, AppraisalVector) else None
+        )
 
         lr = self._config.elaboration_learning_rate
         blended_affect = mem.tag.core_affect.lerp(appraised_affect, lr)
@@ -663,7 +669,7 @@ class AsyncEmotionalMemory:
         updated_tag = mem.tag.model_copy(
             update={
                 "core_affect": blended_affect,
-                "appraisal": appraisal,
+                "appraisal": stored_appraisal,
                 "consolidation_strength": new_cs,
                 "pending_appraisal": False,
                 "window_opened_at": now,
