@@ -670,6 +670,13 @@ class EmotionalMemory:
 
         appraisal = self._appraisal_engine.appraise(mem.content)
         appraised_affect = appraisal.to_core_affect()
+        # Only the Scherer ``AppraisalVector`` carries the SEC fields that
+        # ``EmotionalTag.appraisal`` is typed to hold; a custom-schema
+        # ``GenericAppraisalVector`` is consumed for its blended affect but not
+        # persisted (mirrors the encode() path).
+        stored_appraisal: AppraisalVector | None = (
+            appraisal if isinstance(appraisal, AppraisalVector) else None
+        )
 
         # Blend: elaboration_learning_rate controls how much the appraised
         # affect replaces the raw fast-path affect (30% raw, 70% appraised).
@@ -685,7 +692,7 @@ class EmotionalMemory:
         updated_tag = mem.tag.model_copy(
             update={
                 "core_affect": blended_affect,
-                "appraisal": appraisal,
+                "appraisal": stored_appraisal,
                 "consolidation_strength": new_cs,
                 "pending_appraisal": False,
                 "window_opened_at": now,

@@ -2,8 +2,18 @@
 
 from conftest import DeterministicEmbedder
 
-from emotional_memory import CoreAffect, EmotionalMemory, EmotionalMemoryConfig, InMemoryStore
-from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
+from emotional_memory import (
+    DIRECT_VAD_SCHEMA,
+    CoreAffect,
+    EmotionalMemory,
+    EmotionalMemoryConfig,
+    InMemoryStore,
+)
+from emotional_memory.appraisal import (
+    AppraisalVector,
+    GenericAppraisalVector,
+    StaticAppraisalEngine,
+)
 
 
 def _appraisal_engine(valence: float = 0.7, arousal: float = 0.6) -> StaticAppraisalEngine:
@@ -290,3 +300,36 @@ class TestEncodeBatch:
         em.set_affect(CoreAffect(valence=0.8, arousal=0.7))
         memories = em.encode_batch(["A.", "B."])
         assert all(m.tag.emotion_label is None for m in memories)
+
+
+class _GenericVADEngine:
+    """Appraisal engine returning a custom-schema GenericAppraisalVector (no SECs)."""
+
+    def appraise(self, event_text: str, context: dict | None = None) -> GenericAppraisalVector:
+        return GenericAppraisalVector(
+            {"valence": 0.8, "arousal": 0.6, "dominance": 0.5}, DIRECT_VAD_SCHEMA
+        )
+
+
+class TestElaborateWithCustomSchema:
+    """Regression: elaborate() must not persist a GenericAppraisalVector into the tag."""
+
+    def test_elaborate_generic_vector_not_stored_but_affect_blended(self):
+        em = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=DeterministicEmbedder(),
+            appraisal_engine=_GenericVADEngine(),
+            config=EmotionalMemoryConfig(dual_path_encoding=True),
+        )
+        em.set_affect(CoreAffect(valence=0.0, arousal=0.2))
+        mem = em.encode("Something happened.")
+        assert mem.tag.pending_appraisal is True
+
+        out = em.elaborate(mem.id)
+        assert out is not None
+        # GenericAppraisalVector is consumed for affect but NOT persisted
+        # (EmotionalTag.appraisal is typed AppraisalVector | None).
+        assert out.tag.appraisal is None
+        assert out.tag.pending_appraisal is False
+        # core_affect blended toward the appraised valence (0.8) from the 0.0 baseline.
+        assert out.tag.core_affect.valence > 0.0

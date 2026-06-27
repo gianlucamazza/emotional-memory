@@ -14,7 +14,11 @@ from emotional_memory.appraisal_llm import (
     LLMAppraisalEngine,
     LLMCallable,
 )
-from emotional_memory.appraisal_schema import AppraisalDimension, AppraisalSchema
+from emotional_memory.appraisal_schema import (
+    DIRECT_VAD_SCHEMA,
+    AppraisalDimension,
+    AppraisalSchema,
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -369,3 +373,38 @@ class TestKeywordRule:
     def test_case_insensitive(self):
         rule = KeywordRule(r"\bSUCCESS\b", goal_relevance=0.9)
         assert rule.matches("great success today")
+
+
+class TestDirectVADSchema:
+    """The shipped opt-in DIRECT_VAD_SCHEMA (Addendum V)."""
+
+    def test_direct_vad_schema_end_to_end(self):
+        captured: list[dict] = []
+
+        def vad_llm(prompt: str, json_schema: dict) -> str:
+            captured.append(json_schema)
+            return json.dumps({"valence": -0.4, "arousal": 0.8, "dominance": 0.3})
+
+        engine = LLMAppraisalEngine(
+            vad_llm,  # type: ignore[arg-type]
+            config=LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA),
+        )
+        result = engine.appraise("A tense, frightening moment")
+
+        # JSON schema sent to the LLM has the 3 VAD dims, not Scherer's 5 SECs.
+        assert set(captured[0]["required"]) == {"valence", "arousal", "dominance"}
+        assert "novelty" not in captured[0]["required"]
+
+        # Returns a GenericAppraisalVector that projects V/A/D by identity.
+        assert isinstance(result, GenericAppraisalVector)
+        assert result.schema_name == "direct_vad"
+        ca = result.to_core_affect()
+        assert ca.valence == pytest.approx(-0.4, abs=1e-6)
+        assert ca.arousal == pytest.approx(0.8, abs=1e-6)
+        assert ca.dominance == pytest.approx(0.3, abs=1e-6)
+
+    def test_direct_vad_schema_exported_top_level(self):
+        import emotional_memory
+
+        assert emotional_memory.DIRECT_VAD_SCHEMA is DIRECT_VAD_SCHEMA
+        assert "DIRECT_VAD_SCHEMA" in emotional_memory.__all__

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`DIRECT_VAD_SCHEMA`** — opt-in appraisal schema where the LLM rates
+  valence/arousal/dominance directly (identity projection). Better human-gold agreement
+  than the default SEC→projection (Addendum V: valence r=0.79, arousal r=0.58, dominance
+  r=0.43). Exported top-level; select via `LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA)`.
+  `SCHERER_CPM_SCHEMA` remains the default (theory-faithful; required for dual-path
+  `elaborate()` SEC storage and SEC-reading features).
+
+### Fixed
+
+- **`elaborate()` type-safety (sync + async):** the dual-path slow path stored the appraisal
+  on `EmotionalTag.appraisal` without checking its type, which violated the
+  `AppraisalVector | None` typing when a custom `AppraisalSchema` (e.g. `DIRECT_VAD_SCHEMA`)
+  returned a `GenericAppraisalVector`. It now persists the appraisal only when it is an
+  `AppraisalVector` (else `None`), mirroring the `encode()` path; the blended `core_affect`
+  is unchanged. Regression test added.
+
 ### Research
 
 - **Addendum V (C) — direct-VAD appraisal beats the SEC→projection.** Pre-registered
