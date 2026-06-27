@@ -1,0 +1,5709 @@
+{
+  "source_benchmark": "appraisal_direct_vad_v",
+  "dataset": "emobank_v1",
+  "version": "1.0",
+  "n": 300,
+  "seed": 42,
+  "items": [
+    {
+      "id": "Fermentation_Eminent-Domain_42_93",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.6585500000000001,
+        "arousal": 0.669675,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.65,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "116CUL032_1922_2054",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.59177,
+        "arousal": 0.49907999999999997,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.72,
+        "arousal": 0.58,
+        "dominance": 0.36
+      }
+    },
+    {
+      "id": "SemEval_1370",
+      "split": "test",
+      "human": {
+        "valence": 0.215,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.43812,
+        "arousal": 0.363005,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Ohio_Steel_7452_7599",
+      "split": "dev",
+      "human": {
+        "valence": -0.07,
+        "arousal": 0.465,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.6164999999999999,
+        "arousal": 0.531665,
+        "dominance": 0.15
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.35,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_45926_45965",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.6,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.49757,
+        "arousal": 0.643775,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.35,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_148_278",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.45,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.48323,
+        "arousal": 0.29315500000000005,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.35,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Black_and_white_15404_15803",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.019420000000000007,
+        "arousal": 0.31222,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.2,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "wsj_0173_984_1110",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.43189,
+        "arousal": 0.36273,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.1,
+        "arousal": 0.15,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "Ant_Robot_51389_51606",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.4375,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5759299999999999,
+        "arousal": 0.23839,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "captured_moments_12994_13054",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.60576,
+        "arousal": 0.480835,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.25,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "118CWL050_140_228",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.36971,
+        "arousal": 0.57889,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "118CWL048_1550_1608",
+      "split": "train",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": 0.71504,
+        "arousal": 0.33689500000000006,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.65,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Bartok_14696_14879",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.56333,
+        "arousal": 0.30845,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_41308_41365",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.40618,
+        "arousal": 0.389985,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.3,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_56635_56672",
+      "split": "train",
+      "human": {
+        "valence": -0.35,
+        "arousal": 0.5,
+        "dominance": 0.35
+      },
+      "scherer_m1": {
+        "valence": -0.40013000000000004,
+        "arousal": 0.5359200000000001,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.1,
+        "arousal": 0.2,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "hotel-california_7111_7157",
+      "split": "test",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.65,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": -0.676295,
+        "arousal": 0.73037,
+        "dominance": 0.1
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.85,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "116CUL034_1603_1818",
+      "split": "train",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.405,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5490900000000001,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.15,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_2113_2251",
+      "split": "train",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.5425,
+        "dominance": 0.4175
+      },
+      "scherer_m1": {
+        "valence": 0.58488,
+        "arousal": 0.46301000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.45,
+        "arousal": 0.2,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "wsj_0172_727_931",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": -0.33714999999999995,
+        "arousal": 0.40054,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.15,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "cable_spool_fort_8413_8465",
+      "split": "train",
+      "human": {
+        "valence": -0.09,
+        "arousal": 0.4775,
+        "dominance": 0.455
+      },
+      "scherer_m1": {
+        "valence": 0.44048,
+        "arousal": 0.536455,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.6,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42854_42890",
+      "split": "train",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.34714,
+        "arousal": 0.39719000000000004,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.2,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "defenders5_986_1142",
+      "split": "train",
+      "human": {
+        "valence": -0.145,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.591845,
+        "arousal": 0.558855,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.65,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "SemEval_1419",
+      "split": "train",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.575,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.32382,
+        "arousal": 0.290625,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.72,
+        "arousal": 0.78,
+        "dominance": 0.42
+      }
+    },
+    {
+      "id": "110CYL071_55_94",
+      "split": "train",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.5,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.5523399999999999,
+        "arousal": 0.591655,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.45,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "NYTnewswire1_2612_2727",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.61317,
+        "arousal": 0.27151000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "captured_moments_14272_14429",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": -0.6019349999999999,
+        "arousal": 0.793855,
+        "dominance": 0.15
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.6,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Uprooted_Bike_2653_2725",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.694915,
+        "arousal": 0.54453,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "SemEval_1414",
+      "split": "train",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.5625,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": -0.7047,
+        "arousal": 0.56224,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.95,
+        "arousal": 0.85,
+        "dominance": 0.15
+      }
+    },
+    {
+      "id": "Madame_White_Snake_8666_9267",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.43365,
+        "arousal": 0.57328,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.35,
+        "arousal": 0.2,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_37978_38046",
+      "split": "train",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.625,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": -0.19551999999999997,
+        "arousal": 0.44599,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.8,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "The_Black_Willow_9628_9676",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.65,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.67447,
+        "arousal": 0.49089000000000005,
+        "dominance": 0.1
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.85,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "Black_and_white_14588_14665",
+      "split": "train",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5,
+        "dominance": 0.555
+      },
+      "scherer_m1": {
+        "valence": 0.35291,
+        "arousal": 0.363215,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Bartok_12055_12190",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.3875,
+        "dominance": 0.4775
+      },
+      "scherer_m1": {
+        "valence": -0.42652,
+        "arousal": 0.47355,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "WhereToHongKong_56281_56446",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.24666000000000002,
+        "arousal": 0.36154,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "Bartok_21701_21944",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.49173,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.25,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "WhereToHongKong_11220_11380",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.445,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.0018200000000000091,
+        "arousal": 0.31647499999999995,
+        "dominance": 0.65
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Uprooted_Farming-on-Sand_1360_1442",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.10912999999999999,
+        "arousal": 0.2532,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.2,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "SemEval_1202",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.525,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": 0.671005,
+        "arousal": 0.43964000000000003,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.7,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "20020731-nyt_22221_22257",
+      "split": "train",
+      "human": {
+        "valence": 0.415,
+        "arousal": 0.6675,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.757605,
+        "arousal": 0.663005,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.95,
+        "arousal": 0.85,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "detroit_6155_6401",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": -0.4638,
+        "arousal": 0.4476,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.45,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "wsj_0127_928_1005",
+      "split": "train",
+      "human": {
+        "valence": -0.28,
+        "arousal": 0.5,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": -0.19673999999999997,
+        "arousal": 0.403925,
+        "dominance": 0.55
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.25,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "HistoryLasVegas_1664_1837",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.6885399999999999,
+        "arousal": 0.558535,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.2,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "WhereToHongKong_53329_53408",
+      "split": "train",
+      "human": {
+        "valence": 0.375,
+        "arousal": 0.6875,
+        "dominance": 0.5925
+      },
+      "scherer_m1": {
+        "valence": 0.51006,
+        "arousal": 0.40312000000000003,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Ant_Robot_10575_10869",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5391699999999999,
+        "arousal": 0.40268500000000007,
+        "dominance": 0.75
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.15,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "wsj_2465_4289_4454",
+      "split": "train",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": 0.5047699999999999,
+        "arousal": 0.26171,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "SemEval_527",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": -0.06963,
+        "arousal": 0.47658,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.6,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "WhereToHongKong_17085_17244",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.21428999999999998,
+        "arousal": 0.30845,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.35,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_13518_13543",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.56315,
+        "arousal": 0.536455,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_25689_25727",
+      "split": "dev",
+      "human": {
+        "valence": -0.145,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.500695,
+        "arousal": 0.408775,
+        "dominance": 0.35
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.45,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "20020731-nyt_25556_25718",
+      "split": "train",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5275,
+        "dominance": 0.555
+      },
+      "scherer_m1": {
+        "valence": 0.3804,
+        "arousal": 0.4383849999999999,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_50835_50919",
+      "split": "train",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.53,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.5260900000000001,
+        "arousal": 0.37468999999999997,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.7,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "SemEval_248",
+      "split": "train",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.47,
+        "dominance": 0.4375
+      },
+      "scherer_m1": {
+        "valence": -0.15233,
+        "arousal": 0.29864999999999997,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Ant_Robot_1544_1685",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4375,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.24845,
+        "arousal": 0.3246,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_56759_56816",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.41707,
+        "arousal": 0.521595,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.25,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Black_and_white_10483_10957",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.445,
+        "dominance": 0.555
+      },
+      "scherer_m1": {
+        "valence": 0.55366,
+        "arousal": 0.31567,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.15,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "WhereToHongKong_56684_56816",
+      "split": "train",
+      "human": {
+        "valence": 0.445,
+        "arousal": 0.5275,
+        "dominance": 0.555
+      },
+      "scherer_m1": {
+        "valence": 0.5233099999999999,
+        "arousal": 0.46978,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "SemEval_1416",
+      "split": "train",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.6075,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.6936,
+        "arousal": 0.58814,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.95,
+        "arousal": 0.85,
+        "dominance": 0.15
+      }
+    },
+    {
+      "id": "detroit_15156_15206",
+      "split": "train",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.68894,
+        "arousal": 0.6098,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.35,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "WhereToHongKong_23799_23917",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.425,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.29934,
+        "arousal": 0.47914500000000004,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "NYTnewswire2_4607_4733",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.23063,
+        "arousal": 0.4341299999999999,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "WhereToHongKong_35992_36078",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.17828,
+        "arousal": 0.23457,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "WhatToHongKong_4598_4714",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": -0.12225000000000001,
+        "arousal": 0.27657,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.2,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_31729_31781",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.16864,
+        "arousal": 0.34916,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.25,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "SemEval_1246",
+      "split": "dev",
+      "human": {
+        "valence": 0.19,
+        "arousal": 0.4675,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.69345,
+        "arousal": 0.5540700000000001,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.8,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_3432_3534",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5625,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": -0.0011999999999999927,
+        "arousal": 0.59536,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.5,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "NYTnewswire5_1109_1261",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.53,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.23420999999999997,
+        "arousal": 0.33816999999999997,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.2,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "wsj_0120_4024_4092",
+      "split": "train",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": 0.46231,
+        "arousal": 0.2825,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": 0.2,
+        "arousal": 0.35,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "Ohio_Steel_7193_7237",
+      "split": "test",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.61785,
+        "arousal": 0.46678,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.75,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "NYTnewswire2_6132_6222",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.6613,
+        "arousal": 0.64674,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.55,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "detroit_9954_10030",
+      "split": "train",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": -0.48436999999999997,
+        "arousal": 0.505765,
+        "dominance": 0.15
+      },
+      "direct_vad": {
+        "valence": -0.55,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "WhereToHongKong_5512_5631",
+      "split": "dev",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.11632,
+        "arousal": 0.36154,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "SemEval_1292",
+      "split": "train",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.61,
+        "dominance": 0.64
+      },
+      "scherer_m1": {
+        "valence": 0.0030899999999999955,
+        "arousal": 0.51049,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.75,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42176_42333",
+      "split": "train",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.5325,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.5723499999999999,
+        "arousal": 0.45579000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.65,
+        "arousal": 0.25,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "The_Black_Willow_11330_11437",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.6871499999999999,
+        "arousal": 0.5356,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.6,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "20020731-nyt_47439_47698",
+      "split": "train",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5,
+        "dominance": 0.61
+      },
+      "scherer_m1": {
+        "valence": -0.59299,
+        "arousal": 0.5597099999999999,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.35,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_51860_51877",
+      "split": "train",
+      "human": {
+        "valence": -0.31,
+        "arousal": 0.5,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": -0.25876,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.35,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "118CWL050_1926_2046",
+      "split": "train",
+      "human": {
+        "valence": 0.35,
+        "arousal": 0.575,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.8199399999999999,
+        "arousal": 0.478305,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.9,
+        "arousal": 0.6,
+        "dominance": 0.85
+      }
+    },
+    {
+      "id": "SemEval_878",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.47,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.58842,
+        "arousal": 0.35638000000000003,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.75,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "att2_1849_1904",
+      "split": "test",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.4375,
+        "dominance": 0.5325
+      },
+      "scherer_m1": {
+        "valence": 0.55657,
+        "arousal": 0.566175,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "SemEval_1258",
+      "split": "test",
+      "human": {
+        "valence": -0.35,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": -0.709135,
+        "arousal": 0.613395,
+        "dominance": 0.15
+      },
+      "direct_vad": {
+        "valence": -0.95,
+        "arousal": 0.9,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_1924_2035",
+      "split": "train",
+      "human": {
+        "valence": -0.315,
+        "arousal": 0.6575,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.29924,
+        "arousal": 0.35896,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.35,
+        "arousal": 0.6,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_33266_33288",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.36397,
+        "arousal": 0.54453,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.45,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "SemEval_864",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.55914,
+        "arousal": 0.39966999999999997,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.45,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_35013_35093",
+      "split": "train",
+      "human": {
+        "valence": -0.45,
+        "arousal": 0.575,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.5385,
+        "arousal": 0.69219,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.7,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "hotel-california_32145_32174",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4075,
+        "dominance": 0.4775
+      },
+      "scherer_m1": {
+        "valence": 0.08068000000000002,
+        "arousal": 0.5806,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.1,
+        "arousal": 0.2,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "appalachian1_5401_5622",
+      "split": "train",
+      "human": {
+        "valence": 0.35,
+        "arousal": 0.475,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.70967,
+        "arousal": 0.425635,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "detroit_5560_5663",
+      "split": "train",
+      "human": {
+        "valence": 0.5,
+        "arousal": 0.6125,
+        "dominance": 0.5225
+      },
+      "scherer_m1": {
+        "valence": 0.61357,
+        "arousal": 0.4477150000000001,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.55,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "IFAW1_3847_3908",
+      "split": "train",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.32129,
+        "arousal": 0.34539,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.18,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "SemEval_1209",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.43638,
+        "arousal": 0.4464100000000001,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_1576_1671",
+      "split": "dev",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.625,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": -0.24946000000000002,
+        "arousal": 0.58137,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.65,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Seedbombing_1296_1372",
+      "split": "dev",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.549675,
+        "arousal": 0.5784050000000001,
+        "dominance": 0.35
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.6,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "wsj_0152_252_408",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.38316500000000003,
+        "arousal": 0.27468499999999996,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "SemEval_1172",
+      "split": "train",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.5,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.45755999999999997,
+        "arousal": 0.27151000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.72,
+        "arousal": 0.48,
+        "dominance": 0.56
+      }
+    },
+    {
+      "id": "captured_moments_22463_22573",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.425,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.33221,
+        "arousal": 0.54701,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.2,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "aspca1_2973_2997",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.53909,
+        "arousal": 0.403555,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.65,
+        "arousal": 0.75,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "WhereToHongKong_17902_17983",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.35050000000000003,
+        "arousal": 0.1399,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.2,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_41903_41945",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.55836,
+        "arousal": 0.496115,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.2,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "How_soon-Fans_3248_3323",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.60601,
+        "arousal": 0.5517500000000001,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.45,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "hsus4_5637_5756",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.375,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.33618000000000003,
+        "arousal": 0.43542000000000003,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "hotel-california_26163_26206",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": -0.04477000000000002,
+        "arousal": 0.43113,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.6,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Anti-Terrorist_4412_4509",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.57534,
+        "arousal": 0.43962500000000004,
+        "dominance": 0.75
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.25,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "20020731-nyt_28016_28125",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.06970499999999999,
+        "arousal": 0.49707999999999997,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.2,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_1311_1383",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.50907,
+        "arousal": 0.5817899999999999,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.68,
+        "arousal": 0.52,
+        "dominance": 0.62
+      }
+    },
+    {
+      "id": "Madame_White_Snake_3061_3191",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.625,
+        "dominance": 0.4075
+      },
+      "scherer_m1": {
+        "valence": -0.51113,
+        "arousal": 0.5512,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.8,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "NYTnewswire1_3167_3223",
+      "split": "train",
+      "human": {
+        "valence": 0.6,
+        "arousal": 0.8,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.65585,
+        "arousal": 0.53689,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.9,
+        "arousal": 0.85,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "captured_moments_13277_13416",
+      "split": "train",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.5625,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": -0.40611,
+        "arousal": 0.64297,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_1353_1435",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": 0.62756,
+        "arousal": 0.26387,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.65,
+        "arousal": 0.72,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "WhereToHongKong_66026_66113",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.6572399999999999,
+        "arousal": 0.389985,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.45,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "WhereToHongKong_59648_59721",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.3325,
+        "dominance": 0.4575
+      },
+      "scherer_m1": {
+        "valence": 0.49867000000000006,
+        "arousal": 0.43284,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "easy_money_240_287",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.16719,
+        "arousal": 0.42391,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.45,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "wildelifewatch1_2108_2305",
+      "split": "train",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.6,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.55796,
+        "arousal": 0.48551,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.35,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Seedbombing_7_93",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.465,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.34463,
+        "arousal": 0.29740999999999995,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "wwf12_3238_3286",
+      "split": "test",
+      "human": {
+        "valence": -0.22,
+        "arousal": 0.555,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": -0.30572,
+        "arousal": 0.49348499999999995,
+        "dominance": 0.35
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "112C-L014_1144_1226",
+      "split": "test",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.5,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.62463,
+        "arousal": 0.46343,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_10252_10300",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": 0.52689,
+        "arousal": 0.5063,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "wsj_0135_464_545",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.4,
+        "dominance": 0.4
+      },
+      "scherer_m1": {
+        "valence": -0.07168000000000001,
+        "arousal": 0.39332,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.15,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "SemEval_1243",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5425
+      },
+      "scherer_m1": {
+        "valence": 0.20687,
+        "arousal": 0.24684999999999999,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.6,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Uprooted_Bike_2559_2592",
+      "split": "train",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": 0.39778,
+        "arousal": 0.51394,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.15,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_4527_4654",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.57688,
+        "arousal": 0.46333,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.65,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "SemEval_531",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.575,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.02143000000000002,
+        "arousal": 0.45363,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.6,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "captured_moments_30431_30466",
+      "split": "train",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": -0.28249,
+        "arousal": 0.59623,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.35,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "NYTnewswire1_1032_1159",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.54551,
+        "arousal": 0.48422,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.18,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "detroit_15584_15660",
+      "split": "test",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.15984,
+        "arousal": 0.45147000000000004,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.65,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "110CYL069_3238_3328",
+      "split": "train",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.5625,
+        "dominance": 0.595
+      },
+      "scherer_m1": {
+        "valence": 0.58663,
+        "arousal": 0.42984,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.78,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "SemEval_1185",
+      "split": "train",
+      "human": {
+        "valence": -0.44,
+        "arousal": 0.595,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": -0.37931,
+        "arousal": 0.46375,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.8,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "hotel-california_33068_33156",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.5,
+        "dominance": 0.375
+      },
+      "scherer_m1": {
+        "valence": -0.335,
+        "arousal": 0.47733499999999995,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.55,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "NYTnewswire7_567_697",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.38677,
+        "arousal": 0.36273,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.3,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "hsus4_1520_1565",
+      "split": "train",
+      "human": {
+        "valence": -0.65,
+        "arousal": 0.725,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.6878700000000001,
+        "arousal": 0.60258,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.95,
+        "arousal": 0.88,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Black_and_white_6393_6693",
+      "split": "dev",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": -0.04070999999999997,
+        "arousal": 0.37382000000000004,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "SemEval_610",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.55,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": -0.653145,
+        "arousal": 0.6807150000000001,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.75,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_21165_21227",
+      "split": "test",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.38577,
+        "arousal": 0.33860500000000004,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.2,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "WhereToHongKong_43634_43830",
+      "split": "train",
+      "human": {
+        "valence": 0.165,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.38219000000000003,
+        "arousal": 0.412485,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.2,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "NYTnewswire2_2636_2795",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.03466999999999999,
+        "arousal": 0.70576,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.68,
+        "dominance": 0.88
+      }
+    },
+    {
+      "id": "wsj_0157_408_470",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.26280000000000003,
+        "arousal": 0.42433,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "wildelifewatch1_626_690",
+      "split": "train",
+      "human": {
+        "valence": 0.165,
+        "arousal": 0.5275,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.56333,
+        "arousal": 0.41884999999999994,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "110CYL068_1811_1946",
+      "split": "dev",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.7550600000000001,
+        "arousal": 0.482125,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.65,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "The_Black_Willow_11043_11084",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.16785,
+        "arousal": 0.32967499999999994,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.25,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "hotel-california_22465_22497",
+      "split": "train",
+      "human": {
+        "valence": 0.07,
+        "arousal": 0.5,
+        "dominance": 0.5725
+      },
+      "scherer_m1": {
+        "valence": 0.5468000000000001,
+        "arousal": 0.45321,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.35,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "114CUL059_864_910",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.32502,
+        "arousal": 0.25536000000000003,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.18,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_5349_5372",
+      "split": "train",
+      "human": {
+        "valence": -0.6,
+        "arousal": 0.75,
+        "dominance": 0.75
+      },
+      "scherer_m1": {
+        "valence": -0.43259,
+        "arousal": 0.372545,
+        "dominance": 0.75
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.9,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "WhereToHongKong_19787_19894",
+      "split": "train",
+      "human": {
+        "valence": 0.215,
+        "arousal": 0.5,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": 0.39088999999999996,
+        "arousal": 0.27151000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.3,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "SemEval_755",
+      "split": "train",
+      "human": {
+        "valence": -0.165,
+        "arousal": 0.5425,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": -0.66925,
+        "arousal": 0.62466,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.78,
+        "dominance": 0.28
+      }
+    },
+    {
+      "id": "Ohio_Steel_14047_14126",
+      "split": "train",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.5825,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": -0.37435,
+        "arousal": 0.68368,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.65,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "20020731-nyt_9314_9417",
+      "split": "train",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": -0.07712999999999999,
+        "arousal": 0.60861,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.35,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Ohio_Steel_17098_17291",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.425,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.43208,
+        "arousal": 0.33085,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.25,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "Ant_Robot_10438_10549",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.58804,
+        "arousal": 0.56703,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Ant_Robot_46013_46137",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.48048,
+        "arousal": 0.39719000000000004,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "hotel-california_20821_20845",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.4375
+      },
+      "scherer_m1": {
+        "valence": 0.23680000000000004,
+        "arousal": 0.41076,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.4,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_24951_25019",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.45281000000000005,
+        "arousal": 0.507475,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.45,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "wsj_0120_1571_1623",
+      "split": "train",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.4275,
+        "dominance": 0.5725
+      },
+      "scherer_m1": {
+        "valence": 0.5902499999999999,
+        "arousal": 0.5517500000000001,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.35,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "HistoryLasVegas_222_339",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5225
+      },
+      "scherer_m1": {
+        "valence": 0.23242,
+        "arousal": 0.39719000000000004,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "HistoryLasVegas_7205_7355",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.6777299999999999,
+        "arousal": 0.536455,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.45,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "guidedogs1_2450_2489",
+      "split": "train",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.525,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.50787,
+        "arousal": 0.46257499999999996,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.3,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "wsj_1640_2878_3106",
+      "split": "test",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.24674,
+        "arousal": 0.24942999999999999,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "NYTnewswire2_8753_8912",
+      "split": "dev",
+      "human": {
+        "valence": -0.28,
+        "arousal": 0.61,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.6015900000000001,
+        "arousal": 0.75503,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.8,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "SemEval_1211",
+      "split": "dev",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.20842000000000002,
+        "arousal": 0.41076,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.75,
+        "dominance": 0.85
+      }
+    },
+    {
+      "id": "warner1_2252_2328",
+      "split": "train",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5687,
+        "arousal": 0.21971,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.55,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "captured_moments_15104_15155",
+      "split": "train",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.5,
+        "dominance": 0.5925
+      },
+      "scherer_m1": {
+        "valence": 0.758715,
+        "arousal": 0.6328499999999999,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.25,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_34187_34243",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.47804,
+        "arousal": 0.41884999999999994,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.28,
+        "arousal": 0.35,
+        "dominance": 0.56
+      }
+    },
+    {
+      "id": "wsj_0152_656_806",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.40843999999999997,
+        "arousal": 0.49697,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_23574_23616",
+      "split": "train",
+      "human": {
+        "valence": 0.185,
+        "arousal": 0.6575,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.15200000000000002,
+        "arousal": 0.41034000000000004,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.45,
+        "arousal": 0.82,
+        "dominance": 0.62
+      }
+    },
+    {
+      "id": "SemEval_819",
+      "split": "train",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.5625,
+        "dominance": 0.5925
+      },
+      "scherer_m1": {
+        "valence": -0.47556,
+        "arousal": 0.37629999999999997,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.7,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "aspca1_2236_2374",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.27466,
+        "arousal": 0.60097,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.75,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "WhereToHongKong_42376_42539",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.67089,
+        "arousal": 0.54453,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "captured_moments_34600_34866",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.034680000000000016,
+        "arousal": 0.66381,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.5,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "lw1_2047_2206",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.07916000000000001,
+        "arousal": 0.24942999999999999,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.55,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "detroit_13261_13294",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": -0.24946000000000002,
+        "arousal": 0.49305,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.75,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_8586_8627",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.5625,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": -0.47823,
+        "arousal": 0.45233999999999996,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.65,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Seedbombing_2628_2661",
+      "split": "test",
+      "human": {
+        "valence": 0.5,
+        "arousal": 0.535,
+        "dominance": 0.6775
+      },
+      "scherer_m1": {
+        "valence": 0.41559999999999997,
+        "arousal": 0.47065,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.55,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_47156_47247",
+      "split": "train",
+      "human": {
+        "valence": -0.055,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": 0.21567000000000003,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.25,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_14398_14508",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.011739999999999987,
+        "arousal": 0.4464100000000001,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.55,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Tupelo-Honey-Cafe_2785_2895",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.24087000000000003,
+        "arousal": 0.5283800000000001,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.3,
+        "arousal": 0.25,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "115CVL035_1342_1444",
+      "split": "train",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.62463,
+        "arousal": 0.50759,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.78,
+        "arousal": 0.58,
+        "dominance": 0.52
+      }
+    },
+    {
+      "id": "wwf12_501_591",
+      "split": "train",
+      "human": {
+        "valence": 0.4,
+        "arousal": 0.6,
+        "dominance": 0.65
+      },
+      "scherer_m1": {
+        "valence": 0.6446399999999999,
+        "arousal": 0.426925,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.25,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_53204_53295",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.65,
+        "dominance": 0.4
+      },
+      "scherer_m1": {
+        "valence": -0.5194799999999999,
+        "arousal": 0.650995,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.78,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_42717_42764",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4575,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": 0.24754000000000004,
+        "arousal": 0.2112,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.18,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "110CYL072_413_518",
+      "split": "train",
+      "human": {
+        "valence": 0.4,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.72399,
+        "arousal": 0.411195,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.25,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_28679_28768",
+      "split": "train",
+      "human": {
+        "valence": -0.375,
+        "arousal": 0.4675,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": -0.15404,
+        "arousal": 0.4477150000000001,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.18,
+        "dominance": 0.78
+      }
+    },
+    {
+      "id": "602CZL285_37_62",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.24925000000000003,
+        "arousal": 0.4341299999999999,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_51839_51859",
+      "split": "train",
+      "human": {
+        "valence": -0.32,
+        "arousal": 0.7725,
+        "dominance": 0.5925
+      },
+      "scherer_m1": {
+        "valence": 0.04125,
+        "arousal": 0.4447,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.85,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_21389_21540",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.475,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": -0.63803,
+        "arousal": 0.6616,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.75,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "118CWL050_1092_1209",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.47275,
+        "arousal": 0.28508,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.2,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "The_Black_Willow_21152_21274",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.56877,
+        "arousal": 0.5517500000000001,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.2,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_28181_28423",
+      "split": "train",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.5,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.38194,
+        "arousal": 0.28637,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.2,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "lessig_blog-carbon_6746_6867",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.60875,
+        "arousal": 0.55207,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Ohio_Steel_11205_11319",
+      "split": "train",
+      "human": {
+        "valence": -0.4,
+        "arousal": 0.6,
+        "dominance": 0.4
+      },
+      "scherer_m1": {
+        "valence": -0.4981,
+        "arousal": 0.52277,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.25,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "SemEval_1424",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.575,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.5208,
+        "arousal": 0.28508,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.7,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "hotel-california_20342_20395",
+      "split": "test",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.11918000000000001,
+        "arousal": 0.36154,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.45,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_36746_36762",
+      "split": "train",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.4575,
+        "dominance": 0.335
+      },
+      "scherer_m1": {
+        "valence": -0.35029,
+        "arousal": 0.57286,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.2,
+        "dominance": 0.15
+      }
+    },
+    {
+      "id": "wsj_0152_593_655",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.27891,
+        "arousal": 0.31350999999999996,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "Homosexuality_15624_15791",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.24860000000000004,
+        "arousal": 0.33053,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.3,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "easy_money_8459_8601",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.525,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.11697000000000002,
+        "arousal": 0.52029,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.65,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Ohio_Steel_3612_3754",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.20363000000000003,
+        "arousal": 0.37382000000000004,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "easy_money_8858_8922",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.28608999999999996,
+        "arousal": 0.390405,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "audubon2_4177_4256",
+      "split": "dev",
+      "human": {
+        "valence": 0.45,
+        "arousal": 0.7,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.5765800000000001,
+        "arousal": 0.50759,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.65,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_1163_1228",
+      "split": "train",
+      "human": {
+        "valence": 0.125,
+        "arousal": 0.53,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.48412999999999995,
+        "arousal": 0.69951,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.35,
+        "arousal": 0.5,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Bartok_15911_15998",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.26761999999999997,
+        "arousal": 0.30801500000000004,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Bartok_22435_22598",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.39713000000000004,
+        "arousal": 0.29994,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "captured_moments_25936_26048",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5275,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": -0.371255,
+        "arousal": 0.76246,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.6,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "WhatToHongKong_24374_24580",
+      "split": "train",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.625,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.58911,
+        "arousal": 0.27873000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.6,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "captured_moments_15904_16123",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.486985,
+        "arousal": 0.643665,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.7,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "blog-monastery_5839_5867",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.61901,
+        "arousal": 0.49229500000000004,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.65,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "easy_money_15382_15465",
+      "split": "train",
+      "human": {
+        "valence": -0.5,
+        "arousal": 0.575,
+        "dominance": 0.25
+      },
+      "scherer_m1": {
+        "valence": -0.62984,
+        "arousal": 0.85223,
+        "dominance": 0.1
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.6,
+        "dominance": 0.1
+      }
+    },
+    {
+      "id": "20020731-nyt_43908_44080",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.6575
+      },
+      "scherer_m1": {
+        "valence": 0.010009999999999991,
+        "arousal": 0.31222,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.3,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Bartok_3489_3616",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.375,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.5765800000000001,
+        "arousal": 0.41927000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.25,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "AMC2_2170_2286",
+      "split": "test",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.7088,
+        "arousal": 0.519065,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.7,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "audubon1_2237_2287",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4725,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.4533,
+        "arousal": 0.472325,
+        "dominance": 0.75
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.8,
+        "dominance": 0.85
+      }
+    },
+    {
+      "id": "Uprooted_Bike_1004_1090",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.425,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.17656,
+        "arousal": 0.39719000000000004,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.2,
+        "arousal": 0.35,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Fermentation_Eminent-Domain_12123_12214",
+      "split": "train",
+      "human": {
+        "valence": -0.17,
+        "arousal": 0.4725,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.50812,
+        "arousal": 0.45621,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.25,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Seedbombing_3941_4038",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": -0.45866,
+        "arousal": 0.54572,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.6,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_12890_12932",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": -0.39271,
+        "arousal": 0.6196,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.68,
+        "arousal": 0.62,
+        "dominance": 0.18
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_11531_11577",
+      "split": "train",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.53,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.36591,
+        "arousal": 0.44728,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.6,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "wsj_0132_1031_1129",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.34714,
+        "arousal": 0.39719000000000004,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "defenders5_7141_7210",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.6446399999999999,
+        "arousal": 0.43796500000000005,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "How_soon-Lebron-James_2328_2460",
+      "split": "train",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.445,
+        "dominance": 0.4725
+      },
+      "scherer_m1": {
+        "valence": 0.61715,
+        "arousal": 0.28551499999999996,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.45,
+        "arousal": 0.25,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "NYTnewswire9_2266_2500",
+      "split": "train",
+      "human": {
+        "valence": -0.06,
+        "arousal": 0.47,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": 0.01092000000000004,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.3,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "SemEval_1425",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4575,
+        "dominance": 0.4575
+      },
+      "scherer_m1": {
+        "valence": -0.31221,
+        "arousal": 0.45018,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "easy_money_1035_1073",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.4,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.13582000000000002,
+        "arousal": 0.18911999999999998,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.25,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "Seedbombing_4949_5056",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.53,
+        "dominance": 0.47
+      },
+      "scherer_m1": {
+        "valence": 0.26608,
+        "arousal": 0.47107,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.45,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Acephalous-Cant-believe_1818_2022",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.44167999999999996,
+        "arousal": 0.44599,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.2,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "captured_moments_6813_6908",
+      "split": "train",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.625,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.42949,
+        "arousal": 0.4545,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.7,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "wsj_2465_102_269",
+      "split": "train",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.4275
+      },
+      "scherer_m1": {
+        "valence": -0.6434,
+        "arousal": 0.46246,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.9,
+        "arousal": 0.82,
+        "dominance": 0.18
+      }
+    },
+    {
+      "id": "Bartok_25987_26078",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.45,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.73592,
+        "arousal": 0.43284,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "20020731-nyt_36070_36307",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.5985999999999999,
+        "arousal": 0.46299500000000005,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.15,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "wsj_0158_467_591",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.013870000000000007,
+        "arousal": 0.263,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.1,
+        "arousal": 0.2,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "113CWL017_1233_1378",
+      "split": "train",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.5275,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.59535,
+        "arousal": 0.4252,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.6,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "Bartok_13279_13451",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4175,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.44762,
+        "arousal": 0.43284,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.2,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_9086_9116",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.475,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.45624,
+        "arousal": 0.558535,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "NYTnewswire3_2855_2913",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.6176200000000001,
+        "arousal": 0.5288,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.75,
+        "dominance": 0.85
+      }
+    },
+    {
+      "id": "audubon2_3290_3488",
+      "split": "train",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.55,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5765800000000001,
+        "arousal": 0.48551,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.86,
+        "arousal": 0.48,
+        "dominance": 0.64
+      }
+    },
+    {
+      "id": "hotel-california_2041_2086",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.70636,
+        "arousal": 0.663005,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.5,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "hotel-california_16690_16735",
+      "split": "train",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.61,
+        "dominance": 0.61
+      },
+      "scherer_m1": {
+        "valence": 0.25104000000000004,
+        "arousal": 0.41927000000000003,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.25,
+        "arousal": 0.35,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_36298_36360",
+      "split": "test",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.6,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": 0.62844,
+        "arousal": 0.60097,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.45,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "att2_1619_1712",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.35,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": 0.68553,
+        "arousal": 0.574685,
+        "dominance": 0.95
+      },
+      "direct_vad": {
+        "valence": 0.05,
+        "arousal": 0.05,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "602CZL285_1740_1852",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.41242,
+        "arousal": 0.499935,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "NYTnewswire2_7844_8043",
+      "split": "train",
+      "human": {
+        "valence": 0.05,
+        "arousal": 0.55,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": -0.35741,
+        "arousal": 0.51729,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "WhereToHongKong_53994_54241",
+      "split": "train",
+      "human": {
+        "valence": 0.06,
+        "arousal": 0.5,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.51386,
+        "arousal": 0.51265,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.55,
+        "arousal": 0.25,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "110CYL069_1793_1857",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.405,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.44419,
+        "arousal": 0.53473,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.15,
+        "arousal": 0.45,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "anth_essay_4_2820_2942",
+      "split": "train",
+      "human": {
+        "valence": 0.145,
+        "arousal": 0.535,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.29676,
+        "arousal": 0.39966999999999997,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "SemEval_1215",
+      "split": "train",
+      "human": {
+        "valence": 0.2,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.15802000000000002,
+        "arousal": 0.25195999999999996,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.3,
+        "arousal": 0.35,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "detroit_16658_16785",
+      "split": "test",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.34427,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.65,
+        "dominance": 0.8
+      }
+    },
+    {
+      "id": "SemEval_183",
+      "split": "train",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.5,
+        "dominance": 0.45
+      },
+      "scherer_m1": {
+        "valence": 0.04405999999999998,
+        "arousal": 0.35422,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.35,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "captured_moments_14909_14962",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.475,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": -0.34931,
+        "arousal": 0.6455,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.25,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "hotel-california_21234_21280",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.53,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.38406,
+        "arousal": 0.403555,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.2,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "Madame_White_Snake_7597_7650",
+      "split": "test",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.19628,
+        "arousal": 0.40818,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.45,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_11343_11411",
+      "split": "train",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.465
+      },
+      "scherer_m1": {
+        "valence": -0.31179999999999997,
+        "arousal": 0.6060300000000001,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.28
+      }
+    },
+    {
+      "id": "SemEval_583",
+      "split": "train",
+      "human": {
+        "valence": -0.3,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.42134,
+        "arousal": 0.51513,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.75,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_40157_40312",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.24677,
+        "arousal": 0.6123799999999999,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.75,
+        "arousal": 0.6,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "602CZL285_1461_1654",
+      "split": "train",
+      "human": {
+        "valence": 0.3,
+        "arousal": 0.5,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": 0.6878700000000001,
+        "arousal": 0.59844,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.88,
+        "arousal": 0.58,
+        "dominance": 0.68
+      }
+    },
+    {
+      "id": "wsj_0161_167_431",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.41,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.09767999999999999,
+        "arousal": 0.33559,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": -0.45,
+        "arousal": 0.28,
+        "dominance": 0.62
+      }
+    },
+    {
+      "id": "AMC2_2930_2953",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.6,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.21641,
+        "arousal": 0.525835,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.7,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "SemEval_849",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.20751999999999998,
+        "arousal": 0.39461,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.25,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "20020731-nyt_7158_7339",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": -0.61412,
+        "arousal": 0.35292999999999997,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.45,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "20020731-nyt_35252_35325",
+      "split": "train",
+      "human": {
+        "valence": -0.07,
+        "arousal": 0.535,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": -0.26957,
+        "arousal": 0.32202,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "hotel-california_10471_10502",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4325,
+        "dominance": 0.4775
+      },
+      "scherer_m1": {
+        "valence": 0.19584000000000001,
+        "arousal": 0.40312000000000003,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.35,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "hotel-california_3849_3867",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.45,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.40078,
+        "arousal": 0.5801799999999999,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.35,
+        "arousal": 0.25,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "wsj_0032_376_452",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": 0.55975,
+        "arousal": 0.38233,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "NWF1_4265_4369",
+      "split": "train",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.5825,
+        "dominance": 0.61
+      },
+      "scherer_m1": {
+        "valence": 0.25,
+        "arousal": 0.37629999999999997,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.2,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "20020731-nyt_6431_6549",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.49247,
+        "arousal": 0.39966999999999997,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.6,
+        "arousal": 0.35,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "hsus4_2172_2348",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.535,
+        "dominance": 0.6425
+      },
+      "scherer_m1": {
+        "valence": 0.6878700000000001,
+        "arousal": 0.57636,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.5,
+        "arousal": 0.6,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Ant_Robot_18474_18619",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.6377100000000001,
+        "arousal": 0.380185,
+        "dominance": 0.75
+      },
+      "direct_vad": {
+        "valence": 0.2,
+        "arousal": 0.2,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "NYTnewswire9_5717_5815",
+      "split": "train",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": -0.41745000000000004,
+        "arousal": 0.6098,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.2,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_23628_23886",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.45,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.32783,
+        "arousal": 0.47226,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.25,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_22479_22604",
+      "split": "train",
+      "human": {
+        "valence": -0.05,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": -0.53249,
+        "arousal": 0.561,
+        "dominance": 0.4
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.45,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_7898_7944",
+      "split": "train",
+      "human": {
+        "valence": -0.09,
+        "arousal": 0.4775,
+        "dominance": 0.4775
+      },
+      "scherer_m1": {
+        "valence": 0.010220000000000007,
+        "arousal": 0.49907999999999997,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.2,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "audubon1_4813_4861",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.579505,
+        "arousal": 0.5483,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": 0.62,
+        "arousal": 0.48,
+        "dominance": 0.56
+      }
+    },
+    {
+      "id": "Fermentation_HR5034_6974_7055",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.4375,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.12271999999999998,
+        "arousal": 0.40947,
+        "dominance": 0.7
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Ohio_Steel_9797_9952",
+      "split": "test",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.38344999999999996,
+        "arousal": 0.36737,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.15,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "20020731-nyt_17194_17240",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.53
+      },
+      "scherer_m1": {
+        "valence": 0.33439,
+        "arousal": 0.47236,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.1,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "Ant_Robot_28855_28950",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.41,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.6598299999999999,
+        "arousal": 0.506735,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.3
+      }
+    },
+    {
+      "id": "cable_spool_fort_7728_7784",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.47,
+        "dominance": 0.5625
+      },
+      "scherer_m1": {
+        "valence": 0.22704999999999997,
+        "arousal": 0.48593,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.1,
+        "arousal": 0.2,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "sucker_673_828",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.525,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": -0.59177,
+        "arousal": 0.6688200000000001,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.78,
+        "dominance": 0.18
+      }
+    },
+    {
+      "id": "SemEval_892",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.55,
+        "dominance": 0.55
+      },
+      "scherer_m1": {
+        "valence": 0.506835,
+        "arousal": 0.470425,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.65,
+        "arousal": 0.8,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "SemEval_1142",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.5624899999999999,
+        "arousal": 0.42681,
+        "dominance": 0.3
+      },
+      "direct_vad": {
+        "valence": 0.4,
+        "arousal": 0.8,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_27056_27079",
+      "split": "train",
+      "human": {
+        "valence": -0.315,
+        "arousal": 0.5325,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": -0.677095,
+        "arousal": 0.73548,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.78,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "SemEval_857",
+      "split": "dev",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.55,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.07211000000000001,
+        "arousal": 0.36273,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.7,
+        "arousal": 0.65,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "Ohio_Steel_12380_12451",
+      "split": "train",
+      "human": {
+        "valence": -0.2,
+        "arousal": 0.425,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.5364,
+        "arousal": 0.46968,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.65,
+        "arousal": 0.45,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "SemEval_1220",
+      "split": "train",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.575,
+        "dominance": 0.425
+      },
+      "scherer_m1": {
+        "valence": -0.604405,
+        "arousal": 0.69854,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.85,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "appalachian1_5690_5839",
+      "split": "train",
+      "human": {
+        "valence": 0.22,
+        "arousal": 0.555,
+        "dominance": 0.61
+      },
+      "scherer_m1": {
+        "valence": 0.59893,
+        "arousal": 0.37339999999999995,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.7,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Homosexuality_12930_13477",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.41037999999999997,
+        "arousal": 0.60948,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.52,
+        "arousal": 0.24,
+        "dominance": 0.66
+      }
+    },
+    {
+      "id": "SemEval_636",
+      "split": "train",
+      "human": {
+        "valence": -0.25,
+        "arousal": 0.55,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": -0.5974999999999999,
+        "arousal": 0.58814,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.9,
+        "arousal": 0.75,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "detroit_3925_3986",
+      "split": "train",
+      "human": {
+        "valence": -0.15,
+        "arousal": 0.525,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.01548999999999999,
+        "arousal": 0.40312000000000003,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": -0.25,
+        "arousal": 0.18,
+        "dominance": 0.4
+      }
+    },
+    {
+      "id": "SemEval_889",
+      "split": "train",
+      "human": {
+        "valence": -0.4,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": -0.39889,
+        "arousal": 0.47140499999999996,
+        "dominance": 0.35
+      },
+      "direct_vad": {
+        "valence": -0.8,
+        "arousal": 0.75,
+        "dominance": 0.25
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_5408_5490",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.2716,
+        "arousal": 0.29994,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "112C-L012_312_402",
+      "split": "dev",
+      "human": {
+        "valence": -0.19,
+        "arousal": 0.47,
+        "dominance": 0.375
+      },
+      "scherer_m1": {
+        "valence": 0.18087999999999999,
+        "arousal": 0.54743,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.35,
+        "arousal": 0.25,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "detroit_5012_5137",
+      "split": "train",
+      "human": {
+        "valence": 0.15,
+        "arousal": 0.525,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.39713000000000004,
+        "arousal": 0.38826,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.8,
+        "arousal": 0.5,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Bartok_8345_8415",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.19956000000000002,
+        "arousal": 0.41076,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.45
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_6523_6769",
+      "split": "train",
+      "human": {
+        "valence": -0.285,
+        "arousal": 0.5725,
+        "dominance": 0.535
+      },
+      "scherer_m1": {
+        "valence": -0.676275,
+        "arousal": 0.7323050000000001,
+        "dominance": 0.25
+      },
+      "direct_vad": {
+        "valence": -0.82,
+        "arousal": 0.8,
+        "dominance": 0.72
+      }
+    },
+    {
+      "id": "wsj_0144_374_508",
+      "split": "train",
+      "human": {
+        "valence": -0.11,
+        "arousal": 0.4725,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.5615399999999999,
+        "arousal": 0.34539,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.25,
+        "dominance": 0.75
+      }
+    },
+    {
+      "id": "Nathans_Bylichka_35629_35693",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5275,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.14359,
+        "arousal": 0.36273,
+        "dominance": 0.5
+      },
+      "direct_vad": {
+        "valence": -0.3,
+        "arousal": 0.6,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "hotel-california_7951_8058",
+      "split": "train",
+      "human": {
+        "valence": 0.1,
+        "arousal": 0.575,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.6052899999999999,
+        "arousal": 0.38955,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.85,
+        "arousal": 0.25,
+        "dominance": 0.65
+      }
+    },
+    {
+      "id": "Homosexuality_15882_16052",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.475,
+        "dominance": 0.525
+      },
+      "scherer_m1": {
+        "valence": 0.24567,
+        "arousal": 0.50801,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "WhatToHongKong_12943_13027",
+      "split": "train",
+      "human": {
+        "valence": 0.055,
+        "arousal": 0.4725,
+        "dominance": 0.5825
+      },
+      "scherer_m1": {
+        "valence": 0.41600000000000004,
+        "arousal": 0.437095,
+        "dominance": 0.85
+      },
+      "direct_vad": {
+        "valence": 0.1,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    },
+    {
+      "id": "A_defense_of_Michael_Moore_24446_24593",
+      "split": "dev",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5725,
+        "dominance": 0.5
+      },
+      "scherer_m1": {
+        "valence": 0.1015,
+        "arousal": 0.51426,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.5,
+        "arousal": 0.6,
+        "dominance": 0.7
+      }
+    },
+    {
+      "id": "Ohio_Steel_6375_6506",
+      "split": "train",
+      "human": {
+        "valence": -0.125,
+        "arousal": 0.5,
+        "dominance": 0.4675
+      },
+      "scherer_m1": {
+        "valence": -0.66925,
+        "arousal": 0.6688200000000001,
+        "dominance": 0.2
+      },
+      "direct_vad": {
+        "valence": -0.85,
+        "arousal": 0.25,
+        "dominance": 0.2
+      }
+    },
+    {
+      "id": "WhereToHongKong_3433_3564",
+      "split": "train",
+      "human": {
+        "valence": 0.0,
+        "arousal": 0.5,
+        "dominance": 0.475
+      },
+      "scherer_m1": {
+        "valence": 0.16788,
+        "arousal": 0.21378,
+        "dominance": 1.0
+      },
+      "direct_vad": {
+        "valence": -0.15,
+        "arousal": 0.25,
+        "dominance": 0.35
+      }
+    },
+    {
+      "id": "SemEval_18",
+      "split": "train",
+      "human": {
+        "valence": 0.25,
+        "arousal": 0.525,
+        "dominance": 0.6
+      },
+      "scherer_m1": {
+        "valence": 0.33031,
+        "arousal": 0.38233,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.6,
+        "arousal": 0.25,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "NWF1_480_629",
+      "split": "train",
+      "human": {
+        "valence": 0.44,
+        "arousal": 0.655,
+        "dominance": 0.625
+      },
+      "scherer_m1": {
+        "valence": 0.60422,
+        "arousal": 0.45621,
+        "dominance": 0.9
+      },
+      "direct_vad": {
+        "valence": 0.75,
+        "arousal": 0.35,
+        "dominance": 0.6
+      }
+    },
+    {
+      "id": "captured_moments_34867_34910",
+      "split": "train",
+      "human": {
+        "valence": -0.1,
+        "arousal": 0.6,
+        "dominance": 0.575
+      },
+      "scherer_m1": {
+        "valence": -0.16292,
+        "arousal": 0.29013999999999995,
+        "dominance": 0.6
+      },
+      "direct_vad": {
+        "valence": -0.4,
+        "arousal": 0.7,
+        "dominance": 0.55
+      }
+    },
+    {
+      "id": "wsj_0168_207_383",
+      "split": "train",
+      "human": {
+        "valence": 0.11,
+        "arousal": 0.5,
+        "dominance": 0.5275
+      },
+      "scherer_m1": {
+        "valence": 0.28054999999999997,
+        "arousal": 0.263,
+        "dominance": 0.8
+      },
+      "direct_vad": {
+        "valence": 0.0,
+        "arousal": 0.15,
+        "dominance": 0.5
+      }
+    }
+  ]
+}
