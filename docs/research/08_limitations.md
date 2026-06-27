@@ -31,6 +31,14 @@ limitations:
   arousal to r=0.58 (Δr +0.354), dominance to r=0.43, and valence to r=0.79 with
   near-zero bias — adopting a direct-VAD appraisal schema is recommended as a
   follow-up. See `benchmarks/preregistration_addendum_v_direct_vad_closure.md`.
+  **Update (Addendum W, 2026-06-27):** the one residual direct-VAD caveat — arousal had
+  the better _correlation_ but a worse _MAE_ than the projection (0.19 vs 0.11) — is
+  resolved by an affine calibration (`arousal_cal = 0.16·arousal_direct + 0.45`, fit vs
+  EmoBank): held-out arousal MAE drops to 0.04, so calibrated direct-VAD now dominates the
+  production projection on **both** r (0.57 vs 0.21) and MAE (0.04 vs 0.11) (Hw1/Hw2 PASS,
+  Gw OK). Caveat: the large MAE cut partly reflects EmoBank's narrow arousal variance
+  (shrink-to-mean); the durable claim is dominance-on-both-axes via r-preservation, not the
+  absolute 0.04. See `benchmarks/preregistration_addendum_w_arousal_calibration_closure.md`.
 
 ### 1.2 Language dependence
 

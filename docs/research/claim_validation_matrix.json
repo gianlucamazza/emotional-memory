@@ -162,13 +162,17 @@
       "requires_oracle_affect": false,
       "allowed_public_wording": "Against human-annotated affect (EmoBank, N=300), LLM appraisal valence is human-validated (Pearson r=0.70 [0.66, 0.75]); arousal (r=0.28 [0.17, 0.37]) and dominance (r=0.33 [0.22, 0.43]) are weakly-to-moderately positive (CIs exclude 0). A persistent positive valence bias (+0.15) remains. The rule-based KeywordAppraisalEngine is not human-validated (valence r=0.07).",
       "current_evidence": "Pre-registered Addendum S executed 2026-06-26 on EmoBank (Buechel & Hahn 2017, human VAD, N=300 sampled seed=42, CC-BY-SA 4.0). LLMAppraisalEngine (Scherer CPM, gpt-5-mini) -> to_core_affect() correlated against human VAD, bootstrap n=2000 seed=42: valence r=0.703 [0.655, 0.746] bias +0.152 MAE 0.319; arousal r=0.276 [0.172, 0.373] bias -0.058; dominance r=0.333 [0.224, 0.432] bias +0.130. All three LLM CIs exclude 0. The +0.169 positive valence bias from Addendum N (vs LLM-gold) persists vs human gold (+0.152). KeywordAppraisalEngine is not human-validated: valence r=0.070 [-0.010, 0.148], dominance r=-0.011; only a weak arousal correlation (r=0.106) with a large -0.288 bias.",
-      "not_yet_shown": "Strong validity on arousal/dominance (only weak-to-moderate). Correction of the standing +0.15 valence bias in the production path (Addendum O recalibration is not wired into LLMAppraisalEngine). Validity across non-English corpora and other annotation schemes. Addendum V (2026-06-27, EmoBank N=300): the weak arousal/dominance axes are largely a SEC\u2192projection artifact \u2014 a direct-VAD estimator (LLM rates V/A/D directly) reaches valence r=0.79 (bias \u22120.01), arousal r=0.58 (\u0394r +0.354 vs SEC), dominance r=0.43, paired CIs exclude 0 except dominance (touches 0). Adopt direct-VAD recommended (follow-up).",
+      "not_yet_shown": "Strong validity on arousal/dominance (only weak-to-moderate). Correction of the standing +0.15 valence bias in the production path (Addendum O recalibration is not wired into LLMAppraisalEngine). Validity across non-English corpora and other annotation schemes. Addendum V (2026-06-27, EmoBank N=300): the weak arousal/dominance axes are largely a SEC\u2192projection artifact \u2014 a direct-VAD estimator (LLM rates V/A/D directly) reaches valence r=0.79 (bias \u22120.01), arousal r=0.58 (\u0394r +0.354 vs SEC), dominance r=0.43, paired CIs exclude 0 except dominance (touches 0). Adopt direct-VAD recommended (follow-up). Addendum W (2026-06-27): an affine calibration of direct-VAD arousal (arousal_cal = 0.16*arousal_direct + 0.45, fit on held-out EmoBank) cuts arousal MAE 0.20->0.04 (Hw1 p<0.001), below the SEC projection's 0.11 (Hw2 p<0.001), while preserving r -- calibrated direct-VAD dominates the projection on both r (0.57 vs 0.21) and MAE; the MAE cut partly reflects EmoBank's narrow arousal variance (shrink-to-mean).",
       "next_study": "Wire the Addendum O mapping recalibration into the appraisal path and re-measure bias vs human gold; extend to a second human-annotated corpus and to non-English text.",
-      "evidence_refs": [],
+      "evidence_refs": [
+        "benchmarks/preregistration_addendum_w_arousal_calibration_closure.md"
+      ],
       "benchmark_refs": [
         "benchmarks/human_gold_appraisal/results.json",
         "benchmarks/human_gold_appraisal/results.md",
-        "benchmarks/datasets/emobank_v1.json"
+        "benchmarks/datasets/emobank_v1.json",
+        "benchmarks/arousal_calibration/results.json",
+        "benchmarks/arousal_calibration/results.md"
       ],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_s_human_gold_appraisal.md",

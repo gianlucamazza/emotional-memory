@@ -17,8 +17,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fix, optional `chroma` extra only — not in the runtime wheel). The runtime
   wheel still depends on `numpy` + `pydantic` only; no end-user exposure.
 
+### Research
+
+- **Addendum W — affine calibration of direct-VAD arousal (ADOPTED).** Pre-registered
+  (`benchmarks/preregistration_addendum_w_arousal_calibration.md`, `make bench-arousal-calibration`)
+  follow-up to Addendum V's arousal-MAE caveat. On EmoBank (N=300, held out), an affine map
+  `arousal_cal = 0.16·arousal_direct + 0.45` cuts direct-VAD arousal MAE from 0.20 to **0.04**
+  (Hw1, p<0.001) — below the SEC→projection's 0.11 (Hw2, p<0.001) — while preserving r (Gw).
+  Calibrated direct-VAD therefore **dominates the production projection on both r (0.57 vs 0.21)
+  and MAE (0.04 vs 0.11)**. Caveat: the MAE cut partly reflects EmoBank's narrow arousal variance;
+  the durable claim is dominance-on-both-axes via r-preservation. `predictions.json` is committed
+  so the verdict reproduces offline with no LLM.
+
 ### Docs
 
+- Paper reframed to lead with the durable, benchmark-independent findings — the characterized
+  regime boundary, direct-VAD human-gold measurement (V), and production-reachable query
+  appraisal (T) — ahead of the `+0.21` headline; circularity audit (U), V, and T/T2A added to the
+  contributions list; conclusion staleness fixed (query appraisal was executed, not future work).
+- Gate 2 human-eval kit: `make human-eval-summary` now reports a paired condition-significance
+  test (`aft − naive_cosine`, repo-standard bootstrap) per dimension alongside Krippendorff's α,
+  operationalizing the effectiveness gate (mean Δ>0, p<0.05).
 - New tutorial: retrieve-time query appraisal (`query_affect` /
   `retrieve_with_query_appraisal`), including the Addendum T2A regime-bound caveat.
 - Research index lists Addenda U, V, T, T2A; `make help` documents the
