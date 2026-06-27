@@ -1282,6 +1282,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#built-in-alternative-direct_vad_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in alternative: DIRECT_VAD_SCHEMA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2631,6 +2642,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#built-in-alternative-direct_vad_schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in alternative: DIRECT_VAD_SCHEMA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2749,6 +2771,27 @@ parameter for graceful degradation:</p>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">fallback</span><span class="o">=</span><span class="n">KeywordAppraisalEngine</span><span class="p">(),</span>  <span class="c1"># activates if LLM call fails</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
 </code></pre></div>
+<h2 id="built-in-alternative-direct_vad_schema">Built-in alternative: <code>DIRECT_VAD_SCHEMA</code><a class="headerlink" href="#built-in-alternative-direct_vad_schema" title="Permanent link">&para;</a></h2>
+<p>A ready-made opt-in schema ships with the library: instead of the 5 Scherer SECs,
+the LLM rates <strong>valence / arousal / dominance directly</strong> (identity projection).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DIRECT_VAD_SCHEMA</span><span class="p">,</span> <span class="n">LLMAppraisalConfig</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.appraisal_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMAppraisalEngine</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">appraisal_engine</span> <span class="o">=</span> <span class="n">LLMAppraisalEngine</span><span class="p">(</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">llm</span><span class="o">=</span><span class="n">make_httpx_llm_from_env</span><span class="p">(),</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">config</span><span class="o">=</span><span class="n">LLMAppraisalConfig</span><span class="p">(</span><span class="n">appraisal_schema</span><span class="o">=</span><span class="n">DIRECT_VAD_SCHEMA</span><span class="p">),</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span>
+</code></pre></div>
+<p>Against human-annotated affect (EmoBank, N=300) direct-VAD is <strong>better correlated on
+every axis</strong> than the default SEC→projection — valence r=0.79 (near-zero bias), arousal
+r=0.58, dominance r=0.43, vs 0.70 / 0.23 / 0.31 (Addendum V). Choose it when you only
+need <code>CoreAffect</code> and want stronger human-gold agreement.</p>
+<p><strong>Caveats (why SEC remains the default).</strong> Any custom schema — <code>DIRECT_VAD_SCHEMA</code>
+included — produces a <code>GenericAppraisalVector</code>, not the Scherer <code>AppraisalVector</code>.
+Consequently: the dual-path <code>elaborate()</code> slow path consumes its blended affect but does
+<strong>not</strong> persist the appraisal on the tag (<code>tag.appraisal</code> stays <code>None</code>), and any feature
+that reads the 5 SEC fields requires the default <code>SCHERER_CPM_SCHEMA</code>. Direct-VAD's
+arousal <em>absolute scale</em> is also less calibrated (higher MAE) than its correlation.</p>
 <h2 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <p><a href="../../api/appraisal_schema/">Appraisal Schema API</a> · <a href="../../api/appraisal/">Appraisal API</a></p>
 

@@ -3213,13 +3213,13 @@ initialisation, pass <code>state_store=None</code> and explicitly call
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-773">773</a></span>
-<span class="normal"><a href="#__codelineno-0-774">774</a></span>
-<span class="normal"><a href="#__codelineno-0-775">775</a></span>
-<span class="normal"><a href="#__codelineno-0-776">776</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-773" name="__codelineno-0-773"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">clear_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-774" name="__codelineno-0-774"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the persisted affective-state snapshot, if configured.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-775" name="__codelineno-0-775"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-776" name="__codelineno-0-776"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">clear</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-779">779</a></span>
+<span class="normal"><a href="#__codelineno-0-780">780</a></span>
+<span class="normal"><a href="#__codelineno-0-781">781</a></span>
+<span class="normal"><a href="#__codelineno-0-782">782</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-779" name="__codelineno-0-779"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">clear_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-780" name="__codelineno-0-780"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the persisted affective-state snapshot, if configured.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-781" name="__codelineno-0-781"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-782" name="__codelineno-0-782"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">clear</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3248,13 +3248,7 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-837">837</a></span>
-<span class="normal"><a href="#__codelineno-0-838">838</a></span>
-<span class="normal"><a href="#__codelineno-0-839">839</a></span>
-<span class="normal"><a href="#__codelineno-0-840">840</a></span>
-<span class="normal"><a href="#__codelineno-0-841">841</a></span>
-<span class="normal"><a href="#__codelineno-0-842">842</a></span>
-<span class="normal"><a href="#__codelineno-0-843">843</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-843">843</a></span>
 <span class="normal"><a href="#__codelineno-0-844">844</a></span>
 <span class="normal"><a href="#__codelineno-0-845">845</a></span>
 <span class="normal"><a href="#__codelineno-0-846">846</a></span>
@@ -3262,21 +3256,27 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 <span class="normal"><a href="#__codelineno-0-848">848</a></span>
 <span class="normal"><a href="#__codelineno-0-849">849</a></span>
 <span class="normal"><a href="#__codelineno-0-850">850</a></span>
-<span class="normal"><a href="#__codelineno-0-851">851</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-837" name="__codelineno-0-837"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-838" name="__codelineno-0-838"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by the underlying store, if supported.</span>
-<a id="__codelineno-0-839" name="__codelineno-0-839"></a>
-<a id="__codelineno-0-840" name="__codelineno-0-840"></a><span class="sd">    Awaits ``store.close()`` when available; falls back to sync ``close()``</span>
-<a id="__codelineno-0-841" name="__codelineno-0-841"></a><span class="sd">    via ``asyncio.to_thread``; silently skips stores without cleanup.</span>
-<a id="__codelineno-0-842" name="__codelineno-0-842"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-843" name="__codelineno-0-843"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-844" name="__codelineno-0-844"></a>    <span class="k">if</span> <span class="n">close</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-845" name="__codelineno-0-845"></a>        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
-<a id="__codelineno-0-846" name="__codelineno-0-846"></a>            <span class="k">await</span> <span class="n">close</span><span class="p">()</span>
-<a id="__codelineno-0-847" name="__codelineno-0-847"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-848" name="__codelineno-0-848"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">close</span><span class="p">)</span>
-<a id="__codelineno-0-849" name="__codelineno-0-849"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-850" name="__codelineno-0-850"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
-<a id="__codelineno-0-851" name="__codelineno-0-851"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">state_close</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-851">851</a></span>
+<span class="normal"><a href="#__codelineno-0-852">852</a></span>
+<span class="normal"><a href="#__codelineno-0-853">853</a></span>
+<span class="normal"><a href="#__codelineno-0-854">854</a></span>
+<span class="normal"><a href="#__codelineno-0-855">855</a></span>
+<span class="normal"><a href="#__codelineno-0-856">856</a></span>
+<span class="normal"><a href="#__codelineno-0-857">857</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-843" name="__codelineno-0-843"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-844" name="__codelineno-0-844"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by the underlying store, if supported.</span>
+<a id="__codelineno-0-845" name="__codelineno-0-845"></a>
+<a id="__codelineno-0-846" name="__codelineno-0-846"></a><span class="sd">    Awaits ``store.close()`` when available; falls back to sync ``close()``</span>
+<a id="__codelineno-0-847" name="__codelineno-0-847"></a><span class="sd">    via ``asyncio.to_thread``; silently skips stores without cleanup.</span>
+<a id="__codelineno-0-848" name="__codelineno-0-848"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-849" name="__codelineno-0-849"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-850" name="__codelineno-0-850"></a>    <span class="k">if</span> <span class="n">close</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-851" name="__codelineno-0-851"></a>        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
+<a id="__codelineno-0-852" name="__codelineno-0-852"></a>            <span class="k">await</span> <span class="n">close</span><span class="p">()</span>
+<a id="__codelineno-0-853" name="__codelineno-0-853"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-854" name="__codelineno-0-854"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">close</span><span class="p">)</span>
+<a id="__codelineno-0-855" name="__codelineno-0-855"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-856" name="__codelineno-0-856"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
+<a id="__codelineno-0-857" name="__codelineno-0-857"></a>        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">state_close</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3303,11 +3303,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-727">727</a></span>
-<span class="normal"><a href="#__codelineno-0-728">728</a></span>
-<span class="normal"><a href="#__codelineno-0-729">729</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-727" name="__codelineno-0-727"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-728" name="__codelineno-0-728"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of memories in the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-729" name="__codelineno-0-729"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-733">733</a></span>
+<span class="normal"><a href="#__codelineno-0-734">734</a></span>
+<span class="normal"><a href="#__codelineno-0-735">735</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-733" name="__codelineno-0-733"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-735" name="__codelineno-0-735"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3334,11 +3334,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-715">715</a></span>
-<span class="normal"><a href="#__codelineno-0-716">716</a></span>
-<span class="normal"><a href="#__codelineno-0-717">717</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a memory from the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-717" name="__codelineno-0-717"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-721">721</a></span>
+<span class="normal"><a href="#__codelineno-0-722">722</a></span>
+<span class="normal"><a href="#__codelineno-0-723">723</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-722" name="__codelineno-0-722"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a memory from the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-723" name="__codelineno-0-723"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3430,13 +3430,7 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-682">682</a></span>
-<span class="normal"><a href="#__codelineno-0-683">683</a></span>
-<span class="normal"><a href="#__codelineno-0-684">684</a></span>
-<span class="normal"><a href="#__codelineno-0-685">685</a></span>
-<span class="normal"><a href="#__codelineno-0-686">686</a></span>
-<span class="normal"><a href="#__codelineno-0-687">687</a></span>
-<span class="normal"><a href="#__codelineno-0-688">688</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-688">688</a></span>
 <span class="normal"><a href="#__codelineno-0-689">689</a></span>
 <span class="normal"><a href="#__codelineno-0-690">690</a></span>
 <span class="normal"><a href="#__codelineno-0-691">691</a></span>
@@ -3447,24 +3441,30 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 <span class="normal"><a href="#__codelineno-0-696">696</a></span>
 <span class="normal"><a href="#__codelineno-0-697">697</a></span>
 <span class="normal"><a href="#__codelineno-0-698">698</a></span>
-<span class="normal"><a href="#__codelineno-0-699">699</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-682" name="__codelineno-0-682"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">elaborate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-683" name="__codelineno-0-683"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
-<a id="__codelineno-0-684" name="__codelineno-0-684"></a>
-<a id="__codelineno-0-685" name="__codelineno-0-685"></a><span class="sd">    Async version of ``EmotionalMemory.elaborate()``.</span>
-<a id="__codelineno-0-686" name="__codelineno-0-686"></a>
-<a id="__codelineno-0-687" name="__codelineno-0-687"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-688" name="__codelineno-0-688"></a><span class="sd">        memory_id: ID of the memory to elaborate.</span>
-<a id="__codelineno-0-689" name="__codelineno-0-689"></a>
-<a id="__codelineno-0-690" name="__codelineno-0-690"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-691" name="__codelineno-0-691"></a><span class="sd">        The updated Memory, or None if the memory does not exist,</span>
-<a id="__codelineno-0-692" name="__codelineno-0-692"></a><span class="sd">        is not pending appraisal, or no appraisal engine is configured.</span>
-<a id="__codelineno-0-693" name="__codelineno-0-693"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-694" name="__codelineno-0-694"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.elaborate&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;memory_id&quot;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
-<a id="__codelineno-0-695" name="__codelineno-0-695"></a>        <span class="n">mem</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
-<a id="__codelineno-0-696" name="__codelineno-0-696"></a>        <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-697" name="__codelineno-0-697"></a>            <span class="k">return</span> <span class="kc">None</span>
-<a id="__codelineno-0-698" name="__codelineno-0-698"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
-<a id="__codelineno-0-699" name="__codelineno-0-699"></a>    <span class="k">return</span> <span class="n">result</span>
+<span class="normal"><a href="#__codelineno-0-699">699</a></span>
+<span class="normal"><a href="#__codelineno-0-700">700</a></span>
+<span class="normal"><a href="#__codelineno-0-701">701</a></span>
+<span class="normal"><a href="#__codelineno-0-702">702</a></span>
+<span class="normal"><a href="#__codelineno-0-703">703</a></span>
+<span class="normal"><a href="#__codelineno-0-704">704</a></span>
+<span class="normal"><a href="#__codelineno-0-705">705</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-688" name="__codelineno-0-688"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">elaborate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-689" name="__codelineno-0-689"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
+<a id="__codelineno-0-690" name="__codelineno-0-690"></a>
+<a id="__codelineno-0-691" name="__codelineno-0-691"></a><span class="sd">    Async version of ``EmotionalMemory.elaborate()``.</span>
+<a id="__codelineno-0-692" name="__codelineno-0-692"></a>
+<a id="__codelineno-0-693" name="__codelineno-0-693"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-694" name="__codelineno-0-694"></a><span class="sd">        memory_id: ID of the memory to elaborate.</span>
+<a id="__codelineno-0-695" name="__codelineno-0-695"></a>
+<a id="__codelineno-0-696" name="__codelineno-0-696"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-697" name="__codelineno-0-697"></a><span class="sd">        The updated Memory, or None if the memory does not exist,</span>
+<a id="__codelineno-0-698" name="__codelineno-0-698"></a><span class="sd">        is not pending appraisal, or no appraisal engine is configured.</span>
+<a id="__codelineno-0-699" name="__codelineno-0-699"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-700" name="__codelineno-0-700"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.elaborate&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;memory_id&quot;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
+<a id="__codelineno-0-701" name="__codelineno-0-701"></a>        <span class="n">mem</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+<a id="__codelineno-0-702" name="__codelineno-0-702"></a>        <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-703" name="__codelineno-0-703"></a>            <span class="k">return</span> <span class="kc">None</span>
+<a id="__codelineno-0-704" name="__codelineno-0-704"></a>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
+<a id="__codelineno-0-705" name="__codelineno-0-705"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3514,31 +3514,31 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-701">701</a></span>
-<span class="normal"><a href="#__codelineno-0-702">702</a></span>
-<span class="normal"><a href="#__codelineno-0-703">703</a></span>
-<span class="normal"><a href="#__codelineno-0-704">704</a></span>
-<span class="normal"><a href="#__codelineno-0-705">705</a></span>
-<span class="normal"><a href="#__codelineno-0-706">706</a></span>
-<span class="normal"><a href="#__codelineno-0-707">707</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-707">707</a></span>
 <span class="normal"><a href="#__codelineno-0-708">708</a></span>
 <span class="normal"><a href="#__codelineno-0-709">709</a></span>
 <span class="normal"><a href="#__codelineno-0-710">710</a></span>
 <span class="normal"><a href="#__codelineno-0-711">711</a></span>
 <span class="normal"><a href="#__codelineno-0-712">712</a></span>
-<span class="normal"><a href="#__codelineno-0-713">713</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-701" name="__codelineno-0-701"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">elaborate_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-702" name="__codelineno-0-702"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Elaborate all memories with pending_appraisal=True (async).</span>
-<a id="__codelineno-0-703" name="__codelineno-0-703"></a>
-<a id="__codelineno-0-704" name="__codelineno-0-704"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-705" name="__codelineno-0-705"></a><span class="sd">        List of updated Memory objects (only those that were elaborated).</span>
-<a id="__codelineno-0-706" name="__codelineno-0-706"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-707" name="__codelineno-0-707"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-708" name="__codelineno-0-708"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">():</span>
-<a id="__codelineno-0-709" name="__codelineno-0-709"></a>        <span class="k">if</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">pending_appraisal</span><span class="p">:</span>
-<a id="__codelineno-0-710" name="__codelineno-0-710"></a>            <span class="n">updated</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
-<a id="__codelineno-0-711" name="__codelineno-0-711"></a>            <span class="k">if</span> <span class="n">updated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-712" name="__codelineno-0-712"></a>                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
-<a id="__codelineno-0-713" name="__codelineno-0-713"></a>    <span class="k">return</span> <span class="n">results</span>
+<span class="normal"><a href="#__codelineno-0-713">713</a></span>
+<span class="normal"><a href="#__codelineno-0-714">714</a></span>
+<span class="normal"><a href="#__codelineno-0-715">715</a></span>
+<span class="normal"><a href="#__codelineno-0-716">716</a></span>
+<span class="normal"><a href="#__codelineno-0-717">717</a></span>
+<span class="normal"><a href="#__codelineno-0-718">718</a></span>
+<span class="normal"><a href="#__codelineno-0-719">719</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-707" name="__codelineno-0-707"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">elaborate_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
+<a id="__codelineno-0-708" name="__codelineno-0-708"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Elaborate all memories with pending_appraisal=True (async).</span>
+<a id="__codelineno-0-709" name="__codelineno-0-709"></a>
+<a id="__codelineno-0-710" name="__codelineno-0-710"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-711" name="__codelineno-0-711"></a><span class="sd">        List of updated Memory objects (only those that were elaborated).</span>
+<a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-713" name="__codelineno-0-713"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-714" name="__codelineno-0-714"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">():</span>
+<a id="__codelineno-0-715" name="__codelineno-0-715"></a>        <span class="k">if</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">pending_appraisal</span><span class="p">:</span>
+<a id="__codelineno-0-716" name="__codelineno-0-716"></a>            <span class="n">updated</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
+<a id="__codelineno-0-717" name="__codelineno-0-717"></a>            <span class="k">if</span> <span class="n">updated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-718" name="__codelineno-0-718"></a>                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+<a id="__codelineno-0-719" name="__codelineno-0-719"></a>    <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3948,13 +3948,13 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-800">800</a></span>
-<span class="normal"><a href="#__codelineno-0-801">801</a></span>
-<span class="normal"><a href="#__codelineno-0-802">802</a></span>
-<span class="normal"><a href="#__codelineno-0-803">803</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-800" name="__codelineno-0-800"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all memories as a list of JSON-serialisable dicts (async).&quot;&quot;&quot;</span>
-<a id="__codelineno-0-802" name="__codelineno-0-802"></a>    <span class="n">memories</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
-<a id="__codelineno-0-803" name="__codelineno-0-803"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">memories</span><span class="p">]</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-806">806</a></span>
+<span class="normal"><a href="#__codelineno-0-807">807</a></span>
+<span class="normal"><a href="#__codelineno-0-808">808</a></span>
+<span class="normal"><a href="#__codelineno-0-809">809</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-806" name="__codelineno-0-806"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">export_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<a id="__codelineno-0-807" name="__codelineno-0-807"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all memories as a list of JSON-serialisable dicts (async).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-808" name="__codelineno-0-808"></a>    <span class="n">memories</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
+<a id="__codelineno-0-809" name="__codelineno-0-809"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">memories</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3981,11 +3981,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-719">719</a></span>
-<span class="normal"><a href="#__codelineno-0-720">720</a></span>
-<span class="normal"><a href="#__codelineno-0-721">721</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a single memory by ID, or None if not found.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-721" name="__codelineno-0-721"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-725">725</a></span>
+<span class="normal"><a href="#__codelineno-0-726">726</a></span>
+<span class="normal"><a href="#__codelineno-0-727">727</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-725" name="__codelineno-0-725"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-726" name="__codelineno-0-726"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a single memory by ID, or None if not found.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-727" name="__codelineno-0-727"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4008,19 +4008,19 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-829">829</a></span>
-<span class="normal"><a href="#__codelineno-0-830">830</a></span>
-<span class="normal"><a href="#__codelineno-0-831">831</a></span>
-<span class="normal"><a href="#__codelineno-0-832">832</a></span>
-<span class="normal"><a href="#__codelineno-0-833">833</a></span>
-<span class="normal"><a href="#__codelineno-0-834">834</a></span>
-<span class="normal"><a href="#__codelineno-0-835">835</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-829" name="__codelineno-0-829"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
-<a id="__codelineno-0-830" name="__codelineno-0-830"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mood field regressed to ``now`` without modifying state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-831" name="__codelineno-0-831"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-832" name="__codelineno-0-832"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
-<a id="__codelineno-0-833" name="__codelineno-0-833"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-834" name="__codelineno-0-834"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span><span class="o">.</span><span class="n">regress</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">)</span>
-<a id="__codelineno-0-835" name="__codelineno-0-835"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-835">835</a></span>
+<span class="normal"><a href="#__codelineno-0-836">836</a></span>
+<span class="normal"><a href="#__codelineno-0-837">837</a></span>
+<span class="normal"><a href="#__codelineno-0-838">838</a></span>
+<span class="normal"><a href="#__codelineno-0-839">839</a></span>
+<span class="normal"><a href="#__codelineno-0-840">840</a></span>
+<span class="normal"><a href="#__codelineno-0-841">841</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-835" name="__codelineno-0-835"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
+<a id="__codelineno-0-836" name="__codelineno-0-836"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mood field regressed to ``now`` without modifying state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-837" name="__codelineno-0-837"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-838" name="__codelineno-0-838"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+<a id="__codelineno-0-839" name="__codelineno-0-839"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-840" name="__codelineno-0-840"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span><span class="o">.</span><span class="n">regress</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">)</span>
+<a id="__codelineno-0-841" name="__codelineno-0-841"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4043,11 +4043,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-731">731</a></span>
-<span class="normal"><a href="#__codelineno-0-732">732</a></span>
-<span class="normal"><a href="#__codelineno-0-733">733</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-731" name="__codelineno-0-731"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AffectiveState</span><span class="p">:</span>
-<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of the current affective state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-733" name="__codelineno-0-733"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-737">737</a></span>
+<span class="normal"><a href="#__codelineno-0-738">738</a></span>
+<span class="normal"><a href="#__codelineno-0-739">739</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-737" name="__codelineno-0-737"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AffectiveState</span><span class="p">:</span>
+<a id="__codelineno-0-738" name="__codelineno-0-738"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-739" name="__codelineno-0-739"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4145,13 +4145,7 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-805">805</a></span>
-<span class="normal"><a href="#__codelineno-0-806">806</a></span>
-<span class="normal"><a href="#__codelineno-0-807">807</a></span>
-<span class="normal"><a href="#__codelineno-0-808">808</a></span>
-<span class="normal"><a href="#__codelineno-0-809">809</a></span>
-<span class="normal"><a href="#__codelineno-0-810">810</a></span>
-<span class="normal"><a href="#__codelineno-0-811">811</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-811">811</a></span>
 <span class="normal"><a href="#__codelineno-0-812">812</a></span>
 <span class="normal"><a href="#__codelineno-0-813">813</a></span>
 <span class="normal"><a href="#__codelineno-0-814">814</a></span>
@@ -4167,29 +4161,35 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 <span class="normal"><a href="#__codelineno-0-824">824</a></span>
 <span class="normal"><a href="#__codelineno-0-825">825</a></span>
 <span class="normal"><a href="#__codelineno-0-826">826</a></span>
-<span class="normal"><a href="#__codelineno-0-827">827</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-805" name="__codelineno-0-805"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">import_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-806" name="__codelineno-0-806"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import memories from a list of dicts produced by ``export_memories()`` (async).</span>
-<a id="__codelineno-0-807" name="__codelineno-0-807"></a>
-<a id="__codelineno-0-808" name="__codelineno-0-808"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-809" name="__codelineno-0-809"></a><span class="sd">        data:      List of memory dicts (as returned by ``export_memories()``).</span>
-<a id="__codelineno-0-810" name="__codelineno-0-810"></a><span class="sd">        overwrite: When True, existing memories with the same ID are replaced.</span>
-<a id="__codelineno-0-811" name="__codelineno-0-811"></a><span class="sd">                   When False (default), duplicates are skipped silently.</span>
-<a id="__codelineno-0-812" name="__codelineno-0-812"></a>
-<a id="__codelineno-0-813" name="__codelineno-0-813"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="sd">        Number of memories actually written.</span>
-<a id="__codelineno-0-815" name="__codelineno-0-815"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-816" name="__codelineno-0-816"></a>    <span class="n">written</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-817" name="__codelineno-0-817"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-<a id="__codelineno-0-818" name="__codelineno-0-818"></a>        <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<a id="__codelineno-0-819" name="__codelineno-0-819"></a>        <span class="n">existing</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-<a id="__codelineno-0-820" name="__codelineno-0-820"></a>        <span class="k">if</span> <span class="n">existing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-821" name="__codelineno-0-821"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-<a id="__codelineno-0-822" name="__codelineno-0-822"></a>                <span class="k">continue</span>
-<a id="__codelineno-0-823" name="__codelineno-0-823"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
-<a id="__codelineno-0-824" name="__codelineno-0-824"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-825" name="__codelineno-0-825"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
-<a id="__codelineno-0-826" name="__codelineno-0-826"></a>        <span class="n">written</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="__codelineno-0-827" name="__codelineno-0-827"></a>    <span class="k">return</span> <span class="n">written</span>
+<span class="normal"><a href="#__codelineno-0-827">827</a></span>
+<span class="normal"><a href="#__codelineno-0-828">828</a></span>
+<span class="normal"><a href="#__codelineno-0-829">829</a></span>
+<span class="normal"><a href="#__codelineno-0-830">830</a></span>
+<span class="normal"><a href="#__codelineno-0-831">831</a></span>
+<span class="normal"><a href="#__codelineno-0-832">832</a></span>
+<span class="normal"><a href="#__codelineno-0-833">833</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-811" name="__codelineno-0-811"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">import_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-812" name="__codelineno-0-812"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import memories from a list of dicts produced by ``export_memories()`` (async).</span>
+<a id="__codelineno-0-813" name="__codelineno-0-813"></a>
+<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-815" name="__codelineno-0-815"></a><span class="sd">        data:      List of memory dicts (as returned by ``export_memories()``).</span>
+<a id="__codelineno-0-816" name="__codelineno-0-816"></a><span class="sd">        overwrite: When True, existing memories with the same ID are replaced.</span>
+<a id="__codelineno-0-817" name="__codelineno-0-817"></a><span class="sd">                   When False (default), duplicates are skipped silently.</span>
+<a id="__codelineno-0-818" name="__codelineno-0-818"></a>
+<a id="__codelineno-0-819" name="__codelineno-0-819"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-820" name="__codelineno-0-820"></a><span class="sd">        Number of memories actually written.</span>
+<a id="__codelineno-0-821" name="__codelineno-0-821"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-822" name="__codelineno-0-822"></a>    <span class="n">written</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-823" name="__codelineno-0-823"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-0-824" name="__codelineno-0-824"></a>        <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-0-825" name="__codelineno-0-825"></a>        <span class="n">existing</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<a id="__codelineno-0-826" name="__codelineno-0-826"></a>        <span class="k">if</span> <span class="n">existing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-827" name="__codelineno-0-827"></a>            <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+<a id="__codelineno-0-828" name="__codelineno-0-828"></a>                <span class="k">continue</span>
+<a id="__codelineno-0-829" name="__codelineno-0-829"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+<a id="__codelineno-0-830" name="__codelineno-0-830"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-831" name="__codelineno-0-831"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+<a id="__codelineno-0-832" name="__codelineno-0-832"></a>        <span class="n">written</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-0-833" name="__codelineno-0-833"></a>    <span class="k">return</span> <span class="n">written</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4216,11 +4216,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-723">723</a></span>
-<span class="normal"><a href="#__codelineno-0-724">724</a></span>
-<span class="normal"><a href="#__codelineno-0-725">725</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-723" name="__codelineno-0-723"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all memories in the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-725" name="__codelineno-0-725"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-729">729</a></span>
+<span class="normal"><a href="#__codelineno-0-730">730</a></span>
+<span class="normal"><a href="#__codelineno-0-731">731</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-729" name="__codelineno-0-729"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
+<a id="__codelineno-0-730" name="__codelineno-0-730"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4243,13 +4243,13 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-753">753</a></span>
-<span class="normal"><a href="#__codelineno-0-754">754</a></span>
-<span class="normal"><a href="#__codelineno-0-755">755</a></span>
-<span class="normal"><a href="#__codelineno-0-756">756</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-753" name="__codelineno-0-753"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-754" name="__codelineno-0-754"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore a previously saved affective state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-755" name="__codelineno-0-755"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-756" name="__codelineno-0-756"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-759">759</a></span>
+<span class="normal"><a href="#__codelineno-0-760">760</a></span>
+<span class="normal"><a href="#__codelineno-0-761">761</a></span>
+<span class="normal"><a href="#__codelineno-0-762">762</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-759" name="__codelineno-0-759"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-760" name="__codelineno-0-760"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore a previously saved affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-761" name="__codelineno-0-761"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-762" name="__codelineno-0-762"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4333,13 +4333,13 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-758">758</a></span>
-<span class="normal"><a href="#__codelineno-0-759">759</a></span>
-<span class="normal"><a href="#__codelineno-0-760">760</a></span>
-<span class="normal"><a href="#__codelineno-0-761">761</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-758" name="__codelineno-0-758"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-759" name="__codelineno-0-759"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return and, when configured, persist the current affective state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-760" name="__codelineno-0-760"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_async</span><span class="p">()</span>
-<a id="__codelineno-0-761" name="__codelineno-0-761"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-764">764</a></span>
+<span class="normal"><a href="#__codelineno-0-765">765</a></span>
+<span class="normal"><a href="#__codelineno-0-766">766</a></span>
+<span class="normal"><a href="#__codelineno-0-767">767</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-764" name="__codelineno-0-764"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-765" name="__codelineno-0-765"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return and, when configured, persist the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-766" name="__codelineno-0-766"></a>    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_async</span><span class="p">()</span>
+<a id="__codelineno-0-767" name="__codelineno-0-767"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4420,13 +4420,7 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-778">778</a></span>
-<span class="normal"><a href="#__codelineno-0-779">779</a></span>
-<span class="normal"><a href="#__codelineno-0-780">780</a></span>
-<span class="normal"><a href="#__codelineno-0-781">781</a></span>
-<span class="normal"><a href="#__codelineno-0-782">782</a></span>
-<span class="normal"><a href="#__codelineno-0-783">783</a></span>
-<span class="normal"><a href="#__codelineno-0-784">784</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-784">784</a></span>
 <span class="normal"><a href="#__codelineno-0-785">785</a></span>
 <span class="normal"><a href="#__codelineno-0-786">786</a></span>
 <span class="normal"><a href="#__codelineno-0-787">787</a></span>
@@ -4440,27 +4434,33 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 <span class="normal"><a href="#__codelineno-0-795">795</a></span>
 <span class="normal"><a href="#__codelineno-0-796">796</a></span>
 <span class="normal"><a href="#__codelineno-0-797">797</a></span>
-<span class="normal"><a href="#__codelineno-0-798">798</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-778" name="__codelineno-0-778"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-779" name="__codelineno-0-779"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove memories whose effective strength has fallen below *threshold* (async).</span>
-<a id="__codelineno-0-780" name="__codelineno-0-780"></a>
-<a id="__codelineno-0-781" name="__codelineno-0-781"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="sd">        threshold: Minimum acceptable strength in [0, 1].  Defaults to 0.05 (5%).</span>
-<a id="__codelineno-0-783" name="__codelineno-0-783"></a>
-<a id="__codelineno-0-784" name="__codelineno-0-784"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-785" name="__codelineno-0-785"></a><span class="sd">        Number of memories removed.</span>
-<a id="__codelineno-0-786" name="__codelineno-0-786"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-787" name="__codelineno-0-787"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_effective_strength</span>
-<a id="__codelineno-0-788" name="__codelineno-0-788"></a>
-<a id="__codelineno-0-789" name="__codelineno-0-789"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.prune&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
-<a id="__codelineno-0-790" name="__codelineno-0-790"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
-<a id="__codelineno-0-791" name="__codelineno-0-791"></a>        <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-792" name="__codelineno-0-792"></a>            <span class="n">m</span><span class="o">.</span><span class="n">id</span>
-<a id="__codelineno-0-793" name="__codelineno-0-793"></a>            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
-<a id="__codelineno-0-794" name="__codelineno-0-794"></a>            <span class="k">if</span> <span class="n">compute_effective_strength</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">decay</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span>
-<a id="__codelineno-0-795" name="__codelineno-0-795"></a>        <span class="p">]</span>
-<a id="__codelineno-0-796" name="__codelineno-0-796"></a>        <span class="k">for</span> <span class="n">memory_id</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="p">:</span>
-<a id="__codelineno-0-797" name="__codelineno-0-797"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
-<a id="__codelineno-0-798" name="__codelineno-0-798"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-798">798</a></span>
+<span class="normal"><a href="#__codelineno-0-799">799</a></span>
+<span class="normal"><a href="#__codelineno-0-800">800</a></span>
+<span class="normal"><a href="#__codelineno-0-801">801</a></span>
+<span class="normal"><a href="#__codelineno-0-802">802</a></span>
+<span class="normal"><a href="#__codelineno-0-803">803</a></span>
+<span class="normal"><a href="#__codelineno-0-804">804</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-784" name="__codelineno-0-784"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-785" name="__codelineno-0-785"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove memories whose effective strength has fallen below *threshold* (async).</span>
+<a id="__codelineno-0-786" name="__codelineno-0-786"></a>
+<a id="__codelineno-0-787" name="__codelineno-0-787"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-788" name="__codelineno-0-788"></a><span class="sd">        threshold: Minimum acceptable strength in [0, 1].  Defaults to 0.05 (5%).</span>
+<a id="__codelineno-0-789" name="__codelineno-0-789"></a>
+<a id="__codelineno-0-790" name="__codelineno-0-790"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-791" name="__codelineno-0-791"></a><span class="sd">        Number of memories removed.</span>
+<a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-793" name="__codelineno-0-793"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_effective_strength</span>
+<a id="__codelineno-0-794" name="__codelineno-0-794"></a>
+<a id="__codelineno-0-795" name="__codelineno-0-795"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.prune&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
+<a id="__codelineno-0-796" name="__codelineno-0-796"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+<a id="__codelineno-0-797" name="__codelineno-0-797"></a>        <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-0-798" name="__codelineno-0-798"></a>            <span class="n">m</span><span class="o">.</span><span class="n">id</span>
+<a id="__codelineno-0-799" name="__codelineno-0-799"></a>            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
+<a id="__codelineno-0-800" name="__codelineno-0-800"></a>            <span class="k">if</span> <span class="n">compute_effective_strength</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">decay</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span>
+<a id="__codelineno-0-801" name="__codelineno-0-801"></a>        <span class="p">]</span>
+<a id="__codelineno-0-802" name="__codelineno-0-802"></a>        <span class="k">for</span> <span class="n">memory_id</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="p">:</span>
+<a id="__codelineno-0-803" name="__codelineno-0-803"></a>            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+<a id="__codelineno-0-804" name="__codelineno-0-804"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4483,13 +4483,13 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-744">744</a></span>
-<span class="normal"><a href="#__codelineno-0-745">745</a></span>
-<span class="normal"><a href="#__codelineno-0-746">746</a></span>
-<span class="normal"><a href="#__codelineno-0-747">747</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="k">def</span><span class="w"> </span><span class="nf">reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-745" name="__codelineno-0-745"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the runtime affective state to its initial baseline.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-746" name="__codelineno-0-746"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">initial</span><span class="p">()</span>
-<a id="__codelineno-0-747" name="__codelineno-0-747"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-750">750</a></span>
+<span class="normal"><a href="#__codelineno-0-751">751</a></span>
+<span class="normal"><a href="#__codelineno-0-752">752</a></span>
+<span class="normal"><a href="#__codelineno-0-753">753</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-750" name="__codelineno-0-750"></a><span class="k">def</span><span class="w"> </span><span class="nf">reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-751" name="__codelineno-0-751"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the runtime affective state to its initial baseline.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-752" name="__codelineno-0-752"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">initial</span><span class="p">()</span>
+<a id="__codelineno-0-753" name="__codelineno-0-753"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4516,23 +4516,23 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-763">763</a></span>
-<span class="normal"><a href="#__codelineno-0-764">764</a></span>
-<span class="normal"><a href="#__codelineno-0-765">765</a></span>
-<span class="normal"><a href="#__codelineno-0-766">766</a></span>
-<span class="normal"><a href="#__codelineno-0-767">767</a></span>
-<span class="normal"><a href="#__codelineno-0-768">768</a></span>
-<span class="normal"><a href="#__codelineno-0-769">769</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-769">769</a></span>
 <span class="normal"><a href="#__codelineno-0-770">770</a></span>
-<span class="normal"><a href="#__codelineno-0-771">771</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-763" name="__codelineno-0-763"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">restore_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-764" name="__codelineno-0-764"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the last persisted affective state from the configured state store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-765" name="__codelineno-0-765"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-766" name="__codelineno-0-766"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-767" name="__codelineno-0-767"></a>    <span class="n">persisted</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">load</span><span class="p">)</span>
-<a id="__codelineno-0-768" name="__codelineno-0-768"></a>    <span class="k">if</span> <span class="n">persisted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-769" name="__codelineno-0-769"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-770" name="__codelineno-0-770"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">persisted</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
-<a id="__codelineno-0-771" name="__codelineno-0-771"></a>    <span class="k">return</span> <span class="kc">True</span>
+<span class="normal"><a href="#__codelineno-0-771">771</a></span>
+<span class="normal"><a href="#__codelineno-0-772">772</a></span>
+<span class="normal"><a href="#__codelineno-0-773">773</a></span>
+<span class="normal"><a href="#__codelineno-0-774">774</a></span>
+<span class="normal"><a href="#__codelineno-0-775">775</a></span>
+<span class="normal"><a href="#__codelineno-0-776">776</a></span>
+<span class="normal"><a href="#__codelineno-0-777">777</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-769" name="__codelineno-0-769"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">restore_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-770" name="__codelineno-0-770"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the last persisted affective state from the configured state store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-771" name="__codelineno-0-771"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-772" name="__codelineno-0-772"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-773" name="__codelineno-0-773"></a>    <span class="n">persisted</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">to_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">load</span><span class="p">)</span>
+<a id="__codelineno-0-774" name="__codelineno-0-774"></a>    <span class="k">if</span> <span class="n">persisted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-775" name="__codelineno-0-775"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-776" name="__codelineno-0-776"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">persisted</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
+<a id="__codelineno-0-777" name="__codelineno-0-777"></a>    <span class="k">return</span> <span class="kc">True</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4860,11 +4860,11 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-749">749</a></span>
-<span class="normal"><a href="#__codelineno-0-750">750</a></span>
-<span class="normal"><a href="#__codelineno-0-751">751</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-749" name="__codelineno-0-749"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-750" name="__codelineno-0-750"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise the current affective state for persistence.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-751" name="__codelineno-0-751"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-755">755</a></span>
+<span class="normal"><a href="#__codelineno-0-756">756</a></span>
+<span class="normal"><a href="#__codelineno-0-757">757</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-755" name="__codelineno-0-755"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-756" name="__codelineno-0-756"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise the current affective state for persistence.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-757" name="__codelineno-0-757"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4887,21 +4887,21 @@ via <code>asyncio.to_thread</code>; silently skips stores without cleanup.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/async_engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-735">735</a></span>
-<span class="normal"><a href="#__codelineno-0-736">736</a></span>
-<span class="normal"><a href="#__codelineno-0-737">737</a></span>
-<span class="normal"><a href="#__codelineno-0-738">738</a></span>
-<span class="normal"><a href="#__codelineno-0-739">739</a></span>
-<span class="normal"><a href="#__codelineno-0-740">740</a></span>
-<span class="normal"><a href="#__codelineno-0-741">741</a></span>
-<span class="normal"><a href="#__codelineno-0-742">742</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-735" name="__codelineno-0-735"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-736" name="__codelineno-0-736"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manually inject a CoreAffect, updating state synchronously.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-737" name="__codelineno-0-737"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-<a id="__codelineno-0-738" name="__codelineno-0-738"></a>        <span class="n">core_affect</span><span class="p">,</span>
-<a id="__codelineno-0-739" name="__codelineno-0-739"></a>        <span class="n">mood_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_alpha</span><span class="p">,</span>
-<a id="__codelineno-0-740" name="__codelineno-0-740"></a>        <span class="n">mood_decay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">,</span>
-<a id="__codelineno-0-741" name="__codelineno-0-741"></a>    <span class="p">)</span>
-<a id="__codelineno-0-742" name="__codelineno-0-742"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-741">741</a></span>
+<span class="normal"><a href="#__codelineno-0-742">742</a></span>
+<span class="normal"><a href="#__codelineno-0-743">743</a></span>
+<span class="normal"><a href="#__codelineno-0-744">744</a></span>
+<span class="normal"><a href="#__codelineno-0-745">745</a></span>
+<span class="normal"><a href="#__codelineno-0-746">746</a></span>
+<span class="normal"><a href="#__codelineno-0-747">747</a></span>
+<span class="normal"><a href="#__codelineno-0-748">748</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-741" name="__codelineno-0-741"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-742" name="__codelineno-0-742"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manually inject a CoreAffect, updating state synchronously.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-743" name="__codelineno-0-743"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+<a id="__codelineno-0-744" name="__codelineno-0-744"></a>        <span class="n">core_affect</span><span class="p">,</span>
+<a id="__codelineno-0-745" name="__codelineno-0-745"></a>        <span class="n">mood_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_alpha</span><span class="p">,</span>
+<a id="__codelineno-0-746" name="__codelineno-0-746"></a>        <span class="n">mood_decay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">,</span>
+<a id="__codelineno-0-747" name="__codelineno-0-747"></a>    <span class="p">)</span>
+<a id="__codelineno-0-748" name="__codelineno-0-748"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state_sync</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

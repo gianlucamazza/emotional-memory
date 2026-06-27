@@ -3440,11 +3440,11 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-786">786</a></span>
-<span class="normal"><a href="#__codelineno-0-787">787</a></span>
-<span class="normal"><a href="#__codelineno-0-788">788</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-786" name="__codelineno-0-786"></a><span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-787" name="__codelineno-0-787"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of memories in the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-788" name="__codelineno-0-788"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-793">793</a></span>
+<span class="normal"><a href="#__codelineno-0-794">794</a></span>
+<span class="normal"><a href="#__codelineno-0-795">795</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-793" name="__codelineno-0-793"></a><span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-794" name="__codelineno-0-794"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-795" name="__codelineno-0-795"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3467,13 +3467,13 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-845">845</a></span>
-<span class="normal"><a href="#__codelineno-0-846">846</a></span>
-<span class="normal"><a href="#__codelineno-0-847">847</a></span>
-<span class="normal"><a href="#__codelineno-0-848">848</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-845" name="__codelineno-0-845"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-846" name="__codelineno-0-846"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the persisted affective-state snapshot, if configured.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-847" name="__codelineno-0-847"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-848" name="__codelineno-0-848"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-852">852</a></span>
+<span class="normal"><a href="#__codelineno-0-853">853</a></span>
+<span class="normal"><a href="#__codelineno-0-854">854</a></span>
+<span class="normal"><a href="#__codelineno-0-855">855</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-852" name="__codelineno-0-852"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-853" name="__codelineno-0-853"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the persisted affective-state snapshot, if configured.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-854" name="__codelineno-0-854"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-855" name="__codelineno-0-855"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3498,29 +3498,29 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-921">921</a></span>
-<span class="normal"><a href="#__codelineno-0-922">922</a></span>
-<span class="normal"><a href="#__codelineno-0-923">923</a></span>
-<span class="normal"><a href="#__codelineno-0-924">924</a></span>
-<span class="normal"><a href="#__codelineno-0-925">925</a></span>
-<span class="normal"><a href="#__codelineno-0-926">926</a></span>
-<span class="normal"><a href="#__codelineno-0-927">927</a></span>
-<span class="normal"><a href="#__codelineno-0-928">928</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-928">928</a></span>
 <span class="normal"><a href="#__codelineno-0-929">929</a></span>
 <span class="normal"><a href="#__codelineno-0-930">930</a></span>
 <span class="normal"><a href="#__codelineno-0-931">931</a></span>
-<span class="normal"><a href="#__codelineno-0-932">932</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-921" name="__codelineno-0-921"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-922" name="__codelineno-0-922"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by the underlying store, if supported.</span>
-<a id="__codelineno-0-923" name="__codelineno-0-923"></a>
-<a id="__codelineno-0-924" name="__codelineno-0-924"></a><span class="sd">    Calls ``store.close()`` when the store exposes that method (e.g.</span>
-<a id="__codelineno-0-925" name="__codelineno-0-925"></a><span class="sd">    ``SQLiteStore``).  Safe to call on stores that do not implement it.</span>
-<a id="__codelineno-0-926" name="__codelineno-0-926"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-927" name="__codelineno-0-927"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-928" name="__codelineno-0-928"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
-<a id="__codelineno-0-929" name="__codelineno-0-929"></a>        <span class="n">close</span><span class="p">()</span>
-<a id="__codelineno-0-930" name="__codelineno-0-930"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-931" name="__codelineno-0-931"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
-<a id="__codelineno-0-932" name="__codelineno-0-932"></a>        <span class="n">state_close</span><span class="p">()</span>
+<span class="normal"><a href="#__codelineno-0-932">932</a></span>
+<span class="normal"><a href="#__codelineno-0-933">933</a></span>
+<span class="normal"><a href="#__codelineno-0-934">934</a></span>
+<span class="normal"><a href="#__codelineno-0-935">935</a></span>
+<span class="normal"><a href="#__codelineno-0-936">936</a></span>
+<span class="normal"><a href="#__codelineno-0-937">937</a></span>
+<span class="normal"><a href="#__codelineno-0-938">938</a></span>
+<span class="normal"><a href="#__codelineno-0-939">939</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-928" name="__codelineno-0-928"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-929" name="__codelineno-0-929"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by the underlying store, if supported.</span>
+<a id="__codelineno-0-930" name="__codelineno-0-930"></a>
+<a id="__codelineno-0-931" name="__codelineno-0-931"></a><span class="sd">    Calls ``store.close()`` when the store exposes that method (e.g.</span>
+<a id="__codelineno-0-932" name="__codelineno-0-932"></a><span class="sd">    ``SQLiteStore``).  Safe to call on stores that do not implement it.</span>
+<a id="__codelineno-0-933" name="__codelineno-0-933"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-934" name="__codelineno-0-934"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-935" name="__codelineno-0-935"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
+<a id="__codelineno-0-936" name="__codelineno-0-936"></a>        <span class="n">close</span><span class="p">()</span>
+<a id="__codelineno-0-937" name="__codelineno-0-937"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-938" name="__codelineno-0-938"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
+<a id="__codelineno-0-939" name="__codelineno-0-939"></a>        <span class="n">state_close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3543,11 +3543,11 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-743">743</a></span>
-<span class="normal"><a href="#__codelineno-0-744">744</a></span>
-<span class="normal"><a href="#__codelineno-0-745">745</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-743" name="__codelineno-0-743"></a><span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a memory from the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-745" name="__codelineno-0-745"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-750">750</a></span>
+<span class="normal"><a href="#__codelineno-0-751">751</a></span>
+<span class="normal"><a href="#__codelineno-0-752">752</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-750" name="__codelineno-0-750"></a><span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-751" name="__codelineno-0-751"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a memory from the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-752" name="__codelineno-0-752"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3638,14 +3638,7 @@ pending_appraisal, and opens the reconsolidation window.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-704">704</a></span>
-<span class="normal"><a href="#__codelineno-0-705">705</a></span>
-<span class="normal"><a href="#__codelineno-0-706">706</a></span>
-<span class="normal"><a href="#__codelineno-0-707">707</a></span>
-<span class="normal"><a href="#__codelineno-0-708">708</a></span>
-<span class="normal"><a href="#__codelineno-0-709">709</a></span>
-<span class="normal"><a href="#__codelineno-0-710">710</a></span>
-<span class="normal"><a href="#__codelineno-0-711">711</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-711">711</a></span>
 <span class="normal"><a href="#__codelineno-0-712">712</a></span>
 <span class="normal"><a href="#__codelineno-0-713">713</a></span>
 <span class="normal"><a href="#__codelineno-0-714">714</a></span>
@@ -3658,27 +3651,34 @@ pending_appraisal, and opens the reconsolidation window.</p>
 <span class="normal"><a href="#__codelineno-0-721">721</a></span>
 <span class="normal"><a href="#__codelineno-0-722">722</a></span>
 <span class="normal"><a href="#__codelineno-0-723">723</a></span>
-<span class="normal"><a href="#__codelineno-0-724">724</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-704" name="__codelineno-0-704"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-705" name="__codelineno-0-705"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
-<a id="__codelineno-0-706" name="__codelineno-0-706"></a>
-<a id="__codelineno-0-707" name="__codelineno-0-707"></a><span class="sd">    Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal</span>
-<a id="__codelineno-0-708" name="__codelineno-0-708"></a><span class="sd">    on the memory&#39;s content, blends the appraised affect with the raw</span>
-<a id="__codelineno-0-709" name="__codelineno-0-709"></a><span class="sd">    fast-path affect, updates consolidation_strength, clears</span>
-<a id="__codelineno-0-710" name="__codelineno-0-710"></a><span class="sd">    pending_appraisal, and opens the reconsolidation window.</span>
-<a id="__codelineno-0-711" name="__codelineno-0-711"></a>
-<a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-713" name="__codelineno-0-713"></a><span class="sd">        memory_id: ID of the memory to elaborate.</span>
-<a id="__codelineno-0-714" name="__codelineno-0-714"></a>
-<a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">        The updated Memory, or None if the memory does not exist,</span>
-<a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="sd">        is not pending appraisal, or no appraisal engine is configured.</span>
-<a id="__codelineno-0-718" name="__codelineno-0-718"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-719" name="__codelineno-0-719"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.elaborate&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;memory_id&quot;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
-<a id="__codelineno-0-720" name="__codelineno-0-720"></a>        <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
-<a id="__codelineno-0-721" name="__codelineno-0-721"></a>        <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-722" name="__codelineno-0-722"></a>            <span class="k">return</span> <span class="kc">None</span>
-<a id="__codelineno-0-723" name="__codelineno-0-723"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
-<a id="__codelineno-0-724" name="__codelineno-0-724"></a>    <span class="k">return</span> <span class="n">result</span>
+<span class="normal"><a href="#__codelineno-0-724">724</a></span>
+<span class="normal"><a href="#__codelineno-0-725">725</a></span>
+<span class="normal"><a href="#__codelineno-0-726">726</a></span>
+<span class="normal"><a href="#__codelineno-0-727">727</a></span>
+<span class="normal"><a href="#__codelineno-0-728">728</a></span>
+<span class="normal"><a href="#__codelineno-0-729">729</a></span>
+<span class="normal"><a href="#__codelineno-0-730">730</a></span>
+<span class="normal"><a href="#__codelineno-0-731">731</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-711" name="__codelineno-0-711"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
+<a id="__codelineno-0-713" name="__codelineno-0-713"></a>
+<a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="sd">    Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal</span>
+<a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="sd">    on the memory&#39;s content, blends the appraised affect with the raw</span>
+<a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">    fast-path affect, updates consolidation_strength, clears</span>
+<a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="sd">    pending_appraisal, and opens the reconsolidation window.</span>
+<a id="__codelineno-0-718" name="__codelineno-0-718"></a>
+<a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">        memory_id: ID of the memory to elaborate.</span>
+<a id="__codelineno-0-721" name="__codelineno-0-721"></a>
+<a id="__codelineno-0-722" name="__codelineno-0-722"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-723" name="__codelineno-0-723"></a><span class="sd">        The updated Memory, or None if the memory does not exist,</span>
+<a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="sd">        is not pending appraisal, or no appraisal engine is configured.</span>
+<a id="__codelineno-0-725" name="__codelineno-0-725"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-726" name="__codelineno-0-726"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.elaborate&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;memory_id&quot;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
+<a id="__codelineno-0-727" name="__codelineno-0-727"></a>        <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+<a id="__codelineno-0-728" name="__codelineno-0-728"></a>        <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-729" name="__codelineno-0-729"></a>            <span class="k">return</span> <span class="kc">None</span>
+<a id="__codelineno-0-730" name="__codelineno-0-730"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
+<a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3726,14 +3726,7 @@ memories in the store. Each memory is elaborated in sequence.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-726">726</a></span>
-<span class="normal"><a href="#__codelineno-0-727">727</a></span>
-<span class="normal"><a href="#__codelineno-0-728">728</a></span>
-<span class="normal"><a href="#__codelineno-0-729">729</a></span>
-<span class="normal"><a href="#__codelineno-0-730">730</a></span>
-<span class="normal"><a href="#__codelineno-0-731">731</a></span>
-<span class="normal"><a href="#__codelineno-0-732">732</a></span>
-<span class="normal"><a href="#__codelineno-0-733">733</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-733">733</a></span>
 <span class="normal"><a href="#__codelineno-0-734">734</a></span>
 <span class="normal"><a href="#__codelineno-0-735">735</a></span>
 <span class="normal"><a href="#__codelineno-0-736">736</a></span>
@@ -3741,22 +3734,29 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <span class="normal"><a href="#__codelineno-0-738">738</a></span>
 <span class="normal"><a href="#__codelineno-0-739">739</a></span>
 <span class="normal"><a href="#__codelineno-0-740">740</a></span>
-<span class="normal"><a href="#__codelineno-0-741">741</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-726" name="__codelineno-0-726"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-727" name="__codelineno-0-727"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Elaborate all memories with pending_appraisal=True.</span>
-<a id="__codelineno-0-728" name="__codelineno-0-728"></a>
-<a id="__codelineno-0-729" name="__codelineno-0-729"></a><span class="sd">    Convenience method to run the slow appraisal path on all fast-path</span>
-<a id="__codelineno-0-730" name="__codelineno-0-730"></a><span class="sd">    memories in the store. Each memory is elaborated in sequence.</span>
-<a id="__codelineno-0-731" name="__codelineno-0-731"></a>
-<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-733" name="__codelineno-0-733"></a><span class="sd">        List of updated Memory objects (only those that were elaborated).</span>
-<a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-735" name="__codelineno-0-735"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-736" name="__codelineno-0-736"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">():</span>
-<a id="__codelineno-0-737" name="__codelineno-0-737"></a>        <span class="k">if</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">pending_appraisal</span><span class="p">:</span>
-<a id="__codelineno-0-738" name="__codelineno-0-738"></a>            <span class="n">updated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
-<a id="__codelineno-0-739" name="__codelineno-0-739"></a>            <span class="k">if</span> <span class="n">updated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-740" name="__codelineno-0-740"></a>                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
-<a id="__codelineno-0-741" name="__codelineno-0-741"></a>    <span class="k">return</span> <span class="n">results</span>
+<span class="normal"><a href="#__codelineno-0-741">741</a></span>
+<span class="normal"><a href="#__codelineno-0-742">742</a></span>
+<span class="normal"><a href="#__codelineno-0-743">743</a></span>
+<span class="normal"><a href="#__codelineno-0-744">744</a></span>
+<span class="normal"><a href="#__codelineno-0-745">745</a></span>
+<span class="normal"><a href="#__codelineno-0-746">746</a></span>
+<span class="normal"><a href="#__codelineno-0-747">747</a></span>
+<span class="normal"><a href="#__codelineno-0-748">748</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-733" name="__codelineno-0-733"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
+<a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Elaborate all memories with pending_appraisal=True.</span>
+<a id="__codelineno-0-735" name="__codelineno-0-735"></a>
+<a id="__codelineno-0-736" name="__codelineno-0-736"></a><span class="sd">    Convenience method to run the slow appraisal path on all fast-path</span>
+<a id="__codelineno-0-737" name="__codelineno-0-737"></a><span class="sd">    memories in the store. Each memory is elaborated in sequence.</span>
+<a id="__codelineno-0-738" name="__codelineno-0-738"></a>
+<a id="__codelineno-0-739" name="__codelineno-0-739"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-740" name="__codelineno-0-740"></a><span class="sd">        List of updated Memory objects (only those that were elaborated).</span>
+<a id="__codelineno-0-741" name="__codelineno-0-741"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-742" name="__codelineno-0-742"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-743" name="__codelineno-0-743"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">():</span>
+<a id="__codelineno-0-744" name="__codelineno-0-744"></a>        <span class="k">if</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">pending_appraisal</span><span class="p">:</span>
+<a id="__codelineno-0-745" name="__codelineno-0-745"></a>            <span class="n">updated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elaborate_with_memory</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
+<a id="__codelineno-0-746" name="__codelineno-0-746"></a>            <span class="k">if</span> <span class="n">updated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-747" name="__codelineno-0-747"></a>                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+<a id="__codelineno-0-748" name="__codelineno-0-748"></a>    <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4184,19 +4184,19 @@ can be restored with <code>import_memories()</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-877">877</a></span>
-<span class="normal"><a href="#__codelineno-0-878">878</a></span>
-<span class="normal"><a href="#__codelineno-0-879">879</a></span>
-<span class="normal"><a href="#__codelineno-0-880">880</a></span>
-<span class="normal"><a href="#__codelineno-0-881">881</a></span>
-<span class="normal"><a href="#__codelineno-0-882">882</a></span>
-<span class="normal"><a href="#__codelineno-0-883">883</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-877" name="__codelineno-0-877"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<a id="__codelineno-0-878" name="__codelineno-0-878"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all memories as a list of JSON-serialisable dicts.</span>
-<a id="__codelineno-0-879" name="__codelineno-0-879"></a>
-<a id="__codelineno-0-880" name="__codelineno-0-880"></a><span class="sd">    Suitable for backup or migration between store backends.  The output</span>
-<a id="__codelineno-0-881" name="__codelineno-0-881"></a><span class="sd">    can be restored with ``import_memories()``.</span>
-<a id="__codelineno-0-882" name="__codelineno-0-882"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-883" name="__codelineno-0-883"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()]</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-884">884</a></span>
+<span class="normal"><a href="#__codelineno-0-885">885</a></span>
+<span class="normal"><a href="#__codelineno-0-886">886</a></span>
+<span class="normal"><a href="#__codelineno-0-887">887</a></span>
+<span class="normal"><a href="#__codelineno-0-888">888</a></span>
+<span class="normal"><a href="#__codelineno-0-889">889</a></span>
+<span class="normal"><a href="#__codelineno-0-890">890</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-884" name="__codelineno-0-884"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<a id="__codelineno-0-885" name="__codelineno-0-885"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all memories as a list of JSON-serialisable dicts.</span>
+<a id="__codelineno-0-886" name="__codelineno-0-886"></a>
+<a id="__codelineno-0-887" name="__codelineno-0-887"></a><span class="sd">    Suitable for backup or migration between store backends.  The output</span>
+<a id="__codelineno-0-888" name="__codelineno-0-888"></a><span class="sd">    can be restored with ``import_memories()``.</span>
+<a id="__codelineno-0-889" name="__codelineno-0-889"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-890" name="__codelineno-0-890"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4219,11 +4219,11 @@ can be restored with <code>import_memories()</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-747">747</a></span>
-<span class="normal"><a href="#__codelineno-0-748">748</a></span>
-<span class="normal"><a href="#__codelineno-0-749">749</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-747" name="__codelineno-0-747"></a><span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-748" name="__codelineno-0-748"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a single memory by ID, or None if not found.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-749" name="__codelineno-0-749"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-754">754</a></span>
+<span class="normal"><a href="#__codelineno-0-755">755</a></span>
+<span class="normal"><a href="#__codelineno-0-756">756</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-754" name="__codelineno-0-754"></a><span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-755" name="__codelineno-0-755"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a single memory by ID, or None if not found.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-756" name="__codelineno-0-756"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4248,27 +4248,27 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-909">909</a></span>
-<span class="normal"><a href="#__codelineno-0-910">910</a></span>
-<span class="normal"><a href="#__codelineno-0-911">911</a></span>
-<span class="normal"><a href="#__codelineno-0-912">912</a></span>
-<span class="normal"><a href="#__codelineno-0-913">913</a></span>
-<span class="normal"><a href="#__codelineno-0-914">914</a></span>
-<span class="normal"><a href="#__codelineno-0-915">915</a></span>
-<span class="normal"><a href="#__codelineno-0-916">916</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-916">916</a></span>
 <span class="normal"><a href="#__codelineno-0-917">917</a></span>
 <span class="normal"><a href="#__codelineno-0-918">918</a></span>
-<span class="normal"><a href="#__codelineno-0-919">919</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-909" name="__codelineno-0-909"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
-<a id="__codelineno-0-910" name="__codelineno-0-910"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mood field regressed to ``now`` without modifying state.</span>
-<a id="__codelineno-0-911" name="__codelineno-0-911"></a>
-<a id="__codelineno-0-912" name="__codelineno-0-912"></a><span class="sd">    Useful for read-only mood inspection between encode/retrieve calls.</span>
-<a id="__codelineno-0-913" name="__codelineno-0-913"></a><span class="sd">    If ``mood_decay`` is not configured, returns the frozen mood.</span>
-<a id="__codelineno-0-914" name="__codelineno-0-914"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-915" name="__codelineno-0-915"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-916" name="__codelineno-0-916"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
-<a id="__codelineno-0-917" name="__codelineno-0-917"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-918" name="__codelineno-0-918"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span><span class="o">.</span><span class="n">regress</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">)</span>
-<a id="__codelineno-0-919" name="__codelineno-0-919"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span>
+<span class="normal"><a href="#__codelineno-0-919">919</a></span>
+<span class="normal"><a href="#__codelineno-0-920">920</a></span>
+<span class="normal"><a href="#__codelineno-0-921">921</a></span>
+<span class="normal"><a href="#__codelineno-0-922">922</a></span>
+<span class="normal"><a href="#__codelineno-0-923">923</a></span>
+<span class="normal"><a href="#__codelineno-0-924">924</a></span>
+<span class="normal"><a href="#__codelineno-0-925">925</a></span>
+<span class="normal"><a href="#__codelineno-0-926">926</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-916" name="__codelineno-0-916"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
+<a id="__codelineno-0-917" name="__codelineno-0-917"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mood field regressed to ``now`` without modifying state.</span>
+<a id="__codelineno-0-918" name="__codelineno-0-918"></a>
+<a id="__codelineno-0-919" name="__codelineno-0-919"></a><span class="sd">    Useful for read-only mood inspection between encode/retrieve calls.</span>
+<a id="__codelineno-0-920" name="__codelineno-0-920"></a><span class="sd">    If ``mood_decay`` is not configured, returns the frozen mood.</span>
+<a id="__codelineno-0-921" name="__codelineno-0-921"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-922" name="__codelineno-0-922"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-923" name="__codelineno-0-923"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+<a id="__codelineno-0-924" name="__codelineno-0-924"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-925" name="__codelineno-0-925"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span><span class="o">.</span><span class="n">regress</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">)</span>
+<a id="__codelineno-0-926" name="__codelineno-0-926"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">mood</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4291,11 +4291,11 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-790">790</a></span>
-<span class="normal"><a href="#__codelineno-0-791">791</a></span>
-<span class="normal"><a href="#__codelineno-0-792">792</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-790" name="__codelineno-0-790"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AffectiveState</span><span class="p">:</span>
-<a id="__codelineno-0-791" name="__codelineno-0-791"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of the current affective state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-792" name="__codelineno-0-792"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-797">797</a></span>
+<span class="normal"><a href="#__codelineno-0-798">798</a></span>
+<span class="normal"><a href="#__codelineno-0-799">799</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-797" name="__codelineno-0-797"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AffectiveState</span><span class="p">:</span>
+<a id="__codelineno-0-798" name="__codelineno-0-798"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-799" name="__codelineno-0-799"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4389,14 +4389,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-885">885</a></span>
-<span class="normal"><a href="#__codelineno-0-886">886</a></span>
-<span class="normal"><a href="#__codelineno-0-887">887</a></span>
-<span class="normal"><a href="#__codelineno-0-888">888</a></span>
-<span class="normal"><a href="#__codelineno-0-889">889</a></span>
-<span class="normal"><a href="#__codelineno-0-890">890</a></span>
-<span class="normal"><a href="#__codelineno-0-891">891</a></span>
-<span class="normal"><a href="#__codelineno-0-892">892</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-892">892</a></span>
 <span class="normal"><a href="#__codelineno-0-893">893</a></span>
 <span class="normal"><a href="#__codelineno-0-894">894</a></span>
 <span class="normal"><a href="#__codelineno-0-895">895</a></span>
@@ -4411,29 +4404,36 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-904">904</a></span>
 <span class="normal"><a href="#__codelineno-0-905">905</a></span>
 <span class="normal"><a href="#__codelineno-0-906">906</a></span>
-<span class="normal"><a href="#__codelineno-0-907">907</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-885" name="__codelineno-0-885"></a><span class="k">def</span><span class="w"> </span><span class="nf">import_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-886" name="__codelineno-0-886"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import memories from a list of dicts produced by ``export_memories()``.</span>
-<a id="__codelineno-0-887" name="__codelineno-0-887"></a>
-<a id="__codelineno-0-888" name="__codelineno-0-888"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-889" name="__codelineno-0-889"></a><span class="sd">        data:      List of memory dicts (as returned by ``export_memories()``).</span>
-<a id="__codelineno-0-890" name="__codelineno-0-890"></a><span class="sd">        overwrite: When True, existing memories with the same ID are replaced.</span>
-<a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">                   When False (default), duplicates are skipped silently.</span>
-<a id="__codelineno-0-892" name="__codelineno-0-892"></a>
-<a id="__codelineno-0-893" name="__codelineno-0-893"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-894" name="__codelineno-0-894"></a><span class="sd">        Number of memories actually written.</span>
-<a id="__codelineno-0-895" name="__codelineno-0-895"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-896" name="__codelineno-0-896"></a>    <span class="n">written</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-897" name="__codelineno-0-897"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-<a id="__codelineno-0-898" name="__codelineno-0-898"></a>        <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-<a id="__codelineno-0-899" name="__codelineno-0-899"></a>        <span class="n">exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<a id="__codelineno-0-900" name="__codelineno-0-900"></a>        <span class="k">if</span> <span class="n">exists</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
-<a id="__codelineno-0-901" name="__codelineno-0-901"></a>            <span class="k">continue</span>
-<a id="__codelineno-0-902" name="__codelineno-0-902"></a>        <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
-<a id="__codelineno-0-903" name="__codelineno-0-903"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
-<a id="__codelineno-0-904" name="__codelineno-0-904"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-905" name="__codelineno-0-905"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
-<a id="__codelineno-0-906" name="__codelineno-0-906"></a>        <span class="n">written</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="__codelineno-0-907" name="__codelineno-0-907"></a>    <span class="k">return</span> <span class="n">written</span>
+<span class="normal"><a href="#__codelineno-0-907">907</a></span>
+<span class="normal"><a href="#__codelineno-0-908">908</a></span>
+<span class="normal"><a href="#__codelineno-0-909">909</a></span>
+<span class="normal"><a href="#__codelineno-0-910">910</a></span>
+<span class="normal"><a href="#__codelineno-0-911">911</a></span>
+<span class="normal"><a href="#__codelineno-0-912">912</a></span>
+<span class="normal"><a href="#__codelineno-0-913">913</a></span>
+<span class="normal"><a href="#__codelineno-0-914">914</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-892" name="__codelineno-0-892"></a><span class="k">def</span><span class="w"> </span><span class="nf">import_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-893" name="__codelineno-0-893"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import memories from a list of dicts produced by ``export_memories()``.</span>
+<a id="__codelineno-0-894" name="__codelineno-0-894"></a>
+<a id="__codelineno-0-895" name="__codelineno-0-895"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-896" name="__codelineno-0-896"></a><span class="sd">        data:      List of memory dicts (as returned by ``export_memories()``).</span>
+<a id="__codelineno-0-897" name="__codelineno-0-897"></a><span class="sd">        overwrite: When True, existing memories with the same ID are replaced.</span>
+<a id="__codelineno-0-898" name="__codelineno-0-898"></a><span class="sd">                   When False (default), duplicates are skipped silently.</span>
+<a id="__codelineno-0-899" name="__codelineno-0-899"></a>
+<a id="__codelineno-0-900" name="__codelineno-0-900"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-901" name="__codelineno-0-901"></a><span class="sd">        Number of memories actually written.</span>
+<a id="__codelineno-0-902" name="__codelineno-0-902"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-903" name="__codelineno-0-903"></a>    <span class="n">written</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-904" name="__codelineno-0-904"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-0-905" name="__codelineno-0-905"></a>        <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<a id="__codelineno-0-906" name="__codelineno-0-906"></a>        <span class="n">exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<a id="__codelineno-0-907" name="__codelineno-0-907"></a>        <span class="k">if</span> <span class="n">exists</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">overwrite</span><span class="p">:</span>
+<a id="__codelineno-0-908" name="__codelineno-0-908"></a>            <span class="k">continue</span>
+<a id="__codelineno-0-909" name="__codelineno-0-909"></a>        <span class="k">if</span> <span class="n">exists</span><span class="p">:</span>
+<a id="__codelineno-0-910" name="__codelineno-0-910"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+<a id="__codelineno-0-911" name="__codelineno-0-911"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-912" name="__codelineno-0-912"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+<a id="__codelineno-0-913" name="__codelineno-0-913"></a>        <span class="n">written</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-0-914" name="__codelineno-0-914"></a>    <span class="k">return</span> <span class="n">written</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4456,11 +4456,11 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-782">782</a></span>
-<span class="normal"><a href="#__codelineno-0-783">783</a></span>
-<span class="normal"><a href="#__codelineno-0-784">784</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="k">def</span><span class="w"> </span><span class="nf">list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-783" name="__codelineno-0-783"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all memories in the store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-784" name="__codelineno-0-784"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-789">789</a></span>
+<span class="normal"><a href="#__codelineno-0-790">790</a></span>
+<span class="normal"><a href="#__codelineno-0-791">791</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-789" name="__codelineno-0-789"></a><span class="k">def</span><span class="w"> </span><span class="nf">list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
+<a id="__codelineno-0-790" name="__codelineno-0-790"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-791" name="__codelineno-0-791"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4514,21 +4514,21 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-821">821</a></span>
-<span class="normal"><a href="#__codelineno-0-822">822</a></span>
-<span class="normal"><a href="#__codelineno-0-823">823</a></span>
-<span class="normal"><a href="#__codelineno-0-824">824</a></span>
-<span class="normal"><a href="#__codelineno-0-825">825</a></span>
-<span class="normal"><a href="#__codelineno-0-826">826</a></span>
-<span class="normal"><a href="#__codelineno-0-827">827</a></span>
-<span class="normal"><a href="#__codelineno-0-828">828</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-821" name="__codelineno-0-821"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-822" name="__codelineno-0-822"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore a previously saved affective state.</span>
-<a id="__codelineno-0-823" name="__codelineno-0-823"></a>
-<a id="__codelineno-0-824" name="__codelineno-0-824"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-825" name="__codelineno-0-825"></a><span class="sd">        data: A dict produced by a previous ``save_state()`` call.</span>
-<a id="__codelineno-0-826" name="__codelineno-0-826"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-827" name="__codelineno-0-827"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-0-828" name="__codelineno-0-828"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-828">828</a></span>
+<span class="normal"><a href="#__codelineno-0-829">829</a></span>
+<span class="normal"><a href="#__codelineno-0-830">830</a></span>
+<span class="normal"><a href="#__codelineno-0-831">831</a></span>
+<span class="normal"><a href="#__codelineno-0-832">832</a></span>
+<span class="normal"><a href="#__codelineno-0-833">833</a></span>
+<span class="normal"><a href="#__codelineno-0-834">834</a></span>
+<span class="normal"><a href="#__codelineno-0-835">835</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-828" name="__codelineno-0-828"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-829" name="__codelineno-0-829"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore a previously saved affective state.</span>
+<a id="__codelineno-0-830" name="__codelineno-0-830"></a>
+<a id="__codelineno-0-831" name="__codelineno-0-831"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-832" name="__codelineno-0-832"></a><span class="sd">        data: A dict produced by a previous ``save_state()`` call.</span>
+<a id="__codelineno-0-833" name="__codelineno-0-833"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-834" name="__codelineno-0-834"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-0-835" name="__codelineno-0-835"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4606,13 +4606,13 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-830">830</a></span>
-<span class="normal"><a href="#__codelineno-0-831">831</a></span>
-<span class="normal"><a href="#__codelineno-0-832">832</a></span>
-<span class="normal"><a href="#__codelineno-0-833">833</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-830" name="__codelineno-0-830"></a><span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-831" name="__codelineno-0-831"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return and, when configured, persist the current affective state.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-832" name="__codelineno-0-832"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
-<a id="__codelineno-0-833" name="__codelineno-0-833"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-837">837</a></span>
+<span class="normal"><a href="#__codelineno-0-838">838</a></span>
+<span class="normal"><a href="#__codelineno-0-839">839</a></span>
+<span class="normal"><a href="#__codelineno-0-840">840</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-837" name="__codelineno-0-837"></a><span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-838" name="__codelineno-0-838"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return and, when configured, persist the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-839" name="__codelineno-0-839"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
+<a id="__codelineno-0-840" name="__codelineno-0-840"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4691,14 +4691,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-850">850</a></span>
-<span class="normal"><a href="#__codelineno-0-851">851</a></span>
-<span class="normal"><a href="#__codelineno-0-852">852</a></span>
-<span class="normal"><a href="#__codelineno-0-853">853</a></span>
-<span class="normal"><a href="#__codelineno-0-854">854</a></span>
-<span class="normal"><a href="#__codelineno-0-855">855</a></span>
-<span class="normal"><a href="#__codelineno-0-856">856</a></span>
-<span class="normal"><a href="#__codelineno-0-857">857</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-857">857</a></span>
 <span class="normal"><a href="#__codelineno-0-858">858</a></span>
 <span class="normal"><a href="#__codelineno-0-859">859</a></span>
 <span class="normal"><a href="#__codelineno-0-860">860</a></span>
@@ -4716,32 +4709,39 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-872">872</a></span>
 <span class="normal"><a href="#__codelineno-0-873">873</a></span>
 <span class="normal"><a href="#__codelineno-0-874">874</a></span>
-<span class="normal"><a href="#__codelineno-0-875">875</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-850" name="__codelineno-0-850"></a><span class="k">def</span><span class="w"> </span><span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-851" name="__codelineno-0-851"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove memories whose effective consolidation strength has fallen below *threshold*.</span>
-<a id="__codelineno-0-852" name="__codelineno-0-852"></a>
-<a id="__codelineno-0-853" name="__codelineno-0-853"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-854" name="__codelineno-0-854"></a><span class="sd">        threshold: Minimum acceptable strength in [0, 1].  Memories whose</span>
-<a id="__codelineno-0-855" name="__codelineno-0-855"></a><span class="sd">                   ``compute_effective_strength()`` is below this value are deleted.</span>
-<a id="__codelineno-0-856" name="__codelineno-0-856"></a><span class="sd">                   Defaults to 0.05 (5%).</span>
-<a id="__codelineno-0-857" name="__codelineno-0-857"></a>
-<a id="__codelineno-0-858" name="__codelineno-0-858"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-859" name="__codelineno-0-859"></a><span class="sd">        Number of memories removed.</span>
-<a id="__codelineno-0-860" name="__codelineno-0-860"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-861" name="__codelineno-0-861"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_effective_strength_batch</span>
-<a id="__codelineno-0-862" name="__codelineno-0-862"></a>
-<a id="__codelineno-0-863" name="__codelineno-0-863"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.prune&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
-<a id="__codelineno-0-864" name="__codelineno-0-864"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
-<a id="__codelineno-0-865" name="__codelineno-0-865"></a>        <span class="n">mems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
-<a id="__codelineno-0-866" name="__codelineno-0-866"></a>        <span class="k">if</span> <span class="n">mems</span><span class="p">:</span>
-<a id="__codelineno-0-867" name="__codelineno-0-867"></a>            <span class="n">strengths</span> <span class="o">=</span> <span class="n">compute_effective_strength_batch</span><span class="p">(</span>
-<a id="__codelineno-0-868" name="__codelineno-0-868"></a>                <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">tag</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mems</span><span class="p">],</span> <span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">decay</span>
-<a id="__codelineno-0-869" name="__codelineno-0-869"></a>            <span class="p">)</span>
-<a id="__codelineno-0-870" name="__codelineno-0-870"></a>            <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mems</span><span class="p">,</span> <span class="n">strengths</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">]</span>
-<a id="__codelineno-0-871" name="__codelineno-0-871"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-872" name="__codelineno-0-872"></a>            <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[]</span>
-<a id="__codelineno-0-873" name="__codelineno-0-873"></a>        <span class="k">for</span> <span class="n">memory_id</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="p">:</span>
-<a id="__codelineno-0-874" name="__codelineno-0-874"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
-<a id="__codelineno-0-875" name="__codelineno-0-875"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-875">875</a></span>
+<span class="normal"><a href="#__codelineno-0-876">876</a></span>
+<span class="normal"><a href="#__codelineno-0-877">877</a></span>
+<span class="normal"><a href="#__codelineno-0-878">878</a></span>
+<span class="normal"><a href="#__codelineno-0-879">879</a></span>
+<span class="normal"><a href="#__codelineno-0-880">880</a></span>
+<span class="normal"><a href="#__codelineno-0-881">881</a></span>
+<span class="normal"><a href="#__codelineno-0-882">882</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-857" name="__codelineno-0-857"></a><span class="k">def</span><span class="w"> </span><span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-0-858" name="__codelineno-0-858"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove memories whose effective consolidation strength has fallen below *threshold*.</span>
+<a id="__codelineno-0-859" name="__codelineno-0-859"></a>
+<a id="__codelineno-0-860" name="__codelineno-0-860"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-861" name="__codelineno-0-861"></a><span class="sd">        threshold: Minimum acceptable strength in [0, 1].  Memories whose</span>
+<a id="__codelineno-0-862" name="__codelineno-0-862"></a><span class="sd">                   ``compute_effective_strength()`` is below this value are deleted.</span>
+<a id="__codelineno-0-863" name="__codelineno-0-863"></a><span class="sd">                   Defaults to 0.05 (5%).</span>
+<a id="__codelineno-0-864" name="__codelineno-0-864"></a>
+<a id="__codelineno-0-865" name="__codelineno-0-865"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-866" name="__codelineno-0-866"></a><span class="sd">        Number of memories removed.</span>
+<a id="__codelineno-0-867" name="__codelineno-0-867"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-868" name="__codelineno-0-868"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_effective_strength_batch</span>
+<a id="__codelineno-0-869" name="__codelineno-0-869"></a>
+<a id="__codelineno-0-870" name="__codelineno-0-870"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.prune&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
+<a id="__codelineno-0-871" name="__codelineno-0-871"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
+<a id="__codelineno-0-872" name="__codelineno-0-872"></a>        <span class="n">mems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
+<a id="__codelineno-0-873" name="__codelineno-0-873"></a>        <span class="k">if</span> <span class="n">mems</span><span class="p">:</span>
+<a id="__codelineno-0-874" name="__codelineno-0-874"></a>            <span class="n">strengths</span> <span class="o">=</span> <span class="n">compute_effective_strength_batch</span><span class="p">(</span>
+<a id="__codelineno-0-875" name="__codelineno-0-875"></a>                <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">tag</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mems</span><span class="p">],</span> <span class="n">now</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">decay</span>
+<a id="__codelineno-0-876" name="__codelineno-0-876"></a>            <span class="p">)</span>
+<a id="__codelineno-0-877" name="__codelineno-0-877"></a>            <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mems</span><span class="p">,</span> <span class="n">strengths</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">]</span>
+<a id="__codelineno-0-878" name="__codelineno-0-878"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-879" name="__codelineno-0-879"></a>            <span class="n">to_delete</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-0-880" name="__codelineno-0-880"></a>        <span class="k">for</span> <span class="n">memory_id</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="p">:</span>
+<a id="__codelineno-0-881" name="__codelineno-0-881"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
+<a id="__codelineno-0-882" name="__codelineno-0-882"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_delete</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4764,13 +4764,13 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-806">806</a></span>
-<span class="normal"><a href="#__codelineno-0-807">807</a></span>
-<span class="normal"><a href="#__codelineno-0-808">808</a></span>
-<span class="normal"><a href="#__codelineno-0-809">809</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-806" name="__codelineno-0-806"></a><span class="k">def</span><span class="w"> </span><span class="nf">reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-807" name="__codelineno-0-807"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the runtime affective state to its initial baseline.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-808" name="__codelineno-0-808"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">initial</span><span class="p">()</span>
-<a id="__codelineno-0-809" name="__codelineno-0-809"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-813">813</a></span>
+<span class="normal"><a href="#__codelineno-0-814">814</a></span>
+<span class="normal"><a href="#__codelineno-0-815">815</a></span>
+<span class="normal"><a href="#__codelineno-0-816">816</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-813" name="__codelineno-0-813"></a><span class="k">def</span><span class="w"> </span><span class="nf">reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the runtime affective state to its initial baseline.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-815" name="__codelineno-0-815"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">initial</span><span class="p">()</span>
+<a id="__codelineno-0-816" name="__codelineno-0-816"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4793,23 +4793,23 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-835">835</a></span>
-<span class="normal"><a href="#__codelineno-0-836">836</a></span>
-<span class="normal"><a href="#__codelineno-0-837">837</a></span>
-<span class="normal"><a href="#__codelineno-0-838">838</a></span>
-<span class="normal"><a href="#__codelineno-0-839">839</a></span>
-<span class="normal"><a href="#__codelineno-0-840">840</a></span>
-<span class="normal"><a href="#__codelineno-0-841">841</a></span>
-<span class="normal"><a href="#__codelineno-0-842">842</a></span>
-<span class="normal"><a href="#__codelineno-0-843">843</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-835" name="__codelineno-0-835"></a><span class="k">def</span><span class="w"> </span><span class="nf">restore_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-836" name="__codelineno-0-836"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the last persisted affective state from the configured state store.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-837" name="__codelineno-0-837"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-838" name="__codelineno-0-838"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-839" name="__codelineno-0-839"></a>    <span class="n">persisted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-<a id="__codelineno-0-840" name="__codelineno-0-840"></a>    <span class="k">if</span> <span class="n">persisted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-841" name="__codelineno-0-841"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-842" name="__codelineno-0-842"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">persisted</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
-<a id="__codelineno-0-843" name="__codelineno-0-843"></a>    <span class="k">return</span> <span class="kc">True</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-842">842</a></span>
+<span class="normal"><a href="#__codelineno-0-843">843</a></span>
+<span class="normal"><a href="#__codelineno-0-844">844</a></span>
+<span class="normal"><a href="#__codelineno-0-845">845</a></span>
+<span class="normal"><a href="#__codelineno-0-846">846</a></span>
+<span class="normal"><a href="#__codelineno-0-847">847</a></span>
+<span class="normal"><a href="#__codelineno-0-848">848</a></span>
+<span class="normal"><a href="#__codelineno-0-849">849</a></span>
+<span class="normal"><a href="#__codelineno-0-850">850</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-842" name="__codelineno-0-842"></a><span class="k">def</span><span class="w"> </span><span class="nf">restore_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-843" name="__codelineno-0-843"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the last persisted affective state from the configured state store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-844" name="__codelineno-0-844"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-845" name="__codelineno-0-845"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-846" name="__codelineno-0-846"></a>    <span class="n">persisted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+<a id="__codelineno-0-847" name="__codelineno-0-847"></a>    <span class="k">if</span> <span class="n">persisted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-848" name="__codelineno-0-848"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-849" name="__codelineno-0-849"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">persisted</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
+<a id="__codelineno-0-850" name="__codelineno-0-850"></a>    <span class="k">return</span> <span class="kc">True</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5175,23 +5175,23 @@ correctly after a restart.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-811">811</a></span>
-<span class="normal"><a href="#__codelineno-0-812">812</a></span>
-<span class="normal"><a href="#__codelineno-0-813">813</a></span>
-<span class="normal"><a href="#__codelineno-0-814">814</a></span>
-<span class="normal"><a href="#__codelineno-0-815">815</a></span>
-<span class="normal"><a href="#__codelineno-0-816">816</a></span>
-<span class="normal"><a href="#__codelineno-0-817">817</a></span>
-<span class="normal"><a href="#__codelineno-0-818">818</a></span>
-<span class="normal"><a href="#__codelineno-0-819">819</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-811" name="__codelineno-0-811"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-812" name="__codelineno-0-812"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise the current affective state for persistence.</span>
-<a id="__codelineno-0-813" name="__codelineno-0-813"></a>
-<a id="__codelineno-0-814" name="__codelineno-0-814"></a><span class="sd">    Returns a JSON-serialisable dict that can be stored alongside the</span>
-<a id="__codelineno-0-815" name="__codelineno-0-815"></a><span class="sd">    memory store and later restored with ``load_state()``.  The private</span>
-<a id="__codelineno-0-816" name="__codelineno-0-816"></a><span class="sd">    momentum history is included so that momentum computation continues</span>
-<a id="__codelineno-0-817" name="__codelineno-0-817"></a><span class="sd">    correctly after a restart.</span>
-<a id="__codelineno-0-818" name="__codelineno-0-818"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-819" name="__codelineno-0-819"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-818">818</a></span>
+<span class="normal"><a href="#__codelineno-0-819">819</a></span>
+<span class="normal"><a href="#__codelineno-0-820">820</a></span>
+<span class="normal"><a href="#__codelineno-0-821">821</a></span>
+<span class="normal"><a href="#__codelineno-0-822">822</a></span>
+<span class="normal"><a href="#__codelineno-0-823">823</a></span>
+<span class="normal"><a href="#__codelineno-0-824">824</a></span>
+<span class="normal"><a href="#__codelineno-0-825">825</a></span>
+<span class="normal"><a href="#__codelineno-0-826">826</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-818" name="__codelineno-0-818"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-819" name="__codelineno-0-819"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise the current affective state for persistence.</span>
+<a id="__codelineno-0-820" name="__codelineno-0-820"></a>
+<a id="__codelineno-0-821" name="__codelineno-0-821"></a><span class="sd">    Returns a JSON-serialisable dict that can be stored alongside the</span>
+<a id="__codelineno-0-822" name="__codelineno-0-822"></a><span class="sd">    memory store and later restored with ``load_state()``.  The private</span>
+<a id="__codelineno-0-823" name="__codelineno-0-823"></a><span class="sd">    momentum history is included so that momentum computation continues</span>
+<a id="__codelineno-0-824" name="__codelineno-0-824"></a><span class="sd">    correctly after a restart.</span>
+<a id="__codelineno-0-825" name="__codelineno-0-825"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-826" name="__codelineno-0-826"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5215,27 +5215,27 @@ correctly after a restart.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/engine.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-794">794</a></span>
-<span class="normal"><a href="#__codelineno-0-795">795</a></span>
-<span class="normal"><a href="#__codelineno-0-796">796</a></span>
-<span class="normal"><a href="#__codelineno-0-797">797</a></span>
-<span class="normal"><a href="#__codelineno-0-798">798</a></span>
-<span class="normal"><a href="#__codelineno-0-799">799</a></span>
-<span class="normal"><a href="#__codelineno-0-800">800</a></span>
-<span class="normal"><a href="#__codelineno-0-801">801</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-801">801</a></span>
 <span class="normal"><a href="#__codelineno-0-802">802</a></span>
 <span class="normal"><a href="#__codelineno-0-803">803</a></span>
-<span class="normal"><a href="#__codelineno-0-804">804</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-794" name="__codelineno-0-794"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-795" name="__codelineno-0-795"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manually inject a CoreAffect (e.g. from external appraisal).</span>
-<a id="__codelineno-0-796" name="__codelineno-0-796"></a>
-<a id="__codelineno-0-797" name="__codelineno-0-797"></a><span class="sd">    Updates core_affect, momentum, and mood.</span>
-<a id="__codelineno-0-798" name="__codelineno-0-798"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-799" name="__codelineno-0-799"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-<a id="__codelineno-0-800" name="__codelineno-0-800"></a>        <span class="n">core_affect</span><span class="p">,</span>
-<a id="__codelineno-0-801" name="__codelineno-0-801"></a>        <span class="n">mood_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_alpha</span><span class="p">,</span>
-<a id="__codelineno-0-802" name="__codelineno-0-802"></a>        <span class="n">mood_decay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">,</span>
-<a id="__codelineno-0-803" name="__codelineno-0-803"></a>    <span class="p">)</span>
-<a id="__codelineno-0-804" name="__codelineno-0-804"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
+<span class="normal"><a href="#__codelineno-0-804">804</a></span>
+<span class="normal"><a href="#__codelineno-0-805">805</a></span>
+<span class="normal"><a href="#__codelineno-0-806">806</a></span>
+<span class="normal"><a href="#__codelineno-0-807">807</a></span>
+<span class="normal"><a href="#__codelineno-0-808">808</a></span>
+<span class="normal"><a href="#__codelineno-0-809">809</a></span>
+<span class="normal"><a href="#__codelineno-0-810">810</a></span>
+<span class="normal"><a href="#__codelineno-0-811">811</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-802" name="__codelineno-0-802"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manually inject a CoreAffect (e.g. from external appraisal).</span>
+<a id="__codelineno-0-803" name="__codelineno-0-803"></a>
+<a id="__codelineno-0-804" name="__codelineno-0-804"></a><span class="sd">    Updates core_affect, momentum, and mood.</span>
+<a id="__codelineno-0-805" name="__codelineno-0-805"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-806" name="__codelineno-0-806"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+<a id="__codelineno-0-807" name="__codelineno-0-807"></a>        <span class="n">core_affect</span><span class="p">,</span>
+<a id="__codelineno-0-808" name="__codelineno-0-808"></a>        <span class="n">mood_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_alpha</span><span class="p">,</span>
+<a id="__codelineno-0-809" name="__codelineno-0-809"></a>        <span class="n">mood_decay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span><span class="p">,</span>
+<a id="__codelineno-0-810" name="__codelineno-0-810"></a>    <span class="p">)</span>
+<a id="__codelineno-0-811" name="__codelineno-0-811"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
