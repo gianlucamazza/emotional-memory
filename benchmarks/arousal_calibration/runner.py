@@ -33,7 +33,6 @@ from typing import Any
 import numpy as np
 
 from benchmarks.common.statistics import DEFAULT_N_BOOTSTRAP, paired_bootstrap_diff
-from benchmarks.human_gold_appraisal.runner import _pearson
 
 ROOT = Path(__file__).resolve().parents[2]
 _HERE = Path(__file__).parent
@@ -44,6 +43,15 @@ DEFAULT_OUT_MD = _HERE / "results.md"
 DIMENSION = "arousal"
 EVAL_SPLITS = ("dev", "test")
 GUARD_R_TOL = 0.02
+
+
+def _pearson(x: np.ndarray, y: np.ndarray) -> float:
+    """Pearson r (numpy-only; self-contained so this offline module needs no LLM deps)."""
+    if len(x) < 2:
+        return float("nan")
+    with np.errstate(invalid="ignore", divide="ignore"):
+        c = np.corrcoef(x, y)
+    return float(c[0, 1])
 
 
 def affine_fit(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
