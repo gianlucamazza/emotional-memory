@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/research/01_foundations/">
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/tutorials/query_appraisal_retrieval/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../query_routing/">
       
       
-        <link rel="next" href="../02_neuroscience/">
+        <link rel="next" href="../byo_appraisal_schema/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Philosophical Foundations - emotional_memory</title>
+        <title>Retrieve-time query appraisal - emotional_memory</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#philosophical-foundations-emotion-and-memory" class="md-skip">
+        <a href="#retrieve-time-query-appraisal" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Philosophical Foundations
+              Retrieve-time query appraisal
             
           </span>
         </div>
@@ -359,11 +359,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tutorials/async/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../async/" class="md-tabs__link">
           
   
   
@@ -399,13 +401,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../research/" class="md-tabs__link">
           
   
   
@@ -939,26 +939,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
             
   
   
@@ -976,7 +981,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -994,7 +999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/async/" class="md-nav__link">
+      <a href="../async/" class="md-nav__link">
         
   
   
@@ -1022,7 +1027,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -1050,7 +1055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         
   
   
@@ -1078,7 +1083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/langchain/" class="md-nav__link">
+      <a href="../langchain/" class="md-nav__link">
         
   
   
@@ -1106,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/mem0/" class="md-nav__link">
+      <a href="../mem0/" class="md-nav__link">
         
   
   
@@ -1134,7 +1139,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/query_routing/" class="md-nav__link">
+      <a href="../query_routing/" class="md-nav__link">
         
   
   
@@ -1159,10 +1164,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tutorials/query_appraisal_retrieval/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieve-time query appraisal
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1178,6 +1210,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-pass-an-explicit-query_affect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Pass an explicit query_affect
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-auto-appraise-the-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Auto-appraise the query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-pair-with-direct_vad_schema-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Pair with DIRECT_VAD_SCHEMA (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-and-honest-caveat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope and honest caveat
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1190,7 +1286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/byo_appraisal_schema/" class="md-nav__link">
+      <a href="../byo_appraisal_schema/" class="md-nav__link">
         
   
   
@@ -1813,31 +1909,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -1855,7 +1946,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1873,7 +1964,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../research/" class="md-nav__link">
         
   
   
@@ -1898,37 +1989,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Philosophical Foundations
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../research/01_foundations/" class="md-nav__link">
         
   
   
@@ -1944,237 +2008,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-antiquity-early-theories-of-affective-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Antiquity: Early Theories of Affective Memory
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1. Antiquity: Early Theories of Affective Memory">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#aristotle-de-anima-de-memoria-et-reminiscentia" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Aristotle — De Anima, De Memoria et Reminiscentia
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plato-meno-phaedo-phaedrus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plato — Meno, Phaedo, Phaedrus
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stoics-chrysippus-zeno-epictetus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stoics — Chrysippus, Zeno, Epictetus
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-modern-age-the-mindbody-problem-and-the-dynamics-of-affects" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Modern Age: The Mind–Body Problem and the Dynamics of Affects
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Modern Age: The Mind–Body Problem and the Dynamics of Affects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rene-descartes-les-passions-de-lame-1649" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        René Descartes — Les Passions de l'âme (1649)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#baruch-spinoza-ethica-ordine-geometrico-demonstrata-1677" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Baruch Spinoza — Ethica Ordine Geometrico Demonstrata (1677)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#david-hume-a-treatise-of-human-nature-173940" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        David Hume — A Treatise of Human Nature (1739–40)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-phenomenology-the-experiential-structure-of-emotion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Phenomenology: The Experiential Structure of Emotion
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Phenomenology: The Experiential Structure of Emotion">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edmund-husserl-lectures-on-inner-time-consciousness-18931917" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edmund Husserl — Lectures on Inner Time-Consciousness (1893–1917)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#martin-heidegger-being-and-time-1927" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Martin Heidegger — Being and Time (1927)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maurice-merleau-ponty-phenomenology-of-perception-1945" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maurice Merleau-Ponty — Phenomenology of Perception (1945)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-contemporary-enactivism-and-the-extended-mind" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Contemporary: Enactivism and the Extended Mind
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Contemporary: Enactivism and the Extended Mind">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#giovanna-colombetti-the-feeling-body-2014" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Giovanna Colombetti — The Feeling Body (2014)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#andy-clark-david-chalmers-the-extended-mind-1998" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Andy Clark &amp; David Chalmers — The Extended Mind (1998)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-synthesis-what-philosophy-tells-the-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Synthesis: What Philosophy Tells the Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bibliographic-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bibliographic Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2187,7 +2020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../02_neuroscience/" class="md-nav__link">
+      <a href="../../research/02_neuroscience/" class="md-nav__link">
         
   
   
@@ -2215,7 +2048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../03_computational_models/" class="md-nav__link">
+      <a href="../../research/03_computational_models/" class="md-nav__link">
         
   
   
@@ -2243,7 +2076,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../04_state_of_art/" class="md-nav__link">
+      <a href="../../research/04_state_of_art/" class="md-nav__link">
         
   
   
@@ -2271,7 +2104,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../05_design_principles/" class="md-nav__link">
+      <a href="../../research/05_design_principles/" class="md-nav__link">
         
   
   
@@ -2299,7 +2132,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../07_related_work/" class="md-nav__link">
+      <a href="../../research/07_related_work/" class="md-nav__link">
         
   
   
@@ -2327,7 +2160,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../08_limitations/" class="md-nav__link">
+      <a href="../../research/08_limitations/" class="md-nav__link">
         
   
   
@@ -2355,7 +2188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../09_current_evidence/" class="md-nav__link">
+      <a href="../../research/09_current_evidence/" class="md-nav__link">
         
   
   
@@ -2383,7 +2216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../10_scientific_quality_bar/" class="md-nav__link">
+      <a href="../../research/10_scientific_quality_bar/" class="md-nav__link">
         
   
   
@@ -2411,7 +2244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../11_dominance_design/" class="md-nav__link">
+      <a href="../../research/11_dominance_design/" class="md-nav__link">
         
   
   
@@ -2439,7 +2272,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../12_multilingual_followup/" class="md-nav__link">
+      <a href="../../research/12_multilingual_followup/" class="md-nav__link">
         
   
   
@@ -2467,7 +2300,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../audit_2026-04/" class="md-nav__link">
+      <a href="../../research/audit_2026-04/" class="md-nav__link">
         
   
   
@@ -2495,7 +2328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../review_response_2026-06/" class="md-nav__link">
+      <a href="../../research/review_response_2026-06/" class="md-nav__link">
         
   
   
@@ -2523,7 +2356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../problem_register_2026-06/" class="md-nav__link">
+      <a href="../../research/problem_register_2026-06/" class="md-nav__link">
         
   
   
@@ -2551,7 +2384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../claim_validation_matrix/" class="md-nav__link">
+      <a href="../../research/claim_validation_matrix/" class="md-nav__link">
         
   
   
@@ -2579,7 +2412,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../figure_inventory/" class="md-nav__link">
+      <a href="../../research/figure_inventory/" class="md-nav__link">
         
   
   
@@ -2607,7 +2440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../06_bibliography/" class="md-nav__link">
+      <a href="../../research/06_bibliography/" class="md-nav__link">
         
   
   
@@ -2749,199 +2582,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-antiquity-early-theories-of-affective-memory" class="md-nav__link">
+  <a href="#1-pass-an-explicit-query_affect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Antiquity: Early Theories of Affective Memory
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="1. Antiquity: Early Theories of Affective Memory">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#aristotle-de-anima-de-memoria-et-reminiscentia" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Aristotle — De Anima, De Memoria et Reminiscentia
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plato-meno-phaedo-phaedrus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plato — Meno, Phaedo, Phaedrus
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stoics-chrysippus-zeno-epictetus" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stoics — Chrysippus, Zeno, Epictetus
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-modern-age-the-mindbody-problem-and-the-dynamics-of-affects" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Modern Age: The Mind–Body Problem and the Dynamics of Affects
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Modern Age: The Mind–Body Problem and the Dynamics of Affects">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rene-descartes-les-passions-de-lame-1649" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        René Descartes — Les Passions de l'âme (1649)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#baruch-spinoza-ethica-ordine-geometrico-demonstrata-1677" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Baruch Spinoza — Ethica Ordine Geometrico Demonstrata (1677)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#david-hume-a-treatise-of-human-nature-173940" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        David Hume — A Treatise of Human Nature (1739–40)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-phenomenology-the-experiential-structure-of-emotion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Phenomenology: The Experiential Structure of Emotion
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3. Phenomenology: The Experiential Structure of Emotion">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edmund-husserl-lectures-on-inner-time-consciousness-18931917" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edmund Husserl — Lectures on Inner Time-Consciousness (1893–1917)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#martin-heidegger-being-and-time-1927" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Martin Heidegger — Being and Time (1927)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#maurice-merleau-ponty-phenomenology-of-perception-1945" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Maurice Merleau-Ponty — Phenomenology of Perception (1945)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-contemporary-enactivism-and-the-extended-mind" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Contemporary: Enactivism and the Extended Mind
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="4. Contemporary: Enactivism and the Extended Mind">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#giovanna-colombetti-the-feeling-body-2014" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Giovanna Colombetti — The Feeling Body (2014)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#andy-clark-david-chalmers-the-extended-mind-1998" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Andy Clark &amp; David Chalmers — The Extended Mind (1998)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-synthesis-what-philosophy-tells-the-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Synthesis: What Philosophy Tells the Architecture
+        1. Pass an explicit query_affect
       
     </span>
   </a>
@@ -2949,10 +2593,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#bibliographic-notes" class="md-nav__link">
+  <a href="#2-auto-appraise-the-query" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bibliographic Notes
+        2. Auto-appraise the query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-pair-with-direct_vad_schema-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Pair with DIRECT_VAD_SCHEMA (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-and-honest-caveat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope and honest caveat
       
     </span>
   </a>
@@ -2979,338 +2645,82 @@
   
 
 
-<h1 id="philosophical-foundations-emotion-and-memory">Philosophical Foundations: Emotion and Memory<a class="headerlink" href="#philosophical-foundations-emotion-and-memory" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p>This document traces the philosophical arc that leads to our conception of
-emotional memory, from Greek origins to contemporary enactivism. Each section
-highlights the concepts that are operationally relevant to the library's
-architecture.</p>
-</blockquote>
-<hr />
-<h2 id="1-antiquity-early-theories-of-affective-memory">1. Antiquity: Early Theories of Affective Memory<a class="headerlink" href="#1-antiquity-early-theories-of-affective-memory" title="Permanent link">&para;</a></h2>
-<h3 id="aristotle-de-anima-de-memoria-et-reminiscentia">Aristotle — <em>De Anima</em>, <em>De Memoria et Reminiscentia</em><a class="headerlink" href="#aristotle-de-anima-de-memoria-et-reminiscentia" title="Permanent link">&para;</a></h3>
-<p>Aristotle writes the first systematic treatise on memory in the Western
-tradition. His analysis remains strikingly modern.</p>
-<p><strong>Memory as an affective state</strong>: memory is neither pure perception nor pure
-thought, but a "state or affection" (<em>hexis</em> / <em>pathos</em>) that preserves a
-sensory impression conditioned by the passage of time. The object of memory
-is always the past.</p>
-<p><strong>Emotions as first-class memory objects</strong>: when we remember that we were
-afraid, we remember fear itself as an object — not merely its external cause.
-Emotions are not memory metadata: they are memory content.</p>
-<p><strong>Phantasmata</strong>: mnemonic images (<em>phantasmata</em>) are residues of sensory
-impressions and carry affective coloring. There are no affectively neutral
-memories.</p>
-<p><strong>Associationism</strong>: Aristotle distinguishes <em>mneme</em> (spontaneous, passive
-recall) from <em>anamnesis</em> (active, deliberate search). <em>Anamnesis</em> proceeds
-through three associative laws:</p>
-<ul>
-<li><strong>Similarity</strong> (<em>homoion</em>)</li>
-<li><strong>Spatio-temporal contiguity</strong> (<em>synecheia</em>)</li>
-<li><strong>Contrast</strong> (<em>enantion</em>)</li>
-</ul>
-<p>These three laws are the first formulation of what modern cognitive
-psychology calls associative retrieval.</p>
-<p><strong>Relevance to the library</strong>: multi-signal retrieval must include emotional
-similarity as an autonomous associative axis. Emotions are not metadata —
-they are searchable content.</p>
-<hr />
-<h3 id="plato-meno-phaedo-phaedrus">Plato — <em>Meno</em>, <em>Phaedo</em>, <em>Phaedrus</em><a class="headerlink" href="#plato-meno-phaedo-phaedrus" title="Permanent link">&para;</a></h3>
-<p><strong>Anamnesis</strong>: learning as re-cognition — knowledge was already present in
-the soul before embodiment. Reminiscence is the process of recovering what
-one knew but has forgotten.</p>
-<p><strong>Eros as a memory trigger</strong>: in the <em>Phaedrus</em>, the most powerful emotion —
-amorous desire — is epistemically productive: an intense emotion triggers
-anamnesis. Physical beauty shakes the soul and sets it in motion toward the
-memory of the Forms.</p>
-<p><strong>Implication</strong>: high-intensity emotions have privileged access to deep
-mnemonic structures. Emotional arousal does not disturb memory — it
-catalyzes it.</p>
-<hr />
-<h3 id="stoics-chrysippus-zeno-epictetus">Stoics — Chrysippus, Zeno, Epictetus<a class="headerlink" href="#stoics-chrysippus-zeno-epictetus" title="Permanent link">&para;</a></h3>
-<p><strong>Passions as cognitive judgments</strong>: the Stoics reject the Platonic division
-of the soul into rational and irrational parts. The soul is unitary and
-rational. Passions (<em>pathē</em>) are not irrational eruptions but <strong>errors of
-judgment</strong> about good and evil.</p>
-<p><strong>The phantasia–assent model</strong>:</p>
+<h1 id="retrieve-time-query-appraisal">Retrieve-time query appraisal<a class="headerlink" href="#retrieve-time-query-appraisal" title="Permanent link">&para;</a></h1>
+<p>By default the affect-proximity signal (s3) in retrieval scores each memory against
+the engine's <strong>current runtime affective state</strong>. When the query itself carries
+affect that the runtime state does not reflect, you can score against the <strong>query's
+own affect</strong> instead — without mutating the runtime state.</p>
+<p>This is the production-reachable mechanism studied in Addendum T: appraising the query
+at retrieve-time recovers most of the oracle-affect advantage on the curated
+<code>realistic_recall_v2</code> benchmark, with no oracle. See the scope caveat at the end.</p>
+<p>This tutorial covers three usage patterns:</p>
 <ol>
-<li>An impression (<em>phantasia</em>) presents itself to the mind</li>
-<li>The mind gives or withholds <em>assent</em> (<em>synkatathesis</em>)</li>
-<li>If assent is hasty or erroneous → a passion emerges</li>
+<li>Pass an explicit <code>query_affect</code></li>
+<li>Auto-appraise the query (<code>retrieve_with_query_appraisal</code>)</li>
+<li>Pair with <code>DIRECT_VAD_SCHEMA</code> (recommended)</li>
 </ol>
-<p>The four generic passions: <em>lupe</em> (distress), <em>phobos</em> (fear), <em>epithumia</em>
-(craving), <em>hedone</em> (pleasure).</p>
-<p><strong>Cataleptic impressions</strong>: reliable impressions (<em>phantasiai kataleptikai</em>)
-bear the clear mark of their origin. Unreliable impressions produce false
-emotional responses.</p>
-<p><strong>Implication for appraisal</strong>: the Stoic model directly anticipates cognitive
-appraisal theory (Lazarus, Scherer). Emotion emerges from evaluation, not
-from the event. An appraisal engine that evaluates the content of an event
-against the system's goals is operationally Stoic.</p>
-<hr />
-<h2 id="2-modern-age-the-mindbody-problem-and-the-dynamics-of-affects">2. Modern Age: The Mind–Body Problem and the Dynamics of Affects<a class="headerlink" href="#2-modern-age-the-mindbody-problem-and-the-dynamics-of-affects" title="Permanent link">&para;</a></h2>
-<h3 id="rene-descartes-les-passions-de-lame-1649">René Descartes — <em>Les Passions de l'âme</em> (1649)<a class="headerlink" href="#rene-descartes-les-passions-de-lame-1649" title="Permanent link">&para;</a></h3>
-<p><strong>The six primitive passions</strong>: wonder, love, hatred, desire, joy, sadness.
-All other emotions are compositions or species of these six.</p>
-<p><strong>Adaptive function</strong>: the passions "move and dispose the soul to will the
-things for which they prepare the body." They are orientational — not noise,
-but a navigation signal.</p>
-<p><strong>Habitual memory</strong>: repetition creates traces in the <em>animal spirits</em>
-(subtle material particles). The body "remembers" emotional associations
-independently of conscious cognition — a precursor to classical conditioning
-and procedural memory.</p>
-<p><strong>The unresolved problem</strong>: how do two ontologically distinct substances
-(mind and body) causally interact in emotion? Cartesian dualism poses the
-problem that all subsequent thought tries to solve.</p>
-<hr />
-<h3 id="baruch-spinoza-ethica-ordine-geometrico-demonstrata-1677">Baruch Spinoza — <em>Ethica Ordine Geometrico Demonstrata</em> (1677)<a class="headerlink" href="#baruch-spinoza-ethica-ordine-geometrico-demonstrata-1677" title="Permanent link">&para;</a></h3>
-<p>Spinoza is the philosopher most directly relevant to our architecture.</p>
-<p><strong>Monism</strong>: mind and body are not distinct substances but two attributes
-(thought and extension) of a single substance. There is no causal
-interaction problem — they are parallel expressions of the same reality.</p>
-<p><strong>Conatus</strong>: every being tends to persevere in its own existence. It is the
-fundamental drive underlying all affects. Computationally: the system has
-an implicit goal-set of self-preservation that generates the evaluative
-plane of affects.</p>
-<p><strong>The three primary affects</strong>:</p>
-<ul>
-<li><strong>Desire</strong> (<em>cupiditas</em>): the essence of conatus itself — the impulse to
-  persist and act</li>
-<li><strong>Joy</strong> (<em>laetitia</em>): transition toward greater power / perfection</li>
-<li><strong>Sadness</strong> (<em>tristitia</em>): transition toward lesser power / perfection</li>
-</ul>
-<p><strong>The fundamental insight</strong>: affects are not states but <strong>transitions</strong>.
-"Laetitia est transitio hominis a minore ad maiorem perfectionem" — joy
-<em>is</em> the passage, not the destination. Spinoza defines affects in terms of
-direction and velocity of change, not absolute position.</p>
-<p>This is the insight that generates <strong>Layer 2 — Affective Momentum</strong> in our
-architecture.</p>
-<p><strong>Active vs passive affects</strong>: when the mind acts from adequate ideas, it
-generates active affects (which increase the power of action). When it is
-caused by something external through inadequate ideas, it undergoes passive
-affects (passions). Freedom is the progressive substitution of passive
-affects with active ones.</p>
-<p><strong>Associative memory</strong>: "If the human body has been simultaneously affected
-by two bodies, when the mind imagines one of them it will immediately
-remember the others as well" (<em>Ethica</em> II, Prop. 18). Emotional conditioning
-avant la lettre.</p>
-<hr />
-<h3 id="david-hume-a-treatise-of-human-nature-173940">David Hume — <em>A Treatise of Human Nature</em> (1739–40)<a class="headerlink" href="#david-hume-a-treatise-of-human-nature-173940" title="Permanent link">&para;</a></h3>
-<p><strong>Impressions and ideas</strong>: all mental content consists of "perceptions",
-divided into impressions (vivid, intense — sensations, passions) and ideas
-(faded copies of impressions, used in thought and memory).</p>
-<p><strong>Memory vs imagination</strong>: both use ideas, but ideas of memory retain more
-force and vivacity and preserve the original order of impressions.</p>
-<p><strong>Associationism</strong>: three principles of association — resemblance,
-contiguity, cause–effect — the "gentle forces" that organize mental life.</p>
-<p><strong>The radical thesis</strong>: "Reason is, and can only be, the slave of the
-passions." Emotions have cognitive primacy — they do not distort reason,
-they guide it.</p>
-<p><strong>Sympathy as emotional contagion</strong>: impressions of others' emotions produce
-ideas that, through their vivacity, become impressions — emotions that are
-actually felt. The basis of a model of interpersonal emotional resonance.</p>
-<hr />
-<h2 id="3-phenomenology-the-experiential-structure-of-emotion">3. Phenomenology: The Experiential Structure of Emotion<a class="headerlink" href="#3-phenomenology-the-experiential-structure-of-emotion" title="Permanent link">&para;</a></h2>
-<h3 id="edmund-husserl-lectures-on-inner-time-consciousness-18931917">Edmund Husserl — Lectures on Inner Time-Consciousness (1893–1917)<a class="headerlink" href="#edmund-husserl-lectures-on-inner-time-consciousness-18931917" title="Permanent link">&para;</a></h3>
-<p><strong>The triadic structure of the "living present"</strong>:</p>
-<ul>
-<li><strong>Primal impression</strong>: the now-point</li>
-<li><strong>Retention</strong>: consciousness of the just-past phase — the "comet's tail"
-  of the present</li>
-<li><strong>Protention</strong>: anticipation of what is about to come</li>
-</ul>
-<p>These are not three separate acts but inseparable moments of a single
-temporal flow.</p>
-<p><strong>Retention vs recollection</strong>: retention is not memory — it is the note
-just played, still "held" in consciousness as just-past. Memory
-(<em>Wiedererinnerung</em>) is a separate act that re-presents a past experience.</p>
-<p><strong>Passive synthesis</strong>: before any active judgment, consciousness already
-organizes experience through temporal associations, affective saliences,
-and habitual patterns. Emotional salience pre-reflectively determines what
-emerges in the field of attention.</p>
-<p><strong>Protention and surprise</strong>: if you await one note and a different one
-plays, the mismatch between protention and primal impression generates an
-affective response. Emotions are partly constituted by structures of
-temporal expectation.</p>
-<p><strong>Relevance</strong>: our system must model the temporal dimension not only as
-timestamps but as a structure of expectation–retention. "Surprise" emotions
-emerge from the comparison between expectation memory (protention) and
-actual event.</p>
-<hr />
-<h3 id="martin-heidegger-being-and-time-1927">Martin Heidegger — <em>Being and Time</em> (1927)<a class="headerlink" href="#martin-heidegger-being-and-time-1927" title="Permanent link">&para;</a></h3>
-<p><strong>Befindlichkeit</strong> (attunement / finding oneself): an existential structure
-(<em>Existenzial</em>) of Dasein (human being). We are never without mood — there
-is no neutral access to the world.</p>
-<p><strong>Stimmung</strong> (emotional tonality / attunement): not a subjective coloring
-added to a neutral perception. It is a fundamental mode of disclosure.
-Moods reveal the world — they are "the lenses through which things,
-persons, and events come to matter to us."</p>
-<p>Stimmung has a triadic structure of disclosure:</p>
-<ol>
-<li>It reveals our <strong>thrownness</strong> (<em>Geworfenheit</em>) — the facticity of being
-   already situated</li>
-<li>It reveals <strong>being-in-the-world as a whole</strong> — mood colors the totality
-   of our situation</li>
-<li>It enables <strong>encounter</strong> — only through mood do entities in the world
-   come to matter to us</li>
-</ol>
-<p><strong>Anxiety</strong>: the fundamental mood that reveals being-toward-death and the
-nullity of existence, stripping away the familiar sense of the world. The
-most disclosive mood precisely because it reveals the structure of care
-(<em>Sorge</em>) itself.</p>
-<p><strong>The fundamental insight for the library</strong>: mood is not an attribute of
-individual memories — it is the global state of the system that colors all
-cognitive operations. You cannot "remove" mood from experience and still
-have experience.</p>
-<p>This is the foundation of <strong>Layer 3 — MoodField</strong> in our architecture: a
-slowly-varying field that does not change per individual event but by
-accumulation, and which acts as a gravitational bias on every encoding and
-retrieval operation.</p>
-<hr />
-<h3 id="maurice-merleau-ponty-phenomenology-of-perception-1945">Maurice Merleau-Ponty — <em>Phenomenology of Perception</em> (1945)<a class="headerlink" href="#maurice-merleau-ponty-phenomenology-of-perception-1945" title="Permanent link">&para;</a></h3>
-<p><strong>The lived body</strong>: we do not "have" a body — we "are" a body. The body is
-not an object among objects but the zero-point of all orientation and
-experience.</p>
-<p><strong>Motor intentionality</strong>: the body-subject "understands" situations
-practically before reflective cognition. A pianist whose fingers "know"
-the keyboard.</p>
-<p><strong>Bodily memory</strong>: the body preserves skills, habits, postures, and
-emotional patterns. Habit is "knowledge in the hands." Memory is not only
-representational (archived data) but <strong>motor-affective</strong> (bodily
-dispositions, postural schemas, habitual emotional responses).</p>
-<p><strong>Intercorporeal memory</strong>: our embodied interactions are shaped by prior
-experience to such an extent that we can speak of an implicit, unconscious
-memory that operates in every social encounter. Emotional resonance with
-others is bodily before it is cognitive.</p>
-<p><strong>Implication for the library</strong>: the system's "bodily memory" is Layer 3
-(MoodField) — the accumulation of affective patterns that are not
-explicitly recalled but color every new experience. Habitual emotional
-dispositions are our computational equivalent of bodily memory.</p>
-<hr />
-<h2 id="4-contemporary-enactivism-and-the-extended-mind">4. Contemporary: Enactivism and the Extended Mind<a class="headerlink" href="#4-contemporary-enactivism-and-the-extended-mind" title="Permanent link">&para;</a></h2>
-<h3 id="giovanna-colombetti-the-feeling-body-2014">Giovanna Colombetti — <em>The Feeling Body</em> (2014)<a class="headerlink" href="#giovanna-colombetti-the-feeling-body-2014" title="Permanent link">&para;</a></h3>
-<p><strong>Enactivism and intrinsically affective cognition</strong>: enactivism holds that
-cognition is "enaction" — the "bringing forth" of domains of meaning
-through the activity of the organism in its environment. Colombetti argues
-that this implies cognition is intrinsically affective.</p>
-<p><strong>Primordial affectivity</strong>: even simple organisms exhibit a form of affect
-— the capacity to be "touched" by the environment. Emotion does not
-require higher cognition.</p>
-<p><strong>Autonomy and sense-making</strong>: a living system maintains itself through
-self-organization (autopoiesis). This self-maintaining activity generates
-a perspective — a point of view from which things matter. Emotion is a
-manifestation of this fundamental organic sense-making.</p>
-<p><strong>Critique of standard theories</strong>: Colombetti criticizes both basic emotion
-theory (Ekman) and appraisal theory (Lazarus) for being overly cognitivist
-— they fail to capture the embodied, dynamic, relational character of
-emotion.</p>
-<p><strong>Implication</strong>: affect is not a module added to the cognitive system.
-Every cognitive operation — every attentional allocation, every inference,
-every encoding — has an affective dimension. This justifies our approach
-of pervasive emotional tagging rather than an isolated emotional sector.</p>
-<hr />
-<h3 id="andy-clark-david-chalmers-the-extended-mind-1998">Andy Clark &amp; David Chalmers — <em>The Extended Mind</em> (1998)<a class="headerlink" href="#andy-clark-david-chalmers-the-extended-mind-1998" title="Permanent link">&para;</a></h3>
-<p><strong>The Parity Principle</strong>: if an external process functions in a way that,
-were it in the brain, we would call cognitive, then that external process
-is part of the cognitive system.</p>
-<p><strong>The Otto / Inga thought experiment</strong>: Otto (an Alzheimer's patient)
-relies on a notebook for routes; Inga uses biological memory. If the
-notebook plays the functional role of memory, it is part of Otto's mind.</p>
-<p><strong>Evocative objects</strong> (Sherry Turkle): artifacts carry emotional meaning
-and participate in memory processes. Bridges between the extended mind and
-affective science.</p>
-<p><strong>Implication for the library</strong>: external memory databases (vector stores,
-files) are not passive repositories but <strong>active extensions</strong> of the
-emotional memory system. They should be treated as part of the affective
-system, not as neutral external storage.</p>
-<hr />
-<h2 id="5-synthesis-what-philosophy-tells-the-architecture">5. Synthesis: What Philosophy Tells the Architecture<a class="headerlink" href="#5-synthesis-what-philosophy-tells-the-architecture" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Philosopher</th>
-<th>Key insight</th>
-<th>Correspondence in the library</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Aristotle</td>
-<td>Emotions as memory objects; associative retrieval</td>
-<td>Layer 5: Associative Resonance; retrieval by emotional similarity</td>
-</tr>
-<tr>
-<td>Plato</td>
-<td>High emotional intensity catalyzes recall</td>
-<td>Consolidation strength ∝ arousal</td>
-</tr>
-<tr>
-<td>Stoics</td>
-<td>Emotion arises from evaluation</td>
-<td>Layer 4: Appraisal Vector</td>
-</tr>
-<tr>
-<td>Spinoza</td>
-<td>Affect as transition, not state; conatus</td>
-<td>Layer 2: Affective Momentum; goal-relevance in appraisal</td>
-</tr>
-<tr>
-<td>Hume</td>
-<td>Primacy of passions; associationism</td>
-<td>Retrieval bias toward emotionally congruent content</td>
-</tr>
-<tr>
-<td>Husserl</td>
-<td>Temporal structure of experience; affective salience</td>
-<td>Temporal structure in encoding; surprise as an affective event</td>
-</tr>
-<tr>
-<td>Heidegger</td>
-<td>Stimmung as a global field</td>
-<td>Layer 3: MoodField; mood-dependent retrieval weights</td>
-</tr>
-<tr>
-<td>Merleau-Ponty</td>
-<td>Bodily memory as disposition</td>
-<td>Habitual emotional patterns; decay floor for consolidated memories</td>
-</tr>
-<tr>
-<td>Colombetti</td>
-<td>Intrinsically affective cognition</td>
-<td>Pervasive emotional tagging — every memory has affective metadata</td>
-</tr>
-<tr>
-<td>Clark &amp; Chalmers</td>
-<td>Extended mind</td>
-<td>External storage as an extension of the affective system</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="bibliographic-notes">Bibliographic Notes<a class="headerlink" href="#bibliographic-notes" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Aristotle. <em>De Memoria et Reminiscentia</em>. In <em>Parva Naturalia</em>. Trans.
-  J.I. Beare. MIT Classics Archive.</li>
-<li>Aristotle. <em>De Anima</em>. Trans. D.W. Hamlyn. Oxford: Clarendon Press, 1968.</li>
-<li>Plato. <em>Meno</em>, <em>Phaedo</em>, <em>Phaedrus</em>. In <em>Complete Works</em>. Indianapolis:
-  Hackett.</li>
-<li>Spinoza, B. <em>Ethica Ordine Geometrico Demonstrata</em> (1677). Trans. E.
-  Curley. Princeton: Princeton University Press, 1994.</li>
-<li>Hume, D. <em>A Treatise of Human Nature</em> (1739–40). Ed. L.A. Selby-Bigge.
-  Oxford: Clarendon Press.</li>
-<li>Husserl, E. <em>Vorlesungen zur Phänomenologie des inneren
-  Zeitbewusstseins</em> (1905–1917). Ed. M. Heidegger. Halle: Niemeyer, 1928.</li>
-<li>Heidegger, M. <em>Sein und Zeit</em> (1927). Trans. <em>Being and Time</em>. New York:
-  Harper &amp; Row.</li>
-<li>Merleau-Ponty, M. <em>Phénoménologie de la perception</em> (1945). Trans.
-  <em>Phenomenology of Perception</em>. London: Routledge.</li>
-<li>Colombetti, G. <em>The Feeling Body: Affective Science Meets the Enactive
-  Mind</em>. Cambridge: MIT Press, 2014.</li>
-<li>Clark, A. &amp; Chalmers, D. "The Extended Mind." <em>Analysis</em> 58(1), 7–19,
-  1998.</li>
-<li>Turkle, S. (ed.) <em>Evocative Objects: Things We Think With</em>. Cambridge:
-  MIT Press, 2007.</li>
-</ul>
+<h2 id="1-pass-an-explicit-query_affect">1. Pass an explicit <code>query_affect</code><a class="headerlink" href="#1-pass-an-explicit-query_affect" title="Permanent link">&para;</a></h2>
+<p><code>retrieve()</code> and <code>retrieve_with_explanations()</code> accept a keyword-only
+<code>query_affect: CoreAffect | None</code>. When provided, it feeds the affect-proximity
+signal instead of the runtime state — the runtime state is left untouched.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmotionalMemory</span><span class="p">,</span> <span class="n">InMemoryStore</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.affect</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreAffect</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span> <span class="n">embedder</span><span class="o">=</span><span class="n">my_embedder</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ... encode some memories ...</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Score against the query&#39;s affect (e.g. an anxious, negative-valence query),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># regardless of the engine&#39;s current mood.</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="s2">&quot;I&#39;m worried I forgot something important before the trip&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">query_affect</span><span class="o">=</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=-</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.7</span><span class="p">),</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">)</span>
+</code></pre></div>
+<p><code>query_affect=None</code> (the default) preserves the previous behaviour (uses the runtime
+state), so this is fully backward-compatible.</p>
+<h2 id="2-auto-appraise-the-query">2. Auto-appraise the query<a class="headerlink" href="#2-auto-appraise-the-query" title="Permanent link">&para;</a></h2>
+<p>If you have an appraisal engine configured, <code>retrieve_with_query_appraisal()</code>
+appraises the query text for you and uses the result as <code>query_affect</code> — no oracle,
+no state mutation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_with_query_appraisal</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;I&#39;m worried I forgot something important before the trip&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
+</code></pre></div>
+<p>It raises <code>RuntimeError</code> if no appraisal engine is configured. Both methods exist on
+<code>AsyncEmotionalMemory</code> as well (awaitable).</p>
+<h2 id="3-pair-with-direct_vad_schema-recommended">3. Pair with <code>DIRECT_VAD_SCHEMA</code> (recommended)<a class="headerlink" href="#3-pair-with-direct_vad_schema-recommended" title="Permanent link">&para;</a></h2>
+<p>Addendum V found that having the LLM rate valence/arousal/dominance <strong>directly</strong>
+estimates query affect more faithfully than the default Scherer SEC→projection. Pair
+the convenience method with an LLM appraisal engine using <code>DIRECT_VAD_SCHEMA</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DIRECT_VAD_SCHEMA</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.appraisal_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMAppraisalConfig</span><span class="p">,</span> <span class="n">LLMAppraisalEngine</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.llm_http</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAICompatibleLLMConfig</span><span class="p">,</span> <span class="n">make_httpx_llm</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">cfg</span> <span class="o">=</span> <span class="n">OpenAICompatibleLLMConfig</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">appraisal_engine</span> <span class="o">=</span> <span class="n">LLMAppraisalEngine</span><span class="p">(</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">llm</span><span class="o">=</span><span class="n">make_httpx_llm</span><span class="p">(</span><span class="n">cfg</span><span class="p">),</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">config</span><span class="o">=</span><span class="n">LLMAppraisalConfig</span><span class="p">(</span><span class="n">appraisal_schema</span><span class="o">=</span><span class="n">DIRECT_VAD_SCHEMA</span><span class="p">,</span> <span class="n">cache_size</span><span class="o">=</span><span class="mi">4096</span><span class="p">),</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">embedder</span><span class="o">=</span><span class="n">my_embedder</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">appraisal_engine</span><span class="o">=</span><span class="n">appraisal_engine</span><span class="p">,</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_with_query_appraisal</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<p>The cache means each distinct query text is appraised once.</p>
+<h2 id="scope-and-honest-caveat">Scope and honest caveat<a class="headerlink" href="#scope-and-honest-caveat" title="Permanent link">&para;</a></h2>
+<p>Retrieve-time query appraisal helps <strong>in the affect-discriminative regime</strong> — where
+the correct memory is distinguished by affect, not just lexical/semantic overlap. On
+the curated <code>realistic_recall_v2</code> benchmark it beats cosine (Addendum T, Ht1 PASS).</p>
+<p>A pre-registered naturalistic re-test (Addendum T2A) found it does <strong>not</strong> beat cosine
+on naturalistic, affect-sparse dialogue (DailyDialog): the query appraisal there is
+faithful (valence r=0.69, arousal r=0.74) yet the affect signal does not discriminate
+when semantic overlap already carries it. Treat query appraisal as a targeted booster
+for affect-conditioned retrieval, not a universal win.</p>
 
 
 
