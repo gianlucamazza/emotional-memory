@@ -200,9 +200,21 @@ the query text, then injected as the state) makes AFT beat cosine **without any 
 of the oracle advantage overall and ~82% on the affect-discriminative subset. The appraised
 query affect tracks the oracle state (valence r=0.80, arousal r=0.56). So the headline
 advantage is **largely production-reachable** — the oracle is not required for the
-affect-discriminative regime. Caveats: bounded to that regime (Addendum U); naturalistic,
-affect-sparse QA (LoCoMo/DailyDialog) with query appraisal remains untested.
+affect-discriminative regime. Caveat: bounded to that regime (Addendum U).
 See `benchmarks/preregistration_addendum_t_query_appraisal_closure.md`.
+
+**Update (Addendum T2A, 2026-06-27) — the recovery is regime-bound.** The natural follow-up
+tested the same retrieve-time query-appraisal mechanism on **naturalistic** affect-conditioned
+dialogue (DailyDialog, N=120 personas / 396 queries, multilingual-e5-small) via the public
+`query_affect` API. It does **not** beat cosine: aft_query_appraised top1=0.212 vs cosine 0.220
+(Δ=−0.008 [−0.056, +0.040], p_holm=1.000, 0/3 directional types — **Ht2a FAIL**), reproducing
+the Hk1 null and recovering only +0.010 (ns) over the stale-state AFT arm. Crucially the query
+appraisal is **faithful** here too (diagnostic valence r=0.69, arousal r=0.74), so the failure
+is a **regime limit, not an appraisal-quality failure**: where lexical/semantic overlap already
+carries the signal (naturalistic, affect-sparse QA), affect does not discriminate. The
+production-reachability established in Addendum T is therefore **confined to the
+affect-discriminative regime** and does not generalize to naturalistic dialogue.
+See `benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
 
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 

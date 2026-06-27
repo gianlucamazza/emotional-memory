@@ -1,0 +1,17 @@
+{
+  "benchmark": "t2a_dailydialog_query_appraisal",
+  "pre_registration": "benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal.md",
+  "arms": [
+    "naive_cosine",
+    "aft",
+    "aft_query_appraised"
+  ],
+  "primary_contrast": "aft_query_appraised vs naive_cosine",
+  "primary_metric": "top1_accuracy",
+  "n_personas": 120,
+  "embedder": "multilingual-e5-small",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "decision_rule": "PASS iff p_holm<0.05 AND delta>0 AND ci_lower>0 on aggregate, and >=2/3 directional types also PASS individually",
+  "ht2a_pass": false
+}
