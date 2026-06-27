@@ -49,8 +49,28 @@ N=300 agrees: calibrated MAE 0.041 vs raw 0.197 vs scherer 0.116, r 0.565.)
   itself change any retrieval result; whether calibrated arousal improves downstream retrieval is a
   separate question (the affect signal's retrieval value is bounded by Addenda U/T2A regardless).
 
-## Follow-up (not in this study)
+## Follow-up — library integration EVALUATED and DECLINED (2026-06-27)
 
-If adopted in the library, ship the calibration as an opt-in post-processing step on the
-`DIRECT_VAD_SCHEMA` arousal output (a pre-registered library change, with the coefficients
-re-fittable per corpus), keeping the raw schema as default for theory fidelity.
+The originally-suggested follow-up — "ship the calibration as an opt-in post-processing step on
+the `DIRECT_VAD_SCHEMA` arousal output" — was **evaluated against the codebase and declined**.
+`DIRECT_VAD_SCHEMA.project_to_core_affect` produces the affect that _drives the engine_, so
+post-processing it would feed calibrated arousal into retrieval and decay, where it breaks
+silently:
+
+- The calibrated range is **[0.45, 0.61]** (`arousal_cal = 0.16·x + 0.45`), a narrow band around
+  0.5. The decay floor (`decay.py`, `floor_arousal_threshold=0.7`, McGaugh) would **never trigger**;
+  affect-proximity `s3` (`retrieval.py`, normalized by `sqrt(6)` assuming arousal ∈ [0,1]) would
+  see arousal compressed from [0.05, 0.90] to a near-constant band → arousal **effectively removed**
+  as a retrieval signal; the inverted-U consolidation and the `high_arousal_center=0.7` weight gate
+  would likewise mis-fire.
+- Root tension: calibration optimizes arousal for _absolute agreement with human gold_ (narrow
+  values), while retrieval/decay need _discriminative spread_. The two objectives are opposed. The
+  coefficients are also EmoBank-fit (corpus-specific).
+
+**Decision:** the calibration is a **measurement/reporting transform only** (use it when you need
+VAD numbers comparable to human gold — analytics, logging, evaluation), and is **not** wired into
+the affect pipeline. The engine should keep using _raw_ direct-VAD arousal, which already has both
+good spread and good correlation (r=0.58) and ships opt-in as `DIRECT_VAD_SCHEMA`. Re-opening this
+would require a separate pre-registered study that re-tunes `sqrt(6)`, `floor_arousal_threshold`,
+and the 0.7 gate _and_ demonstrates a retrieval gain — which Addenda U/T2A make unlikely in the
+naturalistic regime. No library change is shipped.
