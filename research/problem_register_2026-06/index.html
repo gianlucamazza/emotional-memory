@@ -3371,16 +3371,23 @@ minimal type/lint debt (1 <code># noqa</code>, 0 <code>type: ignore</code>/<code
 silent <code>xfail</code>/skip in tests (skips are env/feature-gated).</p>
 <hr />
 <h2 id="7-future-work-scoped-not-faked">7. Future work (scoped, not faked)<a class="headerlink" href="#7-future-work-scoped-not-faked" title="Permanent link">&para;</a></h2>
-<p>In priority order, the items whose <em>correct</em> resolution is execution rather than
-re-scoping — none claimed as done:</p>
+<p><strong>Executed since this register was written (June 2026):</strong> the in-repo items are done —
+A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
+(Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
+audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), and retrieve-time
+query appraisal (Addendum T, production-reachable). See the per-item §A* sections.</p>
+<p>The genuinely open items (execution, not re-scoping), in priority order:</p>
 <ol>
-<li><strong>Run the human-eval pilot</strong> (A4) — the highest-value gap (Gate 2); needs raters.</li>
-<li><strong>Human-gold appraisal comparison</strong> (A5) — validate the affect signal against
-   people, not LLM-derived gold; needs annotations.</li>
-<li><strong>Minimal downstream task</strong> (A3) — encode→retrieve→generate→judge, to test
-   whether ranking gains convert to end-to-end value; needs an LLM judge.</li>
+<li><strong>Run the human-eval pilot</strong> (A4 / Gate 2) — the highest-value gap; needs raters
+   (external, tracked by issue #27).</li>
+<li><strong>Naturalistic query-appraisal re-test</strong> — Addendum T showed query appraisal is
+   production-reachable in the affect-discriminative regime; whether it helps on
+   oracle-free naturalistic QA (LoCoMo/DailyDialog) is untested (the "T2A" follow-up).</li>
+<li><strong>Independent affect-discriminative + oracle-free corpus</strong> — external-validity test
+   for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).</li>
+<li><strong>Arousal affine calibration</strong> for direct-VAD (Addendum V follow-up: r improved, MAE
+   not yet — a held-out affine fit).</li>
 </ol>
-<p>(A7, the multi-seed robustness sweep, is <strong>done</strong> — see §A7 above.)</p>
 
 
 
