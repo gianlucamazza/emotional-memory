@@ -2769,7 +2769,7 @@
 
 <h1 id="related-work-emotional-memory-for-llm-agents">Related Work: Emotional Memory for LLM Agents<a class="headerlink" href="#related-work-emotional-memory-for-llm-agents" title="Permanent link">&para;</a></h1>
 <h2 id="scope-and-methodology">Scope and Methodology<a class="headerlink" href="#scope-and-methodology" title="Permanent link">&para;</a></h2>
-<p>This review surveys work from 2022 to 2026 relevant to Affective Field Theory (AFT) and its implementation in the <code>emotional-memory</code> library. The survey covers four clusters: (1) general LLM memory architectures that provide the structural substrate in which AFT operates; (2) emotion- and affect-aware retrieval systems that overlap most directly with AFT's mood-congruent retrieval and resonance scoring; (3) foundational affective computing results that ground the psychological claims underlying AFT's layers; and (4) memory reconsolidation and dynamic updating mechanisms that parallel AFT's APE-gated reconsolidation engine. Papers were discovered via Hugging Face Paper Search, targeted web queries on arXiv, and ACL/AAAI/CHI proceedings. Priority was given to 2023–2026 papers; classical foundations (Russell 1980, Bower 1981, Scherer 1984, etc.) are cited in companion documents <code>01_foundations.md</code> and <code>06_bibliography.md</code> and not repeated here. The 29 papers below constitute a systematic but non-exhaustive survey; the field is growing rapidly and searches were time-boxed.</p>
+<p>This review surveys work from 2022 to 2026 relevant to Affective Field Theory (AFT) and its implementation in the <code>emotional-memory</code> library. The survey covers four clusters: (1) general LLM memory architectures that provide the structural substrate in which AFT operates; (2) emotion- and affect-aware retrieval systems that overlap most directly with AFT's mood-congruent retrieval and resonance scoring; (3) foundational affective computing results that ground the psychological claims underlying AFT's layers; and (4) memory reconsolidation and dynamic updating mechanisms that parallel AFT's APE-gated reconsolidation engine. Papers were discovered via Hugging Face Paper Search, targeted web queries on arXiv, and ACL/AAAI/CHI proceedings. Priority was given to 2023–2026 papers; classical foundations (Russell 1980, Bower 1981, Scherer 1984, etc.) are cited in companion documents <code>01_foundations.md</code> and <code>06_bibliography.md</code> and not repeated here. The 33 papers below constitute a systematic but non-exhaustive survey; the field is growing rapidly and searches were time-boxed.</p>
 <hr />
 <h2 id="1-llm-memory-architectures">1. LLM Memory Architectures<a class="headerlink" href="#1-llm-memory-architectures" title="Permanent link">&para;</a></h2>
 <p>These papers establish the general landscape of memory systems in which AFT situates itself. None implement affect-weighted encoding or mood-congruent retrieval, making them natural baselines against which AFT's additional layers can be evaluated.</p>
@@ -2856,19 +2856,31 @@ Liu, Z., Yang, K., Zhang, T., Xie, Q., Yu, Z., Ananiadou, S. (2024). <em>arXiv:2
 <p><strong>[P25] EICAP: Deep Dive in Assessment and Enhancement of LLMs in Emotional Intelligence through Multi-Turn Conversations</strong>
 Nazar, N., Asgari, E. (2025). <em>arXiv:2508.06196</em>.</p>
 <p>Benchmark for LLM emotional intelligence with four layers: emotional tracking, cause inference, appraisal, and emotionally appropriate response. Fine-tuning on UltraChat improves appraisal. Finding that fine-tuning improves only the appraisal layer—not emotional tracking or cause inference—supports AFT's decision to separate the appraisal engine from the memory encoding pipeline.</p>
+<p><strong>[P26] LLMs Capture Emotion Labels, Not Emotion Uncertainty: Distributional Analysis and Calibration of Human-LLM Judgment Gaps</strong>
+Inoshita, K., Zhou, X., Kawai, A., Yada, K. (2026). <em>arXiv:2604.27345</em>.</p>
+<p>Benchmarks four zero-shot LLMs plus a fine-tuned RoBERTa baseline on EmoBank VAD rating: valence r = 0.49–0.67 and arousal r = 0.19–0.34 across models, with systematic divergence from human rating distributions. Also documents that low MAE can coexist with low correlation when predictions compress toward the mean (their lowest-MAE model is also their lowest-r one). Directly comparable to Addenda S/V/W: AFT's schema-constrained direct-VAD protocol (valence r = 0.79, arousal r = 0.58 on the same corpus) exceeds these zero-shot ranges, and the MAE-vs-r trade-off they document independently motivates Addendum W's affine arousal calibration.</p>
+<p><strong>[P27] Aware Yet Biased: Investigating Emotional Reasoning and Appraisal Bias in Large Language Models</strong>
+Tak, A.N., Gratch, J., Scherer, K.R. (2025). <em>IEEE Transactions on Affective Computing</em>.</p>
+<p>GPT-4 predicts emotions and appraisals in a largely language-independent way, but struggles with shame/fear/irritation and fails on appraisal dimensions related to control and power. LLMs appraise situations as if they had a high-agreeableness, low-power personality profile. This independently explains two AFT observations: the persistent +0.15 positive valence bias of <code>LLMAppraisalEngine</code> (Addendum S) and the weakness of the SEC control/power projection behind the dominance axis (Addendum V).</p>
+<p><strong>[P28] The Personalization Trap: How User Memory Alters Emotional Reasoning in LLMs</strong>
+Fang, X., Xu, W., Zhang, Y., Eckman, S., Nickleach, S., Reddy, C.K. (2025). <em>arXiv:2510.09905</em>.</p>
+<p>Across 15 models, identical scenarios paired with different user profiles produce systematically divergent emotional interpretations, with advantaged demographic profiles receiving more accurate readings. A caution directly relevant to any affect-aware memory system, AFT included: the persistent memory itself can shift appraisal along demographic lines.</p>
+<p><strong>[P29] Controlling Long-Horizon Behavior in Language Model Agents with Explicit State Dynamics</strong>
+Subaharan, S. (2026). <em>arXiv:2601.16087</em>.</p>
+<p>Maintains an explicit external VAD state governed by first-order (exponential smoothing) and second-order (momentum) update rules, fed back into generation without touching model weights; evaluated over a fixed 25-turn dialogue protocol, showing a stability-vs-responsiveness trade-off. Structurally parallel to AFT Layers 2–3 (<code>MoodField</code> EMA, <code>AffectiveMomentum</code>), but with a fixed memoryless affect estimator instead of appraisal-based encoding, and no memory store or retrieval pipeline.</p>
 <hr />
 <h2 id="4-reconsolidation-and-memory-updating">4. Reconsolidation and Memory Updating<a class="headerlink" href="#4-reconsolidation-and-memory-updating" title="Permanent link">&para;</a></h2>
 <p>These papers address the dynamic nature of stored memories—the mechanism most differentiated in AFT via APE-gated reconsolidation.</p>
-<p><strong>[P26] FadeMem: Biologically-Inspired Forgetting for Efficient Agent Memory</strong>
+<p><strong>[P30] FadeMem: Biologically-Inspired Forgetting for Efficient Agent Memory</strong>
 Wei, L., Peng, X., Dong, X., Xie, N., Wang, B. (2026). <em>arXiv:2601.18642</em>.</p>
 <p>Dual-layer memory with adaptive exponential decay rates that factor in semantic relevance, access frequency, and temporal patterns. Conflict-aware fusion prevents contradictory memories from coexisting. Closest published system to AFT's <code>DecayEngine</code>, but: (a) decay is exponential rather than ACT-R power-law, (b) no arousal-floor for high-salience memories, (c) no prediction-error trigger for reconsolidation windows.</p>
-<p><strong>[P27] "My agent understands me better": Integrating Dynamic Human-like Memory Recall and Consolidation in LLM-Based Agents</strong>
+<p><strong>[P31] "My agent understands me better": Integrating Dynamic Human-like Memory Recall and Consolidation in LLM-Based Agents</strong>
 (2024). <em>arXiv:2404.00573</em>.</p>
 <p>Proposes a consolidation loop where new experiences retroactively refine existing memory graph nodes—enabling associative learning. Structurally analogous to AFT's reconsolidation pathway but driven by semantic overlap rather than prediction error (APE). No affective signals.</p>
-<p><strong>[P28] Human-Like Remembering and Forgetting in LLM Agents: An ACT-R-Inspired Memory Architecture</strong>
+<p><strong>[P32] Human-Like Remembering and Forgetting in LLM Agents: An ACT-R-Inspired Memory Architecture</strong>
 (2025). <em>ACM HAI 2025 / dl.acm.org/doi/10.1145/3765766.3765803</em>.</p>
 <p>Integrates the ACT-R activation formula directly into the LLM generation process, making memory recall and forgetting transparent to the generation itself rather than treating ACT-R as a downstream component. This is the most rigorous existing ACT-R implementation for LLM agents. AFT differs in adding affective modulation (arousal-based decay floor, McGaugh 2004) and coupling decay to a Hebbian resonance network.</p>
-<p><strong>[P29] In Prospect and Retrospect: Reflective Memory Management for Long-term Personalized Dialogue Agents</strong>
+<p><strong>[P33] In Prospect and Retrospect: Reflective Memory Management for Long-term Personalized Dialogue Agents</strong>
 Tan, Z., Yan, J., Hsu, I.-H., Han, R., Wang, Z., Le, L.T., Song, Y., Chen, Y. et al. (2025). <em>arXiv:2503.08026</em>.</p>
 <p>Prospective reflection (forward-looking) and retrospective reflection (backward-looking) update stored memories using online RL on LongMemEval. Achieves better temporal consistency than retrieval-only approaches. The reflection-as-update mechanism is functionally analogous to AFT's <code>elaborate()</code> dual-path elaboration (slow-path appraisal blending), though the trigger is conversation-turn-based rather than prediction-error-gated.</p>
 <hr />
@@ -3207,6 +3219,50 @@ Tan, Z., Yan, J., Hsu, I.-H., Han, R., Wang, Z., Le, L.T., Song, Y., Chen, Y. et
 <td>No</td>
 <td>No prediction-error gate; functionally similar to elaborate()</td>
 </tr>
+<tr>
+<td>Inoshita et al.</td>
+<td>2026</td>
+<td>LLMs Capture Emotion Labels, Not Uncertainty</td>
+<td>arXiv:2604.27345</td>
+<td>N/A</td>
+<td>Zero-shot VAD distributional analysis</td>
+<td>No</td>
+<td>No</td>
+<td>Zero-shot VAD baseline ranges that direct-VAD (Addendum V) exceeds</td>
+</tr>
+<tr>
+<td>Tak, Gratch &amp; Scherer</td>
+<td>2025</td>
+<td>Aware Yet Biased</td>
+<td>IEEE TAFFC</td>
+<td>N/A</td>
+<td>Appraisal-bias evaluation</td>
+<td>No</td>
+<td>No</td>
+<td>Independently explains Addendum S valence bias and weak SEC power projection</td>
+</tr>
+<tr>
+<td>Fang et al.</td>
+<td>2025</td>
+<td>The Personalization Trap</td>
+<td>arXiv:2510.09905</td>
+<td>User memory profiles</td>
+<td>Emotional-reasoning shift analysis</td>
+<td>No</td>
+<td>No</td>
+<td>Demographic-bias caution for affect-aware memory systems</td>
+</tr>
+<tr>
+<td>Subaharan</td>
+<td>2026</td>
+<td>Explicit State Dynamics</td>
+<td>arXiv:2601.16087</td>
+<td>None (state only)</td>
+<td>VAD EMA + momentum dynamics</td>
+<td>No</td>
+<td>No</td>
+<td>Parallels AFT Layers 2–3; no appraisal, no memory store, no retrieval</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -3220,7 +3276,7 @@ Tan, Z., Yan, J., Hsu, I.-H., Han, R., Wang, Z., Le, L.T., Song, Y., Chen, Y. et
 <p><strong>Mood-congruent retrieval with circumplex geometry</strong>: Emotional RAG [P13] and LUFY [P14] implement emotion-state-weighted retrieval, but neither uses the Russell (1980) valence-arousal circumplex as the encoding space. AFT's mood congruence signal is computed as the cosine distance in circumplex space, providing a theoretically grounded metric.</p>
 </li>
 <li>
-<p><strong>APE-gated reconsolidation</strong>: No published LLM memory system implements prediction-error-gated reconsolidation windows (Nader 2000; Pearce-Hall 1980). FadeMem [P26] and DAM-LLM [P15] update memories dynamically but without a biologically motivated trigger. The ACT-R system [P28] uses activation thresholds, not prediction error.</p>
+<p><strong>APE-gated reconsolidation</strong>: No published LLM memory system implements prediction-error-gated reconsolidation windows (Nader 2000; Pearce-Hall 1980). FadeMem [P30] and DAM-LLM [P15] update memories dynamically but without a biologically motivated trigger. The ACT-R system [P32] uses activation thresholds, not prediction error.</p>
 </li>
 <li>
 <p><strong>Arousal-modulated decay floor</strong>: LUFY [P14] demonstrates empirically that arousal is the strongest predictor of long-term memory retention; AFT translates this into a formal ACT-R decay floor based on encoding arousal, with support from McGaugh (2004). No other system reviewed implements this mechanism.</p>
@@ -3236,7 +3292,7 @@ Tan, Z., Yan, J., Hsu, I.-H., Han, R., Wang, Z., Le, L.T., Song, Y., Chen, Y. et
 <li>The async architecture in <code>AsyncEmotionalMemory</code> has not been benchmarked at the scale of Mem0 [P6], which reports 91% latency reduction; production-scale validation remains future work.</li>
 </ul>
 <hr />
-<p><em>Generated: 2026-04-17. Sources include arXiv, ACL Anthology, AAAI proceedings, PLOS One, ACM DL, and Hugging Face Paper Search.</em></p>
+<p><em>Generated: 2026-04-17; updated 2026-07-02 (P26–P29 added, later entries renumbered). Sources include arXiv, ACL Anthology, AAAI proceedings, PLOS One, ACM DL, IEEE Xplore, and Hugging Face Paper Search.</em></p>
 
 
 
