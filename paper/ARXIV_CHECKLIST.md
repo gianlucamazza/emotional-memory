@@ -13,7 +13,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
 | All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
 | All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
-| `refs.bib` is included and all citations resolve                     | ✓      | 38 unique `\cite` keys, 38 entries — all resolve                                 |
+| `refs.bib` is included and all citations resolve                     | ✓      | 43 unique `\cite` keys, 43 entries — all resolve                                 |
 | No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                             |
 
 ---
@@ -25,8 +25,8 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | Title matches repo/Zenodo metadata                    | ✗      | Check `release.toml` and `CITATION.cff`                                                                                             |
 | Authors and affiliations complete                     | ✗      |                                                                                                                                     |
 | Abstract ≤ 1920 characters (arXiv limit)              | ✓      | reframed (V+T lead); ≈1908 rendered est. — tight, re-verify with arXiv's own counter at submit time                                 |
-| No placeholders (`XXXX`, `TODO`, `???`) in text       | ✗      | `grep -n "TODO\|XXXX\|???"` in `main.tex`                                                                                           |
-| Acknowledgements section present                      | ✓      | Neutral placeholder added before bibliography; fill funding/contributors before camera-ready (`TODO(author)` comment in `main.tex`) |
+| No placeholders (`XXXX`, `TODO`, `???`) in text       | ✓      | `grep -n "TODO\|XXXX\|???"` in `main.tex` — clean (Acknowledgements TODO resolved 2026-07-02)                                       |
+| Acknowledgements section present                      | ✓      | Final text: no external funding, independent work; thanks to OSS maintainers and corpus authors                                     |
 | All claims in §Results match committed JSON artifacts | ✓      | `make reproduce-paper-check` passes — zero diff                                                                                     |
 | §Limitations is present and complete                  | ✓      | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL)                              |
 | Negative results (LoCoMo Gate 1 FAIL) are disclosed   | ✓      | §Limitations §External-benchmark scope                                                                                              |
@@ -37,8 +37,8 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 
 | Item                                                       | Status | Notes                                |
 | ---------------------------------------------------------- | ------ | ------------------------------------ |
-| Primary category: `cs.AI`                                  | ✗      | Check arXiv taxonomy                 |
-| Cross-list categories: `cs.CL`, `cs.LG`                    | ✗      | Optional but recommended             |
+| Primary category: `cs.LG` (no endorsement, per issue #31)  | ✗      | Cross-list `cs.AI`, `cs.CL` optional |
+| Cross-list categories: `cs.AI`, `cs.CL`                    | ✗      | Optional but recommended             |
 | MSC classification (if required): not required for cs      | —      |                                      |
 | License: `CC BY 4.0` or `CC BY-NC 4.0`                     | ✗      | Must match `LICENSE` file            |
 | DOI (Zenodo concept DOI): `10.5281/zenodo.19972258`        | ✓      | In `release.toml`; confirmed correct |
@@ -79,4 +79,5 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._
+_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 43/43 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 18pp).
+Previous: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._

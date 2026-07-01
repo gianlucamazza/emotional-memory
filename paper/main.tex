@@ -540,7 +540,7 @@ Both systems produce no LLM call at test time; the latency advantage
 \label{sec:related}
 
 \begin{sloppypar}
-We survey 29 papers from 2022--2026; a full review is available in
+We survey 33 papers from 2022--2026; a full review is available in
 \texttt{docs/research/07\_related\_work.md}. We highlight the most directly
 relevant here.
 \end{sloppypar}
@@ -596,7 +596,18 @@ a suite of emotion-tuned LLMs and annotation tools.
 and LLMs. In the memory-specific domain, \citet{xu2025amem} propose A-MEM, an
 agentic memory system. \citet{damllm2025} and \citet{tan2025prospective}
 address dynamic affective state management and prospective/retrospective reflection
-in LLM agents, respectively. None of these systems simultaneously implement the
+in LLM agents, respectively.
+\citet{subaharan2026dynamics} maintain an explicit external VAD state with first-
+and second-order update dynamics (exponential smoothing and momentum) to control
+long-horizon agent behavior---structurally parallel to AFT Layers~2--3, but with
+no appraisal-based encoding, no memory store, and no retrieval pipeline.
+On measurement, \citet{inoshita2026labels} benchmark zero-shot LLM VAD rating
+against EmoBank distributions, and \citet{tak2025aware} document systematic
+appraisal bias in LLMs (situations evaluated as if by a high-agreeableness,
+low-power rater); \citet{fang2025personalization} show that persistent user
+memory itself shifts LLM emotional reasoning along demographic lines---a caution
+relevant to any affect-aware memory system, ours included.
+None of these systems simultaneously implement the
 five-layer affective fingerprint, APE-gated reconsolidation, and Hebbian resonance
 that distinguish AFT.
 
@@ -644,7 +655,9 @@ been compared against human affect labels (Addendum~S; closure:\footnote{%
 EmoBank \citep{buechel2017emobank} (human VAD, $N=300$), \texttt{LLMAppraisalEngine}
 valence is human-validated (Pearson $r=0.70$ [$0.66$, $0.75$]), while arousal
 ($r=0.28$) and dominance ($r=0.33$) are only weak-to-moderately positive and a
-$+0.15$ positive valence bias persists; the rule-based \texttt{KeywordAppraisalEngine}
+$+0.15$ positive valence bias persists---consistent with the systematic
+positivity-leaning appraisal bias independently documented in LLMs by
+\citet{tak2025aware}; the rule-based \texttt{KeywordAppraisalEngine}
 is \emph{not} human-validated ($r=0.07$). This validates the first link of the
 ``text $\to$ affect signal $\to$ retrieval'' chain against people, but \emph{perceived
 utility} of the retrieved memories by human raters (Gate~2) remains future work---a
@@ -656,7 +669,12 @@ ceiling: a pre-registered comparison (Addendum~V; closure:\footnote{%
 {\texttt{preregistration\_addendum\_v\_direct\_vad\_closure.md}}.}) shows that asking the LLM
 for valence/arousal/dominance \emph{directly} (a custom \texttt{AppraisalSchema}, no engine
 change) beats the SEC$\to$projection on every axis vs.\ EmoBank---valence $r=0.79$ (bias
-${\approx}0$), arousal $r=0.58$, dominance $r=0.43$ vs.\ $0.70/0.23/0.31$. This direct-VAD
+${\approx}0$), arousal $r=0.58$, dominance $r=0.43$ vs.\ $0.70/0.23/0.31$. For context,
+these figures also exceed the zero-shot LLM ranges recently reported on the same corpus
+(valence $r=0.49$--$0.67$, arousal $r=0.19$--$0.34$ across four models;
+\citealp{inoshita2026labels}), though models and prompts differ, so we read this as
+evidence that the schema-constrained rating protocol matters, not as a controlled
+model comparison. This direct-VAD
 schema ships opt-in (\texttt{DIRECT\_VAD\_SCHEMA}); the Scherer SEC schema remains the default
 for theory fidelity and SEC-dependent features.
 Direct-VAD arousal wins on correlation but, in Addendum~V, loses on absolute error
@@ -668,7 +686,9 @@ fitting \texttt{arousal\_cal}${=}0.16\,{\cdot}\,$\texttt{arousal\_direct}${+}0.4
 EmoBank cuts arousal MAE to $0.04$ while preserving $r$, so calibrated direct-VAD
 \emph{dominates} the projection on \emph{both} $r$ ($0.57$ vs.\ $0.21$) and MAE
 ($0.04$ vs.\ $0.11$). The large MAE drop partly reflects EmoBank's narrow arousal variance
-(shrink-to-mean); the durable claim is the dual-axis dominance via $r$-preservation, with the
+(shrink-to-mean); the same low-MAE-via-compression trade-off is independently documented
+by \citet{inoshita2026labels}, whose lowest-MAE model is also their lowest-$r$ one. The
+durable claim is the dual-axis dominance via $r$-preservation, with the
 calibration coefficients refittable per corpus.
 
 \paragraph{Synthetic benchmark.}
@@ -1027,10 +1047,11 @@ SOTA replication on the LoCoMo factual QA benchmark remains open work.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \section*{Acknowledgements}
-% TODO(author): add funding sources, institutional support, and individual
-% contributors before camera-ready submission.
-This work builds on the open-source scientific Python ecosystem; we thank the
-maintainers of the libraries on which \texttt{emotional-memory} depends.
+This work received no external funding and was conducted independently.
+It builds on the open-source scientific Python ecosystem; we thank the
+maintainers of the libraries on which \texttt{emotional-memory} depends, and
+the authors of EmoBank, DailyDialog, and LoCoMo for releasing the corpora
+used in the evidence programme.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}
