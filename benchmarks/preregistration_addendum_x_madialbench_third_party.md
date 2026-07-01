@@ -1,6 +1,10 @@
 # Pre-registration Addendum X — Hx1: Third-party emotion-triggered retrieval (MADial-Bench)
 
-**Status:** PRE-REGISTERED (not yet executed)
+**Status:** EXECUTED (2026-07-02) — **Hx1 FAIL** (Δ=−0.083 [−0.123, −0.043], p*one=0.9998;
+cosine significantly ahead despite faithful appraisal D1 AUC=0.996 and an
+affect-discriminative corpus D2=76.9% — construct mismatch: the benchmark rewards
+counter-congruent supportive recall). See
+`preregistration_addendum_x_madialbench_third_party_closure.md`.
 **Date (pre-reg):** 2026-07-02
 **Dataset:** MADial-Bench EN (NAACL 2025, Long 499; He et al., arXiv:2409.15240) — third-party,
 peer-reviewed, MIT license. Repo `hejunqing/MADial-Bench`, pinned commit
@@ -10,10 +14,8 @@ JSONL) and `data/en/MADial-Bench-en-memory.json` (sha256 `d384b2d35e01ed36416500
 160 memories, JSONL, ids 1–160 contiguous, each `{time, scene, emotion, event}`).
 **Embedder:** `BAAI/bge-small-en-v1.5` (matches the `realistic_recall_v2` headline runs; EN corpus)
 **LLM:** direct-VAD appraisal (`DIRECT_VAD_SCHEMA`, Addendum V) resolved from
-`EMOTIONAL_MEMORY_LLM_*` (`.env`). ~320 calls (160 memories at encode + 160 queries), cached.
-**Parent closures:** `preregistration_addendum_t_query_appraisal_closure.md` (Ht1 PASS, curated) ·
-`preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md` (Ht2a FAIL, naturalistic) ·
-`benchmarks/circularity/` Addendum U (author-crafted benchmark ~62.5% AFT-favorable)
+`EMOTIONAL_MEMORY_LLM*\*` (`.env`). ~320 calls (160 memories at encode + 160 queries), cached.
+**Parent closures:** `preregistration_addendum_t_query_appraisal_closure.md`(Ht1 PASS, curated) ·`preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`(Ht2a FAIL, naturalistic) ·`benchmarks/circularity/` Addendum U (author-crafted benchmark ~62.5% AFT-favorable)
 
 ---
 

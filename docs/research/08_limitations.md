@@ -224,6 +224,27 @@ production-reachability established in Addendum T is therefore **confined to the
 affect-discriminative regime** and does not generalize to naturalistic dialogue.
 See `benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
 
+**Update (Addendum X, 2026-07-02) — the mechanism fails on third-party gold sets, for a
+new reason.** The first test on a released third-party retrieval-native corpus
+(MADial-Bench EN, NAACL 2025: 160 emotion-triggered recall queries with gold memory sets,
+fully oracle-free, harness merged before the scored run) is a decisive **FAIL, inverted**:
+cosine significantly beats aft_query_appraised on nDCG@5 (0.304 vs 0.221, Δ=−0.083
+[−0.123, −0.043], p_one=0.9998, d=−0.317; MDE 0.051 < |Δ| → powered negative). The
+diagnostics exonerate the usual suspects: the appraisal is near-perfect against the
+third-party emotion labels (D1 AUC=0.996) and the corpus is _more_ affect-discriminative
+than the curated v2 (D2 76.9% vs 62.5%). Post-hoc (exploratory): 84/160 queries carry
+negative appraised valence, and for 73.8% of those the gold-set mean valence is
+_positive_ — the benchmark operationalizes emotion-triggered recall as **interpersonal
+emotion regulation** (recall a positive memory to support a distressed user), i.e.
+**counter-congruent** recall, while AFT's affect channel implements _mood-congruent_
+retrieval (Bower 1981). The affect signal did what the theory says and pushed the gold
+memories down. The query-appraisal advantage is therefore bounded on three measured axes:
+**regime** (U/T2A), **provenance** (positive evidence only on author-crafted corpora),
+and **construct** (congruence vs supportive counter-congruence). A support-mode retrieval
+profile is the theory-level follow-up; it must be designed from the emotion-regulation
+literature and validated on held-out data, not tuned on this corpus.
+See `benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md`.
+
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the

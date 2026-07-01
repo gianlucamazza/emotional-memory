@@ -13,7 +13,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
 | All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
 | All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
-| `refs.bib` is included and all citations resolve                     | ✓      | 43 unique `\cite` keys, 43 entries — all resolve                                 |
+| `refs.bib` is included and all citations resolve                     | ✓      | 44 unique `\cite` keys, 44 entries — all resolve                                 |
 | No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                             |
 
 ---
@@ -79,5 +79,5 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 43/43 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 18pp).
+_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 43/43 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 19pp after Addendum X).
 Previous: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._
