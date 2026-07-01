@@ -1,0 +1,17 @@
+{
+  "benchmark": "addendum_x_madialbench",
+  "pre_registration": "benchmarks/preregistration_addendum_x_madialbench_third_party.md",
+  "arms": [
+    "naive_cosine",
+    "aft_query_appraised"
+  ],
+  "primary_contrast": "aft_query_appraised vs naive_cosine",
+  "primary_metric": "ndcg@5",
+  "n_queries": 160,
+  "embedder": "bge-small-en-v1.5",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "dry_run": false,
+  "decision_rule": "PASS iff p_onetail<0.05 AND delta>0 AND ci_lower>0 on ndcg@5 (single family member, m=1)",
+  "hx1_pass": false
+}
