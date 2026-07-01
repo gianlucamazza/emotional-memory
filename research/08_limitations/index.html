@@ -3348,6 +3348,26 @@ carries the signal (naturalistic, affect-sparse QA), affect does not discriminat
 production-reachability established in Addendum T is therefore <strong>confined to the
 affect-discriminative regime</strong> and does not generalize to naturalistic dialogue.
 See <code>benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md</code>.</p>
+<p><strong>Update (Addendum X, 2026-07-02) — the mechanism fails on third-party gold sets, for a
+new reason.</strong> The first test on a released third-party retrieval-native corpus
+(MADial-Bench EN, NAACL 2025: 160 emotion-triggered recall queries with gold memory sets,
+fully oracle-free, harness merged before the scored run) is a decisive <strong>FAIL, inverted</strong>:
+cosine significantly beats aft_query_appraised on nDCG@5 (0.304 vs 0.221, Δ=−0.083
+[−0.123, −0.043], p_one=0.9998, d=−0.317; MDE 0.051 &lt; |Δ| → powered negative). The
+diagnostics exonerate the usual suspects: the appraisal is near-perfect against the
+third-party emotion labels (D1 AUC=0.996) and the corpus is <em>more</em> affect-discriminative
+than the curated v2 (D2 76.9% vs 62.5%). Post-hoc (exploratory): 84/160 queries carry
+negative appraised valence, and for 73.8% of those the gold-set mean valence is
+<em>positive</em> — the benchmark operationalizes emotion-triggered recall as <strong>interpersonal
+emotion regulation</strong> (recall a positive memory to support a distressed user), i.e.
+<strong>counter-congruent</strong> recall, while AFT's affect channel implements <em>mood-congruent</em>
+retrieval (Bower 1981). The affect signal did what the theory says and pushed the gold
+memories down. The query-appraisal advantage is therefore bounded on three measured axes:
+<strong>regime</strong> (U/T2A), <strong>provenance</strong> (positive evidence only on author-crafted corpora),
+and <strong>construct</strong> (congruence vs supportive counter-congruence). A support-mode retrieval
+profile is the theory-level follow-up; it must be designed from the emotion-regulation
+literature and validated on held-out data, not tuned on this corpus.
+See <code>benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md</code>.</p>
 <h3 id="25-resonance-magnitude-amplification-on-e5-small-v2">2.5 Resonance magnitude amplification on e5-small-v2<a class="headerlink" href="#25-resonance-magnitude-amplification-on-e5-small-v2" title="Permanent link">&para;</a></h3>
 <p>S3 ablation (<code>no_resonance</code> variant, e5-small-v2) found that removing the
 <code>ResonanceLink</code> layer <strong>improves</strong> top1 accuracy: Δ = +0.075 [0.040, 0.115],
