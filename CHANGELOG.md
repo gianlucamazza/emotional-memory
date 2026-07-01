@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum X — third-party retrieval on MADial-Bench (Hx1 FAIL, decisive).** First
+  pre-registered test of the retrieve-time query-appraisal mechanism (Addendum T) on a
+  released third-party retrieval-native emotional corpus (MADial-Bench EN, NAACL 2025,
+  MIT; N=160 queries, oracle-free; harness `benchmarks/madialbench/`, `make bench-x-madial`,
+  data pinned by sha256). Cosine significantly ahead (nDCG@5 0.304 vs 0.221, Δ=−0.083
+  [−0.123, −0.043], p_one=0.9998, d=−0.317; powered negative, MDE 0.051) despite
+  near-perfect appraisal vs third-party labels (D1 AUC=0.996) and an affect-discriminative
+  corpus (D2=76.9% > U's 62.5%). Post-hoc: 84/160 queries have negative appraised valence
+  and 73.8% of them positive gold sets — the benchmark rewards **counter-congruent
+  supportive recall** (interpersonal emotion regulation), the opposite of AFT's
+  mood-congruence prior. The query-appraisal advantage is now bounded on three measured
+  axes: regime (U/T2A), provenance (author-crafted corpora only), **construct**
+  (congruence vs regulation). Propagated to paper (abstract, limitations §2.4-equivalent,
+  conclusion), claim matrix (`cross_domain_affect_replication`), 08_limitations, ROADMAP.
+  See `benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md`.
+
+### Added
+
+- `benchmarks/madialbench/` harness (pinned loader, replicated MADial metrics, adapters,
+  runner with MDE + D1/D2 diagnostics) and vendored MADial-Bench EN data
+  (`benchmarks/datasets/madialbench/`, MIT) with `make bench-x-madial[-dry]` targets.
+
 ## [0.14.0] - 2026-06-27
 
 ### Security

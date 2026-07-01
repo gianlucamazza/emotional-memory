@@ -45,7 +45,7 @@ from source).
 | Secondary categories | cs.LG, stat.ML (optional) |
 | MSC class | 68T07, 68T50 (optional) |
 | ACM class | I.2.7 (optional) |
-| Comments | 18 pages, 4 figures, 3 tables. Software: emotional-memory v0.14.0 |
+| Comments | 19 pages, 4 figures, 3 tables. Software: emotional-memory v0.14.0 |
 | License | CC BY 4.0 (recommended) |
 | DOI | 10.5281/zenodo.20962443 (Zenodo software record for v0.14.0) |
 

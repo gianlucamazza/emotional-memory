@@ -219,7 +219,7 @@ Closure: `benchmarks/preregistration_addendum_m_fr_closure.md`
 
 **Branch A confirmed (pre-reg declared expected = FAIL).**
 
-Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424.
+Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424. Addendum X FAIL (2026-07-02): first third-party retrieval-native corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free) — aft_query_appraised significantly below naive cosine (nDCG@5 0.221 vs 0.304, Δ=-0.083 [-0.123, -0.043], p_one=0.9998) despite faithful appraisal (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9%); construct mismatch — the benchmark rewards counter-congruent supportive recall (emotion regulation), the opposite of AFT's mood-congruence prior.
 
 Per challenge type (AFT top1): affective_arc 0.38, same_topic_distractor 0.42, recency_confound 0.29,
 semantic_confound 0.33, momentum_alignment 0.12. Momentum_alignment remains weak across all

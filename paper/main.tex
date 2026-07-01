@@ -74,25 +74,25 @@ affective modulation of human memory. AFT encodes every event with a five-compon
 affective fingerprint---Russell circumplex core affect, affective momentum, a
 slow-adapting PAD mood field, a Scherer appraisal vector, and a resonance graph---and
 retrieves with a six-signal mood-adaptive scorer gated by a Pearce-Hall
-prediction-error term, validated through 127 fidelity cases over 20 psychological
-phenomena. Our central result is a
+prediction-error term, validated by 127 fidelity cases across 20 phenomena.
+Our central result is a
 characterized \emph{boundary}: affect improves retrieval exactly when it discriminates
 among candidate memories. Within that regime AFT reaches \texttt{top1\_accuracy}=0.53
-vs.\ 0.33 for semantic-only cosine (v2, $N=200$, SBERT; $\Delta=+0.21$ [0.15, 0.27],
-$p<0.001$, $d=0.49$; replicated on e5-small-v2), and a pre-registered circularity audit
-shows ${\sim}62\%$ of it is affect-discriminative by construction---the advantage
+vs.\ 0.33 for semantic-only cosine (v2, $N=200$, SBERT; $\Delta=+0.21$,
+$p<0.001$, $d=0.49$), and a pre-registered audit shows ${\sim}62\%$ of it is affect-discriminative by construction---the advantage
 concentrates there, null on the rest. Two findings hold \emph{independent} of the
 curated benchmark. (i)~Asking the LLM for valence/arousal/dominance directly is
-human-validated against EmoBank (valence $r=0.79$), beating the theory-driven projection
-on every axis. (ii)~Appraising the query \emph{at retrieve time} recovers most of it
+human-validated on EmoBank (valence $r=0.79$), beating the theory-driven projection on all axes. (ii)~Appraising the query \emph{at retrieve time} recovers most of it
 with no oracle ($\Delta=+0.115$, $p<0.001$; ${\sim}59\%$ recovery, ${\sim}82\%$ on the
-affect-discriminative subset)---production-reachable, yet regime-bound (null on
-naturalistic dialogue, $\Delta=-0.008$). The ranking edge converts end-to-end
-(LLM-judged answer accuracy 0.595 vs.\ 0.440, $p<0.001$); with automatic appraisal on
+affect-discriminative subset)---production-reachable, yet bounded: null on
+naturalistic dialogue ($\Delta=-0.008$) and \emph{negative} on a third-party
+emotion-support corpus whose gold recall is counter-congruent
+($\Delta=-0.083$). The ranking edge converts end-to-end
+(LLM-judged accuracy 0.595 vs.\ 0.440, $p<0.001$); with automatic appraisal on
 affect-free data it does not beat cosine ($\Delta=-0.087$, $p=0.002$), locating the
 boundary at retrieve-time state injection. AFT encodes 25$\times$ faster than Mem0
-(CPU-only) with no retrieval-time LLM call. Released as the MIT-licensed
-\texttt{emotional-memory} Python library.
+with no retrieval-time LLM call. Released as the MIT-licensed
+\texttt{emotional-memory} library.
 \end{abstract}
 
 % ──────────────────────────────────────────────────────────────────────────────
@@ -909,6 +909,25 @@ types), reproducing the $H_{k1}$ null---even though the query appraisal is faith
 (valence $r=0.69$, arousal $r=0.74$). The production-reachable recovery is thus confined to the
 affect-discriminative regime and does not extend to naturalistic, affect-sparse dialogue.
 
+A further pre-registered test (Addendum~X; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_x\_madialbench\_third\_party\_closure.md}%
+{\texttt{preregistration\_addendum\_x\_madialbench\_third\_party\_closure.md}}.}) ran the same
+oracle-free mechanism on the first released \emph{third-party} retrieval-native emotional
+corpus (MADial-Bench EN \citep{he2025madialbench}: 160 emotion-triggered recall queries with
+gold memory sets). Cosine won \emph{significantly} (nDCG@5 $0.304$ vs $0.221$, $\Delta=-0.083$
+[$-0.123$, $-0.043$], $d=-0.317$; a powered negative, MDE $0.051$), even though the appraisal
+is near-perfect against the third-party labels (AUC $=0.996$) and the corpus is \emph{more}
+affect-discriminative than v2 ($76.9\%$ vs $62.5\%$). A post-hoc analysis explains why:
+$84/160$ queries carry negative appraised valence, and for $73.8\%$ of them the gold memories
+are \emph{positive}---the benchmark operationalizes emotion-triggered recall as interpersonal
+emotion \emph{regulation} (recall a positive memory to support a distressed user), i.e.\
+counter-congruent recall, the opposite of AFT's mood-congruence prior \citep{bower1981mood}.
+The query-appraisal advantage is therefore bounded on three measured axes: \emph{regime}
+(Addenda~U/T2A), \emph{provenance} (positive evidence only on author-crafted corpora so far),
+and \emph{construct} (intrapersonal congruence vs.\ supportive counter-congruence). A
+support-mode retrieval profile grounded in the emotion-regulation literature is the natural
+theory-level follow-up.
+
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
 AFT's affective signals are theoretically discriminative
@@ -986,7 +1005,7 @@ dataset. The library is MIT-licensed, fully typed, and available for immediate u
 in LangChain pipelines and custom LLM agents.
 
 A staged evidence programme has produced a series of pre-registered studies
-(Addenda A--V and T2A, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
+(Addenda A--X, plus the Hd2 power top-up) since initial submission. The expanded realistic-recall benchmark ($N=200$, five
 challenge types, two embedder classes) confirmed a decisive advantage (SBERT:
 $\Delta=+0.21$, $p<0.001$, $d=0.49$; e5-small-v2: $\Delta=+0.16$, $p<0.001$;
 Gate~3 CLOSED via the appraisal-confound ablation\footnote{$H_{d1}$:
@@ -1021,7 +1040,10 @@ human-validated against EmoBank (Addendum~V, valence $r=0.79$, beating the
 theory-driven projection on every axis), and retrieve-time query appraisal recovers
 most of the oracle advantage with no oracle (Addendum~T, $\Delta=+0.115$, $p<0.001$,
 ${\sim}59\%$ recovery)---production-reachable, though a naturalistic re-test bounds it
-to the affect-discriminative regime (Addendum~T2A, $\Delta=-0.008$). Per-category
+to the affect-discriminative regime (Addendum~T2A, $\Delta=-0.008$), and the first
+third-party test (Addendum~X, MADial-Bench) is significantly negative
+($\Delta=-0.083$): the benchmark rewards counter-congruent supportive recall, exposing a
+construct boundary between mood-congruent and emotion-regulatory retrieval. Per-category
 weight routing, query-type classification, and per-query affect gating were tested and
 are closed negatives (Addenda~J/L/Q).
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
@@ -1050,8 +1072,8 @@ SOTA replication on the LoCoMo factual QA benchmark remains open work.
 This work received no external funding and was conducted independently.
 It builds on the open-source scientific Python ecosystem; we thank the
 maintainers of the libraries on which \texttt{emotional-memory} depends, and
-the authors of EmoBank, DailyDialog, and LoCoMo for releasing the corpora
-used in the evidence programme.
+the authors of EmoBank, DailyDialog, LoCoMo, and MADial-Bench for releasing the
+corpora used in the evidence programme.
 
 % ──────────────────────────────────────────────────────────────────────────────
 \bibliographystyle{plainnat}
