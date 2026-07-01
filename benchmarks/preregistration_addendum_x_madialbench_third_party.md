@@ -62,9 +62,16 @@ only released retrieval-native candidate.
   labels are NOT injected into the document text — this keeps the third-party affect label out
   of the semantic channel of both arms. (The repo's baselines embed the serialized dict
   including the emotion label; our published-baseline comparison is therefore indicative only.)
-- **Timestamps:** uniform synthetic encode timestamps, fixed retrieval time → the recency
-  signal (s5) is constant across memories and non-discriminative. This isolates the affect
-  channel. (A full-stack variant with real dataset dates is exploratory; see arms.)
+- **Timestamps / recency (amended pre-run, 2026-07-02 — see Amendment A1):** dataset dates are
+  NOT used in the primary arms. Time-invariance is implemented config-side via
+  `DecayConfig(base_decay=0, arousal_modulation=0, retrieval_boost=0)`, which makes stored
+  strength independent of elapsed time (equivalent to uniform encode timestamps, and robust to
+  encode-loop duration). Note an implementation fact the original text got wrong: s5 is the
+  _decayed consolidation strength_, whose initial value is arousal-gated
+  (`consolidation_strength()`, inverted-U, McGaugh 2004) — so even time-invariant, s5 remains
+  a function of the memory's appraised arousal. This is part of AFT's affect channel and the
+  production default; it stays active. What this bullet removes is only the _time/file-order_
+  confound, not the arousal-gated strength.
 - **Affective state:** engine state reset to baseline before each query; no `observe()` calls.
   No oracle affect anywhere in the primary arms.
 
@@ -76,9 +83,11 @@ only released retrieval-native candidate.
    `DIRECT_VAD_SCHEMA`); at retrieve, `retrieve_with_query_appraisal()` appraises the query
    text (same schema) — s3 override via the public `query_affect` API, no state mutation.
    Uniform timestamps.
-3. `aft_full_stack` — **exploratory, not in family**: as (2) but encode timestamps from the
-   memory `time` field and retrieval date 2024-06-16 (the dataset's own `<Time>` header),
-   activating ACT-R decay on real third-party dates.
+3. `aft_full_stack` — **exploratory, not in family**: as (2) but with default `DecayConfig`
+   and encode timestamps from the memory `time` field, retrieval date 2024-06-16 (the
+   dataset's own `<Time>` header), activating ACT-R decay on real third-party dates.
+   Conditional on public-API feasibility (timestamp rewrite via `export_memories()` /
+   `import_memories()`); dropped without penalty if it would require private-API surgery.
 4. `mem0` — **exploratory, not in family**: Mem0 adapter from the v2 SOTA harness if it runs
    unmodified on this corpus (symmetric, no oracle); dropped without penalty if the adapter
    requires per-corpus surgery (any such surgery would itself bias the comparison).
@@ -170,3 +179,22 @@ runner reuses `benchmarks/common/statistics`; metrics module replicates the repo
 **Pre-registration integrity:** this document is committed before the harness executes a
 single scored run; the closure reports realized per-arm metric grids, Δ/CI/p, Cohen's d,
 D1/D2, the MDE, and the Hx1 verdict.
+
+---
+
+## Amendment A1 (2026-07-02, pre-run, before any harness execution)
+
+Made while implementing the harness, before any scored or smoke run. Two corrections:
+
+1. **Timestamps bullet corrected.** The original text claimed uniform encode timestamps make
+   s5 "constant across memories". Factually wrong: s5 is the decayed _consolidation strength_,
+   whose initial value is arousal-gated (`consolidation_strength()`, inverted-U). The intent
+   (remove the time/file-order confound) is now implemented via
+   `DecayConfig(base_decay=0, arousal_modulation=0, retrieval_boost=0)` — declared here
+   ex-ante, not fitted to any result; the arousal-gated strength remains active as part of
+   the affect channel under test.
+2. **Arm 3 feasibility scoped.** `encode()` takes no timestamp parameter; the real-dates
+   exploratory arm is conditional on public-API timestamp rewrite
+   (`export_memories()`/`import_memories()`) and is dropped without penalty otherwise.
+
+No hypothesis, metric, decision rule, N, or statistical plan changed.
