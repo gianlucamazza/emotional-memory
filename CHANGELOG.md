@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-> **Release framing note:** unlike the v0.14.0 bump (docs/metadata only, wheel
-> code-identical to 0.13.0), this Unreleased section now contains `src/` changes
-> (httpx connection pooling, resource cleanup) — the next release ships new
-> runtime code.
+## [0.14.0] - 2026-07-02
+
+> Cut 2026-07-02. This release grew beyond the original 2026-06-27 bump (#88):
+> it now ships runtime changes (httpx connection pooling, resource cleanup),
+> so the wheel is **not** code-identical to 0.13.0.
+
 
 ### Changed
 
@@ -54,13 +56,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   conclusion), claim matrix (`cross_domain_affect_replication`), 08_limitations, ROADMAP.
   See `benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md`.
 
+- **Addendum W — affine calibration of direct-VAD arousal (ADOPTED).** Pre-registered
+  (`benchmarks/preregistration_addendum_w_arousal_calibration.md`, `make bench-arousal-calibration`)
+  follow-up to Addendum V's arousal-MAE caveat. On EmoBank (N=300, held out), an affine map
+  `arousal_cal = 0.16·arousal_direct + 0.45` cuts direct-VAD arousal MAE from 0.20 to **0.04**
+  (Hw1, p<0.001) — below the SEC→projection's 0.11 (Hw2, p<0.001) — while preserving r (Gw).
+  Calibrated direct-VAD therefore **dominates the production projection on both r (0.57 vs 0.21)
+  and MAE (0.04 vs 0.11)**. Caveat: the MAE cut partly reflects EmoBank's narrow arousal variance;
+  the durable claim is dominance-on-both-axes via r-preservation. `predictions.json` is committed
+  so the verdict reproduces offline with no LLM.
+
 ### Added
 
 - `benchmarks/madialbench/` harness (pinned loader, replicated MADial metrics, adapters,
   runner with MDE + D1/D2 diagnostics) and vendored MADial-Bench EN data
   (`benchmarks/datasets/madialbench/`, MIT) with `make bench-x-madial[-dry]` targets.
 
-## [0.14.0] - 2026-06-27
+
 
 ### Security
 
@@ -71,18 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now reports **only** `chromadb` ≤ 1.5.9 (CVE-2026-45829, CRITICAL, no upstream
   fix, optional `chroma` extra only — not in the runtime wheel). The runtime
   wheel still depends on `numpy` + `pydantic` only; no end-user exposure.
-
-### Research
-
-- **Addendum W — affine calibration of direct-VAD arousal (ADOPTED).** Pre-registered
-  (`benchmarks/preregistration_addendum_w_arousal_calibration.md`, `make bench-arousal-calibration`)
-  follow-up to Addendum V's arousal-MAE caveat. On EmoBank (N=300, held out), an affine map
-  `arousal_cal = 0.16·arousal_direct + 0.45` cuts direct-VAD arousal MAE from 0.20 to **0.04**
-  (Hw1, p<0.001) — below the SEC→projection's 0.11 (Hw2, p<0.001) — while preserving r (Gw).
-  Calibrated direct-VAD therefore **dominates the production projection on both r (0.57 vs 0.21)
-  and MAE (0.04 vs 0.11)**. Caveat: the MAE cut partly reflects EmoBank's narrow arousal variance;
-  the durable claim is dominance-on-both-axes via r-preservation. `predictions.json` is committed
-  so the verdict reproduces offline with no LLM.
 
 ### Docs
 
