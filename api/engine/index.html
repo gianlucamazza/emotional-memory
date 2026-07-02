@@ -3569,9 +3569,11 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 
     <div class="doc doc-contents ">
 
-        <p>Release resources held by the underlying store, if supported.</p>
-<p>Calls <code>store.close()</code> when the store exposes that method (e.g.
-<code>SQLiteStore</code>).  Safe to call on stores that do not implement it.</p>
+        <p>Release resources held by store, state store, and appraisal engine.</p>
+<p>Calls <code>close()</code> on each collaborator that exposes it (e.g.
+<code>SQLiteStore</code>, <code>LLMAppraisalEngine</code> with an httpx-backed LLM).
+Safe on collaborators without cleanup. The embedder is not owned by
+the engine and remains the caller's responsibility.</p>
 
 
             <details class="mkdocstrings-source">
@@ -3587,18 +3589,28 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 <span class="normal"><a href="#__codelineno-0-976">976</a></span>
 <span class="normal"><a href="#__codelineno-0-977">977</a></span>
 <span class="normal"><a href="#__codelineno-0-978">978</a></span>
-<span class="normal"><a href="#__codelineno-0-979">979</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-968" name="__codelineno-0-968"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-969" name="__codelineno-0-969"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by the underlying store, if supported.</span>
+<span class="normal"><a href="#__codelineno-0-979">979</a></span>
+<span class="normal"><a href="#__codelineno-0-980">980</a></span>
+<span class="normal"><a href="#__codelineno-0-981">981</a></span>
+<span class="normal"><a href="#__codelineno-0-982">982</a></span>
+<span class="normal"><a href="#__codelineno-0-983">983</a></span>
+<span class="normal"><a href="#__codelineno-0-984">984</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-968" name="__codelineno-0-968"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-969" name="__codelineno-0-969"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by store, state store, and appraisal engine.</span>
 <a id="__codelineno-0-970" name="__codelineno-0-970"></a>
-<a id="__codelineno-0-971" name="__codelineno-0-971"></a><span class="sd">    Calls ``store.close()`` when the store exposes that method (e.g.</span>
-<a id="__codelineno-0-972" name="__codelineno-0-972"></a><span class="sd">    ``SQLiteStore``).  Safe to call on stores that do not implement it.</span>
-<a id="__codelineno-0-973" name="__codelineno-0-973"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-974" name="__codelineno-0-974"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-975" name="__codelineno-0-975"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
-<a id="__codelineno-0-976" name="__codelineno-0-976"></a>        <span class="n">close</span><span class="p">()</span>
-<a id="__codelineno-0-977" name="__codelineno-0-977"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-<a id="__codelineno-0-978" name="__codelineno-0-978"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
-<a id="__codelineno-0-979" name="__codelineno-0-979"></a>        <span class="n">state_close</span><span class="p">()</span>
+<a id="__codelineno-0-971" name="__codelineno-0-971"></a><span class="sd">    Calls ``close()`` on each collaborator that exposes it (e.g.</span>
+<a id="__codelineno-0-972" name="__codelineno-0-972"></a><span class="sd">    ``SQLiteStore``, ``LLMAppraisalEngine`` with an httpx-backed LLM).</span>
+<a id="__codelineno-0-973" name="__codelineno-0-973"></a><span class="sd">    Safe on collaborators without cleanup. The embedder is not owned by</span>
+<a id="__codelineno-0-974" name="__codelineno-0-974"></a><span class="sd">    the engine and remains the caller&#39;s responsibility.</span>
+<a id="__codelineno-0-975" name="__codelineno-0-975"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-976" name="__codelineno-0-976"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-977" name="__codelineno-0-977"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
+<a id="__codelineno-0-978" name="__codelineno-0-978"></a>        <span class="n">close</span><span class="p">()</span>
+<a id="__codelineno-0-979" name="__codelineno-0-979"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-980" name="__codelineno-0-980"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
+<a id="__codelineno-0-981" name="__codelineno-0-981"></a>        <span class="n">state_close</span><span class="p">()</span>
+<a id="__codelineno-0-982" name="__codelineno-0-982"></a>    <span class="n">appraisal_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-983" name="__codelineno-0-983"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">appraisal_close</span><span class="p">):</span>
+<a id="__codelineno-0-984" name="__codelineno-0-984"></a>        <span class="n">appraisal_close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
