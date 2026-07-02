@@ -222,8 +222,8 @@ def test_chatbot_explicitly_disables_tags() -> None:
     assert chatbot_calls
     chatbot_keywords = _keyword_map(chatbot_calls[0])
 
-    type_kw = chatbot_keywords.get("type")
-    assert isinstance(type_kw, ast.Constant)
-    assert type_kw.value == "messages"
+    # Gradio 6 removed the type= kwarg (messages is the only format); passing
+    # it raises TypeError at startup on the HF Space (regressed once, 2026-07-02).
+    assert "type" not in chatbot_keywords
     assert isinstance(chatbot_keywords.get("allow_tags"), ast.Constant)
     assert chatbot_keywords["allow_tags"].value is False

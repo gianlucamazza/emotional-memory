@@ -417,11 +417,12 @@ def build_demo() -> gr.Blocks:
         with gr.Row():
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(
+                    # No type= kwarg: Gradio 6 removed it (messages is the only
+                    # format); passing it raises TypeError at startup on the Space.
                     value=_INITIAL_CHAT_HISTORY,
                     label="Conversation",
                     height=420,
                     allow_tags=False,
-                    type="messages",
                 )
                 with gr.Row():
                     msg_box = gr.Textbox(

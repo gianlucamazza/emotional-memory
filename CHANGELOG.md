@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- HF Space startup: removed the `gr.Chatbot(type="messages")` kwarg introduced in
+  0.14.0 — Gradio 6 (which the Space runs) removed the parameter entirely and the
+  app crashed with `TypeError` at startup (messages is the only format in 6.x, so
+  behavior is unchanged). Demo-only; the PyPI wheel is unaffected.
+
 ## [0.14.0] - 2026-07-02
 
 > Cut 2026-07-02. This release grew beyond the original 2026-06-27 bump (#88):
