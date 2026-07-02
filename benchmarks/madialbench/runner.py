@@ -42,6 +42,7 @@ from benchmarks.madialbench.dataset import (
     load_dataset,
 )
 from benchmarks.madialbench.metrics import K_GRID, METRICS, ndcg_at_k
+from emotional_memory.embedders import SentenceTransformerEmbedder
 
 _HERE = Path(__file__).parent
 DEFAULT_OUT_JSON = _HERE / "results.json"
@@ -106,9 +107,12 @@ def run_benchmark(
     queries = list(dataset.queries[:10] if dry_run else dataset.queries)
     memories = list(dataset.memories)
 
+    # One embedder instance shared by both arms ("share the same embedder",
+    # pre-registration §Protocol) — halves model RAM, identical scores.
+    embedder = SentenceTransformerEmbedder.make_bge_small()
     adapters: dict[str, MadialAdapter] = {
-        BASELINE: NaiveCosineMadialAdapter(),
-        PRIMARY: AFTQueryAppraisedMadialAdapter(dry_run=dry_run),
+        BASELINE: NaiveCosineMadialAdapter(embedder=embedder),
+        PRIMARY: AFTQueryAppraisedMadialAdapter(dry_run=dry_run, embedder=embedder),
     }
 
     # {arm: {metric@k: [per-query score]}} — queries in file order for pairing.
@@ -172,7 +176,8 @@ def run_benchmark(
         "share_affect_discriminative": n_discriminative / len(queries) if queries else 0.0,
     }
 
-    aft.close()
+    for adapter in adapters.values():
+        adapter.close()
     return {
         "benchmark": "addendum_x_madialbench",
         "pre_registration": ("benchmarks/preregistration_addendum_x_madialbench_third_party.md"),
@@ -304,9 +309,17 @@ def main() -> None:
         dry_run=args.dry_run,
         verbose=not args.quiet,
     )
-    write_results(
-        results, out_json=args.out_json, out_md=args.out_md, out_protocol=args.out_protocol
-    )
+    out_json, out_md, out_protocol = args.out_json, args.out_md, args.out_protocol
+    if args.dry_run:
+        # Never clobber committed scored artifacts with smoke output.
+        if out_json == DEFAULT_OUT_JSON:
+            out_json = out_json.with_name("results.dry.json")
+        if out_md == DEFAULT_OUT_MD:
+            out_md = out_md.with_name("results.dry.md")
+        if out_protocol == DEFAULT_OUT_PROTOCOL:
+            out_protocol = out_protocol.with_name("results.protocol.dry.json")
+    write_results(results, out_json=out_json, out_md=out_md, out_protocol=out_protocol)
+    args.out_json = out_json
     hx1 = results["hx1"]
     print(f"\nResults written to {args.out_json}")
     print(

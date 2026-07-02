@@ -85,6 +85,12 @@ markers = [
   "appraisal_quality: LLM appraisal prompt quality benchmarks (skipped without EMOTIONAL_MEMORY_LLM_API_KEY)",
   "slow: slow integration tests (benchmark-level fixtures)",
 ]
+# Fail on deprecations from our own code so they surface in CI instead of
+# rotting silently; third-party noise gets a targeted, commented ignore.
+filterwarnings = [
+  "error::DeprecationWarning",
+  "error::PendingDeprecationWarning",
+]
 
 [tool.coverage.run]
 source = ["emotional_memory"]

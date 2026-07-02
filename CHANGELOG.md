@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **Release framing note:** unlike the v0.14.0 bump (docs/metadata only, wheel
+> code-identical to 0.13.0), this Unreleased section now contains `src/` changes
+> (httpx connection pooling, resource cleanup) — the next release ships new
+> runtime code.
+
+### Changed
+
+- `make_httpx_llm()` now reuses a single `httpx.Client` (keep-alive connection
+  pool) instead of opening a new TLS connection per request, and the returned
+  callable exposes `close()`. Sequential appraisal workloads (benchmarks, batch
+  encode) no longer pay a per-call handshake.
+- `EmotionalMemory.close()` / `AsyncEmotionalMemory.close()` now also release
+  the appraisal engine (duck-typed), and `LLMAppraisalEngine.close()` delegates
+  to the LLM callable — `with EmotionalMemory(...)` cleans up the HTTP client.
+- Gradio demo: `gr.Chatbot(type="messages")` set explicitly (payloads were
+  already in messages format), silencing the Gradio ≥5 deprecation.
+- Test suite now fails on `DeprecationWarning`/`PendingDeprecationWarning`
+  (`filterwarnings` in pyproject) so deprecations surface in CI.
+- Benchmark adapters share one `cosine()` helper (`benchmarks/common/similarity.py`)
+  instead of four identical copies; the MADial-Bench arms share a single embedder
+  instance (formula- and score-identical, pure refactor).
+- `RedisAffectiveStateStore` docstring documents the last-write-wins multi-worker
+  semantics (existing behavior, previously only in the limitations doc).
+
+### Fixed
+
+- Perf benchmark `store_size=10_000` no longer hits the global 120 s pytest
+  timeout (dedicated 300 s mark) — closes validation-report finding F4.
+
 ### Research
 
 - **Addendum X — third-party retrieval on MADial-Bench (Hx1 FAIL, decisive).** First

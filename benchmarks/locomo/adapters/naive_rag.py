@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import math
-
+from benchmarks.common.similarity import cosine
 from benchmarks.locomo.adapters.base import _ANSWER_SYSTEM, LoCoMoAdapter, call_llm
 from benchmarks.locomo.dataset import Conversation, QAPair, Session
 from emotional_memory.embedders import SentenceTransformerEmbedder
@@ -38,7 +37,7 @@ class NaiveRAGLoCoMoAdapter(LoCoMoAdapter):
     def answer(self, qa: QAPair, conversation: Conversation) -> str:
         qvec = self._embedder.embed(qa.question)
         scored = sorted(
-            ((text, _cosine(qvec, vec)) for text, vec in self._store),
+            ((text, cosine(qvec, vec)) for text, vec in self._store),
             key=lambda x: x[1],
             reverse=True,
         )
@@ -46,10 +45,3 @@ class NaiveRAGLoCoMoAdapter(LoCoMoAdapter):
         context = "\n".join(f"- {text}" for text, _ in top)
         prompt = f"Conversation excerpts:\n{context}\n\nQuestion: {qa.question}\n\nAnswer:"
         return call_llm(prompt, system=_ANSWER_SYSTEM)
-
-
-def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(x * x for x in b))
-    return dot / (na * nb + 1e-9)

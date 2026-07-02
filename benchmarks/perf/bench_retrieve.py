@@ -10,7 +10,10 @@ from benchmarks.conftest import make_engine, populate_store
 from emotional_memory import CoreAffect
 
 
-@pytest.mark.parametrize("store_size", [100, 1_000, 10_000])
+@pytest.mark.parametrize(
+    "store_size",
+    [100, 1_000, pytest.param(10_000, marks=pytest.mark.timeout(300))],
+)
 def bench_retrieve_top5(benchmark, store_size):
     """Retrieve top-5 from a store of varying size — measures O(n) scoring."""
     engine = make_engine(resonance_threshold=0.9)

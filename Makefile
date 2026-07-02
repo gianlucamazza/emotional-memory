@@ -387,7 +387,7 @@ llm-config-strict:
 
 demo-check:
 	uv run python -m pytest tests/test_demo_ui_config.py -q
-	uv run python -m pytest tests/test_demo_app.py -q
+	uv run python -m pytest tests/test_demo_app.py -rs --override-ini="addopts=-q --tb=short" || [ $$? -eq 5 ]  # 5 = demo extra not installed (module importorskip)
 
 demo-run:
 	uv run python demo/app.py

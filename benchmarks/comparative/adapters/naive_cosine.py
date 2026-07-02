@@ -9,9 +9,10 @@ quality, different scoring).
 from __future__ import annotations
 
 import hashlib
-import math
 import uuid
 from typing import Any
+
+from benchmarks.common.similarity import cosine
 
 from .base import MemoryAdapter, RetrievedItem
 
@@ -20,13 +21,6 @@ class _HashEmbedder:
     def embed(self, text: str) -> list[float]:
         digest = hashlib.sha256(text.encode()).digest()
         return [(b / 127.5) - 1.0 for b in digest[:64]]
-
-
-def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(x * x for x in b))
-    return dot / (na * nb + 1e-9)
 
 
 class NaiveCosineAdapter(MemoryAdapter):
@@ -58,7 +52,7 @@ class NaiveCosineAdapter(MemoryAdapter):
     ) -> list[RetrievedItem]:
         qvec = self._embedder.embed(query)
         scored = sorted(
-            ((item_id, text, _cosine(qvec, emb)) for item_id, text, emb in self._store),
+            ((item_id, text, cosine(qvec, emb)) for item_id, text, emb in self._store),
             key=lambda x: x[2],
             reverse=True,
         )

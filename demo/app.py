@@ -421,6 +421,7 @@ def build_demo() -> gr.Blocks:
                     label="Conversation",
                     height=420,
                     allow_tags=False,
+                    type="messages",
                 )
                 with gr.Row():
                     msg_box = gr.Textbox(

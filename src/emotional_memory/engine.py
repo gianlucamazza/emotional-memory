@@ -966,10 +966,12 @@ class EmotionalMemory:
         return self._state.mood
 
     def close(self) -> None:
-        """Release resources held by the underlying store, if supported.
+        """Release resources held by store, state store, and appraisal engine.
 
-        Calls ``store.close()`` when the store exposes that method (e.g.
-        ``SQLiteStore``).  Safe to call on stores that do not implement it.
+        Calls ``close()`` on each collaborator that exposes it (e.g.
+        ``SQLiteStore``, ``LLMAppraisalEngine`` with an httpx-backed LLM).
+        Safe on collaborators without cleanup. The embedder is not owned by
+        the engine and remains the caller's responsibility.
         """
         close = getattr(self._store, "close", None)
         if callable(close):
@@ -977,6 +979,9 @@ class EmotionalMemory:
         state_close = getattr(self._state_store, "close", None)
         if callable(state_close):
             state_close()
+        appraisal_close = getattr(self._appraisal_engine, "close", None)
+        if callable(appraisal_close):
+            appraisal_close()
 
     def __enter__(self) -> EmotionalMemory:
         return self

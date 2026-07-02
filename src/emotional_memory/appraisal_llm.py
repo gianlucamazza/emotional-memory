@@ -221,6 +221,17 @@ class LLMAppraisalEngine:
     # Public API
     # ------------------------------------------------------------------
 
+    def close(self) -> None:
+        """Release resources held by the LLM callable, if supported.
+
+        Delegates to ``llm.close()`` when the callable exposes it (e.g. the
+        httpx-backed client from ``make_httpx_llm``). Safe on callables
+        without cleanup.
+        """
+        close = getattr(self._llm, "close", None)
+        if callable(close):
+            close()
+
     def appraise(
         self, event_text: str, context: dict[str, Any] | None = None
     ) -> AppraisalVector | GenericAppraisalVector:

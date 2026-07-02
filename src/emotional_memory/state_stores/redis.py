@@ -18,6 +18,13 @@ class RedisAffectiveStateStore:
     The class lazily imports ``redis`` so the package remains importable
     without the optional dependency installed. Pass a preconfigured client in
     tests or advanced deployments to avoid URL-based construction.
+
+    Concurrency: ``save``/``load`` are independent GET/SET operations with no
+    transaction — concurrent workers sharing one key are last-write-wins, and
+    an interleaved read-modify-write can drop another worker's update. This is
+    a documented limitation (docs/research/08_limitations.md, "Shared-backend
+    multi-worker validation"); use one key per worker, or an external lock, if
+    that matters for your deployment.
     """
 
     __slots__ = ("_client", "_key", "_url")

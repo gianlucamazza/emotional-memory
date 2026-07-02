@@ -10,9 +10,9 @@ APE-gated reconsolidation stay active in the AFT arm).
 from __future__ import annotations
 
 import contextlib
-import math
 from abc import ABC, abstractmethod
 
+from benchmarks.common.similarity import cosine
 from benchmarks.madialbench.dataset import MadialMemory
 from emotional_memory import (
     DIRECT_VAD_SCHEMA,
@@ -44,6 +44,10 @@ class MadialAdapter(ABC):
     def retrieve(self, query_text: str, *, top_k: int) -> list[int]:
         """Return ranked memory ids (length <= top_k)."""
 
+    def close(self) -> None:
+        """Release adapter resources; no-op by default."""
+        return None
+
 
 def _make_embedder() -> SentenceTransformerEmbedder:
     return SentenceTransformerEmbedder.make_bge_small()
@@ -54,8 +58,8 @@ class NaiveCosineMadialAdapter(MadialAdapter):
 
     name = "naive_cosine"
 
-    def __init__(self) -> None:
-        self._embedder = _make_embedder()
+    def __init__(self, *, embedder: SentenceTransformerEmbedder | None = None) -> None:
+        self._embedder = embedder if embedder is not None else _make_embedder()
         self._store: list[tuple[int, list[float]]] = []
 
     def ingest(self, memories: list[MadialMemory]) -> None:
@@ -63,7 +67,7 @@ class NaiveCosineMadialAdapter(MadialAdapter):
 
     def retrieve(self, query_text: str, *, top_k: int) -> list[int]:
         qvec = self._embedder.embed(query_text)
-        ranked = sorted(self._store, key=lambda e: _cosine(qvec, e[1]), reverse=True)
+        ranked = sorted(self._store, key=lambda e: cosine(qvec, e[1]), reverse=True)
         return [mem_id for mem_id, _ in ranked[:top_k]]
 
 
@@ -83,11 +87,16 @@ class AFTQueryAppraisedMadialAdapter(MadialAdapter):
 
     name = "aft_query_appraised"
 
-    def __init__(self, *, dry_run: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        dry_run: bool = False,
+        embedder: SentenceTransformerEmbedder | None = None,
+    ) -> None:
         self._appraiser = _make_appraiser(dry_run=dry_run)
         self._engine = EmotionalMemory(
             store=InMemoryStore(),
-            embedder=_make_embedder(),
+            embedder=embedder if embedder is not None else _make_embedder(),
             appraisal_engine=self._appraiser,
             config=EmotionalMemoryConfig(
                 decay=DecayConfig(base_decay=0.0, arousal_modulation=0.0, retrieval_boost=0.0),
@@ -138,10 +147,3 @@ def _make_appraiser(*, dry_run: bool) -> AppraisalEngine:
             cache_size=4096, fallback_on_error=True, appraisal_schema=DIRECT_VAD_SCHEMA
         ),
     )
-
-
-def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(x * x for x in b))
-    return dot / (na * nb + 1e-9)

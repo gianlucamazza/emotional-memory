@@ -869,10 +869,12 @@ class AsyncEmotionalMemory:
         return self._state.mood
 
     async def close(self) -> None:
-        """Release resources held by the underlying store, if supported.
+        """Release resources held by store, state store, and appraisal engine.
 
         Awaits ``store.close()`` when available; falls back to sync ``close()``
-        via ``asyncio.to_thread``; silently skips stores without cleanup.
+        via ``asyncio.to_thread``; silently skips collaborators without
+        cleanup. The embedder is not owned by the engine and remains the
+        caller's responsibility.
         """
         close = getattr(self._store, "close", None)
         if close is not None:
@@ -883,6 +885,12 @@ class AsyncEmotionalMemory:
         state_close = getattr(self._state_store, "close", None)
         if callable(state_close):
             await asyncio.to_thread(state_close)
+        appraisal_close = getattr(self._appraisal_engine, "close", None)
+        if callable(appraisal_close):
+            if inspect.iscoroutinefunction(appraisal_close):
+                await appraisal_close()
+            else:
+                await asyncio.to_thread(appraisal_close)
 
     async def __aenter__(self) -> AsyncEmotionalMemory:
         return self

@@ -91,3 +91,8 @@ benchmarks/locomo/routing_results.checkpoint.jsonl
 Thumbs.db
 desktop.ini
 benchmark-results.json
+
+# Benchmark smoke-run outputs (never committed)
+benchmarks/**/results.dry.json
+benchmarks/**/results.dry.md
+benchmarks/**/results.protocol.dry.json
