@@ -278,6 +278,16 @@ def sync_release_metadata(
         pypi_url = f"https://pypi.org/project/emotional-memory/{version}/"
         codemeta_data["downloadUrl"] = pypi_url
         codemeta_data["installUrl"] = pypi_url
+        # relatedLink: keep non-DOI links as-is, pin any Zenodo DOI link to the
+        # concept DOI (a stale per-version DOI lived here unnoticed for 8 releases).
+        related = codemeta_data.get("relatedLink")
+        if isinstance(related, list):
+            codemeta_data["relatedLink"] = [
+                f"https://doi.org/{concept_doi}"
+                if isinstance(link, str) and link.startswith("https://doi.org/10.5281/zenodo.")
+                else link
+                for link in related
+            ]
         updated_codemeta = json.dumps(codemeta_data, indent=2, ensure_ascii=False) + "\n"
         if updated_codemeta != codemeta_text:
             changes.append((codemeta_path, updated_codemeta))
