@@ -2427,6 +2427,34 @@
   
   
     <li class="md-nav__item">
+      <a href="research/validation_report_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Report (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="research/claim_validation_matrix/" class="md-nav__link">
         
   
@@ -2761,7 +2789,7 @@ will pick the change up on next build.
 <li><strong>Dual-path encoding</strong> — fast affective signal precedes slow appraisal (LeDoux 1996)</li>
 <li><strong>3D affect</strong> — perceived control (dominance) discriminates fear from anger (Mehrabian &amp; Russell 1974; PAD)</li>
 </ul>
-<p><code>emotional_memory</code> operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 12+ pre-registered confirmatory studies — including <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json">committed negative results</a>.</p>
+<p><code>emotional_memory</code> operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 20+ pre-registered confirmatory studies — including <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json">committed negative results</a>.</p>
 <h3 id="how-it-compares">How it compares<a class="headerlink" href="#how-it-compares" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2834,8 +2862,9 @@ will pick the change up on next build.
 <ul>
 <li><strong>Factual / open-domain QA</strong> — on LoCoMo (1986 QA pairs) AFT underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 FAIL).</li>
 <li><strong>End-to-end automatic appraisal</strong> — when affect comes from <code>LLMAppraisalEngine</code> rather than oracle labels, AFT does not beat cosine on affect-free queries (Hg1 FAIL, Δ=−0.010; recalibrated re-run Addendum P, Δ=−0.087, p=0.002). The gain has <strong>not</strong> transferred to automatic appraisal, calibrated or not.</li>
-<li><strong>Short-turn naturalistic dialogue</strong> — on DailyDialog (120 personas, 396 queries) there is no advantage over cosine (Hk1 FAIL, Δ=−0.008).</li>
+<li><strong>Short-turn naturalistic dialogue</strong> — on DailyDialog (120 personas, 396 queries) there is no advantage over cosine (Hk1 FAIL, Δ=−0.008; confirmed with retrieve-time query appraisal, Addendum T2A).</li>
 <li><strong>Query-type routing as a fix</strong> — heuristic routing does not close the LoCoMo gap (Addendum L FAIL).</li>
+<li><strong>Emotional-support recall (counter-congruent)</strong> — on the first third-party emotional retrieval benchmark (MADial-Bench, NAACL 2025; Addendum X) cosine is <em>significantly better</em> (nDCG@5 0.304 vs 0.221, Δ=−0.083), even with near-perfect appraisal: supportive assistants are expected to recall <em>positive</em> memories for a <em>distressed</em> user (interpersonal emotion regulation) — the opposite of AFT's mood-congruence prior. If your gold behavior is counter-congruent, AFT's affect channel actively hurts.</li>
 </ul>
 <p><strong>Recommended for:</strong> multi-session episodic memory where mood-congruent retrieval matters and affect is available at encode time (e.g. journaling, long-horizon conversational agents). For the full record see the <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json">claim-validation matrix</a> and <a href="https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md">current evidence</a>.</p>
 <h3 id="30-second-example">30-second example<a class="headerlink" href="#30-second-example" title="Permanent link">&para;</a></h3>

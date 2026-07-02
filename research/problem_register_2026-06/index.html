@@ -16,7 +16,7 @@
         <link rel="prev" href="../review_response_2026-06/">
       
       
-        <link rel="next" href="../claim_validation_matrix/">
+        <link rel="next" href="../validation_report_2026-06/">
       
       
         
@@ -2503,10 +2503,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c3-no-consolidated-when-not-to-use-section-issue-32" class="md-nav__link">
+  <a href="#c3-no-consolidated-when-not-to-use-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C3 — No consolidated "When NOT to use" section (issue #32)
+        C3 — No consolidated "When NOT to use" section
       
     </span>
   </a>
@@ -2583,6 +2583,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation_report_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Report (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2971,10 +2999,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c3-no-consolidated-when-not-to-use-section-issue-32" class="md-nav__link">
+  <a href="#c3-no-consolidated-when-not-to-use-section" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C3 — No consolidated "When NOT to use" section (issue #32)
+        C3 — No consolidated "When NOT to use" section
       
     </span>
   </a>
@@ -3165,7 +3193,7 @@ claim status. Where the two disagree, the matrix wins.</p>
 <td>README comparison ✅ implies general superiority</td>
 <td>Public claim</td>
 <td>Medium</td>
-<td>Footnote on the table</td>
+<td><strong>Resolved</strong> — footnote live under the README table</td>
 </tr>
 <tr>
 <td>C2</td>
@@ -3179,7 +3207,7 @@ claim status. Where the two disagree, the matrix wins.</p>
 <td>No consolidated "When NOT to use" section</td>
 <td>Public claim</td>
 <td>High</td>
-<td>Add section (issue #32)</td>
+<td><strong>Resolved</strong> — section live in README after "How it compares"</td>
 </tr>
 <tr>
 <td>D1</td>
@@ -3345,6 +3373,8 @@ open."</p>
 <hr />
 <h2 id="4-c-public-claim-wording">4. C — Public-claim wording<a class="headerlink" href="#4-c-public-claim-wording" title="Permanent link">&para;</a></h2>
 <h3 id="c1-comparison-table-implies-general-superiority">C1 — Comparison-table ✅ implies general superiority<a class="headerlink" href="#c1-comparison-table-implies-general-superiority" title="Permanent link">&para;</a></h3>
+<p><strong>Status: RESOLVED (2026-06/07).</strong> The footnote below is live in <code>README.md</code> directly
+under the comparison table.</p>
 <p><strong>Problem.</strong> <code>README.md</code> "How it compares" marks AFT ✅ on <em>Affective retrieval</em>
 and <em>Reconsolidation</em> against all-❌ competitors. A binary checkmark reads as
 general superiority; in fact the <em>measured</em> advantage is regime-specific and
@@ -3361,7 +3391,10 @@ without scope. This is a metaphor that <em>could</em> imply downstream benefit.<
 <p><strong>Correct resolution.</strong> Low priority — README L15 scopes it immediately. Optional:
 a light suffix such as "…; affect-discriminative retrieval — see Validation for
 scope." Not forced; recorded for completeness.</p>
-<h3 id="c3-no-consolidated-when-not-to-use-section-issue-32">C3 — No consolidated "When NOT to use" section (issue #32)<a class="headerlink" href="#c3-no-consolidated-when-not-to-use-section-issue-32" title="Permanent link">&para;</a></h3>
+<h3 id="c3-no-consolidated-when-not-to-use-section">C3 — No consolidated "When NOT to use" section<a class="headerlink" href="#c3-no-consolidated-when-not-to-use-section" title="Permanent link">&para;</a></h3>
+<p><strong>Status: RESOLVED (2026-06/07).</strong> The "When NOT to use" section is live in <code>README.md</code>
+after "How it compares", with the corrected oracle-affect wording. (The tracking issue
+formerly referenced here no longer exists.)</p>
 <p><strong>Problem.</strong> The four FAIL regimes (factual/open-domain QA, end-to-end LLM
 appraisal, short-turn dialogue, query-type routing) are documented but scattered;
 an adopter can miss them.</p>
@@ -3403,8 +3436,11 @@ silent <code>xfail</code>/skip in tests (skips are env/feature-gated).</p>
 A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
 (Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
 audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), retrieve-time
-query appraisal (Addendum T, production-reachable), and its naturalistic re-test
-(Addendum T2A, FAIL — the recovery is regime-bound). See the per-item §A* sections.</p>
+query appraisal (Addendum T, production-reachable), its naturalistic re-test
+(Addendum T2A, FAIL — the recovery is regime-bound), the arousal affine calibration
+(Addendum W, ADOPTED as a measurement-only transform; library integration evaluated
+and declined), and the third-party corpus test (Addendum X, FAIL — construct
+boundary; see item 3 below). See the per-item §A* sections.</p>
 <p>The genuinely open items (execution, not re-scoping), in priority order:</p>
 <ol>
 <li><strong>Run the human-eval pilot</strong> (A4 / Gate 2) — the highest-value gap; needs raters
@@ -3416,10 +3452,24 @@ query appraisal (Addendum T, production-reachable), and its naturalistic re-test
    production-reachable recovery is <strong>bounded to the affect-discriminative regime</strong> (Addendum U)
    and does not extend to naturalistic dialogue. LoCoMo bound-confirmation de-scoped (expected
    FAIL). See <code>preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md</code>.</li>
-<li><strong>Independent affect-discriminative + oracle-free corpus</strong> — external-validity test
-   for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).</li>
-<li><strong>Arousal affine calibration</strong> for direct-VAD (Addendum V follow-up: r improved, MAE
-   not yet — a held-out affine fit).</li>
+<li><strong>Independent affect-discriminative + oracle-free corpus</strong> — <strong>EXECUTED (Addendum X,
+   2026-07-02): FAIL, inverted.</strong> First released third-party retrieval-native emotional
+   corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free, data sha256-pinned): cosine
+   significantly ahead (nDCG@5 0.304 vs 0.221, Δ=−0.083 [−0.123, −0.043], p_one=0.9998;
+   powered negative, MDE 0.051) despite near-perfect appraisal vs the third-party labels
+   (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9% &gt; U's 62.5%). Post-hoc:
+   84/160 queries have negative appraised valence and 73.8% of them positive gold sets —
+   the benchmark rewards <strong>counter-congruent supportive recall</strong> (interpersonal emotion
+   regulation), the opposite of AFT's mood-congruence prior. The query-appraisal advantage
+   is now bounded on three measured axes: regime (U/T2A), provenance (author-crafted only),
+   construct (congruence vs regulation). Residual (not scheduled): Addendum X2 on
+   ES-MemEval/EvoEmo. See <code>preregistration_addendum_x_madialbench_third_party_closure.md</code>.</li>
+<li><strong>Arousal affine calibration</strong> for direct-VAD — <strong>EXECUTED (Addendum W, 2026-06-28):
+   ADOPTED</strong> as a measurement/reporting transform (held-out EmoBank fit cuts arousal MAE
+   0.20→0.04 preserving r; calibrated direct-VAD dominates the SEC projection on both
+   axes). Library integration evaluated and <strong>declined</strong> (the fit compresses arousal into
+   [0.45, 0.61], silently breaking the decay floor and s3). See
+   <code>preregistration_addendum_w_arousal_calibration_closure.md</code>.</li>
 </ol>
 
 

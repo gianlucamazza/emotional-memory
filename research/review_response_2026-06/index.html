@@ -2489,6 +2489,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../validation_report_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Report (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../claim_validation_matrix/" class="md-nav__link">
         
   
@@ -2878,7 +2906,7 @@ external negative,"</strong> and the negative results the review fears a hostile
 would raise (LoCoMo, DailyDialog, end-to-end appraisal) are all committed FAILs
 with closures.</p>
 <p>Of the seven review criticisms (§3.1–§3.7), five are <strong>resolved or honestly
-scoped</strong> and two (§3.4 construct validity, §3.5 multi-seed) are <strong>partially
+| §3.4 construct validity of affect signal | MEDIA               | </strong>Substantially addressed<strong> (signal human-validated; construct <em>boundary</em> measured; human-eval unrun) | Addenda N/O/P/S/V/W; Addendum X (construct boundary: counter-congruent supportive recall); <code>human_eval/</code> built, never run |
 open</strong>. Importantly, "honestly scoped" is <em>not</em> the same as "solved": §3.1's
 underlying downstream gap is a committed FAIL that has been bounded, not closed.
 The real residue is four items, tracked in §5 below and itemized in the companion
@@ -2919,8 +2947,8 @@ addressed, some is open.</p>
 <tr>
 <td>§3.4 construct validity of affect signal</td>
 <td>MEDIA</td>
-<td><strong>Partially open</strong></td>
-<td>Addenda N/O/P; <code>human_eval/</code> built, never run</td>
+<td><strong>Substantially addressed</strong> (signal human-validated; construct <em>boundary</em> measured; human-eval unrun)</td>
+<td>Addenda N/O/P/S/V/W; Addendum X (construct boundary: counter-congruent supportive recall); <code>human_eval/</code> built, never run</td>
 </tr>
 <tr>
 <td>§3.5 power / seeds / CIs</td>
@@ -2932,7 +2960,7 @@ addressed, some is open.</p>
 <td>§3.6 positioning vs prior art</td>
 <td>BASSA</td>
 <td><strong>Resolved</strong></td>
-<td><code>07_related_work.md</code> (29 systems), <code>comparison.md</code></td>
+<td><code>07_related_work.md</code> (33 papers surveyed), <code>comparison.md</code></td>
 </tr>
 <tr>
 <td>§3.7 bus-factor / sustainability</td>
@@ -3125,6 +3153,13 @@ have been carried out.</p>
   is the oracle-free regime, and the two coexist.</li>
 <li>✅ <strong>Multi-seed robustness sweep (#60 closed).</strong> <code>make bench-multiseed</code> ships; the
   result is characterized as near-deterministic (sub-CI, timing-driven variance).</li>
+<li>✅ <strong>Post-June addenda (U/V/T/T2A/W/X).</strong> Circularity audit quantified (~62.5%
+  AFT-favorable by construction, Addendum U); direct-VAD estimator adopted opt-in
+  (Addendum V) with measurement-only arousal calibration (Addendum W); retrieve-time
+  query appraisal production-reachable within the regime (Addendum T) and bounded on
+  naturalistic dialogue (T2A FAIL) and on the first third-party corpus (Addendum X
+  FAIL, inverted — MADial-Bench rewards counter-congruent supportive recall; construct
+  boundary on top of regime and provenance).</li>
 </ul>
 <p>The single highest-value gap that remains genuinely open:</p>
 <ol>

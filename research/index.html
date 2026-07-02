@@ -2303,6 +2303,34 @@
   
   
     <li class="md-nav__item">
+      <a href="validation_report_2026-06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation Report (2026-06)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="claim_validation_matrix/" class="md-nav__link">
         
   
@@ -2521,7 +2549,7 @@
 <li><a href="04_state_of_art/">State of the Art</a> — LLM memory systems and affective computing</li>
 <li><a href="05_design_principles/">Design Principles</a> — Affective Field Theory design rationale</li>
 <li><a href="06_bibliography/">Bibliography</a> — Full reference list</li>
-<li><a href="07_related_work/">Related Work</a> — 29-system comparative table positioning AFT</li>
+<li><a href="07_related_work/">Related Work</a> — 33-paper survey and comparative table positioning AFT</li>
 <li><a href="08_limitations/">Limitations</a> — What is validated today, and what is not</li>
 <li><a href="09_current_evidence/">Current Evidence</a> — Study ladder and claim/evidence matrix</li>
 <li><a href="10_scientific_quality_bar/">Scientific Quality Bar</a> — Pre-committed gates before upgrading public claims</li>
@@ -2534,6 +2562,8 @@
 <li><a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_v_direct_vad_closure.md">Addendum V — Direct-VAD appraisal</a> — direct-LLM valence/arousal/dominance beats the Scherer SEC→projection on EmoBank human gold (valence r=0.79, arousal r=0.58; Hv1/Hv3 PASS); shipped as opt-in <code>DIRECT_VAD_SCHEMA</code> (2026-06-27)</li>
 <li><a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_t_query_appraisal_closure.md">Addendum T — Retrieve-time query appraisal</a> — appraising the query at retrieve-time (no oracle) beats cosine on curated realistic_recall_v2 (Ht1 PASS, Δ=+0.115, ~59% of the oracle advantage recovered); production-reachable, bounded to the affect-discriminative regime (2026-06-27)</li>
 <li><a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md">Addendum T2A — Naturalistic query-appraisal re-test</a> — the same mechanism on naturalistic DailyDialog does <strong>not</strong> beat cosine (Ht2a FAIL, Δ=−0.008, p_holm=1.000); a faithful diagnostic (valence r=0.69, arousal r=0.74) shows this is a regime limit, not an appraisal-quality failure (2026-06-27)</li>
+<li><a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_w_arousal_calibration_closure.md">Addendum W — Arousal affine calibration</a> — affine calibration of direct-VAD arousal on held-out EmoBank cuts MAE 0.20→0.04 while preserving r (dominates the SEC projection on both axes); <strong>adopted as a measurement/reporting transform only</strong> — library integration evaluated and declined (would compress arousal into [0.45, 0.61] and silently break the decay floor and s3) (2026-06-28)</li>
+<li><a href="https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md">Addendum X — Third-party retrieval (MADial-Bench)</a> — first released third-party retrieval-native emotional corpus (NAACL 2025, N=160, oracle-free): <strong>Hx1 FAIL, inverted</strong> — cosine significantly ahead (nDCG@5 0.304 vs 0.221, Δ=−0.083, powered negative) despite near-perfect appraisal (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9%). Post-hoc: the benchmark rewards <strong>counter-congruent supportive recall</strong> (emotion regulation) — a construct boundary on top of the regime (U/T2A) and provenance bounds (2026-07-02)</li>
 <li><a href="audit_2026-04/">Audit (2026-04)</a> — Critical self-review of strengths, gaps, and priority order</li>
 <li><code>claim_validation_matrix.json</code> — Canonical machine-readable source for public scientific claims</li>
 </ul>
