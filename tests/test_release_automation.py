@@ -67,6 +67,18 @@ def test_sync_release_metadata_is_idempotent_for_current_repo() -> None:
     assert changed == []
 
 
+def test_codemeta_related_link_pins_concept_doi() -> None:
+    # Regression: a stale per-version Zenodo DOI sat in relatedLink for 8
+    # releases before sync_release_metadata learned to manage the field.
+    import json
+
+    data = json.loads((ROOT / "codemeta.json").read_text(encoding="utf-8"))
+    zenodo_links = [
+        link for link in data["relatedLink"] if link.startswith("https://doi.org/10.5281/zenodo.")
+    ]
+    assert zenodo_links == [f"https://doi.org/{_current_readme_concept_doi()}"]
+
+
 def test_verify_pypi_release_succeeds_when_version_is_visible(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
