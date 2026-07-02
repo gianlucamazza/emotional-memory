@@ -217,7 +217,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ---
 
-## v0.11.x — Appraisal-quality research (closed, 2026-05-30 → 2026-05-31)
+## v0.11.x+ — Appraisal-quality & boundary research (closed, 2026-05-30 → 2026-07-02)
 
 Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap. No API changes.
 
@@ -248,6 +248,33 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       Hq5 Δ=0.000) — a safe wrapper, not an advantage. The affect-routing line is **closed**;
       residual hypothesis (not scheduled): retrieve-time query appraisal as a new signal.
       See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
+- [x] **Addenda R/S — downstream value + human-gold appraisal (2026-06-26).** Addendum R:
+  encode→retrieve→generate→judge on realistic_recall_v2 (N=200, oracle affect) — **PASS**,
+  AFT judge-accuracy 0.595 vs cosine 0.440 (Δ=+0.155, p<0.001), bounded to the oracle
+  regime. Addendum S: LLM appraisal vs EmoBank human VAD (N=300) — valence human-validated
+  (r=0.70), arousal/dominance weak, +0.15 bias stands, keyword engine not validated.
+  See `benchmarks/preregistration_addendum_r_downstream_closure.md` and
+  `preregistration_addendum_s_human_gold_appraisal_closure.md`.
+- [x] **Addendum U — circularity audit of v2 (2026-06-27).** ~62.5% of queries are
+  AFT-favorable by construction; the advantage concentrates there (Δ=+0.304) and is null
+  on the neutral remainder (Δ=+0.013, p=0.63). Headline scoped accordingly.
+  See `benchmarks/preregistration_addendum_u_circularity_audit_closure.md`.
+- [x] **Addendum V — direct-VAD estimator (2026-06-27).** Direct LLM V/A/D rating beats
+  the Scherer SEC→projection on every axis vs EmoBank (valence r=0.79, arousal r=0.58,
+  dominance r=0.43); shipped opt-in as `DIRECT_VAD_SCHEMA`.
+  See `benchmarks/preregistration_addendum_v_direct_vad_closure.md`.
+- [x] **Addendum T — retrieve-time query appraisal (2026-06-27): Ht1 PASS.** Appraising
+  the query (direct-VAD, no oracle) beats cosine on realistic_recall_v2 (Δ=+0.115,
+  p<0.001; ~59% oracle recovery) — the production-reachable mechanism, shipped as the
+  public `query_affect` API. See `benchmarks/preregistration_addendum_t_query_appraisal_closure.md`.
+- [x] **Addendum T2A — naturalistic re-test (2026-06-27): FAIL.** The same mechanism on
+  DailyDialog does not beat cosine (Δ=−0.008, p_holm=1.000) despite faithful appraisal
+  (valence r=0.69, arousal r=0.74) — the T recovery is regime-bound.
+  See `benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
+- [x] **Addendum W — affine arousal calibration (2026-06-28): ADOPTED, measurement-only.**
+  Held-out EmoBank fit cuts arousal MAE 0.20→0.04 preserving r; library integration
+  evaluated and declined (would compress arousal into [0.45, 0.61], breaking the decay
+  floor and s3). See `benchmarks/preregistration_addendum_w_arousal_calibration_closure.md`.
 - [x] **Addendum X — third-party retrieval, MADial-Bench (2026-07-02).** First test of the
       query-appraisal mechanism (Addendum T) on a released third-party retrieval-native
       emotional corpus (NAACL 2025, MIT; N=160, oracle-free, harness merged pre-run).
@@ -261,6 +288,17 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       See `benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md`.
 
 ---
+
+## v0.12.0 – v0.14.0 — Consolidation releases (2026-06-27 → )
+
+- [x] **v0.12.0 shipped 2026-06-27** (DOI 10.5281/zenodo.20959964): `DIRECT_VAD_SCHEMA`
+  public API + addenda R/S/U/V/T + `elaborate()` type-guard fix.
+- [x] **v0.13.0 shipped 2026-06-27** (DOI 10.5281/zenodo.20962443): public `query_affect`
+  API + `retrieve_with_query_appraisal()` + Addendum T2A boundary.
+- [ ] **v0.14.0 — bumped on main (#88), release pending.** Metadata/docs/security snapshot
+  (Addendum W + V/T-led paper reframe); no `src/` change vs v0.13.0 at bump time. Not yet
+  tagged/published — `make release` is the gated user step (coins the Zenodo DOI, tags,
+  publishes to PyPI, redeploys the HF Space).
 
 ## v1.0.0 — Stability commitment (target: when above is closed)
 
