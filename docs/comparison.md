@@ -26,9 +26,15 @@ APE-gated reconsolidation rather than generic conversational recall alone.
 **Benchmark caveat**: AFT fidelity tests validate psychological invariants
 (intra-theory). The comparative benchmark in this repo is a controlled synthetic
 retrieval probe, not a general downstream evaluation of production memory systems.
+The measured retrieval advantage is regime-specific to affect-discriminative recall
+under oracle-affect labeling, and on the first third-party emotional retrieval
+benchmark (MADial-Bench, Addendum X) cosine is significantly ahead — the corpus
+rewards counter-congruent supportive recall. See the README section
+["When NOT to use"](https://github.com/gianlucamazza/emotional-memory#when-not-to-use)
+for the committed failure regimes.
 
 ## See also
 
 - [Current Evidence](research/09_current_evidence.md) — the study ladder and claim-to-evidence matrix
 - [Benchmarks](benchmarks.md) — fidelity, performance, and appraisal-quality suites
-- [Related Work](research/07_related_work.md) — full 29-system comparative positioning
+- [Related Work](research/07_related_work.md) — full 33-paper survey and comparative positioning

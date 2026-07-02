@@ -21,6 +21,7 @@ make test-llm        # Real-LLM integration tests (requires EMOTIONAL_MEMORY_LLM
 make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMORY_LLM_API_KEY)
 make bench-a3        # A3 downstream encode→retrieve→generate→judge (Addendum R; requires LLM key)
 make bench-human-gold # A5 appraisal vs human-gold EmoBank (Addendum S; requires LLM key)
+make bench-x-madial  # Addendum X third-party retrieval on MADial-Bench (requires LLM key; -dry = no-LLM smoke)
 make install        # Install package in editable mode with dev deps
 make install-llm-test # Install llm-test dependencies (httpx)
 make install-dotenv  # Install dotenv dependencies (python-dotenv)
@@ -159,3 +160,5 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 - Appraisal quality benchmarks in `benchmarks/appraisal_quality/` validate LLM prompt output — run after changes to the Scherer CPM prompt in `appraisal_llm.py`.
 - Downstream benchmark in `benchmarks/downstream/` (Addendum R, `make bench-a3`) measures end-to-end answer quality (encode→retrieve→generate→judge) AFT vs cosine in the oracle-affect regime.
 - Human-gold appraisal benchmark in `benchmarks/human_gold_appraisal/` (Addendum S, `make bench-human-gold`) validates the appraisal signal against EmoBank human VAD labels (`benchmarks/datasets/emobank_v1.json`, CC-BY-SA 4.0).
+- Third-party retrieval benchmark in `benchmarks/madialbench/` (Addendum X, `make bench-x-madial[-dry]`) tests oracle-free query-appraisal retrieval on MADial-Bench EN (vendored in `benchmarks/datasets/madialbench/`, MIT, sha256-pinned by the loader). Hx1 FAIL — the corpus rewards counter-congruent supportive recall.
+- Other addendum harnesses: `benchmarks/query_appraisal/` (T), `benchmarks/circularity_audit/` (U), `benchmarks/appraisal_vad/` (V), `benchmarks/arousal_calibration/` (W). The full prereg→closure→verdict index is `benchmarks/README.md`.

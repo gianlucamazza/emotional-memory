@@ -9,7 +9,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | Item                                                                 | Status | Notes                                                                            |
 | -------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------- |
 | `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates     |
-| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 18pp, ~533KB (grew with addenda R/S/U/V/T/T2A/W) — only benign hyperref warnings |
+| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 19pp, ~539KB (grew with addenda R/S/U/V/T/T2A/W/X) — only benign hyperref warnings |
 | No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
 | All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
 | All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
@@ -79,5 +79,5 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 43/43 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 19pp after Addendum X).
+_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 44/44 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 19pp after Addendum X).
 Previous: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._
