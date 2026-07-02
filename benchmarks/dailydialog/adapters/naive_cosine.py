@@ -7,8 +7,7 @@ signals vs. pure semantic embedding quality.
 
 from __future__ import annotations
 
-import math
-
+from benchmarks.common.similarity import cosine
 from benchmarks.dailydialog.adapters.base import DailyDialogAdapter
 from benchmarks.dailydialog.dataset import PersonaSession
 from emotional_memory.embedders import SentenceTransformerEmbedder
@@ -41,14 +40,7 @@ class NaiveCosineDailyDialogAdapter(DailyDialogAdapter):
         qvec = self._embedder.embed(query_text)
         scored = sorted(
             self._store,
-            key=lambda entry: _cosine(qvec, entry[2]),
+            key=lambda entry: cosine(qvec, entry[2]),
             reverse=True,
         )
         return [entry[0] for entry in scored[:top_k]]
-
-
-def _cosine(a: list[float], b: list[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b, strict=False))
-    na = math.sqrt(sum(x * x for x in a))
-    nb = math.sqrt(sum(x * x for x in b))
-    return dot / (na * nb + 1e-9)

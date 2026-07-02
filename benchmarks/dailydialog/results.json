@@ -1,72 +1,72 @@
 {
   "benchmark": "hk1_dailydialog",
   "dataset_version": "1",
-  "n_personas": 120,
+  "n_personas": 5,
   "embedder": "multilingual-e5-small",
   "n_bootstrap": 10000,
   "seed": 0,
   "systems": [
     {
       "system": "aft",
-      "n_queries": 396,
-      "top1_accuracy": 0.21212121212121213,
-      "hit_at_k": 0.3661616161616162,
+      "n_queries": 16,
+      "top1_accuracy": 0.3125,
+      "hit_at_k": 0.375,
       "per_type": [
         {
           "query_type": "emotion_state_recall",
-          "n": 120,
-          "top1_accuracy": 0.21666666666666667,
-          "hit_at_k": 0.375
+          "n": 5,
+          "top1_accuracy": 0.2,
+          "hit_at_k": 0.2
         },
         {
           "query_type": "affect_conditioned_content",
-          "n": 120,
-          "top1_accuracy": 0.175,
-          "hit_at_k": 0.325
+          "n": 5,
+          "top1_accuracy": 0.4,
+          "hit_at_k": 0.4
         },
         {
           "query_type": "affective_trajectory",
-          "n": 39,
-          "top1_accuracy": 0.38461538461538464,
-          "hit_at_k": 0.48717948717948717
+          "n": 1,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0
         },
         {
           "query_type": "cross_session_control",
-          "n": 117,
-          "top1_accuracy": 0.18803418803418803,
-          "hit_at_k": 0.358974358974359
+          "n": 5,
+          "top1_accuracy": 0.2,
+          "hit_at_k": 0.4
         }
       ]
     },
     {
       "system": "naive_cosine",
-      "n_queries": 396,
-      "top1_accuracy": 0.2196969696969697,
-      "hit_at_k": 0.3888888888888889,
+      "n_queries": 16,
+      "top1_accuracy": 0.25,
+      "hit_at_k": 0.375,
       "per_type": [
         {
           "query_type": "emotion_state_recall",
-          "n": 120,
-          "top1_accuracy": 0.225,
-          "hit_at_k": 0.39166666666666666
+          "n": 5,
+          "top1_accuracy": 0.2,
+          "hit_at_k": 0.2
         },
         {
           "query_type": "affect_conditioned_content",
-          "n": 120,
-          "top1_accuracy": 0.21666666666666667,
-          "hit_at_k": 0.4083333333333333
+          "n": 5,
+          "top1_accuracy": 0.2,
+          "hit_at_k": 0.4
         },
         {
           "query_type": "affective_trajectory",
-          "n": 39,
-          "top1_accuracy": 0.28205128205128205,
-          "hit_at_k": 0.38461538461538464
+          "n": 1,
+          "top1_accuracy": 1.0,
+          "hit_at_k": 1.0
         },
         {
           "query_type": "cross_session_control",
-          "n": 117,
-          "top1_accuracy": 0.19658119658119658,
-          "hit_at_k": 0.36752136752136755
+          "n": 5,
+          "top1_accuracy": 0.2,
+          "hit_at_k": 0.4
         }
       ]
     }
@@ -77,67 +77,67 @@
       "baseline": "naive_cosine",
       "stats": {
         "aggregate": {
-          "delta": -0.007575757575757576,
-          "ci_lower": -0.05555555555555555,
-          "ci_upper": 0.04292929292929293,
-          "p_bootstrap_onetail": 0.5964499999999999,
-          "p_mcnemar": 0.8392136618440833,
-          "cohens_d": -0.015289371506313178,
-          "n": 396,
-          "only_aft_correct": 47,
-          "only_baseline_correct": 50,
+          "delta": 0.0625,
+          "ci_lower": -0.125,
+          "ci_upper": 0.25,
+          "p_bootstrap_onetail": 0.3847,
+          "p_mcnemar": 1.0,
+          "cohens_d": 0.141233170716508,
+          "n": 16,
+          "only_aft_correct": 2,
+          "only_baseline_correct": 1,
           "p_holm": 1.0,
           "pass_holm": false
         },
         "emotion_state_recall": {
-          "delta": -0.008333333333333333,
-          "ci_lower": -0.09166666666666666,
-          "ci_upper": 0.075,
-          "p_bootstrap_onetail": 0.53845,
+          "delta": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "p_bootstrap_onetail": 0.5,
           "p_mcnemar": 1.0,
-          "cohens_d": -0.0168832341363481,
-          "n": 120,
-          "only_aft_correct": 14,
-          "only_baseline_correct": 15,
+          "cohens_d": NaN,
+          "n": 5,
+          "only_aft_correct": 0,
+          "only_baseline_correct": 0,
           "p_holm": 1.0,
           "pass_holm": false
         },
         "affect_conditioned_content": {
-          "delta": -0.041666666666666664,
-          "ci_lower": -0.125,
-          "ci_upper": 0.041666666666666664,
-          "p_bootstrap_onetail": 0.80795,
-          "p_mcnemar": 0.44206833839416504,
-          "cohens_d": -0.08781371961143572,
-          "n": 120,
-          "only_aft_correct": 11,
-          "only_baseline_correct": 16,
+          "delta": 0.2,
+          "ci_lower": 0.0,
+          "ci_upper": 0.6,
+          "p_bootstrap_onetail": 0.2934,
+          "p_mcnemar": 1.0,
+          "cohens_d": 0.4472135954999579,
+          "n": 5,
+          "only_aft_correct": 1,
+          "only_baseline_correct": 0,
           "p_holm": 1.0,
           "pass_holm": false
         },
         "affective_trajectory": {
-          "delta": 0.10256410256410256,
-          "ci_lower": -0.07692307692307693,
-          "ci_upper": 0.28205128205128205,
-          "p_bootstrap_onetail": 0.14675,
-          "p_mcnemar": 0.3876953125,
-          "cohens_d": 0.18571640520737398,
-          "n": 39,
-          "only_aft_correct": 8,
-          "only_baseline_correct": 4,
-          "p_holm": 0.7337499999999999,
+          "delta": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "p_bootstrap_onetail": 0.5,
+          "p_mcnemar": 1.0,
+          "cohens_d": NaN,
+          "n": 1,
+          "only_aft_correct": 0,
+          "only_baseline_correct": 0,
+          "p_holm": 1.0,
           "pass_holm": false
         },
         "cross_session_control": {
-          "delta": -0.008547008547008548,
-          "ci_lower": -0.09401709401709402,
-          "ci_upper": 0.07692307692307693,
-          "p_bootstrap_onetail": 0.5397000000000001,
+          "delta": 0.0,
+          "ci_lower": -0.6,
+          "ci_upper": 0.6,
+          "p_bootstrap_onetail": 0.5,
           "p_mcnemar": 1.0,
-          "cohens_d": -0.017096536663209646,
-          "n": 117,
-          "only_aft_correct": 14,
-          "only_baseline_correct": 15,
+          "cohens_d": 0.0,
+          "n": 5,
+          "only_aft_correct": 1,
+          "only_baseline_correct": 1,
           "p_holm": 1.0,
           "pass_holm": false
         }

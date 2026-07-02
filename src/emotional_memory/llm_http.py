@@ -112,27 +112,38 @@ def build_openai_compatible_payload(
     return payload
 
 
-def make_httpx_llm(config: OpenAICompatibleLLMConfig) -> LLMCallable:
-    """Build an LLMCallable using raw httpx."""
-    try:
-        import httpx
-    except ImportError as exc:  # pragma: no cover
-        raise ImportError(
-            "httpx is required for OpenAI-compatible HTTP LLM calls. "
-            "Install with: pip install -e '.[dev,llm-test]'"
-        ) from exc
+class _HttpxLLM:
+    """Callable LLM backed by a shared ``httpx.Client`` (keep-alive/connection pool).
 
-    def _call(prompt: str, json_schema: dict[str, Any]) -> str:
+    One TLS connection is reused across calls instead of a new handshake per
+    request — appraisal benchmarks issue thousands of sequential calls, where
+    per-request connections are measurable overhead. ``httpx.Client`` is
+    thread-safe, matching ``LLMAppraisalEngine``'s thread-safe cache.
+    """
+
+    __slots__ = ("_client", "_config")
+
+    def __init__(self, config: OpenAICompatibleLLMConfig) -> None:
+        import httpx
+
+        self._config = config
+        self._client = httpx.Client(
+            headers={
+                "Authorization": f"Bearer {config.api_key}",
+                "Content-Type": "application/json",
+            },
+            timeout=config.timeout_seconds,
+        )
+
+    def __call__(self, prompt: str, json_schema: dict[str, Any]) -> str:
+        import httpx
+
+        config = self._config
         payload = build_openai_compatible_payload(prompt, json_schema, config)
         try:
-            response = httpx.post(
+            response = self._client.post(
                 f"{config.base_url}/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {config.api_key}",
-                    "Content-Type": "application/json",
-                },
                 json=payload,
-                timeout=config.timeout_seconds,
             )
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
@@ -165,7 +176,29 @@ def make_httpx_llm(config: OpenAICompatibleLLMConfig) -> LLMCallable:
             )
         return content
 
-    return _call
+    def close(self) -> None:
+        """Close the underlying HTTP client (idempotent)."""
+        self._client.close()
+
+    def __repr__(self) -> str:
+        return f"_HttpxLLM(model={self._config.model!r}, base_url={self._config.base_url!r})"
+
+
+def make_httpx_llm(config: OpenAICompatibleLLMConfig) -> LLMCallable:
+    """Build an LLMCallable using httpx with a shared connection pool.
+
+    The returned callable exposes ``close()``; ``LLMAppraisalEngine.close()``
+    (and, transitively, ``EmotionalMemory.close()``) call it via duck typing.
+    """
+    try:
+        import httpx  # noqa: F401
+    except ImportError as exc:  # pragma: no cover
+        raise ImportError(
+            "httpx is required for OpenAI-compatible HTTP LLM calls. "
+            "Install with: pip install -e '.[dev,llm-test]'"
+        ) from exc
+
+    return _HttpxLLM(config)
 
 
 def make_httpx_llm_from_env(env: Mapping[str, str] | None = None) -> LLMCallable | None:

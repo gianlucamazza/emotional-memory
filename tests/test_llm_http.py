@@ -125,23 +125,23 @@ def test_make_httpx_llm_uses_timeout_and_output_mode() -> None:
         def json(self) -> dict[str, object]:
             return {"choices": [{"message": {"content": "{}"}}]}
 
-    def fake_post(
-        url: str,
-        *,
-        headers: dict[str, str],
-        json: dict[str, object],
-        timeout: float,
-    ) -> FakeResponse:
-        seen["url"] = url
-        seen["headers"] = headers
-        seen["json"] = json
-        seen["timeout"] = timeout
-        return FakeResponse()
+    class FakeClient:
+        def __init__(self, *, headers: dict[str, str], timeout: float) -> None:
+            seen["headers"] = headers
+            seen["timeout"] = timeout
+
+        def post(self, url: str, *, json: dict[str, object]) -> FakeResponse:
+            seen["url"] = url
+            seen["json"] = json
+            return FakeResponse()
+
+        def close(self) -> None:
+            seen["closed"] = True
 
     fake_httpx = SimpleNamespace(
         HTTPError=FakeHTTPError,
         HTTPStatusError=FakeHTTPStatusError,
-        post=fake_post,
+        Client=FakeClient,
     )
 
     config = OpenAICompatibleLLMConfig(
@@ -155,7 +155,11 @@ def test_make_httpx_llm_uses_timeout_and_output_mode() -> None:
     with patch.dict(sys.modules, {"httpx": fake_httpx}):
         llm = make_httpx_llm(config)
         assert llm("Return JSON please", {}) == "{}"
+        close = getattr(llm, "close", None)
+        assert callable(close)
+        close()
 
+    assert seen.get("closed") is True
     assert seen["url"] == "https://example.invalid/v1/chat/completions"
     assert seen["timeout"] == 9.5
     headers = seen["headers"]
@@ -185,10 +189,21 @@ def test_probe_raises_clear_error_on_http_failure() -> None:
         def json(self) -> dict[str, object]:
             return {"error": {"message": "model_not_found"}}
 
+    class FakeClient:
+        def __init__(self, *, headers: dict[str, str], timeout: float) -> None:
+            del headers, timeout
+
+        def post(self, url: str, *, json: dict[str, object]) -> FakeResponse:
+            del url, json
+            return FakeResponse()
+
+        def close(self) -> None:
+            return None
+
     fake_httpx = SimpleNamespace(
         HTTPError=FakeHTTPError,
         HTTPStatusError=FakeHTTPStatusError,
-        post=lambda *args, **kwargs: FakeResponse(),
+        Client=FakeClient,
     )
 
     config = OpenAICompatibleLLMConfig(
