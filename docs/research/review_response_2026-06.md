@@ -27,7 +27,7 @@ would raise (LoCoMo, DailyDialog, end-to-end appraisal) are all committed FAILs
 with closures.
 
 Of the seven review criticisms (§3.1–§3.7), five are **resolved or honestly
-scoped** and two (§3.4 construct validity, §3.5 multi-seed) are **partially
+| §3.4 construct validity of affect signal | MEDIA               | **Substantially addressed** (signal human-validated; construct _boundary_ measured; human-eval unrun) | Addenda N/O/P/S/V/W; Addendum X (construct boundary: counter-congruent supportive recall); `human_eval/` built, never run |
 open**. Importantly, "honestly scoped" is _not_ the same as "solved": §3.1's
 underlying downstream gap is a committed FAIL that has been bounded, not closed.
 The real residue is four items, tracked in §5 below and itemized in the companion
@@ -45,9 +45,9 @@ addressed, some is open.
 | §3.1 embedding→downstream / LoCoMo       | CRITICA             | **Honestly scoped, not solved** (downstream FAIL committed)  | `08_limitations.md`, `benchmarks/locomo/`, Addenda J/L/Q closures              |
 | §3.2 ablation of the mechanism           | ALTA                | **Resolved**                                                 | `benchmarks/ablation/runner.py` (8 variants), `runner_hi3.py`                  |
 | §3.3 "field" framing earns its place     | ALTA                | **Resolved** (by under-claiming: capped "prototype" ceiling) | `01_foundations.md`, `05_design_principles.md`, `10_scientific_quality_bar.md` |
-| §3.4 construct validity of affect signal | MEDIA               | **Partially open**                                           | Addenda N/O/P; `human_eval/` built, never run                                  |
+| §3.4 construct validity of affect signal | MEDIA               | **Substantially addressed** (signal human-validated; construct _boundary_ measured; human-eval unrun) | Addenda N/O/P/S/V/W; Addendum X (construct boundary: counter-congruent supportive recall); `human_eval/` built, never run |
 | §3.5 power / seeds / CIs                 | MEDIA               | **Partially open** (CIs done; multi-seed sweep absent)       | `benchmarks/common/statistics.py`                                              |
-| §3.6 positioning vs prior art            | BASSA               | **Resolved**                                                 | `07_related_work.md` (29 systems), `comparison.md`                             |
+| §3.6 positioning vs prior art            | BASSA               | **Resolved**                                                 | `07_related_work.md` (33 papers surveyed), `comparison.md`                             |
 | §3.7 bus-factor / sustainability         | BASSA               | **Acknowledged** (out of scope for evidence)                 | CI/supply-chain hardening as partial mitigation                                |
 
 ## 3. Point-by-point response
@@ -204,6 +204,13 @@ have been carried out.
   is the oracle-free regime, and the two coexist.
 - ✅ **Multi-seed robustness sweep (#60 closed).** `make bench-multiseed` ships; the
   result is characterized as near-deterministic (sub-CI, timing-driven variance).
+- ✅ **Post-June addenda (U/V/T/T2A/W/X).** Circularity audit quantified (~62.5%
+  AFT-favorable by construction, Addendum U); direct-VAD estimator adopted opt-in
+  (Addendum V) with measurement-only arousal calibration (Addendum W); retrieve-time
+  query appraisal production-reachable within the regime (Addendum T) and bounded on
+  naturalistic dialogue (T2A FAIL) and on the first third-party corpus (Addendum X
+  FAIL, inverted — MADial-Bench rewards counter-congruent supportive recall; construct
+  boundary on top of regime and provenance).
 
 The single highest-value gap that remains genuinely open:
 

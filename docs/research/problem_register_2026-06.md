@@ -34,9 +34,9 @@ claim status. Where the two disagree, the matrix wins.
 | A7  | Single-seed; cross-run variance uncharacterized         | Method       | Medium   | **Characterized** — sweep added; retrieval _near_-deterministic (sub-CI, timing-driven variance on near-ties)  |
 | B1  | Response doc conflates _scoped_ with _solved_           | Meta         | Medium   | Add 3-state legend; relabel                                                                                    |
 | B2  | "Five already addressed" snapshot overstates            | Meta         | Low      | Re-word                                                                                                        |
-| C1  | README comparison ✅ implies general superiority        | Public claim | Medium   | Footnote on the table                                                                                          |
+| C1  | README comparison ✅ implies general superiority        | Public claim | Medium   | **Resolved** — footnote live under the README table                                                            |
 | C2  | Bare "Emotional memory" one-liners                      | Public claim | Low      | Optional light suffix                                                                                          |
-| C3  | No consolidated "When NOT to use" section               | Public claim | High     | Add section (issue #32)                                                                                        |
+| C3  | No consolidated "When NOT to use" section               | Public claim | High     | **Resolved** — section live in README after "How it compares"                                                  |
 | D1  | chromadb CVE-2026-45829 (critical, optional/dev)        | Security     | Medium   | No upstream fix; document + monitor                                                                            |
 | D2  | torch CVE-2025-3000 (low, dev-only)                     | Security     | Low      | No upstream fix; document + monitor                                                                            |
 
@@ -233,6 +233,9 @@ open."
 
 ### C1 — Comparison-table ✅ implies general superiority
 
+**Status: RESOLVED (2026-06/07).** The footnote below is live in `README.md` directly
+under the comparison table.
+
 **Problem.** `README.md` "How it compares" marks AFT ✅ on _Affective retrieval_
 and _Reconsolidation_ against all-❌ competitors. A binary checkmark reads as
 general superiority; in fact the _measured_ advantage is regime-specific and
@@ -254,7 +257,11 @@ without scope. This is a metaphor that _could_ imply downstream benefit.
 a light suffix such as "…; affect-discriminative retrieval — see Validation for
 scope." Not forced; recorded for completeness.
 
-### C3 — No consolidated "When NOT to use" section (issue #32)
+### C3 — No consolidated "When NOT to use" section
+
+**Status: RESOLVED (2026-06/07).** The "When NOT to use" section is live in `README.md`
+after "How it compares", with the corrected oracle-affect wording. (The tracking issue
+formerly referenced here no longer exists.)
 
 **Problem.** The four FAIL regimes (factual/open-domain QA, end-to-end LLM
 appraisal, short-turn dialogue, query-type routing) are documented but scattered;
@@ -313,8 +320,11 @@ silent `xfail`/skip in tests (skips are env/feature-gated).
 A3 minimal downstream task (Addendum R, PASS), A5 human-gold appraisal comparison
 (Addendum S), A7 multi-seed sweep (re-scoped near-deterministic), plus the circularity
 audit (Addendum U), the direct-VAD appraisal estimator (Addendum V), retrieve-time
-query appraisal (Addendum T, production-reachable), and its naturalistic re-test
-(Addendum T2A, FAIL — the recovery is regime-bound). See the per-item §A\* sections.
+query appraisal (Addendum T, production-reachable), its naturalistic re-test
+(Addendum T2A, FAIL — the recovery is regime-bound), the arousal affine calibration
+(Addendum W, ADOPTED as a measurement-only transform; library integration evaluated
+and declined), and the third-party corpus test (Addendum X, FAIL — construct
+boundary; see item 3 below). See the per-item §A\* sections.
 
 The genuinely open items (execution, not re-scoping), in priority order:
 
@@ -327,7 +337,21 @@ The genuinely open items (execution, not re-scoping), in priority order:
    production-reachable recovery is **bounded to the affect-discriminative regime** (Addendum U)
    and does not extend to naturalistic dialogue. LoCoMo bound-confirmation de-scoped (expected
    FAIL). See `preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`.
-3. **Independent affect-discriminative + oracle-free corpus** — external-validity test
-   for the downstream/oracle claims beyond the author-crafted v2 (bounded by Addendum U).
-4. **Arousal affine calibration** for direct-VAD (Addendum V follow-up: r improved, MAE
-   not yet — a held-out affine fit).
+3. **Independent affect-discriminative + oracle-free corpus** — **EXECUTED (Addendum X,
+   2026-07-02): FAIL, inverted.** First released third-party retrieval-native emotional
+   corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free, data sha256-pinned): cosine
+   significantly ahead (nDCG@5 0.304 vs 0.221, Δ=−0.083 [−0.123, −0.043], p_one=0.9998;
+   powered negative, MDE 0.051) despite near-perfect appraisal vs the third-party labels
+   (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9% > U's 62.5%). Post-hoc:
+   84/160 queries have negative appraised valence and 73.8% of them positive gold sets —
+   the benchmark rewards **counter-congruent supportive recall** (interpersonal emotion
+   regulation), the opposite of AFT's mood-congruence prior. The query-appraisal advantage
+   is now bounded on three measured axes: regime (U/T2A), provenance (author-crafted only),
+   construct (congruence vs regulation). Residual (not scheduled): Addendum X2 on
+   ES-MemEval/EvoEmo. See `preregistration_addendum_x_madialbench_third_party_closure.md`.
+4. **Arousal affine calibration** for direct-VAD — **EXECUTED (Addendum W, 2026-06-28):
+   ADOPTED** as a measurement/reporting transform (held-out EmoBank fit cuts arousal MAE
+   0.20→0.04 preserving r; calibrated direct-VAD dominates the SEC projection on both
+   axes). Library integration evaluated and **declined** (the fit compresses arousal into
+   [0.45, 0.61], silently breaking the decay floor and s3). See
+   `preregistration_addendum_w_arousal_calibration_closure.md`.

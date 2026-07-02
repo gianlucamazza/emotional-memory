@@ -31,6 +31,14 @@ This is the correct public claim until all three mandatory gates below are passe
 > **open**: that requires recruited raters, which Addendum S (signal-level validation)
 > does not substitute for.
 
+> **Update (2026-07-02).** External validity now has its first measured data point:
+> Addendum X ran the production-reachable query-appraisal mechanism on a third-party
+> retrieval-native emotional corpus (MADial-Bench EN) and **failed decisively** — the
+> corpus rewards counter-congruent supportive recall (emotion regulation), a construct
+> boundary distinct from the regime bound. This is not a formal gate, but it sharpens
+> what Gate 2 must eventually test: human _perceived utility_ of mood-congruent recall,
+> not agreement with regulation-oriented gold standards.
+
 ---
 
 ## Three mandatory gates before upgrading the claim
