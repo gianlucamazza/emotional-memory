@@ -93,6 +93,5 @@ desktop.ini
 benchmark-results.json
 
 # Benchmark smoke-run outputs (never committed)
-benchmarks/**/results.dry.json
-benchmarks/**/results.dry.md
-benchmarks/**/results.protocol.dry.json
+benchmarks/**/*.dry.json
+benchmarks/**/*.dry.md

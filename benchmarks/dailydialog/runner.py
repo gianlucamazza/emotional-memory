@@ -457,6 +457,14 @@ def main() -> None:
         verbose=not args.quiet,
         limit_personas=limit,
     )
+    if args.dry_run:
+        # Never clobber committed scored artifacts with smoke output.
+        if args.out_json == DEFAULT_OUT_JSON:
+            args.out_json = args.out_json.with_name("results.dry.json")
+        if args.out_md == DEFAULT_OUT_MD:
+            args.out_md = args.out_md.with_name("results.dry.md")
+        if args.out_protocol == DEFAULT_OUT_PROTOCOL:
+            args.out_protocol = args.out_protocol.with_name("results.protocol.dry.json")
     write_results(
         results,
         out_json=args.out_json,
