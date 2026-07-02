@@ -17,6 +17,18 @@
 > The verdicts below are preserved as the point-in-time snapshot; resolution status is
 > annotated inline.
 
+> **Update (2026-07-02) — the post-report addenda extend the ladder beyond S.**
+> The circularity audit (**U**) quantifies the benchmark's construction bias (~62.5%
+> AFT-favorable); direct-VAD (**V**) and its measurement-only arousal calibration (**W**)
+> upgrade the appraisal estimator vs EmoBank human gold; retrieve-time query appraisal
+> (**T**) makes the advantage production-reachable within the affect-discriminative
+> regime, and its bounds are now measured on naturalistic dialogue (**T2A** FAIL) and on
+> the first third-party retrieval corpus (**X** FAIL, inverted — MADial-Bench rewards
+> counter-congruent supportive recall; a **construct** boundary relevant to A3/A5:
+> external validity beyond the author-crafted v2 is now measured, and negative).
+> Closures:
+> [`preregistration_addendum_x_madialbench_third_party_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md).
+
 ## Executive summary
 
 | Area                                   | Result                                                                              |
