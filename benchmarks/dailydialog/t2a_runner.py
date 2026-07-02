@@ -365,6 +365,14 @@ def main() -> None:
         verbose=not args.quiet,
         limit_personas=5 if args.dry_run else None,
     )
+    if args.dry_run:
+        # Never clobber committed scored artifacts with smoke output.
+        if args.out_json == DEFAULT_OUT_JSON:
+            args.out_json = args.out_json.with_name("t2a_results.dry.json")
+        if args.out_md == DEFAULT_OUT_MD:
+            args.out_md = args.out_md.with_name("t2a_results.dry.md")
+        if args.out_protocol == DEFAULT_OUT_PROTOCOL:
+            args.out_protocol = args.out_protocol.with_name("t2a_results.protocol.dry.json")
     write_results(
         results, out_json=args.out_json, out_md=args.out_md, out_protocol=args.out_protocol
     )
