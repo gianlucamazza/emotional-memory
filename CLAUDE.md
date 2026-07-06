@@ -22,6 +22,7 @@ make bench-appraisal # LLM appraisal quality benchmarks (requires EMOTIONAL_MEMO
 make bench-a3        # A3 downstream encode→retrieve→generate→judge (Addendum R; requires LLM key)
 make bench-human-gold # A5 appraisal vs human-gold EmoBank (Addendum S; requires LLM key)
 make bench-x-madial  # Addendum X third-party retrieval on MADial-Bench (requires LLM key; -dry = no-LLM smoke)
+make bench-x2-esmem  # Addendum X2 third-party retrieval on ES-MemEval/EvoEmo (requires LLM key; -dry = no-LLM smoke)
 make install        # Install package in editable mode with dev deps
 make install-llm-test # Install llm-test dependencies (httpx)
 make install-dotenv  # Install dotenv dependencies (python-dotenv)

@@ -8,13 +8,20 @@ repos:
       - id: check-toml
       - id: check-merge-conflict
       - id: check-case-conflict
+      # Vendored third-party datasets are sha256-pinned byte-identical to the
+      # upstream release (see benchmarks/datasets/README.md) — byte-mutating
+      # and size hooks must not touch them.
       - id: end-of-file-fixer
+        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
       - id: trailing-whitespace
+        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
       - id: check-added-large-files
         args: [--maxkb=500]
+        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
       - id: detect-private-key
       - id: mixed-line-ending
         args: [--fix=lf]
+        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
 
   # Self-contained ruff hook (no `uv run` dependency on host).
   # The pinned ruff binary is downloaded by pre-commit's own toolchain so

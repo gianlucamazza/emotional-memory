@@ -187,3 +187,31 @@ is **third-party data**, not original to this project.
   aclanthology.org/2025.naacl-long.499; arXiv:2409.15240.
 - **License:** **MIT** (per the upstream repository's LICENSE). Applies to the
   two vendored files; attribution preserved above.
+
+---
+
+## esmemeval/ (Addendum X2 — third-party retrieval benchmark)
+
+`esmemeval/evo_emo.json` is the **EvoEmo** corpus from the **ES-MemEval v1.0.0**
+release (18 seekers, 401 multi-session emotional-support conversations spanning
+~15 months, 1,427 QA questions with turn-level evidence refs), vendored
+byte-identical from the v1.0.0 release archive (GitHub tree `6926242`, Zenodo
+deposit of the same snapshot) and pinned by sha256 in
+`benchmarks/preregistration_addendum_x2_esmemeval_third_party.md` (the loader
+refuses to run on mismatching bytes). Like `madialbench/`, this is
+**third-party data**, not original to this project. Note (declared in the
+pre-registration): the released artifact contains 1,427 QA questions while the
+paper reports 1,209; the hash-pinned artifact is treated as ground truth.
+
+### Source & License
+
+- **Source:** ES-MemEval — slptongji/ES-MemEval
+  (<https://github.com/slptongji/ES-MemEval>); Zenodo DOI
+  [10.5281/zenodo.18338564](https://doi.org/10.5281/zenodo.18338564).
+- **Citation:** Chen, T., Lu, J., Shen, Y., & Zhang, L. (2026). _ES-MemEval:
+  Benchmarking Conversational Agents on Personalized Long-Term Emotional
+  Support._ The Web Conference (WWW) 2026, doi:10.1145/3774904.3792143;
+  arXiv:2602.01885.
+- **License:** **CC-BY-4.0** (per the Zenodo record). Applies to the vendored
+  file; attribution preserved above. Redistribution of this file or derivatives
+  must preserve attribution per the CC-BY-4.0 terms.
