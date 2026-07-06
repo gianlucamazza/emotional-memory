@@ -210,3 +210,20 @@ hand-computed examples; dry-run writes `results.dry.*`, never the scored artifac
 **Pre-registration integrity:** this document is committed before the harness executes a
 single scored run; the closure reports realized per-arm metric grids, Δ/CI/p, Cohen's d,
 D1/D2, the MDE, and the Hx2 verdict.
+
+---
+
+## Amendment A1 (2026-07-07, pre-run, before any harness execution)
+
+Made while implementing the harness, before any scored or smoke run. One
+descriptive correction:
+
+1. **Regime-prior counts made exact under the D1 mapping.** The Motivation
+   section's "393/401 negative and ~8 positive" figure was computed with a
+   coarser rule (compound labels counted as negative). Under the D1 mapping
+   actually pre-registered (compound/ambiguous labels excluded), the exact
+   class counts on the pinned artifact are **7 positive / 376 negative /
+   18 excluded**. The prior's substance (near-uniformly negative bank, low-D2
+   expectation, three fixed readings) is unchanged.
+
+No hypothesis, metric, decision rule, N, or statistical plan changed.
