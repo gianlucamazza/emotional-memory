@@ -29,7 +29,7 @@ Several files in this repository carry metadata that is also duplicated in packa
 - `CITATION.cff` — most fields are derived
 - `.zenodo.json` — most fields are derived
 - `codemeta.json` — most fields are derived
-- `paper/main.tex` — DOI / URL / arxiv\_id macros are derived
+- `paper/main.tex` — DOI / URL / arxiv_id macros are derived
 - `demo/app.py` — DOI / URL constants are derived
 - `docs/index.md` — positioning hero is derived from `README.md`
 
@@ -78,11 +78,11 @@ variables manually.
 
 Release secrets (not LLM configuration) used by maintainer targets:
 
-| Variable | Required | Default | Purpose |
-|---|---|---|---|
-| `PYPI_TOKEN` | No | — | Manual PyPI fallback token for `make publish-pypi-manual` |
-| `ZENODO_TOKEN` | No | — | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
-| `ZENODO_BASE` | No | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs |
+| Variable       | Required | Default              | Purpose                                                          |
+| -------------- | -------- | -------------------- | ---------------------------------------------------------------- |
+| `PYPI_TOKEN`   | No       | —                    | Manual PyPI fallback token for `make publish-pypi-manual`        |
+| `ZENODO_TOKEN` | No       | —                    | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
+| `ZENODO_BASE`  | No       | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs                        |
 
 Real-LLM tests and benchmarks need the HTTP client — run `make install-llm-test` (installs
 `httpx`). `make` targets export `.env` automatically; to have `.env` auto-loaded when invoking
@@ -103,15 +103,15 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 
 ## Test suites
 
-| Command | Scope | Speed |
-|---|---|---|
-| `make test` | Unit + integration (835+ tests) | ~1s |
-| `make cov` | Same with branch coverage (≥ 80% enforced) | ~2s |
-| `make bench-fidelity` | 126 parametrized psychological invariant tests | ~5s |
-| `make bench-perf` | Latency/throughput benchmarks | ~30s |
-| `make test-llm` | Real-LLM integration (requires API key) | ~30s |
-| `make bench-appraisal` | Scherer CPM prompt quality (requires API key) | ~60s |
-| `make demo-check` | Demo wiring + runtime regression tests | ~seconds to model-load |
+| Command                | Scope                                          | Speed                  |
+| ---------------------- | ---------------------------------------------- | ---------------------- |
+| `make test`            | Unit + integration (835+ tests)                | ~1s                    |
+| `make cov`             | Same with branch coverage (≥ 80% enforced)     | ~2s                    |
+| `make bench-fidelity`  | 126 parametrized psychological invariant tests | ~5s                    |
+| `make bench-perf`      | Latency/throughput benchmarks                  | ~30s                   |
+| `make test-llm`        | Real-LLM integration (requires API key)        | ~30s                   |
+| `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |
+| `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
 
 Recommended local demo validation flow:
 
@@ -180,7 +180,7 @@ make lint     # check only (CI mode)
 
 Enabled rule groups: `E`, `F`, `I` (isort), `W`, `UP` (pyupgrade), `B` (bugbear), `SIM`, `RUF`, `C4`, `T20`, `PERF`, `S` (security), `PTH`.
 
-**Comments**: write no comments by default. Add one only when the *why* is non-obvious — a hidden constraint, a theory invariant, a workaround for a specific behavior. Never describe *what* the code does.
+**Comments**: write no comments by default. Add one only when the _why_ is non-obvious — a hidden constraint, a theory invariant, a workaround for a specific behavior. Never describe _what_ the code does.
 
 **Theory references**: every formula, coefficient, or design decision that comes from a paper must cite the source inline: `# Bower 1981`, `# ACT-R power-law (Anderson 1983)`.
 
@@ -218,6 +218,7 @@ Always update `CHANGELOG.md` under `## [Unreleased]`.
 5. CI runs automatically. A maintainer will review within a few days.
 
 **What makes a PR easy to merge:**
+
 - Single logical change per PR
 - Tests for every new behaviour
 - Theory reference for changes to retrieval, decay, or resonance logic
@@ -356,6 +357,7 @@ After adding the test, add it to the README fidelity table and run `make bench-f
 **New Embedder**: subclass `SequentialEmbedder` from `interfaces.py` and implement `embed(text) -> list[float]`. Override `embed_batch` for native batching. Place in `src/emotional_memory/embedders/my_embedder.py`.
 
 Checklist for both:
+
 - [ ] Thread-safety: writes must be serialised if the object is shared across threads
 - [ ] `close()` method if the resource needs cleanup (engine calls it via duck-type)
 - [ ] `__repr__` with meaningful content
@@ -373,3 +375,49 @@ Checklist for both:
 ...are especially welcome. Please cite primary sources in both docstrings and `docs/research/06_bibliography.md` using the format already in use: `Author, Initial. (Year). *Title*. Publisher.`
 
 New theoretical content should link to `docs/research/08_limitations.md` if it introduces assumptions that are contestable or culturally specific.
+
+### Adding a pre-registered study (addendum lifecycle)
+
+Every confirmatory study in this repo follows the same five-step lifecycle,
+validated end to end by Addenda X and X2 (use their documents as templates). The
+full prereg → closure → verdict index is
+[`benchmarks/README.md`](benchmarks/README.md).
+
+1. **Pre-registration first, in its own PR.** The prereg
+   (`benchmarks/preregistration_addendum_<id>_*.md`) is committed and merged
+   **before any scored or smoke run**. Follow the established skeleton
+   (Status/Dataset header with sha256 + row counts, Motivation with a dated
+   dataset-selection audit and any ex-ante priors, Protocol, Arms — exploratory
+   arms marked "not in family, pre-declared droppable" —, Hypotheses +
+   diagnostics, Statistical analysis plan, ex-ante Decision rule with explicit
+   Branch A/PASS and Branch B/FAIL propagation, Scope, Execution).
+2. **Harness in a separate PR, still pre-run.** Third-party datasets are
+   vendored **byte-identical** under `benchmarks/datasets/<name>/` and pinned by
+   sha256 in the loader (fail on mismatch), with a "Source & License" section in
+   `benchmarks/datasets/README.md`. Add per-hook `exclude` entries in
+   `.pre-commit-config.yaml` for the vendored file — the byte-mutating hooks
+   (`end-of-file-fixer`, `trailing-whitespace`, `mixed-line-ending`) and
+   `check-added-large-files` would otherwise silently break byte-identity. The
+   runner must support `--dry-run` (no LLM key, small slice) and write
+   `results.dry.*` (gitignored) so smoke runs can never clobber committed scored
+   artifacts. Replicate upstream metric formulas verbatim (quirks included, unit
+   tested against hand-computed examples) when comparability with published
+   baselines matters.
+3. **Pre-run amendments are legitimate only if labeled.** An "Amendment A<n>"
+   section appended before any execution may correct descriptive or
+   implementation details, and must end with the sentence "No hypothesis,
+   metric, decision rule, N, or statistical plan changed" — and mean it.
+4. **Scored run + closure + core propagation in one PR.** Commit
+   `results.{json,md,protocol.json}`, update the prereg Status header, write the
+   closure (Verdict with power/MDE, Diagnostics, clearly-labeled post-hoc, Bound
+   update, decisions on exploratory arms, Follow-ups, Propagation list). Core
+   propagation: `docs/research/08_limitations.md`,
+   `docs/research/claim_validation_matrix.json` (the `allowed_public_wording`
+   must be mirrored **verbatim** in `docs/research/09_current_evidence.md` — a
+   test enforces this), CHANGELOG, ROADMAP, and the paper if affected.
+5. **Residual-surface propagation in a final PR.** README, the
+   `benchmarks/README.md` verdict table and research index ladder, the problem
+   register, and any comparison/quality-bar documents.
+
+Negative results are committed with the same care as positive ones — the
+decision rule is fixed ex-ante and the result stands as measured.

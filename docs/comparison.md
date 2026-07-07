@@ -27,9 +27,11 @@ APE-gated reconsolidation rather than generic conversational recall alone.
 (intra-theory). The comparative benchmark in this repo is a controlled synthetic
 retrieval probe, not a general downstream evaluation of production memory systems.
 The measured retrieval advantage is regime-specific to affect-discriminative recall
-under oracle-affect labeling, and on the first third-party emotional retrieval
-benchmark (MADial-Bench, Addendum X) cosine is significantly ahead — the corpus
-rewards counter-congruent supportive recall. See the README section
+under oracle-affect labeling, and on both released third-party emotional retrieval
+benchmarks cosine is significantly ahead: MADial-Bench (Addendum X, Δ=−0.083 — the
+corpus rewards counter-congruent supportive recall) and ES-MemEval (Addendum X2,
+Δ=−0.164 — the QA gold is content-determined and affect-orthogonal, so the affect
+channel is uninformative noise). See the README section
 ["When NOT to use"](https://github.com/gianlucamazza/emotional-memory#when-not-to-use)
 for the committed failure regimes.
 
