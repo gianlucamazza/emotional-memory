@@ -542,6 +542,33 @@ class AsyncEmotionalMemory:
                     logger.debug("hebbian: id=%s links_strengthened=%d", mem.id, len(new_links))
         return result
 
+    async def _appraise_many(
+        self,
+        contents: list[str],
+        metadata: list[dict[str, Any]] | None,
+        use_fast_path: bool,
+    ) -> list[AppraisalVector | GenericAppraisalVector | None]:
+        """Appraise a batch concurrently (bounded), preserving input order.
+
+        Appraisal depends only on content/context, so the batch's LLM calls run
+        concurrently under an ``asyncio.Semaphore`` and are consumed afterwards by
+        the order-preserving state-evolution loop — results are identical to the
+        sequential path, only the I/O waits overlap. Returns ``None`` per item on
+        the fast path or when no appraisal engine is configured.
+        """
+        n = len(contents)
+        engine = self._appraisal_engine
+        if use_fast_path or engine is None:
+            return [None] * n
+        sem = asyncio.Semaphore(self._config.appraisal_max_concurrency)
+
+        async def _one(idx: int) -> AppraisalVector | GenericAppraisalVector:
+            ctx = metadata[idx] if metadata else None
+            async with sem:
+                return await engine.appraise(contents[idx], context=ctx)
+
+        return list(await asyncio.gather(*[_one(i) for i in range(n)]))
+
     async def encode_batch(
         self,
         contents: list[str],
@@ -557,19 +584,15 @@ class AsyncEmotionalMemory:
                 "emotional_memory.embed", {"content_length": sum(len(c) for c in contents)}
             ):
                 embeddings = await self._embedder.embed_batch(contents)
+            # Dual-path: skip appraisal on fast path. Appraise the whole batch
+            # concurrently up front, then evolve state sequentially below.
+            use_fast_path = self._config.dual_path_encoding and self._appraisal_engine is not None
+            appraisals = await self._appraise_many(contents, metadata, use_fast_path)
             results = []
             for i, (content, embedding) in enumerate(zip(contents, embeddings, strict=True)):
                 meta = metadata[i] if metadata else None
                 now = datetime.now(tz=UTC)
-
-                # Resolve appraisal per item (mirrors encode())
-                # Dual-path: skip appraisal on fast path
-                use_fast_path = (
-                    self._config.dual_path_encoding and self._appraisal_engine is not None
-                )
-                computed_a: AppraisalVector | GenericAppraisalVector | None = None
-                if not use_fast_path and self._appraisal_engine is not None:
-                    computed_a = await self._appraisal_engine.appraise(content, context=meta)
+                computed_a: AppraisalVector | GenericAppraisalVector | None = appraisals[i]
 
                 new_affect = (
                     computed_a.to_core_affect()
