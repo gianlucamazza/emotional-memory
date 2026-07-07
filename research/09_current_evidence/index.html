@@ -2325,6 +2325,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Reading guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addendum-y-query-affect-conditioned-gate-branch-a-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addendum Y — Query-affect-conditioned gate (Branch A PASS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -2904,6 +2921,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Reading guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addendum-y-query-affect-conditioned-gate-branch-a-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addendum Y — Query-affect-conditioned gate (Branch A PASS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3713,6 +3747,8 @@ vectors, not t-tests.</p>
   <a href="../07_related_work/">Related Work</a></li>
 <li>For known limitations: <a href="../08_limitations/">Limitations</a></li>
 </ul>
+<h3 id="addendum-y-query-affect-conditioned-gate-branch-a-pass">Addendum Y — Query-affect-conditioned gate (Branch A PASS)<a class="headerlink" href="#addendum-y-query-affect-conditioned-gate-branch-a-pass" title="Permanent link">&para;</a></h3>
+<p><strong>Claim <code>query_affect_gate</code>.</strong> Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (|valence|&lt;0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated&gt;aft +0.076 and gated&gt;cosine +0.095). The gate recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's 45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime gain; it does not fix the X/X2 boundary (affect-carrying-but-misaligned queries stay un-gateable). A production retrieve_query_gated() API is a Branch-A follow-up.</p>
 
 
 

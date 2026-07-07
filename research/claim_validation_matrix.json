@@ -411,6 +411,30 @@
         "benchmarks/human_eval/protocol.md"
       ],
       "limitations_refs": ["docs/research/08_limitations.md"]
+    },
+    {
+      "claim_id": "query_affect_gate",
+      "claim_text": "A query-affect-conditioned gate makes AFT a safe wrapper off-regime without sacrificing the on-regime gain.",
+      "claim_area": "Retrieval mechanism",
+      "status": "controlled_evidence",
+      "evidence_level": "4_realistic_tasks",
+      "requires_oracle_affect": false,
+      "allowed_public_wording": "Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (|valence|<0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated>aft +0.076 and gated>cosine +0.095). The gate recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's 45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime gain; it does not fix the X/X2 boundary (affect-carrying-but-misaligned queries stay un-gateable). A production retrieve_query_gated() API is a Branch-A follow-up.",
+      "current_evidence": "Addendum Y (make bench-y-gate, 4 corpora, tau=0.2 primary + {0.1,0.2,0.3} sensitivity, paired bootstrap n=10k seed=0, Holm m=2). The gated arm is an exact per-query selection between the naive_cosine and aft_query_appraised arms. Hg1 (ES-MemEval) gated>aft delta=+0.076 [+0.065,+0.087] p_holm=0.0000; Hg2 (realistic_recall_v2) gated>cosine delta=+0.095 [+0.050,+0.140] p_holm=0.0000. Per-corpus recovery tracks the neutral-query fraction of the penalty: ES-MemEval 45.5% neutral -> 50% recovered (gated still -0.075 vs cosine); MADial 0% neutral -> 0% recovered (gate never fires); DailyDialog best-of-both (ns); curated preserve (gated==aft, +0.095 vs cosine). tau-monotone on ES-MemEval, flat on curated. The X/X2 gold-relation boundary is unchanged.",
+      "not_yet_shown": "A production retrieve_query_gated() src API (Branch-A follow-up); gains beyond safe-wrapper (the gate cannot beat cosine on affect-orthogonal/counter-congruent corpora).",
+      "next_study": "Promote the gate to a production API in its own pre-registered PR (weight-forcing [1,0,0,0,0,0] via precomputed_weights, bypassing adaptive_weights).",
+      "evidence_refs": [
+        "benchmarks/preregistration_addendum_y_query_affect_gate_closure.md"
+      ],
+      "benchmark_refs": [
+        "benchmarks/gate/results.json"
+      ],
+      "protocol_refs": [
+        "benchmarks/preregistration_addendum_y_query_affect_gate.md"
+      ],
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     }
   ]
 }
