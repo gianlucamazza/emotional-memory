@@ -316,6 +316,19 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       gold-relation boundary. Follow-up (not scheduled): promote to a production
       `retrieve_query_gated()` src API in its own pre-registered PR.
       See `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
+- [ ] **Addendum Z — held-out learned retrieval profile (pre-registered; scored run
+      pending).** The untested lever behind every third-party FAIL: they all used a
+      _fixed_ weight vector. Z fits a linear pairwise learning-to-rank over the 6
+      retrieval signals and evaluates it strictly out-of-sample via k-fold cross-fitting
+      (tests generalization, not fit — resolving the circularity that kept the
+      support-mode profile unscheduled). Hz1 (break, Holm m=3): held-out learned > cosine
+      on ≥1 third-party corpus → Branch A, provenance bound broken (replication-gated);
+      Hz2 (preserve): non-inferior to the fixed profile on curated. Honest ex-ante
+      expectation is Branch B (even the held-out optimal linear profile does not beat
+      cosine → hardens the boundary). Pre-registration + harness (`benchmarks/common/ltr.py` + `benchmarks/learned_profile/`, all 4 corpora dry-validated, zero `src/`) landed;
+      scored run (`make bench-z-profile`, direct-VAD, billed) is the next step. Branch-A
+      follow-up: a `fit_retrieval_weights()` src API.
+      See `benchmarks/preregistration_addendum_z_learned_profile.md`.
 
 ---
 

@@ -23,6 +23,7 @@ make bench-a3        # A3 downstream encode→retrieve→generate→judge (Adden
 make bench-human-gold # A5 appraisal vs human-gold EmoBank (Addendum S; requires LLM key)
 make bench-x-madial  # Addendum X third-party retrieval on MADial-Bench (requires LLM key; -dry = no-LLM smoke)
 make bench-x2-esmem  # Addendum X2 third-party retrieval on ES-MemEval/EvoEmo (requires LLM key; -dry = no-LLM smoke)
+make bench-z-profile # Addendum Z held-out learned retrieval profile (learning-to-rank; requires LLM key; -dry = no-LLM smoke)
 make install        # Install package in editable mode with dev deps
 make install-llm-test # Install llm-test dependencies (httpx)
 make install-dotenv  # Install dotenv dependencies (python-dotenv)
@@ -163,4 +164,4 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 - Human-gold appraisal benchmark in `benchmarks/human_gold_appraisal/` (Addendum S, `make bench-human-gold`) validates the appraisal signal against EmoBank human VAD labels (`benchmarks/datasets/emobank_v1.json`, CC-BY-SA 4.0).
 - Third-party retrieval benchmark in `benchmarks/madialbench/` (Addendum X, `make bench-x-madial[-dry]`) tests oracle-free query-appraisal retrieval on MADial-Bench EN (vendored in `benchmarks/datasets/madialbench/`, MIT, sha256-pinned by the loader). Hx1 FAIL — the corpus rewards counter-congruent supportive recall.
 - Second third-party retrieval benchmark in `benchmarks/esmemeval/` (Addendum X2, `make bench-x2-esmem[-dry]`) tests the same mechanism on ES-MemEval/EvoEmo (vendored in `benchmarks/datasets/esmemeval/`, CC-BY-4.0, sha256-pinned; the vendored file is excluded from byte-mutating pre-commit hooks). Hx2 FAIL — the QA gold is content-determined and affect-orthogonal (failure mode distinct from X).
-- Other addendum harnesses: `benchmarks/query_appraisal/` (T), `benchmarks/circularity_audit/` (U), `benchmarks/appraisal_vad/` (V), `benchmarks/arousal_calibration/` (W). The full prereg→closure→verdict index is `benchmarks/README.md`.
+- Other addendum harnesses: `benchmarks/query_appraisal/` (T), `benchmarks/circularity_audit/` (U), `benchmarks/appraisal_vad/` (V), `benchmarks/arousal_calibration/` (W), `benchmarks/gate/` (Y), `benchmarks/learned_profile/` (Z — held-out learning-to-rank of the 6 retrieval-signal weights via `benchmarks/common/ltr.py`; pre-registered, harness dry-validated on all 4 corpora, scored run pending). The full prereg→closure→verdict index is `benchmarks/README.md`.
