@@ -17,6 +17,14 @@ import math
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
+# Maximum Euclidean distance in the 3-D PAD space (single source of truth):
+# valence [-1, 1] (range 2), arousal [0, 1] (range 1), dominance [0, 1] (range 1)
+# => sqrt(2**2 + 1**2 + 1**2) = sqrt(6) ~= 2.449.
+# Any code normalising a CoreAffect.distance() into a [0, 1] similarity must use
+# this value; a stale 2-D max (sqrt(5) ~= 2.236, pre-dominance) over-penalises and
+# clamps distances in (sqrt(5), sqrt(6)] to zero similarity.
+MAX_PAD_DISTANCE: float = math.sqrt(6.0)
+
 
 class CoreAffect(BaseModel):
     """A point in the valence-arousal-dominance (PAD) space.

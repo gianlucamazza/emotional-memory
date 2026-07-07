@@ -23,7 +23,7 @@ from typing import Literal
 import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
-from emotional_memory.affect import CoreAffect
+from emotional_memory.affect import MAX_PAD_DISTANCE, CoreAffect
 from emotional_memory.models import Memory, ResonanceLink
 
 
@@ -106,9 +106,15 @@ def temporal_proximity(t1: datetime, t2: datetime, half_life_seconds: float = 36
 
 
 def _emotional_similarity(a: CoreAffect, b: CoreAffect) -> float:
-    """Maps affect distance [0, 2.24] → similarity [1, 0]."""
+    """Maps affect distance [0, sqrt(6)] → similarity [1, 0].
+
+    Normalised by the full 3-D PAD max distance (``MAX_PAD_DISTANCE``). Prior to
+    this it used a stale 2-D max (2.24 ~= sqrt(5)) that predated the dominance
+    axis, over-penalising emotional similarity and clamping distances in
+    (sqrt(5), sqrt(6)] to zero.
+    """
     dist = a.distance(b)
-    return max(0.0, 1.0 - dist / 2.24)
+    return max(0.0, 1.0 - dist / MAX_PAD_DISTANCE)
 
 
 def _classify_link_type(

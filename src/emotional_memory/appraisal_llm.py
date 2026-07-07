@@ -52,6 +52,41 @@ from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchem
 
 logger = logging.getLogger(__name__)
 
+
+def _first_json_object(text: str) -> str | None:
+    """Return the substring spanning the first balanced ``{...}`` object.
+
+    Tracks string literals and escapes so braces inside JSON strings are not
+    miscounted. Returns ``None`` when no complete top-level object is present.
+    """
+    start = -1
+    depth = 0
+    in_string = False
+    escaped = False
+    for i, ch in enumerate(text):
+        if start == -1:
+            if ch == "{":
+                start, depth = i, 1
+            continue
+        if in_string:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : i + 1]
+    return None
+
+
 # ---------------------------------------------------------------------------
 # JSON schema exposed to the LLM
 # ---------------------------------------------------------------------------
@@ -270,11 +305,16 @@ class LLMAppraisalEngine:
                     vector = AppraisalVector(**data)
                 else:
                     vector = GenericAppraisalVector(dimensions=data, schema=self._schema)
-            except Exception:
+            except Exception as exc:
                 if self._config.fallback_on_error:
-                    logger.debug(
-                        "appraise: parse/validation error, using fallback (text_len=%d)",
+                    # Warn, not debug: a requested appraisal was silently replaced
+                    # with the neutral fallback. Leaving this at debug hid the
+                    # Addendum X2 silent-corruption for a whole measurement run.
+                    logger.warning(
+                        "appraise: parse/validation error, using neutral fallback "
+                        "(text_len=%d): %s",
                         len(event_text),
+                        exc,
                         exc_info=True,
                     )
                     vector = self._fallback
@@ -321,14 +361,29 @@ class LLMAppraisalEngine:
 
     @staticmethod
     def _extract_json(raw: str) -> dict[str, Any]:
-        """Extract the first JSON object from *raw*, tolerating markdown fences."""
-        # Strip markdown code fences if present
+        """Extract the first complete JSON object from *raw*, tolerating fences.
+
+        Handles **nested** objects. A naive ``\\{[^{}]*\\}`` regex stops at the
+        first inner brace and returns a nested sub-object (or fails outright),
+        which silently triggers the neutral fallback — the same silent-corruption
+        class as the Addendum X2 adapter bug. We first try to parse the whole
+        cleaned payload, then fall back to a string-aware balanced-brace scan for
+        the first top-level ``{...}`` object.
+        """
+        # Strip markdown code fences if present.
         cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
-        # Find first {...} block (non-greedy to avoid spanning multiple objects)
-        match = re.search(r"\{[^{}]*\}", cleaned)
-        if not match:
+        # Fast path: the whole payload is already a JSON object (nesting is fine).
+        try:
+            whole = json.loads(cleaned)
+        except json.JSONDecodeError:
+            whole = None
+        if isinstance(whole, dict):
+            return whole
+        # Balanced-brace scan for the first complete top-level object.
+        obj = _first_json_object(cleaned)
+        if obj is None:
             raise ValueError(f"No JSON object found in LLM response: {raw!r}")
-        result = json.loads(match.group())
+        result = json.loads(obj)
         if not isinstance(result, dict):
             raise TypeError(f"Expected JSON object, got {type(result)}")
         return result

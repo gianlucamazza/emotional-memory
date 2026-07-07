@@ -30,19 +30,16 @@ from numpy.typing import NDArray
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from emotional_memory._math import cosine_similarity
-from emotional_memory.affect import AffectiveMomentum, CoreAffect
+from emotional_memory.affect import MAX_PAD_DISTANCE, AffectiveMomentum, CoreAffect
 from emotional_memory.decay import DecayConfig, compute_effective_strength
 from emotional_memory.models import EmotionalTag, Memory
 from emotional_memory.mood import MoodField
 
-# Max Euclidean distance in the 3-D PAD space used by MoodField:
-# valence [-1,1] (range 2), arousal [0,1] (range 1), dominance [0,1] (range 1)
-# => sqrt(4 + 1 + 1) = sqrt(6)
-_MAX_MOOD_DIST: float = math.sqrt(6.0)
-# Max Euclidean distance in the 3-D CoreAffect space (now full PAD):
-# valence [-1,1] (range 2), arousal [0,1] (range 1), dominance [0,1] (range 1)
-# => sqrt(4 + 1 + 1) = sqrt(6) — same as MoodField space
-_MAX_AFFECT_DIST: float = math.sqrt(6.0)
+# Max Euclidean distance in the 3-D PAD space, shared single source of truth
+# (see ``emotional_memory.affect.MAX_PAD_DISTANCE``). MoodField and CoreAffect
+# share the same PAD ranges, so both normalise by sqrt(6) ~= 2.449.
+_MAX_MOOD_DIST: float = MAX_PAD_DISTANCE
+_MAX_AFFECT_DIST: float = MAX_PAD_DISTANCE
 # Threshold below which momentum magnitudes are treated as zero (float stability)
 _MOMENTUM_ZERO_THRESHOLD: float = 1e-12
 

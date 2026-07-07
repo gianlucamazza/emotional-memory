@@ -4,11 +4,12 @@ from datetime import UTC, datetime, timedelta
 import pytest
 from conftest import make_test_memory
 
-from emotional_memory.affect import AffectiveMomentum, CoreAffect
+from emotional_memory.affect import MAX_PAD_DISTANCE, AffectiveMomentum, CoreAffect
 from emotional_memory.models import Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodField
 from emotional_memory.resonance import (
     ResonanceConfig,
+    _emotional_similarity,
     build_resonance_links,
     hebbian_strengthen,
     spreading_activation,
@@ -41,6 +42,31 @@ class TestTemporalProximity:
         t1 = _now()
         t2 = t1 + timedelta(hours=2)
         assert math.isclose(temporal_proximity(t1, t2), temporal_proximity(t2, t1))
+
+
+class TestEmotionalSimilarity:
+    """Regression: normalise CoreAffect.distance() by the full 3-D PAD max (sqrt(6)),
+    not the stale 2-D max (2.24 ~= sqrt(5)) that predated the dominance axis."""
+
+    def test_identical_is_one(self):
+        a = CoreAffect(valence=0.3, arousal=0.5, dominance=0.5)
+        assert math.isclose(_emotional_similarity(a, a), 1.0)
+
+    def test_max_distance_is_zero(self):
+        a = CoreAffect(valence=-1.0, arousal=0.0, dominance=0.0)
+        b = CoreAffect(valence=1.0, arousal=1.0, dominance=1.0)
+        assert math.isclose(a.distance(b), MAX_PAD_DISTANCE)
+        assert math.isclose(_emotional_similarity(a, b), 0.0, abs_tol=1e-9)
+
+    def test_normalised_by_sqrt6_not_stale_2d_max(self):
+        # Pair at distance sqrt(5): the stale 2.24 normaliser clamped this to ~0;
+        # under the correct sqrt(6) it is a clear positive similarity.
+        a = CoreAffect(valence=-1.0, arousal=0.0, dominance=0.5)
+        b = CoreAffect(valence=1.0, arousal=1.0, dominance=0.5)
+        assert math.isclose(a.distance(b), math.sqrt(5.0))
+        sim = _emotional_similarity(a, b)
+        assert sim == pytest.approx(1.0 - math.sqrt(5.0) / MAX_PAD_DISTANCE)
+        assert sim > 0.08
 
 
 class TestBuildResonanceLinks:
