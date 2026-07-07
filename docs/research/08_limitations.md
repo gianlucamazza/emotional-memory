@@ -266,6 +266,8 @@ regime criterion: **the gold relation itself must be affect-conditioned**, which
 has only been observed in author-crafted corpora.
 See `benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 
+**Update (Addendum Y, 2026-07-07) — a query-affect gate removes the self-inflicted penalty, not the boundary.** Gating the affect channel on the appraised query (neutral query -> pure cosine, else the affect-conditioned arm) is a validated safe wrapper (Branch A: Hg1 recover + Hg2 preserve both PASS): it recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval’s 45.5%-neutral queries; 0% on MADial, where every distressed-user query is affect-carrying) and preserves the full on-regime gain (+0.095 vs cosine on curated). It does **not** move the X/X2 boundary: affect-carrying queries whose gold is counter-congruent (X) or content-determined (X2) stay un-gateable. See `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
+
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 
 S3 ablation (`no_resonance` variant, e5-small-v2) found that removing the

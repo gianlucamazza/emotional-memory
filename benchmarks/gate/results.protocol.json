@@ -1,0 +1,8 @@
+{
+  "benchmark": "addendum_y_query_affect_gate",
+  "pre_registration": "benchmarks/preregistration_addendum_y_query_affect_gate.md",
+  "primary_tau": 0.2,
+  "confirmatory_family": "Holm m=2: Hg1 esmemeval gated_vs_aft, Hg2 realistic_recall_v2 gated_vs_cosine",
+  "dry_run": false,
+  "branch_a": true
+}

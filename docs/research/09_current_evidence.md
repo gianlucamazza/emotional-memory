@@ -367,3 +367,7 @@ These figures are generated from the committed benchmark JSON artefacts with
 - For neighboring systems: [State of the Art](04_state_of_art.md) and
   [Related Work](07_related_work.md)
 - For known limitations: [Limitations](08_limitations.md)
+
+### Addendum Y — Query-affect-conditioned gate (Branch A PASS)
+
+**Claim `query_affect_gate`.** Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (|valence|<0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated>aft +0.076 and gated>cosine +0.095). The gate recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's 45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime gain; it does not fix the X/X2 boundary (affect-carrying-but-misaligned queries stay un-gateable). A production retrieve_query_gated() API is a Branch-A follow-up.
