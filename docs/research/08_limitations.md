@@ -440,7 +440,10 @@ extending it to those cases is straightforward future work.
 `LLMAppraisalEngine` requires a call to an external LLM (OpenAI-compatible)
 to produce an `AppraisalVector`. This introduces:
 
-- **Latency**: 200–2000 ms per encoding in slow-path mode.
+- **Latency**: 200–2000 ms per encoding in slow-path mode. Batch throughput is
+  mitigated by `encode_batch`, which appraises items concurrently (bounded by
+  `appraisal_max_concurrency`, default 8) rather than serially; per-item latency is
+  unchanged. `dual_path_encoding` defers appraisal off the encode hot path entirely.
 - **Cost**: dependent on provider and model.
 - **Non-determinism**: the same text can produce different appraisals across
   successive calls.

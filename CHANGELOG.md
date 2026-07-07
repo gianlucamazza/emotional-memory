@@ -26,6 +26,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dry-validated; features via `build_retrieval_plan(precomputed_weights=)`. See
   `benchmarks/preregistration_addendum_z_learned_profile.md`.
 
+### Added
+
+- **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
+  bounds the parallel appraisal in `encode_batch`. Set to 1 for fully sequential
+  appraisal (e.g. a non-thread-safe `llm` callable).
+
+### Changed
+
+- **`encode_batch` now appraises items in parallel** (both sync and async) instead of
+  serially. A batch of N previously cost N serial LLM round-trips — the dominant encode
+  latency (200–2000 ms/item). Since appraisal depends only on content/context, the batch's
+  appraisals are computed concurrently up front (async `asyncio.gather` + `Semaphore`; sync
+  `ThreadPoolExecutor`) and then consumed by the order-preserving state-evolution loop, so
+  results are identical to the sequential path — only the appraisal I/O waits overlap. The
+  sync path requires a thread-safe `llm` callable (httpx.Client and `KeywordAppraisalEngine`
+  are). `elaborate_pending()` remains sequential.
+
+### Fixed
+
+- **PAD similarity normaliser mismatch (resonance).** `resonance._emotional_similarity`
+  normalised `CoreAffect.distance()` by a stale 2-D maximum (`2.24 ≈ √5`, predating the
+  dominance axis) while `retrieval.py` correctly used the 3-D maximum (`√6 ≈ 2.449`) for
+  the same distance. This over-penalised emotional similarity in resonance-link
+  construction and clamped every distance in `(√5, √6]` to zero. Introduced a single
+  source of truth `emotional_memory.affect.MAX_PAD_DISTANCE`, used by both modules. All
+  127 psychological-fidelity benchmarks still pass (the correction is within tolerance).
+- **Appraisal JSON parser dropped nested objects, silently.** `LLMAppraisalEngine._extract_json`
+  used a `\{[^{}]*\}` regex that stops at the first inner brace, returning a nested
+  sub-object (or failing) on any nested LLM payload → validation error → **silent** neutral
+  fallback (the same silent-corruption class as the Addendum X2 adapter bug). Now parses the
+  whole payload first, then falls back to a string-aware balanced-brace scan. The
+  parse/validation-error fallback is also logged at WARNING (was DEBUG), so a swallowed
+  appraisal is no longer silent.
+
 ## [0.16.0] - 2026-07-07
 
 ### Research
