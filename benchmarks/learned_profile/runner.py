@@ -12,10 +12,13 @@ Confirmatory family (Holm m=3, one-tailed): Hz1 = {MADial, ES-MemEval, DailyDial
 ``aft_learned`` (held-out) > ``naive_cosine``. Hz2 = curated non-inferiority vs
 ``aft_fixed``. See ``benchmarks/preregistration_addendum_z_learned_profile.md``.
 
-This harness PR wires the two dry-capable third-party break corpora (MADial-Bench X,
-ES-MemEval X2), validated end-to-end by ``--dry-run`` (keyword appraiser, no LLM).
-DailyDialog and curated (both stateful / LLM-only) are added in the run+closure PR;
-until the full pre-registered family is present the Holm verdict is not evaluable.
+All four pre-registered corpora are wired and **dry-capable** (their encode side
+needs no LLM — MADial/ES-MemEval use keyword appraisal, DailyDialog uses oracle
+session PAD + keyword, curated uses oracle per-event PAD; only the query-affect
+source differs). ``--dry-run`` validates the full pipeline with a keyword query
+appraiser and a per-corpus query cap; the scored run uses direct-VAD (LLM) and the
+full corpora. Dry artifacts are written to ``results.dry.*`` and are labelled
+non-scored — the numbers are a smoke, not a verdict.
 
 Usage::
 
@@ -26,6 +29,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
@@ -205,10 +209,122 @@ def _make_qf(
     return QueryFeatures(features=feats, gold=gold, metric=metric)
 
 
+def _top1_metric(gold: np.ndarray) -> Callable[[Sequence[int]], float]:
+    """top1 hit: 1.0 iff the top-ranked candidate is relevant."""
+
+    def metric(ranking: Sequence[int], _g=gold) -> float:
+        return 1.0 if _g[ranking[0]] > 0.5 else 0.0
+
+    return metric
+
+
+def _query_appraiser(dry_run: bool) -> Any:
+    """Query-side appraiser: keyword (dry, no LLM) or direct-VAD (scored)."""
+    from emotional_memory.appraisal_llm import KeywordAppraisalEngine
+
+    if dry_run:
+        return KeywordAppraisalEngine()
+    from emotional_memory import DIRECT_VAD_SCHEMA
+    from emotional_memory.appraisal_llm import LLMAppraisalConfig, LLMAppraisalEngine
+    from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
+
+    cfg = OpenAICompatibleLLMConfig.from_env()
+    if cfg is None:
+        raise RuntimeError("EMOTIONAL_MEMORY_LLM_API_KEY not set — cannot appraise queries.")
+    return LLMAppraisalEngine(
+        llm=make_httpx_llm(cfg),
+        config=LLMAppraisalConfig(
+            cache_size=4096, fallback_on_error=True, appraisal_schema=DIRECT_VAD_SCHEMA
+        ),
+    )
+
+
+def _dailydialog_queries(*, dry_run: bool) -> list[QueryFeatures]:
+    # Encode side uses oracle session PAD + keyword appraisal (no LLM); only the
+    # query-affect source needs an appraiser, so this corpus is dry-capable.
+    from benchmarks.dailydialog.adapters.aft import AFTDailyDialogAdapter
+    from benchmarks.dailydialog.t2a_runner import DEFAULT_PERSONA_FILE, load_personas
+
+    dataset = load_personas(DEFAULT_PERSONA_FILE)
+    q_appraiser = _query_appraiser(dry_run)
+    now = datetime.now(tz=UTC)
+    adapter = AFTDailyDialogAdapter()
+    out: list[QueryFeatures] = []
+    personas = dataset.personas[:_DRY_QUERY_LIMIT] if dry_run else dataset.personas
+    for persona in personas:
+        adapter.reset()
+        for session in persona.sessions:
+            adapter.ingest_session(session)
+        engine = adapter._require_engine()
+        candidates = engine._store.list_all()
+        sess_of = adapter._memory_session_map
+        for query in persona.queries:
+            qa = q_appraiser.appraise(query.text).to_core_affect()
+            emb = engine._embedder.embed(query.text)
+            feats = _pool_features(engine, emb, qa, candidates, now=now)
+            gold = np.asarray(
+                [1.0 if sess_of.get(c.id) == query.target_session_id else 0.0 for c in candidates]
+            )
+            out.append(QueryFeatures(features=feats, gold=gold, metric=_top1_metric(gold)))
+    with contextlib.suppress(Exception):
+        adapter._require_engine().close()
+    return out
+
+
+def _curated_queries(*, dry_run: bool) -> list[QueryFeatures]:
+    # Replays the realistic_recall_v2 timeline (scenario -> session -> events ->
+    # queries); the pool is the memories encoded so far. Encode uses oracle
+    # per-event PAD (no LLM), so this corpus is dry-capable.
+    import tempfile
+
+    from benchmarks.query_appraisal.runner import DEFAULT_DATASET
+    from benchmarks.realistic.runner import _build_embedder, _make_adapter, load_dataset
+
+    dataset = load_dataset(DEFAULT_DATASET)
+    q_appraiser = _query_appraiser(dry_run)
+    now = datetime.now(tz=UTC)
+    out: list[QueryFeatures] = []
+    scenarios = dataset.scenarios[:_DRY_QUERY_LIMIT] if dry_run else dataset.scenarios
+    with tempfile.TemporaryDirectory() as wd:
+        adapter = _make_adapter("aft", workdir=Path(wd), embedder=_build_embedder("sbert-bge"))
+        adapter.reset()
+        for scenario in scenarios:
+            alias_to_actual: dict[str, str] = {}
+            for session in scenario.sessions:
+                adapter.begin_session(session.session_id)
+                for event in session.events:
+                    actual = adapter.encode(
+                        memory_alias=event.memory_id,
+                        content=event.content,
+                        valence=event.valence,
+                        arousal=event.arousal,
+                        metadata=event.metadata,
+                    )
+                    alias_to_actual[event.memory_id] = actual
+                engine = adapter._require_engine()
+                for query in session.queries:
+                    candidates = engine._store.list_all()
+                    qa = q_appraiser.appraise(query.query).to_core_affect()
+                    emb = engine._embedder.embed(query.query)
+                    feats = _pool_features(engine, emb, qa, candidates, now=now)
+                    expected = {
+                        alias_to_actual[m]
+                        for m in query.expected_memory_ids
+                        if m in alias_to_actual
+                    }
+                    gold = np.asarray([1.0 if c.id in expected else 0.0 for c in candidates])
+                    out.append(QueryFeatures(features=feats, gold=gold, metric=_top1_metric(gold)))
+                adapter.end_session()
+        adapter.close()
+    return out
+
+
 # (key, builder, metric_label, role, dry_capable)
 CORPORA: list[tuple[str, Callable[..., list[QueryFeatures]], str, str, bool]] = [
     ("madialbench", _madial_queries, "ndcg@5", "break", True),
     ("esmemeval", _esmemeval_queries, "u_ndcg@4", "break", True),
+    ("dailydialog_t2a", _dailydialog_queries, "top1", "break", True),
+    ("realistic_recall_v2", _curated_queries, "top1", "preserve", True),
 ]
 
 
@@ -274,8 +390,9 @@ def run_benchmark(
 
 
 def _verdict(reports: dict[str, Any]) -> dict[str, Any]:
-    """Holm m=3 over the Hz1 break family + Hz2 non-inferiority. Only evaluable
-    when every pre-registered corpus is present (scored run + closure PR)."""
+    """Holm m=3 over the Hz1 break family + Hz2 non-inferiority. Evaluable once
+    every pre-registered corpus is present (a dry verdict is still labelled
+    non-scored via the results.dry.* header)."""
     have_break = [c for c in _HZ1_BREAK if c in reports]
     if len(have_break) < len(_HZ1_BREAK) or _HZ2_PRESERVE not in reports:
         return {
