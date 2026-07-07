@@ -29,6 +29,18 @@
 > Closures:
 > [`preregistration_addendum_x_madialbench_third_party_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md).
 
+> **Update (2026-07-07) — the third-party bound now has a second measured corpus.**
+> Addendum **X2** (ES-MemEval/EvoEmo, WWW 2026, N=1,133 in-family QA queries, oracle-free)
+> is a second powered inverted FAIL (upstream-verbatim nDCG@4 0.284 vs 0.120,
+> Δ=−0.164 [−0.179, −0.149], MDE 0.019), for a **distinct** reason from X: not
+> counter-congruent recall but **affect-orthogonal, content-determined gold** (45.2% of
+> queries affectively neutral; appraisal still faithful, D1 AUC=0.971). Because X2's corpus
+> is affect-discriminative (D2=68.2%) yet still fails, the operative boundary is sharper
+> than the D2 criterion: **the gold relation itself must be affect-conditioned** — a
+> property observed to date only in author-crafted corpora, so the provenance bound
+> hardens. Closure:
+> [`preregistration_addendum_x2_esmemeval_third_party_closure.md`](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md).
+
 ## Executive summary
 
 | Area                                   | Result                                                                              |

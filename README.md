@@ -45,7 +45,7 @@ This is **not** a replacement for those tools — `emotional_memory` is a focuse
 
 ### When NOT to use
 
-`emotional_memory` is a focused primitive for **affect-discriminative recall**, not a general-purpose memory system. Its measured advantage holds only when affective context discriminates among candidate memories _and_ affect is supplied at encode time (oracle affect). _Within_ that regime the ranking advantage does convert end-to-end: in a pre-registered encode→retrieve→generate→judge task (Addendum R, N=200, gpt-5-mini judge) AFT's LLM-judged answer accuracy is 0.595 vs 0.440 for cosine (Δ=+0.155 [0.095, 0.220], p<0.001). But pre-registered studies show it does **not** help — and can hurt — outside that regime:
+`emotional_memory` is a focused primitive for **affect-discriminative recall**, not a general-purpose memory system. Its measured advantage holds only when relevance is itself affect-conditioned _and_ affect is supplied at encode time (oracle affect). _Within_ that regime the ranking advantage does convert end-to-end: in a pre-registered encode→retrieve→generate→judge task (Addendum R, N=200, gpt-5-mini judge) AFT's LLM-judged answer accuracy is 0.595 vs 0.440 for cosine (Δ=+0.155 [0.095, 0.220], p<0.001). But pre-registered studies show it does **not** help — and can hurt — outside that regime:
 
 - **Factual / open-domain QA** — on LoCoMo (1986 QA pairs) AFT underperforms a naive RAG baseline (F1 0.168 vs 0.271; Gate 1 FAIL).
 - **End-to-end automatic appraisal** — when affect comes from `LLMAppraisalEngine` rather than oracle labels, AFT does not beat cosine on affect-free queries (Hg1 FAIL, Δ=−0.010; recalibrated re-run Addendum P, Δ=−0.087, p=0.002). The gain has **not** transferred to automatic appraisal, calibrated or not.
