@@ -130,7 +130,7 @@ all other exceptions untouched.
   title   = {emotional-memory: Affective Field Theory for LLM Memory},
   version = {0.15.0},
   year    = {2026},
-  doi     = {10.5281/zenodo.21129262},
+  doi     = {10.5281/zenodo.21235738},
   url     = {https://github.com/gianlucamazza/emotional-memory}
 }
 ```
