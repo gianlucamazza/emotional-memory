@@ -6,30 +6,30 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 
 ## 1. Source bundle
 
-| Item                                                                 | Status | Notes                                                                            |
-| -------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------- |
-| `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates     |
+| Item                                                                 | Status | Notes                                                                                 |
+| -------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------- |
+| `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates          |
 | Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 19pp, ~540KB (grew with addenda R/S/U/V/T/T2A/W/X/X2) — only benign hyperref warnings |
-| No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
-| All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
-| All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
-| `refs.bib` is included and all citations resolve                     | ✓      | 44 unique `\cite` keys, 44 entries — all resolve                                 |
-| No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                             |
+| No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                       |
+| All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures                 |
+| All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                                 |
+| `refs.bib` is included and all citations resolve                     | ✓      | 44 unique `\cite` keys, 44 entries — all resolve                                      |
+| No `\usepackage{minted}` or other packages requiring `-shell-escape` | ✓      | Confirmed: no `minted` in `main.tex`                                                  |
 
 ---
 
 ## 2. Content
 
-| Item                                                  | Status | Notes                                                                                                                               |
-| ----------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Title matches repo/Zenodo metadata                    | ✗      | Check `release.toml` and `CITATION.cff`                                                                                             |
-| Authors and affiliations complete                     | ✗      |                                                                                                                                     |
-| Abstract ≤ 1920 characters (arXiv limit)              | ✓      | reframed (V+T lead); ≈1890 rendered est. after the X2 both-corpora rewording — re-verify with arXiv's own counter at submit time                                 |
-| No placeholders (`XXXX`, `TODO`, `???`) in text       | ✓      | `grep -n "TODO\|XXXX\|???"` in `main.tex` — clean (Acknowledgements TODO resolved 2026-07-02)                                       |
-| Acknowledgements section present                      | ✓      | Final text: no external funding, independent work; thanks to OSS maintainers and corpus authors                                     |
-| All claims in §Results match committed JSON artifacts | ✓      | `make reproduce-paper-check` passes — zero diff                                                                                     |
-| §Limitations is present and complete                  | ✓      | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL)                              |
-| Negative results (LoCoMo Gate 1 FAIL) are disclosed   | ✓      | §Limitations §External-benchmark scope                                                                                              |
+| Item                                                  | Status | Notes                                                                                                                            |
+| ----------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Title matches repo/Zenodo metadata                    | ✗      | Check `release.toml` and `CITATION.cff`                                                                                          |
+| Authors and affiliations complete                     | ✗      |                                                                                                                                  |
+| Abstract ≤ 1920 characters (arXiv limit)              | ✓      | reframed (V+T lead); ≈1890 rendered est. after the X2 both-corpora rewording — re-verify with arXiv's own counter at submit time |
+| No placeholders (`XXXX`, `TODO`, `???`) in text       | ✓      | `grep -n "TODO\|XXXX\|???"` in `main.tex` — clean (Acknowledgements TODO resolved 2026-07-02)                                    |
+| Acknowledgements section present                      | ✓      | Final text: no external funding, independent work; thanks to OSS maintainers and corpus authors                                  |
+| All claims in §Results match committed JSON artifacts | ✓      | `make reproduce-paper-check` passes — zero diff                                                                                  |
+| §Limitations is present and complete                  | ✓      | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL)                           |
+| Negative results (LoCoMo Gate 1 FAIL) are disclosed   | ✓      | §Limitations §External-benchmark scope                                                                                           |
 
 ---
 
@@ -79,5 +79,5 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-07-02 (related-work refresh: 4 new refs, 44/44 cite keys; Acknowledgements TODO resolved; primary category aligned to issue #31 cs.LG; page count 19pp after Addendum X).
+_Last updated: 2026-07-07 (Addendum X2 added: second third-party corpus ES-MemEval/EvoEmo, Hx2 FAIL inverted — abstract reworded to "both released third-party corpora" (≈1890 chars), addenda range A–X2, software snapshot v0.15.0 with version DOI 10.5281/zenodo.21235738; page count 19pp unchanged). Prior 2026-07-02: related-work refresh, 44/44 cite keys, Acknowledgements TODO resolved, primary category cs.LG.
 Previous: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._
