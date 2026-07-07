@@ -251,10 +251,10 @@ mechanism on ES-MemEval/EvoEmo (WWW 2026, CC-BY-4.0: longitudinal emotional-supp
 N=1,133 in-family queries over 401 session documents, 50-candidate pools replicating the
 upstream evaluation; harness merged before the scored run). **Hx2 FAIL, inverted and
 powered by an order of magnitude**: cosine ahead on upstream-verbatim nDCG@4 (0.284 vs
-0.120, Δ=−0.164 [−0.179, −0.149], p_one=1.0000, d=−0.653; MDE 0.019), consistent across
+0.120, Δ=−0.150 [−0.165, −0.136], p_one=1.0000, d=−0.622; MDE 0.018), consistent across
 all 31 grid contrasts and all capabilities. Diagnostics again exonerate the mechanism's
-inputs: appraisal faithful (D1 AUC=0.971 [0.938, 0.994]) and — contrary to the
-pre-registered low-D2 prior — the corpus is affect-discriminative (D2=68.2%). Post-hoc
+inputs: appraisal faithful (D1 AUC=0.950 [0.901, 0.988]) and — contrary to the
+pre-registered low-D2 prior — the corpus is affect-discriminative (D2=63.0%). Post-hoc
 (exploratory): unlike MADial-Bench, the gold is **not counter-congruent**
 (corr(query valence, gold valence)=+0.25; only 13.1% opposite-sign vs X's 40%) — it is
 **affect-orthogonal**: 45.2% of queries are affectively neutral and the right session is

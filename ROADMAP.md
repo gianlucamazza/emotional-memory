@@ -292,8 +292,8 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       released third-party corpus (WWW 2026, CC-BY-4.0; N=1,133 in-family QA queries,
       401 session documents, 50-candidate pools, upstream-verbatim metrics; harness
       merged pre-run). **Hx2 FAIL, inverted**: cosine significantly ahead
-      (u_nDCG@4 0.284 vs 0.120, Δ=−0.164 [−0.179, −0.149], powered, MDE 0.019) with
-      faithful appraisal (D1 AUC=0.971) and an affect-discriminative corpus (D2=68.2%,
+      (u_nDCG@4 0.284 vs 0.133, Δ=−0.150 [−0.165, −0.136], powered, MDE 0.018) with
+      faithful appraisal (D1 AUC=0.950) and an affect-discriminative corpus (D2=63.0%,
       ex-ante low-D2 prior wrong). Post-hoc: failure mode distinct from X — the gold is
       **affect-orthogonal** (content-determined QA; 45.2% of queries affectively
       neutral), not counter-congruent. Provenance bound hardened: positive retrieval

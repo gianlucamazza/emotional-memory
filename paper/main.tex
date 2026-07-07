@@ -86,7 +86,7 @@ human-validated on EmoBank (valence $r=0.79$), beating the theory-driven project
 with no oracle ($\Delta=+0.115$, $p<0.001$; ${\sim}59\%$ recovery, ${\sim}82\%$ on the
 affect-discriminative subset)---production-reachable, yet bounded: null on
 naturalistic dialogue ($\Delta=-0.008$) and \emph{negative} on both released
-third-party corpora ($\Delta=-0.083$, $-0.164$). The ranking edge converts end-to-end
+third-party corpora ($\Delta=-0.083$, $-0.150$). The ranking edge converts end-to-end
 (LLM-judged accuracy 0.595 vs.\ 0.440, $p<0.001$); with automatic appraisal on
 affect-free data it does not beat cosine ($\Delta=-0.087$, $p=0.002$), locating the
 boundary at retrieve-time state injection. AFT encodes 25$\times$ faster than Mem0
@@ -934,9 +934,9 @@ mechanism on the second released third-party corpus, ES-MemEval/EvoEmo
 \citep{chen2026esmemeval}: longitudinal emotional-support QA ($N{=}1{,}133$ in-family
 queries over 401 session documents, 50-candidate pools replicating the upstream
 session-level protocol, upstream-verbatim metrics). Cosine won again, by twice the margin
-(nDCG@4 $0.284$ vs $0.120$, $\Delta=-0.164$ [$-0.179$, $-0.149$], $d=-0.653$; MDE $0.019$),
-with faithful appraisal (AUC $=0.971$) and---contrary to the pre-registered low-D2
-prior---an affect-discriminative corpus ($68.2\%$). The post-hoc failure mode is
+(nDCG@4 $0.284$ vs $0.133$, $\Delta=-0.150$ [$-0.165$, $-0.136$], $d=-0.622$; MDE $0.018$),
+with faithful appraisal (AUC $=0.950$) and---contrary to the pre-registered low-D2
+prior---an affect-discriminative corpus ($63.0\%$). The post-hoc failure mode is
 \emph{distinct}: the gold is not counter-congruent (corr(query, gold valence) $=+0.25$;
 only $13.1\%$ opposite-sign) but \emph{affect-orthogonal}---$45.2\%$ of queries are
 affectively neutral and the correct session is fixed by content, so the affect channel
@@ -1061,7 +1061,7 @@ ${\sim}59\%$ recovery)---production-reachable, though a naturalistic re-test bou
 to the affect-discriminative regime (Addendum~T2A, $\Delta=-0.008$), and both released
 third-party tests are significantly negative---MADial-Bench (Addendum~X,
 $\Delta=-0.083$; counter-congruent supportive recall) and ES-MemEval (Addendum~X2,
-$\Delta=-0.164$; affect-orthogonal QA gold)---so positive retrieval evidence remains
+$\Delta=-0.150$; affect-orthogonal QA gold)---so positive retrieval evidence remains
 confined to corpora whose gold relation is affect-conditioned by construction. Per-category
 weight routing, query-type classification, and per-query affect gating were tested and
 are closed negatives (Addenda~J/L/Q).

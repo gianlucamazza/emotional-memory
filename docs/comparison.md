@@ -30,7 +30,7 @@ The measured retrieval advantage is regime-specific to affect-discriminative rec
 under oracle-affect labeling, and on both released third-party emotional retrieval
 benchmarks cosine is significantly ahead: MADial-Bench (Addendum X, Δ=−0.083 — the
 corpus rewards counter-congruent supportive recall) and ES-MemEval (Addendum X2,
-Δ=−0.164 — the QA gold is content-determined and affect-orthogonal, so the affect
+Δ=−0.150 — the QA gold is content-determined and affect-orthogonal, so the affect
 channel is uninformative noise). See the README section
 ["When NOT to use"](https://github.com/gianlucamazza/emotional-memory#when-not-to-use)
 for the committed failure regimes.
