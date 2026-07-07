@@ -1,0 +1,19 @@
+{
+  "benchmark": "addendum_x2_esmemeval",
+  "pre_registration": "benchmarks/preregistration_addendum_x2_esmemeval_third_party.md",
+  "arms": [
+    "naive_cosine",
+    "aft_query_appraised"
+  ],
+  "primary_contrast": "aft_query_appraised vs naive_cosine",
+  "primary_metric": "u_ndcg@4 (upstream-verbatim formula)",
+  "n_queries": 1133,
+  "n_zero_gold_excluded": 294,
+  "pool_size": 50,
+  "embedder": "bge-small-en-v1.5",
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "dry_run": false,
+  "decision_rule": "PASS iff p_onetail<0.05 AND delta>0 AND ci_lower>0 on upstream-verbatim ndcg@4 (single family member, m=1)",
+  "hx2_pass": false
+}
