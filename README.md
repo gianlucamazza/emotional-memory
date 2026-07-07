@@ -12,7 +12,7 @@
 
 Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just _what_ happened, but _how it felt_, _how that feeling was moving_, and _what mood colored the moment_.
 
-Pre-registered evaluation on `realistic_recall_v2`: English (N=200, SBERT Δ=+0.21, d=0.49) and French (N=120, me5, Δ=+0.18, p<0.0001, Hedges g=0.42 — Addendum M Branch A PASS). Italian/Spanish me5 at declared power (N=120) FAIL; English-SBERT and SBERT-Spanish (N=80) hold. External-QA evaluation (LoCoMo), naturalistic dialogue (DailyDialog), and the first third-party emotional corpus (MADial-Bench, Addendum X — the benchmark rewards counter-congruent supportive recall) FAIL — the AFT advantage is regime-specific to affect-discriminative, mood-congruent recall, not general superiority. Full [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
+Pre-registered evaluation on `realistic_recall_v2`: English (N=200, SBERT Δ=+0.21, d=0.49) and French (N=120, me5, Δ=+0.18, p<0.0001, Hedges g=0.42 — Addendum M Branch A PASS). Italian/Spanish me5 at declared power (N=120) FAIL; English-SBERT and SBERT-Spanish (N=80) hold. External-QA evaluation (LoCoMo), naturalistic dialogue (DailyDialog), and both released third-party emotional corpora (MADial-Bench, Addendum X — counter-congruent supportive recall; ES-MemEval, Addendum X2 — affect-orthogonal QA gold) FAIL — the AFT advantage is regime-specific to affect-discriminative, mood-congruent recall, not general superiority. Full [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 <!-- ssot:positioning-start -->
 
@@ -52,6 +52,7 @@ This is **not** a replacement for those tools — `emotional_memory` is a focuse
 - **Short-turn naturalistic dialogue** — on DailyDialog (120 personas, 396 queries) there is no advantage over cosine (Hk1 FAIL, Δ=−0.008; confirmed with retrieve-time query appraisal, Addendum T2A).
 - **Query-type routing as a fix** — heuristic routing does not close the LoCoMo gap (Addendum L FAIL).
 - **Emotional-support recall (counter-congruent)** — on the first third-party emotional retrieval benchmark (MADial-Bench, NAACL 2025; Addendum X) cosine is _significantly better_ (nDCG@5 0.304 vs 0.221, Δ=−0.083), even with near-perfect appraisal: supportive assistants are expected to recall _positive_ memories for a _distressed_ user (interpersonal emotion regulation) — the opposite of AFT's mood-congruence prior. If your gold behavior is counter-congruent, AFT's affect channel actively hurts.
+- **Content-determined QA over emotional history (affect-orthogonal)** — on the second third-party benchmark (ES-MemEval/EvoEmo, WWW 2026; Addendum X2) cosine is again _significantly better_ (nDCG@4 0.284 vs 0.120, Δ=−0.164, powered), with faithful appraisal: the right memory is fixed by _content_ (what was said, when), 45.2% of queries carry no affect, and the affect channel buys ranking variance with no gold-directed signal. If your gold is content-determined, plain cosine wins.
 
 **Recommended for:** multi-session episodic memory where mood-congruent retrieval matters and affect is available at encode time (e.g. journaling, long-horizon conversational agents). For the full record see the [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json) and [current evidence](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md).
 
@@ -318,12 +319,14 @@ vs EmoBank human gold (**Addendum V**, valence r=0.79, arousal r=0.58; shipped o
 **Addendum W**), and appraising the query at retrieve time recovers ~59% of the oracle
 advantage with no oracle (**Addendum T**, Δ=+0.115, p<0.001 — production-reachable via the
 public `query_affect` API). That recovery is bounded: it does not extend to naturalistic
-dialogue (**Addendum T2A** FAIL, Δ=−0.008), and on the first released third-party emotional
-retrieval corpus (**Addendum X**, MADial-Bench EN, N=160, oracle-free) cosine is
-significantly ahead (nDCG@5 0.304 vs 0.221, Δ=−0.083, powered negative) despite near-perfect
-appraisal (AUC=0.996) — the benchmark rewards **counter-congruent supportive recall**
-(emotion regulation), exposing a construct boundary between mood-congruent and
-emotion-regulatory retrieval (see "When NOT to use").
+dialogue (**Addendum T2A** FAIL, Δ=−0.008), and on both released third-party emotional
+retrieval corpora cosine is significantly ahead: MADial-Bench (**Addendum X**, N=160,
+nDCG@5 0.304 vs 0.221, Δ=−0.083 — **counter-congruent supportive recall**, a construct
+boundary between mood-congruent and emotion-regulatory retrieval) and ES-MemEval
+(**Addendum X2**, N=1,133, nDCG@4 0.284 vs 0.120, Δ=−0.164 — **affect-orthogonal QA gold**,
+where the affect channel is uninformative noise). Positive retrieval evidence remains
+confined to corpora whose gold relation is affect-conditioned by construction
+(see "When NOT to use").
 
 > **Oracle-affect boundary**: results measured with preset valence/arousal injected at encode
 > time (oracle affect, appraisal bypassed) measure a different regime from end-to-end runs.

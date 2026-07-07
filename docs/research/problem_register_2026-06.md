@@ -347,8 +347,13 @@ The genuinely open items (execution, not re-scoping), in priority order:
    the benchmark rewards **counter-congruent supportive recall** (interpersonal emotion
    regulation), the opposite of AFT's mood-congruence prior. The query-appraisal advantage
    is now bounded on three measured axes: regime (U/T2A), provenance (author-crafted only),
-   construct (congruence vs regulation). Residual (not scheduled): Addendum X2 on
-   ES-MemEval/EvoEmo. See `preregistration_addendum_x_madialbench_third_party_closure.md`.
+   construct (congruence vs regulation). Addendum X2 (ES-MemEval/EvoEmo) **EXECUTED 2026-07-07: FAIL,
+   inverted, powered** (Δ=−0.164 [−0.179, −0.149], MDE 0.019; D1 AUC=0.971, D2=68.2%) —
+   failure mode distinct from X: affect-orthogonal content-determined gold, not
+   counter-congruence; provenance bound hardened (the gold relation itself must be
+   affect-conditioned). No further released third-party corpora exist today. See
+   `preregistration_addendum_x_madialbench_third_party_closure.md` and
+   `preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 4. **Arousal affine calibration** for direct-VAD — **EXECUTED (Addendum W, 2026-06-28):
    ADOPTED** as a measurement/reporting transform (held-out EmoBank fit cuts arousal MAE
    0.20→0.04 preserving r; calibrated direct-VAD dominates the SEC projection on both
