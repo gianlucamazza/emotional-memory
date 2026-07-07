@@ -176,9 +176,7 @@ def run_benchmark(
         "share_affect_discriminative": n_discriminative / len(queries) if queries else 0.0,
     }
 
-    for adapter in adapters.values():
-        adapter.close()
-    return {
+    results: dict[str, Any] = {
         "benchmark": "addendum_x_madialbench",
         "pre_registration": ("benchmarks/preregistration_addendum_x_madialbench_third_party.md"),
         "dry_run": dry_run,
@@ -200,6 +198,24 @@ def run_benchmark(
             "mem0": "not run (pre-declared droppable, decision in closure)",
         },
     }
+    # Aligned per-query (cosine, aft, appraised valence) for the Addendum Y gate.
+    results["_per_query_gate"] = {
+        "metric": f"ndcg@{PRIMARY_K}",
+        "cosine": list(primary_scores[BASELINE]),
+        "aft": list(primary_scores[PRIMARY]),
+        "valence": [aft.appraised_query_affect[q.text].valence for q in queries],
+    }
+
+    for adapter in adapters.values():
+        adapter.close()
+    return results
+
+
+def gate_inputs(*, dry_run: bool = False) -> dict[str, Any]:
+    """Addendum Y: aligned per-query (cosine, aft, valence) + metric for this corpus."""
+    results = run_benchmark(load_dataset(), dry_run=dry_run, verbose=False)
+    pq = results["_per_query_gate"]
+    return {"corpus": "madialbench", **pq}
 
 
 def write_results(

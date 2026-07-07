@@ -123,6 +123,8 @@ def run_benchmark(
     diag_qa: list[float] = []
     diag_tv: list[float] = []
     diag_ta: list[float] = []
+    # Addendum Y: appraised query valence, aligned with top1[PRIMARY]["aggregate"].
+    gate_valence: list[float] = []
 
     for persona_idx, persona in enumerate(personas):
         if verbose and persona_idx % 20 == 0:
@@ -150,6 +152,9 @@ def run_benchmark(
 
                 if sys_name == PRIMARY:
                     ca = appraised.appraised_affect.get(row["query_text"])
+                    # Aligned with the top1[PRIMARY]["aggregate"] append above;
+                    # missing appraisal → 0.0 (neutral → gate routes to cosine).
+                    gate_valence.append(ca.valence if ca is not None else 0.0)
                     tgt = session_pad.get(row["target_session_id"])
                     if ca is not None and tgt is not None:
                         diag_qv.append(ca.valence)
@@ -229,7 +234,21 @@ def run_benchmark(
         },
         "ht2a_pass": ht2a_pass,
         "n_directional_types_pass": n_types_pass,
+        "_per_query_gate": {
+            "metric": "top1",
+            "cosine": [float(x) for x in top1[BASELINE]["aggregate"]],
+            "aft": [float(x) for x in top1[PRIMARY]["aggregate"]],
+            "valence": gate_valence,
+        },
     }
+
+
+def gate_inputs(*, dry_run: bool = False) -> dict[str, Any]:
+    """Addendum Y: aligned per-query (cosine, aft, valence) + metric for this corpus."""
+    dataset = load_personas(DEFAULT_PERSONA_FILE)
+    results = run_benchmark(dataset, verbose=False, limit_personas=5 if dry_run else None)
+    pq = results["_per_query_gate"]
+    return {"corpus": "dailydialog_t2a", **pq}
 
 
 def _verdict(st: dict[str, Any]) -> str:

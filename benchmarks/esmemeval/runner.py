@@ -272,9 +272,25 @@ def run_benchmark(
             for arm in adapters
         }
 
+    # Aligned per-query (cosine, aft, appraised valence) for the Addendum Y gate
+    # (query order = file order; valence keyed by query text, deterministic).
+    results["_per_query_gate"] = {
+        "metric": f"u_ndcg@{PRIMARY_K}",
+        "cosine": list(primary_scores[BASELINE]),
+        "aft": list(primary_scores[PRIMARY]),
+        "valence": [aft.appraised_query_affect[q.text].valence for q in queries],
+    }
+
     for adapter in adapters.values():
         adapter.close()
     return results
+
+
+def gate_inputs(*, dry_run: bool = False) -> dict[str, Any]:
+    """Addendum Y: aligned per-query (cosine, aft, valence) + metric for this corpus."""
+    results = run_benchmark(load_dataset(), dry_run=dry_run, verbose=False)
+    pq = results["_per_query_gate"]
+    return {"corpus": "esmemeval", **pq}
 
 
 def write_results(

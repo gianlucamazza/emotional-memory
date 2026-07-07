@@ -243,7 +243,28 @@ def run(
         "recovery_fraction": recovery_fraction,
         "diagnostic_appraised_vs_oracle_state_r": diagnostic,
         "ht1_appraised_beats_cosine": ht1_pass,
+        "_per_query_gate": {
+            "metric": "top1",
+            "cosine": [float(cosine[k]) for k in keys],
+            "aft": [float(appr[k]) for k in keys],
+            "valence": [appraised[k][0] for k in keys],
+        },
     }
+
+
+def gate_inputs(*, dry_run: bool = False) -> dict[str, Any]:
+    """Addendum Y: aligned per-query (cosine, aft, valence) + metric for this corpus."""
+    import tempfile
+
+    dataset = load_dataset(DEFAULT_DATASET)
+    if dry_run:
+        dataset = dataset.model_copy(update={"scenarios": dataset.scenarios[:3]})
+    with tempfile.TemporaryDirectory(prefix="emotional-memory-y-") as tmp:
+        report = run(
+            dataset, workdir=Path(tmp), embedder_name="sbert-bge", n_bootstrap=2000, seed=42
+        )
+    pq = report["_per_query_gate"]
+    return {"corpus": "realistic_recall_v2", **pq}
 
 
 def _fmt(d: dict[str, Any]) -> str:
