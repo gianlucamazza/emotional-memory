@@ -176,6 +176,24 @@ class TestLLMAppraisalEngine:
         v = engine.appraise("test")
         assert isinstance(v, AppraisalVector)
 
+    def test_nested_json_does_not_silently_fallback(self):
+        # An object whose fields precede a nested sub-object. The old
+        # `\{[^{}]*\}` regex returned the inner object and fell back to neutral.
+        resp = json.dumps({**_SUCCESS_RESP, "_debug": {"reasoning": "ok"}})
+        engine = LLMAppraisalEngine(_make_llm(resp))
+        v = engine.appraise("test")
+        assert v.goal_relevance == pytest.approx(0.8)  # not the neutral fallback
+
+    def test_parse_fallback_is_observable(self, caplog):
+        engine = LLMAppraisalEngine(_make_llm("not json at all"))
+        with caplog.at_level("WARNING", logger="emotional_memory.appraisal_llm"):
+            v = engine.appraise("test")
+        assert v == AppraisalVector.neutral()
+        assert any(
+            r.levelname == "WARNING" and "neutral fallback" in r.getMessage()
+            for r in caplog.records
+        )
+
     def test_protocol_conformance(self):
         engine = LLMAppraisalEngine(_make_llm(_NEUTRAL_RESP))
         assert isinstance(engine, type(engine))  # trivial; verify no import errors
@@ -187,6 +205,33 @@ class TestLLMAppraisalEngine:
         assert "coping_potential" in required
         assert "norm_congruence" in required
         assert "self_relevance" in required
+
+
+class TestExtractJson:
+    """Balanced-brace extraction: nested objects must not silently degrade."""
+
+    extract = staticmethod(LLMAppraisalEngine._extract_json)
+
+    def test_whole_object_with_nested_value(self):
+        assert self.extract('{"a": {"b": 1}, "c": 2}') == {"a": {"b": 1}, "c": 2}
+
+    def test_nested_object_with_prose_wrapper(self):
+        # Balanced-brace scan (whole-payload parse fails on the prose).
+        assert self.extract('Result: {"a": {"b": 1}} done') == {"a": {"b": 1}}
+
+    def test_braces_inside_strings_are_ignored(self):
+        assert self.extract('{"a": "has } and { braces"}') == {"a": "has } and { braces"}
+
+    def test_deeply_nested(self):
+        assert self.extract('{"x": {"y": {"z": [1, 2]}}}') == {"x": {"y": {"z": [1, 2]}}}
+
+    def test_no_object_raises(self):
+        with pytest.raises(ValueError):
+            self.extract("no json here")
+
+    def test_non_object_json_raises(self):
+        with pytest.raises((TypeError, ValueError)):
+            self.extract("[1, 2, 3]")
 
     def test_custom_schema_end_to_end(self):
         occ_schema = AppraisalSchema(
