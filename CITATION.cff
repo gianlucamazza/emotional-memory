@@ -15,7 +15,7 @@ authors:
   - family-names: Mazza
     given-names: Gianluca
     email: info@gianlucamazza.it
-version: "0.15.0"
+version: "0.16.0"
 date-released: "2026-07-07"
 doi: "10.5281/zenodo.21235738"
 repository-code: "https://github.com/gianlucamazza/emotional-memory"
