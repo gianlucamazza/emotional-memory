@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum Y — query-affect-conditioned gate (Branch A, both hypotheses PASS).**
+  Pre-registered (`make bench-y-gate`, 4 corpora, τ=0.2 + {0.1,0.2,0.3} sensitivity,
+  Holm m=2): appraise the query and route neutral queries (|valence|<0.2) to pure
+  cosine, else to the Addendum-T affect-conditioned arm. The gate arm is an **exact
+  per-query selection** between each corpus's existing `naive_cosine` and
+  `aft_query_appraised` arms (zero `src/` change; harness `benchmarks/gate/`). Hg1
+  (recover, ES-MemEval) gated>aft +0.076 [+0.065,+0.087] and Hg2 (preserve, curated)
+  gated>cosine +0.095 [+0.050,+0.140], both p_holm=0.0000. **Durable result:** the gate
+  recovers exactly the neutral-query component of the off-regime penalty — ~50% on
+  ES-MemEval (45.5% neutral), 0% on MADial (0% neutral, gate never fires) — and preserves
+  the on-regime gain. A validated safe wrapper, not a fix for the X/X2 gold-relation
+  boundary. New claim `query_affect_gate` = controlled_evidence; follow-up is a production
+  `retrieve_query_gated()` API. See
+  `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
+
 ### Fixed
 
 - **Addendum X2 data correction — the retrieve-time query appraisals silently fell

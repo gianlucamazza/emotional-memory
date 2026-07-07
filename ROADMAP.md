@@ -304,6 +304,19 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       third-party corpora exist today.
       See `benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 
+- [x] **Addendum Y — query-affect-conditioned gate (2026-07-07).** The untested variant
+      X2 reserved: appraise the query and route neutral queries (|valence|<0.2) to pure
+      cosine, else to the Addendum-T affect-conditioned arm. 4 corpora, Holm m=2, harness
+      merged pre-run; the gate arm is an exact per-query selection between the existing
+      cosine and aft arms (zero src/ change). **Branch A — Hg1 (recover) + Hg2 (preserve)
+      both PASS**: gated>aft +0.076 on ES-MemEval, gated>cosine +0.095 on curated. Durable
+      result — the gate recovers **exactly the neutral-query component** of the off-regime
+      penalty (~50% on ES-MemEval’s 45.5%-neutral queries; 0% on MADial, 0%-neutral) and
+      preserves the on-regime gain: a validated safe wrapper, not a fix for the X/X2
+      gold-relation boundary. Follow-up (not scheduled): promote to a production
+      `retrieve_query_gated()` src API in its own pre-registered PR.
+      See `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
+
 ---
 
 ## v0.12.0 – v0.14.0 — Consolidation releases (2026-06-27 → )

@@ -1,6 +1,11 @@
 # Pre-registration Addendum Y — Hy: query-affect-conditioned gate (safe wrapper + penalty decomposition)
 
-**Status:** PRE-REGISTERED (2026-07-07) — committed before any scored run.
+**Status:** EXECUTED (2026-07-07) — **Branch A: Hg1 (recover) + Hg2 (preserve) both PASS**
+(Holm m=2, one-tailed). The query-affect gate is a validated partial safe wrapper: it
+recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's
+45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime
+gain (+0.095 vs cosine on curated). See
+`preregistration_addendum_y_query_affect_gate_closure.md`.
 **Date (pre-reg):** 2026-07-07
 **Mechanism:** a per-query router. Appraise the query with direct-VAD; if the appraised
 query is affectively **neutral** (`|valence| < τ`), retrieve with **pure cosine**;

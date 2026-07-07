@@ -45,6 +45,7 @@ the reader-friendly ladder is
 | W                    | Affine arousal calibration                                    | ADOPTED (measurement-only; library integration declined)                               | `preregistration_addendum_w_arousal_calibration_closure.md`                                               |
 | X                    | Third-party retrieval, MADial-Bench (Hx1)                     | **FAIL, inverted** (Δ=−0.083; construct boundary: counter-congruent supportive recall) | `preregistration_addendum_x_madialbench_third_party_closure.md`                                           |
 | X2                   | Third-party retrieval, ES-MemEval/EvoEmo (Hx2)                | **FAIL, inverted** (Δ=−0.150 powered; distinct failure mode: affect-orthogonal QA gold) | `preregistration_addendum_x2_esmemeval_third_party_closure.md`                                            |
+| Y                    | Query-affect-conditioned gate (Hg1/Hg2)                       | **PASS (Branch A)** — safe wrapper: recovers the neutral-query penalty, preserves the on-regime gain | `preregistration_addendum_y_query_affect_gate_closure.md`                                                 |
 
 Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
 affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
@@ -55,7 +56,7 @@ affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
 `comparative/` (+SOTA) · `realistic/` (v1–v5 datasets) · `ablation/` · `locomo/` ·
 `dailydialog/` (Hk1 + T2A) · `downstream/` (Addendum R) · `human_gold_appraisal/`
 (Addendum S) · `circularity_audit/` (U) · `appraisal_vad/` (V) · `arousal_calibration/`
-(W) · `query_appraisal/` (T) · `madialbench/` (X) · `esmemeval/` (X2) · `appraisal_quality/` ·
+(W) · `query_appraisal/` (T) · `madialbench/` (X) · `esmemeval/` (X2) · `gate/` (Y) · `appraisal_quality/` ·
 `appraisal_calibration/` · `appraisal_confound/` · `appraisal_diagnostics/` ·
 `human_eval/` (Gate 2 kit, unrun — issue #27) · `common/` (shared statistics) ·
 `datasets/` (licensing in its README).
