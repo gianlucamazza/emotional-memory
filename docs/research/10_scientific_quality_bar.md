@@ -38,6 +38,13 @@ This is the correct public claim until all three mandatory gates below are passe
 > boundary distinct from the regime bound. This is not a formal gate, but it sharpens
 > what Gate 2 must eventually test: human _perceived utility_ of mood-congruent recall,
 > not agreement with regulation-oriented gold standards.
+>
+> **Update (2026-07-07).** The second data point (Addendum X2, ES-MemEval/EvoEmo) also
+> failed decisively, for a distinct reason: the QA gold is content-determined and
+> affect-orthogonal, so the affect channel is uninformative there. Together the two
+> external tests bound the mechanism to corpora whose gold relation is
+> affect-conditioned by construction — exactly the property Gate 2's human raters
+> would need to exhibit (or refute) in vivo.
 
 ---
 
