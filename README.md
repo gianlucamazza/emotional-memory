@@ -26,7 +26,7 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 - **Dual-path encoding** — fast affective signal precedes slow appraisal (LeDoux 1996)
 - **3D affect** — perceived control (dominance) discriminates fear from anger (Mehrabian & Russell 1974; PAD)
 
-`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 20+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
+`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 25+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 ### How it compares
 
