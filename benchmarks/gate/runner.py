@@ -42,6 +42,7 @@ from benchmarks.madialbench.runner import gate_inputs as _madial_inputs
 from benchmarks.query_appraisal.runner import gate_inputs as _curated_inputs
 
 _HERE = Path(__file__).parent
+_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_OUT_JSON = _HERE / "results.json"
 DEFAULT_OUT_MD = _HERE / "results.md"
 DEFAULT_OUT_PROTOCOL = _HERE / "results.protocol.json"
@@ -61,6 +62,24 @@ CORPORA: list[tuple[str, Callable[..., dict[str, Any]], bool]] = [
 HG1 = ("esmemeval", "gated_vs_aft")  # recover
 HG2 = ("realistic_recall_v2", "gated_vs_cosine")  # preserve
 
+# Reuse a corpus's committed scored per-query triple instead of re-running (the
+# appraisal is deterministic, so cache == fresh). Keyed by corpus. Only used for
+# the scored run when the file exists and is non-dry.
+_CACHE = {
+    "esmemeval": _ROOT / "benchmarks" / "esmemeval" / "results.json",
+}
+
+
+def _cached_inputs(key: str) -> dict[str, Any] | None:
+    path = _CACHE.get(key)
+    if path is None or not path.exists():
+        return None
+    d = json.loads(path.read_text(encoding="utf-8"))
+    pq = d.get("_per_query_gate")
+    if not pq or d.get("dry_run"):
+        return None
+    return {"corpus": key, "cached": True, **pq}
+
 
 def run_benchmark(
     *,
@@ -72,9 +91,14 @@ def run_benchmark(
     corpora = [(k, fn) for (k, fn, dry_ok) in CORPORA if (dry_ok or not dry_run)]
     reports: dict[str, Any] = {}
     for key, fn in corpora:
-        if verbose:
-            print(f"[{key}] running arms + gate …")
-        gi = fn(dry_run=dry_run)
+        gi = None if dry_run else _cached_inputs(key)
+        if gi is not None:
+            if verbose:
+                print(f"[{key}] reusing committed scored per-query (no re-run)")
+        else:
+            if verbose:
+                print(f"[{key}] running arms + gate …")
+            gi = fn(dry_run=dry_run)
         rep = gate_report(
             gi["cosine"],
             gi["aft"],
@@ -85,6 +109,7 @@ def run_benchmark(
             tau_grid=TAU_GRID,
         )
         rep["metric"] = gi["metric"]
+        rep["cached"] = bool(gi.get("cached"))
         reports[key] = rep
 
     # Confirmatory family Hg1 (recover) + Hg2 (preserve), Holm m=2.
