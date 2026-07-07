@@ -210,7 +210,7 @@ have been carried out.
   query appraisal production-reachable within the regime (Addendum T) and bounded on
   naturalistic dialogue (T2A FAIL) and on **both** released third-party corpora — the
   first (Addendum X, MADial-Bench) rewards counter-congruent supportive recall, the
-  second (Addendum X2, ES-MemEval/EvoEmo, 2026-07-07; powered inverted FAIL, Δ=−0.164)
+  second (Addendum X2, ES-MemEval/EvoEmo, 2026-07-07; powered inverted FAIL, Δ=−0.150)
   has affect-orthogonal content-determined gold. Two distinct failure modes; the
   provenance bound hardens to "the gold relation itself must be affect-conditioned",
   a property so far only in author-crafted corpora.

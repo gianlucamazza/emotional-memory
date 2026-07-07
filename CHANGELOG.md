@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Addendum X2 data correction — the retrieve-time query appraisals silently fell
+  back to keyword instead of direct-VAD.** `AFTQueryAppraisedEsmemAdapter.ingest`
+  closed a temporary engine that shared the LLM appraiser, closing its httpx client;
+  with `fallback_on_error=True`, all ~1,133 retrieve-time query appraisals used the
+  keyword appraiser, not the pre-registered `DIRECT_VAD_SCHEMA`. (Encode-time session
+  appraisals ran before the close, so D1/D2 were valid; MADial-Bench/Addendum X is
+  unaffected.) Fixed the adapter (ingest no longer closes the shared appraiser) and
+  **re-ran X2 with genuine direct-VAD**. Verdict unchanged (Hx2 FAIL, inverted,
+  powered), numbers modestly corrected: u_nDCG@4 AFT 0.120→**0.133** vs cosine 0.284,
+  Δ=−0.164→**−0.150** [−0.165, −0.136], D1 0.971→0.950, D2 68.2%→63.0%. Propagated to
+  the closure (Data-correction note), claim matrix, 09_current_evidence, paper, and
+  the research docs. The v0.15.0 record carried the pre-correction numbers.
+
 ## [0.15.0] - 2026-07-07
 
 ### Fixed

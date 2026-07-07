@@ -348,7 +348,7 @@ The genuinely open items (execution, not re-scoping), in priority order:
    regulation), the opposite of AFT's mood-congruence prior. The query-appraisal advantage
    is now bounded on three measured axes: regime (U/T2A), provenance (author-crafted only),
    construct (congruence vs regulation). Addendum X2 (ES-MemEval/EvoEmo) **EXECUTED 2026-07-07: FAIL,
-   inverted, powered** (Δ=−0.164 [−0.179, −0.149], MDE 0.019; D1 AUC=0.971, D2=68.2%) —
+   inverted, powered** (Δ=−0.150 [−0.165, −0.136], MDE 0.018; D1 AUC=0.950, D2=63.0%) —
    failure mode distinct from X: affect-orthogonal content-determined gold, not
    counter-congruence; provenance bound hardened (the gold relation itself must be
    affect-conditioned). No further released third-party corpora exist today. See

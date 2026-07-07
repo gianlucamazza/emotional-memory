@@ -116,24 +116,25 @@ class AFTQueryAppraisedEsmemAdapter(EsmemAdapter):
         self.appraised_query_affect: dict[str, CoreAffect] = {}
 
     def ingest(self, sessions: list[EsmemSession]) -> None:
+        # NB: do NOT close this engine — it holds the shared self._appraiser, and
+        # EmotionalMemory.close() closes the appraisal engine (its httpx client).
+        # Closing here would break every retrieve()-time query appraisal, silently
+        # falling back to the keyword appraiser. The InMemoryStore is GC'd; the
+        # appraiser is closed once in close() at the end of the run.
         engine = EmotionalMemory(
             store=InMemoryStore(),
             embedder=self._embedder,
             appraisal_engine=self._appraiser,
             config=_TIME_INVARIANT_CONFIG,
         )
-        try:
-            for s in sessions:
-                stored = engine.encode(s.text, metadata={"key": s.key})
-                ca = stored.tag.core_affect
-                self.encoded_affect[s.key] = (ca.valence, ca.arousal)
-            for record in engine.export_memories():
-                key = str(record["metadata"]["key"])
-                self._exported[key] = record
-                self._id_to_key[str(record["id"])] = key
-        finally:
-            with contextlib.suppress(Exception):
-                engine.close()
+        for s in sessions:
+            stored = engine.encode(s.text, metadata={"key": s.key})
+            ca = stored.tag.core_affect
+            self.encoded_affect[s.key] = (ca.valence, ca.arousal)
+        for record in engine.export_memories():
+            key = str(record["metadata"]["key"])
+            self._exported[key] = record
+            self._id_to_key[str(record["id"])] = key
 
     def retrieve(self, query_text: str, pool_keys: Sequence[str], *, top_k: int) -> list[str]:
         # Fresh pool-scoped engine per query: no cross-query state, resonance
@@ -154,6 +155,13 @@ class AFTQueryAppraisedEsmemAdapter(EsmemAdapter):
         finally:
             with contextlib.suppress(Exception):
                 engine.close()
+
+    def close(self) -> None:
+        # Close the shared appraiser's httpx client once, at end of run.
+        appraiser_close = getattr(self._appraiser, "close", None)
+        if callable(appraiser_close):
+            with contextlib.suppress(Exception):
+                appraiser_close()
 
 
 def _make_appraiser(*, dry_run: bool) -> AppraisalEngine:

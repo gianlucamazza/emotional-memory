@@ -44,7 +44,7 @@ the reader-friendly ladder is
 | T2A                  | Naturalistic re-test on DailyDialog (Ht2a)                    | **FAIL** (regime-bound)                                                                | `preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`                                    |
 | W                    | Affine arousal calibration                                    | ADOPTED (measurement-only; library integration declined)                               | `preregistration_addendum_w_arousal_calibration_closure.md`                                               |
 | X                    | Third-party retrieval, MADial-Bench (Hx1)                     | **FAIL, inverted** (Δ=−0.083; construct boundary: counter-congruent supportive recall) | `preregistration_addendum_x_madialbench_third_party_closure.md`                                           |
-| X2                   | Third-party retrieval, ES-MemEval/EvoEmo (Hx2)                | **FAIL, inverted** (Δ=−0.164 powered; distinct failure mode: affect-orthogonal QA gold) | `preregistration_addendum_x2_esmemeval_third_party_closure.md`                                            |
+| X2                   | Third-party retrieval, ES-MemEval/EvoEmo (Hx2)                | **FAIL, inverted** (Δ=−0.150 powered; distinct failure mode: affect-orthogonal QA gold) | `preregistration_addendum_x2_esmemeval_third_party_closure.md`                                            |
 
 Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
 affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
