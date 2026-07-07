@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Research
+
+- **Addendum Z — held-out learned retrieval profile (pre-registered; harness landed,
+  scored run pending).** Every third-party FAIL (K/T2A, X, X2) was run with a single
+  _fixed_ weight vector; Addendum J only swept hand-authored grids. Z fits a linear
+  pairwise learning-to-rank over the 6 AFT retrieval signals and evaluates it strictly
+  out-of-sample via k-fold cross-fitting — which resolves the circularity that kept the
+  support-mode retrieval profile (X residual) unscheduled (it tests _generalization_, not
+  fit). Hz1 (break, Holm m=3 over {MADial, ES-MemEval, DailyDialog}): held-out learned >
+  cosine on ≥1 corpus → Branch A, provenance bound broken (replication-gated). Hz2
+  (preserve): non-inferior to the fixed profile on curated. Interpretability readout: the
+  learned s2 (mood-congruence) sign — negative = counter-congruent/support-mode recall.
+  Honest ex-ante expectation is Branch B (even the held-out optimal linear profile does not
+  beat cosine → hardens `08_limitations.md §2.4`). Harness-only, **zero `src/`**:
+  `benchmarks/common/ltr.py` (pairwise-logistic LTR + cross-fitting, numpy) +
+  `benchmarks/learned_profile/` (`make bench-z-profile[-dry]`); all four corpora wired and
+  dry-validated; features via `build_retrieval_plan(precomputed_weights=)`. See
+  `benchmarks/preregistration_addendum_z_learned_profile.md`.
+
 ### Added
 
 - **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
