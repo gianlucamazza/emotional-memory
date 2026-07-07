@@ -107,7 +107,7 @@ This library implements **Affective Field Theory (AFT)** — a 5-layer emotional
 
 **export/import**: `export_memories()` → `[Memory.model_dump_json() | json.loads(...)]`. `import_memories(data, overwrite=False)` → `Memory.model_validate(item)` per dict, skip duplicates unless `overwrite=True`. Returns count written.
 
-**encode_batch**: `embed_batch(contents) → list[embedding]` → per-item appraisal (sequential) → per-item encode path. Resonance links built after all items stored.
+**encode_batch**: `embed_batch(contents) → list[embedding]` → per-item appraisal computed **in parallel up front** (`_appraise_many`: async `asyncio.gather` + `Semaphore`, sync `ThreadPoolExecutor`, bounded by `appraisal_max_concurrency`), then per-item encode path consuming the appraisals in input order (state still evolves item-by-item, so results are identical to sequential). Resonance links built after all items stored.
 
 **elaborate_pending**: iterates all stored memories where `pending_appraisal=True`, calls `elaborate(memory_id)` on each. Returns list of updated `Memory` objects.
 
@@ -150,7 +150,7 @@ Async protocols live in `interfaces_async.py`: `AsyncEmbedder`, `AsyncMemoryStor
 
 - **Immutability**: All value objects are Pydantic `frozen=True`. `update()` methods return new instances.
 - **Protocols over ABCs**: Extend via duck-typed protocols, not inheritance.
-- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`). Top-level flags on `EmotionalMemoryConfig`: `dual_path_encoding` (bool), `elaboration_learning_rate` (float, blend ratio in `elaborate()`), `auto_categorize` (bool, run Plutchik categorization on encode). Ablation toggles: `enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation` (all `bool = True`).
+- **Config-driven**: All behavior parameterized via nested config classes (`EmotionalMemoryConfig`, `DecayConfig`, `RetrievalConfig`, `ResonanceConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`). Top-level flags on `EmotionalMemoryConfig`: `dual_path_encoding` (bool), `elaboration_learning_rate` (float, blend ratio in `elaborate()`), `auto_categorize` (bool, run Plutchik categorization on encode), `appraisal_max_concurrency` (int, default 8, `ge=1` — bounds parallel appraisal in `encode_batch`; set to 1 for fully sequential / a non-thread-safe `llm` callable). Ablation toggles: `enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation` (all `bool = True`).
 - **Theory references**: Each component cites source papers — preserve these in docstrings/comments.
 - **Validation**: Field clamping via Pydantic validators (e.g., valence ∈ [-1, +1], arousal ∈ [0, 1]).
 - **`__slots__`**: All non-Pydantic classes define `__slots__` for memory efficiency and attribute safety.

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
+  bounds the parallel appraisal in `encode_batch`. Set to 1 for fully sequential
+  appraisal (e.g. a non-thread-safe `llm` callable).
+
+### Changed
+
+- **`encode_batch` now appraises items in parallel** (both sync and async) instead of
+  serially. A batch of N previously cost N serial LLM round-trips — the dominant encode
+  latency (200–2000 ms/item). Since appraisal depends only on content/context, the batch's
+  appraisals are computed concurrently up front (async `asyncio.gather` + `Semaphore`; sync
+  `ThreadPoolExecutor`) and then consumed by the order-preserving state-evolution loop, so
+  results are identical to the sequential path — only the appraisal I/O waits overlap. The
+  sync path requires a thread-safe `llm` callable (httpx.Client and `KeywordAppraisalEngine`
+  are). `elaborate_pending()` remains sequential.
+
 ### Fixed
 
 - **PAD similarity normaliser mismatch (resonance).** `resonance._emotional_similarity`
