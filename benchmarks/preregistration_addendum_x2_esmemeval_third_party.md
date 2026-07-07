@@ -1,6 +1,11 @@
 # Pre-registration Addendum X2 — Hx2: Third-party longitudinal QA retrieval (ES-MemEval/EvoEmo)
 
-**Status:** PRE-REGISTERED (2026-07-07) — committed before any scored run.
+**Status:** EXECUTED (2026-07-07) — **Hx2 FAIL** (Δ=−0.164 [−0.179, −0.149],
+p*one=1.0000, d=−0.653; cosine significantly ahead across the whole grid despite
+faithful appraisal D1 AUC=0.971 and, contrary to the ex-ante low-D2 prior, an
+affect-discriminative corpus D2=68.2% — pre-declared reading (iii): the
+provenance bound hardens). See
+`preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 **Date (pre-reg):** 2026-07-07
 **Dataset:** ES-MemEval v1.0.0 / EvoEmo corpus (WWW 2026; Chen, Lu, Shen & Zhang,
 arXiv:2602.01885, ACM DOI 10.1145/3774904.3792143) — third-party, peer-reviewed,
@@ -14,11 +19,9 @@ the released, hash-pinned artifact as ground truth.
 **Embedder:** `BAAI/bge-small-en-v1.5` (continuity with Addendum X; head-to-head arm
 comparison, not reproduction of the upstream absolute numbers, which used `bge-m3`).
 **LLM:** direct-VAD appraisal (`DIRECT_VAD_SCHEMA`, Addendum V) resolved from
-`EMOTIONAL_MEMORY_LLM_*` (`.env`). ≈ 1,534 calls (401 session documents at encode +
+`EMOTIONAL*MEMORY_LLM**` (`.env`). ≈ 1,534 calls (401 session documents at encode +
 1,133 in-family queries), LRU-cached.
-**Parent closures:** `preregistration_addendum_x_madialbench_third_party_closure.md`
-(Hx1 FAIL inverted, construct boundary) · `preregistration_addendum_t_query_appraisal_closure.md`
-(Ht1 PASS, curated) · `preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`
+**Parent closures:** `preregistration_addendum_x_madialbench_third_party_closure.md`(Hx1 FAIL inverted, construct boundary) ·`preregistration_addendum_t_query_appraisal_closure.md`(Ht1 PASS, curated) ·`preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md`
 (Ht2a FAIL, naturalistic) · Addendum U (author-crafted benchmarks ~62.5% AFT-favorable).
 
 ---

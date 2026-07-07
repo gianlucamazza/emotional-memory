@@ -14,12 +14,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   app crashed with `TypeError` at startup (messages is the only format in 6.x, so
   behavior is unchanged). Demo-only; the PyPI wheel is unaffected.
 
+### Research
+
+- **Addendum X2 — third-party retrieval on ES-MemEval/EvoEmo (Hx2 FAIL, decisive).**
+  Pre-registered replication (reserved by the X closure) of the retrieve-time
+  query-appraisal mechanism on the second released third-party corpus (ES-MemEval
+  v1.0.0/EvoEmo, WWW 2026, CC-BY-4.0; N=1,133 in-family QA queries over 401
+  session documents, 50-candidate pools replicating the upstream session-level
+  protocol, oracle-free; harness `benchmarks/esmemeval/`, `make bench-x2-esmem`,
+  data sha256-pinned). Cosine significantly ahead (upstream-verbatim nDCG@4 0.284
+  vs 0.120, Δ=−0.164 [−0.179, −0.149], p_one=1.0000, d=−0.653; powered negative,
+  MDE 0.019), uniform across all 31 grid contrasts and all capabilities, despite
+  faithful appraisal (D1 AUC=0.971) and — contrary to the pre-registered low-D2
+  prior — an affect-discriminative corpus (D2=68.2%). Post-hoc: failure mode
+  **distinct from X** — the gold is affect-orthogonal (content-determined; 45.2%
+  of queries affectively neutral, corr(query, gold valence)=+0.25), not
+  counter-congruent. Provenance bound hardened: both released third-party corpora
+  are powered inverted FAILs with distinct failure modes; the operative boundary
+  is that the gold relation itself must be affect-conditioned, observed to date
+  only in author-crafted corpora. Pre-commit byte-mutating/size hooks now exclude
+  the vendored dataset (byte-identity is sha256-pinned). Propagated to paper,
+  claim matrix (`cross_domain_affect_replication`), 08_limitations, ROADMAP.
+  See `benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md`.
+
 ## [0.14.0] - 2026-07-02
 
 > Cut 2026-07-02. This release grew beyond the original 2026-06-27 bump (#88):
 > it now ships runtime changes (httpx connection pooling, resource cleanup),
 > so the wheel is **not** code-identical to 0.13.0.
-
 
 ### Changed
 
@@ -78,8 +100,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `benchmarks/madialbench/` harness (pinned loader, replicated MADial metrics, adapters,
   runner with MDE + D1/D2 diagnostics) and vendored MADial-Bench EN data
   (`benchmarks/datasets/madialbench/`, MIT) with `make bench-x-madial[-dry]` targets.
-
-
 
 ### Security
 

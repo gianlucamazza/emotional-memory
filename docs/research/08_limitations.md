@@ -228,10 +228,10 @@ See `benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closur
 new reason.** The first test on a released third-party retrieval-native corpus
 (MADial-Bench EN, NAACL 2025: 160 emotion-triggered recall queries with gold memory sets,
 fully oracle-free, harness merged before the scored run) is a decisive **FAIL, inverted**:
-cosine significantly beats aft_query_appraised on nDCG@5 (0.304 vs 0.221, Δ=−0.083
+cosine significantly beats aft*query_appraised on nDCG@5 (0.304 vs 0.221, Δ=−0.083
 [−0.123, −0.043], p_one=0.9998, d=−0.317; MDE 0.051 < |Δ| → powered negative). The
 diagnostics exonerate the usual suspects: the appraisal is near-perfect against the
-third-party emotion labels (D1 AUC=0.996) and the corpus is _more_ affect-discriminative
+third-party emotion labels (D1 AUC=0.996) and the corpus is \_more* affect-discriminative
 than the curated v2 (D2 76.9% vs 62.5%). Post-hoc (exploratory): 84/160 queries carry
 negative appraised valence, and for 73.8% of those the gold-set mean valence is
 _positive_ — the benchmark operationalizes emotion-triggered recall as **interpersonal
@@ -244,6 +244,27 @@ and **construct** (congruence vs supportive counter-congruence). A support-mode 
 profile is the theory-level follow-up; it must be designed from the emotion-regulation
 literature and validated on held-out data, not tuned on this corpus.
 See `benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md`.
+
+**Update (Addendum X2, 2026-07-07) — the second third-party corpus fails for a second,
+distinct reason.** The replication reserved by the X closure ran the same oracle-free
+mechanism on ES-MemEval/EvoEmo (WWW 2026, CC-BY-4.0: longitudinal emotional-support QA,
+N=1,133 in-family queries over 401 session documents, 50-candidate pools replicating the
+upstream evaluation; harness merged before the scored run). **Hx2 FAIL, inverted and
+powered by an order of magnitude**: cosine ahead on upstream-verbatim nDCG@4 (0.284 vs
+0.120, Δ=−0.164 [−0.179, −0.149], p_one=1.0000, d=−0.653; MDE 0.019), consistent across
+all 31 grid contrasts and all capabilities. Diagnostics again exonerate the mechanism's
+inputs: appraisal faithful (D1 AUC=0.971 [0.938, 0.994]) and — contrary to the
+pre-registered low-D2 prior — the corpus is affect-discriminative (D2=68.2%). Post-hoc
+(exploratory): unlike MADial-Bench, the gold is **not counter-congruent**
+(corr(query valence, gold valence)=+0.25; only 13.1% opposite-sign vs X's 40%) — it is
+**affect-orthogonal**: 45.2% of queries are affectively neutral and the right session is
+determined by content, so the affect channel buys ranking variance with no gold-directed
+signal. Two third-party corpora, two distinct failure modes (counter-congruent construct
+on X; affect-orthogonal gold on X2); what they share is that the gold relation was not
+authored around mood-congruence. The operative boundary is therefore sharper than the D2
+regime criterion: **the gold relation itself must be affect-conditioned**, which to date
+has only been observed in author-crafted corpora.
+See `benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 
 ### 2.5 Resonance magnitude amplification on e5-small-v2
 

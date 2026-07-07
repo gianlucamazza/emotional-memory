@@ -9,7 +9,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | Item                                                                 | Status | Notes                                                                            |
 | -------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------- |
 | `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates     |
-| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 19pp, ~539KB (grew with addenda R/S/U/V/T/T2A/W/X) — only benign hyperref warnings |
+| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 19pp, ~540KB (grew with addenda R/S/U/V/T/T2A/W/X/X2) — only benign hyperref warnings |
 | No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                  |
 | All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures            |
 | All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                            |
@@ -24,7 +24,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | ----------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
 | Title matches repo/Zenodo metadata                    | ✗      | Check `release.toml` and `CITATION.cff`                                                                                             |
 | Authors and affiliations complete                     | ✗      |                                                                                                                                     |
-| Abstract ≤ 1920 characters (arXiv limit)              | ✓      | reframed (V+T lead); ≈1908 rendered est. — tight, re-verify with arXiv's own counter at submit time                                 |
+| Abstract ≤ 1920 characters (arXiv limit)              | ✓      | reframed (V+T lead); ≈1890 rendered est. after the X2 both-corpora rewording — re-verify with arXiv's own counter at submit time                                 |
 | No placeholders (`XXXX`, `TODO`, `???`) in text       | ✓      | `grep -n "TODO\|XXXX\|???"` in `main.tex` — clean (Acknowledgements TODO resolved 2026-07-02)                                       |
 | Acknowledgements section present                      | ✓      | Final text: no external funding, independent work; thanks to OSS maintainers and corpus authors                                     |
 | All claims in §Results match committed JSON artifacts | ✓      | `make reproduce-paper-check` passes — zero diff                                                                                     |
