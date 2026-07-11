@@ -329,6 +329,35 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       scored run (`make bench-z-profile`, direct-VAD, billed) is the next step. Branch-A
       follow-up: a `fit_retrieval_weights()` src API.
       See `benchmarks/preregistration_addendum_z_learned_profile.md`.
+- [x] **Algorithmic levers (P2) — evaluated 2026-07-08, mostly declined.** Three hand-tuned
+      runtime enhancements were assessed against the code and priced honestly; none is opened
+      as an engineering PR (same "evaluated & declined" disposition as Addendum W's library
+      integration). The recorded verdicts, so a future pass does not silently re-open them:
+    - **ACT-R per-trace spacing decay → DECLINED.** The current decay (`decay.py:69-89`) is a
+      single-exposure power law with the spacing effect modelled as a scalar exponent damping
+      `1/(1+retrieval_boost·n)`; a true multi-trace base-level sum `B_i = ln(Σ_j t_j^-d)` is
+      **not** log-log linear and would break the declared fidelity invariant
+      `benchmarks/fidelity/test_decay_power_law.py::test_log_log_linearity` (R²>0.99). It would
+      add a per-presentation list to the frozen `EmotionalTag` (mirrored in both engines) to
+      improve a minor signal (s5 weight 0.10) that is already monotone-correct, with **no**
+      bearing on the open X/X2 boundary. Over-engineering of a documented simplification.
+    - **Hebbian forgetting / LTD → DEFERRED (research addendum only, not an engineering PR).**
+      The only lever with real intellectual merit — the graph today can only strengthen
+      (`hebbian_strengthen` does `min(1.0, s+inc)`, `resonance.py:347`), so links grow
+      monotonically (bloat). But no harness validates a link-decay rate → tuning it is a
+      circularity risk the project deliberately avoids; and it breaks three pinned tests
+      (non-co-retrieved link must stay exactly 0.5; fidelity monotonicity; exact spreading
+      values 0.8/0.72), needs a new temporal field on the frozen `ResonanceLink` + a new config
+      (`hebbian_increment` is floored at `ge=0.0`) + mirroring in both engines. Defensible
+      **only** as a pre-registered, opt-in (default OFF) addendum with an explicit
+      non-inferiority-on-curated + graph-bloat-reduction hypothesis. Behind Z in priority.
+    - **Incremental adjacency cache → DECLINED.** `spreading_activation` rebuilds adjacency
+      O(N·links) per retrieve (`resonance.py:280-290`), but the G2 prefilter already caps the
+      candidate pool at `top_k·candidate_multiplier` = 5×3 = 15 in production (`engine.py:415`),
+      so the rebuild is ~75 ops — not a bottleneck. A cache would speed up only the
+      `bench_spreading_activation` microbench (which bypasses the prefilter), at the cost of
+      invalidation correctness across encode/Hebbian/delete/prune × sync+async. Optimising a
+      microbench is not value.
 
 ---
 
