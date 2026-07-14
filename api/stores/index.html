@@ -3798,18 +3798,7 @@ collection_name:
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/emotional_memory/stores/chroma.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span>
-<span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-103">103</a></span>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
 <span class="normal"><a href="#__codelineno-0-105">105</a></span>
 <span class="normal"><a href="#__codelineno-0-106">106</a></span>
@@ -3838,47 +3827,58 @@ collection_name:
 <span class="normal"><a href="#__codelineno-0-129">129</a></span>
 <span class="normal"><a href="#__codelineno-0-130">130</a></span>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span>
-<span class="normal"><a href="#__codelineno-0-132">132</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="o">*</span><span class="p">,</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;emotional_memory&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="kn">import</span><span class="w"> </span><span class="nn">chromadb</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">chromadb.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Settings</span> <span class="k">as</span> <span class="n">_ChromaSettings</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>            <span class="s2">&quot;chromadb is required for ChromaStore. &quot;</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="s2">&quot;Install with: pip install &#39;emotional-memory[chroma]&#39;&quot;</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="n">_ephemeral_settings</span> <span class="o">=</span> <span class="n">_ChromaSettings</span><span class="p">(</span><span class="n">is_persistent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">anonymized_telemetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">host</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ChromaStore: pass at most one of `path` or `host`, not both&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>    <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span> <span class="n">_ChromaClientAPI</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">HttpClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a>    <span class="k">elif</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>        <span class="c1"># Create an isolated tenant+database namespace for each ephemeral</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a>        <span class="c1"># instance so separate ChromaStore() objects in the same process</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a>        <span class="c1"># don&#39;t share state through chromadb&#39;s process-wide SharedSystemClient.</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a>        <span class="n">_tenant</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="n">_db</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a>        <span class="n">_admin</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">AdminClient</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">_ephemeral_settings</span><span class="p">)</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="n">_admin</span><span class="o">.</span><span class="n">create_tenant</span><span class="p">(</span><span class="n">_tenant</span><span class="p">)</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>        <span class="n">_admin</span><span class="o">.</span><span class="n">create_database</span><span class="p">(</span><span class="n">_db</span><span class="p">,</span> <span class="n">tenant</span><span class="o">=</span><span class="n">_tenant</span><span class="p">)</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">EphemeralClient</span><span class="p">(</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>            <span class="n">tenant</span><span class="o">=</span><span class="n">_tenant</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">_db</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">_ephemeral_settings</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>        <span class="p">)</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_collection_name</span> <span class="o">=</span> <span class="n">collection_name</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="p">:</span> <span class="n">_ChromaCollection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_init_collection_state</span><span class="p">()</span>
+<span class="normal"><a href="#__codelineno-0-132">132</a></span>
+<span class="normal"><a href="#__codelineno-0-133">133</a></span>
+<span class="normal"><a href="#__codelineno-0-134">134</a></span>
+<span class="normal"><a href="#__codelineno-0-135">135</a></span>
+<span class="normal"><a href="#__codelineno-0-136">136</a></span>
+<span class="normal"><a href="#__codelineno-0-137">137</a></span>
+<span class="normal"><a href="#__codelineno-0-138">138</a></span>
+<span class="normal"><a href="#__codelineno-0-139">139</a></span>
+<span class="normal"><a href="#__codelineno-0-140">140</a></span>
+<span class="normal"><a href="#__codelineno-0-141">141</a></span>
+<span class="normal"><a href="#__codelineno-0-142">142</a></span>
+<span class="normal"><a href="#__codelineno-0-143">143</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="o">*</span><span class="p">,</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>    <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;emotional_memory&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="kn">import</span><span class="w"> </span><span class="nn">chromadb</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">chromadb.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Settings</span> <span class="k">as</span> <span class="n">_ChromaSettings</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116"></a>            <span class="s2">&quot;chromadb is required for ChromaStore. &quot;</span>
+<a id="__codelineno-0-117" name="__codelineno-0-117"></a>            <span class="s2">&quot;Install with: pip install &#39;emotional-memory[chroma]&#39;&quot;</span>
+<a id="__codelineno-0-118" name="__codelineno-0-118"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-0-119" name="__codelineno-0-119"></a>
+<a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="n">_ephemeral_settings</span> <span class="o">=</span> <span class="n">_ChromaSettings</span><span class="p">(</span><span class="n">is_persistent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">anonymized_telemetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-121" name="__codelineno-0-121"></a>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">host</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ChromaStore: pass at most one of `path` or `host`, not both&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a>    <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="p">:</span> <span class="n">_ChromaClientAPI</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">HttpClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="k">elif</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="c1"># Create an isolated tenant+database namespace for each ephemeral</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a>        <span class="c1"># instance so separate ChromaStore() objects in the same process</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="c1"># don&#39;t share state through chromadb&#39;s process-wide SharedSystemClient.</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a>        <span class="n">_tenant</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a>        <span class="n">_db</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="n">_admin</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">AdminClient</span><span class="p">(</span><span class="n">settings</span><span class="o">=</span><span class="n">_ephemeral_settings</span><span class="p">)</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="n">_admin</span><span class="o">.</span><span class="n">create_tenant</span><span class="p">(</span><span class="n">_tenant</span><span class="p">)</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a>        <span class="n">_admin</span><span class="o">.</span><span class="n">create_database</span><span class="p">(</span><span class="n">_db</span><span class="p">,</span> <span class="n">tenant</span><span class="o">=</span><span class="n">_tenant</span><span class="p">)</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">EphemeralClient</span><span class="p">(</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a>            <span class="n">tenant</span><span class="o">=</span><span class="n">_tenant</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">_db</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">_ephemeral_settings</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="p">)</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_collection_name</span> <span class="o">=</span> <span class="n">collection_name</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_collection</span><span class="p">:</span> <span class="n">_ChromaCollection</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_init_collection_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3911,9 +3911,9 @@ collection_name:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/stores/chroma.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-276">276</a></span>
-<span class="normal"><a href="#__codelineno-0-277">277</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Close the ChromaStore (Chroma clients manage their own lifecycle).&quot;&quot;&quot;</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-287">287</a></span>
+<span class="normal"><a href="#__codelineno-0-288">288</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Close the ChromaStore (Chroma clients manage their own lifecycle).&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
