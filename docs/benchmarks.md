@@ -5,6 +5,9 @@ invariants), **performance** (throughput), and **appraisal quality** (LLM prompt
 validation). For experimental results against baselines and external datasets see
 [Current Evidence](research/09_current_evidence.md).
 
+The full pre-registered confirmatory programme (addenda A–Z, closures, and verdicts)
+is indexed in the repository [benchmarks/README.md](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/README.md).
+
 ## Psychological fidelity (127 parametrized test cases, 20 phenomena)
 
 The library validates 20 phenomena from the affective science literature via 127 parametrized test cases (run `pytest --collect-only benchmarks/fidelity/` to enumerate them):

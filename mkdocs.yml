@@ -57,6 +57,7 @@ nav:
   - Architecture:
     - Module Overview: architecture/module-overview.md
   - Migration Guide: migration.md
+  - Troubleshooting: troubleshooting.md
   - Evaluation:
     - Comparison: comparison.md
     - Benchmarks: benchmarks.md
@@ -70,6 +71,7 @@ nav:
     - Observability: tutorials/observability.md
     - LangChain integration: tutorials/langchain.md
     - Mem0 integration: tutorials/mem0.md
+    - Configuration guide: tutorials/configuration_guide.md
     - Query routing: tutorials/query_routing.md
     - Retrieve-time query appraisal: tutorials/query_appraisal_retrieval.md
     - Custom appraisal schema: tutorials/byo_appraisal_schema.md

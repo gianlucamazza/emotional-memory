@@ -46,7 +46,7 @@ the reader-friendly ladder is
 | X                    | Third-party retrieval, MADial-Bench (Hx1)                      | **FAIL, inverted** (Δ=−0.083; construct boundary: counter-congruent supportive recall)               | `preregistration_addendum_x_madialbench_third_party_closure.md`                                           |
 | X2                   | Third-party retrieval, ES-MemEval/EvoEmo (Hx2)                 | **FAIL, inverted** (Δ=−0.150 powered; distinct failure mode: affect-orthogonal QA gold)              | `preregistration_addendum_x2_esmemeval_third_party_closure.md`                                            |
 | Y                    | Query-affect-conditioned gate (Hg1/Hg2)                        | **PASS (Branch A)** — safe wrapper: recovers the neutral-query penalty, preserves the on-regime gain | `preregistration_addendum_y_query_affect_gate_closure.md`                                                 |
-| Z                    | Held-out learned retrieval profile (Hz1/Hz2)                   | PRE-REGISTERED — harness landed, dry-validated on all 4 corpora; scored run pending                  | `preregistration_addendum_z_learned_profile.md`                                                           |
+| Z                    | Held-out learned retrieval profile (Hz1/Hz2)                   | **Branch B** — Hz1 FAIL (0/3 break, no learned linear profile beats cosine); Hz2 PASS (curated +0.185 vs fixed) | `preregistration_addendum_z_learned_profile_closure.md`                                                   |
 
 Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
 affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.

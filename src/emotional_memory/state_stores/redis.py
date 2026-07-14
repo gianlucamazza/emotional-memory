@@ -25,9 +25,12 @@ class RedisAffectiveStateStore:
     a documented limitation (docs/research/08_limitations.md, "Shared-backend
     multi-worker validation"); use one key per worker, or an external lock, if
     that matters for your deployment.
+
+    When ``strict=True``, Redis errors propagate after logging instead of being
+    swallowed (fail-open by default for resilience).
     """
 
-    __slots__ = ("_client", "_key", "_url")
+    __slots__ = ("_client", "_key", "_strict", "_url")
 
     def __init__(
         self,
@@ -35,9 +38,11 @@ class RedisAffectiveStateStore:
         *,
         key: str = "emotional_memory:affective_state",
         client: Any | None = None,
+        strict: bool = False,
     ) -> None:
         self._url = url
         self._key = key
+        self._strict = strict
         self._client = client if client is not None else self._create_client(url)
 
     @staticmethod
@@ -52,17 +57,22 @@ class RedisAffectiveStateStore:
 
         return redis_module.Redis.from_url(url, decode_responses=True)
 
+    def _handle_error(self, operation: str, exc: Exception) -> None:
+        logger.warning("RedisAffectiveStateStore.%s failed: %s", operation, exc)
+        if self._strict:
+            raise exc
+
     def save(self, state: AffectiveState) -> None:
         try:
             self._client.set(self._key, json.dumps(state.snapshot()))
         except Exception as exc:
-            logger.warning("RedisAffectiveStateStore.save failed: %s", exc)
+            self._handle_error("save", exc)
 
     def load(self) -> AffectiveState | None:
         try:
             raw = self._client.get(self._key)
         except Exception as exc:
-            logger.warning("RedisAffectiveStateStore.load failed, returning None: %s", exc)
+            self._handle_error("load", exc)
             return None
         if raw is None:
             return None
@@ -72,7 +82,7 @@ class RedisAffectiveStateStore:
         try:
             self._client.delete(self._key)
         except Exception as exc:
-            logger.warning("RedisAffectiveStateStore.clear failed: %s", exc)
+            self._handle_error("clear", exc)
 
     def close(self) -> None:
         close = getattr(self._client, "close", None)
@@ -80,7 +90,9 @@ class RedisAffectiveStateStore:
             try:
                 close()
             except Exception as exc:
-                logger.warning("RedisAffectiveStateStore.close failed: %s", exc)
+                self._handle_error("close", exc)
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(url={self._url!r}, key={self._key!r})"
+        return (
+            f"{type(self).__name__}(url={self._url!r}, key={self._key!r}, strict={self._strict})"
+        )

@@ -9,22 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Research
 
-- **Addendum Z — held-out learned retrieval profile (pre-registered; harness landed,
-  scored run pending).** Every third-party FAIL (K/T2A, X, X2) was run with a single
-  _fixed_ weight vector; Addendum J only swept hand-authored grids. Z fits a linear
-  pairwise learning-to-rank over the 6 AFT retrieval signals and evaluates it strictly
-  out-of-sample via k-fold cross-fitting — which resolves the circularity that kept the
-  support-mode retrieval profile (X residual) unscheduled (it tests _generalization_, not
-  fit). Hz1 (break, Holm m=3 over {MADial, ES-MemEval, DailyDialog}): held-out learned >
-  cosine on ≥1 corpus → Branch A, provenance bound broken (replication-gated). Hz2
-  (preserve): non-inferior to the fixed profile on curated. Interpretability readout: the
-  learned s2 (mood-congruence) sign — negative = counter-congruent/support-mode recall.
-  Honest ex-ante expectation is Branch B (even the held-out optimal linear profile does not
-  beat cosine → hardens `08_limitations.md §2.4`). Harness-only, **zero `src/`**:
-  `benchmarks/common/ltr.py` (pairwise-logistic LTR + cross-fitting, numpy) +
-  `benchmarks/learned_profile/` (`make bench-z-profile[-dry]`); all four corpora wired and
-  dry-validated; features via `build_retrieval_plan(precomputed_weights=)`. See
-  `benchmarks/preregistration_addendum_z_learned_profile.md`.
+- **Addendum Z — held-out learned retrieval profile (Branch B, Hz1 FAIL / Hz2 PASS).**
+  `make bench-z-profile`, 4 corpora, k=5 cross-fitting, Holm m=3 + curated
+  non-inferiority: a held-out learned _linear_ ranker over the 6 AFT retrieval signals does
+  **not** beat cosine on any third-party corpus (MADial Δ=+0.015 p_holm=0.314; ES-MemEval
+  Δ=−0.015 p_holm=0.9997; DailyDialog Δ=+0.008 p_holm=0.811) while **preserving and
+  amplifying** the curated on-regime advantage (learned top1=0.425 vs fixed 0.240 vs cosine
+  0.325; Hz2 Δ_vs_fixed=+0.185). Negative learned s2 on MADial/ES-MemEval (counter-congruent
+  direction) did not translate into a held-out win. Hardens the boundary from "fixed weights
+  fail" to "no held-out learned linear affect profile generalizes on third-party gold."
+  Harness-only, zero `src/`. See
+  `benchmarks/preregistration_addendum_z_learned_profile_closure.md`.
 
 ### Added
 

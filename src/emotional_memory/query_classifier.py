@@ -15,13 +15,12 @@ See: benchmarks/preregistration_addendum_l_query_routing.md
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 import threading
 from collections import OrderedDict
 from typing import Any, Protocol, runtime_checkable
 
-from emotional_memory.appraisal_llm import LLMCallable
+from emotional_memory.appraisal_llm import LLMAppraisalEngine, LLMCallable
 
 __all__ = [
     "LOCOMO_ROUTING",
@@ -179,11 +178,7 @@ class LLMQueryClassifier:
         try:
             prompt = f'{_LLM_SYSTEM_PROMPT}\n\nQuery: "{query}"'
             raw = self._llm(prompt, _LLM_SCHEMA)
-            cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
-            match = re.search(r"\{[^{}]*\}", cleaned)
-            if not match:
-                raise ValueError(f"No JSON in LLM response: {raw!r}")
-            result: dict[str, Any] = json.loads(match.group())
+            result = LLMAppraisalEngine._extract_json(raw)
             query_type = str(result.get("query_type", self._default_type))
         except Exception:
             if not self._fallback:

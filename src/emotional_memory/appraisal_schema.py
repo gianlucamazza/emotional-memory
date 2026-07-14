@@ -117,6 +117,41 @@ class AppraisalSchema:
         )
 
 
+def _coerce_dimension_scalar(value: object, dim: AppraisalDimension) -> float:
+    """Normalize one LLM dimension value to a clamped float.
+
+    Some providers return a numeric range as a JSON list (e.g. ``[0.1, 0.7]``)
+    despite a ``type: number`` schema. We take the arithmetic mean of numeric
+    elements; empty or non-numeric payloads fall back to the dimension neutral.
+    """
+    lo, hi = dim.range
+    scalar: float
+    if isinstance(value, (list, tuple)):
+        nums = [float(x) for x in value if isinstance(x, (int, float)) and not isinstance(x, bool)]
+        scalar = sum(nums) / len(nums) if nums else dim.neutral
+    elif isinstance(value, bool):
+        scalar = float(int(value))
+    elif isinstance(value, (int, float)):
+        scalar = float(value)
+    elif isinstance(value, str):
+        scalar = float(value.strip())
+    else:
+        raise TypeError(
+            f"cannot coerce {type(value).__name__} to float for dimension {dim.name!r}"
+        )
+    return max(lo, min(hi, scalar))
+
+
+def coerce_appraisal_dimensions(
+    raw: Mapping[str, object], schema: AppraisalSchema
+) -> dict[str, float]:
+    """Map raw LLM JSON to schema-ordered, clamped float dimensions."""
+    return {
+        dim.name: _coerce_dimension_scalar(raw.get(dim.name, dim.neutral), dim)
+        for dim in schema.dimensions
+    }
+
+
 # ---------------------------------------------------------------------------
 # Scherer CPM schema — the library default
 # ---------------------------------------------------------------------------

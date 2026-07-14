@@ -4,9 +4,9 @@
 
 | Version         | Supported               |
 | --------------- | ----------------------- |
-| 0.14.x (latest) | ✓ — full support        |
-| 0.13.x          | ✓ — security fixes only |
-| < 0.13          | ✗                       |
+| 0.16.x (latest) | ✓ — full support        |
+| 0.15.x          | ✓ — security fixes only |
+| < 0.15          | ✗                       |
 
 ## Reporting a vulnerability
 
@@ -23,6 +23,13 @@ will be targeted within **30 days** of confirmed impact.
 
 Once a fix is released, the disclosure will be coordinated with the reporter
 before any public announcement.
+
+## LLM integration threat model
+
+User-supplied `content`, `query`, and `metadata` values are embedded in appraisal
+and query-classifier prompts without sanitization. Treat all inputs as untrusted:
+bound payload size with `EmotionalMemoryConfig.max_content_length` when deploying
+against external users, and never execute model output as code.
 
 ## Scope
 

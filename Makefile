@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -21,6 +21,10 @@ install-release:
 
 install-bench:
 	uv pip install -e ".[dev,bench]"
+
+# Scored third-party LLM benchmarks (Addenda X–Z, LoCoMo, A3, …): LLM + SBERT + dotenv
+install-scored-bench:
+	uv pip install -e ".[dev,bench,llm-test,dotenv,sentence-transformers]"
 
 install-llm-test:
 	uv pip install -e ".[dev,llm-test]"
@@ -64,6 +68,7 @@ cov:
 
 typecheck:
 	uv run mypy src/emotional_memory/
+	uv run python -m basedpyright src/emotional_memory/
 
 sync-metadata:
 	uv run python scripts/sync_release_metadata.py --from-toml
@@ -109,7 +114,7 @@ bench-comparative:
 bench-comparative-sbert:
 	uv run python -m benchmarks.comparative.runner --embedder sbert --out benchmarks/comparative/results.sbert.csv
 
-bench-comparative-sota: llm-config-strict
+bench-comparative-sota: bench-deps-strict
 	uv run python -m benchmarks.comparative.runner \
 		--systems aft,naive_cosine,recency,mem0,langmem \
 		--embedder sbert \
@@ -199,14 +204,14 @@ bench-appraisal-confound-hash:
 	uv run python -m benchmarks.appraisal_confound.runner --embedder hash
 
 # Addendum G — Hg1: dual-path LLM appraisal on affect-free dataset (requires API key)
-bench-addendum-g: llm-config-strict
+bench-addendum-g: bench-deps-strict
 	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder sbert-bge
 
-bench-addendum-g-hash: llm-config-strict
+bench-addendum-g-hash: bench-deps-llm-only
 	uv run python -m benchmarks.appraisal_confound.runner_hg1 --embedder hash
 
 # WP-1a — Appraisal diagnostics: residuals of LLM appraisal vs oracle affect (requires API key)
-bench-appraisal-diagnostics: llm-config-strict
+bench-appraisal-diagnostics: bench-deps-strict
 	uv run python -m benchmarks.appraisal_diagnostics.runner --seed 42
 
 # Smoke test with a fixed appraisal vector — no LLM key required
@@ -277,31 +282,31 @@ bench-dailydialog:
 bench-dailydialog-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.runner --dry-run
 
-bench-t2a-dailydialog: llm-config-strict
+bench-t2a-dailydialog: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.t2a_runner
 
 bench-t2a-dailydialog-dry: llm-config-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.t2a_runner --dry-run
 
-bench-x-madial: llm-config-strict
+bench-x-madial: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.madialbench.runner
 
 bench-x-madial-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.madialbench.runner --dry-run
 
-bench-x2-esmem: llm-config-strict
+bench-x2-esmem: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.esmemeval.runner
 
 bench-x2-esmem-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.esmemeval.runner --dry-run
 
-bench-y-gate: llm-config-strict
+bench-y-gate: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.gate.runner
 
 bench-y-gate-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.gate.runner --dry-run
 
-bench-z-profile: llm-config-strict
+bench-z-profile: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.learned_profile.runner
 
 bench-z-profile-dry:
@@ -315,23 +320,23 @@ build-dailydialog-personas-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.dailydialog.persona_builder \
 	    --n 5 --seed 0 --dry-run
 
-bench-locomo: llm-config-strict
+bench-locomo: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner
 
-bench-locomo-routing: llm-config-strict
+bench-locomo-routing: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.routing_runner
 
 bench-locomo-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.runner --limit-conversations 2 --limit-qa 5 --no-judge
 
-bench-locomo-pareto: llm-config-strict
+bench-locomo-pareto: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.pareto_runner
 
 bench-locomo-pareto-dry:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.locomo.pareto_runner \
 	    --dry-run --limit-configs 2 --no-judge
 
-bench-a3: llm-config-strict
+bench-a3: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.downstream.runner
 
 bench-a3-dry:
@@ -340,11 +345,11 @@ bench-a3-dry:
 bench-circularity-audit:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.circularity_audit.runner
 
-bench-appraisal-vad: llm-config-strict
+bench-appraisal-vad: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.appraisal_vad.runner
 
 # Addendum W: one-time LLM pass that also dumps paired per-item predictions.
-bench-arousal-calibration-dump: llm-config-strict
+bench-arousal-calibration-dump: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.appraisal_vad.runner \
 		--dump-predictions benchmarks/arousal_calibration/predictions.json
 
@@ -352,10 +357,10 @@ bench-arousal-calibration-dump: llm-config-strict
 bench-arousal-calibration:
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.arousal_calibration.runner
 
-bench-query-appraisal: llm-config-strict
+bench-query-appraisal: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.query_appraisal.runner
 
-bench-human-gold: llm-config-strict
+bench-human-gold: bench-deps-strict
 	PYTHONUNBUFFERED=1 uv run python -m benchmarks.human_gold_appraisal.runner
 
 bench-human-gold-dry:
@@ -402,6 +407,12 @@ llm-config:
 
 llm-config-strict:
 	uv run python scripts/check_llm_config.py --strict --require-key
+
+bench-deps-strict: llm-config-strict
+	uv run python scripts/check_bench_deps.py --strict
+
+bench-deps-llm-only: llm-config-strict
+	uv run python scripts/check_bench_deps.py --strict --skip-embedder
 
 demo-check:
 	uv run python -m pytest tests/test_demo_ui_config.py -q
@@ -530,7 +541,9 @@ help:
 	@echo "  install-viz                + matplotlib (visualization)"
 	@echo "  install-demo               + Gradio demo runtime (local canonical demo setup)"
 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"
+	@echo "  install-scored-bench       LLM scored benchmarks (bench+llm-test+dotenv+SBERT)"
 	@echo "  install-llm-test           + httpx (real-LLM tests)"
+	@echo "  install-dotenv             + python-dotenv (.env auto-load in runners)"
 	@echo "  install-docs               + mkdocs (documentation)"
 	@echo "  install-release            Maintainer release toolchain + release gates"
 	@echo "  install-all                All extras"
@@ -578,6 +591,7 @@ help:
 	@echo "  test-llm                   Integration tests (requires EMOTIONAL_MEMORY_LLM_API_KEY)"
 	@echo "  llm-config                 Print resolved LLM config without secrets"
 	@echo "  llm-config-strict          Fail fast on missing/unsupported LLM config"
+	@echo "  bench-deps-strict          LLM key + httpx + dotenv + sentence-transformers"
 	@echo "  demo-check                 Demo wiring + runtime regression tests"
 	@echo "  demo-run                   Launch demo/app.py using current exported env"
 	@echo ""

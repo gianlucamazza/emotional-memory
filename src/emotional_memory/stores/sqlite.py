@@ -151,10 +151,12 @@ class SQLiteStore:
         with self._lock:
             self._ensure_vec(memory)
             with self._conn:
-                self._conn.execute(
+                cursor = self._conn.execute(
                     "UPDATE memories SET content = ?, data = ? WHERE id = ?",
                     (memory.content, memory.model_dump_json(), memory.id),
                 )
+                if cursor.rowcount == 0:
+                    return
                 if self._vec_ready and memory.embedding is not None:
                     self._conn.execute("DELETE FROM memory_vec WHERE id = ?", (memory.id,))
                     self._conn.execute(

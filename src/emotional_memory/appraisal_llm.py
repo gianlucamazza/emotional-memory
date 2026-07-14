@@ -48,7 +48,11 @@ from typing import Any, Protocol, runtime_checkable
 from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
-from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
+from emotional_memory.appraisal_schema import (
+    SCHERER_CPM_SCHEMA,
+    AppraisalSchema,
+    coerce_appraisal_dimensions,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -301,10 +305,11 @@ class LLMAppraisalEngine:
         else:
             try:
                 data = self._extract_json(raw)
+                coerced = coerce_appraisal_dimensions(data, self._schema)
                 if self._schema is SCHERER_CPM_SCHEMA:
-                    vector = AppraisalVector(**data)
+                    vector = AppraisalVector(**coerced)
                 else:
-                    vector = GenericAppraisalVector(dimensions=data, schema=self._schema)
+                    vector = GenericAppraisalVector(dimensions=coerced, schema=self._schema)
             except Exception as exc:
                 if self._config.fallback_on_error:
                     # Warn, not debug: a requested appraisal was silently replaced

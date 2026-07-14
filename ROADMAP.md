@@ -316,19 +316,17 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       gold-relation boundary. Follow-up (not scheduled): promote to a production
       `retrieve_query_gated()` src API in its own pre-registered PR.
       See `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
-- [ ] **Addendum Z — held-out learned retrieval profile (pre-registered; scored run
-      pending).** The untested lever behind every third-party FAIL: they all used a
-      _fixed_ weight vector. Z fits a linear pairwise learning-to-rank over the 6
-      retrieval signals and evaluates it strictly out-of-sample via k-fold cross-fitting
-      (tests generalization, not fit — resolving the circularity that kept the
-      support-mode profile unscheduled). Hz1 (break, Holm m=3): held-out learned > cosine
-      on ≥1 third-party corpus → Branch A, provenance bound broken (replication-gated);
-      Hz2 (preserve): non-inferior to the fixed profile on curated. Honest ex-ante
-      expectation is Branch B (even the held-out optimal linear profile does not beat
-      cosine → hardens the boundary). Pre-registration + harness (`benchmarks/common/ltr.py` + `benchmarks/learned_profile/`, all 4 corpora dry-validated, zero `src/`) landed;
-      scored run (`make bench-z-profile`, direct-VAD, billed) is the next step. Branch-A
-      follow-up: a `fit_retrieval_weights()` src API.
-      See `benchmarks/preregistration_addendum_z_learned_profile.md`.
+- [x] **Addendum Z — held-out learned retrieval profile (Branch B, 2026-07-14).** The
+      untested lever behind every third-party FAIL: they all used a _fixed_ weight vector.
+      Z fits a linear pairwise learning-to-rank over the 6 retrieval signals and evaluates
+      it strictly out-of-sample via k-fold cross-fitting. **Hz1 FAIL (0/3 break corpora):**
+      no held-out learned linear profile beats cosine (MADial Δ=+0.015 p_holm=0.314; ES-MemEval
+      Δ=−0.015 p_holm=0.9997; DailyDialog Δ=+0.008 p_holm=0.811). **Hz2 PASS:** curated
+      learned top1=0.425 vs fixed 0.240 (+0.185). Negative learned s2 on MADial/ES-MemEval
+      did not rescue third-party performance. Boundary hardened: fixed-weight failure → no
+      held-out learned linear profile generalizes on third-party gold. Branch-A follow-up
+      (`fit_retrieval_weights()` src API) not scheduled.
+      See `benchmarks/preregistration_addendum_z_learned_profile_closure.md`.
 - [x] **Algorithmic levers (P2) — evaluated 2026-07-08, mostly declined.** Three hand-tuned
       runtime enhancements were assessed against the code and priced honestly; none is opened
       as an engineering PR (same "evaluated & declined" disposition as Addendum W's library

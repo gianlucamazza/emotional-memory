@@ -1,0 +1,172 @@
+{
+  "benchmark": "addendum_z_learned_profile",
+  "pre_registration": "benchmarks/preregistration_addendum_z_learned_profile.md",
+  "dry_run": false,
+  "k": 5,
+  "n_bootstrap": 10000,
+  "seed": 0,
+  "corpora": {
+    "madialbench": {
+      "metric": "ndcg@5",
+      "role": "break",
+      "n_queries": 160,
+      "cosine_mean": 0.3039782695692955,
+      "aft_fixed_mean": 0.16623892149261033,
+      "aft_learned_mean": 0.3192858271811009,
+      "in_sample_mean": 0.3272326834250972,
+      "generalization_gap": 0.007946856243996325,
+      "learned_weights": [
+        0.32714709191279295,
+        -0.013712122041388575,
+        0.044285228081984665,
+        0.0,
+        0.03859085439886487,
+        0.03875293023354711
+      ],
+      "s2_sign": "negative",
+      "learned_vs_cosine": {
+        "delta": 0.015307557611805406,
+        "ci_lower": -0.007897208366362447,
+        "ci_upper": 0.040479493388608685,
+        "p_onetail": 0.1046,
+        "cohens_d": 0.09864201563565757
+      },
+      "learned_vs_aft_fixed": {
+        "delta": 0.15304690568849058,
+        "ci_lower": 0.09110919504637296,
+        "ci_upper": 0.21673494722250874,
+        "p_onetail": 0.0,
+        "cohens_d": 0.37337614360941634
+      }
+    },
+    "esmemeval": {
+      "metric": "u_ndcg@4",
+      "role": "break",
+      "n_queries": 1133,
+      "cosine_mean": 0.2835487352223553,
+      "aft_fixed_mean": 0.08261020270769415,
+      "aft_learned_mean": 0.26883760206750135,
+      "in_sample_mean": 0.2671155868286215,
+      "generalization_gap": -0.001722015238879826,
+      "learned_weights": [
+        0.3470718492724509,
+        -0.009239829855524705,
+        0.03919147689364315,
+        0.0,
+        0.015150166912242741,
+        0.05539622977365498
+      ],
+      "s2_sign": "negative",
+      "learned_vs_cosine": {
+        "delta": -0.014711133154853912,
+        "ci_lower": -0.0231700309626317,
+        "ci_upper": -0.0064519756216028495,
+        "p_onetail": 0.9997,
+        "cohens_d": -0.10236891195757722
+      },
+      "learned_vs_aft_fixed": {
+        "delta": 0.18622739935980723,
+        "ci_lower": 0.17226956039207494,
+        "ci_upper": 0.20027251354609463,
+        "p_onetail": 0.0,
+        "cohens_d": 0.7707446831643854
+      }
+    },
+    "dailydialog_t2a": {
+      "metric": "top1",
+      "role": "break",
+      "n_queries": 396,
+      "cosine_mean": 0.2196969696969697,
+      "aft_fixed_mean": 0.23737373737373738,
+      "aft_learned_mean": 0.22727272727272727,
+      "in_sample_mean": 0.25252525252525254,
+      "generalization_gap": 0.025252525252525276,
+      "learned_weights": [
+        0.012459395505249663,
+        0.01529255443920959,
+        0.009898071370595812,
+        0.0,
+        -0.004623709683470301,
+        -0.01575926449429014
+      ],
+      "s2_sign": "non-negative",
+      "learned_vs_cosine": {
+        "delta": 0.007575757575757576,
+        "ci_lower": -0.045454545454545456,
+        "ci_upper": 0.06060606060606061,
+        "p_onetail": 0.40555,
+        "cohens_d": 0.014423034724067883
+      },
+      "learned_vs_aft_fixed": {
+        "delta": -0.010101010101010102,
+        "ci_lower": -0.06565656565656566,
+        "ci_upper": 0.045454545454545456,
+        "p_onetail": 0.6211,
+        "cohens_d": -0.017747080660009202
+      }
+    },
+    "realistic_recall_v2": {
+      "metric": "top1",
+      "role": "preserve",
+      "n_queries": 200,
+      "cosine_mean": 0.325,
+      "aft_fixed_mean": 0.24,
+      "aft_learned_mean": 0.425,
+      "in_sample_mean": 0.425,
+      "generalization_gap": 0.0,
+      "learned_weights": [
+        0.38315239067015955,
+        -0.1016062090875742,
+        0.19331292386860371,
+        0.0,
+        0.11989056014516204,
+        -0.027294495443266252
+      ],
+      "s2_sign": "negative",
+      "learned_vs_cosine": {
+        "delta": 0.1,
+        "ci_lower": 0.06,
+        "ci_upper": 0.145,
+        "p_onetail": 0.0,
+        "cohens_d": 0.3154362059117501
+      },
+      "learned_vs_aft_fixed": {
+        "delta": 0.185,
+        "ci_lower": 0.12,
+        "ci_upper": 0.25,
+        "p_onetail": 0.0,
+        "cohens_d": 0.3841394311823533
+      }
+    }
+  },
+  "verdict": {
+    "evaluable": true,
+    "family": "Holm m=3 (Hz1 break) + non-inferiority (Hz2 preserve)",
+    "hz1_break": [
+      {
+        "corpus": "madialbench",
+        "delta": 0.015307557611805406,
+        "p_holm": 0.31379999999999997,
+        "pass": false
+      },
+      {
+        "corpus": "esmemeval",
+        "delta": -0.014711133154853912,
+        "p_holm": 0.9997,
+        "pass": false
+      },
+      {
+        "corpus": "dailydialog_t2a",
+        "delta": 0.007575757575757576,
+        "p_holm": 0.8111,
+        "pass": false
+      }
+    ],
+    "hz1_any_pass": false,
+    "hz2_preserve": {
+      "delta_vs_fixed": 0.185,
+      "pass": true
+    },
+    "branch_a": false
+  }
+}

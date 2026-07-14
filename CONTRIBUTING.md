@@ -61,6 +61,11 @@ make install-release
 # Additional targeted extras
 make install-sqlite
 make install-docs
+
+# Scored LLM benchmarks (Addenda X–Z, LoCoMo, A3, …)
+cp .env.example .env        # fill EMOTIONAL_MEMORY_LLM_API_KEY
+make install-scored-bench   # bench + llm-test + dotenv + sentence-transformers
+make bench-deps-strict      # verify key + all bench deps before a scored run
 ```
 
 Verify everything works:
@@ -72,9 +77,10 @@ make check   # lint + typecheck + tests — must pass before any commit
 ### Environment variables for LLM tests
 
 The full `EMOTIONAL_MEMORY_LLM_*` surface is documented canonically in
-[docs/contributing/llm-environment.md](../docs/contributing/llm-environment.md) — set
-`EMOTIONAL_MEMORY_LLM_API_KEY` at minimum. Copy `.env.example` (if present) or export the
-variables manually.
+[docs/contributing/llm-environment.md](docs/contributing/llm-environment.md) — set
+`EMOTIONAL_MEMORY_LLM_API_KEY` at minimum. Copy `.env.example` to `.env` or export the
+variables manually. Scored benchmark runners auto-load `.env` when `python-dotenv` is
+installed (`make install-scored-bench` includes it).
 
 Release secrets (not LLM configuration) used by maintainer targets:
 
@@ -109,7 +115,7 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | ---------------------- | ---------------------------------------------- | ---------------------- |
 | `make test`            | Unit + integration (835+ tests)                | ~1s                    |
 | `make cov`             | Same with branch coverage (≥ 80% enforced)     | ~2s                    |
-| `make bench-fidelity`  | 126 parametrized psychological invariant tests | ~5s                    |
+| `make bench-fidelity`  | 127 parametrized psychological invariant tests | ~5s                    |
 | `make bench-perf`      | Latency/throughput benchmarks                  | ~30s                   |
 | `make test-llm`        | Real-LLM integration (requires API key)        | ~30s                   |
 | `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |

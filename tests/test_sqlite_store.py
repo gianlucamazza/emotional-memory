@@ -117,10 +117,14 @@ class TestSQLiteStoreUpdate:
 
     def test_update_nonexistent_is_noop(self):
         store = SQLiteStore(":memory:")
-        m = make_test_memory("ghost")
+        m = make_test_memory("ghost", embedding=[1.0, 0.0, 0.0])
         store.update(m)  # no error, no new row
         assert len(store) == 0
         assert store.get(m.id) is None
+        with store._lock:
+            vec_rows = store._conn.execute("SELECT COUNT(*) AS n FROM memory_vec").fetchone()
+        assert vec_rows is not None
+        assert int(vec_rows["n"]) == 0
 
 
 # ---------------------------------------------------------------------------

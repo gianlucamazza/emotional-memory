@@ -49,6 +49,12 @@ from emotional_memory.appraisal import (
 )
 from emotional_memory.categorize import label_tag
 from emotional_memory.engine import EmotionalMemoryConfig
+from emotional_memory.engine_shared import (
+    check_content_length,
+    is_query_affect_neutral,
+    semantic_only_weights,
+    validate_prune_threshold,
+)
 from emotional_memory.interfaces import AffectiveStateStore
 from emotional_memory.interfaces_async import AsyncAppraisalEngine, AsyncEmbedder, AsyncMemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
@@ -247,6 +253,7 @@ class AsyncEmotionalMemory:
         metadata: dict[str, Any] | None = None,
     ) -> EmotionalTag:
         """Update affective state from content without storing a retrievable memory."""
+        check_content_length(content, self._config.max_content_length)
         with traced_span("emotional_memory.observe", {"content_length": len(content)}):
             tag, _ = await self._build_tag(
                 content,
@@ -267,6 +274,7 @@ class AsyncEmotionalMemory:
 
         Mirrors ``EmotionalMemory.encode`` with awaited I/O calls.
         """
+        check_content_length(content, self._config.max_content_length)
         with traced_span("emotional_memory.encode", {"content_length": len(content)}):
             now = datetime.now(tz=UTC)
             logger.debug("encode start: content_len=%d", len(content))
@@ -329,7 +337,12 @@ class AsyncEmotionalMemory:
         return memory
 
     async def retrieve(
-        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+        self,
+        query: str,
+        top_k: int = 5,
+        *,
+        query_affect: CoreAffect | None = None,
+        precomputed_weights: NDArray[np.float64] | None = None,
     ) -> list[Memory]:
         """Retrieve the top-k most relevant memories for the query (async).
 
@@ -338,6 +351,7 @@ class AsyncEmotionalMemory:
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
+        check_content_length(query, self._config.max_content_length, label="query")
         with traced_span(
             "emotional_memory.retrieve",
             {"query_length": len(query), "top_k": top_k},
@@ -383,7 +397,11 @@ class AsyncEmotionalMemory:
                 retrieval_config=rc,
                 propagation_hops=self._config.resonance.propagation_hops,
                 spreading_activation_fn=_spreading_fn,
-                precomputed_weights=self._effective_retrieval_weights(query),
+                precomputed_weights=(
+                    self._effective_retrieval_weights(query)
+                    if precomputed_weights is None
+                    else precomputed_weights
+                ),
             )
             top = [item.memory for item in plan.pass2[:top_k]]
             result = await self._apply_retrieval_updates(top, now)
@@ -396,6 +414,7 @@ class AsyncEmotionalMemory:
         top_k: int = 5,
         *,
         query_affect: CoreAffect | None = None,
+        precomputed_weights: NDArray[np.float64] | None = None,
     ) -> list[RetrievalExplanation]:
         """Async retrieval variant that exposes the ranking breakdown.
 
@@ -404,6 +423,7 @@ class AsyncEmotionalMemory:
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
+        check_content_length(query, self._config.max_content_length, label="query")
         now = datetime.now(tz=UTC)
         store_count = await self._store.count()
         logger.debug(
@@ -439,7 +459,11 @@ class AsyncEmotionalMemory:
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
             spreading_activation_fn=_spreading_fn,
-            precomputed_weights=self._effective_retrieval_weights(),
+            precomputed_weights=(
+                self._effective_retrieval_weights(query)
+                if precomputed_weights is None
+                else precomputed_weights
+            ),
         )
         top_ranked = plan.pass2[:top_k]
         result = await self._apply_retrieval_updates([item.memory for item in top_ranked], now)
@@ -484,6 +508,27 @@ class AsyncEmotionalMemory:
             )
         appraisal = await self._appraisal_engine.appraise(query)
         return await self.retrieve(query, top_k=top_k, query_affect=appraisal.to_core_affect())
+
+    async def retrieve_query_gated(
+        self, query: str, top_k: int = 5, *, tau: float | None = None
+    ) -> list[Memory]:
+        """Retrieve with the Addendum Y query-affect gate (Branch A, async).
+
+        Mirrors ``EmotionalMemory.retrieve_query_gated``.
+        """
+        if self._appraisal_engine is None:
+            raise RuntimeError(
+                "retrieve_query_gated requires an appraisal_engine; "
+                "none is configured. Pass appraisal_engine=... to AsyncEmotionalMemory."
+            )
+        effective_tau = self._config.query_affect_gate_tau if tau is None else tau
+        appraisal = await self._appraisal_engine.appraise(query)
+        query_affect = appraisal.to_core_affect()
+        if is_query_affect_neutral(query_affect.valence, effective_tau):
+            return await self.retrieve(
+                query, top_k=top_k, precomputed_weights=semantic_only_weights()
+            )
+        return await self.retrieve(query, top_k=top_k, query_affect=query_affect)
 
     async def _apply_retrieval_updates(self, top: list[Memory], now: datetime) -> list[Memory]:
         """Apply retrieval side effects after ranking has been computed."""
@@ -841,15 +886,19 @@ class AsyncEmotionalMemory:
         Returns:
             Number of memories removed.
         """
-        from emotional_memory.decay import compute_effective_strength
+        from emotional_memory.decay import compute_effective_strength_batch
 
+        validate_prune_threshold(threshold)
         with traced_span("emotional_memory.prune", {"threshold": threshold}):
             now = datetime.now(tz=UTC)
-            to_delete = [
-                m.id
-                for m in await self._store.list_all()
-                if compute_effective_strength(m.tag, now, self._config.decay) < threshold
-            ]
+            mems = await self._store.list_all()
+            if mems:
+                strengths = compute_effective_strength_batch(
+                    [m.tag for m in mems], now, self._config.decay
+                )
+                to_delete = [m.id for m, s in zip(mems, strengths, strict=True) if s < threshold]
+            else:
+                to_delete = []
             for memory_id in to_delete:
                 await self._store.delete(memory_id)
         return len(to_delete)

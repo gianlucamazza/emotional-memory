@@ -218,7 +218,13 @@ class ChromaStore:
         """Attach to an existing collection if present (persistent-mode resume)."""
         try:
             col = self._client.get_collection(self._collection_name)
-        except Exception:
+        except Exception as exc:
+            logger.debug(
+                "ChromaStore: could not attach collection '%s' (%s: %s)",
+                self._collection_name,
+                type(exc).__name__,
+                exc,
+            )
             return
         dim_val = (col.metadata or {}).get("dim")
         if dim_val is not None:

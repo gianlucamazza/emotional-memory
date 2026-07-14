@@ -187,7 +187,7 @@ Full theoretical foundations: [`docs/research/`](docs/research/index.md)
 The full API is auto-generated from docstrings and published at
 **[gianlucamazza.github.io/emotional-memory](https://gianlucamazza.github.io/emotional-memory/api/engine/)**.
 
-- **Engine** — [`EmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/engine/) (sync) and [`AsyncEmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/async_engine/) share the same method surface: `encode`, `observe`, `encode_batch`, `retrieve`, `retrieve_with_explanations`, `elaborate` / `elaborate_pending`, `prune`, `export_memories` / `import_memories`, and state persistence. Both support context managers for automatic resource cleanup.
+- **Engine** — [`EmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/engine/) (sync) and [`AsyncEmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/async_engine/) share the same method surface: `encode`, `observe`, `encode_batch`, `retrieve`, `retrieve_with_explanations`, `retrieve_with_query_appraisal`, `retrieve_query_gated`, `elaborate` / `elaborate_pending`, `prune`, `export_memories` / `import_memories`, and state persistence. Both support context managers for automatic resource cleanup. `encode_batch` parallelizes appraisal up to `appraisal_max_concurrency` (default 8).
 - **Configuration** — `EmotionalMemoryConfig` plus nested `RetrievalConfig`, `ResonanceConfig`, `DecayConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`, `QueryClassifierConfig`. Top-level flags: `dual_path_encoding`, `elaboration_learning_rate`, `auto_categorize`, and ablation toggles (`enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation`).
 - **Bring your own** — `Embedder`, `MemoryStore`, and `AffectiveStateStore` are duck-typed protocols. Included stores: `InMemoryStore`, `SQLiteStore` (sqlite-vec ANN), `QdrantStore`, `ChromaStore`. Included affective-state stores: in-memory, SQLite, Redis (pass one as `state_store=` for cross-session mood continuity).
 - **Appraisal** — `LLMAppraisalEngine` (wrap any LLM callable) or `KeywordAppraisalEngine` (zero-dependency fallback); swap the Scherer CPM prompt for any `AppraisalSchema` (OCC, GRID, custom) — see the [custom-appraisal tutorial](docs/tutorials/byo_appraisal_schema.md).
@@ -295,7 +295,7 @@ above gives the one-line summary.
 
 ## Validation & Benchmarks
 
-AFT is validated against 20 published psychological phenomena (127 fidelity tests) and 20+
+AFT is validated against 20 published psychological phenomena (127 fidelity tests) and 25+
 pre-registered confirmatory studies, **including committed negative results**. On
 affect-discriminative recall the advantage is real and embedder-robust (English N=200, SBERT
 Δ=+0.21, d=0.49; French N=120, me5, Δ=+0.18, p<0.0001) — but it does **not** generalize:

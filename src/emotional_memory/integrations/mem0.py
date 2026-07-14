@@ -188,10 +188,10 @@ class EmotionalMemoryMem0Backend:
         dict or None
             ``{"id": ..., "memory": ..., "metadata": ...}`` or ``None``.
         """
-        for mem in self._em.list_all():
-            if mem.id == memory_id:
-                return {"id": mem.id, "memory": mem.content, "metadata": dict(mem.metadata)}
-        return None
+        mem = self._em.get(memory_id)
+        if mem is None:
+            return None
+        return {"id": mem.id, "memory": mem.content, "metadata": dict(mem.metadata)}
 
     def get_all(
         self,

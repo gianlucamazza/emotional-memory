@@ -882,6 +882,7 @@ demo = [
 ]
 dev = [
     { name = "basedpyright" },
+    { name = "fakeredis" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -944,6 +945,7 @@ requires-dist = [
     { name = "basedpyright", marker = "extra == 'dev'", specifier = ">=1.18" },
     { name = "build", marker = "extra == 'release'", specifier = ">=1.2" },
     { name = "chromadb", marker = "extra == 'chroma'", specifier = ">=0.5" },
+    { name = "fakeredis", marker = "extra == 'dev'", specifier = ">=2.35.1" },
     { name = "gradio", marker = "extra == 'demo'", specifier = ">=6.13,<7" },
     { name = "httpx", marker = "extra == 'llm-test'", specifier = ">=0.27" },
     { name = "langchain-core", marker = "extra == 'langchain'", specifier = ">=0.3" },

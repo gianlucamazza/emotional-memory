@@ -41,6 +41,7 @@ dev = [
   "ruff>=0.4",
   "mypy>=1.10",
   "basedpyright>=1.18",
+  "fakeredis>=2.35.1",
 ]
 bench = ["pytest-benchmark>=4.0", "psutil>=5.9", "tqdm>=4.65"]
 llm-test = ["httpx>=0.27"]

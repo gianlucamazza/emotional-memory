@@ -21,12 +21,23 @@ change a default here, update them too.
 `make` targets export `.env` automatically. To have `.env` auto-loaded when invoking a
 benchmark module directly (e.g. `python -m benchmarks.appraisal_diagnostics.runner`), run
 `make install-dotenv` (installs `python-dotenv`). Real-LLM tests need the HTTP client —
-run `make install-llm-test` (installs `httpx`). Verify the resolved config any time with
-`make llm-config` (prints values, no secrets).
+run `make install-llm-test` (installs `httpx`).
+
+**Scored third-party benchmarks** (Addenda X–Z, LoCoMo, A3, …) also require SBERT/BGE
+embeddings. Install the full stack once:
 
 ```bash
-EMOTIONAL_MEMORY_LLM_API_KEY=... make test-llm
-EMOTIONAL_MEMORY_LLM_API_KEY=... make bench-appraisal
+cp .env.example .env   # fill EMOTIONAL_MEMORY_LLM_API_KEY
+make install-scored-bench
+make bench-deps-strict   # LLM key + httpx + dotenv + sentence-transformers
+```
+
+Verify the resolved LLM config any time with `make llm-config` (prints values, no secrets).
+
+```bash
+make test-llm
+make bench-appraisal
+make bench-z-profile      # Addendum Z — learned retrieval profile
 ```
 
 !!! note "Release secrets are separate"

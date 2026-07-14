@@ -5,9 +5,11 @@ from pydantic import ValidationError
 
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal_schema import (
+    DIRECT_VAD_SCHEMA,
     SCHERER_CPM_SCHEMA,
     AppraisalDimension,
     AppraisalSchema,
+    coerce_appraisal_dimensions,
 )
 
 
@@ -149,3 +151,17 @@ class TestSchereCpmSchema:
         }
         ca = SCHERER_CPM_SCHEMA.project_to_core_affect(positive_dims)
         assert ca.valence > 0.5
+
+
+class TestCoerceAppraisalDimensions:
+    def test_list_values_averaged_for_direct_vad(self) -> None:
+        raw = {"valence": [0.1, 0.7], "arousal": [0.6, 0.8], "dominance": [0.4, 0.75]}
+        coerced = coerce_appraisal_dimensions(raw, DIRECT_VAD_SCHEMA)
+        assert coerced["valence"] == pytest.approx(0.4)
+        assert coerced["arousal"] == pytest.approx(0.7)
+        assert coerced["dominance"] == pytest.approx(0.575)
+
+    def test_missing_keys_use_neutral(self) -> None:
+        coerced = coerce_appraisal_dimensions({}, DIRECT_VAD_SCHEMA)
+        assert coerced["valence"] == pytest.approx(0.0)
+        assert coerced["arousal"] == pytest.approx(0.5)

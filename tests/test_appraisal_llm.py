@@ -72,6 +72,16 @@ class TestLLMAppraisalEngine:
         v = engine.appraise("anything")
         assert v.novelty == pytest.approx(1.0)
 
+    def test_direct_vad_list_values_coerced(self) -> None:
+        resp = {"valence": [0.1, 0.7], "arousal": [0.6, 0.8], "dominance": [0.4, 0.75]}
+        engine = LLMAppraisalEngine(
+            _make_llm(resp),
+            config=LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA),
+        )
+        ca = engine.appraise("mixed feelings").to_core_affect()
+        assert ca.valence == pytest.approx(0.4)
+        assert ca.arousal == pytest.approx(0.7)
+
     def test_fallback_on_error_default(self):
         engine = LLMAppraisalEngine(_make_llm("not json at all"))
         v = engine.appraise("test")

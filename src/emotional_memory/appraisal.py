@@ -29,7 +29,11 @@ from typing import Any, Protocol, runtime_checkable
 from pydantic import BaseModel, ConfigDict, field_validator
 
 from emotional_memory.affect import CoreAffect
-from emotional_memory.appraisal_schema import SCHERER_CPM_SCHEMA, AppraisalSchema
+from emotional_memory.appraisal_schema import (
+    SCHERER_CPM_SCHEMA,
+    AppraisalSchema,
+    coerce_appraisal_dimensions,
+)
 
 
 class GenericAppraisalVector:
@@ -43,8 +47,8 @@ class GenericAppraisalVector:
 
     __slots__ = ("_schema", "dimensions")
 
-    def __init__(self, dimensions: Mapping[str, float], schema: AppraisalSchema) -> None:
-        self.dimensions: dict[str, float] = dict(dimensions)
+    def __init__(self, dimensions: Mapping[str, object], schema: AppraisalSchema) -> None:
+        self.dimensions: dict[str, float] = coerce_appraisal_dimensions(dimensions, schema)
         self._schema: AppraisalSchema = schema
 
     @property

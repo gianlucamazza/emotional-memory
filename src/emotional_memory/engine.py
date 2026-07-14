@@ -35,6 +35,12 @@ from emotional_memory.appraisal import (
 )
 from emotional_memory.categorize import label_tag
 from emotional_memory.decay import DecayConfig
+from emotional_memory.engine_shared import (
+    check_content_length,
+    is_query_affect_neutral,
+    semantic_only_weights,
+    validate_prune_threshold,
+)
 from emotional_memory.interfaces import AffectiveStateStore, Embedder, MemoryStore
 from emotional_memory.models import EmotionalTag, Memory, ResonanceLink, make_emotional_tag
 from emotional_memory.mood import MoodDecayConfig, MoodField
@@ -107,9 +113,19 @@ class EmotionalMemoryConfig(BaseModel):
     """When False, skip the APE-gated reconsolidation window at retrieval time (ablation of
     Pearce-Hall 1980 APE gate). Predictive-learning (update_prediction) still runs."""
 
+    max_content_length: int | None = Field(default=None, ge=1)
+    """Optional maximum length for ``content`` / ``query`` strings. ``None`` = unlimited."""
+
+    query_affect_gate_tau: float = Field(default=0.2, ge=0.0, le=2.0)
+    """Neutral-query threshold for ``retrieve_query_gated()`` (Addendum Y, default 0.2)."""
+
 
 class EmotionalMemory:
     """Emotional memory system for LLMs based on Affective Field Theory.
+
+    The sync engine is intended for single-threaded use; concurrent ``encode()`` /
+    ``observe()`` from multiple threads can interleave affective-state updates.
+    Use :class:`AsyncEmotionalMemory` for concurrent async workloads.
 
     Usage::
 
@@ -279,6 +295,7 @@ class EmotionalMemory:
         metadata: dict[str, Any] | None = None,
     ) -> EmotionalTag:
         """Update affective state from content without storing a retrievable memory."""
+        check_content_length(content, self._config.max_content_length)
         with traced_span("emotional_memory.observe", {"content_length": len(content)}):
             now = datetime.now(tz=UTC)
             tag, _ = self._build_tag(
@@ -307,6 +324,7 @@ class EmotionalMemory:
           6. Build resonance links against existing memories
           7. Update stored memory with resonance links
         """
+        check_content_length(content, self._config.max_content_length)
         with traced_span("emotional_memory.encode", {"content_length": len(content)}):
             now = datetime.now(tz=UTC)
             logger.debug("encode start: content_len=%d", len(content))
@@ -368,7 +386,12 @@ class EmotionalMemory:
         return memory
 
     def retrieve(
-        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+        self,
+        query: str,
+        top_k: int = 5,
+        *,
+        query_affect: CoreAffect | None = None,
+        precomputed_weights: NDArray[np.float64] | None = None,
     ) -> list[Memory]:
         """Retrieve the top-k most relevant memories for the query.
 
@@ -396,6 +419,7 @@ class EmotionalMemory:
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
+        check_content_length(query, self._config.max_content_length, label="query")
         with traced_span(
             "emotional_memory.retrieve",
             {"query_length": len(query), "top_k": top_k, "store_size": len(self._store)},
@@ -441,7 +465,11 @@ class EmotionalMemory:
                 retrieval_config=rc,
                 propagation_hops=self._config.resonance.propagation_hops,
                 spreading_activation_fn=_spreading_fn,
-                precomputed_weights=self._effective_retrieval_weights(query),
+                precomputed_weights=(
+                    self._effective_retrieval_weights(query)
+                    if precomputed_weights is None
+                    else precomputed_weights
+                ),
             )
             top = [item.memory for item in plan.pass2[:top_k]]
             result = self._apply_retrieval_updates(top, now)
@@ -449,7 +477,12 @@ class EmotionalMemory:
         return result
 
     def retrieve_with_explanations(
-        self, query: str, top_k: int = 5, *, query_affect: CoreAffect | None = None
+        self,
+        query: str,
+        top_k: int = 5,
+        *,
+        query_affect: CoreAffect | None = None,
+        precomputed_weights: NDArray[np.float64] | None = None,
     ) -> list[RetrievalExplanation]:
         """Retrieve memories plus a structured score decomposition.
 
@@ -464,6 +497,7 @@ class EmotionalMemory:
         """
         if top_k < 1:
             raise ValueError(f"top_k must be >= 1, got {top_k}")
+        check_content_length(query, self._config.max_content_length, label="query")
         now = datetime.now(tz=UTC)
         logger.debug(
             "retrieve_with_explanations start: query_len=%d top_k=%d store=%d",
@@ -498,7 +532,11 @@ class EmotionalMemory:
             retrieval_config=rc,
             propagation_hops=self._config.resonance.propagation_hops,
             spreading_activation_fn=_spreading_fn,
-            precomputed_weights=self._effective_retrieval_weights(query),
+            precomputed_weights=(
+                self._effective_retrieval_weights(query)
+                if precomputed_weights is None
+                else precomputed_weights
+            ),
         )
         top_ranked = plan.pass2[:top_k]
         result = self._apply_retrieval_updates([item.memory for item in top_ranked], now)
@@ -548,6 +586,33 @@ class EmotionalMemory:
                 "or call retrieve(query, query_affect=...) with an explicit affect."
             )
         query_affect = self._appraisal_engine.appraise(query).to_core_affect()
+        return self.retrieve(query, top_k=top_k, query_affect=query_affect)
+
+    def retrieve_query_gated(
+        self, query: str, top_k: int = 5, *, tau: float | None = None
+    ) -> list[Memory]:
+        """Retrieve with the Addendum Y query-affect gate (Branch A).
+
+        Appraises the query text, then routes to semantic-only retrieval when
+        ``|valence| < tau`` (default ``query_affect_gate_tau``, 0.2), else to
+        the retrieve-time query-appraisal path (``retrieve_with_query_appraisal``).
+
+        This is a validated safe wrapper: it recovers the neutral-query component
+        of the off-regime penalty without mutating runtime affective state on the
+        affect-carrying path.
+
+        Raises:
+            RuntimeError: if no appraisal engine is configured.
+        """
+        if self._appraisal_engine is None:
+            raise RuntimeError(
+                "retrieve_query_gated requires an appraisal_engine; "
+                "none is configured. Pass appraisal_engine=... to EmotionalMemory."
+            )
+        effective_tau = self._config.query_affect_gate_tau if tau is None else tau
+        query_affect = self._appraisal_engine.appraise(query).to_core_affect()
+        if is_query_affect_neutral(query_affect.valence, effective_tau):
+            return self.retrieve(query, top_k=top_k, precomputed_weights=semantic_only_weights())
         return self.retrieve(query, top_k=top_k, query_affect=query_affect)
 
     def _apply_retrieval_updates(self, top: list[Memory], now: datetime) -> list[Memory]:
@@ -944,6 +1009,7 @@ class EmotionalMemory:
         """
         from emotional_memory.decay import compute_effective_strength_batch
 
+        validate_prune_threshold(threshold)
         with traced_span("emotional_memory.prune", {"threshold": threshold}):
             now = datetime.now(tz=UTC)
             mems = self._store.list_all()

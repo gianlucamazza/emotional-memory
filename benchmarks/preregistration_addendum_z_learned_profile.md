@@ -1,7 +1,9 @@
 # Pre-registration Addendum Z — Hz: learned retrieval profile (held-out learning-to-rank)
 
-**Status:** PRE-REGISTERED (not yet executed). Committed before the harness runs a
-single scored evaluation.
+**Closure:** `preregistration_addendum_z_learned_profile_closure.md` — **Branch B** (Hz1 FAIL
+0/3, Hz2 PASS; no held-out learned linear profile beats cosine on third-party corpora).
+
+**Status:** EXECUTED (2026-07-14). Committed before the harness ran a single scored evaluation.
 **Date (pre-reg):** 2026-07-07
 **Mechanism:** replace the fixed retrieval weight vector
 `base_weights = [0.35, 0.25, 0.15, 0.10, 0.10, 0.05]` (`retrieval.py`) with a **linear
