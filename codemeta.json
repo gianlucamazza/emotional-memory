@@ -17,6 +17,7 @@
   "author": [
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0009-0005-1462-3019",
       "givenName": "Gianluca",
       "familyName": "Mazza",
       "email": "info@gianlucamazza.it"
@@ -25,6 +26,7 @@
   "maintainer": [
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0009-0005-1462-3019",
       "givenName": "Gianluca",
       "familyName": "Mazza",
       "email": "info@gianlucamazza.it"

@@ -78,11 +78,13 @@ variables manually.
 
 Release secrets (not LLM configuration) used by maintainer targets:
 
-| Variable       | Required | Default              | Purpose                                                          |
-| -------------- | -------- | -------------------- | ---------------------------------------------------------------- |
-| `PYPI_TOKEN`   | No       | —                    | Manual PyPI fallback token for `make publish-pypi-manual`        |
-| `ZENODO_TOKEN` | No       | —                    | Zenodo API token for `make zenodo-draft` / `make zenodo-publish` |
-| `ZENODO_BASE`  | No       | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs                        |
+| Variable              | Required | Default              | Purpose                                                                                     |
+| --------------------- | -------- | -------------------- | ------------------------------------------------------------------------------------------- |
+| `PYPI_TOKEN`          | No       | —                    | Manual PyPI fallback token for `make publish-pypi-manual`                                   |
+| `ZENODO_TOKEN`        | No       | —                    | Zenodo API token for `make zenodo-draft` / `make zenodo-publish`                            |
+| `ZENODO_BASE`         | No       | `https://zenodo.org` | Zenodo base URL; use sandbox for dry runs                                                   |
+| `ORCID_CLIENT_ID`     | No       | —                    | ORCID Public API client id (public) — client-credentials, scope `/read-public`              |
+| `ORCID_CLIENT_SECRET` | No       | —                    | ORCID Public API client secret (sensitive); register at <https://orcid.org/developer-tools> |
 
 Real-LLM tests and benchmarks need the HTTP client — run `make install-llm-test` (installs
 `httpx`). `make` targets export `.env` automatically; to have `.env` auto-loaded when invoking
@@ -94,7 +96,7 @@ run `make install-dotenv` (installs `python-dotenv`). Verify the resolved config
 
 Use `.env` only for local CLI secrets that need to be read by tools in this repo.
 
-- Good candidates for `.env`: `EMOTIONAL_MEMORY_LLM_*`, `ZENODO_TOKEN`, temporary `PYPI_TOKEN`
+- Good candidates for `.env`: `EMOTIONAL_MEMORY_LLM_*`, `ZENODO_TOKEN`, `ORCID_CLIENT_ID` / `ORCID_CLIENT_SECRET`, temporary `PYPI_TOKEN`
 - `demo/app.py` does not call `load_dotenv()`; use `make demo-run` or export values explicitly
 - Prefer shell-exported values for one-off publish commands so tokens do not linger on disk
 - Never store credentials in git remotes; use a credential helper, OS keychain, or `hf auth login`
