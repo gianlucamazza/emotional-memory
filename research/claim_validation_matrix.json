@@ -17,7 +17,7 @@
     "4_realistic_tasks": "Realistic memory tasks",
     "5_human_ecological": "Human / ecological validation"
   },
-  "oracle_affect_note": "requires_oracle_affect=true: the claim's primary positive-result benchmarks inject preset valence/arousal at encode time (oracle affect); the LLM/keyword appraisal pipeline is bypassed for those results. requires_oracle_affect=false: the benchmark ran without preset affect injection \u2014 either no affect signal (naturalistic) or the appraisal pipeline itself produced the signal.",
+  "oracle_affect_note": "requires_oracle_affect=true: the claim's primary positive-result benchmarks inject preset valence/arousal at encode time (oracle affect); the LLM/keyword appraisal pipeline is bypassed for those results. requires_oracle_affect=false: the benchmark ran without preset affect injection — either no affect signal (naturalistic) or the appraisal pipeline itself produced the signal.",
   "claims": [
     {
       "claim_id": "aft_multilayer_engine",
@@ -38,7 +38,9 @@
       ],
       "benchmark_refs": [],
       "protocol_refs": [],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "retrieval_affect_aware",
@@ -48,9 +50,9 @@
       "evidence_level": "2_controlled_retrieval",
       "requires_oracle_affect": true,
       "allowed_public_wording": "Retrieval is affect-aware, not semantic-only.",
-      "current_evidence": "127 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 \u2248 0.80-0.85 (ceiling effect, N = 20 items) while clearly beating recency (\u0394 = \u22120.55, p < 0.001). SOTA extension on affect_reference_v1 (2026-05-07, gpt-4.1-mini): Mem0 reaches recall@5 = 1.00 (\u0394 = +0.20 vs cosine, p_boot = 0.045) and LangMem 0.90 (\u0394 = +0.10, p_boot = 0.254); AFT 0.85 (\u0394 = +0.05, p_boot = 0.825). LLM-backed memory dominates AFT on that simpler probe but at 25\u00d7 higher encode latency (Mem0 1130 ms/item vs AFT 45 ms/item). The realistic replay v2 benchmark (Hd2 PASS) shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; \u0394=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49). SOTA replication on v2 (2026-05-07, gpt-4.1-mini, H_v2_sota PASS): on the same v2 dataset Mem0 = 0.330 (\u0394 vs cosine = +0.005, p=0.945) and LangMem = 0.365 (\u0394 = +0.040, p=0.233); neither beats naive_cosine. AFT top1 = 0.535 (\u0394 vs cosine = +0.210 [+0.155,+0.270], p<0.001, d=0.512) \u2014 non-overlapping CIs vs both SOTA systems. Pattern inverts across benchmarks: Mem0 excels at semantic quadrant recall (affect_reference_v1) while AFT excels at affect-modulated multi-session recall (v2). Architecture advantage under automatic appraisal: Hg1 FAIL (LLM appraisal + oracle-free; \u0394=\u22120.010, p=0.367). All Hd* results use oracle/preset affect. \u2014 FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries \u00d7 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], \u0394=+0.18 [0.11, 0.26], p_bootstrap=0.0000, Hedges g=0.424. Advantage confirmed in French on same 2-session realistic replay format as EN.",
-      "not_yet_shown": "General downstream superiority over production memory systems in the semantic-recall regime \u2014 Mem0 and LangMem outperform AFT on affect_reference_v1 (simple quadrant probe). Architecture advantage under automatic appraisal unconfirmed (Hg1 FAIL). Consistent cross-embedder per-type advantage (H6 momentum_alignment fails for e5-small-v2). Cross-language replication on IT/ES at me5 N=120 in 2-session format remains open (Hd2 Branch C FAIL 2026-05-07); FR is the sole 2-session confirmatory cross-language PASS (Addendum M, me5, N=120). Cross-domain ecological replication: Hk1 FAIL on DailyDialog (Branch B, \u0394=-0.008, p_holm=1.000, 2026-05-07). Human / ecological validation (#27 open).",
-      "next_study": "Robust cross-language replication (explicit confirmatory study); ecological corpus with >30% affect-bearing turns per dialogue for naturalistic replication. Inter-rater agreement (\u03ba Cohen) on affect_reference_v1.",
+      "current_evidence": "127 fidelity cases validate affect-aware ranking logic. The controlled quadrant benchmark (SBERT) ties AFT and naive_cosine at recall@5 ≈ 0.80-0.85 (ceiling effect, N = 20 items) while clearly beating recency (Δ = −0.55, p < 0.001). SOTA extension on affect_reference_v1 (2026-05-07, gpt-4.1-mini): Mem0 reaches recall@5 = 1.00 (Δ = +0.20 vs cosine, p_boot = 0.045) and LangMem 0.90 (Δ = +0.10, p_boot = 0.254); AFT 0.85 (Δ = +0.05, p_boot = 0.825). LLM-backed memory dominates AFT on that simpler probe but at 25× higher encode latency (Mem0 1130 ms/item vs AFT 45 ms/item). The realistic replay v2 benchmark (Hd2 PASS) shows AFT top1 = 0.53 vs naive_cosine = 0.33 with SBERT (N = 200; Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49). SOTA replication on v2 (2026-05-07, gpt-4.1-mini, H_v2_sota PASS): on the same v2 dataset Mem0 = 0.330 (Δ vs cosine = +0.005, p=0.945) and LangMem = 0.365 (Δ = +0.040, p=0.233); neither beats naive_cosine. AFT top1 = 0.535 (Δ vs cosine = +0.210 [+0.155,+0.270], p<0.001, d=0.512) — non-overlapping CIs vs both SOTA systems. Pattern inverts across benchmarks: Mem0 excels at semantic quadrant recall (affect_reference_v1) while AFT excels at affect-modulated multi-session recall (v2). Architecture advantage under automatic appraisal: Hg1 FAIL (LLM appraisal + oracle-free; Δ=−0.010, p=0.367). All Hd* results use oracle/preset affect. — FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries × 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap=0.0000, Hedges g=0.424. Advantage confirmed in French on same 2-session realistic replay format as EN.",
+      "not_yet_shown": "General downstream superiority over production memory systems in the semantic-recall regime — Mem0 and LangMem outperform AFT on affect_reference_v1 (simple quadrant probe). Architecture advantage under automatic appraisal unconfirmed (Hg1 FAIL). Consistent cross-embedder per-type advantage (H6 momentum_alignment fails for e5-small-v2). Cross-language replication on IT/ES at me5 N=120 in 2-session format remains open (Hd2 Branch C FAIL 2026-05-07); FR is the sole 2-session confirmatory cross-language PASS (Addendum M, me5, N=120). Cross-domain ecological replication: Hk1 FAIL on DailyDialog (Branch B, Δ=-0.008, p_holm=1.000, 2026-05-07). Human / ecological validation (#27 open).",
+      "next_study": "Robust cross-language replication (explicit confirmatory study); ecological corpus with >30% affect-bearing turns per dialogue for naturalistic replication. Inter-rater agreement (κ Cohen) on affect_reference_v1.",
       "evidence_refs": [
         "benchmarks/fidelity/test_emotional_vs_cosine.py",
         "benchmarks/fidelity/test_mood_congruent.py"
@@ -79,7 +81,9 @@
         "benchmarks/preregistration_addendum_m_fr.md",
         "benchmarks/preregistration_addendum_m_fr_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "realistic_replay_vs_sota",
@@ -88,9 +92,9 @@
       "status": "controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "On the realistic multi-session replay benchmark, AFT with preset affect labels achieves top1_accuracy = 0.535 vs Mem0 = 0.330 and LangMem = 0.365 \u2014 an advantage of \u0394 +0.21 (d=0.51) with non-overlapping 95% CIs. Neither LLM-backed system outperforms naive cosine on this benchmark.",
-      "current_evidence": "H_v2_sota PASS (exploratory, 2026-05-07, gpt-4.1-mini, sbert-bge, N=200, n_bootstrap=10000, seed=0): AFT top1=0.535 [0.465,0.600], Mem0=0.330 [0.265,0.395], LangMem=0.365 [0.300,0.430], cosine=0.325 [0.260,0.390]. Pairwise vs cosine: AFT \u0394=+0.210 [+0.155,+0.270], p<0.001, d=0.512; Mem0 \u0394=+0.005, p=0.945; LangMem \u0394=+0.040, p=0.233. Per-challenge AFT advantage strongest on semantic_confound (+0.275), momentum_alignment (+0.275), affective_arc (+0.275). Pattern inverts vs affect_reference_v1 (where Mem0=1.00>AFT=0.85): the two benchmarks test different capabilities. Methodological asymmetry: AFT receives oracle affect; Mem0/LangMem do not.",
-      "not_yet_shown": "Advantage without oracle-affect (Hg1 FAIL). Advantage on factual QA (LoCoMo S1 FAIL). Advantage under realistic appraisal. Human evaluation. Circularity audit (Addendum U, 2026-06-27, SBERT, N=200): 62.5% of v2 queries are AFT-favorable by construction; the aggregate advantage is concentrated there (\u0394=+0.304) and is null on the neutral 37.5% (\u0394=+0.013, p=0.63) \u2014 the headline figure is scoped to a ~62%-affect-discriminative benchmark, not regime-independent.",
+      "allowed_public_wording": "On the realistic multi-session replay benchmark, AFT with preset affect labels achieves top1_accuracy = 0.535 vs Mem0 = 0.330 and LangMem = 0.365 — an advantage of Δ +0.21 (d=0.51) with non-overlapping 95% CIs. Neither LLM-backed system outperforms naive cosine on this benchmark.",
+      "current_evidence": "H_v2_sota PASS (exploratory, 2026-05-07, gpt-4.1-mini, sbert-bge, N=200, n_bootstrap=10000, seed=0): AFT top1=0.535 [0.465,0.600], Mem0=0.330 [0.265,0.395], LangMem=0.365 [0.300,0.430], cosine=0.325 [0.260,0.390]. Pairwise vs cosine: AFT Δ=+0.210 [+0.155,+0.270], p<0.001, d=0.512; Mem0 Δ=+0.005, p=0.945; LangMem Δ=+0.040, p=0.233. Per-challenge AFT advantage strongest on semantic_confound (+0.275), momentum_alignment (+0.275), affective_arc (+0.275). Pattern inverts vs affect_reference_v1 (where Mem0=1.00>AFT=0.85): the two benchmarks test different capabilities. Methodological asymmetry: AFT receives oracle affect; Mem0/LangMem do not.",
+      "not_yet_shown": "Advantage without oracle-affect (Hg1 FAIL). Advantage on factual QA (LoCoMo S1 FAIL). Advantage under realistic appraisal. Human evaluation. Circularity audit (Addendum U, 2026-06-27, SBERT, N=200): 62.5% of v2 queries are AFT-favorable by construction; the aggregate advantage is concentrated there (Δ=+0.304) and is null on the neutral 37.5% (Δ=+0.013, p=0.63) — the headline figure is scoped to a ~62%-affect-discriminative benchmark, not regime-independent.",
       "next_study": "SOTA replication on v2 with automatic appraisal (would require gpt-4.1-mini appraisal, consistent with Hg1 methodology). Cross-embedder replication (e5-small-v2 on v2 SOTA).",
       "evidence_refs": [],
       "benchmark_refs": [
@@ -101,7 +105,9 @@
         "benchmarks/comparative/protocol.sota.v2.md",
         "benchmarks/preregistration_addendum_v2_sota.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "theory_faithful_operationalization",
@@ -111,7 +117,7 @@
       "evidence_level": "1_theory_fidelity",
       "requires_oracle_affect": true,
       "allowed_public_wording": "The implementation is faithful to the theories it operationalizes.",
-      "current_evidence": "127 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. Hi3 PASS (Addendum I closure, 2026-05-06, N=500, seed=1): the per-challenge embedder amplification on semantic_confound is confirmed \u2014 e5 resonance interference exceeds SBERT by \u0394=+0.090 [0.030,0.160] (d=0.257, Holm-adj p=0.0234). Secondary Hi3_recency also PASS (\u0394=+0.070, p_adj=0.0234); Hi3_arc FAIL (\u0394=+0.010). Mechanism channel (Hi2: link-set density) not differentiated at link-count level \u2014 both embedders saturate top-5 cap.",
+      "current_evidence": "127 fidelity cases across 20 phenomena validate expected intra-theory behavior. S3 ablation (N=200, SBERT and e5-small-v2) covers all 7 AFT mechanisms: individual no_mood/no_resonance effects are not significant in the expected direction, dual_path and synchronous keyword variants are destructive, and no_reconsolidation remains null on this benchmark. The 8-variant ablation shows system-level advantage but no isolatable single-layer attribution. Hi3 PASS (Addendum I closure, 2026-05-06, N=500, seed=1): the per-challenge embedder amplification on semantic_confound is confirmed — e5 resonance interference exceeds SBERT by Δ=+0.090 [0.030,0.160] (d=0.257, Holm-adj p=0.0234). Secondary Hi3_recency also PASS (Δ=+0.070, p_adj=0.0234); Hi3_arc FAIL (Δ=+0.010). Mechanism channel (Hi2: link-set density) not differentiated at link-count level — both embedders saturate top-5 cap.",
       "not_yet_shown": "Ecological correspondence to human emotional memory. The LLM-appraisal dual-path advantage on affect-free data is falsified (Addendum G/P, see appraisal_llm_real_dual_path). Mechanism for embedder-dependent amplification not localised at link-count instrumentation level (Hi2 still exploratory).",
       "next_study": "Human and behavioral validation. The automatic-appraisal dual-path question is closed (Addendum G/P, falsified).",
       "evidence_refs": [
@@ -131,7 +137,9 @@
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "appraisal_directionally_useful",
@@ -141,7 +149,7 @@
       "evidence_level": "3_appraisal_quality",
       "requires_oracle_affect": false,
       "allowed_public_wording": "Appraisal is directionally useful.",
-      "current_evidence": "The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. Human-gold construct validity now measured (Addendum S, EmoBank N=300): LLM valence r=0.70 vs human labels \u2014 see appraisal_human_validated.",
+      "current_evidence": "The appraisal-quality benchmark provides early controlled evidence on natural-language inputs. Human-gold construct validity now measured (Addendum S, EmoBank N=300): LLM valence r=0.70 vs human labels — see appraisal_human_validated.",
       "not_yet_shown": "Calibration across models, domains, and languages.",
       "next_study": "Appraisal robustness study across models, domains, and languages.",
       "evidence_refs": [
@@ -151,7 +159,9 @@
         "benchmarks/appraisal_quality/test_appraisal_quality.py"
       ],
       "protocol_refs": [],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "appraisal_human_validated",
@@ -162,7 +172,7 @@
       "requires_oracle_affect": false,
       "allowed_public_wording": "Against human-annotated affect (EmoBank, N=300), LLM appraisal valence is human-validated (Pearson r=0.70 [0.66, 0.75]); arousal (r=0.28 [0.17, 0.37]) and dominance (r=0.33 [0.22, 0.43]) are weakly-to-moderately positive (CIs exclude 0). A persistent positive valence bias (+0.15) remains. The rule-based KeywordAppraisalEngine is not human-validated (valence r=0.07).",
       "current_evidence": "Pre-registered Addendum S executed 2026-06-26 on EmoBank (Buechel & Hahn 2017, human VAD, N=300 sampled seed=42, CC-BY-SA 4.0). LLMAppraisalEngine (Scherer CPM, gpt-5-mini) -> to_core_affect() correlated against human VAD, bootstrap n=2000 seed=42: valence r=0.703 [0.655, 0.746] bias +0.152 MAE 0.319; arousal r=0.276 [0.172, 0.373] bias -0.058; dominance r=0.333 [0.224, 0.432] bias +0.130. All three LLM CIs exclude 0. The +0.169 positive valence bias from Addendum N (vs LLM-gold) persists vs human gold (+0.152). KeywordAppraisalEngine is not human-validated: valence r=0.070 [-0.010, 0.148], dominance r=-0.011; only a weak arousal correlation (r=0.106) with a large -0.288 bias.",
-      "not_yet_shown": "Strong validity on arousal/dominance (only weak-to-moderate). Correction of the standing +0.15 valence bias in the production path (Addendum O recalibration is not wired into LLMAppraisalEngine). Validity across non-English corpora and other annotation schemes. Addendum V (2026-06-27, EmoBank N=300): the weak arousal/dominance axes are largely a SEC\u2192projection artifact \u2014 a direct-VAD estimator (LLM rates V/A/D directly) reaches valence r=0.79 (bias \u22120.01), arousal r=0.58 (\u0394r +0.354 vs SEC), dominance r=0.43, paired CIs exclude 0 except dominance (touches 0). Adopt direct-VAD recommended (follow-up). Addendum W (2026-06-27): an affine calibration of direct-VAD arousal (arousal_cal = 0.16*arousal_direct + 0.45, fit on held-out EmoBank) cuts arousal MAE 0.20->0.04 (Hw1 p<0.001), below the SEC projection's 0.11 (Hw2 p<0.001), while preserving r -- calibrated direct-VAD dominates the projection on both r (0.57 vs 0.21) and MAE; the MAE cut partly reflects EmoBank's narrow arousal variance (shrink-to-mean).",
+      "not_yet_shown": "Strong validity on arousal/dominance (only weak-to-moderate). Correction of the standing +0.15 valence bias in the production path (Addendum O recalibration is not wired into LLMAppraisalEngine). Validity across non-English corpora and other annotation schemes. Addendum V (2026-06-27, EmoBank N=300): the weak arousal/dominance axes are largely a SEC→projection artifact — a direct-VAD estimator (LLM rates V/A/D directly) reaches valence r=0.79 (bias −0.01), arousal r=0.58 (Δr +0.354 vs SEC), dominance r=0.43, paired CIs exclude 0 except dominance (touches 0). Adopt direct-VAD recommended (follow-up). Addendum W (2026-06-27): an affine calibration of direct-VAD arousal (arousal_cal = 0.16*arousal_direct + 0.45, fit on held-out EmoBank) cuts arousal MAE 0.20->0.04 (Hw1 p<0.001), below the SEC projection's 0.11 (Hw2 p<0.001), while preserving r -- calibrated direct-VAD dominates the projection on both r (0.57 vs 0.21) and MAE; the MAE cut partly reflects EmoBank's narrow arousal variance (shrink-to-mean).",
       "next_study": "Wire the Addendum O mapping recalibration into the appraisal path and re-measure bias vs human gold; extend to a second human-annotated corpus and to non-English text.",
       "evidence_refs": [
         "benchmarks/preregistration_addendum_w_arousal_calibration_closure.md"
@@ -178,7 +188,9 @@
         "benchmarks/preregistration_addendum_s_human_gold_appraisal.md",
         "benchmarks/preregistration_addendum_s_human_gold_appraisal_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "replayable_multi_session_help",
@@ -187,9 +199,9 @@
       "status": "controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, \u0394=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, \u0394=+0.16 [0.09,0.22], p<0.001).",
-      "current_evidence": "Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types \u00d7 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, \u0394=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, \u0394=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED. \u2014 FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries \u00d7 30 native-FR scenarios (2-session multi-turn); AFT top1=0.31 [0.23, 0.39], naive_cosine=0.12 [0.07, 0.18], \u0394=+0.18 [0.11, 0.26], p_bootstrap=0.0000, Hedges g=0.424.",
-      "not_yet_shown": "General superiority on external open-domain QA (LoCoMo Gate 1 FAIL \u2014 AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation. Generalization beyond affect-discriminative scenarios: v2 benchmark has 4/5 challenge types where AFT signals are theoretically relevant by design; advantage on valence-neutral tasks is not established. Circularity audit (Addendum U, 2026-06-27, SBERT, N=200): 62.5% of v2 queries are AFT-favorable by construction; the aggregate advantage is concentrated there (\u0394=+0.304) and is null on the neutral 37.5% (\u0394=+0.013, p=0.63) \u2014 the headline figure is scoped to a ~62%-affect-discriminative benchmark, not regime-independent.",
+      "allowed_public_wording": "AFT helps on replayable multi-session memory tasks (v2, N=200, SBERT: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.21 [0.15,0.27], p<0.001; e5-small-v2: AFT top1=0.50 vs 0.34, Δ=+0.16 [0.09,0.22], p<0.001).",
+      "current_evidence": "Realistic replay v2 (50 scenarios, 200 queries, 5 challenge types × 40). SBERT bge-small-en: AFT top1=0.53 vs naive_cosine=0.33, Δ=+0.205 [0.150,0.265], p_bootstrap<0.001, d=0.49. e5-small-v2: AFT top1=0.50 vs naive_cosine=0.34, Δ=+0.155 [0.090,0.225], p_bootstrap<0.001, d=0.31. Advantage holds on both embedder classes. Architecture attribution confirmed: Hd1 PASS (Addendum D, seed=1, 2026-04-27); Gate 3 CLOSED. — FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries × 30 native-FR scenarios (2-session multi-turn); AFT top1=0.31 [0.23, 0.39], naive_cosine=0.12 [0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap=0.0000, Hedges g=0.424.",
+      "not_yet_shown": "General superiority on external open-domain QA (LoCoMo Gate 1 FAIL — AFT F1=0.168 vs naive_rag=0.271) or completed human/ecological validation. Generalization beyond affect-discriminative scenarios: v2 benchmark has 4/5 challenge types where AFT signals are theoretically relevant by design; advantage on valence-neutral tasks is not established. Circularity audit (Addendum U, 2026-06-27, SBERT, N=200): 62.5% of v2 queries are AFT-favorable by construction; the aggregate advantage is concentrated there (Δ=+0.304) and is null on the neutral 37.5% (Δ=+0.013, p=0.63) — the headline figure is scoped to a ~62%-affect-discriminative benchmark, not regime-independent.",
       "next_study": "Execute human-evaluation pilot. Per-task retrieval-weight tuning closed by Hj1 FAIL (Add. J).",
       "evidence_refs": [
         "benchmarks/realistic/runner.py",
@@ -215,7 +227,9 @@
         "benchmarks/preregistration_addendum_m_fr.md",
         "benchmarks/preregistration_addendum_m_fr_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "locomo_external_qa_negative",
@@ -225,7 +239,7 @@
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": false,
       "allowed_public_wording": "On the LoCoMo conversational QA benchmark (1986 QA pairs, 10 conversations), AFT retrieval underperforms a naive RAG baseline (F1 0.168 vs 0.271; judge_acc 0.279 vs 0.441). Gate 1 was not met. AFT's affective weighting does not help on factual open-domain QA.",
-      "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (\u0394<0). Holm-corrected one-tailed p=1.0 for both hypotheses. Add. J Pareto sweep executed 2026-05-06 (10 weight configs \u00d7 200-QA stratified subsample, seed=42, 50 per category). Hj1 FAIL: no AFT config achieves F1 \u2265 naive_rag on any category. Best AFT config (W2: sem=0.50, mood=0.30, no resonance) achieves aggregate F1=0.1765 vs naive_rag F1=0.2092 (\u0394=\u22120.033); closest cell W2\u00d7multi_hop \u0394=\u22120.011. The per-task base_weights tuning line is closed as honest negative. Addendum L (query-type routing, 2026-05-19): closed-loop heuristic routing on LoCoMo 200-QA smoke test. Hl1 FAIL (\u0394=\u22120.017, below +0.02 threshold and in wrong direction). Hl2 FAIL (\u0394=\u22120.081 vs naive_rag). Hl3 data-collection issue (classifier log bug). Branch B verdict: routing ships as optional feature; claim status unchanged. Hl3 follow-up resolved 2026-06-11 (PR #52): the classifier-log alignment bug is fixed (log matched by query text, not list index) and ground-truth heuristic classifier accuracy on the exact 200-QA subset (seed=42) is 0.465 overall, 0.600 excluding adversarial (no routable class); multi_hop is essentially undetected (2/28).",
+      "current_evidence": "Pre-registered S1 run completed 2026-04-27. H1 and H2 both fail (Δ<0). Holm-corrected one-tailed p=1.0 for both hypotheses. Add. J Pareto sweep executed 2026-05-06 (10 weight configs × 200-QA stratified subsample, seed=42, 50 per category). Hj1 FAIL: no AFT config achieves F1 ≥ naive_rag on any category. Best AFT config (W2: sem=0.50, mood=0.30, no resonance) achieves aggregate F1=0.1765 vs naive_rag F1=0.2092 (Δ=−0.033); closest cell W2×multi_hop Δ=−0.011. The per-task base_weights tuning line is closed as honest negative. Addendum L (query-type routing, 2026-05-19): closed-loop heuristic routing on LoCoMo 200-QA smoke test. Hl1 FAIL (Δ=−0.017, below +0.02 threshold and in wrong direction). Hl2 FAIL (Δ=−0.081 vs naive_rag). Hl3 data-collection issue (classifier log bug). Branch B verdict: routing ships as optional feature; claim status unchanged. Hl3 follow-up resolved 2026-06-11 (PR #52): the classifier-log alignment bug is fixed (log matched by query text, not list index) and ground-truth heuristic classifier accuracy on the exact 200-QA subset (seed=42) is 0.465 overall, 0.600 excluding adversarial (no routable class); multi_hop is essentially undetected (2/28).",
       "not_yet_shown": "Whether selective affect suppression on literal queries or factual/affective dual branching could close the gap. base_weights tuning alone cannot match naive_rag (Hj1 FAIL, Add. J closure). Closed-loop query-type routing also FAIL (Addendum L, Hl1 Branch B).",
       "next_study": "Architectural approaches beyond weight tuning: selective affect suppression, factual/affective dual-branch retrieval, or hybrid systems.",
       "evidence_refs": [],
@@ -244,7 +258,9 @@
         "benchmarks/preregistration_addendum_l_query_routing.md",
         "benchmarks/preregistration_addendum_l_query_routing_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "downstream_value",
@@ -253,9 +269,9 @@
       "status": "early_controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "In the affect-discriminative regime (oracle affect + query-time state injection), AFT's retrieval-ranking advantage converts to higher LLM-judged answer quality: on realistic_recall_v2 (N=200, sbert-bge, gpt-5-mini judge) AFT judge-accuracy 0.595 vs cosine 0.440 (\u0394=+0.155 [0.095, 0.220], p<0.001), token-F1 \u0394=+0.152. No downstream benefit is shown in the naturalistic, automatic-appraisal regime (see locomo_external_qa_negative).",
-      "current_evidence": "Pre-registered Addendum R (Hr1/Hr2) executed 2026-06-26. encode\u2192retrieve\u2192generate\u2192judge on realistic_recall_v2 (200 queries), identical generator + LLM judge (gpt-5-mini) for both systems; only retrieval differs (full 6-signal AFT vs embedding cosine). Hr1 judge_correct: AFT 0.595 vs cosine 0.440, \u0394=+0.155 [+0.095, +0.220], paired bootstrap n=2000 seed=42 p<0.001, Holm<0.001, McNemar<0.001 \u2014 PASS. Hr2 token-F1: \u0394=+0.152 [+0.100, +0.205], p<0.001 \u2014 PASS. Retrieval-ranking reference top1 \u0394=+0.205 [0.150,0.265] matches Hd2. Positive across all 5 challenge types (weakest recency_confound +0.075, strongest same_topic_distractor / momentum_alignment +0.200). The +0.205 ranking edge converts ~1:1 to a +0.155 answer-quality edge.",
-      "not_yet_shown": "Downstream value in the oracle-free / automatic-appraisal regime: LoCoMo (oracle-free) shows AFT loses downstream (judge 0.279 vs 0.441). The Addendum R PASS is bounded by the A2 oracle-affect + state-injection boundary; production appraisal is not tested here. Addendum T (2026-06-27, retrieve-time query appraisal): the advantage is largely PRODUCTION-REACHABLE without oracle affect \u2014 appraising the query text (direct-VAD) and injecting it as the state beats cosine (\u0394+0.115 [0.055,0.180], p<0.001) and recovers ~59% of the oracle advantage (~82% on the affect-discriminative subset). The state-injection boundary is partially dissolved, not closed. Addendum T2A (2026-06-27) NOW TESTS the naturalistic regime: retrieve-time query appraisal on DailyDialog (N=120, 396 q, multilingual-e5-small) does NOT beat cosine (aft_query_appraised 0.212 vs cosine 0.220, Δ−0.008 [−0.056,+0.040], p_holm=1.000, 0/3 types — Ht2a FAIL), reproducing the Hk1 null. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so this is a regime limit, not an appraisal-quality failure: the production-reachable recovery is BOUNDED to the affect-discriminative regime (Addendum U) and does not extend to naturalistic affect-conditioned dialogue.",
+      "allowed_public_wording": "In the affect-discriminative regime (oracle affect + query-time state injection), AFT's retrieval-ranking advantage converts to higher LLM-judged answer quality: on realistic_recall_v2 (N=200, sbert-bge, gpt-5-mini judge) AFT judge-accuracy 0.595 vs cosine 0.440 (Δ=+0.155 [0.095, 0.220], p<0.001), token-F1 Δ=+0.152. No downstream benefit is shown in the naturalistic, automatic-appraisal regime (see locomo_external_qa_negative).",
+      "current_evidence": "Pre-registered Addendum R (Hr1/Hr2) executed 2026-06-26. encode→retrieve→generate→judge on realistic_recall_v2 (200 queries), identical generator + LLM judge (gpt-5-mini) for both systems; only retrieval differs (full 6-signal AFT vs embedding cosine). Hr1 judge_correct: AFT 0.595 vs cosine 0.440, Δ=+0.155 [+0.095, +0.220], paired bootstrap n=2000 seed=42 p<0.001, Holm<0.001, McNemar<0.001 — PASS. Hr2 token-F1: Δ=+0.152 [+0.100, +0.205], p<0.001 — PASS. Retrieval-ranking reference top1 Δ=+0.205 [0.150,0.265] matches Hd2. Positive across all 5 challenge types (weakest recency_confound +0.075, strongest same_topic_distractor / momentum_alignment +0.200). The +0.205 ranking edge converts ~1:1 to a +0.155 answer-quality edge.",
+      "not_yet_shown": "Downstream value in the oracle-free / automatic-appraisal regime: LoCoMo (oracle-free) shows AFT loses downstream (judge 0.279 vs 0.441). The Addendum R PASS is bounded by the A2 oracle-affect + state-injection boundary; production appraisal is not tested here. Addendum T (2026-06-27, retrieve-time query appraisal): the advantage is largely PRODUCTION-REACHABLE without oracle affect — appraising the query text (direct-VAD) and injecting it as the state beats cosine (Δ+0.115 [0.055,0.180], p<0.001) and recovers ~59% of the oracle advantage (~82% on the affect-discriminative subset). The state-injection boundary is partially dissolved, not closed. Addendum T2A (2026-06-27) NOW TESTS the naturalistic regime: retrieve-time query appraisal on DailyDialog (N=120, 396 q, multilingual-e5-small) does NOT beat cosine (aft_query_appraised 0.212 vs cosine 0.220, Δ−0.008 [−0.056,+0.040], p_holm=1.000, 0/3 types — Ht2a FAIL), reproducing the Hk1 null. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so this is a regime limit, not an appraisal-quality failure: the production-reachable recovery is BOUNDED to the affect-discriminative regime (Addendum U) and does not extend to naturalistic affect-conditioned dialogue.",
       "next_study": "A downstream task that is both affect-discriminative AND oracle-free (automatic appraisal supplying the affect), to test whether the conversion survives without preset affect.",
       "evidence_refs": [],
       "benchmark_refs": [
@@ -266,7 +282,9 @@
         "benchmarks/preregistration_addendum_r_downstream.md",
         "benchmarks/preregistration_addendum_r_downstream_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "resonance_amplification_e5",
@@ -275,9 +293,9 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "Hi3 PASS (N=500, seed=1): e5-small-v2 shows larger resonance interference than SBERT on semantic_confound queries (\u0394=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234). The v2 per-challenge finding (post-hoc \u0394=+0.100) is confirmed as not a sample-size artefact.",
-      "current_evidence": "Hi3 confirmatory study (Addendum I closure, 2026-05-06): paired bootstrap n=10,000 seed=1, Holm m=3. Primary Hi3 (semantic_confound): \u0394=+0.090, CI=[0.030,0.160], p_one=0.0078, p_adj=0.0234, d=0.257, PASS. Secondary Hi3_recency (recency_confound): \u0394=+0.070, p_adj=0.0234, d=0.239, PASS. Hi3_arc (affective_arc): \u0394=+0.010, p_adj=0.3795, FAIL. Dataset: realistic_recall_v3.json (N=500, affect-rich).",
-      "not_yet_shown": "Mechanism for amplification: link-count instrumentation shows both embedders saturate top-5 cap (mean\u22485.0); link-type or link-strength differentiation not yet measured. Counterfactual (raising ResonanceConfig.cosine_threshold) not executed.",
+      "allowed_public_wording": "Hi3 PASS (N=500, seed=1): e5-small-v2 shows larger resonance interference than SBERT on semantic_confound queries (Δ=+0.090 [0.030,0.160], d=0.257, Holm-adj p=0.0234). The v2 per-challenge finding (post-hoc Δ=+0.100) is confirmed as not a sample-size artefact.",
+      "current_evidence": "Hi3 confirmatory study (Addendum I closure, 2026-05-06): paired bootstrap n=10,000 seed=1, Holm m=3. Primary Hi3 (semantic_confound): Δ=+0.090, CI=[0.030,0.160], p_one=0.0078, p_adj=0.0234, d=0.257, PASS. Secondary Hi3_recency (recency_confound): Δ=+0.070, p_adj=0.0234, d=0.239, PASS. Hi3_arc (affective_arc): Δ=+0.010, p_adj=0.3795, FAIL. Dataset: realistic_recall_v3.json (N=500, affect-rich).",
+      "not_yet_shown": "Mechanism for amplification: link-count instrumentation shows both embedders saturate top-5 cap (mean≈5.0); link-type or link-strength differentiation not yet measured. Counterfactual (raising ResonanceConfig.cosine_threshold) not executed.",
       "next_study": "Link-type/strength instrumentation to localise the Hi2 spreading-activation over-fire hypothesis.",
       "evidence_refs": [],
       "benchmark_refs": [
@@ -289,7 +307,9 @@
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "Hi3_recency",
@@ -298,17 +318,21 @@
       "status": "controlled_evidence",
       "evidence_level": "2_controlled_retrieval",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "Hi3_recency PASS (secondary, Holm-corrected): e5 resonance interference exceeds SBERT on recency_confound queries (\u0394=+0.070 [0.020,0.130], d=0.239, Holm-adj p=0.0234, N=500).",
-      "current_evidence": "Hi3_recency: paired bootstrap n=10,000 seed=1. \u0394=+0.070, CI=[0.020,0.130], p_one=0.0112, p_adj=0.0234, d=0.239, PASS. Secondary hypothesis in Holm m=3 family; reported descriptively.",
+      "allowed_public_wording": "Hi3_recency PASS (secondary, Holm-corrected): e5 resonance interference exceeds SBERT on recency_confound queries (Δ=+0.070 [0.020,0.130], d=0.239, Holm-adj p=0.0234, N=500).",
+      "current_evidence": "Hi3_recency: paired bootstrap n=10,000 seed=1. Δ=+0.070, CI=[0.020,0.130], p_one=0.0112, p_adj=0.0234, d=0.239, PASS. Secondary hypothesis in Holm m=3 family; reported descriptively.",
       "not_yet_shown": "Mechanism; replication on independent dataset.",
-      "next_study": "Part of Hi3 family \u2014 follow-up contingent on mechanism study.",
+      "next_study": "Part of Hi3 family — follow-up contingent on mechanism study.",
       "evidence_refs": [],
-      "benchmark_refs": ["benchmarks/ablation/results.hi3.md"],
+      "benchmark_refs": [
+        "benchmarks/ablation/results.hi3.md"
+      ],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "Hi3_arc",
@@ -317,17 +341,21 @@
       "status": "falsified",
       "evidence_level": "2_controlled_retrieval",
       "requires_oracle_affect": true,
-      "allowed_public_wording": "Hi3_arc FAIL: no significant amplification on affective_arc queries (\u0394=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size.",
-      "current_evidence": "Hi3_arc: paired bootstrap n=10,000 seed=1. \u0394=+0.010, CI=[-0.020,0.050], p_one=0.3795, p_adj=0.3795, d=0.058, FAIL. Holm secondary; honest negative result.",
+      "allowed_public_wording": "Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size.",
+      "current_evidence": "Hi3_arc: paired bootstrap n=10,000 seed=1. Δ=+0.010, CI=[-0.020,0.050], p_one=0.3795, p_adj=0.3795, d=0.058, FAIL. Holm secondary; honest negative result.",
       "not_yet_shown": "Whether a larger N or different dataset would show signal.",
       "next_study": "No active follow-up planned; Hi3_arc FAIL scopes the amplification claim to semantic/recency channels.",
       "evidence_refs": [],
-      "benchmark_refs": ["benchmarks/ablation/results.hi3.md"],
+      "benchmark_refs": [
+        "benchmarks/ablation/results.hi3.md"
+      ],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_i.md",
         "benchmarks/preregistration_addendum_i_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "appraisal_llm_real_dual_path",
@@ -337,7 +365,7 @@
       "evidence_level": "3_appraisal_quality",
       "requires_oracle_affect": false,
       "allowed_public_wording": "Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC->affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.",
-      "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. \u0394=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral \u0394=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync \u0394=+0.185, d=0.342). Diagnosis refined (WP-1a, 2026-05-30, gpt-5-mini, N=750 on realistic_recall_v3 oracle): the appraisal signal is correlated but mis-calibrated, not absent \u2014 valence Pearson r=0.81, sign accuracy=0.86, systematic valence bias +0.19 and arousal bias -0.14. A pre-registered prompt-calibration attempt (Addendum N, N=150) failed both hypotheses: valence bias dropped to +0.044 (Hn1 requires both axes; arousal unchanged at -0.118) and gold-set regressed 1/15; the prompt change was reverted. Addendum O (mapping recalibration, 2026-05-31, gpt-5-mini, N=750 SEC dump, by-scenario 70/30 split seed 42) numerically recalibrated the SEC\u2192valence/arousal projection on the train scenarios and promoted model M1 (Scherer feature basis preserved; valence intercept constrained to 0). Held-out test (228 events): valence bias +0.200\u2192+0.072, arousal bias -0.144\u2192-0.023; MAE improved on both axes (valence 0.306\u21920.298, arousal 0.182\u21920.118), Pearson r within the -0.05 guardrail. Both pre-registered hypotheses (Ho1 bias, Ho2 guardrail) PASS; M1 weights are now live in `_scherer_project`. Addendum P (Hg1 re-run, 2026-05-31, gpt-5-mini, sbert-bge, seed 0, n_bootstrap 10000) executed the pre-registered re-run with the recalibrated M1 mapping on a leakage-free affect-free dataset DISJOINT from realistic_recall_v3 (realistic_recall_v4_noAF, 40 scenarios / 160 queries, pNN_ namespace, zero overlap on scenario/memory ids and event text, frozen before the run): aft_llm_dual top1=0.800 [0.738,0.863] vs naive_cosine top1=0.887 [0.838,0.931], Hp1 delta=-0.0875 [-0.144,-0.031], one-tailed p=0.0018, d=-0.242 -- FAIL, naive cosine SIGNIFICANTLY ahead (gap widened vs Hg1's -0.010 and crossed into significance). Recalibration did not rescue affect-free retrieval. Exploratory: Hp2 dual>neutral PASS (0.800 vs 0.744, delta=+0.056, p=0.030) -- the LLM affect carries signal; Hp3 dual>sync PASS (0.800 vs 0.287, delta=+0.512, d=0.95) -- the deferred dual-path schedule is essential (synchronous appraisal collapses). Net: a better-calibrated affect signal is a net distractor on affect-free queries even though it is not noise; the architecture-vs-cosine delta stays falsified. Addendum Q (affect-aware gating, 2026-06-11, gpt-5-mini shared appraisal, sbert-bge, seed 0, realistic_recall_v5_gate 50 scen / 200 q frozen pre-run, qNN_ namespace disjoint from v3/v4): Hq1 FAIL (dual vs cosine on the affective subset, delta=-0.050 [-0.11,0.00], p_holm=0.0854, d=-0.168 -- wrong direction; on the anchored affect_congruent_tiebreak type 0.160 vs 0.280); Hq3 FAIL (gated vs cosine full corpus, delta=-0.025); Hq4 even the oracle-gate arm is significantly below cosine (delta=-0.045, p=0.0024) -- the bottleneck is the channel, not the gate classifier (LLM gate accuracy 0.844). Hq2 PASS (gated > always-on dual, delta=+0.080, p_holm=0.0009): the front-router recovers the entire always-on penalty exactly (gated == cosine on the affect-free half, Hq5 delta=0.000). Pre-specified Branch C: the affect-routing line is CLOSED; state-based affect signals cannot answer query-driven affect questions (the query is never appraised -- the oracle-affect boundary is also a state-injection boundary). affective_arc_blind queries hit a floor for every system (<=0.02 incl. cosine) under cross-scenario accumulation -- construction limitation, disclosed; the verdict stands on the 50 anchored tiebreak queries.",
+      "current_evidence": "Addendum G closure 2026-05-07: realistic_recall_v3_noAF (50 scenarios, 200 queries), sbert-bge embedder, gpt-5-mini LLM appraisal. aft_llm_dual top1=0.315 [0.250,0.380] vs naive_cosine top1=0.325 [0.260,0.390]. Δ=-0.010, d=-0.032, p_one=0.3669. Exploratory: Hg2 FAIL (aft_llm_dual vs aft_neutral Δ=0.000); Hg3 PASS (aft_llm_dual vs aft_llm_sync Δ=+0.185, d=0.342). Diagnosis refined (WP-1a, 2026-05-30, gpt-5-mini, N=750 on realistic_recall_v3 oracle): the appraisal signal is correlated but mis-calibrated, not absent — valence Pearson r=0.81, sign accuracy=0.86, systematic valence bias +0.19 and arousal bias -0.14. A pre-registered prompt-calibration attempt (Addendum N, N=150) failed both hypotheses: valence bias dropped to +0.044 (Hn1 requires both axes; arousal unchanged at -0.118) and gold-set regressed 1/15; the prompt change was reverted. Addendum O (mapping recalibration, 2026-05-31, gpt-5-mini, N=750 SEC dump, by-scenario 70/30 split seed 42) numerically recalibrated the SEC→valence/arousal projection on the train scenarios and promoted model M1 (Scherer feature basis preserved; valence intercept constrained to 0). Held-out test (228 events): valence bias +0.200→+0.072, arousal bias -0.144→-0.023; MAE improved on both axes (valence 0.306→0.298, arousal 0.182→0.118), Pearson r within the -0.05 guardrail. Both pre-registered hypotheses (Ho1 bias, Ho2 guardrail) PASS; M1 weights are now live in `_scherer_project`. Addendum P (Hg1 re-run, 2026-05-31, gpt-5-mini, sbert-bge, seed 0, n_bootstrap 10000) executed the pre-registered re-run with the recalibrated M1 mapping on a leakage-free affect-free dataset DISJOINT from realistic_recall_v3 (realistic_recall_v4_noAF, 40 scenarios / 160 queries, pNN_ namespace, zero overlap on scenario/memory ids and event text, frozen before the run): aft_llm_dual top1=0.800 [0.738,0.863] vs naive_cosine top1=0.887 [0.838,0.931], Hp1 delta=-0.0875 [-0.144,-0.031], one-tailed p=0.0018, d=-0.242 -- FAIL, naive cosine SIGNIFICANTLY ahead (gap widened vs Hg1's -0.010 and crossed into significance). Recalibration did not rescue affect-free retrieval. Exploratory: Hp2 dual>neutral PASS (0.800 vs 0.744, delta=+0.056, p=0.030) -- the LLM affect carries signal; Hp3 dual>sync PASS (0.800 vs 0.287, delta=+0.512, d=0.95) -- the deferred dual-path schedule is essential (synchronous appraisal collapses). Net: a better-calibrated affect signal is a net distractor on affect-free queries even though it is not noise; the architecture-vs-cosine delta stays falsified. Addendum Q (affect-aware gating, 2026-06-11, gpt-5-mini shared appraisal, sbert-bge, seed 0, realistic_recall_v5_gate 50 scen / 200 q frozen pre-run, qNN_ namespace disjoint from v3/v4): Hq1 FAIL (dual vs cosine on the affective subset, delta=-0.050 [-0.11,0.00], p_holm=0.0854, d=-0.168 -- wrong direction; on the anchored affect_congruent_tiebreak type 0.160 vs 0.280); Hq3 FAIL (gated vs cosine full corpus, delta=-0.025); Hq4 even the oracle-gate arm is significantly below cosine (delta=-0.045, p=0.0024) -- the bottleneck is the channel, not the gate classifier (LLM gate accuracy 0.844). Hq2 PASS (gated > always-on dual, delta=+0.080, p_holm=0.0009): the front-router recovers the entire always-on penalty exactly (gated == cosine on the affect-free half, Hq5 delta=0.000). Pre-specified Branch C: the affect-routing line is CLOSED; state-based affect signals cannot answer query-driven affect questions (the query is never appraised -- the oracle-affect boundary is also a state-injection boundary). affective_arc_blind queries hit a floor for every system (<=0.02 incl. cosine) under cross-scenario accumulation -- construction limitation, disclosed; the verdict stands on the 50 anchored tiebreak queries.",
       "not_yet_shown": "Nothing further pre-registered for the affect-free architecture-vs-cosine comparison: the recalibrated mapping (Addendum O M1) does NOT change the Hg1 verdict (Addendum P, leakage-free). The LLM dual-path advantage remains scoped to oracle-affect conditions (Hd1/Hd2). The Hg3/Hp3 PASS (dual-path > synchronous) is reaffirmed. Mapping weights are calibrated for gpt-5-mini's appraisal output; a different appraisal engine may need re-fitting.",
       "next_study": "DONE (twice). Addendum P closed the affect-free architecture-vs-cosine line; Addendum Q (2026-06-11) closed the affect-aware routing/gating line (Branch C: Hq1/Hq3/Hq4 FAIL, Hq2 PASS -- gating is a safe wrapper but cannot exceed cosine). Residual hypothesis space, NOT scheduled: retrieve-time query appraisal (a new query-affect/memory-affect proximity signal; requires its own pre-registration).",
       "evidence_refs": [
@@ -361,7 +389,9 @@
         "benchmarks/preregistration_addendum_o_mapping_recalibration.md",
         "benchmarks/preregistration_addendum_p_hg1_rerun.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "cross_domain_affect_replication",
@@ -370,10 +400,10 @@
       "status": "controlled_evidence",
       "evidence_level": "4_realistic_tasks",
       "requires_oracle_affect": false,
-      "allowed_public_wording": "Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication \u2014 AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; \u0394=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, \u0394=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424. Addendum X FAIL (2026-07-02): first third-party retrieval-native corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free) \u2014 aft_query_appraised significantly below naive cosine (nDCG@5 0.221 vs 0.304, \u0394=-0.083 [-0.123, -0.043], p_one=0.9998) despite faithful appraisal (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9%); construct mismatch \u2014 the benchmark rewards counter-congruent supportive recall (emotion regulation), the opposite of AFT's mood-congruence prior. Addendum X2 FAIL (2026-07-07): second third-party corpus (ES-MemEval/EvoEmo, WWW 2026, N=1,133 in-family queries, oracle-free) \u2014 aft_query_appraised significantly below naive cosine (upstream-verbatim nDCG@4 0.133 vs 0.284, \u0394=-0.150 [-0.165, -0.136], p_one=1.0000, powered: MDE 0.018) despite faithful appraisal (D1 AUC=0.950) and an affect-discriminative corpus (D2=63.0%); failure mode distinct from X \u2014 the gold is affect-orthogonal (content-determined; 45.2% of queries affectively neutral, corr(query, gold valence)=+0.25, only 13.1% opposite-sign), not counter-congruent; positive retrieval evidence remains confined to author-crafted corpora.",
-      "current_evidence": "Hk1 pre-registered and executed 2026-05-07. Synthetic personas from DailyDialog train+validation (12118 dialogs, 2580 after \u226530% emotion-density filter). 4 programmatic query types from Ekman labels (no LLM). Paired bootstrap n=10000 seed=0, Holm m=4. Aggregate: AFT top1=0.212 vs naive_cosine=0.220 (\u0394=-0.008, CI=[-0.056,+0.043], p_holm=1.000, d=-0.015). Only affective_trajectory shows positive trend (\u0394=+0.103, d=0.186, N=39) but underpowered (p_holm=0.734). All directional query types FAIL Holm threshold. Branch B confirmed. Addendum T2A (2026-06-27): re-ran the same personas adding an aft_query_appraised arm (direct-VAD query appraisal via the public query_affect API; encode path unchanged). Still FAIL: aft_query_appraised top1=0.212 vs cosine 0.220 (\u0394=-0.008 [-0.056,+0.040], p_holm=1.000, 0/3 types); +0.010 (ns) over stale-state AFT. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so even retrieve-time query affect \u2014 the mechanism that worked on curated realistic_recall_v2 (Addendum T) \u2014 does NOT extend to naturalistic short-turn dialogue. This is a stronger negative for cross-domain replication. \u2014 FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries \u00d7 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], \u0394=+0.18 [0.11, 0.26], p_bootstrap=0.0000, p_McNemar=0.0000, Hedges g=0.424. Effect concentrated on same_topic_distractor (top1=0.42) and affective_arc (top1=0.38); momentum_alignment remains weak (top1=0.12). Prior expectation was FAIL; evidence diverges from prior without post-hoc reframing. Addendum X (2026-07-02, MADial-Bench EN, bge-small-en-v1.5, gpt-5-mini direct-VAD, harness merged pre-run): Hx1 FAIL inverted \u2014 nDCG@5 0.221 vs cosine 0.304 (\u0394=-0.083 [-0.123, -0.043], p_one=0.9998, d=-0.317; MDE 0.051 < |\u0394| = powered negative). D1 AUC=0.996, D2=76.9%. Post-hoc: 84/160 negative-valence queries, 73.8% of them with positive gold-set mean valence \u2014 counter-congruent supportive recall. Bound now measured on three axes: regime (U/T2A), provenance (author-crafted only), construct (congruence vs regulation). See benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md. Addendum X2 (2026-07-07): pre-registered replication on ES-MemEval/EvoEmo (WWW 2026, CC-BY-4.0, sha256-pinned; upstream session-level qa_retrieval protocol replicated: session-transcript documents, 50-candidate pools, upstream-verbatim metrics). Hx2 FAIL inverted: \u0394=-0.150 [-0.165, -0.136], d=-0.622, all 31 grid contrasts negative, uniform across capabilities, worst at rank 1. D1 AUC=0.950 [0.901, 0.988]; D2=63.0% (ex-ante low-D2 prior wrong). Post-hoc: affect-orthogonal gold, not counter-congruence. Two third-party corpora, two distinct measured failure modes; operative boundary sharpened to 'the gold relation itself must be affect-conditioned'.",
+      "allowed_public_wording": "Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p<0.0001, Hedges g=0.424. Addendum X FAIL (2026-07-02): first third-party retrieval-native corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free) — aft_query_appraised significantly below naive cosine (nDCG@5 0.221 vs 0.304, Δ=-0.083 [-0.123, -0.043], p_one=0.9998) despite faithful appraisal (D1 AUC=0.996) and an affect-discriminative corpus (D2=76.9%); construct mismatch — the benchmark rewards counter-congruent supportive recall (emotion regulation), the opposite of AFT's mood-congruence prior. Addendum X2 FAIL (2026-07-07): second third-party corpus (ES-MemEval/EvoEmo, WWW 2026, N=1,133 in-family queries, oracle-free) — aft_query_appraised significantly below naive cosine (upstream-verbatim nDCG@4 0.133 vs 0.284, Δ=-0.150 [-0.165, -0.136], p_one=1.0000, powered: MDE 0.018) despite faithful appraisal (D1 AUC=0.950) and an affect-discriminative corpus (D2=63.0%); failure mode distinct from X — the gold is affect-orthogonal (content-determined; 45.2% of queries affectively neutral, corr(query, gold valence)=+0.25, only 13.1% opposite-sign), not counter-congruent; positive retrieval evidence remains confined to author-crafted corpora. Addendum Z FAIL (2026-07-14): held-out linear learning-to-rank over the 6 AFT retrieval signals (k=5 cross-fitting, Holm m=3) does not beat cosine on any third-party corpus (MADial Δ=+0.015 p_holm=0.314; ES-MemEval Δ=−0.015 p_holm=0.9997; DailyDialog Δ=+0.008 p_holm=0.811) while preserving/amplifying curated on-regime advantage (learned top1=0.425 vs fixed 0.240, Hz2 PASS); boundary hardened from fixed-weight failure to no held-out learned linear affect profile generalizes on third-party gold.",
+      "current_evidence": "Hk1 pre-registered and executed 2026-05-07. Synthetic personas from DailyDialog train+validation (12118 dialogs, 2580 after ≥30% emotion-density filter). 4 programmatic query types from Ekman labels (no LLM). Paired bootstrap n=10000 seed=0, Holm m=4. Aggregate: AFT top1=0.212 vs naive_cosine=0.220 (Δ=-0.008, CI=[-0.056,+0.043], p_holm=1.000, d=-0.015). Only affective_trajectory shows positive trend (Δ=+0.103, d=0.186, N=39) but underpowered (p_holm=0.734). All directional query types FAIL Holm threshold. Branch B confirmed. Addendum T2A (2026-06-27): re-ran the same personas adding an aft_query_appraised arm (direct-VAD query appraisal via the public query_affect API; encode path unchanged). Still FAIL: aft_query_appraised top1=0.212 vs cosine 0.220 (Δ=-0.008 [-0.056,+0.040], p_holm=1.000, 0/3 types); +0.010 (ns) over stale-state AFT. The query appraisal is faithful (diagnostic valence r=0.69, arousal r=0.74), so even retrieve-time query affect — the mechanism that worked on curated realistic_recall_v2 (Addendum T) — does NOT extend to naturalistic short-turn dialogue. This is a stronger negative for cross-domain replication. — FR realistic_recall_v2 (Addendum M, 2026-05-16, multilingual-e5-small, Branch A PASS): N=120 queries × 30 native-FR hand-authored scenarios; AFT top1=0.31 [0.23, 0.39], naive_cosine top1=0.12 [0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap=0.0000, p_McNemar=0.0000, Hedges g=0.424. Effect concentrated on same_topic_distractor (top1=0.42) and affective_arc (top1=0.38); momentum_alignment remains weak (top1=0.12). Prior expectation was FAIL; evidence diverges from prior without post-hoc reframing. Addendum X (2026-07-02, MADial-Bench EN, bge-small-en-v1.5, gpt-5-mini direct-VAD, harness merged pre-run): Hx1 FAIL inverted — nDCG@5 0.221 vs cosine 0.304 (Δ=-0.083 [-0.123, -0.043], p_one=0.9998, d=-0.317; MDE 0.051 < |Δ| = powered negative). D1 AUC=0.996, D2=76.9%. Post-hoc: 84/160 negative-valence queries, 73.8% of them with positive gold-set mean valence — counter-congruent supportive recall. Bound now measured on three axes: regime (U/T2A), provenance (author-crafted only), construct (congruence vs regulation). See benchmarks/preregistration_addendum_x_madialbench_third_party_closure.md. Addendum X2 (2026-07-07): pre-registered replication on ES-MemEval/EvoEmo (WWW 2026, CC-BY-4.0, sha256-pinned; upstream session-level qa_retrieval protocol replicated: session-transcript documents, 50-candidate pools, upstream-verbatim metrics). Hx2 FAIL inverted: Δ=-0.150 [-0.165, -0.136], d=-0.622, all 31 grid contrasts negative, uniform across capabilities, worst at rank 1. D1 AUC=0.950 [0.901, 0.988]; D2=63.0% (ex-ante low-D2 prior wrong). Post-hoc: affect-orthogonal gold, not counter-congruence. Two third-party corpora, two distinct measured failure modes; operative boundary sharpened to 'the gold relation itself must be affect-conditioned'. Addendum Z (2026-07-14, make bench-z-profile, 4 corpora, k=5 cross-fitting, paired bootstrap n=10000 seed=0, Holm m=3 + curated non-inferiority ε=0.02). Hz1 FAIL 0/3: aft_learned held-out vs cosine — MADial nDCG@5 0.319 vs 0.304 (Δ=+0.015 [-0.008,+0.040], p_holm=0.314); ES-MemEval u_nDCG@4 0.269 vs 0.284 (Δ=-0.015 [-0.023,-0.006], p_holm=0.9997); DailyDialog top1 0.227 vs 0.220 (Δ=+0.008 [-0.045,+0.061], p_holm=0.811). Hz2 PASS: realistic_recall_v2 learned top1=0.425 vs aft_fixed 0.240 (Δ_vs_fixed=+0.185). Learned beats fixed on third-party (+0.153 MADial, +0.186 ES-MemEval) but not cosine. Negative learned s2 on MADial/ES-MemEval (counter-congruent direction) did not rescue performance. See benchmarks/preregistration_addendum_z_learned_profile_closure.md.",
       "not_yet_shown": "Cross-domain replication on an affect-rich naturalistic corpus (>30% affect-bearing turns). Whether longer multi-turn sessions with richer emotion vocabulary would show signal consistent with affective_trajectory trend (d=0.186). Cross-language replication in non-Romance languages. IT/ES cross-language replication in 2-session realistic replay format (current IT/ES data uses appraisal_confound single-session runner).",
-      "next_study": "Retry targeted affective_trajectory sub-claim at N\u2265120 on a naturalistic corpus with >30% affect-bearing turns (DailyDialog affect density too low). Query appraisal already tested (Addendum T2A) and did not help. Pre-register before executing. Gate 2 human eval (kit ready, zero ratings \u2014 v1.0 scope).",
+      "next_study": "Retry targeted affective_trajectory sub-claim at N≥120 on a naturalistic corpus with >30% affect-bearing turns (DailyDialog affect density too low). Query appraisal already tested (Addendum T2A) and did not help. Pre-register before executing. Gate 2 human eval (kit ready, zero ratings — v1.0 scope).",
       "evidence_refs": [],
       "benchmark_refs": [
         "benchmarks/dailydialog/results.json",
@@ -381,7 +411,9 @@
         "benchmarks/dailydialog/t2a_results.json",
         "benchmarks/dailydialog/t2a_results.md",
         "benchmarks/realistic/results.v2_fr.me5.json",
-        "benchmarks/realistic/results.v2_fr.me5.md"
+        "benchmarks/realistic/results.v2_fr.me5.md",
+        "benchmarks/learned_profile/results.json",
+        "benchmarks/learned_profile/results.md"
       ],
       "protocol_refs": [
         "benchmarks/preregistration_addendum_k_dailydialog.md",
@@ -389,9 +421,13 @@
         "benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal.md",
         "benchmarks/preregistration_addendum_t2a_naturalistic_query_appraisal_closure.md",
         "benchmarks/preregistration_addendum_m_fr.md",
-        "benchmarks/preregistration_addendum_m_fr_closure.md"
+        "benchmarks/preregistration_addendum_m_fr_closure.md",
+        "benchmarks/preregistration_addendum_z_learned_profile.md",
+        "benchmarks/preregistration_addendum_z_learned_profile_closure.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "models_human_emotional_memory",
@@ -404,13 +440,17 @@
       "current_evidence": "Theory-inspired design only.",
       "not_yet_shown": "Human behavioral correspondence.",
       "next_study": "Gate 2 (human eval): kit ready (benchmarks/human_eval/), zero ratings collected. Tracking continues on roadmap v1.0; does not block the v0.11.x line.",
-      "evidence_refs": ["benchmarks/human_eval/README.md"],
+      "evidence_refs": [
+        "benchmarks/human_eval/README.md"
+      ],
       "benchmark_refs": [],
       "protocol_refs": [
         "benchmarks/human_eval/README.md",
         "benchmarks/human_eval/protocol.md"
       ],
-      "limitations_refs": ["docs/research/08_limitations.md"]
+      "limitations_refs": [
+        "docs/research/08_limitations.md"
+      ]
     },
     {
       "claim_id": "query_affect_gate",
