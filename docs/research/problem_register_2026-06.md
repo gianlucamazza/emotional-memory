@@ -37,7 +37,7 @@ claim status. Where the two disagree, the matrix wins.
 | C1  | README comparison ✅ implies general superiority        | Public claim | Medium   | **Resolved** — footnote live under the README table                                                            |
 | C2  | Bare "Emotional memory" one-liners                      | Public claim | Low      | Optional light suffix                                                                                          |
 | C3  | No consolidated "When NOT to use" section               | Public claim | High     | **Resolved** — section live in README after "How it compares"                                                  |
-| D1  | chromadb CVE-2026-45829 (critical, optional/dev)        | Security     | Medium   | No upstream fix; document + monitor                                                                            |
+| D1  | chromadb CVE-2026-45829 (critical, optional `[chroma]`) | Security     | Resolved | Pin `chromadb>=0.6.3,<1.0` until PyPI ≥1.5.10 ships PR #7237 fix                                                 |
 | D2  | torch CVE-2025-3000 (low, dev-only)                     | Security     | Low      | No upstream fix; document + monitor                                                                            |
 
 The headline is that the **core scientific problems are already resolved in the

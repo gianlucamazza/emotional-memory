@@ -31,6 +31,15 @@ Usage::
     store = ChromaStore(path="./chroma_data")          # local on-disk
     store = ChromaStore(host="localhost", port=8000)   # remote HTTP server
     engine = EmotionalMemory(store, embedder)
+
+Security
+--------
+``ChromaStore`` always supplies embeddings on write/query (it never asks Chroma
+to embed documents), which avoids the client-side collection-poisoning path when
+the server configuration carries a malicious ``embedding_function``. When using
+``host=`` to reach a **remote** Chroma server, connect only to instances you
+trust and keep ``chromadb`` on a CVE-2026-45829-patched release (see
+``SECURITY.md``).
 """
 
 from __future__ import annotations
@@ -50,6 +59,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 _SCROLL_PAGE = 1_000
+_INCLUDE_DOCS: Any = ["documents"]
+_INCLUDE_EMBEDDINGS: Any = ["embeddings"]
 
 
 def _require_embedding(memory: Memory) -> list[float]:
@@ -150,7 +161,7 @@ class ChromaStore:
         col = self._collection
         if col is None:
             return None
-        results = col.get(ids=[memory_id], include=["documents"])
+        results = col.get(ids=[memory_id], include=_INCLUDE_DOCS)
         docs = results.get("documents") or []
         if not docs or docs[0] is None:
             return None
@@ -177,7 +188,7 @@ class ChromaStore:
             results = col.get(
                 limit=_SCROLL_PAGE,
                 offset=offset,
-                include=["documents"],
+                include=_INCLUDE_DOCS,
             )
             docs = results.get("documents") or []
             if not docs:
@@ -199,7 +210,7 @@ class ChromaStore:
         results = col.query(
             query_embeddings=np.array([embedding], dtype=np.float32),
             n_results=n,
-            include=["documents"],
+            include=_INCLUDE_DOCS,
         )
         docs_list = results.get("documents") or [[]]
         return [Memory.model_validate_json(doc) for doc in docs_list[0] if doc is not None]
@@ -237,7 +248,7 @@ class ChromaStore:
             )
             return
         # No dim metadata — try to infer from existing embeddings
-        results = col.get(limit=1, include=["embeddings"])
+        results = col.get(limit=1, include=_INCLUDE_EMBEDDINGS)
         existing: Any = results.get("embeddings") or []
         if existing and existing[0] is not None:
             self._dim = len(existing[0])

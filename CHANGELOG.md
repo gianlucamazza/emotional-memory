@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **CVE-2026-45829 (`chromadb`) resolved.** The optional `[chroma]` extra now pins
+  `chromadb>=0.6.3,<1.0`, outside the vulnerable `>=1.0.0,<=1.5.9` range. PyPI
+  1.5.9 remains unpatched; bump to `>=1.5.10` once chroma-core/chroma ships the
+  merged fix (PR #7237). `ChromaStore` docstring notes the remote-server trust model.
+
 ### Research
 
 - **Addendum Z — held-out learned retrieval profile (Branch B, Hz1 FAIL / Hz2 PASS).**

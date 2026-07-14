@@ -50,7 +50,7 @@ dotenv = ["python-dotenv>=1.0"]
 sentence-transformers = ["sentence-transformers>=2.2"]
 sqlite = ["sqlite-vec>=0.1.1"]
 qdrant = ["qdrant-client>=1.10"]
-chroma = ["chromadb>=0.5"]
+chroma = ["chromadb>=0.6.3,<1.0"]
 otel = ["opentelemetry-api>=1.20", "opentelemetry-sdk>=1.20"]
 redis = ["redis>=5.0"]
 langchain = ["langchain-core>=0.3"]
@@ -91,6 +91,9 @@ markers = [
 filterwarnings = [
   "error::DeprecationWarning",
   "error::PendingDeprecationWarning",
+  # chromadb 0.6.x triggers PydanticDeprecatedSince211 on current pydantic 2.x;
+  # safe to ignore until we can bump to a CVE-patched chromadb >=1.5.10 on PyPI.
+  "ignore:Accessing the 'model_fields' attribute on the instance is deprecated.*:pydantic.warnings.PydanticDeprecatedSince211",
 ]
 
 [tool.coverage.run]
