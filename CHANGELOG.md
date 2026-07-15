@@ -35,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (theory-fidelity over raw performance), a base system prompt, reusable prompts
   for common tasks (review, feature, refactor, debug), and a pre-PR checklist.
   Wired into the docs nav under Contributing.
+- **`LLMAppraisalEngine.fallback_count` / `reset_fallback_count()`** — count of
+  appraisals that returned the neutral fallback (LLM/parse error). Lets
+  measurement code detect silent degradation without disabling the fallback
+  mid-batch; pair with `fallback_on_error=False` for fully fail-loud runs.
 - **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
   bounds the parallel appraisal in `encode_batch`. Set to 1 for fully sequential
   appraisal (e.g. a non-thread-safe `llm` callable).
@@ -52,6 +56,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Project-review pass (2026-07).** A structured review (per
+  `docs/contributing/claude-code-guide.md`) surfaced a batch of correctness and
+  fidelity defects, now fixed with regression tests (`tests/test_review_fixes.py`):
+  - **`encode_batch` ignored ablation toggles.** The batch path ran appraisal even
+    with `enable_appraisal=False`, and always built resonance links regardless of
+    `enable_resonance` — diverging from single `encode()` and corrupting Layer-4/5
+    ablations. Both engines now mirror the single-encode guards.
+  - **Neutral affect was mislabelled.** `categorize_affect(CoreAffect.neutral())`
+    returned high-confidence `disgust`/`loathing` (confidence 1.0) because the
+    categoriser's neutral origin (arousal 0.5) disagreed with the system baseline
+    (arousal 0.0). Near-baseline states are now uncategorised (low intensity,
+    confidence 0.0); genuine emotions are unaffected.
+  - **Decay arousal floor could exceed initial strength.** For a weak but arousing
+    memory (`consolidation_strength < floor_value`) the floor raised effective
+    strength above its initial value; the floor is now clamped to the initial value
+    (scalar and batch).
+  - **Appraisal silent-degradation controls.** `NaN`/`Infinity` in LLM JSON are
+    rejected (were accepted, bypassing clamping); a response missing required SEC
+    dimensions is treated as a degraded result instead of being silently
+    neutral-filled; every neutral fallback is now counted (`fallback_count`).
+  - **Cache-corruption via shared `GenericAppraisalVector`.** Its `dimensions` map is
+    now a read-only `MappingProxyType`, so a caller cannot mutate a cached appraisal.
+  - **Async state-consistency.** `retrieve()`/`retrieve_with_explanations()` now read
+    the affective state from a single snapshot (no torn core_affect/mood/momentum mix
+    under concurrent encodes); state persistence saves the snapshot captured under the
+    lock; `close()` uses `callable()` uniformly; `encode` debug-log ordering matches
+    the sync engine.
+  - **`AffectiveState` is now `frozen`** (matching the documented immutability and the
+    other value objects); momentum-history round-trips are preserved.
+  - **Cleanups:** removed dead `_APPRAISAL_JSON_SCHEMA`; the default appraisal system
+    prompt now derives from `SCHERER_CPM_SCHEMA` (no duplicated copy that could drift);
+    cache keys NUL-delimit their components (no concatenation collisions); corrected
+    docstrings/citations (Pearce-Hall LR, mood dominance EMA, Mehrabian & Russell 1974
+    for PAD dominance, Anderson & Schooler 1991 for ACT-R retention, Collins & Loftus
+    1975 for spreading activation) and documented known research-level limitations
+    (retrieval signal scales, momentum-neutral ambiguity, spreading-activation
+    confinement to the semantic pool, monotonic Hebbian saturation, reduced SEC set)
+    as honest notes rather than silently altering calibrated behaviour.
 - **PAD similarity normaliser mismatch (resonance).** `resonance._emotional_similarity`
   normalised `CoreAffect.distance()` by a stale 2-D maximum (`2.24 ≈ √5`, predating the
   dominance axis) while `retrieval.py` correctly used the 3-D maximum (`√6 ≈ 2.449`) for

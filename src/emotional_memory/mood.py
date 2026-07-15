@@ -140,9 +140,9 @@ class MoodField(BaseModel):
         High inertia → mood barely moves per event.
         Low inertia  → mood follows affect closely.
 
-        Dominance is updated via the PAD model heuristic: positive valence +
-        high arousal signals perceived control, negative valence + high arousal
-        signals threat and loss of control.
+        Dominance is a first-class PAD dimension on ``CoreAffect`` and is carried
+        into the mood via the same EMA as valence and arousal (no separate
+        valence/arousal-derived heuristic).
         """
         if now is None:
             now = datetime.now(tz=UTC)

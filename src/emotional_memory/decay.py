@@ -1,11 +1,17 @@
 """Decay Engine.
 
-Memory consolidation strength decays as a power law (ACT-R, Anderson 1983),
-modulated by:
+Memory consolidation strength decays as a power law (the ACT-R retention
+function; Anderson & Schooler 1991), modulated by:
   - arousal at encoding: high arousal → slower decay (McGaugh 2004)
   - retrieval count: spacing effect → each retrieval slows future decay
   - floor: memories above arousal threshold never fully fade
     (Merleau-Ponty's body memory — habitual emotional patterns persist)
+
+Note: the spacing effect here attenuates the decay *exponent* per retrieval
+(``1 / (1 + retrieval_boost * retrieval_count)``) rather than summing per-trace
+power-law activations as in canonical ACT-R (``B = ln Σ tⱼ^(-d)``). The direction
+matches ACT-R (more retrievals → slower forgetting); the functional form is a
+tractable operationalization, not the trace-sum model.
 """
 
 from __future__ import annotations
@@ -62,7 +68,10 @@ def compute_effective_strength(
                           * (1 / (1 + retrieval_boost * retrieval_count))
 
         strength(t) = initial_strength * elapsed_seconds ^ (-effective_decay)
-        strength(t) = max(strength(t), floor)   # if arousal > threshold
+        strength(t) = max(strength(t), min(floor, initial))  # if arousal > threshold
+
+    The floor is clamped to the initial strength so it can never raise a weak
+    memory above where it started.
 
     At t=0 (elapsed < min_seconds), returns initial consolidation_strength.
     """
@@ -84,7 +93,10 @@ def compute_effective_strength(
     strength = max(0.0, strength)
 
     if arousal >= config.floor_arousal_threshold:
-        strength = max(strength, config.floor_value)
+        # Clamp the floor to the initial value: the arousal floor must not boost a
+        # weak memory (consolidation_strength < floor_value) above where it started,
+        # preserving the "never above initial" invariant enforced just above.
+        strength = max(strength, min(config.floor_value, tag.consolidation_strength))
 
     return float(strength)
 
@@ -124,6 +136,8 @@ def compute_effective_strength_batch(
     strength = np.maximum(strength, 0.0)
 
     above_floor = arousal >= config.floor_arousal_threshold
-    strength = np.where(above_floor, np.maximum(strength, config.floor_value), strength)
+    # Clamp the floor to each memory's initial strength (see scalar form).
+    floor = np.minimum(config.floor_value, consolidation)
+    strength = np.where(above_floor, np.maximum(strength, floor), strength)
 
     return strength.astype(np.float64)

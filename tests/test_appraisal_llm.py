@@ -7,7 +7,6 @@ import pytest
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, GenericAppraisalVector
 from emotional_memory.appraisal_llm import (
-    _APPRAISAL_JSON_SCHEMA,
     KeywordAppraisalEngine,
     KeywordRule,
     LLMAppraisalConfig,
@@ -16,6 +15,7 @@ from emotional_memory.appraisal_llm import (
 )
 from emotional_memory.appraisal_schema import (
     DIRECT_VAD_SCHEMA,
+    SCHERER_CPM_SCHEMA,
     AppraisalDimension,
     AppraisalSchema,
 )
@@ -209,7 +209,7 @@ class TestLLMAppraisalEngine:
         assert isinstance(engine, type(engine))  # trivial; verify no import errors
 
     def test_json_schema_has_required_fields(self):
-        required = _APPRAISAL_JSON_SCHEMA["required"]
+        required = SCHERER_CPM_SCHEMA.to_json_schema()["required"]
         assert "novelty" in required
         assert "goal_relevance" in required
         assert "coping_potential" in required

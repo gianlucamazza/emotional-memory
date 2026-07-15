@@ -11,6 +11,16 @@ retrieval (spreading activation, Collins & Loftus 1975; Bower 1981).
 Bidirectional links ensure that activation flows in both directions
 through the associative network. Hebbian co-retrieval strengthening
 (Hebb, 1949) progressively reinforces frequently co-activated links.
+
+Known limitations (documented, not bugs — see benchmarks/README.md before
+changing, as these affect calibrated retrieval behavior):
+  - ``spreading_activation`` only traverses links whose target is already in the
+    semantically pre-filtered candidate pool, so it re-ranks within the semantic
+    neighbourhood rather than reaching purely emotional/temporal associates. The
+    resonance signal is therefore partially correlated with semantic similarity.
+  - Hebbian strengthening is monotonic (no decay/LTD or homeostatic
+    normalization), so heavily co-retrieved links saturate toward 1.0 over time,
+    which flattens the graph's discriminative power for spreading activation.
 """
 
 from __future__ import annotations

@@ -1,8 +1,9 @@
 """Layer 1 & 2: CoreAffect and AffectiveMomentum.
 
 CoreAffect is the fundamental continuous substrate — a point in the
-PAD (Pleasure-Arousal-Dominance) space (Mehrabian & Russell, 1974;
-Russell, 1980).
+PAD (Pleasure-Arousal-Dominance) space (Mehrabian & Russell, 1974).
+The valence-arousal plane follows Russell's (1980) circumplex; the
+dominance dimension comes from Mehrabian & Russell (1974).
 
 AffectiveMomentum captures the first and second time-derivatives of
 CoreAffect — velocity and acceleration over recent history. Inspired by
@@ -33,7 +34,8 @@ class CoreAffect(BaseModel):
     arousal   : [ 0.0,  1.0]  calm → highly activated
     dominance : [ 0.0,  1.0]  submissive → dominant/in-control
 
-    References: Mehrabian & Russell (1974); Russell (1980).
+    References: Mehrabian & Russell (1974) for the PAD space including the
+    dominance dimension; Russell (1980) for the valence-arousal circumplex.
     """
 
     model_config = ConfigDict(frozen=True)
