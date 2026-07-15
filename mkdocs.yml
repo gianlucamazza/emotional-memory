@@ -63,6 +63,7 @@ nav:
     - Benchmarks: benchmarks.md
     - Production Readiness: production-readiness.md
   - Contributing:
+    - Claude Code Guide: contributing/claude-code-guide.md
     - SSOT Policy: contributing/ssot-policy.md
     - LLM Environment: contributing/llm-environment.md
   - Tutorials:

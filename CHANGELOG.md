@@ -30,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Claude Code collaboration guide** (`docs/contributing/claude-code-guide.md`) —
+  operative guide for LLM-assisted work on the project: guiding principles
+  (theory-fidelity over raw performance), a base system prompt, reusable prompts
+  for common tasks (review, feature, refactor, debug), and a pre-PR checklist.
+  Wired into the docs nav under Contributing.
 - **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
   bounds the parallel appraisal in `encode_batch`. Set to 1 for fully sequential
   appraisal (e.g. a non-thread-safe `llm` callable).
