@@ -89,9 +89,81 @@ The performance suite (`make bench-perf`) and the scorer microbench
 (`benchmarks/perf/bench_scoring.py`) isolate in-process AFT costs with a
 hash embedder.
 
+## Measured breakdown (Wave 2 — H12)
+
+Local medians from
+`uv run python -m benchmarks.perf.bench_profile_breakdown`
+(CPU, `InMemoryStore`, warm matrix cache; SBERT = `all-MiniLM-L6-v2`).
+Regenerate on your machine; absolute ms vary, **shares** are the decision signal.
+
+| Embedder | N | embed ms | prefilter ms | AFT plan ms | e2e retrieve ms | plan/e2e | embed/e2e |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| hash-64 | 100 | 0.02 | 0.06 | 0.91 | 1.78 | 51% | 1% |
+| hash-64 | 1 000 | 0.02 | 0.10 | 1.01 | 8.92 | 11% | 0% |
+| sbert-minilm | 100 | 23.9 | 0.13 | 2.22 | 29.1 | **7.6%** | **82%** |
+| sbert-minilm | 1 000 | 19.9 | 0.34 | 1.52 | 66.2 | **2.3%** | **30%** |
+
+**Gate for further scorer optimisations (H5):** open a code PR only if AFT plan
+share of e2e under SBERT is **≥ 15%**. Measured max is **7.6%** → **DECLINE H5**
+(inter-pass s1–s5 cache would save sub-ms under G2 and is not worth fidelity risk).
+
+Notes:
+
+- Under **hash**, plan can look large as a *percentage* because e2e is only a few
+  ms — absolute cost stays ~1 ms on the G2 pool (~15 candidates).
+- Under **SBERT**, query embedding dominates; e2e − (embed+prefilter+plan) also
+  includes reconsolidation / Hebbian store updates on the top-k path.
+- Scorer-only isolation (no embedder): `benchmarks/perf/bench_scoring.py`
+  (~2.4–3× pure cosine rank on a fixed pool).
+
+### H13 — dual-path encode (LLM)
+
+Harness: `python -m benchmarks.perf.bench_profile_breakdown --llm-encode`
+(requires `EMOTIONAL_MEMORY_LLM_API_KEY`). Not run in default CI.
+
+Expected shape (see also [Limitations §3.1](../research/08_limitations.md)):
+
+- **Sync** encode with `LLMAppraisalEngine`: ~200–2000 ms/item on the hot path.
+- **`dual_path_encoding=True`**: encode hot path skips appraisal; cost moves to
+  `elaborate()` / `elaborate_pending()` (deferred, not free).
+- **Do not** flip the library default to dual-path without a product decision —
+  it changes encode semantics (`pending_appraisal`).
+
+## Async note (H10)
+
+`AsyncEmotionalMemory` awaits embed/store/appraise I/O, but **CPU scoring**
+(`build_retrieval_plan`, decay, resonance) still runs **inline on the event
+loop**. For multi-tenant high-QPS services, offload retrieve to a worker thread
+or process at the application boundary; the library does not auto-`run_in_executor`
+(keeps determinism and test simplicity). See [Async usage](../tutorials/async.md).
+
+## Config anti-patterns (H14)
+
+- Setting `candidate_multiplier` very large (or always calling
+  `list_all`-scale scoring) defeats G2 and makes the 6-signal loop O(n).
+- Leaving `LLMAppraisalEngine` on every encode without dual-path/batch is the
+  usual “AFT feels slow” report — it is the LLM, not the scorer.
+
+## Evaluated & declined (overhead levers)
+
+Written so a future pass does not silently re-open them without new evidence:
+
+| Lever | Verdict | Why |
+|---|---|---|
+| H5 Pass2 recompute s1–s5 cache | **DECLINED** (2026-07) | plan/e2e under SBERT ≤ 7.6% < 15% gate |
+| H6 encode `list_all` below resonance prefilter | **DECLINED** | only for small N; absolute cost tiny |
+| H7 `encode_batch` shared embedding matrix for links | **DECLINED** | encode dominated by embed/LLM, not link build |
+| H8 SQLite brute-force vectorize | **DECLINED** | path only when vec table empty |
+| H9 Pydantic `model_copy` on reconsolidation | **DECLINED** | micro-allocation; no prod signal |
+| H11 `prune` / `elaborate_pending` full scan | **DECLINED** | batch/offline paths; ANN store still lists by design |
+| Spreading adjacency cache | **DECLINED** (ROADMAP) | G2 pool ~15 nodes |
+| ACT-R multi-trace spacing | **DECLINED** (ROADMAP) | breaks fidelity log-log invariant |
+| Hebbian LTD | **DEFERRED** (research addendum only) | needs pre-reg; not an engineering perf PR |
+
 ## Related
 
 - [Benchmarks](../benchmarks.md) — committed latency table
 - [Troubleshooting](../troubleshooting.md) — slow SQLite / store issues
 - [Limitations §3](../research/08_limitations.md) — LLM appraisal, SQLite threading, store coverage
 - [Observability](../tutorials/observability.md) — zero-overhead OTel no-ops
+- Profile CLI: `make bench-perf-profile`

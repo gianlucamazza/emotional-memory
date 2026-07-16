@@ -70,6 +70,10 @@ For store choice, appraisal LLM cost, and scaling knobs see
 Scorer-only overhead (6-signal plan vs cosine rank on a fixed candidate set)
 is measured by `benchmarks/perf/bench_scoring.py` inside `make bench-perf`.
 
+Production-shaped component shares (hash vs SBERT embed / plan / e2e) live in
+[Performance & Scaling](guides/performance_scaling.md) and are regenerated with
+`make bench-perf-profile` (not in default CI).
+
 Run with: `make bench-perf`
 
 ## Appraisal quality (LLM prompt validation)

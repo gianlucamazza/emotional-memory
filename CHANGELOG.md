@@ -47,6 +47,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`benchmarks/perf/bench_scoring.py`** — microbench isolating 6-signal
   `build_retrieval_plan` vs pure cosine rank on a fixed candidate pool, plus warm
   `InMemoryStore` search.
+- **`benchmarks/perf/bench_profile_breakdown.py`** + `make bench-perf-profile` — Wave-2
+  H12/H13 harness: median ms for embed / prefilter / AFT plan / e2e retrieve (hash +
+  optional SBERT); optional `--llm-encode` dual-path vs sync when an LLM key is set.
+  Documented measured table and **DECLINE H5** (plan/e2e under SBERT < 15% gate) in
+  the performance scaling guide.
 
 ### Changed
 

@@ -88,6 +88,16 @@ async def main() -> None:
     # close() called automatically by async context manager
 ```
 
+## Event-loop note (CPU scoring)
+
+I/O-bound steps (`embed`, store `search`/`save`, LLM appraisal) are awaited.
+The **6-signal retrieval plan**, decay, and resonance walks still run
+**synchronously on the event loop** after candidates are loaded. That is
+acceptable for typical agent QPS; under multi-tenant high concurrency, run
+`retrieve` in a worker thread/process at the app boundary rather than expecting
+the library to schedule CPU work for you. See
+[Performance & Scaling](../guides/performance_scaling.md) (H10).
+
 ## Batch encoding
 
 `encode_batch()` calls `embed_batch()` once for all texts — more efficient
