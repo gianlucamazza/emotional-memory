@@ -934,10 +934,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#h13-dual-path-encode-llm" class="md-nav__link">
+  <a href="#h13-dual-path-encode-appraisal-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        H13 — dual-path encode (LLM)
+        H13 — dual-path encode (appraisal cost)
       
     </span>
   </a>
@@ -2969,10 +2969,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#h13-dual-path-encode-llm" class="md-nav__link">
+  <a href="#h13-dual-path-encode-appraisal-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        H13 — dual-path encode (LLM)
+        H13 — dual-path encode (appraisal cost)
       
     </span>
   </a>
@@ -3296,17 +3296,57 @@ share of e2e under SBERT is <strong>≥ 15%</strong>. Measured max is <strong>7.
 <li>Scorer-only isolation (no embedder): <code>benchmarks/perf/bench_scoring.py</code>
   (~2.4–3× pure cosine rank on a fixed pool).</li>
 </ul>
-<h3 id="h13-dual-path-encode-llm">H13 — dual-path encode (LLM)<a class="headerlink" href="#h13-dual-path-encode-llm" title="Permanent link">&para;</a></h3>
-<p>Harness: <code>python -m benchmarks.perf.bench_profile_breakdown --llm-encode</code>
-(requires <code>EMOTIONAL_MEMORY_LLM_API_KEY</code>). Not run in default CI.</p>
-<p>Expected shape (see also <a href="../../research/08_limitations/">Limitations §3.1</a>):</p>
-<ul>
-<li><strong>Sync</strong> encode with <code>LLMAppraisalEngine</code>: ~200–2000 ms/item on the hot path.</li>
-<li><strong><code>dual_path_encoding=True</code></strong>: encode hot path skips appraisal; cost moves to
-  <code>elaborate()</code> / <code>elaborate_pending()</code> (deferred, not free).</li>
-<li><strong>Do not</strong> flip the library default to dual-path without a product decision —
-  it changes encode semantics (<code>pending_appraisal</code>).</li>
-</ul>
+<h3 id="h13-dual-path-encode-appraisal-cost">H13 — dual-path encode (appraisal cost)<a class="headerlink" href="#h13-dual-path-encode-appraisal-cost" title="Permanent link">&para;</a></h3>
+<p><strong>Hypothesis:</strong> with appraisal on the encode path, <code>dual_path_encoding=True</code>
+removes appraisal latency from the hot path and defers it to
+<code>elaborate()</code> / <code>elaborate_pending()</code> (work is deferred, not free).</p>
+<p>Harness (not in default CI):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Offline structural measure (no network) — preferred for CI/repro</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.perf.bench_profile_breakdown<span class="w"> </span>--sizes<span class="w"> </span><span class="m">100</span><span class="w"> </span>--llm-encode-sim
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Live LLM (requires valid EMOTIONAL_MEMORY_LLM_API_KEY; aborts as INCONCLUSIVE</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># if fallback_count &gt; 0, e.g. 401 invalid key)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.perf.bench_profile_breakdown<span class="w"> </span>--sizes<span class="w"> </span><span class="m">100</span><span class="w"> </span>--llm-encode
+</code></pre></div>
+<p><strong>Measured (sim, delay=150 ms/appraise, n=5, hash embedder, resonance off):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th style="text-align: right;">Wall time</th>
+<th style="text-align: right;">Appraise calls</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sync encode</td>
+<td style="text-align: right;">~151 ms/item</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>Dual-path encode</td>
+<td style="text-align: right;">~0 ms/item</td>
+<td style="text-align: right;"><strong>0</strong></td>
+</tr>
+<tr>
+<td><code>elaborate_pending</code> after dual</td>
+<td style="text-align: right;">~150 ms/item</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td>Dual hot + elaborate combined</td>
+<td style="text-align: right;">~1.0× sync</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict H13 PASS (structural):</strong> dual-path hot path is ~0× sync; combined work
+≈ sync. Confirms LeDoux dual-path encode semantics in the engine.</p>
+<p>Live LLM absolute ms still require a <strong>valid</strong> API key; a present-but-invalid key
+must not be reported as LLM cost (harness flags <code>INCONCLUSIVE</code> via
+<code>fallback_count</code>). See also <a href="../../research/08_limitations/">Limitations §3.1</a>.</p>
+<p><strong>Do not</strong> flip the library default to dual-path without a product decision —
+it changes encode semantics (<code>pending_appraisal=True</code> until elaborate).</p>
 <h2 id="async-note-h10">Async note (H10)<a class="headerlink" href="#async-note-h10" title="Permanent link">&para;</a></h2>
 <p><code>AsyncEmotionalMemory</code> awaits embed/store/appraise I/O, but <strong>CPU scoring</strong>
 (<code>build_retrieval_plan</code>, decay, resonance) still runs <strong>inline on the event
