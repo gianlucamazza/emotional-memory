@@ -79,5 +79,11 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-07-07b (abstract boundary claim sharpened after Addendum X2: "affect improves retrieval exactly when relevance is itself affect-conditioned" — the precise boundary that survives X/X2, replacing the discrimination-based framing that X2's D2=68.2%-yet-FAIL falsified; abstract now ≈1887 chars, bundle regenerated, page count 19pp unchanged). Earlier 2026-07-07: Addendum X2 added (second third-party corpus ES-MemEval/EvoEmo, Hx2 FAIL inverted; abstract reworded to "both released third-party corpora"; addenda range A–X2; software snapshot v0.15.0, version DOI 10.5281/zenodo.21235738). Prior 2026-07-02: related-work refresh, 44/44 cite keys, Acknowledgements TODO resolved, primary category cs.LG.
-Previous: 2026-05-31. Fidelity count corrected to 127; abstract condensed to ≈1820 chars; Acknowledgements placeholder added; `refs.bib` count fixed (38). Re-run `make paper`/`make check-arxiv-bundle` to refresh the PDF, page count, and tarball. Remaining ✗ items require user action at submission time._
+_Last updated: 2026-07-17 (software snapshot **v0.17.0**, version DOI
+`10.5281/zenodo.21402228`, concept DOI `10.5281/zenodo.19972258`; bundle/DOI
+synced via `make release`). Prior 2026-07-07b: abstract boundary claim sharpened
+after Addendum X2 ("affect improves retrieval exactly when relevance is itself
+affect-conditioned"); addenda range A–X2; earlier software snapshot was v0.15.0.
+Prior 2026-07-02: related-work refresh, 44/44 cite keys, Acknowledgements TODO
+resolved, primary category cs.LG. Remaining ✗ items (arXiv upload / arxiv_id in
+`release.toml`) require user action at submission time — issue #31._

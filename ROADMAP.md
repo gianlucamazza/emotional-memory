@@ -359,16 +359,26 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
 
 ---
 
-## v0.12.0 – v0.14.0 — Consolidation releases (2026-06-27 → )
+## v0.12.0 – v0.17.0 — Consolidation releases (2026-06-27 → 2026-07-16)
 
 - [x] **v0.12.0 shipped 2026-06-27** (DOI 10.5281/zenodo.20959964): `DIRECT_VAD_SCHEMA`
       public API + addenda R/S/U/V/T + `elaborate()` type-guard fix.
 - [x] **v0.13.0 shipped 2026-06-27** (DOI 10.5281/zenodo.20962443): public `query_affect`
       API + `retrieve_with_query_appraisal()` + Addendum T2A boundary.
-- [ ] **v0.14.0 — bumped on main (#88), release pending.** Metadata/docs/security snapshot
-      (Addendum W + V/T-led paper reframe); no `src/` change vs v0.13.0 at bump time. Not yet
-      tagged/published — `make release` is the gated user step (coins the Zenodo DOI, tags,
-      publishes to PyPI, redeploys the HF Space).
+- [x] **v0.14.0 shipped 2026-07-02**: metadata/docs/security snapshot (Addendum W + V/T-led
+      paper reframe); PyPI + GitHub + Zenodo published.
+- [x] **v0.15.0 shipped 2026-07-07**: paper/abstract boundary sharpening after Addendum X2;
+      software snapshot for third-party corpus closures.
+- [x] **v0.16.0 shipped 2026-07-07**: further release-line consolidation on main.
+- [x] **v0.17.0 shipped 2026-07-16** (DOI 10.5281/zenodo.21402228): InMemory embedding-matrix
+      cache; performance scaling guide; H12/H13 dual-path encode overhead PASS (sim + live);
+      CI bench alert 130%; chromadb CVE pin; parallel `encode_batch` appraisal; Addendum Z
+      closure in changelog bundle. PyPI + GitHub + Zenodo + HF Space + SWH.
+
+Still open (not blocking the release line):
+
+- [ ] arXiv submission upload (cs.LG) — issue #31
+- [ ] Gate 2 human evaluation execution — issue #27
 
 ## v1.0.0 — Stability commitment (target: when above is closed)
 
