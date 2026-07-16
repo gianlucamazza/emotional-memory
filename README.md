@@ -354,6 +354,10 @@ attestations, CodeQL SAST, pip-audit, SHA-pinned actions, mypy strict, and ≥80
 coverage on every release. Details and the `gh attestation verify` recipe:
 **[Production Readiness](docs/production-readiness.md)**.
 
+For latency budgets (LLM appraisal vs embedder vs scoring), store choice
+(`InMemory` → SQLite/Qdrant/Chroma), and measured retrieve breakdowns, see
+**[Performance & Scaling](docs/guides/performance_scaling.md)**.
+
 ## mem0 integration
 
 `EmotionalMemoryMem0Backend` exposes the mem0 `Memory` API (`add` / `search` / `get_all` /

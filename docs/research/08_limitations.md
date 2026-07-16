@@ -456,6 +456,10 @@ to produce an `AppraisalVector`. This introduces:
 The `KeywordAppraisalEngine` is a rule-based fallback with limited coverage
 (~50 keyword classes). It does not generalize to open domains.
 
+For an engineering cost budget (embedder vs appraisal vs 6-signal scoring),
+store choice, and measured retrieve breakdowns, see
+[Performance & Scaling](../guides/performance_scaling.md).
+
 ### 3.2 Affective state: local persistence yes, distributed sharing still limited
 
 `AffectiveState` is no longer only in-process. The repository now supports
@@ -483,11 +487,12 @@ scalable.
 
 ### 3.4 No "enterprise" vector store
 
-The available adapters are `InMemoryStore` (RAM, non-persistent),
-`SQLiteStore` (local file, scalable to ~10^6 memories), `QdrantStore`
-(v0.9), and `ChromaStore` (v0.9). There are no adapters for Weaviate or
-Pinecone. The `MemoryStore` Protocol is duck-typed and contributions are
-welcome.
+The available adapters are `InMemoryStore` (RAM, non-persistent; full-scan
+cosine with a cached embedding matrix), `SQLiteStore` (local file, scalable
+to ~10^6 memories via sqlite-vec ANN), `QdrantStore` (v0.9), and `ChromaStore`
+(v0.9). There are no adapters for Weaviate or Pinecone. The `MemoryStore`
+Protocol is duck-typed and contributions are welcome. Decision tree:
+[Performance & Scaling](../guides/performance_scaling.md).
 
 ---
 

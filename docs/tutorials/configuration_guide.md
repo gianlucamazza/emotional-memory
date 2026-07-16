@@ -35,6 +35,11 @@ appraisal = LLMAppraisalEngine(
 Set `appraisal_max_concurrency` (default 8) to bound parallel `encode_batch` LLM
 calls. Use `1` if your LLM client is not thread-safe.
 
+LLM appraisal is usually the dominant encode latency (hundreds of ms–seconds).
+For a lower hot-path cost set `dual_path_encoding=True` and call `elaborate()` /
+`elaborate_pending()` off the critical path — details and measured retrieve
+breakdowns in [Performance & Scaling](../guides/performance_scaling.md).
+
 ## Oracle-free retrieve-time affect
 
 ```python
@@ -86,6 +91,7 @@ Set `enable_mood_signal`, `enable_momentum`, `enable_resonance`, or
 
 ## See also
 
+- [Performance & Scaling](../guides/performance_scaling.md)
 - [Troubleshooting](../troubleshooting.md)
 - [LLM environment](../contributing/llm-environment.md)
 - [Async tutorial](async.md)

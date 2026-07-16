@@ -4,6 +4,11 @@
 
 ### InMemoryStore
 
+Reference store for tests and small single-process agents. `search_by_embedding`
+is a full-scan cosine over a **lazily cached** embedding matrix (rebuilt after
+save/update/delete). Suitable up to roughly thousands of vectors; for larger
+N or durability see [Performance & Scaling](../guides/performance_scaling.md).
+
 ::: emotional_memory.stores.in_memory.InMemoryStore
 
 ### SQLiteStore

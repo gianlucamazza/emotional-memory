@@ -49,6 +49,9 @@ Issues are created to track each item as it is prioritized.
 ### 8. Performance Scaling Guide (InMemory → SQLite → Qdrant)
 - **Scope**: Decision tree: when to use each store; latency/throughput tradeoffs
 - **Deliverable**: `docs/guides/performance_scaling.md` + README link
+- **Status (2026-07):** **Done.** Guide shipped with cost budget, store tree,
+  measured H12 breakdown, H5–H14 decline list; linked from README, mkdocs nav,
+  troubleshooting, and benchmarks. Profile CLI: `make bench-perf-profile`.
 
 ### 9. Verify All Tutorial Links in README Exist
 - **Problem**: Some linked docs may not exist in tree (e.g., `docs/tutorials/mem0.md`, `docs/tutorials/langchain.md`)
@@ -65,6 +68,10 @@ Issues are created to track each item as it is prioritized.
 - **Scope**: Establish baseline for key operations (encode, retrieve, retrieval+reconsolidation)
 - **Action**: Alert if >10% regression on subsequent runs
 - **Rationale**: Ensure performance guarantees remain valid across versions
+- **Status (2026-07):** **Partial.** `benchmark-action` on `benchmarks/perf/` with
+  `alert-threshold: "130%"` (comment-on-alert, not hard-fail). A 10% gate is too
+  noisy on GH-hosted runners — see `CONTRIBUTING.md`. Not tracking further unless
+  alerts prove insufficient.
 
 ### 12. Gate 2 (Human Evaluation) Disposition Decision
 - **Status**: Kit shipped in v0.7, zero raters recruited, deferred to v1.0

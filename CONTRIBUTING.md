@@ -118,16 +118,17 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | `make cov`             | Same with branch coverage (≥ 80% enforced)     | ~2s                    |
 | `make bench-fidelity`  | 127 parametrized psychological invariant tests | ~5s                    |
 | `make bench-perf`      | Latency/throughput benchmarks (incl. scorer microbench) | ~30s            |
+| `make bench-perf-profile` | H12 embed/prefilter/plan/e2e breakdown (opt. SBERT; `--llm-encode` for H13) | ~1–2 min |
+| `make test-llm`        | Real-LLM integration (requires API key)        | ~30s                   |
+| `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |
+| `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
 
 CI stores `benchmarks/perf/` results via `benchmark-action` (gh-pages
 `dev/bench`) and comments on PRs when a metric regresses beyond **130%** of
 the stored baseline (`alert-threshold: "130%"`, comment-only — not a hard
 fail). The threshold is looser than a local 10% gate because GitHub-hosted
 runners are noisy; treat alerts as investigation signals, not automatic
-reverts.
-| `make test-llm`        | Real-LLM integration (requires API key)        | ~30s                   |
-| `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |
-| `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
+reverts. `make bench-perf-profile` is **not** in default CI (SBERT/LLM optional).
 
 Recommended local demo validation flow:
 

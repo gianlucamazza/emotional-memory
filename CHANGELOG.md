@@ -69,6 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (comment-on-alert; documented in `CONTRIBUTING.md`).
 - **`docs/benchmarks.md` performance table** re-synced to committed
   `paper/tables/table2_perf.md` numbers.
+- **Docs cross-links** for the performance guide: `docs/index.md`, limitations §3,
+  stores API note, production-readiness, gap-analysis items #8/#11 status;
+  fixed broken test-suite table in `CONTRIBUTING.md` (CI alert note had split the table).
 
 ### Fixed
 

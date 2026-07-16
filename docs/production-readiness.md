@@ -24,4 +24,5 @@ gh attestation verify emotional_memory-<version>-py3-none-any.whl \
 ## See also
 
 - [Getting Started](getting-started.md) — install the package
+- [Performance & Scaling](guides/performance_scaling.md) — latency budget and store choice for production deploy
 - [Contributing](contributing/ssot-policy.md) — release and metadata discipline

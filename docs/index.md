@@ -44,8 +44,14 @@ See [Research](research/index.md) for full theoretical foundations.
 - [Persistence](tutorials/persistence.md) — `SQLiteStore`, `save_state`, `export_memories`, `prune()`
 - [LangChain integration](tutorials/langchain.md) — `EmotionalMemoryChatHistory`, `RunnableWithMessageHistory`
 
+## Guides
+
+- [Performance & Scaling](guides/performance_scaling.md) — cost budget, store choice, measured H12 breakdown
+- [Troubleshooting](troubleshooting.md) — unexpected retrieval, store latency, appraisal degradation
+
 ## Research status
 
 - [Current Evidence](research/09_current_evidence.md) — what is validated today,
   what is only early controlled evidence, and what still needs stronger studies
 - [Limitations](research/08_limitations.md) — current empirical and architectural gaps
+- [Benchmarks](benchmarks.md) — fidelity, performance tables, appraisal quality
