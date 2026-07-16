@@ -3343,43 +3343,38 @@ parse). Unit coverage: <code>tests/test_h13_overhead.py</code> (in <code>make ch
 </tr>
 </tbody>
 </table>
-<p><strong>Measured — live</strong> (Ollama <code>llama3.2:1b</code> @ <code>127.0.0.1:11434</code>, n=4,
-<code>fallback_count=0</code>, 2026-07-16):</p>
+<p><strong>Measured — live</strong> (<code>fallback_count=0</code>, n=4, <code>DIRECT_VAD</code>, 2026-07-16):</p>
 <table>
 <thead>
 <tr>
-<th>Arm</th>
-<th style="text-align: right;">Wall time</th>
-<th>Notes</th>
+<th>Backend</th>
+<th style="text-align: right;">Sync encode</th>
+<th style="text-align: right;">Dual encode</th>
+<th style="text-align: right;">elaborate_pending</th>
+<th style="text-align: right;">Combined / sync</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Sync encode</td>
+<td>Ollama <code>llama3.2:1b</code> local</td>
 <td style="text-align: right;">~7.6 s/item</td>
-<td>full LLM appraisal on hot path</td>
-</tr>
-<tr>
-<td>Dual-path encode</td>
-<td style="text-align: right;">~1 ms/item</td>
-<td><strong>0.00×</strong> sync; no LLM</td>
-</tr>
-<tr>
-<td><code>elaborate_pending</code></td>
+<td style="text-align: right;">~1 ms</td>
 <td style="text-align: right;">~7.1 s/item</td>
-<td>deferred LLM</td>
+<td style="text-align: right;">~0.93×</td>
 </tr>
 <tr>
-<td>Dual + elaborate combined</td>
-<td style="text-align: right;">~0.93× sync</td>
-<td>work deferred, not free</td>
+<td>OpenAI <code>gpt-5-mini</code> cloud</td>
+<td style="text-align: right;">~3.2 s/item</td>
+<td style="text-align: right;">~0 ms</td>
+<td style="text-align: right;">~3.3 s/item</td>
+<td style="text-align: right;">~1.02×</td>
 </tr>
 </tbody>
 </table>
+<p>Dual hot-path ratio is <strong>0.00×</strong> in both cases (no LLM on encode).</p>
 <p><strong>Verdict H13 PASS (structural + live):</strong> dual-path hot path ≈ 0× sync; combined
-work ≈ sync. Absolute live ms are model/hardware-specific (local 1B vs cloud
-API); the <strong>ratio</strong> is the durable claim. See also
-<a href="../../research/08_limitations/">Limitations §3.1</a>.</p>
+work ≈ sync. Absolute live ms are model/hardware-specific; the <strong>ratio</strong> is the
+durable claim. See also <a href="../../research/08_limitations/">Limitations §3.1</a>.</p>
 <p><strong>Do not</strong> flip the library default to dual-path without a product decision —
 it changes encode semantics (<code>pending_appraisal=True</code> until elaborate).</p>
 <h2 id="async-note-h10">Async note (H10)<a class="headerlink" href="#async-note-h10" title="Permanent link">&para;</a></h2>
