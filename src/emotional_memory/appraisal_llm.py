@@ -273,9 +273,7 @@ class LLMAppraisalEngine:
                 if missing:
                     # Do NOT silently neutral-fill absent dimensions: a partial
                     # response is a degraded result, not a genuine neutral one.
-                    raise ValueError(
-                        f"LLM response missing required dimensions: {missing}"
-                    )
+                    raise ValueError(f"LLM response missing required dimensions: {missing}")
                 coerced = coerce_appraisal_dimensions(data, self._schema)
                 if self._schema is SCHERER_CPM_SCHEMA:
                     vector = AppraisalVector(**coerced)
@@ -298,7 +296,9 @@ class LLMAppraisalEngine:
                 else:
                     raise
 
-        if self._config.cache_size > 0:
+        # Do not cache error fallbacks: a transient LLM/parse failure would
+        # otherwise pin neutral for that key until eviction, masking recovery.
+        if self._config.cache_size > 0 and vector is not self._fallback:
             with self._cache_lock:
                 if len(self._cache) >= self._config.cache_size:
                     self._cache.popitem(last=False)

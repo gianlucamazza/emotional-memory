@@ -186,8 +186,10 @@ class TestAppraisalIntegrity:
 
     def test_nan_is_rejected(self) -> None:
         engine = LLMAppraisalEngine(
-            _llm('{"novelty": NaN, "goal_relevance": 0.2, "coping_potential": 0.5, '
-                 '"norm_congruence": 0.0, "self_relevance": 0.3}'),
+            _llm(
+                '{"novelty": NaN, "goal_relevance": 0.2, "coping_potential": 0.5, '
+                '"norm_congruence": 0.0, "self_relevance": 0.3}'
+            ),
             config=LLMAppraisalConfig(fallback_on_error=False),
         )
         with pytest.raises(ValueError):
@@ -204,6 +206,23 @@ class TestAppraisalIntegrity:
         k1 = LLMAppraisalEngine._make_cache_key("c", None, "ab")
         k2 = LLMAppraisalEngine._make_cache_key("bc", None, "a")
         assert k1 != k2
+
+    def test_error_fallback_is_not_cached(self) -> None:
+        # A transient failure must not pin neutral for that key; a later success
+        # with the same text should surface the real appraisal.
+        responses = iter(["not json", self._GOOD])
+
+        def _flaky(prompt: str, schema: dict[str, Any]) -> str:
+            return next(responses)
+
+        engine = LLMAppraisalEngine(_flaky)
+        first = engine.appraise("same event")
+        assert first == AppraisalVector.neutral()
+        assert engine.fallback_count == 1
+        second = engine.appraise("same event")
+        assert isinstance(second, AppraisalVector)
+        assert second.novelty == pytest.approx(0.1)
+        assert engine.fallback_count == 1  # only the first call fell back
 
 
 # ---------------------------------------------------------------------------

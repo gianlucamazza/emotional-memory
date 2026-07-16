@@ -234,6 +234,8 @@ class AsyncEmotionalMemory:
             computed = await self._appraisal_engine.appraise(content, context=metadata)
 
         new_affect = computed.to_core_affect() if computed is not None else self._state.core_affect
+        # Persist inside the lock so concurrent encodes cannot reorder
+        # asyncio.to_thread saves (older snapshot overwriting a newer one).
         async with self._state_lock:
             self._state = self._state.update(
                 new_affect,
@@ -242,7 +244,7 @@ class AsyncEmotionalMemory:
                 mood_decay=self._config.mood_decay,
             )
             state_snapshot = self._state
-        await self._persist_state_async(state_snapshot)
+            await self._persist_state_async(state_snapshot)
 
         stored_appraisal: AppraisalVector | None = (
             computed if isinstance(computed, AppraisalVector) else None
@@ -668,6 +670,7 @@ class AsyncEmotionalMemory:
                     if computed_a is not None
                     else self._state.core_affect
                 )
+                # Persist inside the lock (same ordering guarantee as _build_tag).
                 async with self._state_lock:
                     self._state = self._state.update(
                         new_affect,
@@ -676,7 +679,7 @@ class AsyncEmotionalMemory:
                         mood_decay=self._config.mood_decay,
                     )
                     _state_snap = self._state
-                await self._persist_state_async(_state_snap)
+                    await self._persist_state_async(_state_snap)
 
                 stored_a: AppraisalVector | None = (
                     computed_a if isinstance(computed_a, AppraisalVector) else None

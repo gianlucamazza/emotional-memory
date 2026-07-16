@@ -75,14 +75,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Appraisal silent-degradation controls.** `NaN`/`Infinity` in LLM JSON are
     rejected (were accepted, bypassing clamping); a response missing required SEC
     dimensions is treated as a degraded result instead of being silently
-    neutral-filled; every neutral fallback is now counted (`fallback_count`).
+    neutral-filled; every neutral fallback is now counted (`fallback_count`);
+    error fallbacks are not written to the LRU cache (a transient failure no longer
+    pins neutral for that key until eviction).
   - **Cache-corruption via shared `GenericAppraisalVector`.** Its `dimensions` map is
     now a read-only `MappingProxyType`, so a caller cannot mutate a cached appraisal.
   - **Async state-consistency.** `retrieve()`/`retrieve_with_explanations()` now read
     the affective state from a single snapshot (no torn core_affect/mood/momentum mix
-    under concurrent encodes); state persistence saves the snapshot captured under the
-    lock; `close()` uses `callable()` uniformly; `encode` debug-log ordering matches
-    the sync engine.
+    under concurrent encodes); state persistence awaits inside `_state_lock` with the
+    captured snapshot so concurrent `asyncio.to_thread` saves cannot reorder and
+    overwrite a newer state with an older one; `close()` uses `callable()` uniformly;
+    `encode` debug-log ordering matches the sync engine.
   - **`AffectiveState` is now `frozen`** (matching the documented immutability and the
     other value objects); momentum-history round-trips are preserved.
   - **Cleanups:** removed dead `_APPRAISAL_JSON_SCHEMA`; the default appraisal system
