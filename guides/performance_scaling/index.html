@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/tutorials/query_appraisal_retrieval/">
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/guides/performance_scaling/">
       
       
-        <link rel="prev" href="../query_routing/">
+        <link rel="prev" href="../../troubleshooting/">
       
       
-        <link rel="next" href="../byo_appraisal_schema/">
+        <link rel="next" href="../../comparison/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Retrieve-time query appraisal - emotional_memory</title>
+        <title>Performance & Scaling - emotional_memory</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#retrieve-time-query-appraisal" class="md-skip">
+        <a href="#performance-scaling" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Retrieve-time query appraisal
+              Performance & Scaling
             
           </span>
         </div>
@@ -338,11 +338,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../guides/performance_scaling/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -398,13 +400,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../async/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tutorials/async/" class="md-tabs__link">
           
   
   
@@ -747,26 +747,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
             
   
   
@@ -784,7 +789,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -799,10 +804,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../guides/performance_scaling/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance & Scaling
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -818,6 +850,153 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cost-budget-by-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost budget by layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieve-path-what-actually-scales-with-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieve path (what actually scales with N)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#store-decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store decision tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-knobs-that-cut-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config knobs that cut cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-comparative-latencies-are-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What comparative latencies are not
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measured-breakdown-wave-2-h12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measured breakdown (Wave 2 — H12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measured breakdown (Wave 2 — H12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h13-dual-path-encode-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H13 — dual-path encode (LLM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-note-h10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async note (H10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-anti-patterns-h14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config anti-patterns (H14)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluated-declined-overhead-levers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluated &amp; declined (overhead levers)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1120,31 +1299,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
             
   
   
@@ -1162,7 +1336,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1180,7 +1354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../async/" class="md-nav__link">
+      <a href="../../tutorials/async/" class="md-nav__link">
         
   
   
@@ -1208,7 +1382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../persistence/" class="md-nav__link">
+      <a href="../../tutorials/persistence/" class="md-nav__link">
         
   
   
@@ -1236,7 +1410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/" class="md-nav__link">
+      <a href="../../tutorials/observability/" class="md-nav__link">
         
   
   
@@ -1264,7 +1438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../langchain/" class="md-nav__link">
+      <a href="../../tutorials/langchain/" class="md-nav__link">
         
   
   
@@ -1292,7 +1466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mem0/" class="md-nav__link">
+      <a href="../../tutorials/mem0/" class="md-nav__link">
         
   
   
@@ -1320,7 +1494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration_guide/" class="md-nav__link">
+      <a href="../../tutorials/configuration_guide/" class="md-nav__link">
         
   
   
@@ -1348,7 +1522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../query_routing/" class="md-nav__link">
+      <a href="../../tutorials/query_routing/" class="md-nav__link">
         
   
   
@@ -1373,37 +1547,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieve-time query appraisal
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tutorials/query_appraisal_retrieval/" class="md-nav__link">
         
   
   
@@ -1419,70 +1566,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-pass-an-explicit-query_affect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Pass an explicit query_affect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-auto-appraise-the-query" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Auto-appraise the query
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-pair-with-direct_vad_schema-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Pair with DIRECT_VAD_SCHEMA (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scope-and-honest-caveat" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scope and honest caveat
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1495,7 +1578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../byo_appraisal_schema/" class="md-nav__link">
+      <a href="../../tutorials/byo_appraisal_schema/" class="md-nav__link">
         
   
   
@@ -2819,10 +2902,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-pass-an-explicit-query_affect" class="md-nav__link">
+  <a href="#cost-budget-by-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Pass an explicit query_affect
+        Cost budget by layer
       
     </span>
   </a>
@@ -2830,10 +2913,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-auto-appraise-the-query" class="md-nav__link">
+  <a href="#retrieve-path-what-actually-scales-with-n" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Auto-appraise the query
+        Retrieve path (what actually scales with N)
       
     </span>
   </a>
@@ -2841,10 +2924,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-pair-with-direct_vad_schema-recommended" class="md-nav__link">
+  <a href="#store-decision-tree" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Pair with DIRECT_VAD_SCHEMA (recommended)
+        Store decision tree
       
     </span>
   </a>
@@ -2852,10 +2935,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scope-and-honest-caveat" class="md-nav__link">
+  <a href="#config-knobs-that-cut-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Scope and honest caveat
+        Config knobs that cut cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-comparative-latencies-are-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What comparative latencies are not
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measured-breakdown-wave-2-h12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measured breakdown (Wave 2 — H12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measured breakdown (Wave 2 — H12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h13-dual-path-encode-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H13 — dual-path encode (LLM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-note-h10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async note (H10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-anti-patterns-h14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config anti-patterns (H14)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluated-declined-overhead-levers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluated &amp; declined (overhead levers)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
       
     </span>
   </a>
@@ -2882,82 +3048,344 @@
   
 
 
-<h1 id="retrieve-time-query-appraisal">Retrieve-time query appraisal<a class="headerlink" href="#retrieve-time-query-appraisal" title="Permanent link">&para;</a></h1>
-<p>By default the affect-proximity signal (s3) in retrieval scores each memory against
-the engine's <strong>current runtime affective state</strong>. When the query itself carries
-affect that the runtime state does not reflect, you can score against the <strong>query's
-own affect</strong> instead — without mutating the runtime state.</p>
-<p>This is the production-reachable mechanism studied in Addendum T: appraising the query
-at retrieve-time recovers most of the oracle-affect advantage on the curated
-<code>realistic_recall_v2</code> benchmark, with no oracle. See the scope caveat at the end.</p>
-<p>This tutorial covers three usage patterns:</p>
+<h1 id="performance-scaling">Performance &amp; Scaling<a class="headerlink" href="#performance-scaling" title="Permanent link">&para;</a></h1>
+<p>How much AFT costs relative to pure cosine, when the cost is dominated by the
+LLM, and which store to pick as N grows.</p>
+<p>This page is an <strong>engineering budget</strong>, not a claim that AFT is faster or
+slower than production memory systems in every regime. For measured latency
+tables see <a href="../../benchmarks/">Benchmarks</a>; for scientific boundaries see
+<a href="../../research/08_limitations/">Limitations</a>.</p>
+<h2 id="cost-budget-by-layer">Cost budget by layer<a class="headerlink" href="#cost-budget-by-layer" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>When it runs</th>
+<th>Typical order of magnitude</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Embedder (hash / SBERT / e5)</td>
+<td>encode + retrieve</td>
+<td>sub-ms (hash) to tens of ms (SBERT on CPU)</td>
+<td>Shared with any RAG pipeline</td>
+</tr>
+<tr>
+<td>Appraisal LLM</td>
+<td>encode slow-path (and optional query appraisal)</td>
+<td><strong>200–2000 ms/item</strong></td>
+<td>Dominates when enabled</td>
+</tr>
+<tr>
+<td>Keyword / preset appraisal</td>
+<td>encode</td>
+<td>~0 ms</td>
+<td>Fallback / oracle-affect benches</td>
+</tr>
+<tr>
+<td>Affective state update</td>
+<td>encode / observe</td>
+<td>O(1), sub-ms</td>
+<td>Core affect, momentum, mood EMA</td>
+</tr>
+<tr>
+<td>Resonance link build</td>
+<td>encode</td>
+<td>O(candidates) scan, top-5 links</td>
+<td>Pre-filtered when store is large</td>
+</tr>
+<tr>
+<td>6-signal score + Pass 2</td>
+<td>retrieve</td>
+<td>ms on the G2 candidate pool</td>
+<td>Pool size ≈ <code>top_k × candidate_multiplier</code></td>
+</tr>
+<tr>
+<td>OTel spans</td>
+<td>always</td>
+<td><strong>zero</strong> without the <code>[otel]</code> extra</td>
+<td>No-op helpers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb:</strong> if you use <code>LLMAppraisalEngine</code> on the hot path, appraisal
+latency dwarfs scoring. Use <code>dual_path_encoding=True</code> and <code>elaborate()</code> /
+<code>elaborate_pending()</code> off the critical path, or batch with
+<code>encode_batch</code> + <code>appraisal_max_concurrency</code>.</p>
+<h2 id="retrieve-path-what-actually-scales-with-n">Retrieve path (what actually scales with N)<a class="headerlink" href="#retrieve-path-what-actually-scales-with-n" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Pass an explicit <code>query_affect</code></li>
-<li>Auto-appraise the query (<code>retrieve_with_query_appraisal</code>)</li>
-<li>Pair with <code>DIRECT_VAD_SCHEMA</code> (recommended)</li>
+<li>Embed the query.</li>
+<li><strong>G2 pre-filter</strong> — if <code>len(store) &gt; top_k × candidate_multiplier</code>
+   (default multiplier <code>3</code>), call <code>search_by_embedding</code> for that many
+   candidates; otherwise <code>list_all()</code>.</li>
+<li>Pass 1: 6-signal score on the candidate pool (no spreading).</li>
+<li>Spreading activation on the seed set (skipped when resonance is off or
+   the activation map is empty).</li>
+<li>Pass 2: re-score with resonance boost.</li>
+<li>Optional APE-gated reconsolidation + Hebbian on co-retrieved links.</li>
 </ol>
-<h2 id="1-pass-an-explicit-query_affect">1. Pass an explicit <code>query_affect</code><a class="headerlink" href="#1-pass-an-explicit-query_affect" title="Permanent link">&para;</a></h2>
-<p><code>retrieve()</code> and <code>retrieve_with_explanations()</code> accept a keyword-only
-<code>query_affect: CoreAffect | None</code>. When provided, it feeds the affect-proximity
-signal instead of the runtime state — the runtime state is left untouched.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmotionalMemory</span><span class="p">,</span> <span class="n">InMemoryStore</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.affect</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoreAffect</span>
+<p><code>InMemoryStore.search_by_embedding</code> is a full-scan cosine (vectorized numpy
+with a <strong>lazily rebuilt embedding matrix</strong>). It is O(n · d) in store size.
+Above ~10k memories prefer an ANN-backed store.</p>
+<h2 id="store-decision-tree">Store decision tree<a class="headerlink" href="#store-decision-tree" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>N ≲ 1k–10k, single process, no durability needed
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  → InMemoryStore  (dev, tests, small agents)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span> <span class="n">embedder</span><span class="o">=</span><span class="n">my_embedder</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ... encode some memories ...</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Need durability on one machine, up to ~10^6 vectors
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  → SQLiteStore with [sqlite] extra (sqlite-vec ANN)
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Score against the query&#39;s affect (e.g. an anxious, negative-valence query),</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># regardless of the engine&#39;s current mood.</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="s2">&quot;I&#39;m worried I forgot something important before the trip&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">query_affect</span><span class="o">=</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=-</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.7</span><span class="p">),</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Need multi-process / remote vector DB
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  → QdrantStore ([qdrant]) or ChromaStore ([chroma])
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Affective mood continuity across sessions
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  → pass state_store= (SQLite / Redis AffectiveStateStore)
 </code></pre></div>
-<p><code>query_affect=None</code> (the default) preserves the previous behaviour (uses the runtime
-state), so this is fully backward-compatible.</p>
-<h2 id="2-auto-appraise-the-query">2. Auto-appraise the query<a class="headerlink" href="#2-auto-appraise-the-query" title="Permanent link">&para;</a></h2>
-<p>If you have an appraisal engine configured, <code>retrieve_with_query_appraisal()</code>
-appraises the query text for you and uses the result as <code>query_affect</code> — no oracle,
-no state mutation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_with_query_appraisal</span><span class="p">(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;I&#39;m worried I forgot something important before the trip&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
-</code></pre></div>
-<p>It raises <code>RuntimeError</code> if no appraisal engine is configured. Both methods exist on
-<code>AsyncEmotionalMemory</code> as well (awaitable).</p>
-<h2 id="3-pair-with-direct_vad_schema-recommended">3. Pair with <code>DIRECT_VAD_SCHEMA</code> (recommended)<a class="headerlink" href="#3-pair-with-direct_vad_schema-recommended" title="Permanent link">&para;</a></h2>
-<p>Addendum V found that having the LLM rate valence/arousal/dominance <strong>directly</strong>
-estimates query affect more faithfully than the default Scherer SEC→projection. Pair
-the convenience method with an LLM appraisal engine using <code>DIRECT_VAD_SCHEMA</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DIRECT_VAD_SCHEMA</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.appraisal_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMAppraisalConfig</span><span class="p">,</span> <span class="n">LLMAppraisalEngine</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.llm_http</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAICompatibleLLMConfig</span><span class="p">,</span> <span class="n">make_httpx_llm</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">cfg</span> <span class="o">=</span> <span class="n">OpenAICompatibleLLMConfig</span><span class="o">.</span><span class="n">from_env</span><span class="p">()</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">appraisal_engine</span> <span class="o">=</span> <span class="n">LLMAppraisalEngine</span><span class="p">(</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">llm</span><span class="o">=</span><span class="n">make_httpx_llm</span><span class="p">(</span><span class="n">cfg</span><span class="p">),</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">config</span><span class="o">=</span><span class="n">LLMAppraisalConfig</span><span class="p">(</span><span class="n">appraisal_schema</span><span class="o">=</span><span class="n">DIRECT_VAD_SCHEMA</span><span class="p">,</span> <span class="n">cache_size</span><span class="o">=</span><span class="mi">4096</span><span class="p">),</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">em</span> <span class="o">=</span> <span class="n">EmotionalMemory</span><span class="p">(</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">store</span><span class="o">=</span><span class="n">InMemoryStore</span><span class="p">(),</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">embedder</span><span class="o">=</span><span class="n">my_embedder</span><span class="p">,</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">appraisal_engine</span><span class="o">=</span><span class="n">appraisal_engine</span><span class="p">,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_with_query_appraisal</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</code></pre></div>
-<p>The cache means each distinct query text is appraised once.</p>
-<h2 id="scope-and-honest-caveat">Scope and honest caveat<a class="headerlink" href="#scope-and-honest-caveat" title="Permanent link">&para;</a></h2>
-<p>Retrieve-time query appraisal helps <strong>in the affect-discriminative regime</strong> — where
-the correct memory is distinguished by affect, not just lexical/semantic overlap. On
-the curated <code>realistic_recall_v2</code> benchmark it beats cosine (Addendum T, Ht1 PASS).</p>
-<p>A pre-registered naturalistic re-test (Addendum T2A) found it does <strong>not</strong> beat cosine
-on naturalistic, affect-sparse dialogue (DailyDialog): the query appraisal there is
-faithful (valence r=0.69, arousal r=0.74) yet the affect signal does not discriminate
-when semantic overlap already carries it. Treat query appraisal as a targeted booster
-for affect-conditioned retrieval, not a universal win.</p>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Search</th>
+<th>Persistence</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InMemoryStore</code></td>
+<td>Brute cosine + matrix cache</td>
+<td>No</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>SQLiteStore</code></td>
+<td>sqlite-vec ANN (brute only if vec table empty)</td>
+<td>File</td>
+<td><code>[sqlite]</code></td>
+</tr>
+<tr>
+<td><code>QdrantStore</code></td>
+<td>ANN</td>
+<td>Server / local</td>
+<td><code>[qdrant]</code></td>
+</tr>
+<tr>
+<td><code>ChromaStore</code></td>
+<td>ANN</td>
+<td>Ephemeral or persistent</td>
+<td><code>[chroma]</code></td>
+</tr>
+</tbody>
+</table>
+<p>API reference: <a href="../../api/stores/">Stores</a>.</p>
+<h2 id="config-knobs-that-cut-cost">Config knobs that cut cost<a class="headerlink" href="#config-knobs-that-cut-cost" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dual_path_encoding=True</code></td>
+<td>Skip appraisal on encode; run <code>elaborate()</code> later</td>
+</tr>
+<tr>
+<td><code>appraisal_max_concurrency</code></td>
+<td>Bound parallel LLM appraisal in <code>encode_batch</code> (default 8)</td>
+</tr>
+<tr>
+<td><code>RetrievalConfig.candidate_multiplier</code></td>
+<td>Smaller → cheaper Pass 1/2, risk of missing non-semantic hits</td>
+</tr>
+<tr>
+<td><code>enable_resonance=False</code></td>
+<td>Skip link build + Pass 2 spreading (ablation / cheap path)</td>
+</tr>
+<tr>
+<td><code>enable_reconsolidation=False</code></td>
+<td>Skip APE tag updates on retrieve</td>
+</tr>
+<tr>
+<td>Keyword / no appraisal engine</td>
+<td>Remove LLM latency entirely</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../../tutorials/configuration_guide/">configuration guide</a> for full
+trees.</p>
+<h2 id="what-comparative-latencies-are-not">What comparative latencies are <em>not</em><a class="headerlink" href="#what-comparative-latencies-are-not" title="Permanent link">&para;</a></h2>
+<p>Paper Table 3 (<code>aft</code> vs <code>naive_cosine</code> encode/retrieve ms) mixes <strong>different
+adapters</strong> (AFT engine vs cosine baseline harness). Use it for rough
+orientation, not as a pure “6-signal overhead vs cosine” micro-measurement.
+The performance suite (<code>make bench-perf</code>) and the scorer microbench
+(<code>benchmarks/perf/bench_scoring.py</code>) isolate in-process AFT costs with a
+hash embedder.</p>
+<h2 id="measured-breakdown-wave-2-h12">Measured breakdown (Wave 2 — H12)<a class="headerlink" href="#measured-breakdown-wave-2-h12" title="Permanent link">&para;</a></h2>
+<p>Local medians from
+<code>uv run python -m benchmarks.perf.bench_profile_breakdown</code>
+(CPU, <code>InMemoryStore</code>, warm matrix cache; SBERT = <code>all-MiniLM-L6-v2</code>).
+Regenerate on your machine; absolute ms vary, <strong>shares</strong> are the decision signal.</p>
+<table>
+<thead>
+<tr>
+<th>Embedder</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">embed ms</th>
+<th style="text-align: right;">prefilter ms</th>
+<th style="text-align: right;">AFT plan ms</th>
+<th style="text-align: right;">e2e retrieve ms</th>
+<th style="text-align: right;">plan/e2e</th>
+<th style="text-align: right;">embed/e2e</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hash-64</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">1.78</td>
+<td style="text-align: right;">51%</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr>
+<td>hash-64</td>
+<td style="text-align: right;">1 000</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">8.92</td>
+<td style="text-align: right;">11%</td>
+<td style="text-align: right;">0%</td>
+</tr>
+<tr>
+<td>sbert-minilm</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">23.9</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">2.22</td>
+<td style="text-align: right;">29.1</td>
+<td style="text-align: right;"><strong>7.6%</strong></td>
+<td style="text-align: right;"><strong>82%</strong></td>
+</tr>
+<tr>
+<td>sbert-minilm</td>
+<td style="text-align: right;">1 000</td>
+<td style="text-align: right;">19.9</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">1.52</td>
+<td style="text-align: right;">66.2</td>
+<td style="text-align: right;"><strong>2.3%</strong></td>
+<td style="text-align: right;"><strong>30%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gate for further scorer optimisations (H5):</strong> open a code PR only if AFT plan
+share of e2e under SBERT is <strong>≥ 15%</strong>. Measured max is <strong>7.6%</strong> → <strong>DECLINE H5</strong>
+(inter-pass s1–s5 cache would save sub-ms under G2 and is not worth fidelity risk).</p>
+<p>Notes:</p>
+<ul>
+<li>Under <strong>hash</strong>, plan can look large as a <em>percentage</em> because e2e is only a few
+  ms — absolute cost stays ~1 ms on the G2 pool (~15 candidates).</li>
+<li>Under <strong>SBERT</strong>, query embedding dominates; e2e − (embed+prefilter+plan) also
+  includes reconsolidation / Hebbian store updates on the top-k path.</li>
+<li>Scorer-only isolation (no embedder): <code>benchmarks/perf/bench_scoring.py</code>
+  (~2.4–3× pure cosine rank on a fixed pool).</li>
+</ul>
+<h3 id="h13-dual-path-encode-llm">H13 — dual-path encode (LLM)<a class="headerlink" href="#h13-dual-path-encode-llm" title="Permanent link">&para;</a></h3>
+<p>Harness: <code>python -m benchmarks.perf.bench_profile_breakdown --llm-encode</code>
+(requires <code>EMOTIONAL_MEMORY_LLM_API_KEY</code>). Not run in default CI.</p>
+<p>Expected shape (see also <a href="../../research/08_limitations/">Limitations §3.1</a>):</p>
+<ul>
+<li><strong>Sync</strong> encode with <code>LLMAppraisalEngine</code>: ~200–2000 ms/item on the hot path.</li>
+<li><strong><code>dual_path_encoding=True</code></strong>: encode hot path skips appraisal; cost moves to
+  <code>elaborate()</code> / <code>elaborate_pending()</code> (deferred, not free).</li>
+<li><strong>Do not</strong> flip the library default to dual-path without a product decision —
+  it changes encode semantics (<code>pending_appraisal</code>).</li>
+</ul>
+<h2 id="async-note-h10">Async note (H10)<a class="headerlink" href="#async-note-h10" title="Permanent link">&para;</a></h2>
+<p><code>AsyncEmotionalMemory</code> awaits embed/store/appraise I/O, but <strong>CPU scoring</strong>
+(<code>build_retrieval_plan</code>, decay, resonance) still runs <strong>inline on the event
+loop</strong>. For multi-tenant high-QPS services, offload retrieve to a worker thread
+or process at the application boundary; the library does not auto-<code>run_in_executor</code>
+(keeps determinism and test simplicity). See <a href="../../tutorials/async/">Async usage</a>.</p>
+<h2 id="config-anti-patterns-h14">Config anti-patterns (H14)<a class="headerlink" href="#config-anti-patterns-h14" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Setting <code>candidate_multiplier</code> very large (or always calling
+  <code>list_all</code>-scale scoring) defeats G2 and makes the 6-signal loop O(n).</li>
+<li>Leaving <code>LLMAppraisalEngine</code> on every encode without dual-path/batch is the
+  usual “AFT feels slow” report — it is the LLM, not the scorer.</li>
+</ul>
+<h2 id="evaluated-declined-overhead-levers">Evaluated &amp; declined (overhead levers)<a class="headerlink" href="#evaluated-declined-overhead-levers" title="Permanent link">&para;</a></h2>
+<p>Written so a future pass does not silently re-open them without new evidence:</p>
+<table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>Verdict</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H5 Pass2 recompute s1–s5 cache</td>
+<td><strong>DECLINED</strong> (2026-07)</td>
+<td>plan/e2e under SBERT ≤ 7.6% &lt; 15% gate</td>
+</tr>
+<tr>
+<td>H6 encode <code>list_all</code> below resonance prefilter</td>
+<td><strong>DECLINED</strong></td>
+<td>only for small N; absolute cost tiny</td>
+</tr>
+<tr>
+<td>H7 <code>encode_batch</code> shared embedding matrix for links</td>
+<td><strong>DECLINED</strong></td>
+<td>encode dominated by embed/LLM, not link build</td>
+</tr>
+<tr>
+<td>H8 SQLite brute-force vectorize</td>
+<td><strong>DECLINED</strong></td>
+<td>path only when vec table empty</td>
+</tr>
+<tr>
+<td>H9 Pydantic <code>model_copy</code> on reconsolidation</td>
+<td><strong>DECLINED</strong></td>
+<td>micro-allocation; no prod signal</td>
+</tr>
+<tr>
+<td>H11 <code>prune</code> / <code>elaborate_pending</code> full scan</td>
+<td><strong>DECLINED</strong></td>
+<td>batch/offline paths; ANN store still lists by design</td>
+</tr>
+<tr>
+<td>Spreading adjacency cache</td>
+<td><strong>DECLINED</strong> (ROADMAP)</td>
+<td>G2 pool ~15 nodes</td>
+</tr>
+<tr>
+<td>ACT-R multi-trace spacing</td>
+<td><strong>DECLINED</strong> (ROADMAP)</td>
+<td>breaks fidelity log-log invariant</td>
+</tr>
+<tr>
+<td>Hebbian LTD</td>
+<td><strong>DEFERRED</strong> (research addendum only)</td>
+<td>needs pre-reg; not an engineering perf PR</td>
+</tr>
+</tbody>
+</table>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../benchmarks/">Benchmarks</a> — committed latency table</li>
+<li><a href="../../troubleshooting/">Troubleshooting</a> — slow SQLite / store issues</li>
+<li><a href="../../research/08_limitations/">Limitations §3</a> — LLM appraisal, SQLite threading, store coverage</li>
+<li><a href="../../tutorials/observability/">Observability</a> — zero-overhead OTel no-ops</li>
+<li>Profile CLI: <code>make bench-perf-profile</code></li>
+</ul>
 
 
 
