@@ -146,20 +146,18 @@ parse). Unit coverage: `tests/test_h13_overhead.py` (in `make check`).
 | `elaborate_pending` after dual | ~150 ms/item | 5 |
 | Dual hot + elaborate combined | ~1.0× sync | — |
 
-**Measured — live** (Ollama `llama3.2:1b` @ `127.0.0.1:11434`, n=4,
-`fallback_count=0`, 2026-07-16):
+**Measured — live** (`fallback_count=0`, n=4, `DIRECT_VAD`, 2026-07-16):
 
-| Arm | Wall time | Notes |
-|-----|----------:|-------|
-| Sync encode | ~7.6 s/item | full LLM appraisal on hot path |
-| Dual-path encode | ~1 ms/item | **0.00×** sync; no LLM |
-| `elaborate_pending` | ~7.1 s/item | deferred LLM |
-| Dual + elaborate combined | ~0.93× sync | work deferred, not free |
+| Backend | Sync encode | Dual encode | elaborate_pending | Combined / sync |
+|---------|------------:|------------:|------------------:|----------------:|
+| Ollama `llama3.2:1b` local | ~7.6 s/item | ~1 ms | ~7.1 s/item | ~0.93× |
+| OpenAI `gpt-5-mini` cloud | ~3.2 s/item | ~0 ms | ~3.3 s/item | ~1.02× |
+
+Dual hot-path ratio is **0.00×** in both cases (no LLM on encode).
 
 **Verdict H13 PASS (structural + live):** dual-path hot path ≈ 0× sync; combined
-work ≈ sync. Absolute live ms are model/hardware-specific (local 1B vs cloud
-API); the **ratio** is the durable claim. See also
-[Limitations §3.1](../research/08_limitations.md).
+work ≈ sync. Absolute live ms are model/hardware-specific; the **ratio** is the
+durable claim. See also [Limitations §3.1](../research/08_limitations.md).
 
 **Do not** flip the library default to dual-path without a product decision —
 it changes encode semantics (`pending_appraisal=True` until elaborate).
