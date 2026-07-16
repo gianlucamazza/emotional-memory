@@ -362,7 +362,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../contributing/ssot-policy/" class="md-tabs__link">
+        <a href="../../contributing/claude-code-guide/" class="md-tabs__link">
           
   
   
@@ -917,6 +917,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/claude-code-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Code Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2817,7 +2845,8 @@
 <p>valence   : [-1.0, +1.0]  negative → positive
 arousal   : [ 0.0,  1.0]  calm → highly activated
 dominance : [ 0.0,  1.0]  submissive → dominant/in-control</p>
-<p>References: Mehrabian &amp; Russell (1974); Russell (1980).</p>
+<p>References: Mehrabian &amp; Russell (1974) for the PAD space including the
+dominance dimension; Russell (1980) for the valence-arousal circumplex.</p>
 
 
 
@@ -2856,19 +2885,19 @@ dominance : [ 0.0,  1.0]  submissive → dominant/in-control</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/affect.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-59">59</a></span>
-<span class="normal"><a href="#__codelineno-0-60">60</a></span>
-<span class="normal"><a href="#__codelineno-0-61">61</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-61">61</a></span>
 <span class="normal"><a href="#__codelineno-0-62">62</a></span>
 <span class="normal"><a href="#__codelineno-0-63">63</a></span>
 <span class="normal"><a href="#__codelineno-0-64">64</a></span>
-<span class="normal"><a href="#__codelineno-0-65">65</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Euclidean distance in valence-arousal-dominance space.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">valence</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">arousal</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dominance</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">dominance</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-65">65</a></span>
+<span class="normal"><a href="#__codelineno-0-66">66</a></span>
+<span class="normal"><a href="#__codelineno-0-67">67</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Euclidean distance in valence-arousal-dominance space.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">valence</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">arousal</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a>        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dominance</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">dominance</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2891,21 +2920,21 @@ dominance : [ 0.0,  1.0]  submissive → dominant/in-control</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/affect.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-67">67</a></span>
-<span class="normal"><a href="#__codelineno-0-68">68</a></span>
-<span class="normal"><a href="#__codelineno-0-69">69</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span>
 <span class="normal"><a href="#__codelineno-0-71">71</a></span>
 <span class="normal"><a href="#__codelineno-0-72">72</a></span>
 <span class="normal"><a href="#__codelineno-0-73">73</a></span>
-<span class="normal"><a href="#__codelineno-0-74">74</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="k">def</span><span class="w"> </span><span class="nf">lerp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreAffect</span><span class="p">:</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation. alpha=0 → self, alpha=1 → other.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="k">return</span> <span class="n">CoreAffect</span><span class="p">(</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="n">valence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">valence</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">valence</span><span class="p">),</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="n">arousal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arousal</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arousal</span><span class="p">),</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">dominance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dominance</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">dominance</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dominance</span><span class="p">),</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-74">74</a></span>
+<span class="normal"><a href="#__codelineno-0-75">75</a></span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="k">def</span><span class="w"> </span><span class="nf">lerp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreAffect</span><span class="p">:</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Linear interpolation. alpha=0 → self, alpha=1 → other.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-71" name="__codelineno-0-71"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">))</span>
+<a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="k">return</span> <span class="n">CoreAffect</span><span class="p">(</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>        <span class="n">valence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">valence</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">valence</span><span class="p">),</span>
+<a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">arousal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">arousal</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">arousal</span><span class="p">),</span>
+<a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">dominance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dominance</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">dominance</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">dominance</span><span class="p">),</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2981,11 +3010,11 @@ dd_valence / dd_arousal / dd_dominance: second derivatives (acceleration)</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/affect.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="k">def</span><span class="w"> </span><span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Speed in affect-space (norm of 3D velocity vector).&quot;&quot;&quot;</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_valence</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_arousal</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_dominance</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-103">103</a></span>
+<span class="normal"><a href="#__codelineno-0-104">104</a></span>
+<span class="normal"><a href="#__codelineno-0-105">105</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="k">def</span><span class="w"> </span><span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Speed in affect-space (norm of 3D velocity vector).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_valence</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_arousal</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_dominance</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
