@@ -58,6 +58,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cache_size=0`, unique texts/arm, and **INCONCLUSIVE** when `fallback_count>0`
   (invalid key / network). Documented measured sim table in performance guide.
   `make bench-perf-h13-sim`.
+- **H13 closed (PASS)** — sim + live Ollama `llama3.2:1b` (dual hot path 0.00× sync,
+  combined ≈0.93×, `fallback_count=0`); `tests/test_h13_overhead.py` in default suite;
+  `make bench-perf-h13-ollama`; live harness uses `DIRECT_VAD_SCHEMA` + dotenv load.
 
 ### Changed
 

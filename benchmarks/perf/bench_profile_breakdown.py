@@ -8,10 +8,16 @@ Not part of ``make check``. Prefer::
     # H12 — hash + SBERT (requires [sentence-transformers] for SBERT arm)
     uv run python -m benchmarks.perf.bench_profile_breakdown
 
-    # H13 — only when EMOTIONAL_MEMORY_LLM_API_KEY is set
-    uv run python -m benchmarks.perf.bench_profile_breakdown --llm-encode
+    # H13 offline structural
+    make bench-perf-h13-sim
 
-Or via pytest (component timers, not pytest-benchmark)::
+    # H13 live (any OpenAI-compatible endpoint, e.g. Ollama)
+    EMOTIONAL_MEMORY_LLM_BASE_URL=http://127.0.0.1:11434/v1 \\
+    EMOTIONAL_MEMORY_LLM_API_KEY=ollama \\
+    EMOTIONAL_MEMORY_LLM_MODEL=llama3.2:1b \\
+    uv run python -m benchmarks.perf.bench_profile_breakdown --llm-encode --sizes 100
+
+Or via pytest::
 
     uv run python -m pytest benchmarks/perf/bench_profile_breakdown.py -v -s
 """
@@ -25,6 +31,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -39,6 +46,22 @@ from emotional_memory import (
 )
 from emotional_memory.resonance import spreading_activation
 from emotional_memory.retrieval import build_retrieval_plan
+
+# ---------------------------------------------------------------------------
+# Env helpers
+# ---------------------------------------------------------------------------
+
+
+def _load_dotenv() -> None:
+    """Load project ``.env`` if python-dotenv is installed (make targets do this too)."""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return
+    env_path = Path(__file__).resolve().parents[2] / ".env"
+    if env_path.is_file():
+        load_dotenv(env_path)
+
 
 # ---------------------------------------------------------------------------
 # Timing helpers
@@ -365,12 +388,16 @@ def run_h13(*, n_items: int = 5) -> str:
     - ``cache_size=0`` so LRU does not make a later arm free
     - unique text per arm
     - separate ``LLMAppraisalEngine`` per arm
+    - ``DIRECT_VAD_SCHEMA`` for reliable JSON from small local models (latency
+      measure, not appraisal-quality score)
     - **INCONCLUSIVE** if any arm records ``fallback_count > 0`` (auth/network/parse)
     """
+    _load_dotenv()
     key = os.environ.get("EMOTIONAL_MEMORY_LLM_API_KEY", "").strip()
     if not key:
         return "SKIP H13 live: EMOTIONAL_MEMORY_LLM_API_KEY not set (use --llm-encode-sim)"
 
+    from emotional_memory import DIRECT_VAD_SCHEMA
     from emotional_memory.appraisal_llm import LLMAppraisalConfig, LLMAppraisalEngine
     from emotional_memory.llm_http import OpenAICompatibleLLMConfig, make_httpx_llm
 
@@ -378,12 +405,16 @@ def run_h13(*, n_items: int = 5) -> str:
     if cfg is None:
         return "SKIP H13 live: OpenAICompatibleLLMConfig.from_env() returned None"
     model = cfg.model
+    base = cfg.base_url
     embedder = ScalableEmbedder(dim=64)
 
     def _fresh() -> LLMAppraisalEngine:
         return LLMAppraisalEngine(
             make_httpx_llm(cfg),
-            config=LLMAppraisalConfig(cache_size=0),
+            config=LLMAppraisalConfig(
+                cache_size=0,
+                appraisal_schema=DIRECT_VAD_SCHEMA,
+            ),
         )
 
     def _encode_all(dual: bool, texts: list[str], appraisal: LLMAppraisalEngine) -> float:
@@ -421,24 +452,35 @@ def run_h13(*, n_items: int = 5) -> str:
     elaborate_ms = (time.perf_counter() - t0) * 1000.0
 
     fb = sync_eng.fallback_count + dual_eng.fallback_count + elab_eng.fallback_count
+    # Expected LLM calls: n_items (sync) + 0 (dual encode) + n_items (elaborate)
+    expected_llm = 2 * n_items
     report = _h13_format_report(
-        label=f"live model={model} cache_size=0",
+        label=f"live model={model} base={base} schema=direct_vad cache_size=0",
         n_items=n_items,
         sync_ms=sync_ms,
         dual_ms=dual_ms,
         elaborate_ms=elaborate_ms,
         dual_only_ms=dual_only_ms,
         n_elaborated=len(elaborated),
-        extra=f"\n  fallback_count total={fb}",
+        extra=(
+            f"\n  fallback_count total={fb} (expected_llm_calls≈{expected_llm}; clean if fb=0)"
+        ),
     )
     if fb > 0:
         return (
             f"H13 live INCONCLUSIVE: {fb} appraisal fallback(s) "
-            f"(invalid key, network, or parse errors). Do not treat ms as LLM cost.\n"
+            f"(invalid key, network, or parse errors). Do not treat ms as clean LLM cost.\n"
             f"{report}\n"
-            f"  tip: fix EMOTIONAL_MEMORY_LLM_API_KEY or use --llm-encode-sim"
+            f"  tip: valid OpenAI key, or Ollama: "
+            f"BASE_URL=http://127.0.0.1:11434/v1 MODEL=llama3.2:1b KEY=ollama; "
+            f"or use --llm-encode-sim"
         )
-    return report
+    return (
+        f"{report}\n"
+        f"  H13 live PASS: dual hot-path ratio "
+        f"{(dual_ms / sync_ms) if sync_ms else float('nan'):.2f}; "
+        f"no appraisal fallbacks"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -486,26 +528,33 @@ def test_h13_dual_path_encode_latency() -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    _load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--llm-encode",
         action="store_true",
-        help="H13 live dual-path vs sync (requires valid LLM API key)",
+        help="H13 live dual-path vs sync (requires valid LLM API key / Ollama)",
     )
     parser.add_argument(
         "--llm-encode-sim",
         action="store_true",
         help="H13 offline with delayed KeywordAppraisal (no network)",
     )
+    parser.add_argument(
+        "--h13-only",
+        action="store_true",
+        help="Skip H12 retrieve breakdown (use with --llm-encode / --llm-encode-sim)",
+    )
     parser.add_argument("--rounds", type=int, default=25)
     parser.add_argument("--sizes", type=int, nargs="+", default=[100, 1000])
     parser.add_argument("--h13-n", type=int, default=5, help="Items per H13 arm")
     args = parser.parse_args(argv)
 
-    print("=== H12 retrieve breakdown (median ms) ===")
-    rows = run_h12(sizes=tuple(args.sizes), rounds=args.rounds)
-    print(format_breakdown_table(rows))
-    print(h5_gate_from_rows(rows))
+    if not args.h13_only:
+        print("=== H12 retrieve breakdown (median ms) ===")
+        rows = run_h12(sizes=tuple(args.sizes), rounds=args.rounds)
+        print(format_breakdown_table(rows))
+        print(h5_gate_from_rows(rows))
 
     if args.llm_encode_sim:
         print("\n=== H13 dual-path encode (simulated appraisal delay) ===")

@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 install:
 	uv pip install -e ".[dev]"
@@ -114,6 +114,14 @@ bench-perf-profile:
 
 bench-perf-h13-sim:
 	uv run python -c "from benchmarks.perf.bench_profile_breakdown import run_h13_sim; print(run_h13_sim())"
+
+# Live H13 against local Ollama (pull model first: ollama pull llama3.2:1b).
+# Does not use .env OpenAI key — forces local endpoint.
+bench-perf-h13-ollama:
+	EMOTIONAL_MEMORY_LLM_API_KEY=ollama \
+	EMOTIONAL_MEMORY_LLM_BASE_URL=http://127.0.0.1:11434/v1 \
+	EMOTIONAL_MEMORY_LLM_MODEL=llama3.2:1b \
+	uv run python -m benchmarks.perf.bench_profile_breakdown --h13-only --llm-encode --h13-n 4
 
 bench: bench-fidelity bench-perf
 
@@ -573,6 +581,7 @@ help:
 	@echo "  bench-perf                 latency / throughput benchmarks"
 	@echo "  bench-perf-profile         H12 embed/plan/e2e breakdown (opt. SBERT/LLM)"
 	@echo "  bench-perf-h13-sim         H13 dual-path vs sync (simulated appraisal delay)"
+	@echo "  bench-perf-h13-ollama      H13 live via local Ollama (llama3.2:1b)"
 	@echo "  bench                      fidelity + performance"
 	@echo "  bench-appraisal            LLM appraisal quality (requires API key)"
 	@echo "  bench-comparative          Cross-system comparison (hash embedder, quick)"

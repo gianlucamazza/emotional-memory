@@ -116,24 +116,28 @@ Notes:
 - Scorer-only isolation (no embedder): `benchmarks/perf/bench_scoring.py`
   (~2.4–3× pure cosine rank on a fixed pool).
 
-### H13 — dual-path encode (appraisal cost)
+### H13 — dual-path encode (appraisal cost) — **CLOSED PASS**
 
 **Hypothesis:** with appraisal on the encode path, `dual_path_encoding=True`
 removes appraisal latency from the hot path and defers it to
 `elaborate()` / `elaborate_pending()` (work is deferred, not free).
 
-Harness (not in default CI):
+Harness:
 
 ```bash
-# Offline structural measure (no network) — preferred for CI/repro
-uv run python -m benchmarks.perf.bench_profile_breakdown --sizes 100 --llm-encode-sim
-
-# Live LLM (requires valid EMOTIONAL_MEMORY_LLM_API_KEY; aborts as INCONCLUSIVE
-# if fallback_count > 0, e.g. 401 invalid key)
-uv run python -m benchmarks.perf.bench_profile_breakdown --sizes 100 --llm-encode
+make bench-perf-h13-sim          # offline structural (no network)
+# Live (OpenAI-compatible). Example with local Ollama:
+EMOTIONAL_MEMORY_LLM_BASE_URL=http://127.0.0.1:11434/v1 \
+EMOTIONAL_MEMORY_LLM_API_KEY=ollama \
+EMOTIONAL_MEMORY_LLM_MODEL=llama3.2:1b \
+  uv run python -m benchmarks.perf.bench_profile_breakdown --h13-only --llm-encode
 ```
 
-**Measured (sim, delay=150 ms/appraise, n=5, hash embedder, resonance off):**
+Live harness uses `DIRECT_VAD_SCHEMA` + `cache_size=0` (latency measure, not
+Scherer quality). Reports **INCONCLUSIVE** if `fallback_count > 0` (bad key /
+parse). Unit coverage: `tests/test_h13_overhead.py` (in `make check`).
+
+**Measured — sim** (delay=150 ms/appraise, n=5, hash embedder, resonance off):
 
 | Arm | Wall time | Appraise calls |
 |-----|----------:|---------------:|
@@ -142,12 +146,20 @@ uv run python -m benchmarks.perf.bench_profile_breakdown --sizes 100 --llm-encod
 | `elaborate_pending` after dual | ~150 ms/item | 5 |
 | Dual hot + elaborate combined | ~1.0× sync | — |
 
-**Verdict H13 PASS (structural):** dual-path hot path is ~0× sync; combined work
-≈ sync. Confirms LeDoux dual-path encode semantics in the engine.
+**Measured — live** (Ollama `llama3.2:1b` @ `127.0.0.1:11434`, n=4,
+`fallback_count=0`, 2026-07-16):
 
-Live LLM absolute ms still require a **valid** API key; a present-but-invalid key
-must not be reported as LLM cost (harness flags `INCONCLUSIVE` via
-`fallback_count`). See also [Limitations §3.1](../research/08_limitations.md).
+| Arm | Wall time | Notes |
+|-----|----------:|-------|
+| Sync encode | ~7.6 s/item | full LLM appraisal on hot path |
+| Dual-path encode | ~1 ms/item | **0.00×** sync; no LLM |
+| `elaborate_pending` | ~7.1 s/item | deferred LLM |
+| Dual + elaborate combined | ~0.93× sync | work deferred, not free |
+
+**Verdict H13 PASS (structural + live):** dual-path hot path ≈ 0× sync; combined
+work ≈ sync. Absolute live ms are model/hardware-specific (local 1B vs cloud
+API); the **ratio** is the durable claim. See also
+[Limitations §3.1](../research/08_limitations.md).
 
 **Do not** flip the library default to dual-path without a product decision —
 it changes encode semantics (`pending_appraisal=True` until elaborate).
