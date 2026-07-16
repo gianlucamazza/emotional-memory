@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Documented measured table and **DECLINE H5** (plan/e2e under SBERT < 15% gate) in
   the performance scaling guide.
 
+- **H13 dual-path encode harness hardened** — offline `--llm-encode-sim` (delayed
+  keyword appraisal) with call-count structural checks; live `--llm-encode` uses
+  `cache_size=0`, unique texts/arm, and **INCONCLUSIVE** when `fallback_count>0`
+  (invalid key / network). Documented measured sim table in performance guide.
+  `make bench-perf-h13-sim`.
+
 ### Changed
 
 - **`encode_batch` now appraises items in parallel** (both sync and async) instead of

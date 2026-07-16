@@ -116,18 +116,41 @@ Notes:
 - Scorer-only isolation (no embedder): `benchmarks/perf/bench_scoring.py`
   (~2.4–3× pure cosine rank on a fixed pool).
 
-### H13 — dual-path encode (LLM)
+### H13 — dual-path encode (appraisal cost)
 
-Harness: `python -m benchmarks.perf.bench_profile_breakdown --llm-encode`
-(requires `EMOTIONAL_MEMORY_LLM_API_KEY`). Not run in default CI.
+**Hypothesis:** with appraisal on the encode path, `dual_path_encoding=True`
+removes appraisal latency from the hot path and defers it to
+`elaborate()` / `elaborate_pending()` (work is deferred, not free).
 
-Expected shape (see also [Limitations §3.1](../research/08_limitations.md)):
+Harness (not in default CI):
 
-- **Sync** encode with `LLMAppraisalEngine`: ~200–2000 ms/item on the hot path.
-- **`dual_path_encoding=True`**: encode hot path skips appraisal; cost moves to
-  `elaborate()` / `elaborate_pending()` (deferred, not free).
-- **Do not** flip the library default to dual-path without a product decision —
-  it changes encode semantics (`pending_appraisal`).
+```bash
+# Offline structural measure (no network) — preferred for CI/repro
+uv run python -m benchmarks.perf.bench_profile_breakdown --sizes 100 --llm-encode-sim
+
+# Live LLM (requires valid EMOTIONAL_MEMORY_LLM_API_KEY; aborts as INCONCLUSIVE
+# if fallback_count > 0, e.g. 401 invalid key)
+uv run python -m benchmarks.perf.bench_profile_breakdown --sizes 100 --llm-encode
+```
+
+**Measured (sim, delay=150 ms/appraise, n=5, hash embedder, resonance off):**
+
+| Arm | Wall time | Appraise calls |
+|-----|----------:|---------------:|
+| Sync encode | ~151 ms/item | 5 |
+| Dual-path encode | ~0 ms/item | **0** |
+| `elaborate_pending` after dual | ~150 ms/item | 5 |
+| Dual hot + elaborate combined | ~1.0× sync | — |
+
+**Verdict H13 PASS (structural):** dual-path hot path is ~0× sync; combined work
+≈ sync. Confirms LeDoux dual-path encode semantics in the engine.
+
+Live LLM absolute ms still require a **valid** API key; a present-but-invalid key
+must not be reported as LLM cost (harness flags `INCONCLUSIVE` via
+`fallback_count`). See also [Limitations §3.1](../research/08_limitations.md).
+
+**Do not** flip the library default to dual-path without a product decision —
+it changes encode semantics (`pending_appraisal=True` until elaborate).
 
 ## Async note (H10)
 

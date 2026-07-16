@@ -118,7 +118,8 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | `make cov`             | Same with branch coverage (≥ 80% enforced)     | ~2s                    |
 | `make bench-fidelity`  | 127 parametrized psychological invariant tests | ~5s                    |
 | `make bench-perf`      | Latency/throughput benchmarks (incl. scorer microbench) | ~30s            |
-| `make bench-perf-profile` | H12 embed/prefilter/plan/e2e breakdown (opt. SBERT; `--llm-encode` for H13) | ~1–2 min |
+| `make bench-perf-profile` | H12 embed/prefilter/plan/e2e breakdown (opt. SBERT) | ~1–2 min |
+| `make bench-perf-h13-sim` | H13 dual-path vs sync encode (simulated appraisal delay) | ~seconds |
 | `make test-llm`        | Real-LLM integration (requires API key)        | ~30s                   |
 | `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |
 | `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
