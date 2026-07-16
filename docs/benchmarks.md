@@ -42,22 +42,33 @@ For the comparative protocol and interpretation rules, see
 
 ## Performance (hash-based embedder, InMemoryStore)
 
-| Operation | N | Mean | OPS |
-|---|---|---|---|
-| Encode (single) | 1 | 1.7 ms | 590/s |
-| Encode (batch of 100) | 100 | 9.9 ms/op | 101/s |
-| Encode w/ resonance graph | 500 | 4.0 ms | 250/s |
-| Retrieve top-5 | 100 | ~2 ms | ~500/s |
-| Retrieve top-5 | 1 000 | ~12 ms | ~85/s |
-| Retrieve top-5 | 10 000 | ~120 ms | ~8/s |
-| Retrieve (top-k 1–25) | 1 000 | 10–18 ms | 55–100/s |
-| Retrieve + reconsolidation | 200 | 2.6 ms | 385/s |
+Committed numbers from `make bench-perf` → `paper/tables/table2_perf.md`
+(CPU-only, in-process). Regenerate with `make bench-perf && make reproduce-paper`.
 
-`InMemoryStore.search_by_embedding` uses vectorized matrix multiplication (numpy),
-making retrieval O(n · d) in a single batch rather than n individual cosine calls.
-Retrieval uses two-pass scoring (spreading activation); when no resonance links are
-active the second pass is skipped. For stores > 10 000 memories, use `SQLiteStore`
-(sqlite-vec ANN) or a vector database implementing the `MemoryStore` protocol.
+| Operation | Mean (ms) | Median (ms) | p95 (ms) |
+|---|---:|---:|---:|
+| Encode (single) | 4.39 | 4.19 | 15.94 |
+| Encode w/ resonance (pre-populated) | 3.13 | 3.09 | 10.32 |
+| Encode scaling @ N=100 existing | 2.91 | 2.83 | 7.94 |
+| Encode scaling @ N=1000 existing | 5.92 | 5.80 | 10.97 |
+| Retrieve top-5 @ N=100 | 1.37 | 1.29 | 2.94 |
+| Retrieve top-5 @ N=1 000 | 5.60 | 5.46 | 8.41 |
+| Retrieve top-5 @ N=10 000 | 99.23 | 97.03 | 112.00 |
+| Retrieve top-k @ N=1 000 (k=1…25) | 5.72–10.06 | — | 9.8–15.7 |
+| Retrieve + reconsolidation @ N=200 | 1.87 | 1.78 | 4.24 |
+
+`InMemoryStore.search_by_embedding` uses vectorized matrix multiplication
+(numpy) over a **lazily cached** embedding matrix (rebuilt on save/update/delete),
+so repeated queries avoid re-stacking all vectors. Retrieval scoring is O(n · d)
+on the candidate pool; the engine **G2 pre-filter** caps the pool at
+`top_k × candidate_multiplier` when the store is larger. Two-pass spreading
+activation runs only when resonance links yield a non-empty activation map.
+
+For store choice, appraisal LLM cost, and scaling knobs see
+[Performance & Scaling](guides/performance_scaling.md).
+
+Scorer-only overhead (6-signal plan vs cosine rank on a fixed candidate set)
+is measured by `benchmarks/perf/bench_scoring.py` inside `make bench-perf`.
 
 Run with: `make bench-perf`
 

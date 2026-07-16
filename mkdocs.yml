@@ -58,6 +58,8 @@ nav:
     - Module Overview: architecture/module-overview.md
   - Migration Guide: migration.md
   - Troubleshooting: troubleshooting.md
+  - Guides:
+    - Performance & Scaling: guides/performance_scaling.md
   - Evaluation:
     - Comparison: comparison.md
     - Benchmarks: benchmarks.md

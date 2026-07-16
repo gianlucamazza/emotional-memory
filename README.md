@@ -335,6 +335,7 @@ confined to corpora whose gold relation is affect-conditioned by construction
 - [Current Evidence](docs/research/09_current_evidence.md) — study ladder and claim-to-evidence matrix
 - [Limitations](docs/research/08_limitations.md) — scoped boundaries, failed regimes, and open gaps
 - [Benchmarks](docs/benchmarks.md) — fidelity (20 phenomena), performance, and appraisal-quality suites
+- [Performance & Scaling](docs/guides/performance_scaling.md) — cost budget, store choice, latency knobs
 - Machine-readable claims: [`docs/research/claim_validation_matrix.json`](docs/research/claim_validation_matrix.json)
 
 ### Current validation status

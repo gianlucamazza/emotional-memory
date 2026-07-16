@@ -39,9 +39,11 @@ Ensure both engines use the same `EmotionalMemoryConfig`. Async paths use an
 | Redis state store | State not restored | Default is fail-open; use `strict=True` in production |
 | SQLite memories | Slow search | Install `sqlite-vec` (`[sqlite]` extra) for ANN |
 | Chroma/Qdrant | Dimension mismatch | First embedding sets dimension; do not mix dims |
+| InMemoryStore | Slow at large N | Full-scan cosine; move to SQLite/Qdrant/Chroma — see [Performance & Scaling](guides/performance_scaling.md) |
 
 ## Further reading
 
+- [Performance & Scaling](guides/performance_scaling.md)
 - [Configuration guide](tutorials/configuration_guide.md)
 - [Benchmarks & addenda index](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/README.md)
 - [Claim validation matrix](research/claim_validation_matrix.md)

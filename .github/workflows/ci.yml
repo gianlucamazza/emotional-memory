@@ -231,8 +231,10 @@ jobs:
           output-file-path: /tmp/benchmark-results.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
-          alert-threshold: "150%"
+          alert-threshold: "130%"
           comment-on-alert: true
+          # 130% balances useful regression signal vs GH-hosted runner noise
+          # (a 10% gate is too tight; 150% was too permissive). See CONTRIBUTING.
           benchmark-data-dir-path: dev/bench
 
   extra-tests:

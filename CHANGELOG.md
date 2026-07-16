@@ -42,6 +42,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`EmotionalMemoryConfig.appraisal_max_concurrency`** (int, default 8, `ge=1`) —
   bounds the parallel appraisal in `encode_batch`. Set to 1 for fully sequential
   appraisal (e.g. a non-thread-safe `llm` callable).
+- **`docs/guides/performance_scaling.md`** — cost budget by layer, store decision tree,
+  and config knobs for encode/retrieve latency.
+- **`benchmarks/perf/bench_scoring.py`** — microbench isolating 6-signal
+  `build_retrieval_plan` vs pure cosine rank on a fixed candidate pool, plus warm
+  `InMemoryStore` search.
 
 ### Changed
 
@@ -53,6 +58,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   results are identical to the sequential path — only the appraisal I/O waits overlap. The
   sync path requires a thread-safe `llm` callable (httpx.Client and `KeywordAppraisalEngine`
   are). `elaborate_pending()` remains sequential.
+- **`InMemoryStore` caches the embedding matrix** for `search_by_embedding` (lazy rebuild
+  on save/update/delete) so repeated queries no longer re-stack all vectors each call.
+- **CI performance alert threshold** tightened from 150% → **130%** of baseline
+  (comment-on-alert; documented in `CONTRIBUTING.md`).
+- **`docs/benchmarks.md` performance table** re-synced to committed
+  `paper/tables/table2_perf.md` numbers.
 
 ### Fixed
 
