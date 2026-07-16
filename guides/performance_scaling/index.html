@@ -934,10 +934,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#h13-dual-path-encode-appraisal-cost" class="md-nav__link">
+  <a href="#h13-dual-path-encode-appraisal-cost-closed-pass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        H13 — dual-path encode (appraisal cost)
+        H13 — dual-path encode (appraisal cost) — CLOSED PASS
       
     </span>
   </a>
@@ -2969,10 +2969,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#h13-dual-path-encode-appraisal-cost" class="md-nav__link">
+  <a href="#h13-dual-path-encode-appraisal-cost-closed-pass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        H13 — dual-path encode (appraisal cost)
+        H13 — dual-path encode (appraisal cost) — CLOSED PASS
       
     </span>
   </a>
@@ -3296,19 +3296,22 @@ share of e2e under SBERT is <strong>≥ 15%</strong>. Measured max is <strong>7.
 <li>Scorer-only isolation (no embedder): <code>benchmarks/perf/bench_scoring.py</code>
   (~2.4–3× pure cosine rank on a fixed pool).</li>
 </ul>
-<h3 id="h13-dual-path-encode-appraisal-cost">H13 — dual-path encode (appraisal cost)<a class="headerlink" href="#h13-dual-path-encode-appraisal-cost" title="Permanent link">&para;</a></h3>
+<h3 id="h13-dual-path-encode-appraisal-cost-closed-pass">H13 — dual-path encode (appraisal cost) — <strong>CLOSED PASS</strong><a class="headerlink" href="#h13-dual-path-encode-appraisal-cost-closed-pass" title="Permanent link">&para;</a></h3>
 <p><strong>Hypothesis:</strong> with appraisal on the encode path, <code>dual_path_encoding=True</code>
 removes appraisal latency from the hot path and defers it to
 <code>elaborate()</code> / <code>elaborate_pending()</code> (work is deferred, not free).</p>
-<p>Harness (not in default CI):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Offline structural measure (no network) — preferred for CI/repro</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.perf.bench_profile_breakdown<span class="w"> </span>--sizes<span class="w"> </span><span class="m">100</span><span class="w"> </span>--llm-encode-sim
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Live LLM (requires valid EMOTIONAL_MEMORY_LLM_API_KEY; aborts as INCONCLUSIVE</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># if fallback_count &gt; 0, e.g. 401 invalid key)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.perf.bench_profile_breakdown<span class="w"> </span>--sizes<span class="w"> </span><span class="m">100</span><span class="w"> </span>--llm-encode
+<p>Harness:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>make<span class="w"> </span>bench-perf-h13-sim<span class="w">          </span><span class="c1"># offline structural (no network)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Live (OpenAI-compatible). Example with local Ollama:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">EMOTIONAL_MEMORY_LLM_BASE_URL</span><span class="o">=</span>http://127.0.0.1:11434/v1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">EMOTIONAL_MEMORY_LLM_API_KEY</span><span class="o">=</span>ollama<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">EMOTIONAL_MEMORY_LLM_MODEL</span><span class="o">=</span>llama3.2:1b<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.perf.bench_profile_breakdown<span class="w"> </span>--h13-only<span class="w"> </span>--llm-encode
 </code></pre></div>
-<p><strong>Measured (sim, delay=150 ms/appraise, n=5, hash embedder, resonance off):</strong></p>
+<p>Live harness uses <code>DIRECT_VAD_SCHEMA</code> + <code>cache_size=0</code> (latency measure, not
+Scherer quality). Reports <strong>INCONCLUSIVE</strong> if <code>fallback_count &gt; 0</code> (bad key /
+parse). Unit coverage: <code>tests/test_h13_overhead.py</code> (in <code>make check</code>).</p>
+<p><strong>Measured — sim</strong> (delay=150 ms/appraise, n=5, hash embedder, resonance off):</p>
 <table>
 <thead>
 <tr>
@@ -3340,11 +3343,43 @@ removes appraisal latency from the hot path and defers it to
 </tr>
 </tbody>
 </table>
-<p><strong>Verdict H13 PASS (structural):</strong> dual-path hot path is ~0× sync; combined work
-≈ sync. Confirms LeDoux dual-path encode semantics in the engine.</p>
-<p>Live LLM absolute ms still require a <strong>valid</strong> API key; a present-but-invalid key
-must not be reported as LLM cost (harness flags <code>INCONCLUSIVE</code> via
-<code>fallback_count</code>). See also <a href="../../research/08_limitations/">Limitations §3.1</a>.</p>
+<p><strong>Measured — live</strong> (Ollama <code>llama3.2:1b</code> @ <code>127.0.0.1:11434</code>, n=4,
+<code>fallback_count=0</code>, 2026-07-16):</p>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th style="text-align: right;">Wall time</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sync encode</td>
+<td style="text-align: right;">~7.6 s/item</td>
+<td>full LLM appraisal on hot path</td>
+</tr>
+<tr>
+<td>Dual-path encode</td>
+<td style="text-align: right;">~1 ms/item</td>
+<td><strong>0.00×</strong> sync; no LLM</td>
+</tr>
+<tr>
+<td><code>elaborate_pending</code></td>
+<td style="text-align: right;">~7.1 s/item</td>
+<td>deferred LLM</td>
+</tr>
+<tr>
+<td>Dual + elaborate combined</td>
+<td style="text-align: right;">~0.93× sync</td>
+<td>work deferred, not free</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict H13 PASS (structural + live):</strong> dual-path hot path ≈ 0× sync; combined
+work ≈ sync. Absolute live ms are model/hardware-specific (local 1B vs cloud
+API); the <strong>ratio</strong> is the durable claim. See also
+<a href="../../research/08_limitations/">Limitations §3.1</a>.</p>
 <p><strong>Do not</strong> flip the library default to dual-path without a product decision —
 it changes encode semantics (<code>pending_appraisal=True</code> until elaborate).</p>
 <h2 id="async-note-h10">Async note (H10)<a class="headerlink" href="#async-note-h10" title="Permanent link">&para;</a></h2>
