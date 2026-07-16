@@ -12,6 +12,7 @@ Thank you for your interest. This guide covers everything from dev setup to gett
 - [Code style](#code-style)
 - [Commit messages](#commit-messages)
 - [SSOT policy](#ssot-policy)
+- [Working with Claude Code](#working-with-claude-code)
 - [Pull request process](#pull-request-process)
 - [Maintainer Release](#maintainer-release)
 - [Adding a fidelity benchmark](#adding-a-fidelity-benchmark)
@@ -216,6 +217,18 @@ test: add fidelity benchmark for PAD dominance (Mehrabian & Russell 1974)
 ```
 
 Always update `CHANGELOG.md` under `## [Unreleased]`.
+
+## Working with Claude Code
+
+Contributions assisted by Claude Code (or other LLM assistants) should follow
+the project's collaboration guide:
+[`docs/contributing/claude-code-guide.md`](docs/contributing/claude-code-guide.md).
+It captures the guiding principles (theory fidelity over raw performance), a base
+system prompt, reusable prompts for common tasks (review, feature, refactor,
+debug), and the pre-PR checklist. See also [`CLAUDE.md`](CLAUDE.md) for the
+canonical command and architecture reference.
+
+---
 
 ## Pull request process
 

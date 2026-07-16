@@ -11,7 +11,8 @@ Radial distance from the origin determines intensity:
   low      r < 0.30  (serenity, acceptance, apprehension, …)
   moderate r ∈ [0.30, 0.70)  (joy, trust, fear, …)
   high     r ≥ 0.70  (ecstasy, admiration, terror, …)
-  neutral  r < 0.05  (near-origin — no reliable categorization)
+  neutral  r < 0.05 near the re-centred origin, OR the system baseline
+           (neutral valence + minimal arousal) — no reliable categorization
 
 When ``dominance`` is available (e.g. from MoodField), it disambiguates
 the fear/anger region (negative valence + high arousal):
@@ -48,8 +49,13 @@ Intensity = Literal["low", "moderate", "high"]
 # max r = sqrt(1² + 1²) ≈ 1.41.  Thresholds are relative to that range.
 _INTENSITY_LOW_THRESHOLD: float = 0.30
 _INTENSITY_HIGH_THRESHOLD: float = 0.70
-# Points within this radius are too close to the origin to categorise reliably.
+# Points within this radius are too close to the re-centred origin to categorise.
 _NEUTRAL_RADIUS: float = 0.05
+# The system's affective baseline is CoreAffect.neutral() = (valence=0, arousal=0):
+# a flat, unmarked state. The isotropic re-centring places it a full unit below the
+# origin (a_scaled=-1), which would otherwise score as high-confidence "loathing".
+# Treat near-baseline states (neutral valence + minimal arousal) as uncategorised.
+_BASELINE_AROUSAL_EPS: float = 0.05
 
 # Plutchik's dyadic intensity tier names for each primary
 _INTENSITY_NAMES: dict[PrimaryEmotion, dict[Intensity, str]] = {
@@ -150,8 +156,15 @@ def categorize_affect(
     if sector_idx == _FEAR_ANGER_SECTOR and dominance is not None:
         primary = "anger" if dominance >= _DOMINANCE_THRESHOLD else "fear"
 
+    # A near-baseline state (neutral valence + minimal arousal, i.e. around
+    # CoreAffect.neutral()) is affectively flat: too ambiguous to categorise. Flag
+    # it as low-intensity, zero-confidence rather than a confident high-arousal
+    # emotion produced by the arousal re-centring.
+    at_baseline = abs(v) < _NEUTRAL_RADIUS and core_affect.arousal < _BASELINE_AROUSAL_EPS
+    is_neutral = r < _NEUTRAL_RADIUS or at_baseline
+
     # Intensity from radial distance
-    if r < _INTENSITY_LOW_THRESHOLD:
+    if is_neutral or r < _INTENSITY_LOW_THRESHOLD:
         intensity: Intensity = "low"
     elif r < _INTENSITY_HIGH_THRESHOLD:
         intensity = "moderate"
@@ -159,8 +172,8 @@ def categorize_affect(
         intensity = "high"
 
     # Confidence: 1.0 at sector centre, 0.0 at sector edge (±22.5°).
-    # Near-origin points are unreliable — confidence forced to 0.0.
-    if r < _NEUTRAL_RADIUS:
+    # Near-origin and near-baseline points are unreliable — confidence forced to 0.0.
+    if is_neutral:
         confidence = 0.0
     else:
         sector_center_deg = (sector_idx * 45.0) % 360.0

@@ -6,16 +6,32 @@ Multi-signal retrieval scoring combining six components:
   s3 — core affect proximity       (current affect vs affect at encoding)
   s4 — momentum alignment          (trajectory of affective change)
   s5 — recency / decay score       (ACT-R power-law)
-  s6 — resonance boost             (spreading activation, Bower 1981)
+  s6 — resonance boost             (spreading activation, Collins & Loftus 1975)
 
 Weights are adaptive: modulated by current mood state.
   Negative mood  → weight shifts toward emotional signals
   High arousal   → weight shifts toward momentum
   Neutral/calm   → weight shifts toward semantic
 
+Known limitations (documented, not bugs — changing them would alter the
+calibrated ranking and needs a pre-registered study, cf. benchmarks/README.md):
+  - The six signals live on different numeric ranges (s1 cosine ∈ [-1, 1];
+    s2/s3/s4 ∈ [0, 1]; s5 ∈ [0, consolidation_strength]; s6 activation is a
+    product of link strengths, typically ≪ 1). They are combined by a weighted
+    sum without cross-signal normalization, so the weights do not map linearly to
+    per-signal influence, and s6's small magnitude makes the resonance boost weak.
+  - s4 (momentum alignment) returns a flat 0.5 both for "no momentum data" and
+    for an orthogonal trajectory; the two cases are indistinguishable.
+
 Reconsolidation (Nader & Schiller 2000): retrieval computes Affective
 Prediction Error (APE) and updates the tag's core_affect if APE exceeds
 a threshold.
+
+Note on s3: it scores against ``tag.core_affect``, which reconsolidation makes
+labile — repeated retrieval in a context drifts core_affect toward that context,
+so s3 is "current vs *most-recently-reconsolidated* encoding affect", not a frozen
+encoding-time value. s2 (mood congruence) uses the immutable ``mood_snapshot`` and
+is the stable encoding-time affective signal.
 """
 
 from __future__ import annotations
@@ -674,12 +690,10 @@ def update_prediction(
     The learning rate is adaptive: large APE increases the rate (fast relearning
     after surprise), small APE decreases it (stable predictions need less updating).
 
-    Learning rate update (EMA of APE toward target LR):
-      new_lr = lr + lr_step * ape — current_lr_step  (simplified)
-    Concretely:
-      target_lr = base_lr * (1 + ape)   (larger APE → higher LR)
-      new_lr = lerp(current_lr, target_lr, 0.2)  (smooth adaptation)
-    Clamped to [0.05, 0.80].
+    Learning-rate update (Pearce-Hall: associability tracks prediction error):
+      target_lr = clamp(ape, 0.05, 0.80)      # the APE magnitude is the attractor
+      new_lr    = current_lr + 0.2 * (target_lr - current_lr)   # smooth adaptation
+      new_lr    = clamp(new_lr, 0.05, 0.80)
 
     The new expected_affect is an EMA blend:
       new_expected = lerp(current_expected, observed, new_lr)

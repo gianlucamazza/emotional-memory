@@ -144,8 +144,16 @@ class AsyncEmotionalMemory:
         persisted = self._state_store.load()
         return AffectiveState.initial() if persisted is None else persisted.model_copy()
 
-    def _effective_retrieval_weights(self, query: str | None = None) -> NDArray[np.float64]:
-        """Return adaptive retrieval weights with ablation mask applied."""
+    def _effective_retrieval_weights(
+        self, query: str | None = None, mood: MoodField | None = None
+    ) -> NDArray[np.float64]:
+        """Return adaptive retrieval weights with ablation mask applied.
+
+        ``mood`` lets callers pass a consistent state snapshot so that all
+        affective reads in a single ``retrieve()`` come from the same
+        ``AffectiveState`` (avoids a torn read under concurrent encodes).
+        Defaults to the current runtime mood.
+        """
         rc = self._config.retrieval
         base = rc.base_weights
         qc_cfg = rc.query_classifier
@@ -156,7 +164,9 @@ class AsyncEmotionalMemory:
             )
             if routed is not None:
                 base = routed
-        weights = adaptive_weights(self._state.mood, base, rc.adaptive_weights_config)
+        weights = adaptive_weights(
+            mood if mood is not None else self._state.mood, base, rc.adaptive_weights_config
+        )
         mask = np.array(
             [
                 True,
@@ -180,13 +190,18 @@ class AsyncEmotionalMemory:
             return active / active_total
         return np.full(6, 1.0 / 6.0, dtype=np.float64)
 
-    def _persist_state_sync(self) -> None:
+    def _persist_state_sync(self, state: AffectiveState | None = None) -> None:
         if self._state_store is not None:
-            self._state_store.save(self._state)
+            self._state_store.save(state if state is not None else self._state)
 
-    async def _persist_state_async(self) -> None:
+    async def _persist_state_async(self, state: AffectiveState | None = None) -> None:
+        # Persist the snapshot captured under the lock rather than re-reading
+        # ``self._state`` — under concurrent encodes a later reassignment could
+        # otherwise make the store lag the value that was just computed.
         if self._state_store is not None:
-            await asyncio.to_thread(self._state_store.save, self._state)
+            await asyncio.to_thread(
+                self._state_store.save, state if state is not None else self._state
+            )
 
     # ------------------------------------------------------------------
     # Public API
@@ -219,6 +234,8 @@ class AsyncEmotionalMemory:
             computed = await self._appraisal_engine.appraise(content, context=metadata)
 
         new_affect = computed.to_core_affect() if computed is not None else self._state.core_affect
+        # Persist inside the lock so concurrent encodes cannot reorder
+        # asyncio.to_thread saves (older snapshot overwriting a newer one).
         async with self._state_lock:
             self._state = self._state.update(
                 new_affect,
@@ -227,7 +244,7 @@ class AsyncEmotionalMemory:
                 mood_decay=self._config.mood_decay,
             )
             state_snapshot = self._state
-        await self._persist_state_async()
+            await self._persist_state_async(state_snapshot)
 
         stored_appraisal: AppraisalVector | None = (
             computed if isinstance(computed, AppraisalVector) else None
@@ -303,6 +320,13 @@ class AsyncEmotionalMemory:
                 content=content, tag=tag, embedding=embedding, metadata=metadata
             )
             await self._store.save(memory)
+            logger.debug(
+                "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
+                memory.id,
+                tag.core_affect.valence,
+                tag.core_affect.arousal,
+                tag.consolidation_strength,
+            )
 
             # Step 6: resonance links — pre-filter when store is large (async I/O)
             if self._config.enable_resonance:
@@ -326,14 +350,6 @@ class AsyncEmotionalMemory:
                     logger.debug("encode resonance: id=%s links=%d", memory.id, len(links))
 
                     await self._add_bidirectional_links(memory, links)
-
-            logger.debug(
-                "encode stored: id=%s valence=%.3f arousal=%.3f cs=%.3f",
-                memory.id,
-                tag.core_affect.valence,
-                tag.core_affect.arousal,
-                tag.consolidation_strength,
-            )
         return memory
 
     async def retrieve(
@@ -385,11 +401,15 @@ class AsyncEmotionalMemory:
                 if not self._config.enable_resonance
                 else spreading_activation
             )
+            # Single consistent snapshot: ``self._state`` is reassigned (not mutated)
+            # under ``_state_lock`` by concurrent encodes, so read it once to avoid a
+            # torn mix of core_affect / mood / momentum from different states.
+            state = self._state
             plan = build_retrieval_plan(
                 query_embedding=query_embedding,
-                query_affect=query_affect or self._state.core_affect,
-                current_mood=self._state.mood,
-                current_momentum=self._state.momentum,
+                query_affect=query_affect or state.core_affect,
+                current_mood=state.mood,
+                current_momentum=state.momentum,
                 candidates=candidates,
                 top_k=top_k,
                 now=now,
@@ -398,7 +418,7 @@ class AsyncEmotionalMemory:
                 propagation_hops=self._config.resonance.propagation_hops,
                 spreading_activation_fn=_spreading_fn,
                 precomputed_weights=(
-                    self._effective_retrieval_weights(query)
+                    self._effective_retrieval_weights(query, mood=state.mood)
                     if precomputed_weights is None
                     else precomputed_weights
                 ),
@@ -447,11 +467,14 @@ class AsyncEmotionalMemory:
         _spreading_fn = (
             (lambda *a, **kw: {}) if not self._config.enable_resonance else spreading_activation
         )
+        # Single consistent snapshot (see ``retrieve``): avoid a torn read of the
+        # affective state under concurrent encodes.
+        state = self._state
         plan = build_retrieval_plan(
             query_embedding=query_embedding,
-            query_affect=query_affect or self._state.core_affect,
-            current_mood=self._state.mood,
-            current_momentum=self._state.momentum,
+            query_affect=query_affect or state.core_affect,
+            current_mood=state.mood,
+            current_momentum=state.momentum,
             candidates=candidates,
             top_k=top_k,
             now=now,
@@ -460,7 +483,7 @@ class AsyncEmotionalMemory:
             propagation_hops=self._config.resonance.propagation_hops,
             spreading_activation_fn=_spreading_fn,
             precomputed_weights=(
-                self._effective_retrieval_weights(query)
+                self._effective_retrieval_weights(query, mood=state.mood)
                 if precomputed_weights is None
                 else precomputed_weights
             ),
@@ -603,7 +626,10 @@ class AsyncEmotionalMemory:
         """
         n = len(contents)
         engine = self._appraisal_engine
-        if use_fast_path or engine is None:
+        # Honor the Layer-4 ablation exactly like the single-encode path
+        # (``_build_tag`` gates on ``enable_appraisal``): with appraisal disabled
+        # the batch must fall back to raw ``state.core_affect``, not run the engine.
+        if use_fast_path or engine is None or not self._config.enable_appraisal:
             return [None] * n
         sem = asyncio.Semaphore(self._config.appraisal_max_concurrency)
 
@@ -644,6 +670,7 @@ class AsyncEmotionalMemory:
                     if computed_a is not None
                     else self._state.core_affect
                 )
+                # Persist inside the lock (same ordering guarantee as _build_tag).
                 async with self._state_lock:
                     self._state = self._state.update(
                         new_affect,
@@ -652,7 +679,7 @@ class AsyncEmotionalMemory:
                         mood_decay=self._config.mood_decay,
                     )
                     _state_snap = self._state
-                await self._persist_state_async()
+                    await self._persist_state_async(_state_snap)
 
                 stored_a: AppraisalVector | None = (
                     computed_a if isinstance(computed_a, AppraisalVector) else None
@@ -685,24 +712,28 @@ class AsyncEmotionalMemory:
                 )
                 await self._store.save(memory)
 
-                resonance_limit = (
-                    self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-                )
-                store_size = await self._store.count()
-                if store_size > resonance_limit and memory.embedding is not None:
-                    candidates = await self._store.search_by_embedding(
-                        memory.embedding, resonance_limit
+                # Layer-5 ablation: mirror the single-encode guard so batch-encoded
+                # memories are not silently given resonance links when disabled.
+                if self._config.enable_resonance:
+                    resonance_limit = (
+                        self._config.resonance.max_links
+                        * self._config.resonance.candidate_multiplier
                     )
-                else:
-                    candidates = await self._store.list_all()
+                    store_size = await self._store.count()
+                    if store_size > resonance_limit and memory.embedding is not None:
+                        candidates = await self._store.search_by_embedding(
+                            memory.embedding, resonance_limit
+                        )
+                    else:
+                        candidates = await self._store.list_all()
 
-                links = build_resonance_links(memory, candidates, self._config.resonance)
-                if links:
-                    updated_tag = tag.model_copy(update={"resonance_links": links})
-                    memory = memory.model_copy(update={"tag": updated_tag})
-                    await self._store.update(memory)
+                    links = build_resonance_links(memory, candidates, self._config.resonance)
+                    if links:
+                        updated_tag = tag.model_copy(update={"resonance_links": links})
+                        memory = memory.model_copy(update={"tag": updated_tag})
+                        await self._store.update(memory)
 
-                    await self._add_bidirectional_links(memory, links)
+                        await self._add_bidirectional_links(memory, links)
 
                 results.append(memory)
         return results
@@ -949,7 +980,7 @@ class AsyncEmotionalMemory:
         caller's responsibility.
         """
         close = getattr(self._store, "close", None)
-        if close is not None:
+        if callable(close):
             if inspect.iscoroutinefunction(close):
                 await close()
             else:

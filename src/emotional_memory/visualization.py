@@ -677,7 +677,7 @@ def plot_appraisal_radar(
     labels: list[str]
 
     if isinstance(appraisal, GenericAppraisalVector):
-        raw = appraisal.dimensions
+        raw = dict(appraisal.dimensions)
         dim_ranges = {d.name: d.range for d in appraisal._schema.dimensions}
         labels = [d.name.replace("_", " ").title() for d in appraisal._schema.dimensions]
         keys = [d.name for d in appraisal._schema.dimensions]

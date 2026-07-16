@@ -16,6 +16,13 @@ Note: Scherer's original CPM is a sequential process model; here the
 five dimensions are combined simultaneously via a linear mapping — a
 simplification chosen for computational tractability.
 
+Scope note (theory fidelity): this is a reduced SEC set. Scherer's
+"intrinsic pleasantness" relevance check is not modelled, so valence is
+derived from goal_relevance + norm_congruence + coping only; and the arousal
+projection excludes goal-relevance *magnitude*, so a high-stakes but expected
+event is rated low-arousal. See ``appraisal_schema._scherer_project`` for the
+fitted coefficients and their provenance (Addendum O).
+
 consolidation_strength() uses an inverted-U curve over arousal (inspired
 by the Yerkes-Dodson phenomenon) with a minimum floor so that calm events
 still receive some consolidation. (McGaugh 2004; Yerkes & Dodson 1908).
@@ -24,6 +31,7 @@ still receive some consolidation. (McGaugh 2004; Yerkes & Dodson 1908).
 from __future__ import annotations
 
 from collections.abc import Mapping
+from types import MappingProxyType
 from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, field_validator
@@ -48,7 +56,11 @@ class GenericAppraisalVector:
     __slots__ = ("_schema", "dimensions")
 
     def __init__(self, dimensions: Mapping[str, object], schema: AppraisalSchema) -> None:
-        self.dimensions: dict[str, float] = coerce_appraisal_dimensions(dimensions, schema)
+        # Read-only view: the same instance is shared from the LLM engine's LRU
+        # cache, so a caller mutating ``dimensions`` would corrupt every consumer.
+        self.dimensions: Mapping[str, float] = MappingProxyType(
+            coerce_appraisal_dimensions(dimensions, schema)
+        )
         self._schema: AppraisalSchema = schema
 
     @property
@@ -123,7 +135,9 @@ class AppraisalEngine(Protocol):
     """Protocol for computing an appraisal vector from an event description.
 
     Implementations may call an LLM, use rule-based heuristics, or any
-    other strategy. The library ships only StaticAppraisalEngine for testing.
+    other strategy. The library ships ``LLMAppraisalEngine`` (LLM-backed),
+    ``KeywordAppraisalEngine`` (rule-based), and ``StaticAppraisalEngine``
+    (fixed vector, for testing).
 
     Return type is ``AppraisalVector | GenericAppraisalVector``:
     ``AppraisalVector`` for the default Scherer CPM schema,

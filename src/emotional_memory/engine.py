@@ -692,7 +692,10 @@ class EmotionalMemory:
         """
         n = len(contents)
         engine = self._appraisal_engine
-        if use_fast_path or engine is None:
+        # Honor the Layer-4 ablation exactly like the single-encode path
+        # (``_build_tag`` gates on ``enable_appraisal``): with appraisal disabled
+        # the batch must fall back to raw ``state.core_affect``, not run the engine.
+        if use_fast_path or engine is None or not self._config.enable_appraisal:
             return [None] * n
 
         def _one(idx: int) -> AppraisalVector | GenericAppraisalVector:
@@ -781,20 +784,26 @@ class EmotionalMemory:
                 )
                 self._store.save(memory)
 
-                resonance_limit = (
-                    self._config.resonance.max_links * self._config.resonance.candidate_multiplier
-                )
-                if len(self._store) > resonance_limit and memory.embedding is not None:
-                    candidates = self._store.search_by_embedding(memory.embedding, resonance_limit)
-                else:
-                    candidates = self._store.list_all()
-                links = build_resonance_links(memory, candidates, self._config.resonance)
-                if links:
-                    updated_tag = tag.model_copy(update={"resonance_links": links})
-                    memory = memory.model_copy(update={"tag": updated_tag})
-                    self._store.update(memory)
+                # Layer-5 ablation: mirror the single-encode guard so batch-encoded
+                # memories are not silently given resonance links when disabled.
+                if self._config.enable_resonance:
+                    resonance_limit = (
+                        self._config.resonance.max_links
+                        * self._config.resonance.candidate_multiplier
+                    )
+                    if len(self._store) > resonance_limit and memory.embedding is not None:
+                        candidates = self._store.search_by_embedding(
+                            memory.embedding, resonance_limit
+                        )
+                    else:
+                        candidates = self._store.list_all()
+                    links = build_resonance_links(memory, candidates, self._config.resonance)
+                    if links:
+                        updated_tag = tag.model_copy(update={"resonance_links": links})
+                        memory = memory.model_copy(update={"tag": updated_tag})
+                        self._store.update(memory)
 
-                    self._add_bidirectional_links(memory, links)
+                        self._add_bidirectional_links(memory, links)
 
                 results.append(memory)
         return results

@@ -13,9 +13,11 @@ LLMAppraisalEngine
     - Context forwarded to the prompt when provided by the engine
 
 KeywordAppraisalEngine
-    Rule-based fallback that requires no external calls.  Keyword patterns map
-    to dimension scores via accumulation.  Useful as a default when no LLM is
-    available or as the ``fallback`` inside LLMAppraisalEngine.
+    Rule-based engine that requires no external calls.  Keyword patterns map
+    to dimension scores via accumulation.  Useful as a standalone default when no
+    LLM is available. Note: it is Scherer-5-dimension specific (always returns an
+    ``AppraisalVector``) and is *not* wired in via ``LLMAppraisalEngine``'s
+    ``fallback`` parameter, which takes a static ``AppraisalVector``, not an engine.
 
 Usage example::
 
@@ -91,67 +93,15 @@ def _first_json_object(text: str) -> str | None:
     return None
 
 
-# ---------------------------------------------------------------------------
-# JSON schema exposed to the LLM
-# ---------------------------------------------------------------------------
+def _reject_non_finite(constant: str) -> float:
+    """``json.loads(parse_constant=...)`` hook that rejects NaN/Infinity.
 
-_APPRAISAL_JSON_SCHEMA: dict[str, Any] = {
-    "type": "object",
-    "properties": {
-        "novelty": {
-            "type": "number",
-            "minimum": -1.0,
-            "maximum": 1.0,
-            "description": "How unexpected: -1=fully expected, 0=neutral, 1=totally new",
-        },
-        "goal_relevance": {
-            "type": "number",
-            "minimum": -1.0,
-            "maximum": 1.0,
-            "description": "Relation to goals: -1=obstructs, 0=irrelevant, 1=furthers",
-        },
-        "coping_potential": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "description": "Perceived ability to handle: 0=helpless, 1=full control",
-        },
-        "norm_congruence": {
-            "type": "number",
-            "minimum": -1.0,
-            "maximum": 1.0,
-            "description": "Alignment with norms/values: -1=violates, 0=neutral, 1=conforms",
-        },
-        "self_relevance": {
-            "type": "number",
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "description": "Personal significance: 0=irrelevant, 1=deeply personal",
-        },
-    },
-    "required": [
-        "novelty",
-        "goal_relevance",
-        "coping_potential",
-        "norm_congruence",
-        "self_relevance",
-    ],
-    "additionalProperties": False,
-}
-
-_SYSTEM_PROMPT = """\
-You are an emotion appraisal system implementing Scherer's Component Process Model.
-Given an event description, evaluate it on 5 dimensions and return ONLY a JSON object.
-
-Dimensions:
-- novelty          [-1, 1]  How unexpected. -1=fully expected, 1=totally new.
-- goal_relevance   [-1, 1]  Relation to goals. -1=obstructs, 1=furthers.
-- coping_potential [0,  1]  Perceived ability to handle. 0=helpless, 1=full control.
-- norm_congruence  [-1, 1]  Alignment with norms/values. -1=violates, 1=conforms.
-- self_relevance   [0,  1]  Personal significance. 0=irrelevant, 1=deeply personal.
-
-Return ONLY valid JSON with these exact keys. No explanation, no markdown.\
-"""
+    Python's ``json`` accepts the JavaScript literals ``NaN``, ``Infinity`` and
+    ``-Infinity`` by default. A non-finite value would slip past the clamping in
+    ``_coerce_dimension_scalar`` (``max``/``min`` propagate NaN) and poison the
+    downstream ``CoreAffect`` arithmetic, so we treat them as a parse error.
+    """
+    raise ValueError(f"non-finite JSON constant not allowed in appraisal output: {constant!r}")
 
 
 # ---------------------------------------------------------------------------
@@ -184,10 +134,11 @@ class LLMAppraisalConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True, arbitrary_types_allowed=True)
 
-    system_prompt: str = _SYSTEM_PROMPT
+    system_prompt: str = SCHERER_CPM_SCHEMA.system_prompt
     """System prompt describing the appraisal task.
 
-    When ``appraisal_schema`` is set and this field is left at its default, the engine
+    Defaults to the Scherer CPM schema prompt (single source of truth). When
+    ``appraisal_schema`` is set and this field is left at its default, the engine
     uses ``appraisal_schema.system_prompt`` instead.  Explicitly setting this field
     always takes precedence.
     """
@@ -196,7 +147,14 @@ class LLMAppraisalConfig(BaseModel):
     """Number of (text, context) pairs to cache.  0 disables the cache."""
 
     fallback_on_error: bool = True
-    """Return a neutral AppraisalVector instead of raising on LLM/parse errors."""
+    """Return a neutral AppraisalVector instead of raising on LLM/parse errors.
+
+    Set to ``False`` in measurement/benchmark code that must not silently ingest a
+    neutral fallback as if it were a genuine appraisal (the failure would be
+    indistinguishable from a real neutral result). When ``True`` (default), the
+    engine still records every fallback in ``LLMAppraisalEngine.fallback_count`` so
+    aggregators can detect and exclude degraded runs without aborting mid-batch.
+    """
 
     appraisal_schema: AppraisalSchema | None = None
     """Appraisal schema to use.  ``None`` defaults to ``SCHERER_CPM_SCHEMA``."""
@@ -229,6 +187,7 @@ class LLMAppraisalEngine:
         "_config",
         "_effective_prompt",
         "_fallback",
+        "_fallback_count",
         "_json_schema",
         "_llm",
         "_schema",
@@ -244,6 +203,10 @@ class LLMAppraisalEngine:
         self._config = config or LLMAppraisalConfig()
         self._schema: AppraisalSchema = self._config.appraisal_schema or SCHERER_CPM_SCHEMA
         self._fallback = fallback or AppraisalVector.neutral()
+        # Count of appraisals that returned the neutral fallback (LLM/parse error).
+        # Lets benchmark harnesses detect silent degradation without disabling the
+        # fallback; guarded by ``_cache_lock``.
+        self._fallback_count = 0
         self._cache: OrderedDict[str, AppraisalVector | GenericAppraisalVector] = OrderedDict()
         self._cache_lock = threading.Lock()
 
@@ -300,11 +263,17 @@ class LLMAppraisalEngine:
             if self._config.fallback_on_error:
                 logger.warning("appraise: LLM call failed, using fallback: %s", exc)
                 vector = self._fallback
+                self._record_fallback()
             else:
                 raise
         else:
             try:
                 data = self._extract_json(raw)
+                missing = [d.name for d in self._schema.dimensions if d.name not in data]
+                if missing:
+                    # Do NOT silently neutral-fill absent dimensions: a partial
+                    # response is a degraded result, not a genuine neutral one.
+                    raise ValueError(f"LLM response missing required dimensions: {missing}")
                 coerced = coerce_appraisal_dimensions(data, self._schema)
                 if self._schema is SCHERER_CPM_SCHEMA:
                     vector = AppraisalVector(**coerced)
@@ -323,16 +292,39 @@ class LLMAppraisalEngine:
                         exc_info=True,
                     )
                     vector = self._fallback
+                    self._record_fallback()
                 else:
                     raise
 
-        if self._config.cache_size > 0:
+        # Do not cache error fallbacks: a transient LLM/parse failure would
+        # otherwise pin neutral for that key until eviction, masking recovery.
+        if self._config.cache_size > 0 and vector is not self._fallback:
             with self._cache_lock:
                 if len(self._cache) >= self._config.cache_size:
                     self._cache.popitem(last=False)
                 self._cache[cache_key] = vector
 
         return vector
+
+    @property
+    def fallback_count(self) -> int:
+        """Number of appraisals that returned the neutral fallback (LLM/parse error).
+
+        A non-zero value after a measurement run signals silent degradation:
+        some results are neutral fallbacks, not genuine appraisals. Reset with
+        ``reset_fallback_count()``.
+        """
+        with self._cache_lock:
+            return self._fallback_count
+
+    def reset_fallback_count(self) -> None:
+        """Reset the fallback counter to zero."""
+        with self._cache_lock:
+            self._fallback_count = 0
+
+    def _record_fallback(self) -> None:
+        with self._cache_lock:
+            self._fallback_count += 1
 
     def clear_cache(self) -> None:
         """Evict all cached appraisals."""
@@ -361,7 +353,10 @@ class LLMAppraisalEngine:
 
     @staticmethod
     def _make_cache_key(event_text: str, context: dict[str, Any] | None, schema_name: str) -> str:
-        raw = schema_name + event_text + (json.dumps(context, sort_keys=True) if context else "")
+        # NUL-delimit the components so distinct (schema, text, context) triples
+        # cannot collide by concatenation (e.g. "ab"+"c" vs "a"+"bc").
+        ctx = json.dumps(context, sort_keys=True) if context else ""
+        raw = "\x00".join((schema_name, event_text, ctx))
         return hashlib.sha256(raw.encode()).hexdigest()
 
     @staticmethod
@@ -378,9 +373,10 @@ class LLMAppraisalEngine:
         # Strip markdown code fences if present.
         cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`").strip()
         # Fast path: the whole payload is already a JSON object (nesting is fine).
+        # ``parse_constant`` rejects NaN/Infinity, which json would otherwise accept.
         try:
-            whole = json.loads(cleaned)
-        except json.JSONDecodeError:
+            whole = json.loads(cleaned, parse_constant=_reject_non_finite)
+        except (json.JSONDecodeError, ValueError):
             whole = None
         if isinstance(whole, dict):
             return whole
@@ -388,7 +384,7 @@ class LLMAppraisalEngine:
         obj = _first_json_object(cleaned)
         if obj is None:
             raise ValueError(f"No JSON object found in LLM response: {raw!r}")
-        result = json.loads(obj)
+        result = json.loads(obj, parse_constant=_reject_non_finite)
         if not isinstance(result, dict):
             raise TypeError(f"Expected JSON object, got {type(result)}")
         return result
@@ -547,6 +543,9 @@ class KeywordAppraisalEngine:
     Each rule contributes *deltas* from neutral baselines.  After accumulation
     the results are averaged (when multiple rules fire) and the coping_potential
     baseline of 0.5 is re-applied.  AppraisalVector validators clamp to range.
+
+    Scherer-5 specific: always returns an ``AppraisalVector`` and therefore does
+    not honor a custom ``AppraisalSchema`` (e.g. ``DIRECT_VAD_SCHEMA``).
     """
 
     __slots__ = ("_rules",)

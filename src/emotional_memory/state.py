@@ -16,7 +16,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, ConfigDict, PrivateAttr
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.mood import MoodDecayConfig, MoodField
@@ -26,7 +26,14 @@ _HistoryEntry = tuple[str, float, float, float]
 
 
 class AffectiveState(BaseModel):
-    """Snapshot of the system's complete affective state at a point in time."""
+    """Snapshot of the system's complete affective state at a point in time.
+
+    Immutable: the model fields are frozen (``update()`` returns a new instance).
+    The private ``_history`` list is still assignable during construction (frozen
+    blocks field mutation, not private-attribute setup).
+    """
+
+    model_config = ConfigDict(frozen=True)
 
     core_affect: CoreAffect
     momentum: AffectiveMomentum
