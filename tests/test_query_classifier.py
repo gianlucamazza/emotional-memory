@@ -266,6 +266,28 @@ class TestLLMQueryClassifier:
         clf.classify("query A")  # cache miss — A was evicted
         assert call_count == 4
 
+    def test_zero_cache_size_disables_caching(self) -> None:
+        llm = _llm_returning("single_hop")
+        clf = LLMQueryClassifier(llm=llm, cache_size=0)
+        clf.classify("same query")
+        clf.classify("same query")
+        assert llm.call_count == 2
+        assert len(clf._cache) == 0
+
+    def test_error_fallback_is_not_cached(self) -> None:
+        """A transient failure must not pin default_type for that query."""
+        calls = {"n": 0}
+
+        def flaky_llm(prompt: str, schema: Any) -> str:
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise RuntimeError("transient")
+            return '{"query_type": "temporal"}'
+
+        clf = LLMQueryClassifier(llm=flaky_llm, default_type="open_domain")
+        assert clf.classify("when did it happen?") == "open_domain"
+        assert clf.classify("when did it happen?") == "temporal"
+
     def test_fallback_on_error_default(self) -> None:
         def bad_llm(prompt: str, schema: Any) -> str:
             raise RuntimeError("LLM unavailable")

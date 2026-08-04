@@ -16,6 +16,15 @@ N or durability see [Performance & Scaling](../guides/performance_scaling.md).
 !!! note
     Requires the `sqlite` extra: `uv pip install "emotional-memory[sqlite]"`
 
+!!! warning "Databases written before v0.18"
+    The `sqlite-vec` index is created with `distance_metric=cosine` so that ANN
+    candidate prefiltering matches the cosine similarity used by retrieval
+    scoring. Earlier versions used sqlite-vec's L2 default, which ranks
+    differently whenever embeddings are not L2-normalised. Opening such a
+    database emits a `UserWarning`; call `store.rebuild_vector_index()` once to
+    migrate it (the vector table is derived data — embeddings are also stored in
+    the memory rows, so nothing is lost).
+
 ::: emotional_memory.stores.sqlite.SQLiteStore
 
 ### QdrantStore

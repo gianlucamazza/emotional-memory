@@ -24,13 +24,13 @@ SWH_API = "https://archive.softwareheritage.org/api/1"
 
 def trigger_save(repo_url: str) -> dict[str, object]:
     url = f"{SWH_API}/origin/save/git/url/{repo_url.rstrip('/')}/"
-    req = urllib.request.Request(  # noqa: S310
+    req = urllib.request.Request(
         url,
         method="POST",
         headers={"Accept": "application/json", "User-Agent": "emotional-memory-release/1"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310
+        with urllib.request.urlopen(req, timeout=30) as resp:
             return json.loads(resp.read())  # type: ignore[return-value]
     except urllib.error.HTTPError as exc:
         body = exc.read().decode(errors="replace")

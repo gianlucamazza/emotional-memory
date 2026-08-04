@@ -50,7 +50,7 @@ CI runs `check_release_metadata.py`, `check_python_version_consistency.py`, and 
 git clone https://github.com/gianlucamazza/emotional-memory
 cd emotional-memory
 
-# Canonical local setup
+# Canonical local setup (creates .venv if absent, unless one is already active)
 make install
 
 # Optional local demo stack

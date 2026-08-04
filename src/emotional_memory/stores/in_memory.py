@@ -64,8 +64,11 @@ class InMemoryStore:
 
         Memories without an embedding are skipped. Uses a cached embedding
         matrix (rebuilt lazily after save/update/delete) so repeated searches
-        avoid re-stacking all vectors on every call.
+        avoid re-stacking all vectors on every call. A non-positive ``top_k``
+        returns an empty list.
         """
+        if top_k <= 0:
+            return []
         if self._dirty:
             self._rebuild_cache()
 

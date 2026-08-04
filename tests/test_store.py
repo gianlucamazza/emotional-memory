@@ -78,6 +78,13 @@ class TestInMemoryStore:
         results = store.search_by_embedding([1.0, 0.0], top_k=3)
         assert len(results) == 3
 
+    def test_search_by_embedding_non_positive_top_k(self):
+        """Non-positive top_k returns [] instead of raising out of numpy."""
+        store = InMemoryStore()
+        store.save(make_test_memory(embedding=[1.0, 0.0]))
+        assert store.search_by_embedding([1.0, 0.0], top_k=0) == []
+        assert store.search_by_embedding([1.0, 0.0], top_k=-1) == []
+
     def test_search_by_embedding_zero_query_norm(self):
         store = InMemoryStore()
         m = make_test_memory(embedding=[1.0, 0.0])

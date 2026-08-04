@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **Restored the `chromadb` CVE-2026-45829 mitigation.** v0.17.0 pinned the optional
+  `[chroma]` extra to `chromadb>=0.6.3,<1.0`, outside the vulnerable
+  `>=1.0.0,<=1.5.9` range. A subsequent automated "permit the latest version" bump
+  (#122) widened the constraint to `<2.0`, which re-admitted that entire range —
+  and 1.5.9 is still the newest release on PyPI, so `pip install
+  emotional-memory[chroma]` resolved to a vulnerable version while `SECURITY.md`
+  continued to describe the CVE as resolved. The `<1.0` ceiling is back, with the
+  rationale inline in `pyproject.toml`, and `.github/dependabot.yml` now ignores
+  `chromadb >=1.0.0` so the mitigation cannot be reverted automatically again.
+  Raise the pin by hand once a patched `>=1.5.10` is published.
+
+### Fixed
+
+- **`SQLiteStore` vector index now ranks by cosine, not L2.** The `vec0` virtual
+  table was created without `distance_metric`, so sqlite-vec's default L2 ordering
+  drove the ANN candidate prefilter while the retrieval scorer (`retrieval._cosine`),
+  the store's own brute-force fallback, and `InMemoryStore` all rank by cosine. On
+  embeddings that are not L2-normalised the two orderings differ, so the prefilter
+  could drop candidates the scorer would have ranked highest. New databases are
+  created with `distance_metric=cosine`; a database written by an earlier version is
+  detected on open and reported with a `UserWarning`, and the new
+  `SQLiteStore.rebuild_vector_index()` migrates it in place (the vec table is derived
+  data — every embedding also lives in the `memories` JSON blob). Zero-length vectors,
+  which have no defined cosine distance and come back as `NULL`, are now ranked last
+  instead of first. Builds of sqlite-vec without `distance_metric` support fall back
+  to the previous L2 index and warn.
+- **`KeywordAppraisalEngine` no longer dilutes dimensions with non-contributing
+  rules.** Per-dimension averaging counted every rule that matched the text, including
+  rules that leave that dimension at its neutral default — so the self-reference rule
+  (`I`, `me`, `my`), which only sets `self_relevance`, halved the `goal_relevance` and
+  `norm_congruence` of any sentence it co-matched (`"I succeeded at the project"` →
+  `goal_relevance` 0.35 instead of 0.70). Only rules that actually contribute to a
+  dimension are counted now, which is what the surrounding comment already documented.
+  **Behaviour change:** rule-based appraisals are stronger (less attenuated) for
+  multi-rule inputs; the published `aft_keyword_synchronous` ablation numbers (Hf1)
+  were produced with the pre-fix engine and are not affected by this release, since
+  no committed benchmark result is regenerated here.
+- **`as_async()` dropped a custom query classifier.** The wrapper did not forward
+  `query_classifier`, so an engine configured with `QueryClassifierConfig(mode="llm")`
+  silently lost per-query-type weight routing when converted to an async engine
+  (`'heuristic'` mode was unaffected — the async engine rebuilds it from config).
+- **`LLMQueryClassifier` cached error fallbacks and ignored `cache_size=0`.** A
+  transient LLM failure pinned `default_type` for that query until eviction; fallbacks
+  are no longer cached, matching `LLMAppraisalEngine.appraise`. `cache_size=0` now
+  disables caching (as documented for `LLMAppraisalConfig`) instead of letting the
+  cache grow without bound.
+- **`search_by_embedding(top_k<=0)`** returns `[]` in `InMemoryStore` and `SQLiteStore`
+  instead of raising out of `np.argpartition`.
+
+### Changed
+
+- **`make check` is green on a fresh clone again.** Two version- and
+  environment-dependent gates were failing outside CI:
+  - `ruff` is unpinned (`>=0.4`), and `make install` (`uv pip install`) resolves it
+    independently of `uv.lock`. Ruff ≥ 0.16 no longer flags `S310` on two literal-URL
+    call sites, so their inline `# noqa: S310` tripped `RUF100`, and it formats Python
+    blocks inside Markdown, which earlier versions do not. `S310` moved to the
+    `scripts/**` per-file ignores (inline directives removed) and `[tool.ruff.format]`
+    now excludes `*.md`, so `ruff check` and `ruff format --check` agree on 0.15.x and
+    0.16.x alike.
+  - `tests/test_figure_inventory.py::test_outputs_exist_on_disk` required the PDF
+    renders, which `.gitignore` excludes and `make figures` produces (CI runs it before
+    pytest). Committed assets are still required unconditionally; the generated ones are
+    checked as a group — skipped with the command to run when the build has not run at
+    all, and failed when a build is partial or stale.
+
 ## [0.17.0] - 2026-07-17
 
 ### Security

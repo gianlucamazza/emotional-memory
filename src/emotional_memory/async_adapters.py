@@ -135,6 +135,10 @@ def as_async(engine: EmotionalMemory) -> AsyncEmotionalMemory:
         appraisal_engine=appraisal_async,
         config=engine._config,
         state_store=engine._state_store,
+        # Carry the classifier over: with query_classifier mode 'llm' the async
+        # engine has no way to rebuild it from config alone, and dropping it
+        # would silently disable per-query-type weight routing.
+        query_classifier=engine._query_classifier,
     )
     # Share the current AffectiveState reference as the async engine's starting
     # point.  AffectiveState is always *replaced* (never mutated) on every

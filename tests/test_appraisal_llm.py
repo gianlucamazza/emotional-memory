@@ -389,6 +389,31 @@ class TestKeywordAppraisalEngine:
             assert -1.0 <= v.norm_congruence <= 1.0
             assert 0.0 <= v.self_relevance <= 1.0
 
+    def test_non_contributing_rules_do_not_dilute(self):
+        """Averaging is per contributing rule, not per matching rule.
+
+        The self-reference rule ("I") touches only self_relevance; it must not
+        halve goal_relevance, which only the success rule sets.
+        """
+        engine = KeywordAppraisalEngine()
+        alone = engine.appraise("succeeded at the project")
+        with_self_ref = engine.appraise("I succeeded at the project")
+        assert with_self_ref.goal_relevance == pytest.approx(alone.goal_relevance)
+        assert with_self_ref.coping_potential == pytest.approx(alone.coping_potential)
+        # self_relevance is set by both rules and is genuinely averaged.
+        assert with_self_ref.self_relevance == pytest.approx((0.6 + 0.4) / 2)
+
+    def test_two_contributing_rules_are_averaged(self):
+        rules = [
+            KeywordRule(r"\balpha\b", goal_relevance=0.8),
+            KeywordRule(r"\bbeta\b", goal_relevance=0.2),
+            KeywordRule(r"\bgamma\b", novelty=0.5),
+        ]
+        engine = KeywordAppraisalEngine(rules=rules)
+        v = engine.appraise("alpha beta gamma")
+        assert v.goal_relevance == pytest.approx(0.5)
+        assert v.novelty == pytest.approx(0.5)
+
     def test_context_ignored(self):
         engine = KeywordAppraisalEngine()
         v1 = engine.appraise("hello", context=None)

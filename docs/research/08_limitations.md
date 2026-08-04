@@ -456,6 +456,16 @@ to produce an `AppraisalVector`. This introduces:
 The `KeywordAppraisalEngine` is a rule-based fallback with limited coverage
 (~50 keyword classes). It does not generalize to open domains.
 
+**Note (v0.18):** its per-dimension averaging divided each dimension by *every*
+matching rule, including rules that left that dimension at its neutral default,
+so multi-rule inputs came out systematically attenuated (`"I succeeded at the
+project"` → `goal_relevance` 0.35 instead of 0.70). Only contributing rules are
+counted now. Every published keyword-engine measurement — the Addendum S
+human-gold figure (valence r=0.07) and the `aft_keyword_synchronous` ablation arm
+(Hf1) — was produced with the diluted engine and would need re-running before
+being read as a post-fix result. No committed benchmark artefact was regenerated
+for this fix; the LLM-appraisal results are untouched.
+
 For an engineering cost budget (embedder vs appraisal vs 6-signal scoring),
 store choice, and measured retrieve breakdowns, see
 [Performance & Scaling](../guides/performance_scaling.md).
@@ -536,4 +546,4 @@ have not yet been validated by the scientific community.
 
 ---
 
-_Document added in v0.5.1. Last updated: v0.9 (2026-05-06)._
+_Document added in v0.5.1. Last updated: v0.17.x (2026-07-14, Addendum Z closure)._

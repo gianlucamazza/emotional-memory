@@ -170,7 +170,7 @@ def main(argv: list[str] | None = None) -> int:
         record_id = version_doi.rsplit(".", 1)[-1]
         api_url = f"{args.zenodo_base.rstrip('/')}/api/records/{record_id}"
         try:
-            with urllib.request.urlopen(api_url, timeout=20) as resp:  # noqa: S310
+            with urllib.request.urlopen(api_url, timeout=20) as resp:
                 payload = json.load(resp)
             remote_concept = str(payload.get("conceptdoi", "")).strip()
             if not remote_concept:
