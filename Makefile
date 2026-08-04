@@ -99,7 +99,9 @@ check-all: check install-docs
 	$(MAKE) check-arxiv-bundle
 
 check-arxiv-bundle:
-	@diff <(tar -xzf paper/arxiv-submission.tar.gz -O ./main.tex) paper/main.tex > /dev/null || \
+	@# Piped rather than process-substituted: make runs recipes with /bin/sh,
+	@# which is dash on most Linux distros and has no <(...).
+	@tar -xzf paper/arxiv-submission.tar.gz -O ./main.tex | diff - paper/main.tex > /dev/null || \
 		(echo "ERROR: paper/arxiv-submission.tar.gz is stale — run 'make paper-arxiv' and commit the bundle"; exit 1)
 	@echo "OK: arxiv bundle main.tex matches paper/main.tex"
 

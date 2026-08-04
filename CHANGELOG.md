@@ -69,6 +69,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `scripts/**` per-file ignores (inline directives removed) and `[tool.ruff.format]`
     now excludes `*.md`, so `ruff check` and `ruff format --check` agree on 0.15.x and
     0.16.x alike.
+  - `make check-arxiv-bundle` (part of `make check-all`) used bash process
+    substitution, which fails under the `/bin/sh` (dash) that make uses on most
+    Linux distributions; it now pipes the extracted `main.tex` into `diff`.
+  - `make install` and its variants assumed an existing virtualenv and failed with
+    "No virtual environment found" on a clean clone; they now create `.venv` when
+    no environment is active.
   - `tests/test_figure_inventory.py::test_outputs_exist_on_disk` required the PDF
     renders, which `.gitignore` excludes and `make figures` produces (CI runs it before
     pytest). Committed assets are still required unconditionally; the generated ones are
