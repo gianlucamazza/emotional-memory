@@ -216,6 +216,35 @@ class TestSQLiteStoreSearch:
         results = store.search_by_embedding([1.0, 0.0], top_k=5)
         assert results == []
 
+    def test_search_ranks_by_cosine_not_l2(self):
+        """Ranking must follow direction (cosine), not magnitude (vec0's L2 default).
+
+        ``long`` points the same way as the query but is 10x longer; ``tilted`` is
+        closer in L2 but points slightly off-axis. Cosine puts ``long`` first.
+        """
+        store = SQLiteStore(":memory:")
+        long_vec = make_test_memory("long", embedding=[10.0, 1.0, 0.0])
+        tilted = make_test_memory("tilted", embedding=[0.9, 0.1, 0.0])
+        store.save(long_vec)
+        store.save(tilted)
+        results = store.search_by_embedding([1.0, 0.0, 0.0], top_k=2)
+        assert [m.id for m in results] == [long_vec.id, tilted.id]
+
+    def test_zero_vector_ranked_last(self):
+        """A zero embedding has no cosine distance and must not outrank a match."""
+        store = SQLiteStore(":memory:")
+        zero = make_test_memory("zero", embedding=[0.0, 0.0])
+        match = make_test_memory("match", embedding=[1.0, 0.0])
+        store.save(zero)
+        store.save(match)
+        results = store.search_by_embedding([1.0, 0.0], top_k=2)
+        assert [m.id for m in results] == [match.id, zero.id]
+
+    def test_search_non_positive_top_k(self):
+        store = SQLiteStore(":memory:")
+        store.save(make_test_memory("a", embedding=[1.0, 0.0]))
+        assert store.search_by_embedding([1.0, 0.0], top_k=0) == []
+
     def test_brute_force_fallback(self):
         """With no vec table, falls back to brute-force cosine scan."""
         store = SQLiteStore(":memory:")
@@ -315,6 +344,43 @@ class TestSQLiteStoreEdgeCases:
         results_after = store.search_by_embedding([0.0, 1.0], top_k=1)
         assert len(results_after) == 1
         assert results_after[0].id == m.id
+
+    def test_legacy_l2_index_warns_and_rebuilds(self, tmp_path):
+        """A pre-cosine (L2) vec table is detected, reported, and migratable."""
+        db_path = tmp_path / "legacy.db"
+        long_vec = make_test_memory("long", embedding=[10.0, 1.0])
+        tilted = make_test_memory("tilted", embedding=[0.9, 0.1])
+
+        with SQLiteStore(db_path) as store:
+            store.save(long_vec)
+            store.save(tilted)
+            # Downgrade the index to the legacy L2 schema, keeping the rows.
+            with store._conn:
+                store._conn.execute("DROP TABLE memory_vec")
+                store._conn.execute(
+                    "CREATE VIRTUAL TABLE memory_vec "
+                    "USING vec0(id TEXT PRIMARY KEY, embedding float[2])"
+                )
+                for mem in (long_vec, tilted):
+                    store._conn.execute(
+                        "INSERT INTO memory_vec (id, embedding) VALUES (?, ?)",
+                        (mem.id, _pack_embedding(mem.embedding)),
+                    )
+
+        with pytest.warns(UserWarning, match="legacy L2-ranked vector index"):
+            store = SQLiteStore(db_path)
+        with store:
+            assert not store._vec_cosine
+            # L2 ranking puts the closer-but-tilted vector first.
+            legacy_order = [m.id for m in store.search_by_embedding([1.0, 0.0], top_k=2)]
+            assert legacy_order[0] == tilted.id
+
+            assert store.rebuild_vector_index() == 2
+            assert store._vec_cosine
+            assert [m.id for m in store.search_by_embedding([1.0, 0.0], top_k=2)] == [
+                long_vec.id,
+                tilted.id,
+            ]
 
     def test_dimension_mismatch_raises(self):
         """Saving a memory with a different embedding dimension must fail."""

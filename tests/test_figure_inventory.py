@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -123,14 +125,63 @@ def test_unique_stems(figures: list[dict]) -> None:  # type: ignore[type-arg]
 # ---------------------------------------------------------------------------
 
 
+def _git_tracked_assets() -> set[str] | None:
+    """Repo-relative paths of figure assets that are committed to git.
+
+    Some declared outputs (the PDF renders) are build artefacts excluded by
+    ``.gitignore`` and produced by ``make figures``; the PNGs are committed.
+    Returns ``None`` when git metadata is unavailable (sdist / exported tree),
+    in which case committed and generated outputs cannot be told apart.
+    """
+    git = shutil.which("git")
+    if git is None:
+        return None
+    try:
+        proc = subprocess.run(
+            [git, "ls-files", "--", "docs/images", "paper/figures"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=30,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
+
+
 def test_outputs_exist_on_disk(figures: list[dict]) -> None:  # type: ignore[type-arg]
-    missing = []
-    for fig in figures:
-        for out in fig["outputs"]:
-            path = ROOT / out
-            if not path.exists():
-                missing.append(f"[{fig['stem']}] {out}")
-    assert not missing, "Declared outputs missing from disk:\n" + "\n".join(missing)
+    """Declared outputs must exist — build artefacts only once the build has run.
+
+    Committed assets (PNGs) are required unconditionally. The gitignored PDF
+    renders are required as a group: absent entirely → the figure build has not
+    been run in this checkout (skip, with the command to run); present in part →
+    a stale or partial build, which is a failure. CI runs ``make figures`` before
+    pytest, so the check is strict there.
+    """
+    tracked = _git_tracked_assets()
+    declared = [(fig["stem"], out) for fig in figures for out in fig["outputs"]]
+
+    committed = [(stem, out) for stem, out in declared if tracked is not None and out in tracked]
+    generated = [(stem, out) for stem, out in declared if (stem, out) not in set(committed)]
+
+    missing_committed = [f"[{stem}] {out}" for stem, out in committed if not (ROOT / out).exists()]
+    assert not missing_committed, "Committed outputs missing from disk:\n" + "\n".join(
+        missing_committed
+    )
+
+    missing_generated = [f"[{stem}] {out}" for stem, out in generated if not (ROOT / out).exists()]
+    if not missing_generated:
+        return
+    if len(missing_generated) == len(generated):
+        pytest.skip(
+            f"{len(generated)} generated figure outputs are absent — run `make figures` "
+            "(requires the [viz] extra) to check them; CI generates them before pytest"
+        )
+    assert not missing_generated, (
+        "Partial figure build — some generated outputs are missing, "
+        "re-run `make figures`:\n" + "\n".join(missing_generated)
+    )
 
 
 # ---------------------------------------------------------------------------

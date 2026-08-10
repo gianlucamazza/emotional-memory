@@ -15,7 +15,7 @@ PYPI_RELEASE_URL = "https://pypi.org/project/emotional-memory/{version}/"
 
 
 def _fetch_release_payload() -> dict[str, Any]:
-    with urllib.request.urlopen(PYPI_JSON_URL, timeout=20) as response:  # noqa: S310
+    with urllib.request.urlopen(PYPI_JSON_URL, timeout=20) as response:
         payload = json.load(response)
     return dict(payload)
 

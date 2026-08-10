@@ -579,6 +579,13 @@ class KeywordAppraisalEngine:
         for rule in self._rules:
             if rule.matches(event_text):
                 for dim, val in rule.scores.items():
+                    if val == 0.0:
+                        # A matching rule that leaves this dimension at its
+                        # neutral default is not a contribution: counting it
+                        # would divide the dimension by rules that never touched
+                        # it (e.g. the self-reference rule halving the
+                        # goal_relevance of "I succeeded").
+                        continue
                     accum[dim] += val
                     dim_hits[dim] += 1
 

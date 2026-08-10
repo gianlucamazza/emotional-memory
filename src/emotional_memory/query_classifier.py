@@ -147,8 +147,10 @@ _LLM_SCHEMA: dict[str, Any] = {
 class LLMQueryClassifier:
     """LLM-backed query classifier mirroring ``LLMAppraisalEngine`` pattern.
 
-    Thread-safe SHA-256 LRU cache. Falls back to ``default_type`` on error
-    when ``fallback_on_error=True`` (default).
+    Thread-safe SHA-256 LRU cache; ``cache_size=0`` disables caching. Falls back
+    to ``default_type`` on error when ``fallback_on_error=True`` (default);
+    fallbacks are never cached, so a transient LLM failure does not pin the
+    default type for that query.
     """
 
     __slots__ = ("_cache", "_cache_lock", "_cache_size", "_default_type", "_fallback", "_llm")
@@ -170,11 +172,13 @@ class LLMQueryClassifier:
 
     def classify(self, query: str) -> str:
         cache_key = hashlib.sha256(query.encode()).hexdigest()
-        with self._cache_lock:
-            if cache_key in self._cache:
-                self._cache.move_to_end(cache_key)
-                return self._cache[cache_key]
+        if self._cache_size > 0:
+            with self._cache_lock:
+                if cache_key in self._cache:
+                    self._cache.move_to_end(cache_key)
+                    return self._cache[cache_key]
 
+        errored = False
         try:
             prompt = f'{_LLM_SYSTEM_PROMPT}\n\nQuery: "{query}"'
             raw = self._llm(prompt, _LLM_SCHEMA)
@@ -183,13 +187,19 @@ class LLMQueryClassifier:
         except Exception:
             if not self._fallback:
                 raise
+            errored = True
             query_type = self._default_type
 
-        with self._cache_lock:
-            self._cache[cache_key] = query_type
-            self._cache.move_to_end(cache_key)
-            if self._cache_size > 0 and len(self._cache) > self._cache_size:
-                self._cache.popitem(last=False)
+        # ``cache_size <= 0`` disables the cache (matching ``LLMAppraisalConfig``)
+        # instead of growing it without bound. Error fallbacks are not cached —
+        # otherwise a transient failure would pin the default type for that query
+        # until eviction, exactly as in ``LLMAppraisalEngine.appraise``.
+        if self._cache_size > 0 and not errored:
+            with self._cache_lock:
+                self._cache[cache_key] = query_type
+                self._cache.move_to_end(cache_key)
+                if len(self._cache) > self._cache_size:
+                    self._cache.popitem(last=False)
         return query_type
 
     def __repr__(self) -> str:

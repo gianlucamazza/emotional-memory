@@ -168,7 +168,7 @@ def phase1_zenodo_reserve(state: dict[str, object], base_url: str) -> None:
         q = urllib.parse.quote(f'conceptdoi:"{zenodo_concept}"')
         api_url = f"https://zenodo.org/api/records?q={q}&allversions=true&size=25"
         try:
-            with urllib.request.urlopen(api_url, timeout=15) as resp:  # noqa: S310
+            with urllib.request.urlopen(api_url, timeout=15) as resp:
                 data = json.loads(resp.read().decode())
             for h in data.get("hits", {}).get("hits", []):
                 if h.get("metadata", {}).get("version") == version_str and h["id"] != draft_id:

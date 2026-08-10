@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-make check          # Full suite: lint + typecheck + test (run before commits)
+make check          # Full suite: lint + typecheck + meta-check + test + bench-fidelity (run before commits)
 make check-all      # check + mkdocs --strict + preflight --fast + reproduce-paper-check
 make bump VERSION=X.Y.Z  # Atomic version bump: patches 3 upstream files, then propagates via sync-metadata
 make test           # Run tests only

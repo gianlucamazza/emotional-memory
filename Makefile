@@ -2,52 +2,55 @@
 -include .env
 export
 
-.PHONY: install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: venv install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
-install:
+venv:
+	@test -n "$$VIRTUAL_ENV" || test -d .venv || uv venv
+
+install: venv
 	uv pip install -e ".[dev]"
 
-install-demo:
+install-demo: venv
 	uv pip install -e ".[dev,demo,viz,sentence-transformers,llm-test]"
 
-install-viz:
+install-viz: venv
 	uv pip install -e ".[dev,viz]"
 
-install-docs:
+install-docs: venv
 	uv pip install -e ".[docs]"
 
-install-release:
+install-release: venv
 	uv pip install -e ".[dev,release,llm-test,bench]"
 
-install-bench:
+install-bench: venv
 	uv pip install -e ".[dev,bench]"
 
 # Scored third-party LLM benchmarks (Addenda X–Z, LoCoMo, A3, …): LLM + SBERT + dotenv
-install-scored-bench:
+install-scored-bench: venv
 	uv pip install -e ".[dev,bench,llm-test,dotenv,sentence-transformers]"
 
-install-llm-test:
+install-llm-test: venv
 	uv pip install -e ".[dev,llm-test]"
 
-install-dotenv:
+install-dotenv: venv
 	uv pip install -e ".[dev,dotenv]"
 
-install-sqlite:
+install-sqlite: venv
 	uv pip install -e ".[dev,sqlite]"
 
-install-redis:
+install-redis: venv
 	uv pip install -e ".[dev,redis]"
 
-install-sentence-transformers:
+install-sentence-transformers: venv
 	uv pip install -e ".[dev,sentence-transformers]"
 
-install-langchain:
+install-langchain: venv
 	uv pip install -e ".[dev,langchain]"
 
-install-mem0:
+install-mem0: venv
 	uv pip install -e ".[dev,mem0]"
 
-install-all:
+install-all: venv
 	uv pip install -e ".[dev,demo,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
 
 lint:
@@ -96,7 +99,9 @@ check-all: check install-docs
 	$(MAKE) check-arxiv-bundle
 
 check-arxiv-bundle:
-	@diff <(tar -xzf paper/arxiv-submission.tar.gz -O ./main.tex) paper/main.tex > /dev/null || \
+	@# Piped rather than process-substituted: make runs recipes with /bin/sh,
+	@# which is dash on most Linux distros and has no <(...).
+	@tar -xzf paper/arxiv-submission.tar.gz -O ./main.tex | diff - paper/main.tex > /dev/null || \
 		(echo "ERROR: paper/arxiv-submission.tar.gz is stale — run 'make paper-arxiv' and commit the bundle"; exit 1)
 	@echo "OK: arxiv bundle main.tex matches paper/main.tex"
 
@@ -550,6 +555,7 @@ help:
 	@echo "emotional-memory — available make targets"
 	@echo ""
 	@echo "Setup:"
+	@echo "  venv                       Create .venv if absent (implied by every install target)"
 	@echo "  install                    Install package with dev dependencies"
 	@echo "  install-sqlite             + sqlite-vec (SQLiteStore)"
 	@echo "  install-redis              + redis (RedisAffectiveStateStore)"

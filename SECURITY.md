@@ -50,7 +50,11 @@ runtime wheel does not import them and was never exposed.
 extra pins `chromadb>=0.6.3,<1.0` — outside the vulnerable range (`>=1.0.0,
 <=1.5.9`). PyPI 1.5.9 remains unpatched; we will bump to `>=1.5.10` once
 chroma-core/chroma ships the fix (merged in PR #7237). When using
-`ChromaStore(host=...)`, connect only to trusted Chroma servers.
+`ChromaStore(host=...)`, connect only to trusted Chroma servers. The ceiling is a
+mitigation, not a compatibility bound: an automated "permit the latest version"
+bump widened it to `<2.0` in #122 and re-admitted the vulnerable range, so
+`.github/dependabot.yml` now ignores `chromadb >=1.0.0` and the pin must be
+raised by hand once a patched release exists.
 
 `torch` CVE-2025-3000 is **resolved**: a patched `torch` 2.12.1 has shipped and
 `uv.lock` is pinned to it. A `uv.lock` refresh (2026-06-27) cleared every other

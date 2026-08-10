@@ -9,6 +9,13 @@ updates:
     commit-message:
       prefix: "build(deps)"
       prefix-development: "build(deps-dev)"
+    ignore:
+      # CVE-2026-45829: every chromadb release >=1.0.0 published so far (latest
+      # 1.5.9) is vulnerable, so the [chroma] extra pins <1.0 deliberately. An
+      # automated "permit the latest version" bump reverted that mitigation once
+      # (#122); re-widen manually when a patched >=1.5.10 reaches PyPI.
+      - dependency-name: "chromadb"
+        versions: [">=1.0.0"]
     groups:
       dev-dependencies:
         patterns:

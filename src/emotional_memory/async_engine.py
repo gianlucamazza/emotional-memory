@@ -169,12 +169,13 @@ class AsyncEmotionalMemory:
         )
         mask = np.array(
             [
-                True,
-                self._config.enable_mood_signal,
-                True,
-                self._config.enable_momentum,
-                True,
-                self._config.enable_resonance,
+                # Signal numbering follows retrieval.py (s1..s6, 1-based).
+                True,  # s1 semantic — always active
+                self._config.enable_mood_signal,  # s2 mood congruence (Bower 1981)
+                True,  # s3 affect_proximity — always active
+                self._config.enable_momentum,  # s4 momentum alignment
+                True,  # s5 recency — always active
+                self._config.enable_resonance,  # s6 resonance boost
             ],
             dtype=bool,
         )

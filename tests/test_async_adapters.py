@@ -222,6 +222,39 @@ async def test_as_async_encode_retrieve_roundtrip() -> None:
 
 
 @pytest.mark.asyncio
+async def test_as_async_carries_llm_query_classifier() -> None:
+    """An 'llm'-mode classifier cannot be rebuilt from config — it must be carried."""
+    from emotional_memory import EmotionalMemoryConfig
+    from emotional_memory.retrieval import QueryClassifierConfig, RetrievalConfig
+
+    class _StubClassifier:
+        def classify(self, query: str) -> str:
+            return "temporal"
+
+    config = EmotionalMemoryConfig(
+        retrieval=RetrievalConfig(
+            query_classifier=QueryClassifierConfig(
+                mode="llm",
+                routed_weights={"temporal": [0.5, 0.3, 0.1, 0.05, 0.05, 0.0]},
+            )
+        )
+    )
+    classifier = _StubClassifier()
+    sync_engine = EmotionalMemory(
+        store=InMemoryStore(),
+        embedder=_FixedEmbedder(),
+        config=config,
+        query_classifier=classifier,
+    )
+    async_engine = as_async(sync_engine)
+    assert async_engine._query_classifier is classifier
+
+    sync_weights = sync_engine._effective_retrieval_weights("when did it happen?")
+    async_weights = async_engine._effective_retrieval_weights("when did it happen?")
+    assert list(sync_weights) == pytest.approx(list(async_weights))
+
+
+@pytest.mark.asyncio
 async def test_as_async_state_independent_from_sync() -> None:
     """After as_async(), the two engines have independent affective states."""
     sync_engine = EmotionalMemory(store=InMemoryStore(), embedder=_FixedEmbedder())

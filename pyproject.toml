@@ -50,7 +50,11 @@ dotenv = ["python-dotenv>=1.0"]
 sentence-transformers = ["sentence-transformers>=2.2"]
 sqlite = ["sqlite-vec>=0.1.1"]
 qdrant = ["qdrant-client>=1.10"]
-chroma = ["chromadb>=0.6.3,<2.0"]
+# CVE-2026-45829 affects chromadb >=1.0.0,<=1.5.9; 1.5.9 is still the latest
+# release on PyPI, so the <1.0 ceiling is the mitigation, not a compatibility
+# choice. Do not widen it (a dependabot bump to <2.0 silently re-admitted the
+# vulnerable range in #122) until a patched >=1.5.10 is published.
+chroma = ["chromadb>=0.6.3,<1.0"]
 otel = ["opentelemetry-api>=1.20", "opentelemetry-sdk>=1.20"]
 redis = ["redis>=5.0"]
 langchain = ["langchain-core>=0.3"]
@@ -117,6 +121,13 @@ fail_under = 80
 line-length = 99
 target-version = "py311"
 
+[tool.ruff.format]
+# Ruff >= 0.16 formats Python code blocks inside Markdown by default; earlier
+# versions do not. Docs snippets are illustrative (partial classes, elided
+# imports) and were never in the formatter's scope, so exclude them explicitly —
+# otherwise `make lint` passes or fails depending on the installed ruff version.
+exclude = ["*.md"]
+
 [tool.ruff.lint]
 select = [
   "E",
@@ -137,10 +148,14 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/emotional_memory/__init__.py" = ["F401"]
-"tests/**" = ["S101"]
+"tests/**" = ["S101", "S603", "S607"]
 "benchmarks/**" = ["S101", "T201", "S311", "TCH"]
 "examples/**" = ["T201"]
-"scripts/**" = ["T201", "S603", "S314", "S311", "S306", "S607", "E501"]
+# S310: release scripts fetch hardcoded https endpoints (PyPI, Zenodo, SWH).
+# Kept as a per-file ignore rather than inline `# noqa: S310` because ruff's
+# S310 detection varies across versions, and an inline directive that a newer
+# ruff no longer needs fails the lint gate under RUF100.
+"scripts/**" = ["T201", "S603", "S314", "S311", "S306", "S607", "E501", "S310"]
 "tools/**" = ["T201", "S603", "S314", "S311"]
 "demo/**" = ["T201", "TCH"]
 "src/**" = ["TCH"]

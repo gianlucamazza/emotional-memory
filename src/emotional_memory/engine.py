@@ -267,12 +267,13 @@ class EmotionalMemory:
         weights = adaptive_weights(self._state.mood, base, rc.adaptive_weights_config)
         mask = np.array(
             [
-                True,  # s0 semantic — always active
-                self._config.enable_mood_signal,  # s1 mood congruence (Bower 1981)
-                True,  # s2 affect_proximity — always active
-                self._config.enable_momentum,  # s3 momentum alignment
-                True,  # s4 recency — always active
-                self._config.enable_resonance,  # s5 resonance boost
+                # Signal numbering follows retrieval.py (s1..s6, 1-based).
+                True,  # s1 semantic — always active
+                self._config.enable_mood_signal,  # s2 mood congruence (Bower 1981)
+                True,  # s3 affect_proximity — always active
+                self._config.enable_momentum,  # s4 momentum alignment
+                True,  # s5 recency — always active
+                self._config.enable_resonance,  # s6 resonance boost
             ],
             dtype=bool,
         )

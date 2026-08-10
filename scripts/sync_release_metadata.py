@@ -60,7 +60,7 @@ def _normalize_base_url(base_url: str) -> str:
 
 def _fetch_concept_doi(base_url: str, version_doi: str) -> str:
     record_id = _record_id_from_doi(version_doi)
-    with urllib.request.urlopen(  # noqa: S310
+    with urllib.request.urlopen(
         f"{_normalize_base_url(base_url)}/api/records/{record_id}", timeout=20
     ) as response:
         payload = json.load(response)
