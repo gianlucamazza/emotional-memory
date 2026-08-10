@@ -359,7 +359,7 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
 
 ---
 
-## v0.12.0 – v0.17.0 — Consolidation releases (2026-06-27 → 2026-07-16)
+## v0.12.0 – v0.18.0 — Consolidation releases (2026-06-27 → 2026-08-10)
 
 - [x] **v0.12.0 shipped 2026-06-27** (DOI 10.5281/zenodo.20959964): `DIRECT_VAD_SCHEMA`
       public API + addenda R/S/U/V/T + `elaborate()` type-guard fix.
@@ -374,6 +374,14 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       cache; performance scaling guide; H12/H13 dual-path encode overhead PASS (sim + live);
       CI bench alert 130%; chromadb CVE pin; parallel `encode_batch` appraisal; Addendum Z
       closure in changelog bundle. PyPI + GitHub + Zenodo + HF Space + SWH.
+- [x] **v0.18.0 shipped 2026-08-10**: correctness/security pass on the v0.17.0 line —
+      `chromadb` CVE pin restored after an automated bump re-admitted the vulnerable
+      range (#122) and locked with a dependabot ignore rule; `SQLiteStore` vector index
+      switched from L2 to cosine ranking (matching the retrieval scorer) with legacy-DB
+      detection and `rebuild_vector_index()`; `KeywordAppraisalEngine` per-dimension
+      averaging no longer diluted by non-contributing rules; `as_async()` classifier
+      forwarding; `LLMQueryClassifier` error-fallback caching. PyPI + GitHub + Zenodo +
+      HF Space + SWH.
 
 Still open (not blocking the release line):
 
