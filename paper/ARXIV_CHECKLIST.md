@@ -79,9 +79,10 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-07-17 (software snapshot **v0.17.0**, version DOI
-`10.5281/zenodo.21402228`, concept DOI `10.5281/zenodo.19972258`; bundle/DOI
-synced via `make release`). Prior 2026-07-07b: abstract boundary claim sharpened
+_Last updated: 2026-08-10 (software snapshot **v0.18.0**, version DOI
+`10.5281/zenodo.21870707`, concept DOI `10.5281/zenodo.19972258`; bundle/DOI
+synced via `make release`). Prior 2026-07-17: software snapshot v0.17.0, version
+DOI `10.5281/zenodo.21402228`. Prior 2026-07-07b: abstract boundary claim sharpened
 after Addendum X2 ("affect improves retrieval exactly when relevance is itself
 affect-conditioned"); addenda range A–X2; earlier software snapshot was v0.15.0.
 Prior 2026-07-02: related-work refresh, 44/44 cite keys, Acknowledgements TODO

@@ -374,7 +374,7 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       cache; performance scaling guide; H12/H13 dual-path encode overhead PASS (sim + live);
       CI bench alert 130%; chromadb CVE pin; parallel `encode_batch` appraisal; Addendum Z
       closure in changelog bundle. PyPI + GitHub + Zenodo + HF Space + SWH.
-- [x] **v0.18.0 shipped 2026-08-10**: correctness/security pass on the v0.17.0 line —
+- [x] **v0.18.0 shipped 2026-08-10** (DOI 10.5281/zenodo.21870707): correctness/security pass on the v0.17.0 line —
       `chromadb` CVE pin restored after an automated bump re-admitted the vulnerable
       range (#122) and locked with a dependabot ignore rule; `SQLiteStore` vector index
       switched from L2 to cosine ranking (matching the retrieval scorer) with legacy-DB
