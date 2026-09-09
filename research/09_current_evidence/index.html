@@ -3370,12 +3370,32 @@ evidence level, and still-open gaps.</p>
 <tr>
 <td><code>Hi3_arc</code></td>
 <td>Retrieval behavior</td>
-<td>Not established</td>
+<td>Falsified</td>
 <td><code>2_controlled_retrieval</code></td>
 <td>Hi3_arc FAIL: no significant amplification on affective_arc queries (Δ=+0.010 [-0.020,0.050], d=0.058, Holm-adj p=0.3795, N=500). The embedder gap does not extend to affective_arc at this sample size.</td>
 <td>Hi3_arc secondary FAIL (Addendum I closure, 2026-05-06): Δ=0.010, p_adj=0.3795, d=0.058. Embedder amplification scoped to semantic_confound and recency_confound.</td>
 <td>Whether larger N or different dataset would show signal.</td>
 <td>No active follow-up; Hi3_arc FAIL scopes the amplification claim.</td>
+</tr>
+<tr>
+<td><code>cross_domain_affect_replication</code></td>
+<td>External benchmarks</td>
+<td>Controlled evidence</td>
+<td><code>4_realistic_tasks</code></td>
+<td>Hk1 FAIL (Branch B, 2026-05-07): DailyDialog ecological replication — AFT does not outperform naive cosine on naturalistic short-turn dialogue (N=120 personas, 396 queries, multilingual-e5-small; Δ=-0.008, p_holm=1.000). Addendum M FR PASS (Branch A, 2026-05-16): native French scenarios, 2-session realistic replay (N=120, me5); AFT top1=0.31 vs naive_cosine=0.12, Δ=+0.18 [0.11, 0.26], p&lt;0.0001, Hedges g=0.424. Addendum X FAIL (2026-07-02): first third-party retrieval-native corpus (MADial-Bench EN, NAACL 2025, N=160, oracle-free) — aft_query_appraised significantly below naive cosine (nDCG@5 0.221 vs 0.304). Addendum X2 FAIL (2026-07-07): second third-party corpus (ES-MemEval/EvoEmo, WWW 2026, N=1,133, oracle-free) — aft_query_appraised significantly below naive cosine (upstream-verbatim nDCG@4 0.133 vs 0.284). Addendum Z FAIL (2026-07-14): held-out linear learning-to-rank does not beat cosine on any third-party corpus.</td>
+<td>Hk1 pre-registered and executed 2026-05-07. DailyDialog: AFT top1=0.212 vs naive_cosine=0.220 (Δ=-0.008, p_holm=1.000). Branch B confirmed. Addendum M FR (2026-05-16, me5, N=120): AFT top1=0.31 vs cosine 0.12, Δ=+0.18, Branch A PASS. Addendum X (MADial-Bench): Hx1 FAIL inverted. Addendum X2 (ES-MemEval): Hx2 FAIL inverted. Addendum Z (learned profile): Hz1 FAIL 0/3 third-party corpora.</td>
+<td>Cross-domain replication on affect-rich naturalistic corpus. Cross-language replication in non-Romance languages. IT/ES cross-language replication in 2-session realistic replay format.</td>
+<td>Retry targeted affective_trajectory sub-claim at N≥120 on naturalistic corpus with &gt;30% affect-bearing turns.</td>
+</tr>
+<tr>
+<td><code>query_affect_gate</code></td>
+<td>Retrieval mechanism</td>
+<td>Controlled evidence</td>
+<td><code>4_realistic_tasks</code></td>
+<td>Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (</td>
+<td>valence</td>
+<td>&lt;0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated&gt;aft +0.076 and gated&gt;cosine +0.095).</td>
+<td>Addendum Y executed 2026-07-07 (4 corpora, tau=0.2 primary, Holm m=2). Hg1 (ES-MemEval) gated&gt;aft delta=+0.076 p_holm=0.0000; Hg2 (realistic_recall_v2) gated&gt;cosine delta=+0.095 p_holm=0.0000. Per-corpus recovery tracks the neutral-query fraction: ES-MemEval 45.5% neutral → 50% recovered.</td>
 </tr>
 <tr>
 <td><code>models_human_emotional_memory</code></td>

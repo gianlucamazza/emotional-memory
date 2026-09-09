@@ -3052,7 +3052,7 @@
 <td><strong>Release-facing identifiers</strong> (DOIs, repo URL, arXiv ID)</td>
 <td><code>release.toml</code></td>
 <td><code>README.md</code> badge, <code>CITATION.cff</code>, <code>.zenodo.json</code>, <code>codemeta.json</code>, <code>paper/main.tex</code>, <code>paper/SUBMISSION.md</code>, <code>demo/README.md</code>, <code>demo/app.py</code></td>
-<td><code>make sync-metadata</code> (<code>scripts/sync_release_metadata.py</code>)</td>
+<td><code>make sync-metadata</code> (<code>scripts/sync_release_metadata.py</code>). <strong>Note:</strong> Badge and <code>codemeta.json</code> intentionally use the <strong>concept</strong> DOI (<code>10.5281/zenodo.19972258</code>) while <code>CITATION.cff</code> and BibTeX use the <strong>version</strong> DOI (<code>10.5281/zenodo.21870707</code>) — this is a deliberate split to provide a stable landing-page DOI for linking while ensuring citations resolve to the specific version.</td>
 </tr>
 <tr>
 <td><strong>Python version floor</strong></td>
