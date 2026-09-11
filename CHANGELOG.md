@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **Grouped lock refresh.** `uv lock --upgrade` within current extra constraints
+  (chromadb stays `>=0.6.3,<1.0`; no patched `>=1.5.10` on PyPI). Clears
+  fixable full-lock advisories: `click` 8.5.0, `cryptography` 50.0.1,
+  `pillow` 12.3.0, `h2` 4.4.1, `mkdocs-material` 9.7.7, `pymdown-extensions`
+  11.0.2, `transformers` 5.17.0, `setuptools` 84.0.0, `torch` 2.14.0. A
+  full-lock `pip-audit` (`uv export --all-extras`) now reports **only**
+  `chromadb` 0.6.3 (PYSEC-2026-3813/3814/3815, no fix versions). CI
+  `pip-audit` (`--extra dev`) remains clean. `mypy` is capped `<2` and
+  `numpy` `<2.5` so the 3.11 typecheck gate still parses stubs.
+
 ### Added
 
 - **Hypothesis property tests for algebraic invariants** (`tests/test_invariants.py`).

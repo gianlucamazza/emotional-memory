@@ -24,7 +24,9 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Typing :: Typed",
 ]
-dependencies = ["numpy>=1.24", "pydantic>=2.0,<3"]
+# numpy <2.5: 2.5.x stubs use PEP 695 `type` statements that mypy 1.x with
+# python_version=3.11 cannot parse (CI typecheck runs on 3.11).
+dependencies = ["numpy>=1.24,<2.5", "pydantic>=2.0,<3"]
 
 [project.urls]
 Homepage = "https://github.com/gianlucamazza/emotional-memory"
@@ -41,7 +43,7 @@ dev = [
   "pytest-timeout>=2.3",
   "hypothesis>=6.122",
   "ruff>=0.4",
-  "mypy>=1.10",
+  "mypy>=1.10,<2",
   "basedpyright>=1.18",
   "fakeredis>=2.35.1",
 ]
