@@ -166,6 +166,51 @@
       "description": "LoCoMo Gate 1 FAIL: AFT underperforms naive RAG on F1 and judge_accuracy."
     },
     {
+      "stem": "research_third_party_x_x2",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_third_party_x_x2.png",
+        "docs/images/research/research_third_party_x_x2.pdf"
+      ],
+      "source_benchmarks": [
+        "benchmarks/madialbench/results.json",
+        "benchmarks/esmemeval/results.json"
+      ],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "cross_domain_affect_replication",
+      "plot_kind": "grouped_bar",
+      "description": "Addenda X/X2: cosine vs AFT query-appraised on MADial-Bench nDCG@5 and ES-MemEval u_nDCG@4 (both FAIL inverted)."
+    },
+    {
+      "stem": "research_query_affect_gate",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_query_affect_gate.png",
+        "docs/images/research/research_query_affect_gate.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/gate/results.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "query_affect_gate",
+      "plot_kind": "grouped_bar",
+      "description": "Addendum Y: cosine vs AFT query-appraised vs gated (tau=0.2) on four corpora."
+    },
+    {
+      "stem": "research_learned_profile",
+      "category": "evidence",
+      "generator": "scripts/generate_research_figures.py",
+      "outputs": [
+        "docs/images/research/research_learned_profile.png",
+        "docs/images/research/research_learned_profile.pdf"
+      ],
+      "source_benchmarks": ["benchmarks/learned_profile/results.json"],
+      "referenced_in": ["README.md", "docs/research/09_current_evidence.md"],
+      "claim_id": "cross_domain_affect_replication",
+      "plot_kind": "grouped_bar",
+      "description": "Addendum Z: cosine vs AFT fixed vs held-out learned linear profile on three break corpora plus curated preserve."
+    },
+    {
       "stem": "fig1_circumplex",
       "category": "paper",
       "generator": "scripts/generate_paper_figures.py",
