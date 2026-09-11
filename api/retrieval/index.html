@@ -1631,6 +1631,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../telemetry/" class="md-nav__link">
         
   
@@ -1969,6 +1997,56 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;reconsolidation_window_seconds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;QueryClassifierConfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" QueryClassifierConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.default_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;default_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.routed_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;routed_weights
       
     </span>
   </a>
@@ -3107,6 +3185,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;QueryClassifierConfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" QueryClassifierConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.default_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;default_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emotional_memory.retrieval.QueryClassifierConfig.routed_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;routed_weights
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#emotional_memory.retrieval.AdaptiveWeightsConfig" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3485,6 +3613,138 @@ candidates before full multi-signal scoring.</p>
     <div class="doc doc-contents ">
 
         <p>Seconds after retrieval during which the tag remains labile.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="emotional_memory.retrieval.QueryClassifierConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <code>emotional_memory.retrieval.QueryClassifierConfig</code>
+
+
+<a href="#emotional_memory.retrieval.QueryClassifierConfig" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Configuration for per-query-type retrieval weight routing.</p>
+<p>Set <code>mode</code> to <code>'heuristic'</code> to activate the built-in regex classifier at
+zero latency overhead, or <code>'llm'</code> to use an external <code>QueryClassifier</code>
+instance passed to the engine constructor.  <code>'disabled'</code> (default) leaves
+weight routing inactive and preserves existing behaviour.</p>
+<p><code>routed_weights</code> maps query-type labels to 6-element weight vectors (same
+order as <code>RetrievalConfig.base_weights</code>).  <code>LOCOMO_ROUTING</code> from
+<code>emotional_memory.query_classifier</code> is a ready-to-use routing table.</p>
+<p>Routing selects the <em>starting</em> weights, it does not bypass adaptive
+weighting: the routed vector replaces <code>base_weights</code> and is then still
+modulated by the current mood via <code>adaptive_weights()</code> (and by the
+ablation mask).  A routed <code>[1, 0, 0, 0, 0, 0]</code> therefore yields a
+pure-semantic ranking only under a neutral/calm mood; to gate signals off
+unconditionally, disable them via the <code>enable_*</code> ablation flags or route
+<em>in front of</em> the engine instead.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="emotional_memory.retrieval.QueryClassifierConfig.default_type" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">default_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#emotional_memory.retrieval.QueryClassifierConfig.default_type" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Fallback key when the classified type has no entry in <code>routed_weights</code>.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="emotional_memory.retrieval.QueryClassifierConfig.mode" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;heuristic&#39;</span><span class="p">,</span> <span class="s1">&#39;llm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;disabled&#39;</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#emotional_memory.retrieval.QueryClassifierConfig.mode" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>'heuristic' — auto-create HeuristicQueryClassifier; 'llm' — use the
+QueryClassifier instance supplied to the engine constructor; 'disabled' — off.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="emotional_memory.retrieval.QueryClassifierConfig.routed_weights" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">routed_weights</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#emotional_memory.retrieval.QueryClassifierConfig.routed_weights" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Per-type weight override. Unknown types fall back to <code>default_type</code>.</p>
 
     </div>
 

@@ -1469,6 +1469,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-gate-neutral-queries-retrieve_query_gated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Gate neutral queries (retrieve_query_gated)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#scope-and-honest-caveat" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1702,6 +1713,34 @@
     
   
     Embedders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
   
 
     
@@ -2852,6 +2891,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-gate-neutral-queries-retrieve_query_gated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Gate neutral queries (retrieve_query_gated)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#scope-and-honest-caveat" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2890,11 +2940,12 @@ own affect</strong> instead — without mutating the runtime state.</p>
 <p>This is the production-reachable mechanism studied in Addendum T: appraising the query
 at retrieve-time recovers most of the oracle-affect advantage on the curated
 <code>realistic_recall_v2</code> benchmark, with no oracle. See the scope caveat at the end.</p>
-<p>This tutorial covers three usage patterns:</p>
+<p>This tutorial covers four usage patterns:</p>
 <ol>
 <li>Pass an explicit <code>query_affect</code></li>
 <li>Auto-appraise the query (<code>retrieve_with_query_appraisal</code>)</li>
 <li>Pair with <code>DIRECT_VAD_SCHEMA</code> (recommended)</li>
+<li>Gate neutral queries to cosine (<code>retrieve_query_gated</code>)</li>
 </ol>
 <h2 id="1-pass-an-explicit-query_affect">1. Pass an explicit <code>query_affect</code><a class="headerlink" href="#1-pass-an-explicit-query_affect" title="Permanent link">&para;</a></h2>
 <p><code>retrieve()</code> and <code>retrieve_with_explanations()</code> accept a keyword-only
@@ -2949,6 +3000,24 @@ the convenience method with an LLM appraisal engine using <code>DIRECT_VAD_SCHEM
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_with_query_appraisal</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
 <p>The cache means each distinct query text is appraised once.</p>
+<h2 id="4-gate-neutral-queries-retrieve_query_gated">4. Gate neutral queries (<code>retrieve_query_gated</code>)<a class="headerlink" href="#4-gate-neutral-queries-retrieve_query_gated" title="Permanent link">&para;</a></h2>
+<p>Addendum Y is a validated <em>safe wrapper</em> around the same retrieve-time path:
+appraise the query, then route <code>|valence| &lt; tau</code> (default <code>0.2</code>) to
+semantic-only weights and everything else to <code>retrieve_with_query_appraisal</code>.
+Runtime affective state is not mutated. Requires an appraisal engine.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Factual / affect-free query → cosine arm</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_query_gated</span><span class="p">(</span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Distressed query → affect-conditioned arm (same as retrieve_with_query_appraisal)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve_query_gated</span><span class="p">(</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="s2">&quot;I&#39;m worried I forgot something important before the trip&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span>
+</code></pre></div>
+<p>Tune the threshold with <code>EmotionalMemoryConfig.query_affect_gate_tau</code> or the
+keyword-only <code>tau=</code> argument. The gate recovers the <em>neutral-query</em> slice of
+the off-regime penalty; it does not fix counter-congruent or content-determined
+gold (Addenda X/X2). See the <a href="../configuration_guide/">configuration guide</a>.</p>
 <h2 id="scope-and-honest-caveat">Scope and honest caveat<a class="headerlink" href="#scope-and-honest-caveat" title="Permanent link">&para;</a></h2>
 <p>Retrieve-time query appraisal helps <strong>in the affect-discriminative regime</strong> — where
 the correct memory is distinguished by affect, not just lexical/semantic overlap. On

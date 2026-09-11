@@ -866,6 +866,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#v0160-v0170" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.16.0 → v0.17.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0170-v0180" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.17.0 → v0.18.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.17.0 → v0.18.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlite-vector-index-ranks-by-cosine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQLite vector index ranks by cosine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyword-appraisal-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyword appraisal scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1764,6 +1814,34 @@
     
   
     Embedders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
   
 
     
@@ -2991,6 +3069,56 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#v0160-v0170" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.16.0 → v0.17.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v0170-v0180" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.17.0 → v0.18.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.17.0 → v0.18.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlite-vector-index-ranks-by-cosine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQLite vector index ranks by cosine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keyword-appraisal-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keyword appraisal scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3139,6 +3267,24 @@ reconsolidation and Hebbian strengthening.</p>
 promoted as stable top-level API. In particular, <code>build_retrieval_plan()</code> should be
 treated as an internal engine helper unless the project explicitly documents it as
 stable in a future release.</p>
+<h2 id="v0160-v0170">v0.16.0 → v0.17.0<a class="headerlink" href="#v0160-v0170" title="Permanent link">&para;</a></h2>
+<p>Additive. <code>retrieve_query_gated()</code> (sync and async) is the Addendum Y safe wrapper:
+it appraises the query and routes <code>|valence| &lt; tau</code> (default
+<code>EmotionalMemoryConfig.query_affect_gate_tau=0.2</code>) to semantic-only retrieval,
+else to <code>retrieve_with_query_appraisal</code>. Requires an <code>appraisal_engine</code>. Default
+<code>retrieve()</code> behaviour is unchanged. See the
+<a href="../tutorials/query_appraisal_retrieval/">query-appraisal tutorial</a>.</p>
+<h2 id="v0170-v0180">v0.17.0 → v0.18.0<a class="headerlink" href="#v0170-v0180" title="Permanent link">&para;</a></h2>
+<h3 id="sqlite-vector-index-ranks-by-cosine">SQLite vector index ranks by cosine<a class="headerlink" href="#sqlite-vector-index-ranks-by-cosine" title="Permanent link">&para;</a></h3>
+<p>Databases created by v0.18+ use <code>sqlite-vec</code> <code>distance_metric=cosine</code>, matching
+the retrieval scorer. Databases written by earlier versions used L2. Opening one
+emits a <code>UserWarning</code>; call <code>store.rebuild_vector_index()</code> once to migrate (the
+vector table is derived — embeddings also live in the memory rows).</p>
+<h3 id="keyword-appraisal-scaling">Keyword appraisal scaling<a class="headerlink" href="#keyword-appraisal-scaling" title="Permanent link">&para;</a></h3>
+<p><code>KeywordAppraisalEngine</code> no longer averages in rules that leave a dimension at
+its neutral default. Multi-rule inputs produce stronger (less attenuated)
+appraisals. The published <code>aft_keyword_synchronous</code> (Hf1) numbers used the
+pre-fix engine and are not regenerated.</p>
 
 
 

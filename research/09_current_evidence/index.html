@@ -1626,6 +1626,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../api/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api/telemetry/" class="md-nav__link">
         
   
@@ -3425,7 +3453,7 @@ evidence level, and still-open gaps.</p>
 <td>Hg1 FAIL (twice): AFT with LLMAppraisalEngine (dual-path, gpt-5-mini) does not outperform naive cosine on affect-free queries. Original Hg1 (realistic_recall_v3_noAF, N=200): delta=-0.010, p=0.367. Re-run with the recalibrated SEC-&gt;affect mapping on a leakage-free set disjoint from the calibration data (Addendum P, realistic_recall_v4_noAF, N=160): delta=-0.087 [-0.144,-0.031], p=0.0018, d=-0.242 -- naive cosine significantly ahead. The LLM affect signal is real (beats neutral, Hp2 PASS) and the dual-path schedule is essential (beats synchronous, Hp3 PASS, d=0.95), but the full system still trails pure cosine when queries are affect-free. The oracle-affect circularity remains the scope boundary of the Hd1/Hd2 claims.</td>
 <td>Hg1 (realistic_recall_v3_noAF, N=200) FAIL: delta=-0.010, p=0.367. Addendum P re-run with recalibrated M1 on leakage-free realistic_recall_v4_noAF (40 scen / 160 q, disjoint from v3): aft_llm_dual top1=0.800 vs naive_cosine 0.887, delta=-0.0875 [-0.144,-0.031], p=0.0018, d=-0.242 FAIL. Exploratory Hp2 dual&gt;neutral PASS (+0.056, p=0.030); Hp3 dual&gt;sync PASS (+0.512, d=0.95). <strong>Addendum Q (2026-06-11)</strong>: affect-aware gating on realistic_recall_v5_gate (200 q, 100/100 gate-labelled). Hq1 FAIL (dual vs cosine on affective subset, Δ=−0.050; tiebreak type 0.160 vs 0.280), Hq3 FAIL (gated vs cosine, Δ=−0.025), Hq4 oracle-gate also below cosine (Δ=−0.045, p=0.0024); Hq2 PASS (gated &gt; always-on, Δ=+0.080, p_holm=0.0009; gated == cosine on affect-free half, Hq5 Δ=0.000). Branch C: routing line closed.</td>
 <td>Recalibration (Addendum O) did not change the affect-free verdict; advantage scoped to oracle-affect (Hd1/Hd2). Dual-path &gt; synchronous (Hp3) reaffirmed. Gating recovers the always-on penalty but cannot exceed cosine (Addendum Q); the bottleneck is the state-based channel, not the gate.</td>
-<td>Affect-routing line closed (Addendum Q, Branch C). Residual (not scheduled): retrieve-time query appraisal as a new signal.</td>
+<td>DONE. Residual retrieve-time query appraisal was executed (T/T2A/X/X2/Y); <code>retrieve_query_gated()</code> shipped in v0.17.0.</td>
 </tr>
 </tbody>
 </table>
@@ -3999,7 +4027,7 @@ vectors, not t-tests.</p>
 <li>For known limitations: <a href="../08_limitations/">Limitations</a></li>
 </ul>
 <h3 id="addendum-y-query-affect-conditioned-gate-branch-a-pass">Addendum Y — Query-affect-conditioned gate (Branch A PASS)<a class="headerlink" href="#addendum-y-query-affect-conditioned-gate-branch-a-pass" title="Permanent link">&para;</a></h3>
-<p><strong>Claim <code>query_affect_gate</code>.</strong> Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (|valence|&lt;0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated&gt;aft +0.076 and gated&gt;cosine +0.095). The gate recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's 45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime gain; it does not fix the X/X2 boundary (affect-carrying-but-misaligned queries stay un-gateable). A production retrieve_query_gated() API is a Branch-A follow-up.</p>
+<p><strong>Claim <code>query_affect_gate</code>.</strong> Addendum Y (Branch A, 2026-07-07): a query-affect-conditioned gate — route the query to pure cosine when the appraised query is affectively neutral (|valence|&lt;0.2), else to the retrieve-time affect-conditioned arm — is a validated partial safe wrapper. Hg1 (recover, ES-MemEval) and Hg2 (preserve, realistic_recall_v2) both PASS (Holm m=2, gated&gt;aft +0.076 and gated&gt;cosine +0.095). The gate recovers exactly the neutral-query component of the off-regime penalty (~50% on ES-MemEval's 45.5%-neutral queries; 0% on MADial's 0%-neutral queries) and preserves the full on-regime gain; it does not fix the X/X2 boundary (affect-carrying-but-misaligned queries stay un-gateable). Shipped as EmotionalMemory.retrieve_query_gated() / AsyncEmotionalMemory.retrieve_query_gated() in v0.17.0 (EmotionalMemoryConfig.query_affect_gate_tau, default 0.2).</p>
 <h3 id="addendum-z-held-out-learned-retrieval-profile-branch-b">Addendum Z — Held-out learned retrieval profile (Branch B)<a class="headerlink" href="#addendum-z-held-out-learned-retrieval-profile-branch-b" title="Permanent link">&para;</a></h3>
 <p><strong><code>cross_domain_affect_replication</code> bound hardened.</strong> Addendum Z (Branch B, 2026-07-14): a held-out linear learning-to-rank profile over the 6 AFT retrieval signals (k=5 cross-fitting, Holm m=3) does <strong>not</strong> beat cosine on any third-party corpus — MADial Δ=+0.015 p_holm=0.314, ES-MemEval Δ=−0.015 p_holm=0.9997, DailyDialog Δ=+0.008 p_holm=0.811 — while preserving and amplifying the curated on-regime advantage (learned top1=0.425 vs fixed 0.240, Hz2 Δ_vs_fixed=+0.185). Learned weights recover negative s2 on MADial/ES-MemEval (counter-congruent direction) but do not close the cosine gap. The operative boundary upgrades from fixed-weight misspecification to: no held-out learned linear affect profile generalizes on third-party gold. No new positive claim; <code>fit_retrieval_weights()</code> src API remains a Branch-A-only follow-up.</p>
 

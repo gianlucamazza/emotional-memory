@@ -1733,6 +1733,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../api/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../api/telemetry/" class="md-nav__link">
         
   
@@ -3006,6 +3034,11 @@ captured at encoding time:</p>
 <td><a href="../../api/query_classifier/">Query Classifier</a></td>
 </tr>
 <tr>
+<td><code>logging_config.py</code></td>
+<td><code>configure_logging()</code> — package logger (always on; JSON optional)</td>
+<td><a href="../../api/logging/">Logging</a></td>
+</tr>
+<tr>
 <td><code>telemetry.py</code></td>
 <td><code>traced_span()</code> — OpenTelemetry spans, no-op without the <code>[otel]</code> extra</td>
 <td><a href="../../api/telemetry/">Telemetry</a></td>
@@ -3069,7 +3102,7 @@ no inheritance required. Bring your own implementation, or use the bundled ones:
 <h2 id="key-data-flow">Key data flow<a class="headerlink" href="#key-data-flow" title="Permanent link">&para;</a></h2>
 <p><strong>encode</strong> — <code>AppraisalVector → CoreAffect → AffectiveState.update() → EmotionalTag → [Plutchik label if auto_categorize] → embed → store → resonance links (forward + backward)</code>.</p>
 <p><strong>encode (dual-path, LeDoux 1996)</strong> — with <code>dual_path_encoding=True</code> and an appraisal engine: the fast path skips appraisal, uses the raw <code>core_affect</code>, and marks <code>pending_appraisal=True</code>; a later <code>elaborate(memory_id)</code> runs full appraisal and blends core affect (default 70% appraised / 30% raw).</p>
-<p><strong>retrieve</strong> — <code>embed query → build_retrieval_plan() → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (multi-hop BFS) → Pass 2 (activation boost) → per-memory APE computation → APE-gated reconsolidation → Hebbian strengthening on co-retrieved links → top-k</code>. Use <code>retrieve_with_explanations()</code> to expose the per-signal breakdown.</p>
+<p><strong>retrieve</strong> — <code>embed query → build_retrieval_plan() → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (multi-hop BFS) → Pass 2 (activation boost) → per-memory APE computation → APE-gated reconsolidation → Hebbian strengthening on co-retrieved links → top-k</code>. Use <code>retrieve_with_explanations()</code> to expose the per-signal breakdown. Optional retrieve-time paths: <code>query_affect=</code> / <code>retrieve_with_query_appraisal()</code> (Addendum T) score s3 against the query's own affect; <code>retrieve_query_gated()</code> (Addendum Y) routes neutral queries to cosine.</p>
 <p><strong>observe</strong> — update the affective state from content <em>without</em> storing a retrievable memory (useful for assistant turns or system events).</p>
 <p><strong>prune</strong> — iterate all memories, compute effective strength via <a href="../../api/decay/"><code>decay</code></a>, delete those below the threshold.</p>
 <p><strong>state persistence</strong> — <code>save_state()</code>/<code>load_state()</code> round-trip the affective state (including momentum history) as a JSON-safe dict; <code>persist_state()</code>/<code>restore_persisted_state()</code> delegate to the configured <code>AffectiveStateStore</code>.</p>

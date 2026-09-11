@@ -1744,6 +1744,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../telemetry/" class="md-nav__link">
         
   
@@ -2928,11 +2956,15 @@
 
 <h1 id="state-stores">State Stores<a class="headerlink" href="#state-stores" title="Permanent link">&para;</a></h1>
 <p>State stores persist the runtime <code>AffectiveState</code> snapshot across sessions.
-Plug one in via <code>EmotionalMemoryConfig.state_store</code> (or the <code>state_store=</code> parameter).</p>
-<p>The <code>AffectiveStateStore</code> protocol (defined in <code>interfaces.py</code>) requires three methods:
-<code>save(state)</code>, <code>load() → AffectiveState | None</code>, and <code>clear()</code>.</p>
-<p>See also: <a href="../state/">State</a> for the <code>AffectiveState</code> data model,
-and <a href="../interfaces/">Interfaces</a> for the protocol definition.</p>
+Pass one as the <code>state_store=</code> constructor argument of <code>EmotionalMemory</code> or
+<code>AsyncEmotionalMemory</code> — it is <strong>not</strong> a field on <code>EmotionalMemoryConfig</code>.</p>
+<p>The <a href="../interfaces/"><code>AffectiveStateStore</code></a> protocol (defined in <code>interfaces.py</code>)
+requires three methods: <code>save(state)</code>, <code>load() → AffectiveState | None</code>, and
+<code>clear()</code>.</p>
+<p><code>SQLiteAffectiveStateStore</code> uses the stdlib <code>sqlite3</code> module (no extra).
+<code>RedisAffectiveStateStore</code> requires the <code>[redis]</code> extra.</p>
+<p>See also: <a href="../state/">State</a> for the <code>AffectiveState</code> data model, and
+<a href="../stores/">Stores</a> for <code>MemoryStore</code> backends.</p>
 <h2 id="in-memory-default">In-Memory (default)<a class="headerlink" href="#in-memory-default" title="Permanent link">&para;</a></h2>
 
 

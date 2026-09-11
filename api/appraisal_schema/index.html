@@ -1631,6 +1631,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../telemetry/" class="md-nav__link">
         
   
@@ -1808,10 +1836,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-schema" class="md-nav__link">
+  <a href="#built-in-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in schema
+        Built-in schemas
       
     </span>
   </a>
@@ -1823,6 +1851,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;SCHERER_CPM_SCHEMA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emotional_memory.appraisal_schema.DIRECT_VAD_SCHEMA" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DIRECT_VAD_SCHEMA
       
     </span>
   </a>
@@ -2941,10 +2980,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#built-in-schema" class="md-nav__link">
+  <a href="#built-in-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Built-in schema
+        Built-in schemas
       
     </span>
   </a>
@@ -2956,6 +2995,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;SCHERER_CPM_SCHEMA
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#emotional_memory.appraisal_schema.DIRECT_VAD_SCHEMA" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;DIRECT_VAD_SCHEMA
       
     </span>
   </a>
@@ -3198,9 +3248,7 @@ projection function that maps a dimension dict to <code>CoreAffect</code>.</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/emotional_memory/appraisal_schema.py</code></summary>
-                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-82">82</a></span>
-<span class="normal"><a href="#__codelineno-0-83">83</a></span>
-<span class="normal"><a href="#__codelineno-0-84">84</a></span>
+                    <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-84">84</a></span>
 <span class="normal"><a href="#__codelineno-0-85">85</a></span>
 <span class="normal"><a href="#__codelineno-0-86">86</a></span>
 <span class="normal"><a href="#__codelineno-0-87">87</a></span>
@@ -3208,17 +3256,19 @@ projection function that maps a dimension dict to <code>CoreAffect</code>.</p>
 <span class="normal"><a href="#__codelineno-0-89">89</a></span>
 <span class="normal"><a href="#__codelineno-0-90">90</a></span>
 <span class="normal"><a href="#__codelineno-0-91">91</a></span>
-<span class="normal"><a href="#__codelineno-0-92">92</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="n">dimensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AppraisalDimension</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">system_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="n">project_to_core_affect</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">CoreAffect</span><span class="p">],</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">dimensions</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">system_prompt</span> <span class="o">=</span> <span class="n">system_prompt</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">project_to_core_affect</span> <span class="o">=</span> <span class="n">project_to_core_affect</span>
+<span class="normal"><a href="#__codelineno-0-92">92</a></span>
+<span class="normal"><a href="#__codelineno-0-93">93</a></span>
+<span class="normal"><a href="#__codelineno-0-94">94</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-0-85" name="__codelineno-0-85"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-0-86" name="__codelineno-0-86"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="n">dimensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AppraisalDimension</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="n">system_prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a>    <span class="n">project_to_core_affect</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="n">CoreAffect</span><span class="p">],</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">dimensions</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">system_prompt</span> <span class="o">=</span> <span class="n">system_prompt</span>
+<a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">project_to_core_affect</span> <span class="o">=</span> <span class="n">project_to_core_affect</span>
 </code></pre></div></td></tr></table></div>
                   </details>
 
@@ -3251,9 +3301,7 @@ projection function that maps a dimension dict to <code>CoreAffect</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/emotional_memory/appraisal_schema.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
 <span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
 <span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
 <span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
@@ -3267,23 +3315,25 @@ projection function that maps a dimension dict to <code>CoreAffect</code>.</p>
 <span class="normal"><a href="#__codelineno-0-107">107</a></span>
 <span class="normal"><a href="#__codelineno-0-108">108</a></span>
 <span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_json_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive a JSON schema dict from ``self.dimensions`` for LLM structured output.&quot;&quot;&quot;</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="n">props</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">range</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="n">props</span><span class="p">[</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>            <span class="s2">&quot;minimum&quot;</span><span class="p">:</span> <span class="n">lo</span><span class="p">,</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="s2">&quot;maximum&quot;</span><span class="p">:</span> <span class="n">hi</span><span class="p">,</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">dim</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>        <span class="p">}</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>    <span class="k">return</span> <span class="p">{</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="n">props</span><span class="p">,</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">],</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="s2">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="p">}</span>
+<span class="normal"><a href="#__codelineno-0-110">110</a></span>
+<span class="normal"><a href="#__codelineno-0-111">111</a></span>
+<span class="normal"><a href="#__codelineno-0-112">112</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_json_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive a JSON schema dict from ``self.dimensions`` for LLM structured output.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="n">props</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>    <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">:</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a>        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">dim</span><span class="o">.</span><span class="n">range</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="n">props</span><span class="p">[</span><span class="n">dim</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a>            <span class="s2">&quot;minimum&quot;</span><span class="p">:</span> <span class="n">lo</span><span class="p">,</span>
+<a id="__codelineno-0-104" name="__codelineno-0-104"></a>            <span class="s2">&quot;maximum&quot;</span><span class="p">:</span> <span class="n">hi</span><span class="p">,</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a>            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">dim</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a>        <span class="p">}</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="n">props</span><span class="p">,</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a>        <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span><span class="p">],</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="s2">&quot;additionalProperties&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3362,7 +3412,7 @@ schema's mapping function.</p>
 
     </div>
 
-</div><h2 id="built-in-schema">Built-in schema<a class="headerlink" href="#built-in-schema" title="Permanent link">&para;</a></h2>
+</div><h2 id="built-in-schemas">Built-in schemas<a class="headerlink" href="#built-in-schemas" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-attribute">
@@ -3380,6 +3430,40 @@ schema's mapping function.</p>
 
 
     <div class="doc doc-contents first">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="emotional_memory.appraisal_schema.DIRECT_VAD_SCHEMA" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">emotional_memory</span><span class="o">.</span><span class="n">appraisal_schema</span><span class="o">.</span><span class="n">DIRECT_VAD_SCHEMA</span><span class="p">:</span> <span class="n">AppraisalSchema</span> <span class="o">=</span> <span class="n">AppraisalSchema</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;direct_vad&#39;</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="p">(</span><span class="n">AppraisalDimension</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;valence&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">neutral</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Pleasantness: -1=unpleasant/negative, 0=neutral, 1=pleasant/positive&#39;</span><span class="p">),</span> <span class="n">AppraisalDimension</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arousal&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">neutral</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Activation: 0=calm/subdued, 1=excited/activated&#39;</span><span class="p">),</span> <span class="n">AppraisalDimension</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dominance&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">neutral</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Control: 0=controlled/submissive, 1=in-control/dominant&#39;</span><span class="p">)),</span> <span class="n">system_prompt</span><span class="o">=</span><span class="n">_DIRECT_VAD_SYSTEM_PROMPT</span><span class="p">,</span> <span class="n">project_to_core_affect</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;valence&#39;</span><span class="p">]),</span> <span class="n">arousal</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;arousal&#39;</span><span class="p">]),</span> <span class="n">dominance</span><span class="o">=</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;dominance&#39;</span><span class="p">]))))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#emotional_memory.appraisal_schema.DIRECT_VAD_SCHEMA" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+
+        <p>Direct valence/arousal/dominance appraisal — the LLM rates V/A/D directly
+(identity projection) instead of the 5 Scherer SECs.</p>
+<p>Opt-in alternative to the default <code>SCHERER_CPM_SCHEMA</code>. Against human-annotated
+affect (EmoBank, N=300) it is better correlated on every axis — valence r=0.79
+(near-zero bias), arousal r=0.58, dominance r=0.43 — vs the SEC-&gt;projection's
+0.70 / 0.23 / 0.31 (Addendum V,
+<code>benchmarks/preregistration_addendum_v_direct_vad_closure.md</code>). Trade-offs: it
+yields a <code>GenericAppraisalVector</code> (no Scherer SEC fields), so the dual-path
+<code>elaborate()</code> SEC-appraisal storage and any SEC-reading feature require the
+default schema; and its arousal absolute scale is less calibrated (higher MAE)
+than its correlation. Use when you only need <code>CoreAffect</code> and want stronger
+human-gold agreement. Select via
+<code>LLMAppraisalConfig(appraisal_schema=DIRECT_VAD_SCHEMA)</code>.</p>
 
     </div>
 

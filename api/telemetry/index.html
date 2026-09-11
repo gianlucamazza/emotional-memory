@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/api/telemetry/">
       
       
-        <link rel="prev" href="../embedders/">
+        <link rel="prev" href="../logging/">
       
       
         <link rel="next" href="../appraisal/">
@@ -1628,6 +1628,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2866,6 +2894,8 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;emotional-memory[otel]&quot;</span>
 </code></pre></div>
 <p>Without the extra, all helpers are <strong>zero-overhead no-ops</strong> — no import errors, no performance cost.</p>
+<p>Package logging (<code>configure_logging</code>) is separate and always available — see
+<a href="../logging/">Logging</a>.</p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.telemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">traced_span</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
