@@ -47,6 +47,9 @@ All didactic figures use synthetic/hardcoded inputs — no benchmark JSON.
 | `research_ablation_s3` | bar\_forest | `benchmarks/ablation/results.v2.sbert.json` | `theory_faithful_operationalization` | README.md, `09_current_evidence.md` |
 | `research_multilingual` | grouped\_bar\_with\_ci | `results.v2_{it,es}.{sbert,me5}.json` (N=80) + `results.v2_fr.me5.json` (N=120 Hm1) | `retrieval_affect_aware`, `cross_domain_affect_replication` | README.md, `09_current_evidence.md` |
 | `research_locomo_negative` | grouped\_bar\_with\_ci | `benchmarks/locomo/results.json` | `locomo_external_qa_negative` | README.md, `09_current_evidence.md` |
+| `research_third_party_x_x2` | grouped\_bar | `madialbench/results.json` + `esmemeval/results.json` | `cross_domain_affect_replication` | README.md, `09_current_evidence.md` |
+| `research_query_affect_gate` | grouped\_bar | `benchmarks/gate/results.json` | `query_affect_gate` | README.md, `09_current_evidence.md` |
+| `research_learned_profile` | grouped\_bar | `benchmarks/learned_profile/results.json` | `cross_domain_affect_replication` | README.md, `09_current_evidence.md` |
 
 Claim IDs map to `docs/research/claim_validation_matrix.json`.
 

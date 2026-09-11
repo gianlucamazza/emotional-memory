@@ -24,6 +24,9 @@ def test_generate_research_figures_writes_expected_outputs(tmp_path: object) -> 
         "research_ablation_s3",
         "research_multilingual",
         "research_locomo_negative",
+        "research_third_party_x_x2",
+        "research_query_affect_gate",
+        "research_learned_profile",
     }
     assert {p.stem for p in png_dir.glob("*.png")} == expected
     assert {p.stem for p in pdf_dir.glob("*.pdf")} == expected

@@ -286,6 +286,12 @@ not from rerunning long studies.
 
 ![LoCoMo Negative Result](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_locomo_negative.png)
 
+![Third-party retrieval (Addenda X / X2)](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_third_party_x_x2.png)
+
+![Query-affect gate (Addendum Y)](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_query_affect_gate.png)
+
+![Learned retrieval profile (Addendum Z)](https://raw.githubusercontent.com/gianlucamazza/emotional-memory/main/docs/images/research/research_learned_profile.png)
+
 ## Comparison
 
 `emotional_memory` is a focused affective-memory primitive, not a general-purpose memory

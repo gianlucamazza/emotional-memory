@@ -28,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   are documented only on the State Stores API page (Stores links there).
   README Validation now covers Addenda Y/Z; examples table lists
   `query_appraisal.py`; config flags include `query_affect_gate_tau` and
-  `max_content_length`.
+  `max_content_length`. Evidence figures for Addenda X/X2, Y, and Z
+  (`make research-figures`).
 
 - **CI `uv sync` is frozen** and `uv lock --check` runs in `meta-integrity`, so a
   drifted lockfile fails closed instead of being silently regenerated.

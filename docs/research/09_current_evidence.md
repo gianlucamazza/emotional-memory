@@ -361,6 +361,12 @@ These figures are generated from the committed benchmark JSON artefacts with
 
 ![LoCoMo negative result](../images/research/research_locomo_negative.png)
 
+![Third-party retrieval (Addenda X / X2)](../images/research/research_third_party_x_x2.png)
+
+![Query-affect gate (Addendum Y)](../images/research/research_query_affect_gate.png)
+
+![Learned retrieval profile (Addendum Z)](../images/research/research_learned_profile.png)
+
 ---
 
 ## Reading guide

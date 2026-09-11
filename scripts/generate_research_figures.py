@@ -42,12 +42,18 @@ REALISTIC_ES_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_es.me5.json"
 REALISTIC_FR_ME5 = ROOT / "benchmarks" / "realistic" / "results.v2_fr.me5.json"
 ABLATION_SBERT = ROOT / "benchmarks" / "ablation" / "results.v2.sbert.json"
 LOCOMO = ROOT / "benchmarks" / "locomo" / "results.json"
+MADIAL = ROOT / "benchmarks" / "madialbench" / "results.json"
+ESMEM = ROOT / "benchmarks" / "esmemeval" / "results.json"
+GATE = ROOT / "benchmarks" / "gate" / "results.json"
+LEARNED = ROOT / "benchmarks" / "learned_profile" / "results.json"
 
 SYSTEM_COLORS = {
     "aft": "#4C72B0",
     "naive_cosine": "#DD5555",
     "recency": "#55A868",
     "naive_rag": "#DD5555",
+    "gated": "#8172B3",
+    "learned": "#CC8963",
 }
 
 
@@ -277,6 +283,116 @@ def _figure_locomo(data: dict[str, Any]) -> object:
     return fig
 
 
+def _grouped_bar_series(
+    labels: list[str],
+    series: list[tuple[str, list[float], str]],
+    *,
+    ylabel: str,
+    title: str,
+    footnote: str,
+    figsize: tuple[float, float] = (10.0, 4.8),
+) -> object:
+    n = len(labels)
+    n_series = len(series)
+    x = np.arange(n)
+    width = min(0.8 / n_series, 0.28)
+    offsets = (np.arange(n_series) - (n_series - 1) / 2.0) * width
+
+    fig, ax = plt.subplots(figsize=figsize)
+    for offset, (name, values, color) in zip(offsets, series, strict=True):
+        ax.bar(x + offset, values, width=width, label=name, color=color, alpha=0.88)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, fontsize=8)
+    ax.set_ylim(0.0, 1.0)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    ax.legend(frameon=False, ncol=min(n_series, 3))
+    ax.grid(axis="y", alpha=0.25)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.text(0.01, -0.24, footnote, transform=ax.transAxes, fontsize=8)
+    return fig
+
+
+def _figure_third_party(madial: dict[str, Any], esmem: dict[str, Any]) -> object:
+    cosine = [
+        float(madial["arms"]["naive_cosine"]["ndcg@5"]),
+        float(esmem["arms"]["naive_cosine"]["u_ndcg@4"]),
+    ]
+    aft = [
+        float(madial["arms"]["aft_query_appraised"]["ndcg@5"]),
+        float(esmem["arms"]["aft_query_appraised"]["u_ndcg@4"]),
+    ]
+    return _grouped_bar_series(
+        ["MADial-Bench\nnDCG@5", "ES-MemEval\nu_nDCG@4"],
+        [
+            ("naive cosine", cosine, SYSTEM_COLORS["naive_cosine"]),
+            ("AFT query-appraised", aft, SYSTEM_COLORS["aft"]),
+        ],
+        ylabel="Primary metric",
+        title="Third-party retrieval: Hx1 / Hx2 FAIL (inverted)",
+        footnote="Oracle-free query appraisal. Cosine significantly ahead on both corpora.",
+    )
+
+
+def _figure_query_affect_gate(gate: dict[str, Any]) -> object:
+    corpora = [
+        ("v2 curated\ntop-1", "realistic_recall_v2"),
+        ("ES-MemEval\nu_nDCG@4", "esmemeval"),
+        ("MADial\nnDCG@5", "madialbench"),
+        ("DailyDialog\ntop-1", "dailydialog_t2a"),
+    ]
+    cosine: list[float] = []
+    aft: list[float] = []
+    gated: list[float] = []
+    for _, key in corpora:
+        primary = gate["corpora"][key]["primary"]
+        cosine.append(float(primary["cosine_mean"]))
+        aft.append(float(primary["aft_mean"]))
+        gated.append(float(primary["gated_mean"]))
+    return _grouped_bar_series(
+        [label for label, _ in corpora],
+        [
+            ("naive cosine", cosine, SYSTEM_COLORS["naive_cosine"]),
+            ("AFT query-appraised", aft, SYSTEM_COLORS["aft"]),
+            ("gated (τ=0.2)", gated, SYSTEM_COLORS["gated"]),
+        ],
+        ylabel="Primary metric",
+        title="Addendum Y: query-affect gate (safe wrapper)",
+        footnote="Neutral queries → cosine; else query-appraised AFT. Recovers the "
+        "neutral-query penalty; does not move the X/X2 boundary.",
+    )
+
+
+def _figure_learned_profile(learned: dict[str, Any]) -> object:
+    corpora = [
+        ("MADial\nnDCG@5", "madialbench"),
+        ("ES-MemEval\nu_nDCG@4", "esmemeval"),
+        ("DailyDialog\ntop-1", "dailydialog_t2a"),
+        ("v2 curated\ntop-1", "realistic_recall_v2"),
+    ]
+    cosine: list[float] = []
+    fixed: list[float] = []
+    learned_vals: list[float] = []
+    for _, key in corpora:
+        row = learned["corpora"][key]
+        cosine.append(float(row["cosine_mean"]))
+        fixed.append(float(row["aft_fixed_mean"]))
+        learned_vals.append(float(row["aft_learned_mean"]))
+    return _grouped_bar_series(
+        [label for label, _ in corpora],
+        [
+            ("naive cosine", cosine, SYSTEM_COLORS["naive_cosine"]),
+            ("AFT fixed weights", fixed, SYSTEM_COLORS["aft"]),
+            ("AFT learned (held-out)", learned_vals, SYSTEM_COLORS["learned"]),
+        ],
+        ylabel="Primary metric",
+        title="Addendum Z: held-out learned linear profile",
+        footnote="Hz1 FAIL (0/3 break corpora vs cosine). Hz2 PASS on curated (learned > fixed).",
+    )
+
+
 def generate(png_dir: Path, pdf_dir: Path) -> None:
     png_dir.mkdir(parents=True, exist_ok=True)
     pdf_dir.mkdir(parents=True, exist_ok=True)
@@ -289,6 +405,10 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
     realistic_fr_me5 = _load_json(REALISTIC_FR_ME5)
     ablation = _load_json(ABLATION_SBERT)
     locomo = _load_json(LOCOMO)
+    madial = _load_json(MADIAL)
+    esmem = _load_json(ESMEM)
+    gate = _load_json(GATE)
+    learned = _load_json(LEARNED)
 
     print("Generating research figures ...")
     _save(
@@ -319,6 +439,14 @@ def generate(png_dir: Path, pdf_dir: Path) -> None:
         "research_multilingual",
     )
     _save(_figure_locomo(locomo), png_dir, pdf_dir, "research_locomo_negative")
+    _save(
+        _figure_third_party(madial, esmem),
+        png_dir,
+        pdf_dir,
+        "research_third_party_x_x2",
+    )
+    _save(_figure_query_affect_gate(gate), png_dir, pdf_dir, "research_query_affect_gate")
+    _save(_figure_learned_profile(learned), png_dir, pdf_dir, "research_learned_profile")
     print("Done.")
 
 
