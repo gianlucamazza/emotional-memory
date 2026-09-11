@@ -9,7 +9,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | Item                                                                 | Status | Notes                                                                                 |
 | -------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------- |
 | `arxiv-submission.tar.gz` exists and is up-to-date                   | ✓      | `make check-arxiv-bundle` enforces freshness; `make paper-arxiv` regenerates          |
-| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 19pp, ~540KB (grew with addenda R/S/U/V/T/T2A/W/X/X2) — only benign hyperref warnings |
+| Bundle compiles to PDF without errors (`pdflatex` or `latexmk`)      | ✓      | 20pp, ~540KB (addenda through Y/Z) — only benign hyperref warnings |
 | No compilation warnings about missing figures                        | ✓      | Confirmed in last `latexmk` run                                                       |
 | All figures in `figures/` are referenced in `main.tex`               | ✓      | `make paper-arxiv` now does selective copy of only referenced figures                 |
 | All figures are in acceptable format (PDF, PNG, EPS)                 | ✓      | All 4 figures are PDF                                                                 |
@@ -28,7 +28,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 | No placeholders (`XXXX`, `TODO`, `???`) in text       | ✓      | `grep -n "TODO\|XXXX\|???"` in `main.tex` — clean (Acknowledgements TODO resolved 2026-07-02)                                    |
 | Acknowledgements section present                      | ✓      | Final text: no external funding, independent work; thanks to OSS maintainers and corpus authors                                  |
 | All claims in §Results match committed JSON artifacts | ✓      | `make reproduce-paper-check` passes — zero diff                                                                                  |
-| §Limitations is present and complete                  | ✓      | Updated v0.8.3–v0.9 (oracle-affect, resonance magnitude amplification, dataset scope, Add. J Hj1 FAIL)                           |
+| §Limitations is present and complete                  | ✓      | Includes X/X2 third-party FAIL, Y query-affect gate (safe wrapper), Z learned-profile FAIL                           |
 | Negative results (LoCoMo Gate 1 FAIL) are disclosed   | ✓      | §Limitations §External-benchmark scope                                                                                           |
 
 ---
