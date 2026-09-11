@@ -1,10 +1,21 @@
 """Shared test helpers for emotional_memory test suite."""
 
+from __future__ import annotations
+
+import os
 from datetime import UTC, datetime, timedelta
+
+from hypothesis import settings
 
 from emotional_memory.affect import AffectiveMomentum, CoreAffect
 from emotional_memory.models import Memory, make_emotional_tag
 from emotional_memory.mood import MoodField
+
+# Deterministic, bounded Hypothesis profile for CI and `make test`.
+# Override with HYPOTHESIS_PROFILE=dev for a longer local hunt.
+settings.register_profile("ci", derandomize=True, max_examples=50, deadline=None)
+settings.register_profile("dev", max_examples=200, deadline=None)
+settings.load_profile(os.environ.get("HYPOTHESIS_PROFILE", "ci"))
 
 
 def make_test_memory(

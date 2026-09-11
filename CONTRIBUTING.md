@@ -131,6 +131,9 @@ fail). The threshold is looser than a local 10% gate because GitHub-hosted
 runners are noisy; treat alerts as investigation signals, not automatic
 reverts. `make bench-perf-profile` is **not** in default CI (SBERT/LLM optional).
 
+`make test` includes Hypothesis algebraic invariants (`tests/test_invariants.py`)
+for decay, retrieval weights, PAD geometry, mood EMA, and cosine similarity.
+
 Recommended local demo validation flow:
 
 ```bash

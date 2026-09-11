@@ -86,6 +86,23 @@ def test_makefile_exposes_release_metadata_targets() -> None:
     assert "human-eval-summary:" in makefile
 
 
+def test_pyproject_declares_pep639_license_files() -> None:
+    pyproject = tomllib.loads((_repo_root() / "pyproject.toml").read_text(encoding="utf-8"))
+
+    assert pyproject["project"]["license"] == "MIT"
+    assert "LICENSE" in pyproject["project"]["license-files"]
+    assert (_repo_root() / "LICENSE").is_file()
+
+
+def test_ci_syncs_the_frozen_lockfile() -> None:
+    ci = (_repo_root() / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+    assert "uv lock --check" in ci
+    for i, line in enumerate(ci.splitlines(), 1):
+        if "uv sync" in line:
+            assert "--frozen" in line, f"ci.yml:{i} uv sync without --frozen: {line.strip()}"
+
+
 def test_ci_workflow_checks_release_metadata() -> None:
     workflow = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
 

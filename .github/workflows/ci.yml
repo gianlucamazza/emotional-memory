@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install dependencies
-        run: uv sync --extra dev
+        run: uv sync --frozen --extra dev
       - name: Lint (ruff check)
         run: uv run ruff check .
       - name: Format check (ruff format)
@@ -68,7 +68,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install dependencies
-        run: uv sync --extra dev --extra viz
+        run: uv sync --frozen --extra dev --extra viz
 
       - name: Generate all figures
         run: make figures
@@ -117,7 +117,7 @@ jobs:
         # but still installed here so the type checkers see zero missing-import
         # warnings; uv caches the wheels across runs.
         run: >
-          uv sync --extra dev --extra viz --extra langchain --extra llm-test
+          uv sync --frozen --extra dev --extra viz --extra langchain --extra llm-test
           --extra qdrant --extra chroma --extra sentence-transformers
       - name: Type check (mypy)
         run: uv run mypy src/emotional_memory/
@@ -144,8 +144,11 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Check lockfile is up to date
+        run: uv lock --check
+
       - name: Install release dependencies
-        run: uv sync --extra release
+        run: uv sync --frozen --extra release
 
       - name: Check release metadata
         run: uv run python scripts/check_release_metadata.py
@@ -178,7 +181,7 @@ jobs:
           python-version: "3.13"
 
       - name: Export requirements for audit
-        run: uv export --extra dev --no-hashes -o /tmp/audit-requirements.txt
+        run: uv export --frozen --extra dev --no-hashes -o /tmp/audit-requirements.txt
 
       - name: Install pip-audit
         run: uv pip install pip-audit --system
@@ -208,7 +211,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv sync --extra dev --extra bench
+        run: uv sync --frozen --extra dev --extra bench
 
       - name: Run fidelity benchmarks
         run: uv run python -m pytest benchmarks/fidelity/ -v
@@ -255,7 +258,7 @@ jobs:
           python-version: "3.13"
       - name: Install all optional dependencies
         run: >
-          uv sync --extra dev
+          uv sync --frozen --extra dev
           --extra sqlite --extra langchain --extra sentence-transformers
           --extra viz --extra dotenv
           --extra qdrant --extra chroma --extra redis --extra mem0 --extra otel
@@ -304,7 +307,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install ${{ matrix.backend }} extra
-        run: uv sync --extra dev --extra ${{ matrix.backend }}
+        run: uv sync --frozen --extra dev --extra ${{ matrix.backend }}
       - name: Run ${{ matrix.backend }} store tests
         run: uv run python -m pytest ${{ matrix.test_file }} -v
 
@@ -326,7 +329,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install demo dependencies
-        run: uv sync --extra dev --extra demo --extra viz
+        run: uv sync --frozen --extra dev --extra demo --extra viz
       - name: Run demo tests
         run: >
           uv run python -m pytest tests/test_demo_app.py tests/test_demo_ui_config.py -v
@@ -354,7 +357,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies
-        run: uv sync --extra dev --extra llm-test
+        run: uv sync --frozen --extra dev --extra llm-test
 
       - name: Validate LLM test files are importable
         run: uv run python -m pytest --collect-only -m llm -q

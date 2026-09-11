@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Hypothesis property tests for algebraic invariants** (`tests/test_invariants.py`).
+  Decay (bounded by initial strength, monotone in time, scalar ≡ batch), retrieval
+  weight simplex, PAD distance/lerp, mood EMA/regression box, and cosine similarity
+  are now checked over generated inputs instead of a hand-picked grid. Psychological
+  fidelity tests are unchanged.
+
+### Changed
+
+- **CI `uv sync` is frozen** and `uv lock --check` runs in `meta-integrity`, so a
+  drifted lockfile fails closed instead of being silently regenerated.
+- **PEP 639 `license-files = ["LICENSE"]`** so the wheel/sdist ship the MIT license
+  text alongside the SPDX expression.
+
 ## [0.18.0] - 2026-08-10
 
 ### Security
