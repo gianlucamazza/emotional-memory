@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Addenda Y/Z are aligned with the code. ROADMAP Q/X2 residuals now point
   forward to the addenda that later executed them. Affective-state backends
   are documented only on the State Stores API page (Stores links there).
+  README Validation now covers Addenda Y/Z; examples table lists
+  `query_appraisal.py`; config flags include `query_affect_gate_tau` and
+  `max_content_length`.
 
 - **CI `uv sync` is frozen** and `uv lock --check` runs in `meta-integrity`, so a
   drifted lockfile fails closed instead of being silently regenerated.

@@ -188,9 +188,9 @@ The full API is auto-generated from docstrings and published at
 **[gianlucamazza.github.io/emotional-memory](https://gianlucamazza.github.io/emotional-memory/api/engine/)**.
 
 - **Engine** — [`EmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/engine/) (sync) and [`AsyncEmotionalMemory`](https://gianlucamazza.github.io/emotional-memory/api/async_engine/) share the same method surface: `encode`, `observe`, `encode_batch`, `retrieve`, `retrieve_with_explanations`, `retrieve_with_query_appraisal`, `retrieve_query_gated`, `elaborate` / `elaborate_pending`, `prune`, `export_memories` / `import_memories`, and state persistence. Both support context managers for automatic resource cleanup. `encode_batch` parallelizes appraisal up to `appraisal_max_concurrency` (default 8).
-- **Configuration** — `EmotionalMemoryConfig` plus nested `RetrievalConfig`, `ResonanceConfig`, `DecayConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`, `QueryClassifierConfig`. Top-level flags: `dual_path_encoding`, `elaboration_learning_rate`, `auto_categorize`, and ablation toggles (`enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation`).
+- **Configuration** — `EmotionalMemoryConfig` plus nested `RetrievalConfig`, `ResonanceConfig`, `DecayConfig`, `MoodDecayConfig`, `AdaptiveWeightsConfig`, `LLMAppraisalConfig`, `QueryClassifierConfig`. Top-level flags: `dual_path_encoding`, `elaboration_learning_rate`, `auto_categorize`, `appraisal_max_concurrency`, `max_content_length`, `query_affect_gate_tau` (Addendum Y, default 0.2), and ablation toggles (`enable_appraisal`, `enable_mood_signal`, `enable_momentum`, `enable_resonance`, `enable_reconsolidation`).
 - **Bring your own** — `Embedder`, `MemoryStore`, and `AffectiveStateStore` are duck-typed protocols. Included stores: `InMemoryStore`, `SQLiteStore` (sqlite-vec ANN), `QdrantStore`, `ChromaStore`. Included affective-state stores: in-memory, SQLite, Redis (pass one as `state_store=` for cross-session mood continuity).
-- **Appraisal** — `LLMAppraisalEngine` (wrap any LLM callable) or `KeywordAppraisalEngine` (zero-dependency fallback); swap the Scherer CPM prompt for any `AppraisalSchema` (OCC, GRID, custom) — see the [custom-appraisal tutorial](docs/tutorials/byo_appraisal_schema.md).
+- **Appraisal** — `LLMAppraisalEngine` (wrap any LLM callable) or `KeywordAppraisalEngine` (zero-dependency fallback); default `SCHERER_CPM_SCHEMA`, opt-in `DIRECT_VAD_SCHEMA` (Addendum V), or any custom `AppraisalSchema` (OCC, GRID) — see the [custom-appraisal tutorial](docs/tutorials/byo_appraisal_schema.md). Retrieve-time query affect: `retrieve_with_query_appraisal()` / `retrieve_query_gated()` — [tutorial](docs/tutorials/query_appraisal_retrieval.md).
 - **Async** — `as_async()` wraps a sync engine; `SyncToAsyncEmbedder` / `SyncToAsyncStore` / `SyncToAsyncAppraisalEngine` bridge sync I/O. See the [async tutorial](docs/tutorials/async.md).
 - **Query routing** — a pluggable `QueryClassifier` selects per-query-type retrieval weights (`HeuristicQueryClassifier` + `LOCOMO_ROUTING`, or `LLMQueryClassifier`). See the [query-routing tutorial](docs/tutorials/query_routing.md).
 
@@ -300,8 +300,8 @@ pre-registered confirmatory studies, **including committed negative results**. O
 affect-discriminative recall the advantage is real and embedder-robust (English N=200, SBERT
 Δ=+0.21, d=0.49; French N=120, me5, Δ=+0.18, p<0.0001) — but it does **not** generalize:
 external QA (LoCoMo F1 0.168 vs 0.271), naturalistic dialogue (DailyDialog), end-to-end LLM
-appraisal (Hg1/Addendum P), query-type routing (Addendum L), and per-query affect gating
-(Addendum Q — gating recovers the always-on penalty but cannot exceed cosine) all **FAIL**. The AFT advantage is
+appraisal (Hg1/Addendum P), query-type routing (Addendum L), and state-based affect gating
+(Addendum Q — recovers the always-on penalty but cannot exceed cosine) all **FAIL**. The AFT advantage is
 regime-specific to affect-discriminative recall, not a general superiority claim.
 Within that affect-discriminative regime, two pre-registered results are positive:
 the ranking edge **converts downstream** (Addendum R: encode→retrieve→generate→judge,
@@ -324,9 +324,15 @@ retrieval corpora cosine is significantly ahead: MADial-Bench (**Addendum X**, N
 nDCG@5 0.304 vs 0.221, Δ=−0.083 — **counter-congruent supportive recall**, a construct
 boundary between mood-congruent and emotion-regulatory retrieval) and ES-MemEval
 (**Addendum X2**, N=1,133, nDCG@4 0.284 vs 0.133, Δ=−0.150 — **affect-orthogonal QA gold**,
-where the affect channel is uninformative noise). Positive retrieval evidence remains
-confined to corpora whose gold relation is affect-conditioned by construction
-(see "When NOT to use").
+where the affect channel is uninformative noise). A query-affect-conditioned gate
+(**Addendum Y**, Branch A PASS) routes neutral queries to cosine and the rest to the
+retrieve-time arm: it recovers the *neutral-query* slice of the off-regime penalty
+without sacrificing the on-regime gain, and shipped as `retrieve_query_gated()` in
+v0.17.0; it does not move the X/X2 boundary. A held-out learned linear profile over
+the 6 retrieval signals (**Addendum Z**) does **not** beat cosine on any third-party
+corpus (Hz1 FAIL, 0/3) while preserving the curated on-regime advantage (Hz2 PASS).
+Positive retrieval evidence remains confined to corpora whose gold relation is
+affect-conditioned by construction (see "When NOT to use").
 
 > **Oracle-affect boundary**: results measured with preset valence/arousal injected at encode
 > time (oracle affect, appraisal bypassed) measure a different regime from end-to-end runs.
@@ -507,6 +513,7 @@ any ML dependencies.
 | `visualization.py`                  | All 8 matplotlib plot types                           | `[viz]`                 |
 | `resonance_network.py`              | Resonance graph and link-type distribution            | `[viz]`                 |
 | `retrieval_signals.py`              | 6-signal decomposition, radar chart, weight heatmap   | `[viz]`                 |
+| `query_appraisal.py`                | Query appraisal + gated retrieve (Addenda T/Y)        | —                       |
 
 Run any script: `uv run python examples/<script>.py`
 
