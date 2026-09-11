@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3136,7 +3136,7 @@ inertia   : [ 0.0,  1.0] 0=volatile, 1=completely stable</p>
 <span class="normal"><a href="#__codelineno-0-170">170</a></span>
 <span class="normal"><a href="#__codelineno-0-171">171</a></span>
 <span class="normal"><a href="#__codelineno-0-172">172</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">MoodField</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Euclidean distance in valence-arousal-dominance space.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="w">    </span><span class="sd">"""Euclidean distance in valence-arousal-dominance space."""</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">valence</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">valence</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">arousal</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -3193,14 +3193,14 @@ resist regression (as in trauma or persistent elation).</p>
 <span class="normal"><a href="#__codelineno-0-120">120</a></span>
 <span class="normal"><a href="#__codelineno-0-121">121</a></span>
 <span class="normal"><a href="#__codelineno-0-122">122</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="k">def</span><span class="w"> </span><span class="nf">regress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">MoodDecayConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a new MoodField regressed toward baseline by elapsed time.</span>
+<a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="w">    </span><span class="sd">"""Return a new MoodField regressed toward baseline by elapsed time.</span>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">    Uses exponential decay:</span>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">        value(t) = baseline + (value - baseline) * exp(-t * ln2 / half_life)</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="sd">    Effective half-life is modulated by inertia: high-inertia moods</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    resist regression (as in trauma or persistent elation).</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">    """</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>    <span class="n">elapsed</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="n">eff_hl</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">base_half_life_seconds</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">inertia</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">inertia_scale</span><span class="p">)</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="k">if</span> <span class="n">eff_hl</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
@@ -3296,7 +3296,7 @@ valence/arousal-derived heuristic).</p>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="n">decay_config</span><span class="p">:</span> <span class="n">MoodDecayConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
-<a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a new MoodField updated via exponential moving average.</span>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="w">    </span><span class="sd">"""Return a new MoodField updated via exponential moving average.</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>
 <a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="sd">    If ``decay_config`` is provided, temporal regression toward baseline is</span>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="sd">    applied first (accounting for elapsed silence since last update), then</span>
@@ -3311,7 +3311,7 @@ valence/arousal-derived heuristic).</p>
 <a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">    Dominance is a first-class PAD dimension on ``CoreAffect`` and is carried</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">    into the mood via the same EMA as valence and arousal (no separate</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    valence/arousal-derived heuristic).</span>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    """</span>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-149" name="__codelineno-0-149"></a>
@@ -3571,7 +3571,7 @@ valence/arousal-derived heuristic).</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

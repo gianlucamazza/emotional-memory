@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3005,7 +3005,7 @@
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>           │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>           ▼
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    ┌─────────────┐
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │ AppraisalVector │  ← &quot;Is this novel? Relevant to my goals? Threatening?&quot;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │ AppraisalVector │  ← "Is this novel? Relevant to my goals? Threatening?"
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │  (Scherer CPM)  │    5 dimensions → mapped to CoreAffect delta
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └──────┬──────┘
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>           │
@@ -3049,7 +3049,7 @@
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ▼
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Pass 1 — score all candidates (6 signals, no spreading):
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    s1  semantic similarity     (cosine of embeddings)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    s2  mood congruence         (how close is memory&#39;s mood to current mood?)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    s2  mood congruence         (how close is memory's mood to current mood?)
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    s3  core affect proximity   (distance in PAD space, 3D, sqrt(6) normalizer)
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    s4  momentum alignment      (do affect trajectories point the same way?)
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    s5  recency / decay         (ACT-R power-law: strength decays with time)
@@ -3057,7 +3057,7 @@
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Weights are adaptive: `adaptive_weights()` modulates w1-w6 with the current
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>MoodField *before* scoring. Calm/neutral mood → semantic (s1) dominates; negative
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mood → mood congruence (s2) and affect proximity (s3) rise at semantic&#39;s expense;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mood → mood congruence (s2) and affect proximity (s3) rise at semantic's expense;
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>high arousal → momentum (s4) rises. This applies to whatever base vector is in
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>effect — **including per-query routed weights** (`QueryClassifierConfig.routed_weights`):
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>a routed vector is a starting point, not the final weights. A routed
@@ -3081,7 +3081,7 @@
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    │
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    ▼
 <a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Per memory: compute_ape() — Affective Prediction Error
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    │         &quot;How surprising is this memory given the current context?&quot;
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    │         "How surprising is this memory given the current context?"
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    ▼
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>APE-gated reconsolidation:
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    high APE → open lability window → memory becomes reconsolidatable
@@ -3223,20 +3223,20 @@ need the ranking plan and signal breakdown for debugging, evaluation, or UI insp
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Encode with a positive, high-arousal state (e.g. after shipping a feature)</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">em</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.7</span><span class="p">))</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Finally shipped the new recommendation engine after three hard weeks.&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Team celebrated with pizza — everyone relieved and proud.&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Finally shipped the new recommendation engine after three hard weeks."</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Team celebrated with pizza — everyone relieved and proud."</span><span class="p">)</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Encode with a negative state (e.g. an incident)</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">em</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=-</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.9</span><span class="p">))</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Database outage at 3am — on-call for two hours.&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">em</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Database outage at 3am — on-call for two hours."</span><span class="p">)</span>
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Retrieve from a positive state → mood-congruent memories rank first</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="n">em</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;project work&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">results</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">"project work"</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
 <a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># results[0] will be one of the positive memories, not the outage</span>
 <a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;| valence:&quot;</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span><span class="p">)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="s2">"| valence:"</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
@@ -3304,7 +3304,7 @@ need the ranking plan and signal breakdown for debugging, evaluation, or UI insp
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

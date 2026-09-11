@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3132,7 +3132,7 @@ ambiguous to categorise reliably; they are returned with
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">,</span>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>    <span class="n">dominance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmotionLabel</span><span class="p">:</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Map a CoreAffect point to a discrete Plutchik emotion label.</span>
+<a id="__codelineno-0-119" name="__codelineno-0-119"></a><span class="w">    </span><span class="sd">"""Map a CoreAffect point to a discrete Plutchik emotion label.</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">        core_affect: The continuous valence-arousal point.</span>
@@ -3152,7 +3152,7 @@ ambiguous to categorise reliably; they are returned with
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">        Points within radius ``_NEUTRAL_RADIUS`` of the origin are too</span>
 <a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="sd">        ambiguous to categorise reliably; they are returned with</span>
 <a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">        ``confidence=0.0``.</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">    """</span>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="n">v</span> <span class="o">=</span> <span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span>
 <a id="__codelineno-0-141" name="__codelineno-0-141"></a>    <span class="c1"># Re-centre arousal to [-0.5, 0.5], then scale to [-1, 1] for isotropy.</span>
 <a id="__codelineno-0-142" name="__codelineno-0-142"></a>    <span class="n">a_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span>
@@ -3170,7 +3170,7 @@ ambiguous to categorise reliably; they are returned with
 <a id="__codelineno-0-154" name="__codelineno-0-154"></a>    <span class="c1"># Resolve primary emotion</span>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>    <span class="n">primary</span><span class="p">:</span> <span class="n">PrimaryEmotion</span> <span class="o">=</span> <span class="n">_SECTOR_EMOTION</span><span class="p">[</span><span class="n">sector_idx</span><span class="p">]</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="k">if</span> <span class="n">sector_idx</span> <span class="o">==</span> <span class="n">_FEAR_ANGER_SECTOR</span> <span class="ow">and</span> <span class="n">dominance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a>        <span class="n">primary</span> <span class="o">=</span> <span class="s2">&quot;anger&quot;</span> <span class="k">if</span> <span class="n">dominance</span> <span class="o">&gt;=</span> <span class="n">_DOMINANCE_THRESHOLD</span> <span class="k">else</span> <span class="s2">&quot;fear&quot;</span>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>        <span class="n">primary</span> <span class="o">=</span> <span class="s2">"anger"</span> <span class="k">if</span> <span class="n">dominance</span> <span class="o">&gt;=</span> <span class="n">_DOMINANCE_THRESHOLD</span> <span class="k">else</span> <span class="s2">"fear"</span>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="c1"># A near-baseline state (neutral valence + minimal arousal, i.e. around</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a>    <span class="c1"># CoreAffect.neutral()) is affectively flat: too ambiguous to categorise. Flag</span>
@@ -3181,11 +3181,11 @@ ambiguous to categorise reliably; they are returned with
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>    <span class="c1"># Intensity from radial distance</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="k">if</span> <span class="n">is_neutral</span> <span class="ow">or</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">_INTENSITY_LOW_THRESHOLD</span><span class="p">:</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>        <span class="n">intensity</span><span class="p">:</span> <span class="n">Intensity</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a>        <span class="n">intensity</span><span class="p">:</span> <span class="n">Intensity</span> <span class="o">=</span> <span class="s2">"low"</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="k">elif</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">_INTENSITY_HIGH_THRESHOLD</span><span class="p">:</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="n">intensity</span> <span class="o">=</span> <span class="s2">&quot;moderate&quot;</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="n">intensity</span> <span class="o">=</span> <span class="s2">"moderate"</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">intensity</span> <span class="o">=</span> <span class="s2">&quot;high&quot;</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">intensity</span> <span class="o">=</span> <span class="s2">"high"</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a>    <span class="c1"># Confidence: 1.0 at sector centre, 0.0 at sector edge (±22.5°).</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="c1"># Near-origin and near-baseline points are unreliable — confidence forced to 0.0.</span>
@@ -3330,23 +3330,23 @@ ambiguous to categorise reliably; they are returned with
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="n">tag</span><span class="p">:</span> <span class="n">EmotionalTag</span><span class="p">,</span>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="n">dominance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmotionalTag</span><span class="p">:</span>
-<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of *tag* with the ``emotion_label`` field populated.</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="w">    </span><span class="sd">"""Return a copy of *tag* with the ``emotion_label`` field populated.</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        tag:       The emotional tag to label.</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        dominance: Optional dominance value for fear/anger disambiguation.</span>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">                   If ``None`` and the tag has a ``mood_snapshot``, the</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">                   mood&#39;s dominance is used automatically.</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">                   mood's dominance is used automatically.</span>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">        A new frozen :class:`~emotional_memory.models.EmotionalTag` with</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        ``emotion_label`` set.</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    """</span>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="c1"># Auto-extract dominance from mood snapshot when not provided</span>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a>    <span class="k">if</span> <span class="n">dominance</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tag</span><span class="o">.</span><span class="n">mood_snapshot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>        <span class="n">dominance</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">mood_snapshot</span><span class="o">.</span><span class="n">dominance</span>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="n">label</span> <span class="o">=</span> <span class="n">categorize_affect</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">,</span> <span class="n">dominance</span><span class="o">=</span><span class="n">dominance</span><span class="p">)</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;emotion_label&quot;</span><span class="p">:</span> <span class="n">label</span><span class="p">})</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"emotion_label"</span><span class="p">:</span> <span class="n">label</span><span class="p">})</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3410,7 +3410,7 @@ ambiguous to categorise reliably; they are returned with
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

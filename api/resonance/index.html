@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3566,7 +3566,7 @@ associative network.</p>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="n">candidates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">],</span>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="n">config</span><span class="p">:</span> <span class="n">ResonanceConfig</span><span class="p">,</span>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ResonanceLink</span><span class="p">]:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Build resonance links from new_memory to the most resonant candidates.</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">"""Build resonance links from new_memory to the most resonant candidates.</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Excludes self-links. Returns up to config.max_links links above threshold,</span>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    sorted by strength descending.</span>
@@ -3575,7 +3575,7 @@ associative network.</p>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    The caller is responsible for creating the corresponding *backward* links</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">    on each target memory (candidate → new_memory) to maintain a bidirectional</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">    associative network.</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    """</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="c1"># Separate memories that have embeddings from those that do not.</span>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="c1"># Semantic similarities for the former are computed in a single</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="c1"># vectorised numpy operation instead of a Python loop.</span>
@@ -3852,14 +3852,14 @@ when bidirectional link creation is used at encode time.</p>
 <a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="n">candidates</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">],</span>
 <a id="__codelineno-0-264" name="__codelineno-0-264"></a>    <span class="n">hops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute activation levels via spreading activation from seed memories.</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="w">    </span><span class="sd">"""Compute activation levels via spreading activation from seed memories.</span>
 <a id="__codelineno-0-267" name="__codelineno-0-267"></a>
 <a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    Collins &amp; Loftus (1975): activation spreads from seed nodes through</span>
 <a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    associative links with multiplicative strength decay at each hop.</span>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a><span class="sd">    Because each link has strength &lt; 1.0, activation diminishes naturally</span>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a><span class="sd">    with distance — no explicit hop-discount factor is needed.</span>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">    The adjacency is built from every memory&#39;s stored resonance_links,</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">    The adjacency is built from every memory's stored resonance_links,</span>
 <a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">    which include both forward (new→old) and backward (old→new) links</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a><span class="sd">    when bidirectional link creation is used at encode time.</span>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a>
@@ -3872,7 +3872,7 @@ when bidirectional link creation is used at encode time.</p>
 <a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">        Mapping memory_id → activation level in (0, 1] for non-seed memories</span>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">        that were reached by activation spreading. Seeds are excluded from</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        the returned map (they are already in the top-k).</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">    """</span>
 <a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">seed_ids</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>        <span class="k">return</span> <span class="p">{}</span>
 <a id="__codelineno-0-289" name="__codelineno-0-289"></a>
@@ -4075,9 +4075,9 @@ query (excluding the memory itself).</p>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a>    <span class="n">co_retrieved_ids</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <a id="__codelineno-0-332" name="__codelineno-0-332"></a>    <span class="n">increment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ResonanceLink</span><span class="p">]:</span>
-<a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Strengthen links to co-retrieved memories (Hebb, 1949).</span>
+<a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="w">    </span><span class="sd">"""Strengthen links to co-retrieved memories (Hebb, 1949).</span>
 <a id="__codelineno-0-335" name="__codelineno-0-335"></a>
-<a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    &quot;Neurons that fire together wire together&quot; — when two linked memories</span>
+<a id="__codelineno-0-336" name="__codelineno-0-336"></a><span class="sd">    "Neurons that fire together wire together" — when two linked memories</span>
 <a id="__codelineno-0-337" name="__codelineno-0-337"></a><span class="sd">    are both retrieved in the same query, their associative link is</span>
 <a id="__codelineno-0-338" name="__codelineno-0-338"></a><span class="sd">    incrementally strengthened up to a maximum of 1.0.</span>
 <a id="__codelineno-0-339" name="__codelineno-0-339"></a>
@@ -4090,7 +4090,7 @@ query (excluding the memory itself).</p>
 <a id="__codelineno-0-346" name="__codelineno-0-346"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-347" name="__codelineno-0-347"></a><span class="sd">        Updated resonance_links list. Returns the original list unchanged</span>
 <a id="__codelineno-0-348" name="__codelineno-0-348"></a><span class="sd">        if no links were strengthened (avoids unnecessary copies).</span>
-<a id="__codelineno-0-349" name="__codelineno-0-349"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-349" name="__codelineno-0-349"></a><span class="sd">    """</span>
 <a id="__codelineno-0-350" name="__codelineno-0-350"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">co_retrieved_ids</span> <span class="ow">or</span> <span class="n">increment</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
 <a id="__codelineno-0-351" name="__codelineno-0-351"></a>        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">resonance_links</span><span class="p">)</span>
 <a id="__codelineno-0-352" name="__codelineno-0-352"></a>
@@ -4100,7 +4100,7 @@ query (excluding the memory itself).</p>
 <a id="__codelineno-0-356" name="__codelineno-0-356"></a>        <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">target_id</span> <span class="ow">in</span> <span class="n">co_retrieved_ids</span><span class="p">:</span>
 <a id="__codelineno-0-357" name="__codelineno-0-357"></a>            <span class="n">new_strength</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">link</span><span class="o">.</span><span class="n">strength</span> <span class="o">+</span> <span class="n">increment</span><span class="p">)</span>
 <a id="__codelineno-0-358" name="__codelineno-0-358"></a>            <span class="k">if</span> <span class="n">new_strength</span> <span class="o">!=</span> <span class="n">link</span><span class="o">.</span><span class="n">strength</span><span class="p">:</span>
-<a id="__codelineno-0-359" name="__codelineno-0-359"></a>                <span class="n">updated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="n">new_strength</span><span class="p">}))</span>
+<a id="__codelineno-0-359" name="__codelineno-0-359"></a>                <span class="n">updated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"strength"</span><span class="p">:</span> <span class="n">new_strength</span><span class="p">}))</span>
 <a id="__codelineno-0-360" name="__codelineno-0-360"></a>                <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
 <a id="__codelineno-0-361" name="__codelineno-0-361"></a>                <span class="k">continue</span>
 <a id="__codelineno-0-362" name="__codelineno-0-362"></a>        <span class="n">updated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
@@ -4140,11 +4140,11 @@ Returns 1.0 for simultaneous events, approaches 0 for distant events.</p>
 <span class="normal"><a href="#__codelineno-0-113">113</a></span>
 <span class="normal"><a href="#__codelineno-0-114">114</a></span>
 <span class="normal"><a href="#__codelineno-0-115">115</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="k">def</span><span class="w"> </span><span class="nf">temporal_proximity</span><span class="p">(</span><span class="n">t1</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">t2</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">half_life_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3600.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponential decay of temporal proximity.</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="w">    </span><span class="sd">"""Exponential decay of temporal proximity.</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">    proximity = exp(-|delta_t| * ln(2) / half_life)</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">    Returns 1.0 for simultaneous events, approaches 0 for distant events.</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    """</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="k">if</span> <span class="n">half_life_seconds</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a>        <span class="k">return</span> <span class="mf">0.0</span>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="n">delta</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">((</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t2</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">())</span>
@@ -4212,7 +4212,7 @@ Returns 1.0 for simultaneous events, approaches 0 for distant events.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

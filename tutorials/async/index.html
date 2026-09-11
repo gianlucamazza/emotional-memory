@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3078,7 +3078,7 @@ Do <strong>not</strong> drive the same engine from multiple threads concurrently
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">HashEmbedder</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Deterministic 8-dim embedder — no ML dependencies required.&quot;&quot;&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="sd">"""Deterministic 8-dim embedder — no ML dependencies required."""</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">DIM</span> <span class="o">=</span> <span class="mi">8</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
@@ -3097,11 +3097,11 @@ Do <strong>not</strong> drive the same engine from multiple threads concurrently
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    <span class="n">aem</span> <span class="o">=</span> <span class="n">as_async</span><span class="p">(</span><span class="n">sync_em</span><span class="p">)</span>          <span class="c1"># wrap — one line</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="n">mem</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Shipped the new feature ahead of schedule.&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="n">mem</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Shipped the new feature ahead of schedule."</span><span class="p">)</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">mem</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;feature release&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories.&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">"feature release"</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Retrieved </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories."</span><span class="p">)</span>
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
@@ -3119,12 +3119,12 @@ or supply natively-async implementations of <code>AsyncEmbedder</code> /
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">,</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.8</span><span class="p">))</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Breakthrough — the algorithm finally converged.&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Breakthrough — the algorithm finally converged."</span><span class="p">)</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=-</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.6</span><span class="p">))</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;Critical bug found in production at 2 AM.&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"Critical bug found in production at 2 AM."</span><span class="p">)</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;algorithm bug&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">"algorithm bug"</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="p">)</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="c1"># close() called automatically by async context manager</span>
@@ -3143,20 +3143,20 @@ than looping over <code>encode()</code> when the embedder supports batching (e.g
 <code>SentenceTransformerEmbedder</code>).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">async_store</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">texts</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">&quot;Quarterly OKRs reviewed, on track.&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">&quot;Customer escalation resolved within SLA.&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="s2">&quot;New team member onboarded successfully.&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="s2">"Quarterly OKRs reviewed, on track."</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="s2">"Customer escalation resolved within SLA."</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="s2">"New team member onboarded successfully."</span><span class="p">,</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">]</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">mems</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">encode_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Encoded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mems</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories.&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Encoded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mems</span><span class="p">)</span><span class="si">}</span><span class="s2"> memories."</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="maintenance-count-and-prune">Maintenance — count and prune<a class="headerlink" href="#maintenance-count-and-prune" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">AsyncEmotionalMemory</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">async_store</span><span class="p">,</span> <span class="n">embedder</span><span class="o">=</span><span class="n">async_embedder</span><span class="p">)</span> <span class="k">as</span> <span class="n">aem</span><span class="p">:</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">total</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total memories: </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total memories: </span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">removed</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pruned </span><span class="si">{</span><span class="n">removed</span><span class="si">}</span><span class="s2"> weak memories.&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pruned </span><span class="si">{</span><span class="n">removed</span><span class="si">}</span><span class="s2"> weak memories."</span><span class="p">)</span>
 </code></pre></div>
 <p><code>prune()</code> removes memories whose <code>compute_effective_strength()</code> score falls
 below <code>threshold</code> (ACT-R power-law decay — see <a href="../../api/decay/">Decay</a>).</p>
@@ -3173,7 +3173,7 @@ State captures mood, momentum history, and the mood-decay config.</p>
 alignment, recency, resonance).  Set mood with <code>set_affect()</code> before
 <code>retrieve()</code> to steer results toward emotionally matching memories.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">aem</span><span class="o">.</span><span class="n">set_affect</span><span class="p">(</span><span class="n">CoreAffect</span><span class="p">(</span><span class="n">valence</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">arousal</span><span class="o">=</span><span class="mf">0.6</span><span class="p">))</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;team achievement&quot;</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">aem</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">"team achievement"</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
@@ -3240,7 +3240,7 @@ alignment, recency, resonance).  Set mood with <code>set_affect()</code> before
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

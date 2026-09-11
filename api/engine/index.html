@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3754,10 +3754,10 @@ engine = EmotionalMemory(store, embedder)
 
 # Encode with automatic appraisal (if engine provided) or manual affect
 engine.set_affect(CoreAffect(valence=0.8, arousal=0.6))
-memory = engine.encode(&quot;Just completed a difficult project successfully!&quot;)
+memory = engine.encode("Just completed a difficult project successfully!")
 
 # Retrieve — emotionally weighted by current state
-results = engine.retrieve(&quot;challenging work accomplishment&quot;)
+results = engine.retrieve("challenging work accomplishment")
 </code></pre></div>
 
 
@@ -3807,8 +3807,8 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="o">=</span> <span class="n">state_store</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_initial_state</span><span class="p">()</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="n">qc_cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">retrieval</span><span class="o">.</span><span class="n">query_classifier</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="k">if</span> <span class="n">qc_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">qc_cfg</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;disabled&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="k">if</span> <span class="n">qc_cfg</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;heuristic&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="k">if</span> <span class="n">qc_cfg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">qc_cfg</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">"disabled"</span><span class="p">:</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a>        <span class="k">if</span> <span class="n">qc_cfg</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"heuristic"</span><span class="p">:</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_query_classifier</span><span class="p">:</span> <span class="n">QueryClassifier</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">HeuristicQueryClassifier</span><span class="p">()</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>        <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_query_classifier</span> <span class="o">=</span> <span class="n">query_classifier</span>
@@ -3849,7 +3849,7 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-945">945</a></span>
 <span class="normal"><a href="#__codelineno-0-946">946</a></span>
 <span class="normal"><a href="#__codelineno-0-947">947</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-945" name="__codelineno-0-945"></a><span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-946" name="__codelineno-0-946"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the number of memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-946" name="__codelineno-0-946"></a><span class="w">    </span><span class="sd">"""Return the number of memories in the store."""</span>
 <a id="__codelineno-0-947" name="__codelineno-0-947"></a>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3877,7 +3877,7 @@ results = engine.retrieve(&quot;challenging work accomplishment&quot;)
 <span class="normal"><a href="#__codelineno-0-1005">1005</a></span>
 <span class="normal"><a href="#__codelineno-0-1006">1006</a></span>
 <span class="normal"><a href="#__codelineno-0-1007">1007</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1004" name="__codelineno-0-1004"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-1005" name="__codelineno-0-1005"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove the persisted affective-state snapshot, if configured.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-1005" name="__codelineno-0-1005"></a><span class="w">    </span><span class="sd">"""Remove the persisted affective-state snapshot, if configured."""</span>
 <a id="__codelineno-0-1006" name="__codelineno-0-1006"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-1007" name="__codelineno-0-1007"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -3923,20 +3923,20 @@ the engine and remains the caller's responsibility.</p>
 <span class="normal"><a href="#__codelineno-0-1095">1095</a></span>
 <span class="normal"><a href="#__codelineno-0-1096">1096</a></span>
 <span class="normal"><a href="#__codelineno-0-1097">1097</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1081" name="__codelineno-0-1081"></a><span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-1082" name="__codelineno-0-1082"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Release resources held by store, state store, and appraisal engine.</span>
+<a id="__codelineno-0-1082" name="__codelineno-0-1082"></a><span class="w">    </span><span class="sd">"""Release resources held by store, state store, and appraisal engine.</span>
 <a id="__codelineno-0-1083" name="__codelineno-0-1083"></a>
 <a id="__codelineno-0-1084" name="__codelineno-0-1084"></a><span class="sd">    Calls ``close()`` on each collaborator that exposes it (e.g.</span>
 <a id="__codelineno-0-1085" name="__codelineno-0-1085"></a><span class="sd">    ``SQLiteStore``, ``LLMAppraisalEngine`` with an httpx-backed LLM).</span>
 <a id="__codelineno-0-1086" name="__codelineno-0-1086"></a><span class="sd">    Safe on collaborators without cleanup. The embedder is not owned by</span>
-<a id="__codelineno-0-1087" name="__codelineno-0-1087"></a><span class="sd">    the engine and remains the caller&#39;s responsibility.</span>
-<a id="__codelineno-0-1088" name="__codelineno-0-1088"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-1089" name="__codelineno-0-1089"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-1087" name="__codelineno-0-1087"></a><span class="sd">    the engine and remains the caller's responsibility.</span>
+<a id="__codelineno-0-1088" name="__codelineno-0-1088"></a><span class="sd">    """</span>
+<a id="__codelineno-0-1089" name="__codelineno-0-1089"></a>    <span class="n">close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <a id="__codelineno-0-1090" name="__codelineno-0-1090"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">close</span><span class="p">):</span>
 <a id="__codelineno-0-1091" name="__codelineno-0-1091"></a>        <span class="n">close</span><span class="p">()</span>
-<a id="__codelineno-0-1092" name="__codelineno-0-1092"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-1092" name="__codelineno-0-1092"></a>    <span class="n">state_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <a id="__codelineno-0-1093" name="__codelineno-0-1093"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">state_close</span><span class="p">):</span>
 <a id="__codelineno-0-1094" name="__codelineno-0-1094"></a>        <span class="n">state_close</span><span class="p">()</span>
-<a id="__codelineno-0-1095" name="__codelineno-0-1095"></a>    <span class="n">appraisal_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="p">,</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-0-1095" name="__codelineno-0-1095"></a>    <span class="n">appraisal_close</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="p">,</span> <span class="s2">"close"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <a id="__codelineno-0-1096" name="__codelineno-0-1096"></a>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">appraisal_close</span><span class="p">):</span>
 <a id="__codelineno-0-1097" name="__codelineno-0-1097"></a>        <span class="n">appraisal_close</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -3964,7 +3964,7 @@ the engine and remains the caller's responsibility.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-902">902</a></span>
 <span class="normal"><a href="#__codelineno-0-903">903</a></span>
 <span class="normal"><a href="#__codelineno-0-904">904</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-902" name="__codelineno-0-902"></a><span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-903" name="__codelineno-0-903"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove a memory from the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-903" name="__codelineno-0-903"></a><span class="w">    </span><span class="sd">"""Remove a memory from the store."""</span>
 <a id="__codelineno-0-904" name="__codelineno-0-904"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4077,10 +4077,10 @@ pending_appraisal, and opens the reconsolidation window.</p>
 <span class="normal"><a href="#__codelineno-0-881">881</a></span>
 <span class="normal"><a href="#__codelineno-0-882">882</a></span>
 <span class="normal"><a href="#__codelineno-0-883">883</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-863" name="__codelineno-0-863"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-864" name="__codelineno-0-864"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
+<a id="__codelineno-0-864" name="__codelineno-0-864"></a><span class="w">    </span><span class="sd">"""Run full appraisal on a fast-path (pending) memory and blend core_affect.</span>
 <a id="__codelineno-0-865" name="__codelineno-0-865"></a>
 <a id="__codelineno-0-866" name="__codelineno-0-866"></a><span class="sd">    Dual-path slow path (LeDoux, 1996): runs the full Scherer appraisal</span>
-<a id="__codelineno-0-867" name="__codelineno-0-867"></a><span class="sd">    on the memory&#39;s content, blends the appraised affect with the raw</span>
+<a id="__codelineno-0-867" name="__codelineno-0-867"></a><span class="sd">    on the memory's content, blends the appraised affect with the raw</span>
 <a id="__codelineno-0-868" name="__codelineno-0-868"></a><span class="sd">    fast-path affect, updates consolidation_strength, clears</span>
 <a id="__codelineno-0-869" name="__codelineno-0-869"></a><span class="sd">    pending_appraisal, and opens the reconsolidation window.</span>
 <a id="__codelineno-0-870" name="__codelineno-0-870"></a>
@@ -4090,8 +4090,8 @@ pending_appraisal, and opens the reconsolidation window.</p>
 <a id="__codelineno-0-874" name="__codelineno-0-874"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-875" name="__codelineno-0-875"></a><span class="sd">        The updated Memory, or None if the memory does not exist,</span>
 <a id="__codelineno-0-876" name="__codelineno-0-876"></a><span class="sd">        is not pending appraisal, or no appraisal engine is configured.</span>
-<a id="__codelineno-0-877" name="__codelineno-0-877"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-878" name="__codelineno-0-878"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.elaborate&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;memory_id&quot;</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
+<a id="__codelineno-0-877" name="__codelineno-0-877"></a><span class="sd">    """</span>
+<a id="__codelineno-0-878" name="__codelineno-0-878"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.elaborate"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"memory_id"</span><span class="p">:</span> <span class="n">memory_id</span><span class="p">}):</span>
 <a id="__codelineno-0-879" name="__codelineno-0-879"></a>        <span class="n">mem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 <a id="__codelineno-0-880" name="__codelineno-0-880"></a>        <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-881" name="__codelineno-0-881"></a>            <span class="k">return</span> <span class="kc">None</span>
@@ -4160,14 +4160,14 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <span class="normal"><a href="#__codelineno-0-898">898</a></span>
 <span class="normal"><a href="#__codelineno-0-899">899</a></span>
 <span class="normal"><a href="#__codelineno-0-900">900</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-885" name="__codelineno-0-885"></a><span class="k">def</span><span class="w"> </span><span class="nf">elaborate_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-886" name="__codelineno-0-886"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Elaborate all memories with pending_appraisal=True.</span>
+<a id="__codelineno-0-886" name="__codelineno-0-886"></a><span class="w">    </span><span class="sd">"""Elaborate all memories with pending_appraisal=True.</span>
 <a id="__codelineno-0-887" name="__codelineno-0-887"></a>
 <a id="__codelineno-0-888" name="__codelineno-0-888"></a><span class="sd">    Convenience method to run the slow appraisal path on all fast-path</span>
 <a id="__codelineno-0-889" name="__codelineno-0-889"></a><span class="sd">    memories in the store. Each memory is elaborated in sequence.</span>
 <a id="__codelineno-0-890" name="__codelineno-0-890"></a>
 <a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-892" name="__codelineno-0-892"></a><span class="sd">        List of updated Memory objects (only those that were elaborated).</span>
-<a id="__codelineno-0-893" name="__codelineno-0-893"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-893" name="__codelineno-0-893"></a><span class="sd">    """</span>
 <a id="__codelineno-0-894" name="__codelineno-0-894"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-0-895" name="__codelineno-0-895"></a>    <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">():</span>
 <a id="__codelineno-0-896" name="__codelineno-0-896"></a>        <span class="k">if</span> <span class="n">mem</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">pending_appraisal</span><span class="p">:</span>
@@ -4292,7 +4292,7 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="n">appraisal</span><span class="p">:</span> <span class="n">AppraisalVector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-315" name="__codelineno-0-315"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span><span class="p">:</span>
-<a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Encode content into emotional memory.</span>
+<a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="w">    </span><span class="sd">"""Encode content into emotional memory.</span>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a>
 <a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">    Pipeline:</span>
 <a id="__codelineno-0-320" name="__codelineno-0-320"></a><span class="sd">      1. Compute/use appraisal → derive CoreAffect</span>
@@ -4302,11 +4302,11 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">      5. Store memory</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">      6. Build resonance links against existing memories</span>
 <a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">      7. Update stored memory with resonance links</span>
-<a id="__codelineno-0-327" name="__codelineno-0-327"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-327" name="__codelineno-0-327"></a><span class="sd">    """</span>
 <a id="__codelineno-0-328" name="__codelineno-0-328"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">)</span>
-<a id="__codelineno-0-329" name="__codelineno-0-329"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.encode&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
+<a id="__codelineno-0-329" name="__codelineno-0-329"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.encode"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"content_length"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
 <a id="__codelineno-0-330" name="__codelineno-0-330"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
-<a id="__codelineno-0-331" name="__codelineno-0-331"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;encode start: content_len=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+<a id="__codelineno-0-331" name="__codelineno-0-331"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"encode start: content_len=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
 <a id="__codelineno-0-332" name="__codelineno-0-332"></a>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a>        <span class="c1"># Steps 1-3: resolve affect, update state, and build EmotionalTag.</span>
 <a id="__codelineno-0-334" name="__codelineno-0-334"></a>        <span class="n">tag</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_tag</span><span class="p">(</span>
@@ -4318,12 +4318,12 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-340" name="__codelineno-0-340"></a>        <span class="p">)</span>
 <a id="__codelineno-0-341" name="__codelineno-0-341"></a>
 <a id="__codelineno-0-342" name="__codelineno-0-342"></a>        <span class="c1"># Step 4: embed</span>
-<a id="__codelineno-0-343" name="__codelineno-0-343"></a>        <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.embed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
+<a id="__codelineno-0-343" name="__codelineno-0-343"></a>        <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.embed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"content_length"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
 <a id="__codelineno-0-344" name="__codelineno-0-344"></a>            <span class="n">embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 <a id="__codelineno-0-345" name="__codelineno-0-345"></a>        <span class="k">if</span> <span class="n">embedding</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">embedding</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
 <a id="__codelineno-0-346" name="__codelineno-0-346"></a>            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-<a id="__codelineno-0-347" name="__codelineno-0-347"></a>                <span class="sa">f</span><span class="s2">&quot;Embedder returned NaN values for content (len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">). &quot;</span>
-<a id="__codelineno-0-348" name="__codelineno-0-348"></a>                <span class="s2">&quot;Semantic retrieval will be degraded for this memory.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-347" name="__codelineno-0-347"></a>                <span class="sa">f</span><span class="s2">"Embedder returned NaN values for content (len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">). "</span>
+<a id="__codelineno-0-348" name="__codelineno-0-348"></a>                <span class="s2">"Semantic retrieval will be degraded for this memory."</span><span class="p">,</span>
 <a id="__codelineno-0-349" name="__codelineno-0-349"></a>                <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <a id="__codelineno-0-350" name="__codelineno-0-350"></a>            <span class="p">)</span>
 <a id="__codelineno-0-351" name="__codelineno-0-351"></a>
@@ -4333,7 +4333,7 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-355" name="__codelineno-0-355"></a>        <span class="p">)</span>
 <a id="__codelineno-0-356" name="__codelineno-0-356"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
 <a id="__codelineno-0-357" name="__codelineno-0-357"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-358" name="__codelineno-0-358"></a>            <span class="s2">&quot;encode stored: id=</span><span class="si">%s</span><span class="s2"> valence=</span><span class="si">%.3f</span><span class="s2"> arousal=</span><span class="si">%.3f</span><span class="s2"> cs=</span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-358" name="__codelineno-0-358"></a>            <span class="s2">"encode stored: id=</span><span class="si">%s</span><span class="s2"> valence=</span><span class="si">%.3f</span><span class="s2"> arousal=</span><span class="si">%.3f</span><span class="s2"> cs=</span><span class="si">%.3f</span><span class="s2">"</span><span class="p">,</span>
 <a id="__codelineno-0-359" name="__codelineno-0-359"></a>            <span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
 <a id="__codelineno-0-360" name="__codelineno-0-360"></a>            <span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span>
 <a id="__codelineno-0-361" name="__codelineno-0-361"></a>            <span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span>
@@ -4346,7 +4346,7 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-368" name="__codelineno-0-368"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">resonance</span><span class="o">.</span><span class="n">max_links</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">resonance</span><span class="o">.</span><span class="n">candidate_multiplier</span>
 <a id="__codelineno-0-369" name="__codelineno-0-369"></a>            <span class="p">)</span>
 <a id="__codelineno-0-370" name="__codelineno-0-370"></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">resonance_limit</span> <span class="ow">and</span> <span class="n">memory</span><span class="o">.</span><span class="n">embedding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-371" name="__codelineno-0-371"></a>                <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.store.search_by_embedding&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-371" name="__codelineno-0-371"></a>                <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.store.search_by_embedding"</span><span class="p">):</span>
 <a id="__codelineno-0-372" name="__codelineno-0-372"></a>                    <span class="n">candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">search_by_embedding</span><span class="p">(</span>
 <a id="__codelineno-0-373" name="__codelineno-0-373"></a>                        <span class="n">memory</span><span class="o">.</span><span class="n">embedding</span><span class="p">,</span> <span class="n">resonance_limit</span>
 <a id="__codelineno-0-374" name="__codelineno-0-374"></a>                    <span class="p">)</span>
@@ -4355,10 +4355,10 @@ memories in the store. Each memory is elaborated in sequence.</p>
 <a id="__codelineno-0-377" name="__codelineno-0-377"></a>            <span class="n">links</span> <span class="o">=</span> <span class="n">build_resonance_links</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">resonance</span><span class="p">)</span>
 <a id="__codelineno-0-378" name="__codelineno-0-378"></a>
 <a id="__codelineno-0-379" name="__codelineno-0-379"></a>            <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
-<a id="__codelineno-0-380" name="__codelineno-0-380"></a>                <span class="n">updated_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;resonance_links&quot;</span><span class="p">:</span> <span class="n">links</span><span class="p">})</span>
-<a id="__codelineno-0-381" name="__codelineno-0-381"></a>                <span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">updated_tag</span><span class="p">})</span>
+<a id="__codelineno-0-380" name="__codelineno-0-380"></a>                <span class="n">updated_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"resonance_links"</span><span class="p">:</span> <span class="n">links</span><span class="p">})</span>
+<a id="__codelineno-0-381" name="__codelineno-0-381"></a>                <span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"tag"</span><span class="p">:</span> <span class="n">updated_tag</span><span class="p">})</span>
 <a id="__codelineno-0-382" name="__codelineno-0-382"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
-<a id="__codelineno-0-383" name="__codelineno-0-383"></a>                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;encode resonance: id=</span><span class="si">%s</span><span class="s2"> links=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">))</span>
+<a id="__codelineno-0-383" name="__codelineno-0-383"></a>                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"encode resonance: id=</span><span class="si">%s</span><span class="s2"> links=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span> <span class="n">memory</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">))</span>
 <a id="__codelineno-0-384" name="__codelineno-0-384"></a>
 <a id="__codelineno-0-385" name="__codelineno-0-385"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_add_bidirectional_links</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span>
 <a id="__codelineno-0-386" name="__codelineno-0-386"></a>
@@ -4493,21 +4493,21 @@ computed up front in parallel (see <code>_appraise_many</code>).</p>
 <a id="__codelineno-0-714" name="__codelineno-0-714"></a>    <span class="n">contents</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <a id="__codelineno-0-715" name="__codelineno-0-715"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Encode multiple contents using a single embed_batch call.</span>
+<a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="w">    </span><span class="sd">"""Encode multiple contents using a single embed_batch call.</span>
 <a id="__codelineno-0-718" name="__codelineno-0-718"></a>
 <a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">    Uses embed_batch() for efficient batched embedding (G6), then encodes</span>
 <a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">    each item sequentially so that AffectiveState evolves naturally.</span>
 <a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">    Resonance links are built against the store state at each step, meaning</span>
 <a id="__codelineno-0-722" name="__codelineno-0-722"></a><span class="sd">    later items in the batch can link to earlier ones. Per-item appraisal is</span>
 <a id="__codelineno-0-723" name="__codelineno-0-723"></a><span class="sd">    computed up front in parallel (see ``_appraise_many``).</span>
-<a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="sd">    """</span>
 <a id="__codelineno-0-725" name="__codelineno-0-725"></a>    <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">):</span>
 <a id="__codelineno-0-726" name="__codelineno-0-726"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-727" name="__codelineno-0-727"></a>            <span class="sa">f</span><span class="s2">&quot;metadata length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match contents length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+<a id="__codelineno-0-727" name="__codelineno-0-727"></a>            <span class="sa">f</span><span class="s2">"metadata length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="si">}</span><span class="s2">) must match contents length (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
 <a id="__codelineno-0-728" name="__codelineno-0-728"></a>        <span class="p">)</span>
-<a id="__codelineno-0-729" name="__codelineno-0-729"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.encode_batch&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;batch_size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)}):</span>
+<a id="__codelineno-0-729" name="__codelineno-0-729"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.encode_batch"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"batch_size"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)}):</span>
 <a id="__codelineno-0-730" name="__codelineno-0-730"></a>        <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span>
-<a id="__codelineno-0-731" name="__codelineno-0-731"></a>            <span class="s2">&quot;emotional_memory.embed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content_length&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">)}</span>
+<a id="__codelineno-0-731" name="__codelineno-0-731"></a>            <span class="s2">"emotional_memory.embed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"content_length"</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">)}</span>
 <a id="__codelineno-0-732" name="__codelineno-0-732"></a>        <span class="p">):</span>
 <a id="__codelineno-0-733" name="__codelineno-0-733"></a>            <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embedder</span><span class="o">.</span><span class="n">embed_batch</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
 <a id="__codelineno-0-734" name="__codelineno-0-734"></a>        <span class="c1"># Dual-path: skip appraisal on fast path. Appraise the whole batch in</span>
@@ -4547,7 +4547,7 @@ computed up front in parallel (see <code>_appraise_many</code>).</p>
 <a id="__codelineno-0-768" name="__codelineno-0-768"></a>
 <a id="__codelineno-0-769" name="__codelineno-0-769"></a>            <span class="c1"># Mark pending_appraisal for fast-path memories</span>
 <a id="__codelineno-0-770" name="__codelineno-0-770"></a>            <span class="k">if</span> <span class="n">use_fast_path</span><span class="p">:</span>
-<a id="__codelineno-0-771" name="__codelineno-0-771"></a>                <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pending_appraisal&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<a id="__codelineno-0-771" name="__codelineno-0-771"></a>                <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"pending_appraisal"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 <a id="__codelineno-0-772" name="__codelineno-0-772"></a>
 <a id="__codelineno-0-773" name="__codelineno-0-773"></a>            <span class="c1"># Auto-categorize: attach Plutchik EmotionLabel</span>
 <a id="__codelineno-0-774" name="__codelineno-0-774"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">auto_categorize</span><span class="p">:</span>
@@ -4555,8 +4555,8 @@ computed up front in parallel (see <code>_appraise_many</code>).</p>
 <a id="__codelineno-0-776" name="__codelineno-0-776"></a>
 <a id="__codelineno-0-777" name="__codelineno-0-777"></a>            <span class="k">if</span> <span class="n">embedding</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">embedding</span><span class="p">))</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
 <a id="__codelineno-0-778" name="__codelineno-0-778"></a>                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-<a id="__codelineno-0-779" name="__codelineno-0-779"></a>                    <span class="sa">f</span><span class="s2">&quot;Embedder returned NaN values for content[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] (len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">). &quot;</span>
-<a id="__codelineno-0-780" name="__codelineno-0-780"></a>                    <span class="s2">&quot;Semantic retrieval will be degraded for this memory.&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-779" name="__codelineno-0-779"></a>                    <span class="sa">f</span><span class="s2">"Embedder returned NaN values for content[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] (len=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2">). "</span>
+<a id="__codelineno-0-780" name="__codelineno-0-780"></a>                    <span class="s2">"Semantic retrieval will be degraded for this memory."</span><span class="p">,</span>
 <a id="__codelineno-0-781" name="__codelineno-0-781"></a>                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <a id="__codelineno-0-782" name="__codelineno-0-782"></a>                <span class="p">)</span>
 <a id="__codelineno-0-783" name="__codelineno-0-783"></a>            <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
@@ -4579,8 +4579,8 @@ computed up front in parallel (see <code>_appraise_many</code>).</p>
 <a id="__codelineno-0-800" name="__codelineno-0-800"></a>                    <span class="n">candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
 <a id="__codelineno-0-801" name="__codelineno-0-801"></a>                <span class="n">links</span> <span class="o">=</span> <span class="n">build_resonance_links</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">resonance</span><span class="p">)</span>
 <a id="__codelineno-0-802" name="__codelineno-0-802"></a>                <span class="k">if</span> <span class="n">links</span><span class="p">:</span>
-<a id="__codelineno-0-803" name="__codelineno-0-803"></a>                    <span class="n">updated_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;resonance_links&quot;</span><span class="p">:</span> <span class="n">links</span><span class="p">})</span>
-<a id="__codelineno-0-804" name="__codelineno-0-804"></a>                    <span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">updated_tag</span><span class="p">})</span>
+<a id="__codelineno-0-803" name="__codelineno-0-803"></a>                    <span class="n">updated_tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"resonance_links"</span><span class="p">:</span> <span class="n">links</span><span class="p">})</span>
+<a id="__codelineno-0-804" name="__codelineno-0-804"></a>                    <span class="n">memory</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"tag"</span><span class="p">:</span> <span class="n">updated_tag</span><span class="p">})</span>
 <a id="__codelineno-0-805" name="__codelineno-0-805"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
 <a id="__codelineno-0-806" name="__codelineno-0-806"></a>
 <a id="__codelineno-0-807" name="__codelineno-0-807"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_bidirectional_links</span><span class="p">(</span><span class="n">memory</span><span class="p">,</span> <span class="n">links</span><span class="p">)</span>
@@ -4618,12 +4618,12 @@ can be restored with <code>import_memories()</code>.</p>
 <span class="normal"><a href="#__codelineno-0-1041">1041</a></span>
 <span class="normal"><a href="#__codelineno-0-1042">1042</a></span>
 <span class="normal"><a href="#__codelineno-0-1043">1043</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1037" name="__codelineno-0-1037"></a><span class="k">def</span><span class="w"> </span><span class="nf">export_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<a id="__codelineno-0-1038" name="__codelineno-0-1038"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all memories as a list of JSON-serialisable dicts.</span>
+<a id="__codelineno-0-1038" name="__codelineno-0-1038"></a><span class="w">    </span><span class="sd">"""Export all memories as a list of JSON-serialisable dicts.</span>
 <a id="__codelineno-0-1039" name="__codelineno-0-1039"></a>
 <a id="__codelineno-0-1040" name="__codelineno-0-1040"></a><span class="sd">    Suitable for backup or migration between store backends.  The output</span>
 <a id="__codelineno-0-1041" name="__codelineno-0-1041"></a><span class="sd">    can be restored with ``import_memories()``.</span>
-<a id="__codelineno-0-1042" name="__codelineno-0-1042"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-1043" name="__codelineno-0-1043"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()]</span>
+<a id="__codelineno-0-1042" name="__codelineno-0-1042"></a><span class="sd">    """</span>
+<a id="__codelineno-0-1043" name="__codelineno-0-1043"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"json"</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -4649,7 +4649,7 @@ can be restored with <code>import_memories()</code>.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-906">906</a></span>
 <span class="normal"><a href="#__codelineno-0-907">907</a></span>
 <span class="normal"><a href="#__codelineno-0-908">908</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-906" name="__codelineno-0-906"></a><span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memory_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-907" name="__codelineno-0-907"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Look up a single memory by ID, or None if not found.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-907" name="__codelineno-0-907"></a><span class="w">    </span><span class="sd">"""Look up a single memory by ID, or None if not found."""</span>
 <a id="__codelineno-0-908" name="__codelineno-0-908"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">memory_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4686,11 +4686,11 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-1077">1077</a></span>
 <span class="normal"><a href="#__codelineno-0-1078">1078</a></span>
 <span class="normal"><a href="#__codelineno-0-1079">1079</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1069" name="__codelineno-0-1069"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MoodField</span><span class="p">:</span>
-<a id="__codelineno-0-1070" name="__codelineno-0-1070"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the mood field regressed to ``now`` without modifying state.</span>
+<a id="__codelineno-0-1070" name="__codelineno-0-1070"></a><span class="w">    </span><span class="sd">"""Return the mood field regressed to ``now`` without modifying state.</span>
 <a id="__codelineno-0-1071" name="__codelineno-0-1071"></a>
 <a id="__codelineno-0-1072" name="__codelineno-0-1072"></a><span class="sd">    Useful for read-only mood inspection between encode/retrieve calls.</span>
 <a id="__codelineno-0-1073" name="__codelineno-0-1073"></a><span class="sd">    If ``mood_decay`` is not configured, returns the frozen mood.</span>
-<a id="__codelineno-0-1074" name="__codelineno-0-1074"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-1074" name="__codelineno-0-1074"></a><span class="sd">    """</span>
 <a id="__codelineno-0-1075" name="__codelineno-0-1075"></a>    <span class="k">if</span> <span class="n">now</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-1076" name="__codelineno-0-1076"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-1077" name="__codelineno-0-1077"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_decay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -4721,7 +4721,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-949">949</a></span>
 <span class="normal"><a href="#__codelineno-0-950">950</a></span>
 <span class="normal"><a href="#__codelineno-0-951">951</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-949" name="__codelineno-0-949"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AffectiveState</span><span class="p">:</span>
-<a id="__codelineno-0-950" name="__codelineno-0-950"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a copy of the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-950" name="__codelineno-0-950"></a><span class="w">    </span><span class="sd">"""Return a copy of the current affective state."""</span>
 <a id="__codelineno-0-951" name="__codelineno-0-951"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">model_copy</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4839,7 +4839,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-1065">1065</a></span>
 <span class="normal"><a href="#__codelineno-0-1066">1066</a></span>
 <span class="normal"><a href="#__codelineno-0-1067">1067</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1045" name="__codelineno-0-1045"></a><span class="k">def</span><span class="w"> </span><span class="nf">import_memories</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-1046" name="__codelineno-0-1046"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Import memories from a list of dicts produced by ``export_memories()``.</span>
+<a id="__codelineno-0-1046" name="__codelineno-0-1046"></a><span class="w">    </span><span class="sd">"""Import memories from a list of dicts produced by ``export_memories()``.</span>
 <a id="__codelineno-0-1047" name="__codelineno-0-1047"></a>
 <a id="__codelineno-0-1048" name="__codelineno-0-1048"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-1049" name="__codelineno-0-1049"></a><span class="sd">        data:      List of memory dicts (as returned by ``export_memories()``).</span>
@@ -4848,7 +4848,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <a id="__codelineno-0-1052" name="__codelineno-0-1052"></a>
 <a id="__codelineno-0-1053" name="__codelineno-0-1053"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-1054" name="__codelineno-0-1054"></a><span class="sd">        Number of memories actually written.</span>
-<a id="__codelineno-0-1055" name="__codelineno-0-1055"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-1055" name="__codelineno-0-1055"></a><span class="sd">    """</span>
 <a id="__codelineno-0-1056" name="__codelineno-0-1056"></a>    <span class="n">written</span> <span class="o">=</span> <span class="mi">0</span>
 <a id="__codelineno-0-1057" name="__codelineno-0-1057"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
 <a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>        <span class="n">memory</span> <span class="o">=</span> <span class="n">Memory</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -4886,7 +4886,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-941">941</a></span>
 <span class="normal"><a href="#__codelineno-0-942">942</a></span>
 <span class="normal"><a href="#__codelineno-0-943">943</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-941" name="__codelineno-0-941"></a><span class="k">def</span><span class="w"> </span><span class="nf">list_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-942" name="__codelineno-0-942"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return all memories in the store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-942" name="__codelineno-0-942"></a><span class="w">    </span><span class="sd">"""Return all memories in the store."""</span>
 <a id="__codelineno-0-943" name="__codelineno-0-943"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4949,11 +4949,11 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-985">985</a></span>
 <span class="normal"><a href="#__codelineno-0-986">986</a></span>
 <span class="normal"><a href="#__codelineno-0-987">987</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-980" name="__codelineno-0-980"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-981" name="__codelineno-0-981"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore a previously saved affective state.</span>
+<a id="__codelineno-0-981" name="__codelineno-0-981"></a><span class="w">    </span><span class="sd">"""Restore a previously saved affective state.</span>
 <a id="__codelineno-0-982" name="__codelineno-0-982"></a>
 <a id="__codelineno-0-983" name="__codelineno-0-983"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-984" name="__codelineno-0-984"></a><span class="sd">        data: A dict produced by a previous ``save_state()`` call.</span>
-<a id="__codelineno-0-985" name="__codelineno-0-985"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-985" name="__codelineno-0-985"></a><span class="sd">    """</span>
 <a id="__codelineno-0-986" name="__codelineno-0-986"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-987" name="__codelineno-0-987"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -5001,9 +5001,9 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="n">appraisal</span><span class="p">:</span> <span class="n">AppraisalVector</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-296" name="__codelineno-0-296"></a>    <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-297" name="__codelineno-0-297"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmotionalTag</span><span class="p">:</span>
-<a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update affective state from content without storing a retrievable memory.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a><span class="w">    </span><span class="sd">"""Update affective state from content without storing a retrievable memory."""</span>
 <a id="__codelineno-0-299" name="__codelineno-0-299"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">)</span>
-<a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.observe&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
+<a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.observe"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"content_length"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)}):</span>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-302" name="__codelineno-0-302"></a>        <span class="n">tag</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_tag</span><span class="p">(</span>
 <a id="__codelineno-0-303" name="__codelineno-0-303"></a>            <span class="n">content</span><span class="p">,</span>
@@ -5039,7 +5039,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-990">990</a></span>
 <span class="normal"><a href="#__codelineno-0-991">991</a></span>
 <span class="normal"><a href="#__codelineno-0-992">992</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-989" name="__codelineno-0-989"></a><span class="k">def</span><span class="w"> </span><span class="nf">persist_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-990" name="__codelineno-0-990"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return and, when configured, persist the current affective state.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-990" name="__codelineno-0-990"></a><span class="w">    </span><span class="sd">"""Return and, when configured, persist the current affective state."""</span>
 <a id="__codelineno-0-991" name="__codelineno-0-991"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 <a id="__codelineno-0-992" name="__codelineno-0-992"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -5147,7 +5147,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-1033">1033</a></span>
 <span class="normal"><a href="#__codelineno-0-1034">1034</a></span>
 <span class="normal"><a href="#__codelineno-0-1035">1035</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1009" name="__codelineno-0-1009"></a><span class="k">def</span><span class="w"> </span><span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<a id="__codelineno-0-1010" name="__codelineno-0-1010"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove memories whose effective consolidation strength has fallen below *threshold*.</span>
+<a id="__codelineno-0-1010" name="__codelineno-0-1010"></a><span class="w">    </span><span class="sd">"""Remove memories whose effective consolidation strength has fallen below *threshold*.</span>
 <a id="__codelineno-0-1011" name="__codelineno-0-1011"></a>
 <a id="__codelineno-0-1012" name="__codelineno-0-1012"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-1013" name="__codelineno-0-1013"></a><span class="sd">        threshold: Minimum acceptable strength in [0, 1].  Memories whose</span>
@@ -5156,11 +5156,11 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <a id="__codelineno-0-1016" name="__codelineno-0-1016"></a>
 <a id="__codelineno-0-1017" name="__codelineno-0-1017"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-1018" name="__codelineno-0-1018"></a><span class="sd">        Number of memories removed.</span>
-<a id="__codelineno-0-1019" name="__codelineno-0-1019"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-1019" name="__codelineno-0-1019"></a><span class="sd">    """</span>
 <a id="__codelineno-0-1020" name="__codelineno-0-1020"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.decay</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_effective_strength_batch</span>
 <a id="__codelineno-0-1021" name="__codelineno-0-1021"></a>
 <a id="__codelineno-0-1022" name="__codelineno-0-1022"></a>    <span class="n">validate_prune_threshold</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
-<a id="__codelineno-0-1023" name="__codelineno-0-1023"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.prune&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
+<a id="__codelineno-0-1023" name="__codelineno-0-1023"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.prune"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"threshold"</span><span class="p">:</span> <span class="n">threshold</span><span class="p">}):</span>
 <a id="__codelineno-0-1024" name="__codelineno-0-1024"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-1025" name="__codelineno-0-1025"></a>        <span class="n">mems</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">list_all</span><span class="p">()</span>
 <a id="__codelineno-0-1026" name="__codelineno-0-1026"></a>        <span class="k">if</span> <span class="n">mems</span><span class="p">:</span>
@@ -5199,7 +5199,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-966">966</a></span>
 <span class="normal"><a href="#__codelineno-0-967">967</a></span>
 <span class="normal"><a href="#__codelineno-0-968">968</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-965" name="__codelineno-0-965"></a><span class="k">def</span><span class="w"> </span><span class="nf">reset_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-966" name="__codelineno-0-966"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset the runtime affective state to its initial baseline.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-966" name="__codelineno-0-966"></a><span class="w">    </span><span class="sd">"""Reset the runtime affective state to its initial baseline."""</span>
 <a id="__codelineno-0-967" name="__codelineno-0-967"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">AffectiveState</span><span class="o">.</span><span class="n">initial</span><span class="p">()</span>
 <a id="__codelineno-0-968" name="__codelineno-0-968"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_persist_state</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -5233,7 +5233,7 @@ If <code>mood_decay</code> is not configured, returns the frozen mood.</p>
 <span class="normal"><a href="#__codelineno-0-1000">1000</a></span>
 <span class="normal"><a href="#__codelineno-0-1001">1001</a></span>
 <span class="normal"><a href="#__codelineno-0-1002">1002</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-994" name="__codelineno-0-994"></a><span class="k">def</span><span class="w"> </span><span class="nf">restore_persisted_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-995" name="__codelineno-0-995"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the last persisted affective state from the configured state store.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-995" name="__codelineno-0-995"></a><span class="w">    </span><span class="sd">"""Load the last persisted affective state from the configured state store."""</span>
 <a id="__codelineno-0-996" name="__codelineno-0-996"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-997" name="__codelineno-0-997"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-998" name="__codelineno-0-998"></a>    <span class="n">persisted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_store</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
@@ -5377,7 +5377,7 @@ Addendum T (retrieve-time query appraisal); see
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a>    <span class="n">query_affect</span><span class="p">:</span> <span class="n">CoreAffect</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-395" name="__codelineno-0-395"></a>    <span class="n">precomputed_weights</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve the top-k most relevant memories for the query.</span>
+<a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="w">    </span><span class="sd">"""Retrieve the top-k most relevant memories for the query.</span>
 <a id="__codelineno-0-398" name="__codelineno-0-398"></a>
 <a id="__codelineno-0-399" name="__codelineno-0-399"></a><span class="sd">    Scoring uses all 6 AFT signals with mood-adaptive weights.</span>
 <a id="__codelineno-0-400" name="__codelineno-0-400"></a>
@@ -5395,27 +5395,27 @@ Addendum T (retrieve-time query appraisal); see
 <a id="__codelineno-0-412" name="__codelineno-0-412"></a>
 <a id="__codelineno-0-413" name="__codelineno-0-413"></a><span class="sd">    Query affect: by default the affect-proximity signal (s3) uses the</span>
 <a id="__codelineno-0-414" name="__codelineno-0-414"></a><span class="sd">    current runtime affective state (``self._state.core_affect``). Pass an</span>
-<a id="__codelineno-0-415" name="__codelineno-0-415"></a><span class="sd">    explicit ``query_affect`` to score against the query&#39;s own affect instead</span>
+<a id="__codelineno-0-415" name="__codelineno-0-415"></a><span class="sd">    explicit ``query_affect`` to score against the query's own affect instead</span>
 <a id="__codelineno-0-416" name="__codelineno-0-416"></a><span class="sd">    — e.g. the appraised affect of the query text — without mutating the</span>
 <a id="__codelineno-0-417" name="__codelineno-0-417"></a><span class="sd">    runtime state. This is the production-reachable path validated in</span>
 <a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">    Addendum T (retrieve-time query appraisal); see</span>
 <a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="sd">    ``retrieve_with_query_appraisal``.</span>
-<a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="sd">    """</span>
 <a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="k">if</span> <span class="n">top_k</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-<a id="__codelineno-0-422" name="__codelineno-0-422"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;top_k must be &gt;= 1, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-422" name="__codelineno-0-422"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top_k must be &gt;= 1, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"query"</span><span class="p">)</span>
 <a id="__codelineno-0-424" name="__codelineno-0-424"></a>    <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span>
-<a id="__codelineno-0-425" name="__codelineno-0-425"></a>        <span class="s2">&quot;emotional_memory.retrieve&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-426" name="__codelineno-0-426"></a>        <span class="p">{</span><span class="s2">&quot;query_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="s2">&quot;top_k&quot;</span><span class="p">:</span> <span class="n">top_k</span><span class="p">,</span> <span class="s2">&quot;store_size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)},</span>
+<a id="__codelineno-0-425" name="__codelineno-0-425"></a>        <span class="s2">"emotional_memory.retrieve"</span><span class="p">,</span>
+<a id="__codelineno-0-426" name="__codelineno-0-426"></a>        <span class="p">{</span><span class="s2">"query_length"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="s2">"top_k"</span><span class="p">:</span> <span class="n">top_k</span><span class="p">,</span> <span class="s2">"store_size"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)},</span>
 <a id="__codelineno-0-427" name="__codelineno-0-427"></a>    <span class="p">):</span>
 <a id="__codelineno-0-428" name="__codelineno-0-428"></a>        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-429" name="__codelineno-0-429"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-430" name="__codelineno-0-430"></a>            <span class="s2">&quot;retrieve start: query_len=</span><span class="si">%d</span><span class="s2"> top_k=</span><span class="si">%d</span><span class="s2"> store=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-430" name="__codelineno-0-430"></a>            <span class="s2">"retrieve start: query_len=</span><span class="si">%d</span><span class="s2"> top_k=</span><span class="si">%d</span><span class="s2"> store=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span>
 <a id="__codelineno-0-431" name="__codelineno-0-431"></a>            <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
 <a id="__codelineno-0-432" name="__codelineno-0-432"></a>            <span class="n">top_k</span><span class="p">,</span>
 <a id="__codelineno-0-433" name="__codelineno-0-433"></a>            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">),</span>
 <a id="__codelineno-0-434" name="__codelineno-0-434"></a>        <span class="p">)</span>
-<a id="__codelineno-0-435" name="__codelineno-0-435"></a>        <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">&quot;emotional_memory.embed&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;content_length&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)}):</span>
+<a id="__codelineno-0-435" name="__codelineno-0-435"></a>        <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span><span class="s2">"emotional_memory.embed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"content_length"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">)}):</span>
 <a id="__codelineno-0-436" name="__codelineno-0-436"></a>            <span class="n">query_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 <a id="__codelineno-0-437" name="__codelineno-0-437"></a>
 <a id="__codelineno-0-438" name="__codelineno-0-438"></a>        <span class="c1"># G2 — pre-filter candidates via embedding search when store is large</span>
@@ -5423,7 +5423,7 @@ Addendum T (retrieve-time query appraisal); see
 <a id="__codelineno-0-440" name="__codelineno-0-440"></a>        <span class="n">candidate_limit</span> <span class="o">=</span> <span class="n">top_k</span> <span class="o">*</span> <span class="n">rc</span><span class="o">.</span><span class="n">candidate_multiplier</span>
 <a id="__codelineno-0-441" name="__codelineno-0-441"></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">candidate_limit</span><span class="p">:</span>
 <a id="__codelineno-0-442" name="__codelineno-0-442"></a>            <span class="k">with</span> <span class="n">traced_span</span><span class="p">(</span>
-<a id="__codelineno-0-443" name="__codelineno-0-443"></a>                <span class="s2">&quot;emotional_memory.store.search_by_embedding&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="n">candidate_limit</span><span class="p">}</span>
+<a id="__codelineno-0-443" name="__codelineno-0-443"></a>                <span class="s2">"emotional_memory.store.search_by_embedding"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"limit"</span><span class="p">:</span> <span class="n">candidate_limit</span><span class="p">}</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a>            <span class="p">):</span>
 <a id="__codelineno-0-445" name="__codelineno-0-445"></a>                <span class="n">candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="o">.</span><span class="n">search_by_embedding</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">candidate_limit</span><span class="p">)</span>
 <a id="__codelineno-0-446" name="__codelineno-0-446"></a>        <span class="k">else</span><span class="p">:</span>
@@ -5457,7 +5457,7 @@ Addendum T (retrieve-time query appraisal); see
 <a id="__codelineno-0-474" name="__codelineno-0-474"></a>        <span class="p">)</span>
 <a id="__codelineno-0-475" name="__codelineno-0-475"></a>        <span class="n">top</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">memory</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">pass2</span><span class="p">[:</span><span class="n">top_k</span><span class="p">]]</span>
 <a id="__codelineno-0-476" name="__codelineno-0-476"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_retrieval_updates</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
-<a id="__codelineno-0-477" name="__codelineno-0-477"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;retrieve done: returned=</span><span class="si">%d</span><span class="s2"> candidates=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span>
+<a id="__codelineno-0-477" name="__codelineno-0-477"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"retrieve done: returned=</span><span class="si">%d</span><span class="s2"> candidates=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span>
 <a id="__codelineno-0-478" name="__codelineno-0-478"></a>    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5538,7 +5538,7 @@ affect-carrying path.</p>
 <span class="normal"><a href="#__codelineno-0-617">617</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-592" name="__codelineno-0-592"></a><span class="k">def</span><span class="w"> </span><span class="nf">retrieve_query_gated</span><span class="p">(</span>
 <a id="__codelineno-0-593" name="__codelineno-0-593"></a>    <span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-594" name="__codelineno-0-594"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve with the Addendum Y query-affect gate (Branch A).</span>
+<a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="w">    </span><span class="sd">"""Retrieve with the Addendum Y query-affect gate (Branch A).</span>
 <a id="__codelineno-0-596" name="__codelineno-0-596"></a>
 <a id="__codelineno-0-597" name="__codelineno-0-597"></a><span class="sd">    Appraises the query text, then routes to semantic-only retrieval when</span>
 <a id="__codelineno-0-598" name="__codelineno-0-598"></a><span class="sd">    ``|valence| &lt; tau`` (default ``query_affect_gate_tau``, 0.2), else to</span>
@@ -5550,11 +5550,11 @@ affect-carrying path.</p>
 <a id="__codelineno-0-604" name="__codelineno-0-604"></a>
 <a id="__codelineno-0-605" name="__codelineno-0-605"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="sd">        RuntimeError: if no appraisal engine is configured.</span>
-<a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">    """</span>
 <a id="__codelineno-0-608" name="__codelineno-0-608"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-609" name="__codelineno-0-609"></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-<a id="__codelineno-0-610" name="__codelineno-0-610"></a>            <span class="s2">&quot;retrieve_query_gated requires an appraisal_engine; &quot;</span>
-<a id="__codelineno-0-611" name="__codelineno-0-611"></a>            <span class="s2">&quot;none is configured. Pass appraisal_engine=... to EmotionalMemory.&quot;</span>
+<a id="__codelineno-0-610" name="__codelineno-0-610"></a>            <span class="s2">"retrieve_query_gated requires an appraisal_engine; "</span>
+<a id="__codelineno-0-611" name="__codelineno-0-611"></a>            <span class="s2">"none is configured. Pass appraisal_engine=... to EmotionalMemory."</span>
 <a id="__codelineno-0-612" name="__codelineno-0-612"></a>        <span class="p">)</span>
 <a id="__codelineno-0-613" name="__codelineno-0-613"></a>    <span class="n">effective_tau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">query_affect_gate_tau</span> <span class="k">if</span> <span class="n">tau</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">tau</span>
 <a id="__codelineno-0-614" name="__codelineno-0-614"></a>    <span class="n">query_affect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="o">.</span><span class="n">appraise</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">to_core_affect</span><span class="p">()</span>
@@ -5683,7 +5683,7 @@ in <code>retrieve()</code> (default: current runtime state).</p>
 <a id="__codelineno-0-485" name="__codelineno-0-485"></a>    <span class="n">query_affect</span><span class="p">:</span> <span class="n">CoreAffect</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-486" name="__codelineno-0-486"></a>    <span class="n">precomputed_weights</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RetrievalExplanation</span><span class="p">]:</span>
-<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve memories plus a structured score decomposition.</span>
+<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="w">    </span><span class="sd">"""Retrieve memories plus a structured score decomposition.</span>
 <a id="__codelineno-0-489" name="__codelineno-0-489"></a>
 <a id="__codelineno-0-490" name="__codelineno-0-490"></a><span class="sd">    Ranking is computed by the same two-pass retrieval pipeline used by</span>
 <a id="__codelineno-0-491" name="__codelineno-0-491"></a><span class="sd">    ``retrieve()``. The returned score and breakdown reflect the ranking</span>
@@ -5693,13 +5693,13 @@ in <code>retrieve()</code> (default: current runtime state).</p>
 <a id="__codelineno-0-495" name="__codelineno-0-495"></a>
 <a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="sd">    ``query_affect`` overrides the affect-proximity signal source exactly as</span>
 <a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">    in ``retrieve()`` (default: current runtime state).</span>
-<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">    """</span>
 <a id="__codelineno-0-499" name="__codelineno-0-499"></a>    <span class="k">if</span> <span class="n">top_k</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-<a id="__codelineno-0-500" name="__codelineno-0-500"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;top_k must be &gt;= 1, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-501" name="__codelineno-0-501"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;query&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-500" name="__codelineno-0-500"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"top_k must be &gt;= 1, got </span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-0-501" name="__codelineno-0-501"></a>    <span class="n">check_content_length</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">max_content_length</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"query"</span><span class="p">)</span>
 <a id="__codelineno-0-502" name="__codelineno-0-502"></a>    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)</span>
 <a id="__codelineno-0-503" name="__codelineno-0-503"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-504" name="__codelineno-0-504"></a>        <span class="s2">&quot;retrieve_with_explanations start: query_len=</span><span class="si">%d</span><span class="s2"> top_k=</span><span class="si">%d</span><span class="s2"> store=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-504" name="__codelineno-0-504"></a>        <span class="s2">"retrieve_with_explanations start: query_len=</span><span class="si">%d</span><span class="s2"> top_k=</span><span class="si">%d</span><span class="s2"> store=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span>
 <a id="__codelineno-0-505" name="__codelineno-0-505"></a>        <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">),</span>
 <a id="__codelineno-0-506" name="__codelineno-0-506"></a>        <span class="n">top_k</span><span class="p">,</span>
 <a id="__codelineno-0-507" name="__codelineno-0-507"></a>        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_store</span><span class="p">),</span>
@@ -5756,7 +5756,7 @@ in <code>retrieve()</code> (default: current runtime state).</p>
 <a id="__codelineno-0-558" name="__codelineno-0-558"></a>        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">top_ranked</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <a id="__codelineno-0-559" name="__codelineno-0-559"></a>    <span class="p">]</span>
 <a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="s2">&quot;retrieve_with_explanations done: returned=</span><span class="si">%d</span><span class="s2"> candidates=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="s2">"retrieve_with_explanations done: returned=</span><span class="si">%d</span><span class="s2"> candidates=</span><span class="si">%d</span><span class="s2">"</span><span class="p">,</span>
 <a id="__codelineno-0-562" name="__codelineno-0-562"></a>        <span class="nb">len</span><span class="p">(</span><span class="n">explanations</span><span class="p">),</span>
 <a id="__codelineno-0-563" name="__codelineno-0-563"></a>        <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">),</span>
 <a id="__codelineno-0-564" name="__codelineno-0-564"></a>    <span class="p">)</span>
@@ -5838,7 +5838,7 @@ estimates query affect more faithfully than the Scherer SEC projection.</p>
 <span class="normal"><a href="#__codelineno-0-588">588</a></span>
 <span class="normal"><a href="#__codelineno-0-589">589</a></span>
 <span class="normal"><a href="#__codelineno-0-590">590</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-567" name="__codelineno-0-567"></a><span class="k">def</span><span class="w"> </span><span class="nf">retrieve_with_query_appraisal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Memory</span><span class="p">]:</span>
-<a id="__codelineno-0-568" name="__codelineno-0-568"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve using the query&#39;s own appraised affect (Addendum T).</span>
+<a id="__codelineno-0-568" name="__codelineno-0-568"></a><span class="w">    </span><span class="sd">"""Retrieve using the query's own appraised affect (Addendum T).</span>
 <a id="__codelineno-0-569" name="__codelineno-0-569"></a>
 <a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="sd">    Appraises the query text with the configured appraisal engine and uses</span>
 <a id="__codelineno-0-571" name="__codelineno-0-571"></a><span class="sd">    the resulting :class:`CoreAffect` as ``query_affect`` for retrieval,</span>
@@ -5852,12 +5852,12 @@ estimates query affect more faithfully than the Scherer SEC projection.</p>
 <a id="__codelineno-0-579" name="__codelineno-0-579"></a>
 <a id="__codelineno-0-580" name="__codelineno-0-580"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-581" name="__codelineno-0-581"></a><span class="sd">        RuntimeError: if no appraisal engine is configured.</span>
-<a id="__codelineno-0-582" name="__codelineno-0-582"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-582" name="__codelineno-0-582"></a><span class="sd">    """</span>
 <a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-584" name="__codelineno-0-584"></a>        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-<a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="s2">&quot;retrieve_with_query_appraisal requires an appraisal_engine; &quot;</span>
-<a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="s2">&quot;none is configured. Pass appraisal_engine=... to EmotionalMemory, &quot;</span>
-<a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="s2">&quot;or call retrieve(query, query_affect=...) with an explicit affect.&quot;</span>
+<a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="s2">"retrieve_with_query_appraisal requires an appraisal_engine; "</span>
+<a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="s2">"none is configured. Pass appraisal_engine=... to EmotionalMemory, "</span>
+<a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="s2">"or call retrieve(query, query_affect=...) with an explicit affect."</span>
 <a id="__codelineno-0-588" name="__codelineno-0-588"></a>        <span class="p">)</span>
 <a id="__codelineno-0-589" name="__codelineno-0-589"></a>    <span class="n">query_affect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_appraisal_engine</span><span class="o">.</span><span class="n">appraise</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">to_core_affect</span><span class="p">()</span>
 <a id="__codelineno-0-590" name="__codelineno-0-590"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">,</span> <span class="n">query_affect</span><span class="o">=</span><span class="n">query_affect</span><span class="p">)</span>
@@ -5896,13 +5896,13 @@ correctly after a restart.</p>
 <span class="normal"><a href="#__codelineno-0-976">976</a></span>
 <span class="normal"><a href="#__codelineno-0-977">977</a></span>
 <span class="normal"><a href="#__codelineno-0-978">978</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-970" name="__codelineno-0-970"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-971" name="__codelineno-0-971"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise the current affective state for persistence.</span>
+<a id="__codelineno-0-971" name="__codelineno-0-971"></a><span class="w">    </span><span class="sd">"""Serialise the current affective state for persistence.</span>
 <a id="__codelineno-0-972" name="__codelineno-0-972"></a>
 <a id="__codelineno-0-973" name="__codelineno-0-973"></a><span class="sd">    Returns a JSON-serialisable dict that can be stored alongside the</span>
 <a id="__codelineno-0-974" name="__codelineno-0-974"></a><span class="sd">    memory store and later restored with ``load_state()``.  The private</span>
 <a id="__codelineno-0-975" name="__codelineno-0-975"></a><span class="sd">    momentum history is included so that momentum computation continues</span>
 <a id="__codelineno-0-976" name="__codelineno-0-976"></a><span class="sd">    correctly after a restart.</span>
-<a id="__codelineno-0-977" name="__codelineno-0-977"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-977" name="__codelineno-0-977"></a><span class="sd">    """</span>
 <a id="__codelineno-0-978" name="__codelineno-0-978"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">snapshot</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -5938,10 +5938,10 @@ correctly after a restart.</p>
 <span class="normal"><a href="#__codelineno-0-961">961</a></span>
 <span class="normal"><a href="#__codelineno-0-962">962</a></span>
 <span class="normal"><a href="#__codelineno-0-963">963</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-953" name="__codelineno-0-953"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_affect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">core_affect</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-954" name="__codelineno-0-954"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manually inject a CoreAffect (e.g. from external appraisal).</span>
+<a id="__codelineno-0-954" name="__codelineno-0-954"></a><span class="w">    </span><span class="sd">"""Manually inject a CoreAffect (e.g. from external appraisal).</span>
 <a id="__codelineno-0-955" name="__codelineno-0-955"></a>
 <a id="__codelineno-0-956" name="__codelineno-0-956"></a><span class="sd">    Updates core_affect, momentum, and mood.</span>
-<a id="__codelineno-0-957" name="__codelineno-0-957"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-957" name="__codelineno-0-957"></a><span class="sd">    """</span>
 <a id="__codelineno-0-958" name="__codelineno-0-958"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
 <a id="__codelineno-0-959" name="__codelineno-0-959"></a>        <span class="n">core_affect</span><span class="p">,</span>
 <a id="__codelineno-0-960" name="__codelineno-0-960"></a>        <span class="n">mood_alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">mood_alpha</span><span class="p">,</span>
@@ -6348,7 +6348,7 @@ Pearce-Hall 1980 APE gate). Predictive-learning (update_prediction) still runs.<
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

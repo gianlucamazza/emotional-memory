@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3544,7 +3544,7 @@ goals and norms. Layer 4 is the engine that produces Core Affect (Layer 1) from 
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">goal_relevance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [-1.0, +1.0] from obstructing goals to furthering them</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">coping_potential</span><span class="p">:</span> <span class="nb">float</span>     <span class="c1"># [0.0, 1.0] from no coping ability to full control</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">norm_congruence</span><span class="p">:</span> <span class="nb">float</span>      <span class="c1"># [-1.0, +1.0] from norm-violating to norm-conforming</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">self_relevance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [0.0, 1.0] how much it concerns the system&#39;s &quot;self&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">self_relevance</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># [0.0, 1.0] how much it concerns the system's "self"</span>
 </code></pre></div>
 <p><strong>Appraisal → Core Affect mapping</strong>:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># coping_potential [0,1] is converted to signed [-1,+1]:</span>
@@ -3572,7 +3572,7 @@ Bower (affective associative network)
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">target_id</span><span class="p">:</span> <span class="nb">str</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">strength</span><span class="p">:</span> <span class="nb">float</span>             <span class="c1"># [0.0, 1.0]</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">link_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;semantic&#39;</span><span class="p">,</span> <span class="s1">&#39;emotional&#39;</span><span class="p">,</span> <span class="s1">&#39;temporal&#39;</span><span class="p">,</span> <span class="s1">&#39;causal&#39;</span><span class="p">,</span> <span class="s1">&#39;contrastive&#39;</span><span class="p">]</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">link_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'semantic'</span><span class="p">,</span> <span class="s1">'emotional'</span><span class="p">,</span> <span class="s1">'temporal'</span><span class="p">,</span> <span class="s1">'causal'</span><span class="p">,</span> <span class="s1">'contrastive'</span><span class="p">]</span>
 </code></pre></div>
 <p>Resonance links form emotional clusters that mutually reinforce each other during retrieval
 (spreading activation).</p>
@@ -3736,8 +3736,8 @@ to produce new instances.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">on_retrieval</span><span class="p">(</span><span class="n">memory</span><span class="p">:</span> <span class="n">Memory</span><span class="p">,</span> <span class="n">current_state</span><span class="p">:</span> <span class="n">AffectiveState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Memory</span><span class="p">:</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="c1"># Update metadata (returns new immutable instance)</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">new_tag</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="s2">&quot;last_retrieved&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">),</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="s2">&quot;retrieval_count&quot;</span><span class="p">:</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">retrieval_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>        <span class="s2">"last_retrieved"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">),</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="s2">"retrieval_count"</span><span class="p">:</span> <span class="n">memory</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">retrieval_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="p">})</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="c1"># Compute APE and update prediction (Pearce &amp; Hall, 1980)</span>
@@ -3746,7 +3746,7 @@ to produce new instances.</p>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="c1"># Open window only if APE exceeds threshold</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="k">if</span> <span class="n">ape</span> <span class="o">&gt;=</span> <span class="n">APE_THRESHOLD</span> <span class="ow">and</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">window_opened_at</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        <span class="n">new_tag</span> <span class="o">=</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;window_opened_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)})</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        <span class="n">new_tag</span> <span class="o">=</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"window_opened_at"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="n">UTC</span><span class="p">)})</span>
 <a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="c1"># Reconsolidate if window is open (any retrieval within the window)</span>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    <span class="k">if</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">window_opened_at</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -3756,12 +3756,12 @@ to produce new instances.</p>
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>            <span class="n">arousal</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">*</span><span class="n">new_tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span> <span class="o">+</span> <span class="n">alpha</span><span class="o">*</span><span class="n">current_state</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span>
 <a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>        <span class="p">)</span>
 <a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        <span class="n">new_tag</span> <span class="o">=</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>            <span class="s2">&quot;core_affect&quot;</span><span class="p">:</span> <span class="n">blended</span><span class="p">,</span>
-<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            <span class="s2">&quot;reconsolidation_count&quot;</span><span class="p">:</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">reconsolidation_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            <span class="s2">&quot;window_opened_at&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># window closes after reconsolidation</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>            <span class="s2">"core_affect"</span><span class="p">:</span> <span class="n">blended</span><span class="p">,</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>            <span class="s2">"reconsolidation_count"</span><span class="p">:</span> <span class="n">new_tag</span><span class="o">.</span><span class="n">reconsolidation_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            <span class="s2">"window_opened_at"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># window closes after reconsolidation</span>
 <a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>        <span class="p">})</span>
 <a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
-<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">return</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;tag&quot;</span><span class="p">:</span> <span class="n">new_tag</span><span class="p">})</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">return</span> <span class="n">memory</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">update</span><span class="o">=</span><span class="p">{</span><span class="s2">"tag"</span><span class="p">:</span> <span class="n">new_tag</span><span class="p">})</span>
 </code></pre></div>
 <hr />
 <h2 id="principle-8-appraisal-as-generator-of-emotion">Principle 8 — Appraisal as Generator of Emotion<a class="headerlink" href="#principle-8-appraisal-as-generator-of-emotion" title="Permanent link">&para;</a></h2>
@@ -3769,13 +3769,13 @@ to produce new instances.</p>
 <p>Emotion is not an input — it is an <strong>output</strong> of the appraisal of the event against the system's
 goals. The system must be able to define a <strong>goal set</strong> (<em>conatus</em>) that orients the appraisal.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">AppraisalEngine</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Duck-typed protocol — no inheritance required.</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">"""Duck-typed protocol — no inheritance required.</span>
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="sd">    Available implementations:</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="sd">      - LLMAppraisalEngine  : uses an LLM (OpenAI-compatible) with Scherer CPM prompt</span>
 <a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="sd">      - KeywordAppraisalEngine: keyword-based rules, no external dependency</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="sd">      - StaticAppraisalEngine : returns a fixed vector (for testing)</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="sd">    """</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
 <a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">appraise</span><span class="p">(</span>
 <a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        <span class="bp">self</span><span class="p">,</span> <span class="n">event_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3856,7 +3856,7 @@ explicit supervision.</p>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>         |
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>         v
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    [2. Core Affect Update]
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    Update the system&#39;s affective state
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    Update the system's affective state
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>         |
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>         v
 <a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    [3. Momentum Update]
@@ -4040,7 +4040,7 @@ explicit supervision.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

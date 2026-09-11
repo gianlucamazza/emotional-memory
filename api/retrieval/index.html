@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3685,7 +3685,7 @@ unconditionally, disable them via the <code>enable_*</code> ablation flags or ro
 
 
 <h3 id="emotional_memory.retrieval.QueryClassifierConfig.default_type" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">default_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">default_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'default'</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -3708,7 +3708,7 @@ unconditionally, disable them via the <code>enable_*</code> ablation flags or ro
 
 
 <h3 id="emotional_memory.retrieval.QueryClassifierConfig.mode" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;heuristic&#39;</span><span class="p">,</span> <span class="s1">&#39;llm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;disabled&#39;</span></code>
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">'disabled'</span><span class="p">,</span> <span class="s1">'heuristic'</span><span class="p">,</span> <span class="s1">'llm'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'disabled'</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
@@ -3891,7 +3891,7 @@ resonance</p>
 <span class="normal"><a href="#__codelineno-0-238">238</a></span>
 <span class="normal"><a href="#__codelineno-0-239">239</a></span>
 <span class="normal"><a href="#__codelineno-0-240">240</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="k">def</span><span class="w"> </span><span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sum of all six signals.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="w">    </span><span class="sd">"""Return the sum of all six signals."""</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="k">return</span> <span class="p">(</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">semantic_similarity</span>
 <a id="__codelineno-0-235" name="__codelineno-0-235"></a>        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mood_congruence</span>
@@ -4127,7 +4127,7 @@ redundant computation. If None, weights are computed inline.</p>
 <a id="__codelineno-0-599" name="__codelineno-0-599"></a>    <span class="n">retrieval_config</span><span class="p">:</span> <span class="n">RetrievalConfig</span><span class="p">,</span>
 <a id="__codelineno-0-600" name="__codelineno-0-600"></a>    <span class="n">precomputed_weights</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-601" name="__codelineno-0-601"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-602" name="__codelineno-0-602"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the composite retrieval score for a single memory.</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a><span class="w">    </span><span class="sd">"""Compute the composite retrieval score for a single memory.</span>
 <a id="__codelineno-0-603" name="__codelineno-0-603"></a>
 <a id="__codelineno-0-604" name="__codelineno-0-604"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-605" name="__codelineno-0-605"></a><span class="sd">        activation_map: Pre-computed spreading activation levels from</span>
@@ -4137,7 +4137,7 @@ redundant computation. If None, weights are computed inline.</p>
 <a id="__codelineno-0-609" name="__codelineno-0-609"></a><span class="sd">        precomputed_weights: Pre-computed adaptive weights from ``adaptive_weights()``.</span>
 <a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">            Pass this when scoring many memories with the same mood/config to avoid</span>
 <a id="__codelineno-0-611" name="__codelineno-0-611"></a><span class="sd">            redundant computation. If None, weights are computed inline.</span>
-<a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    """</span>
 <a id="__codelineno-0-613" name="__codelineno-0-613"></a>    <span class="k">return</span> <span class="n">retrieval_breakdown</span><span class="p">(</span>
 <a id="__codelineno-0-614" name="__codelineno-0-614"></a>        <span class="n">query_embedding</span><span class="o">=</span><span class="n">query_embedding</span><span class="p">,</span>
 <a id="__codelineno-0-615" name="__codelineno-0-615"></a>        <span class="n">query_affect</span><span class="o">=</span><span class="n">query_affect</span><span class="p">,</span>
@@ -4231,11 +4231,11 @@ exact same scoring path.</p>
 <a id="__codelineno-0-472" name="__codelineno-0-472"></a>    <span class="n">retrieval_config</span><span class="p">:</span> <span class="n">RetrievalConfig</span><span class="p">,</span>
 <a id="__codelineno-0-473" name="__codelineno-0-473"></a>    <span class="n">precomputed_weights</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-474" name="__codelineno-0-474"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RetrievalBreakdown</span><span class="p">:</span>
-<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the full score decomposition for one memory.</span>
+<a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="w">    </span><span class="sd">"""Return the full score decomposition for one memory.</span>
 <a id="__codelineno-0-476" name="__codelineno-0-476"></a>
 <a id="__codelineno-0-477" name="__codelineno-0-477"></a><span class="sd">    This is the explainable counterpart to ``retrieval_score()`` and uses the</span>
 <a id="__codelineno-0-478" name="__codelineno-0-478"></a><span class="sd">    exact same scoring path.</span>
-<a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">    """</span>
 <a id="__codelineno-0-480" name="__codelineno-0-480"></a>    <span class="n">weight_arr</span> <span class="o">=</span> <span class="p">(</span>
 <a id="__codelineno-0-481" name="__codelineno-0-481"></a>        <span class="n">precomputed_weights</span>
 <a id="__codelineno-0-482" name="__codelineno-0-482"></a>        <span class="k">if</span> <span class="n">precomputed_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -4347,7 +4347,7 @@ boundary values while preserving the same directional intent:
 <a id="__codelineno-0-319" name="__codelineno-0-319"></a>    <span class="n">base</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
 <a id="__codelineno-0-320" name="__codelineno-0-320"></a>    <span class="n">config</span><span class="p">:</span> <span class="n">AdaptiveWeightsConfig</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
-<a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return retrieval weights modulated by current mood state.</span>
+<a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="w">    </span><span class="sd">"""Return retrieval weights modulated by current mood state.</span>
 <a id="__codelineno-0-323" name="__codelineno-0-323"></a>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">    Mood acts as a weight modulator — not a hard filter but a continuous</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">    shaping of what signals dominate retrieval (inspired by mood-congruent</span>
@@ -4359,7 +4359,7 @@ boundary values while preserving the same directional intent:
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a><span class="sd">      - Negative mood  → emotional signals dominate (s2, s3 ↑, s1 ↓)</span>
 <a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">      - High arousal   → momentum alignment dominates (s4 ↑, s1 ↓)</span>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a><span class="sd">      - Calm/neutral   → semantic retrieval dominates (s1 ↑, s2, s3 ↓)</span>
-<a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-334" name="__codelineno-0-334"></a><span class="sd">    """</span>
 <a id="__codelineno-0-335" name="__codelineno-0-335"></a>    <span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">AdaptiveWeightsConfig</span><span class="p">()</span>
 <a id="__codelineno-0-336" name="__codelineno-0-336"></a>    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 <a id="__codelineno-0-337" name="__codelineno-0-337"></a>
@@ -4443,20 +4443,20 @@ reconsolidation_count is incremented.</p>
 <a id="__codelineno-0-644" name="__codelineno-0-644"></a>    <span class="n">ape</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-645" name="__codelineno-0-645"></a>    <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-646" name="__codelineno-0-646"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmotionalTag</span><span class="p">:</span>
-<a id="__codelineno-0-647" name="__codelineno-0-647"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the tag&#39;s core_affect proportionally to the APE.</span>
+<a id="__codelineno-0-647" name="__codelineno-0-647"></a><span class="w">    </span><span class="sd">"""Update the tag's core_affect proportionally to the APE.</span>
 <a id="__codelineno-0-648" name="__codelineno-0-648"></a>
 <a id="__codelineno-0-649" name="__codelineno-0-649"></a><span class="sd">    alpha = min(ape * learning_rate, 0.5) — linearly scaled, capped at 50% per retrieval.</span>
 <a id="__codelineno-0-650" name="__codelineno-0-650"></a><span class="sd">    Pearce-Hall associability (large errors increase the learning rate) is handled separately</span>
 <a id="__codelineno-0-651" name="__codelineno-0-651"></a><span class="sd">    by update_prediction().</span>
 <a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="sd">    Only core_affect is updated; all other fields remain unchanged.</span>
 <a id="__codelineno-0-653" name="__codelineno-0-653"></a><span class="sd">    reconsolidation_count is incremented.</span>
-<a id="__codelineno-0-654" name="__codelineno-0-654"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-654" name="__codelineno-0-654"></a><span class="sd">    """</span>
 <a id="__codelineno-0-655" name="__codelineno-0-655"></a>    <span class="n">alpha</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ape</span> <span class="o">*</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
 <a id="__codelineno-0-656" name="__codelineno-0-656"></a>    <span class="n">new_affect</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span><span class="o">.</span><span class="n">lerp</span><span class="p">(</span><span class="n">current_affect</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 <a id="__codelineno-0-657" name="__codelineno-0-657"></a>    <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span>
 <a id="__codelineno-0-658" name="__codelineno-0-658"></a>        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-0-659" name="__codelineno-0-659"></a>            <span class="s2">&quot;core_affect&quot;</span><span class="p">:</span> <span class="n">new_affect</span><span class="p">,</span>
-<a id="__codelineno-0-660" name="__codelineno-0-660"></a>            <span class="s2">&quot;reconsolidation_count&quot;</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">reconsolidation_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-659" name="__codelineno-0-659"></a>            <span class="s2">"core_affect"</span><span class="p">:</span> <span class="n">new_affect</span><span class="p">,</span>
+<a id="__codelineno-0-660" name="__codelineno-0-660"></a>            <span class="s2">"reconsolidation_count"</span><span class="p">:</span> <span class="n">tag</span><span class="o">.</span><span class="n">reconsolidation_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
 <a id="__codelineno-0-661" name="__codelineno-0-661"></a>        <span class="p">}</span>
 <a id="__codelineno-0-662" name="__codelineno-0-662"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4496,14 +4496,14 @@ and observed affect (Pearce &amp; Hall, 1980).</p>
 <span class="normal"><a href="#__codelineno-0-678">678</a></span>
 <span class="normal"><a href="#__codelineno-0-679">679</a></span>
 <span class="normal"><a href="#__codelineno-0-680">680</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_ape</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="n">EmotionalTag</span><span class="p">,</span> <span class="n">observed</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute Affective Prediction Error for a memory tag.</span>
+<a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="w">    </span><span class="sd">"""Compute Affective Prediction Error for a memory tag.</span>
 <a id="__codelineno-0-672" name="__codelineno-0-672"></a>
 <a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">    Uses ``tag.expected_affect`` as the reference point when set; otherwise</span>
 <a id="__codelineno-0-674" name="__codelineno-0-674"></a><span class="sd">    falls back to ``tag.core_affect`` (i.e. the encoding-time affect).</span>
 <a id="__codelineno-0-675" name="__codelineno-0-675"></a>
 <a id="__codelineno-0-676" name="__codelineno-0-676"></a><span class="sd">    The APE is the Euclidean distance in affect space between the expected</span>
 <a id="__codelineno-0-677" name="__codelineno-0-677"></a><span class="sd">    and observed affect (Pearce &amp; Hall, 1980).</span>
-<a id="__codelineno-0-678" name="__codelineno-0-678"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-678" name="__codelineno-0-678"></a><span class="sd">    """</span>
 <a id="__codelineno-0-679" name="__codelineno-0-679"></a>    <span class="n">reference</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">expected_affect</span> <span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">expected_affect</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">tag</span><span class="o">.</span><span class="n">core_affect</span>
 <a id="__codelineno-0-680" name="__codelineno-0-680"></a>    <span class="k">return</span> <span class="n">affective_prediction_error</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">observed</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4699,7 +4699,7 @@ Psychological Review, 87(6), 532-552.</p>
 <a id="__codelineno-0-685" name="__codelineno-0-685"></a>    <span class="n">observed</span><span class="p">:</span> <span class="n">CoreAffect</span><span class="p">,</span>
 <a id="__codelineno-0-686" name="__codelineno-0-686"></a>    <span class="n">ape</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-687" name="__codelineno-0-687"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmotionalTag</span><span class="p">:</span>
-<a id="__codelineno-0-688" name="__codelineno-0-688"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the tag&#39;s expected_affect via Pearce-Hall associability learning.</span>
+<a id="__codelineno-0-688" name="__codelineno-0-688"></a><span class="w">    </span><span class="sd">"""Update the tag's expected_affect via Pearce-Hall associability learning.</span>
 <a id="__codelineno-0-689" name="__codelineno-0-689"></a>
 <a id="__codelineno-0-690" name="__codelineno-0-690"></a><span class="sd">    The learning rate is adaptive: large APE increases the rate (fast relearning</span>
 <a id="__codelineno-0-691" name="__codelineno-0-691"></a><span class="sd">    after surprise), small APE decreases it (stable predictions need less updating).</span>
@@ -4726,7 +4726,7 @@ Psychological Review, 87(6), 532-552.</p>
 <a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="sd">    Pearce, J. M., &amp; Hall, G. (1980). A model for Pavlovian learning: Variations</span>
 <a id="__codelineno-0-713" name="__codelineno-0-713"></a><span class="sd">    in the effectiveness of conditioned but not of unconditioned stimuli.</span>
 <a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="sd">    Psychological Review, 87(6), 532-552.</span>
-<a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="sd">    """</span>
 <a id="__codelineno-0-716" name="__codelineno-0-716"></a>    <span class="n">_LR_MIN</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span>
 <a id="__codelineno-0-717" name="__codelineno-0-717"></a>    <span class="n">_LR_MAX</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.80</span>
 <a id="__codelineno-0-718" name="__codelineno-0-718"></a>    <span class="n">_LR_ADAPT_RATE</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># meta-learning rate for lr update</span>
@@ -4746,8 +4746,8 @@ Psychological Review, 87(6), 532-552.</p>
 <a id="__codelineno-0-732" name="__codelineno-0-732"></a>
 <a id="__codelineno-0-733" name="__codelineno-0-733"></a>    <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span>
 <a id="__codelineno-0-734" name="__codelineno-0-734"></a>        <span class="n">update</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-0-735" name="__codelineno-0-735"></a>            <span class="s2">&quot;expected_affect&quot;</span><span class="p">:</span> <span class="n">new_expected</span><span class="p">,</span>
-<a id="__codelineno-0-736" name="__codelineno-0-736"></a>            <span class="s2">&quot;prediction_learning_rate&quot;</span><span class="p">:</span> <span class="n">new_lr</span><span class="p">,</span>
+<a id="__codelineno-0-735" name="__codelineno-0-735"></a>            <span class="s2">"expected_affect"</span><span class="p">:</span> <span class="n">new_expected</span><span class="p">,</span>
+<a id="__codelineno-0-736" name="__codelineno-0-736"></a>            <span class="s2">"prediction_learning_rate"</span><span class="p">:</span> <span class="n">new_lr</span><span class="p">,</span>
 <a id="__codelineno-0-737" name="__codelineno-0-737"></a>        <span class="p">}</span>
 <a id="__codelineno-0-738" name="__codelineno-0-738"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4813,7 +4813,7 @@ Psychological Review, 87(6), 532-552.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
