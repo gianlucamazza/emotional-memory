@@ -9,11 +9,12 @@ This is the production-reachable mechanism studied in Addendum T: appraising the
 at retrieve-time recovers most of the oracle-affect advantage on the curated
 `realistic_recall_v2` benchmark, with no oracle. See the scope caveat at the end.
 
-This tutorial covers three usage patterns:
+This tutorial covers four usage patterns:
 
 1. Pass an explicit `query_affect`
 2. Auto-appraise the query (`retrieve_with_query_appraisal`)
 3. Pair with `DIRECT_VAD_SCHEMA` (recommended)
+4. Gate neutral queries to cosine (`retrieve_query_gated`)
 
 ## 1. Pass an explicit `query_affect`
 
@@ -82,6 +83,29 @@ results = em.retrieve_with_query_appraisal("...", top_k=5)
 ```
 
 The cache means each distinct query text is appraised once.
+
+## 4. Gate neutral queries (`retrieve_query_gated`)
+
+Addendum Y is a validated *safe wrapper* around the same retrieve-time path:
+appraise the query, then route `|valence| < tau` (default `0.2`) to
+semantic-only weights and everything else to `retrieve_with_query_appraisal`.
+Runtime affective state is not mutated. Requires an appraisal engine.
+
+```python
+# Factual / affect-free query → cosine arm
+results = em.retrieve_query_gated("What is the capital of France?", top_k=5)
+
+# Distressed query → affect-conditioned arm (same as retrieve_with_query_appraisal)
+results = em.retrieve_query_gated(
+    "I'm worried I forgot something important before the trip",
+    top_k=5,
+)
+```
+
+Tune the threshold with `EmotionalMemoryConfig.query_affect_gate_tau` or the
+keyword-only `tau=` argument. The gate recovers the *neutral-query* slice of
+the off-regime penalty; it does not fix counter-congruent or content-determined
+gold (Addenda X/X2). See the [configuration guide](configuration_guide.md).
 
 ## Scope and honest caveat
 

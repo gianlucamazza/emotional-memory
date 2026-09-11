@@ -1,8 +1,10 @@
 """Pluggable appraisal schemas for parametric emotion-theory support.
 
-Ships one built-in schema: ``SCHERER_CPM_SCHEMA`` (Scherer 1984 CPM, 5 SECs).
-Custom schemas (OCC, GRID, domain-specific) can be plugged into
-``LLMAppraisalEngine`` without forking the library.
+Ships two built-in schemas: ``SCHERER_CPM_SCHEMA`` (default; Scherer 1984 CPM,
+5 SECs) and ``DIRECT_VAD_SCHEMA`` (opt-in; the LLM rates valence/arousal/dominance
+directly — stronger human-gold agreement, Addendum V). Custom schemas (OCC, GRID,
+domain-specific) can be plugged into ``LLMAppraisalEngine`` without forking the
+library.
 
 Usage::
 

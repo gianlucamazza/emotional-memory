@@ -51,7 +51,7 @@
   \small\textit{Independent Researcher}
 }
 
-\date{May 2026}
+\date{September 2026}
 
 % ── Release metadata (managed by scripts/sync_release_metadata.py) ─────────────
 % Edit release.toml, then run: make sync-metadata
@@ -946,6 +946,27 @@ mood-congruence. The operative boundary is thus sharper than the D2 regime crite
 \emph{the gold relation itself must be affect-conditioned}, observed to date only in
 author-crafted corpora.
 
+A pre-registered query-affect gate (Addendum~Y; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_y\_query\_affect\_gate\_closure.md}%
+{\texttt{preregistration\_addendum\_y\_query\_affect\_gate\_closure.md}}.}) routes
+neutral queries ($\lvert\mathrm{valence}\rvert<0.2$) to pure cosine and affect-carrying
+queries to the retrieve-time arm. Both primary hypotheses PASS (Holm $m=2$): the gate
+recovers the neutral-query slice of the off-regime penalty on ES-MemEval
+($\Delta=+0.076$ vs.\ always-on AFT) and preserves the on-regime gain on curated
+($\Delta=+0.095$ vs.\ cosine). It does \emph{not} move the X/X2 boundary---affect-carrying
+queries whose gold is counter-congruent or content-determined stay un-gateable. The
+mechanism shipped as \texttt{retrieve\_query\_gated()} in v0.17.0.
+
+A held-out linear learning-to-rank profile over the six retrieval signals
+(Addendum~Z; closure:\footnote{%
+\href{\repourl/blob/main/benchmarks/preregistration\_addendum\_z\_learned\_profile\_closure.md}%
+{\texttt{preregistration\_addendum\_z\_learned\_profile\_closure.md}}.}) does
+\emph{not} beat cosine on any third-party corpus (Hz1 FAIL, $0/3$; MADial
+$\Delta=+0.015$, ES-MemEval $\Delta=-0.015$, DailyDialog $\Delta=+0.008$) while
+preserving the curated on-regime advantage (Hz2 PASS, learned top1 $=0.425$ vs.\
+fixed $0.240$). The boundary hardens from fixed-weight failure to: no held-out
+learned linear affect profile generalizes on third-party gold.
+
 \paragraph{Controlled benchmark scope.}
 \texttt{realistic\_recall\_v2} was designed with 4 of 5 challenge types where
 AFT's affective signals are theoretically discriminative
@@ -1063,8 +1084,11 @@ third-party tests are significantly negative---MADial-Bench (Addendum~X,
 $\Delta=-0.083$; counter-congruent supportive recall) and ES-MemEval (Addendum~X2,
 $\Delta=-0.150$; affect-orthogonal QA gold)---so positive retrieval evidence remains
 confined to corpora whose gold relation is affect-conditioned by construction. Per-category
-weight routing, query-type classification, and per-query affect gating were tested and
-are closed negatives (Addenda~J/L/Q).
+weight routing and query-type classification are closed negatives (Addenda~J/L).
+State-based affect gating cannot exceed cosine (Addendum~Q). A query-affect-conditioned
+gate is a validated safe wrapper and shipped as \texttt{retrieve\_query\_gated()}
+(Addendum~Y, Branch~A); a held-out learned linear profile does not beat cosine on
+third-party gold (Addendum~Z, Branch~B).
 Open work: a human-evaluation pilot to ground-truth affective coherence ratings
 (protocol in \texttt{benchmarks/human\_eval/}); broader multilingual coverage
 beyond the English/Italian/Spanish/French slices validated here;

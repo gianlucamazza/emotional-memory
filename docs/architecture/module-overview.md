@@ -36,6 +36,7 @@ The runtime affective state that ties the first three layers together lives in
 | `decay.py` | ACT-R power-law decay with arousal modulation (McGaugh 2004) and spacing effect | [Decay](../api/decay.md) |
 | `appraisal_schema.py` | Pluggable appraisal-theory schemas (Scherer CPM, OCC, GRID, custom) | [Appraisal Schema](../api/appraisal_schema.md) |
 | `query_classifier.py` | Pluggable query-type routing driving per-type retrieval weights | [Query Classifier](../api/query_classifier.md) |
+| `logging_config.py` | `configure_logging()` — package logger (always on; JSON optional) | [Logging](../api/logging.md) |
 | `telemetry.py` | `traced_span()` — OpenTelemetry spans, no-op without the `[otel]` extra | [Telemetry](../api/telemetry.md) |
 | `visualization.py` | 8 matplotlib plotting functions (optional `[viz]` extra) | [Visualization](../api/visualization.md) |
 
@@ -60,7 +61,7 @@ no inheritance required. Bring your own implementation, or use the bundled ones:
 
 **encode (dual-path, LeDoux 1996)** — with `dual_path_encoding=True` and an appraisal engine: the fast path skips appraisal, uses the raw `core_affect`, and marks `pending_appraisal=True`; a later `elaborate(memory_id)` runs full appraisal and blends core affect (default 70% appraised / 30% raw).
 
-**retrieve** — `embed query → build_retrieval_plan() → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (multi-hop BFS) → Pass 2 (activation boost) → per-memory APE computation → APE-gated reconsolidation → Hebbian strengthening on co-retrieved links → top-k`. Use `retrieve_with_explanations()` to expose the per-signal breakdown.
+**retrieve** — `embed query → build_retrieval_plan() → Pass 1 (6-signal score, no spreading) → seed set → spreading_activation() (multi-hop BFS) → Pass 2 (activation boost) → per-memory APE computation → APE-gated reconsolidation → Hebbian strengthening on co-retrieved links → top-k`. Use `retrieve_with_explanations()` to expose the per-signal breakdown. Optional retrieve-time paths: `query_affect=` / `retrieve_with_query_appraisal()` (Addendum T) score s3 against the query's own affect; `retrieve_query_gated()` (Addendum Y) routes neutral queries to cosine.
 
 **observe** — update the affective state from content *without* storing a retrievable memory (useful for assistant turns or system events).
 

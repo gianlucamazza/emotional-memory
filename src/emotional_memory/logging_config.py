@@ -18,17 +18,11 @@ def configure_logging(
 ) -> None:
     """Configure the root ``emotional_memory`` logger.
 
-    Parameters
-    ----------
-    level:
-        Log level.  When *None* (default) the value of the environment
-        variable ``EMOTIONAL_MEMORY_LOG_LEVEL`` is used, falling back to
-        ``WARNING``.
-    json_format:
-        When ``True``, emit single-line JSON objects with ``timestamp``,
-        ``level``, ``logger``, and ``message`` fields.  Useful for
-        production deployments that feed logs into structured ingestion
-        pipelines.
+    Args:
+        level: Log level. When ``None`` (default), uses
+            ``EMOTIONAL_MEMORY_LOG_LEVEL``, falling back to ``WARNING``.
+        json_format: When ``True``, emit single-line JSON objects with
+            ``timestamp``, ``level``, ``logger``, and ``message`` fields.
     """
     if level is None:
         level = os.environ.get("EMOTIONAL_MEMORY_LOG_LEVEL", "WARNING")

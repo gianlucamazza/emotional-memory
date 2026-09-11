@@ -28,6 +28,7 @@ The library validates 20 phenomena from the affective science literature via 127
 | Hebbian co-retrieval strengthening | Hebb 1949 | 4 | [test_hebbian_strengthening.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_hebbian_strengthening.py) |
 | ACT-R power-law decay | Anderson 1983 / McGaugh 2004 | 5 | [test_decay_power_law.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_decay_power_law.py) |
 | PAD dominance | Mehrabian & Russell 1974 | 8 | [test_pad_dominance.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_pad_dominance.py) |
+| Dominance retrieval gap (G7) | Mehrabian & Russell 1974 | 1 | [test_dominance_retrieval_gap.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_dominance_retrieval_gap.py) |
 | Emotional retrieval vs. cosine | Bower 1981 / Russell 1980 / Nader 2000 | 3 | [test_emotional_vs_cosine.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_emotional_vs_cosine.py) |
 | Design gap regression | (various) | 3 | [test_design_gaps.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_design_gaps.py) |
 | Dual-path encoding | LeDoux 1996 | 6 | [test_dual_path_encoding.py](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/fidelity/test_dual_path_encoding.py) |

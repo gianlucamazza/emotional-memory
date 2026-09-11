@@ -114,3 +114,28 @@ Lower-level planning helpers in `emotional_memory.retrieval` are intentionally n
 promoted as stable top-level API. In particular, `build_retrieval_plan()` should be
 treated as an internal engine helper unless the project explicitly documents it as
 stable in a future release.
+
+## v0.16.0 → v0.17.0
+
+Additive. `retrieve_query_gated()` (sync and async) is the Addendum Y safe wrapper:
+it appraises the query and routes `|valence| < tau` (default
+`EmotionalMemoryConfig.query_affect_gate_tau=0.2`) to semantic-only retrieval,
+else to `retrieve_with_query_appraisal`. Requires an `appraisal_engine`. Default
+`retrieve()` behaviour is unchanged. See the
+[query-appraisal tutorial](tutorials/query_appraisal_retrieval.md).
+
+## v0.17.0 → v0.18.0
+
+### SQLite vector index ranks by cosine
+
+Databases created by v0.18+ use `sqlite-vec` `distance_metric=cosine`, matching
+the retrieval scorer. Databases written by earlier versions used L2. Opening one
+emits a `UserWarning`; call `store.rebuild_vector_index()` once to migrate (the
+vector table is derived — embeddings also live in the memory rows).
+
+### Keyword appraisal scaling
+
+`KeywordAppraisalEngine` no longer averages in rules that leave a dimension at
+its neutral default. Multi-rule inputs produce stronger (less attenuated)
+appraisals. The published `aft_keyword_synchronous` (Hf1) numbers used the
+pre-fix engine and are not regenerated.

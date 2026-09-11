@@ -176,5 +176,6 @@ when a state store is configured. See [Async tutorial](async.md) for the full as
 
 - [`EmotionalMemory` API reference](../api/engine.md)
 - [`SQLiteStore`, `QdrantStore`, `ChromaStore`](../api/stores.md)
+- [State stores](../api/state_stores.md)
 - [Async tutorial](async.md)
 - `examples/persistence.py` in the repository

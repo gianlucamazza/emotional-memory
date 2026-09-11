@@ -10,6 +10,9 @@ uv pip install "emotional-memory[otel]"
 
 Without the extra, all helpers are **zero-overhead no-ops** — no import errors, no performance cost.
 
+Package logging (`configure_logging`) is separate and always available — see
+[Logging](logging.md).
+
 ## Usage
 
 ```python

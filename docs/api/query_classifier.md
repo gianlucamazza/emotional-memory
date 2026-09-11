@@ -6,7 +6,8 @@ the query targets an emotion state, an affect-conditioned topic, or a temporal
 trajectory.
 
 See also: [tutorial — query routing](../tutorials/query_routing.md) for end-to-end usage,
-and `LOCOMO_ROUTING` for the pre-registered weight table from Addendum L.
+`LOCOMO_ROUTING` for the pre-registered weight table from Addendum L, and
+[`QueryClassifierConfig`](retrieval.md) on `RetrievalConfig.query_classifier`.
 
 ## Protocol
 

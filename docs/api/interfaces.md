@@ -6,6 +6,8 @@
 
 ::: emotional_memory.interfaces.MemoryStore
 
+::: emotional_memory.interfaces.AffectiveStateStore
+
 ::: emotional_memory.interfaces.SequentialEmbedder
 
 ## Async Protocols

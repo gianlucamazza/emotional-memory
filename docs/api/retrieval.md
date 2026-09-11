@@ -21,6 +21,8 @@ root import.
 
 ::: emotional_memory.retrieval.RetrievalConfig
 
+::: emotional_memory.retrieval.QueryClassifierConfig
+
 ::: emotional_memory.retrieval.AdaptiveWeightsConfig
 
 ::: emotional_memory.retrieval.RetrievalSignals

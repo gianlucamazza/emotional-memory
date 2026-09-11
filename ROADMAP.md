@@ -245,8 +245,9 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       itself (tiebreak 0.160 vs 0.280); **Hq3 FAIL**, Hq4 — even the oracle-gate arm is
       significantly below cosine (Δ=−0.045). **Hq2 PASS** (+0.080, p_holm=0.0009): gating
       recovers the entire always-on penalty exactly (gated == cosine on affect-free queries,
-      Hq5 Δ=0.000) — a safe wrapper, not an advantage. The affect-routing line is **closed**;
-      residual hypothesis (not scheduled): retrieve-time query appraisal as a new signal.
+      Hq5 Δ=0.000) — a safe wrapper, not an advantage. The affect-routing line is **closed**.
+      Residual at close (retrieve-time query appraisal as a new signal) was later executed
+      as Addendum T (and T2A / X / X2 / Y).
       See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
 - [x] **Addenda R/S — downstream value + human-gold appraisal (2026-06-26).** Addendum R:
       encode→retrieve→generate→judge on realistic_recall_v2 (N=200, oracle affect) — **PASS**,
@@ -298,10 +299,10 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       **affect-orthogonal** (content-determined QA; 45.2% of queries affectively
       neutral), not counter-congruent. Provenance bound hardened: positive retrieval
       evidence remains confined to author-crafted corpora; operative boundary = the gold
-      relation itself must be affect-conditioned. Residual (not scheduled): a
-      query-affect-conditioned gate (engage the affect channel only on affect-carrying
-      queries — the untested variant left open by Addendum Q); no further released
-      third-party corpora exist today.
+      relation itself must be affect-conditioned. Residual at close (a
+      query-affect-conditioned gate — the untested variant left open by Addendum Q)
+      was later executed as Addendum Y; no further released third-party corpora
+      exist today.
       See `benchmarks/preregistration_addendum_x2_esmemeval_third_party_closure.md`.
 
 - [x] **Addendum Y — query-affect-conditioned gate (2026-07-07).** The untested variant
@@ -313,8 +314,8 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       result — the gate recovers **exactly the neutral-query component** of the off-regime
       penalty (~50% on ES-MemEval’s 45.5%-neutral queries; 0% on MADial, 0%-neutral) and
       preserves the on-regime gain: a validated safe wrapper, not a fix for the X/X2
-      gold-relation boundary. Follow-up (not scheduled): promote to a production
-      `retrieve_query_gated()` src API in its own pre-registered PR.
+      gold-relation boundary. Production API shipped in v0.17.0:
+      `retrieve_query_gated()` (sync + async; `query_affect_gate_tau`, default 0.2).
       See `benchmarks/preregistration_addendum_y_query_affect_gate_closure.md`.
 - [x] **Addendum Z — held-out learned retrieval profile (Branch B, 2026-07-14).** The
       untested lever behind every third-party FAIL: they all used a _fixed_ weight vector.

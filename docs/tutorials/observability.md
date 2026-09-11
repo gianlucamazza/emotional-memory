@@ -119,5 +119,6 @@ telemetry_mod._reset_tracer_cache()
 
 ## See also
 
+- [`configure_logging` API reference](../api/logging.md)
 - [`traced_span` API reference](../api/telemetry.md)
 - [OpenTelemetry Python SDK](https://opentelemetry-python.readthedocs.io/)

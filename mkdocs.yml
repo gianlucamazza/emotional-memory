@@ -84,6 +84,7 @@ nav:
     - Stores: api/stores.md
     - State Stores: api/state_stores.md
     - Embedders: api/embedders.md
+    - Logging: api/logging.md
     - Telemetry: api/telemetry.md
     - Appraisal: api/appraisal.md
     - Appraisal Schema: api/appraisal_schema.md

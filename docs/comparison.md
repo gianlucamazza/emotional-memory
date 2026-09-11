@@ -16,7 +16,7 @@ the underlying numbers see [Current Evidence](research/09_current_evidence.md).
 | **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |
 | **Internal fidelity tests** | ✅ 127 cases, 20 phenomena ([bench-fidelity](https://github.com/gianlucamazza/emotional-memory/tree/main/benchmarks/fidelity)) | — | — | — | — |
 | **External benchmark** | ✅ LoCoMo (FAIL: F1 0.168 vs 0.271; Pareto Hj1 FAIL) | ✅ LoCoMo, LongMemEval, BEAM | ✅ LoCoMo, DMR | ✅ DMR, LongMemEval | ❌ |
-| **Codebase size** | ~4.8k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
+| **Codebase size** | ~9k LOC (src/) | >50k LOC | >50k LOC | >50k LOC | ~5k LOC |
 
 **Key differentiator**: emotional-memory makes affect a first-class, multi-layer part
 of encoding and retrieval. Compared with the general-purpose memory systems in this

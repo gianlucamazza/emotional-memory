@@ -1,6 +1,6 @@
-"""Abstract interfaces: Embedder and MemoryStore.
+"""Abstract interfaces: Embedder, MemoryStore, and AffectiveStateStore.
 
-Both are typing.Protocol — implementors do not import or subclass from
+These are typing.Protocol — implementors do not import or subclass from
 here. Duck typing is sufficient.
 
 ``SequentialEmbedder`` is a convenience base class for implementations

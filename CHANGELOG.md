@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Documentation drift pass.** Claim matrix, current-evidence, ROADMAP, API
+  pages, and the v0.17.0 notes now record that `retrieve_query_gated()` shipped
+  in v0.17.0 (Addendum Y production path). Fidelity table, comparison LOC,
+  `AffectiveStateStore` constructor wiring, missing API symbols
+  (`QueryClassifierConfig`, `DIRECT_VAD_SCHEMA`, `configure_logging`), the
+  query-appraisal tutorial, `.env.example`, the migration guide, and paper
+  Addenda Y/Z are aligned with the code. ROADMAP Q/X2 residuals now point
+  forward to the addenda that later executed them. Affective-state backends
+  are documented only on the State Stores API page (Stores links there).
+
 - **CI `uv sync` is frozen** and `uv lock --check` runs in `meta-integrity`, so a
   drifted lockfile fails closed instead of being silently regenerated.
 - **PEP 639 `license-files = ["LICENSE"]`** so the wheel/sdist ship the MIT license
@@ -128,6 +138,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `benchmarks/preregistration_addendum_z_learned_profile_closure.md`.
 
 ### Added
+
+- **`retrieve_query_gated()`** (sync + async) — Addendum Y production path.
+  Appraises the query and routes `|valence| < tau` (default
+  `EmotionalMemoryConfig.query_affect_gate_tau=0.2`) to semantic-only weights,
+  else to `retrieve_with_query_appraisal`. Validated safe wrapper (Hg1/Hg2
+  PASS); does not move the X/X2 gold-relation boundary. Omitted from these
+  notes at release; recorded here as a historical correction.
 
 - **Claude Code collaboration guide** (`docs/contributing/claude-code-guide.md`) —
   operative guide for LLM-assisted work on the project: guiding principles

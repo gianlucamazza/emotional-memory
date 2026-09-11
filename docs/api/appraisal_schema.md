@@ -12,9 +12,13 @@ that bundles dimension definitions, an LLM prompt, and a projection function.
 
 ::: emotional_memory.appraisal.GenericAppraisalVector
 
-## Built-in schema
+## Built-in schemas
 
 ::: emotional_memory.appraisal_schema.SCHERER_CPM_SCHEMA
+    options:
+      show_docstring_attributes: false
+
+::: emotional_memory.appraisal_schema.DIRECT_VAD_SCHEMA
     options:
       show_docstring_attributes: false
 
