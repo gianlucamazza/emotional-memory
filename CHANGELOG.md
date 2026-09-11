@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   drifted lockfile fails closed instead of being silently regenerated.
 - **PEP 639 `license-files = ["LICENSE"]`** so the wheel/sdist ship the MIT license
   text alongside the SPDX expression.
+- **arXiv endorsement docs.** `paper/SUBMISSION.md`, `paper/ARXIV_CHECKLIST.md`,
+  and `ROADMAP.md` no longer claim that `cs.LG` skips endorsement. As of
+  2026-01-21 new submitters in every category need an institutional email *and*
+  a prior paper in the endorsement domain, or a personal endorser. Issue #31
+  stays open; the bundle remains ready. Software citation is unchanged
+  (Zenodo `10.5281/zenodo.21870707`).
 
 ## [0.18.0] - 2026-08-10
 

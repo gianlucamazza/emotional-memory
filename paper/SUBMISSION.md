@@ -41,8 +41,8 @@ from source).
 | Title | Emotional Memory for LLMs: Affective Field Theory |
 | Authors | Gianluca Mazza |
 | Affiliation | Independent Researcher |
-| Primary category | see below |
-| Secondary categories | cs.LG, stat.ML (optional) |
+| Primary category | `cs.LG` once endorsed (see below) |
+| Secondary categories | `cs.AI`, `cs.CL` (optional cross-list) |
 | MSC class | 68T07, 68T50 (optional) |
 | ACM class | I.2.7 (optional) |
 | Comments | 19 pages, 4 figures, 3 tables. Software: emotional-memory v0.18.0 |
@@ -51,30 +51,30 @@ from source).
 
 ---
 
-## Category selection
+## Category and endorsement
 
-### Option A — cs.AI (requires endorsement)
+**Blocked (2026-01-21 policy).** Issue #31 stays open until endorsement is
+obtained. The submission bundle is ready; the software is already citable via
+Zenodo `10.5281/zenodo.21870707`.
 
-**cs.AI** (Artificial Intelligence) is the most natural fit.  Requires an
-endorser who has previously submitted to cs.AI.  Ask on the arXiv mailing
-list or find a collaborator.
+As of [21 January 2026](https://blog.arxiv.org/2026/01/21/attention-authors-updated-endorsement-policy),
+new submitters in **all categories** (including `cs.LG`) need one of:
 
-Steps:
-1. Request endorsement at https://arxiv.org/auth/endorse
-2. Endorser enters code at https://arxiv.org/auth/endorse?x={code}
-3. Submit once endorsed
+1. **Automatic path:** an institutional academic/research email **and** prior
+   authorship on an accepted arXiv paper in the same endorsement domain
+   ([paper ownership](https://info.arxiv.org/help/authority.html)).
+2. **Personal path:** endorsement from an established arXiv author in that
+   domain ([who can endorse](https://info.arxiv.org/help/endorsement.html#who-can-endorse)).
 
-### Option B — cs.LG (no endorsement required)
+An institutional email alone is no longer sufficient. arXiv staff cannot waive
+the requirement or personally endorse. Independent researchers without a prior
+paper in the domain must use path 2.
 
-**cs.LG** (Machine Learning) does not require endorsement for new submitters.
-Lower barrier; still visible to the AI/ML community.  Add cs.AI as a
-cross-list category.
+Intended category once endorsed: primary `cs.LG`, optional cross-list `cs.AI`
+and `cs.CL`. Request endorsement at https://arxiv.org/auth/endorse.
 
-### Option C — OSF Preprints (no gate)
-
-https://osf.io/preprints/ — submit without review or endorsement.  Provides
-a DOI and is indexed by Google Scholar.  Less prestigious than arXiv but
-zero friction.
+**Not arXiv (optional, no endorsement):** [OSF Preprints](https://osf.io/preprints/)
+gives a DOI and Google Scholar indexing. It is not a substitute for arXiv.
 
 ---
 
@@ -82,7 +82,7 @@ zero friction.
 
 1. Go to https://arxiv.org/submit
 2. Click **Start new submission**
-3. Select primary category (cs.LG or cs.AI if endorsed)
+3. Select primary category `cs.LG` (only after endorsement; see above)
 4. Upload `paper/arxiv-submission.tar.gz`
 5. Wait for auto-compilation preview — fix any LaTeX errors
 6. Fill metadata form (title, authors, abstract, comments, DOI)

@@ -37,7 +37,7 @@ Use this checklist before submitting to arXiv. Update the ✓/✗ column in plac
 
 | Item                                                       | Status | Notes                                |
 | ---------------------------------------------------------- | ------ | ------------------------------------ |
-| Primary category: `cs.LG` (no endorsement, per issue #31)  | ✗      | Cross-list `cs.AI`, `cs.CL` optional |
+| Primary category: `cs.LG` (blocked on endorsement)         | ✗      | 2026-01-21 policy; issue #31 stays open. Cross-list `cs.AI`, `cs.CL` optional |
 | Cross-list categories: `cs.AI`, `cs.CL`                    | ✗      | Optional but recommended             |
 | MSC classification (if required): not required for cs      | —      |                                      |
 | License: `CC BY 4.0` or `CC BY-NC 4.0`                     | ✗      | Must match `LICENSE` file            |
@@ -79,7 +79,8 @@ If any of the above fail, do not submit until resolved.
 
 ---
 
-_Last updated: 2026-08-10 (software snapshot **v0.18.0**, version DOI
+_Last updated: 2026-09-11 (endorsement policy 2026-01-21 recorded; issue #31
+stays open). Prior 2026-08-10: software snapshot **v0.18.0**, version DOI
 `10.5281/zenodo.21870707`, concept DOI `10.5281/zenodo.19972258`; bundle/DOI
 synced via `make release`). Prior 2026-07-17: software snapshot v0.17.0, version
 DOI `10.5281/zenodo.21402228`. Prior 2026-07-07b: abstract boundary claim sharpened
@@ -87,4 +88,5 @@ after Addendum X2 ("affect improves retrieval exactly when relevance is itself
 affect-conditioned"); addenda range A–X2; earlier software snapshot was v0.15.0.
 Prior 2026-07-02: related-work refresh, 44/44 cite keys, Acknowledgements TODO
 resolved, primary category cs.LG. Remaining ✗ items (arXiv upload / arxiv_id in
-`release.toml`) require user action at submission time — issue #31._
+`release.toml`) are blocked on endorsement (arXiv policy 2026-01-21) — issue #31
+stays open. The 2026-07-02 note that `cs.LG` needed no endorsement is obsolete._

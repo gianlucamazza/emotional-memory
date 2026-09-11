@@ -68,7 +68,7 @@ Dot release(s) for the paper bundle, no API changes:
 
 - [x] Footnote linking Addendum H from §Limitations of `paper/main.tex`
 - [x] arXiv submission bundle ready (`paper/arxiv-submission.tar.gz`, `make check-arxiv-bundle` enforces freshness)
-- [ ] arXiv submission executed (cs.LG, no endorsement) — upload pending (user action)
+- [ ] arXiv submission executed — blocked on endorsement (arXiv policy 2026-01-21); issue #31 stays open. Bundle is ready.
 - [ ] Post-submission: update `release.toml: arxiv_id`, run `sync_release_metadata --from-toml`, refresh README badges
 
 ---
@@ -185,7 +185,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ### Open
 
-- [ ] arXiv submission (cs.LG, no endorsement) — upload pending (user action); see v0.7.x.
+- [ ] arXiv submission — blocked on endorsement (arXiv policy 2026-01-21); issue #31 stays open. See v0.7.x.
 - [ ] Gate 2 — Human evaluation execution (Prolific/MTurk distribution of `benchmarks/human_eval/packets.json`). Does **not** block v0.11.0; tracked on v1.0 roadmap.
 
 ---
@@ -385,7 +385,7 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
 
 Still open (not blocking the release line):
 
-- [ ] arXiv submission upload (cs.LG) — issue #31
+- [ ] arXiv submission upload — blocked on endorsement (arXiv policy 2026-01-21); issue #31 stays open
 - [ ] Gate 2 human evaluation execution — issue #27
 
 ## v1.0.0 — Stability commitment (target: when above is closed)
