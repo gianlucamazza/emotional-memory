@@ -85,7 +85,7 @@ uv pip install emotional-memory
 uv pip install "emotional-memory[sentence-transformers]"  # real semantic embeddings (recommended)
 uv pip install "emotional-memory[sqlite]"                 # SQLite persistence via sqlite-vec
 uv pip install "emotional-memory[qdrant]"                 # Qdrant vector database
-uv pip install "emotional-memory[chroma]"                 # ChromaDB vector database
+uv pip install "emotional-memory[chroma]"                 # ChromaDB HTTP client
 uv pip install "emotional-memory[otel]"                   # OpenTelemetry tracing (no-op without this extra)
 uv pip install "emotional-memory[redis]"                  # shared affective-state persistence via Redis
 uv pip install "emotional-memory[viz]"                    # matplotlib visualization

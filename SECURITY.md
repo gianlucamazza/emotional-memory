@@ -46,15 +46,13 @@ It does **not** cover:
 These affected **optional or development dependencies only** — the published
 runtime wheel does not import them and was never exposed.
 
-`chromadb` CVE-2026-45829 is **resolved** (2026-07-14): the optional `[chroma]`
-extra pins `chromadb>=0.6.3,<1.0` — outside the vulnerable range (`>=1.0.0,
-<=1.5.9`). PyPI 1.5.9 remains unpatched; we will bump to `>=1.5.10` once
-chroma-core/chroma ships the fix (merged in PR #7237). When using
-`ChromaStore(host=...)`, connect only to trusted Chroma servers. The ceiling is a
-mitigation, not a compatibility bound: an automated "permit the latest version"
-bump widened it to `<2.0` in #122 and re-admitted the vulnerable range, so
-`.github/dependabot.yml` now ignores `chromadb >=1.0.0` and the pin must be
-raised by hand once a patched release exists.
+The optional `[chroma]` extra installs the HTTP-only `chromadb-client`, not the
+vulnerable embedded `chromadb` server package. Since 2026-09-12, `ChromaStore`
+requires `host=` and rejects local ephemeral or persistent mode. Operate the
+remote server outside this library, require authentication, and use only a
+deployment verified not to be affected by the listed advisories. This removes CVE-2026-45830,
+CVE-2026-45831, and CVE-2026-45833 from this project's dependency graph while
+upstream has no fixed `chromadb` release.
 
 `torch` CVE-2025-3000 is **resolved**: a patched `torch` 2.12.1 has shipped and
 `uv.lock` is pinned to it. A `uv.lock` refresh (2026-06-27) cleared every other

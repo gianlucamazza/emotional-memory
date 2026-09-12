@@ -6,6 +6,9 @@ Run with:
 
 from __future__ import annotations
 
+from typing import Any
+
+import numpy as np
 import pytest
 from conftest import make_test_memory
 
@@ -13,7 +16,73 @@ from conftest import make_test_memory
 pytest.importorskip("chromadb")
 
 from emotional_memory.interfaces import MemoryStore
-from emotional_memory.stores.chroma import ChromaStore
+from emotional_memory.stores.chroma import ChromaStore as _ChromaStore
+
+
+class _FakeCollection:
+    def __init__(self, metadata: dict[str, Any]) -> None:
+        self.metadata = metadata
+        self._rows: dict[str, tuple[list[float], str]] = {}
+
+    def upsert(self, *, ids, embeddings, documents, metadatas) -> None:
+        del metadatas
+        self._rows[ids[0]] = (embeddings[0].tolist(), documents[0])
+
+    def get(self, *, ids=None, limit=None, offset=0, include=None) -> dict[str, Any]:
+        del include
+        rows = list(self._rows.items())
+        if ids is not None:
+            rows = [(key, self._rows[key]) for key in ids if key in self._rows]
+        rows = rows[offset : offset + limit if limit is not None else None]
+        return {
+            "documents": [row[1][1] for row in rows],
+            "embeddings": [row[1][0] for row in rows],
+        }
+
+    def delete(self, *, ids) -> None:
+        for row_id in ids:
+            self._rows.pop(row_id, None)
+
+    def query(self, *, query_embeddings, n_results, include) -> dict[str, Any]:
+        del include
+        query = np.asarray(query_embeddings[0])
+        ranked = sorted(
+            self._rows.values(),
+            key=lambda row: -float(np.dot(query, np.asarray(row[0]))),
+        )
+        return {"documents": [[row[1] for row in ranked[:n_results]]]}
+
+    def count(self) -> int:
+        return len(self._rows)
+
+
+class _FakeClient:
+    def __init__(self) -> None:
+        self._collections: dict[str, _FakeCollection] = {}
+
+    def get_collection(self, name: str) -> _FakeCollection:
+        if name not in self._collections:
+            raise ValueError("collection does not exist")
+        return self._collections[name]
+
+    def create_collection(self, name: str, metadata: dict[str, Any]) -> _FakeCollection:
+        collection = _FakeCollection(metadata)
+        self._collections[name] = collection
+        return collection
+
+
+@pytest.fixture(autouse=True)
+def _fake_http_client(monkeypatch):
+    import chromadb
+
+    monkeypatch.setattr(chromadb, "HttpClient", lambda **kwargs: _FakeClient())
+
+
+def ChromaStore(**kwargs):
+    """Construct the HTTP-only adapter against the unit-test client."""
+    kwargs.setdefault("host", "localhost")
+    return _ChromaStore(**kwargs)
+
 
 # ---------------------------------------------------------------------------
 # Initialisation
@@ -37,9 +106,13 @@ class TestChromaStoreInit:
         store = ChromaStore()
         assert store._collection is None
 
-    def test_path_and_host_mutually_exclusive(self, tmp_path):
-        with pytest.raises(ValueError, match="at most one"):
+    def test_path_mode_is_rejected(self, tmp_path):
+        with pytest.raises(ValueError, match="unavailable for security reasons"):
             ChromaStore(path=str(tmp_path / "chroma"), host="localhost")
+
+    def test_host_is_required(self):
+        with pytest.raises(ValueError, match="requires host"):
+            _ChromaStore()
 
 
 # ---------------------------------------------------------------------------
@@ -262,23 +335,19 @@ class TestChromaStoreRepr:
 
 
 # ---------------------------------------------------------------------------
-# Persistence (file-backed)
+# Remote mode
 # ---------------------------------------------------------------------------
 
 
-class TestChromaStorePersistence:
-    def test_local_path_persists_across_instances(self, tmp_path):
-        path = str(tmp_path / "chroma_data")
-        store1 = ChromaStore(path=path)
-        m = make_test_memory("persistent", embedding=[1.0, 0.0, 0.0])
-        store1.save(m)
-        assert len(store1) == 1
-        store1.close()
+class TestChromaStoreRemoteMode:
+    def test_passes_host_and_port_to_http_client(self, monkeypatch):
+        import chromadb
 
-        store2 = ChromaStore(path=path)
-        got = store2.get(m.id)
-        assert got is not None
-        assert got.content == "persistent"
-        assert store2._collection is not None
-        assert store2._dim == 3
-        store2.close()
+        received = {}
+        monkeypatch.setattr(
+            chromadb,
+            "HttpClient",
+            lambda **kwargs: received.update(kwargs) or _FakeClient(),
+        )
+        _ChromaStore(host="chroma.internal", port=9000)
+        assert received == {"host": "chroma.internal", "port": 9000}

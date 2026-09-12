@@ -15,7 +15,7 @@ restarts.  This tutorial covers:
 ```bash
 uv pip install "emotional-memory[sqlite]"    # SQLite backend
 uv pip install "emotional-memory[qdrant]"    # Qdrant backend
-uv pip install "emotional-memory[chroma]"    # ChromaDB backend
+uv pip install "emotional-memory[chroma]"    # ChromaDB HTTP client (remote server required)
 ```
 
 `SQLiteStore` requires `sqlite-vec` for approximate-nearest-neighbour search.

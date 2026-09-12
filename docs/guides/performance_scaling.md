@@ -62,7 +62,7 @@ Affective mood continuity across sessions
 | `InMemoryStore` | Brute cosine + matrix cache | No | none |
 | `SQLiteStore` | sqlite-vec ANN (brute only if vec table empty) | File | `[sqlite]` |
 | `QdrantStore` | ANN | Server / local | `[qdrant]` |
-| `ChromaStore` | ANN | Ephemeral or persistent | `[chroma]` |
+| `ChromaStore` | ANN | Remote server | `[chroma]` |
 
 API reference: [Stores](../api/stores.md).
 

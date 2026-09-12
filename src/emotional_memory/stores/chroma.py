@@ -1,6 +1,6 @@
-"""ChromaStore — persistent MemoryStore backed by a Chroma vector database.
+"""ChromaStore — remote MemoryStore backed by a Chroma vector database.
 
-Requires the ``chromadb`` optional dependency::
+Requires the HTTP-only Chroma client from the ``chroma`` optional extra::
 
     pip install emotional-memory[chroma]
 
@@ -27,25 +27,19 @@ Usage::
 
     from emotional_memory.stores.chroma import ChromaStore
 
-    store = ChromaStore()                              # in-memory (ephemeral)
-    store = ChromaStore(path="./chroma_data")          # local on-disk
     store = ChromaStore(host="localhost", port=8000)   # remote HTTP server
     engine = EmotionalMemory(store, embedder)
 
 Security
 --------
-``ChromaStore`` always supplies embeddings on write/query (it never asks Chroma
-to embed documents), which avoids the client-side collection-poisoning path when
-the server configuration carries a malicious ``embedding_function``. When using
-``host=`` to reach a **remote** Chroma server, connect only to instances you
-trust and keep ``chromadb`` on a CVE-2026-45829-patched release (see
-``SECURITY.md``).
+The optional dependency is Chroma's HTTP-only client: the vulnerable embedded
+server is deliberately not installed. ``ChromaStore`` always supplies embeddings
+on write/query and must connect to a separately managed, trusted, patched server.
 """
 
 from __future__ import annotations
 
 import logging
-import uuid
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -80,12 +74,10 @@ class ChromaStore:
     Parameters
     ----------
     path:
-        Local filesystem path for a persistent on-disk Chroma instance.
-        Mutually exclusive with ``host``. ``None`` (default) selects the
-        ephemeral in-memory Chroma instance, useful for tests and prototyping.
+        Unsupported. Retained to provide a migration error for callers that used
+        the former embedded persistent mode.
     host:
-        Remote Chroma server hostname, e.g. ``"localhost"``. Mutually
-        exclusive with ``path``.
+        Remote Chroma server hostname, e.g. ``"localhost"``. Required.
     port:
         Remote Chroma server port (default 8000). Only used when ``host``
         is provided.
@@ -110,33 +102,23 @@ class ChromaStore:
     ) -> None:
         try:
             import chromadb
-            from chromadb.config import Settings as _ChromaSettings
         except ImportError as exc:
             raise ImportError(
-                "chromadb is required for ChromaStore. "
+                "the Chroma HTTP client is required for ChromaStore. "
                 "Install with: pip install 'emotional-memory[chroma]'"
             ) from exc
 
-        _ephemeral_settings = _ChromaSettings(is_persistent=False, anonymized_telemetry=False)
-
-        if path is not None and host is not None:
-            raise ValueError("ChromaStore: pass at most one of `path` or `host`, not both")
-        if host is not None:
-            self._client: _ChromaClientAPI = chromadb.HttpClient(host=host, port=port)
-        elif path is not None:
-            self._client = chromadb.PersistentClient(path=path)
-        else:
-            # Create an isolated tenant+database namespace for each ephemeral
-            # instance so separate ChromaStore() objects in the same process
-            # don't share state through chromadb's process-wide SharedSystemClient.
-            _tenant = uuid.uuid4().hex
-            _db = uuid.uuid4().hex
-            _admin = chromadb.AdminClient(settings=_ephemeral_settings)
-            _admin.create_tenant(_tenant)
-            _admin.create_database(_db, tenant=_tenant)
-            self._client = chromadb.EphemeralClient(
-                tenant=_tenant, database=_db, settings=_ephemeral_settings
+        if path is not None:
+            raise ValueError(
+                "ChromaStore embedded persistence is unavailable for security reasons; "
+                "run a patched Chroma server and pass host= instead"
             )
+        if host is None:
+            raise ValueError(
+                "ChromaStore requires host= because the [chroma] extra installs only "
+                "the HTTP client"
+            )
+        self._client: _ChromaClientAPI = chromadb.HttpClient(host=host, port=port)
         self._collection_name = collection_name
         self._collection: _ChromaCollection | None = None
         self._dim: int = 0

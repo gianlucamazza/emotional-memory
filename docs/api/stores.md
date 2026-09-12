@@ -37,7 +37,9 @@ N or durability see [Performance & Scaling](../guides/performance_scaling.md).
 ### ChromaStore
 
 !!! note
-    Requires the `chroma` extra: `uv pip install "emotional-memory[chroma]"`
+    Requires the HTTP-only `chroma` extra and a separately operated server:
+    `uv pip install "emotional-memory[chroma]"`. Pass `host=`; embedded and
+    file-backed modes are intentionally unavailable.
 
 ::: emotional_memory.stores.chroma.ChromaStore
 
