@@ -5,7 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/v/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![Last commit](https://img.shields.io/github/last-commit/gianlucamazza/emotional-memory)](https://github.com/gianlucamazza/emotional-memory/commits/main)
 [![Python](https://img.shields.io/pypi/pyversions/emotional_memory)](https://pypi.org/project/emotional_memory/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19972258.svg)](https://doi.org/10.5281/zenodo.19972258)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19972258-blue?logo=doi)](https://doi.org/10.5281/zenodo.19972258)
 [![Benchmarks](https://img.shields.io/badge/benchmarks-tracked-blue)](https://gianlucamazza.github.io/emotional-memory/dev/bench/)
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
