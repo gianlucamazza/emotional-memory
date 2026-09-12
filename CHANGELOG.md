@@ -33,6 +33,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Public memory update API.** `EmotionalMemory.update_memory()` and its async
+  counterpart replace selected content, tag, or metadata fields without exposing
+  store/embedder internals. Content changes are re-embedded before persistence.
+
 - **Hypothesis property tests for algebraic invariants** (`tests/test_invariants.py`).
   Decay (bounded by initial strength, monotone in time, scalar ≡ batch), retrieval
   weight simplex, PAD distance/lerp, mood EMA/regression box, and cosine similarity
