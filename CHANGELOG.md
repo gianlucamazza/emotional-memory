@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.1] - 2026-09-12
+
 ### Fixed
 
 - **CI metadata sync and fidelity determinism.** Release metadata synchronization
@@ -2060,7 +2062,8 @@ disclosure).
 - PyPI release workflow (OIDC trusted publishing)
 - Pre-commit hooks: ruff check + format
 
-[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.18.0...HEAD
+[Unreleased]: https://github.com/gianlucamazza/emotional-memory/compare/v0.18.1...HEAD
+[0.18.1]: https://github.com/gianlucamazza/emotional-memory/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/gianlucamazza/emotional-memory/compare/v0.15.0...v0.16.0
