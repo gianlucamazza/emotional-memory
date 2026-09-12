@@ -571,6 +571,28 @@ class TestAsyncFacadeMethods:
         em = _async_engine()
         assert await em.get("nonexistent-id") is None
 
+    async def test_update_memory_replaces_fields_and_reembeds_content(self):
+        em = _async_engine()
+        memory = await em.encode("old", metadata={"version": 1})
+        updated_tag = memory.tag.model_copy(update={"pending_appraisal": True})
+
+        updated = await em.update_memory(
+            memory.id,
+            content="new",
+            tag=updated_tag,
+            metadata={"version": 2},
+        )
+
+        assert updated.content == "new"
+        assert updated.tag == updated_tag
+        assert updated.metadata == {"version": 2}
+        assert await em.get(memory.id) == updated
+
+    async def test_update_memory_missing_id_raises(self):
+        em = _async_engine()
+        with pytest.raises(KeyError, match="nonexistent-id"):
+            await em.update_memory("nonexistent-id", content="new")
+
     async def test_list_all_empty(self):
         em = _async_engine()
         assert await em.list_all() == []

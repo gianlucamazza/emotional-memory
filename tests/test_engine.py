@@ -545,6 +545,41 @@ class TestFacadeMethods:
         em = _engine()
         assert em.get("nonexistent-id") is None
 
+    def test_update_memory_replaces_fields_and_reembeds_content(self):
+        em = _engine(embedder=IndexEmbedder({"old": [1.0, 0.0], "new": [0.0, 1.0]}))
+        memory = em.encode("old", metadata={"version": 1})
+        updated_tag = memory.tag.model_copy(update={"pending_appraisal": True})
+
+        updated = em.update_memory(
+            memory.id,
+            content="new",
+            tag=updated_tag,
+            metadata={"version": 2},
+        )
+
+        assert updated.content == "new"
+        assert updated.embedding == [0.0, 1.0]
+        assert updated.tag == updated_tag
+        assert updated.metadata == {"version": 2}
+        assert em.get(memory.id) == updated
+
+    def test_update_memory_preserves_omitted_fields(self):
+        em = _engine()
+        memory = em.encode("original", metadata={"keep": True})
+        updated_tag = memory.tag.model_copy(update={"pending_appraisal": True})
+
+        updated = em.update_memory(memory.id, tag=updated_tag)
+
+        assert updated.content == memory.content
+        assert updated.embedding == memory.embedding
+        assert updated.metadata == memory.metadata
+        assert updated.tag == updated_tag
+
+    def test_update_memory_missing_id_raises(self):
+        em = _engine()
+        with pytest.raises(KeyError, match="nonexistent-id"):
+            em.update_memory("nonexistent-id", content="new")
+
     def test_list_all_empty(self):
         em = _engine()
         assert em.list_all() == []

@@ -854,6 +854,31 @@ class AsyncEmotionalMemory:
         """Look up a single memory by ID, or None if not found."""
         return await self._store.get(memory_id)
 
+    async def update_memory(
+        self,
+        memory_id: str,
+        *,
+        content: str | None = None,
+        tag: EmotionalTag | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> Memory:
+        """Replace selected fields of an existing memory asynchronously."""
+        memory = await self._store.get(memory_id)
+        if memory is None:
+            raise KeyError(f"memory not found: {memory_id}")
+        changes: dict[str, Any] = {}
+        if content is not None:
+            check_content_length(content, self._config.max_content_length)
+            changes["content"] = content
+            changes["embedding"] = await self._embedder.embed(content)
+        if tag is not None:
+            changes["tag"] = tag
+        if metadata is not None:
+            changes["metadata"] = metadata
+        updated = memory.model_copy(update=changes)
+        await self._store.update(updated)
+        return updated
+
     async def list_all(self) -> list[Memory]:
         """Return all memories in the store."""
         return await self._store.list_all()

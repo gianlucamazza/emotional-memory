@@ -907,6 +907,36 @@ class EmotionalMemory:
         """Look up a single memory by ID, or None if not found."""
         return self._store.get(memory_id)
 
+    def update_memory(
+        self,
+        memory_id: str,
+        *,
+        content: str | None = None,
+        tag: EmotionalTag | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> Memory:
+        """Replace selected fields of an existing memory.
+
+        ``None`` preserves a field. Changing content recomputes its embedding
+        before the store is mutated, so embedding failures leave the original
+        memory intact.
+        """
+        memory = self._store.get(memory_id)
+        if memory is None:
+            raise KeyError(f"memory not found: {memory_id}")
+        changes: dict[str, Any] = {}
+        if content is not None:
+            check_content_length(content, self._config.max_content_length)
+            changes["content"] = content
+            changes["embedding"] = self._embedder.embed(content)
+        if tag is not None:
+            changes["tag"] = tag
+        if metadata is not None:
+            changes["metadata"] = metadata
+        updated = memory.model_copy(update=changes)
+        self._store.update(updated)
+        return updated
+
     def _add_bidirectional_links(self, memory: Memory, links: list[ResonanceLink]) -> None:
         """Persist backward resonance links on each target memory.
 
