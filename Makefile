@@ -519,17 +519,17 @@ RELEASE_FLAGS ?= --skip-pypi --skip-github-release
 ## Usage: make release VERSION=0.9.0
 release:
 	@test -n "$(VERSION)" || (echo "Usage: make release VERSION=0.9.0"; exit 1)
-	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+	@if test -f .env; then set -a; . ./.env; set +a; fi; \
 		uv run python scripts/release.py "$(VERSION)" $(RELEASE_FLAGS)
 
 release-resume:
 	@test -n "$(VERSION)" || (echo "Usage: make release-resume VERSION=0.9.0"; exit 1)
-	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+	@if test -f .env; then set -a; . ./.env; set +a; fi; \
 		uv run python scripts/release.py "$(VERSION)" --resume $(RELEASE_FLAGS)
 
 release-sandbox:
 	@test -n "$(VERSION)" || (echo "Usage: make release-sandbox VERSION=0.9.0"; exit 1)
-	@export $$(grep -v '^#' .env | xargs) 2>/dev/null; \
+	@if test -f .env; then set -a; . ./.env; set +a; fi; \
 		uv run python scripts/release.py "$(VERSION)" --sandbox $(RELEASE_FLAGS)
 
 release-check:
