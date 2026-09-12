@@ -9,6 +9,8 @@ the deceleration.
 Reference: Spinoza, B. (1677). Ethics III, Def. of Emotions.
 """
 
+from datetime import UTC, datetime, timedelta
+
 import pytest
 
 from emotional_memory import CoreAffect
@@ -19,8 +21,12 @@ pytestmark = pytest.mark.fidelity
 
 def _build_state(*valence_sequence: float) -> AffectiveState:
     state = AffectiveState.initial()
-    for v in valence_sequence:
-        state = state.update(CoreAffect(valence=v, arousal=0.5))
+    start = datetime(2026, 1, 1, tzinfo=UTC)
+    for index, v in enumerate(valence_sequence):
+        state = state.update(
+            CoreAffect(valence=v, arousal=0.5),
+            now=start + timedelta(seconds=index),
+        )
     return state
 
 

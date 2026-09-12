@@ -20,6 +20,7 @@ import re
 import tomllib
 import urllib.request
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -84,6 +85,22 @@ def _replace(pattern: str, repl: str, text: str, description: str) -> str:
     return updated
 
 
+def _sync_readme_doi_badge(readme_text: str, concept_doi: str) -> str:
+    """Update either supported README DOI badge to the canonical icon badge."""
+    encoded_doi = quote(concept_doi, safe="")
+    pattern = (
+        r"\[!\[DOI\]\("
+        r"(?:https://zenodo\.org/badge/DOI/[^)]+\.svg|"
+        r"https://img\.shields\.io/badge/DOI-[^)?]+-blue\?logo=doi)"
+        r"\)\]\(https://doi\.org/[^)]+\)"
+    )
+    badge = (
+        f"[![DOI](https://img.shields.io/badge/DOI-{encoded_doi}-blue?logo=doi)]"
+        f"(https://doi.org/{concept_doi})"
+    )
+    return _replace(pattern, badge, readme_text, "README DOI badge")
+
+
 def sync_release_metadata(
     version_doi: str,
     concept_doi: str,
@@ -101,12 +118,7 @@ def sync_release_metadata(
 
     readme = ROOT / "README.md"
     readme_text = readme.read_text(encoding="utf-8")
-    updated_readme = _replace(
-        r"\[!\[DOI\]\(https://zenodo\.org/badge/DOI/[^\)]+\.svg\)\]\(https://doi\.org/[^\)]+\)",
-        f"[![DOI](https://zenodo.org/badge/DOI/{concept_doi}.svg)](https://doi.org/{concept_doi})",
-        readme_text,
-        "README Zenodo badge",
-    )
+    updated_readme = _sync_readme_doi_badge(readme_text, concept_doi)
     updated_readme = _replace(
         r"^  version\s+= \{[^}]+\},$",
         f"  version   = {{{version}}},",

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **CI metadata sync and fidelity determinism.** Release metadata synchronization
+  now preserves the README's icon-enabled DOI badge, and the momentum fidelity
+  benchmark uses explicit equal time intervals instead of wall-clock timing.
+  Failed fidelity reproduction also prints the captured pytest diagnostics.
+
 ### Security
 
 - **Grouped lock refresh.** `uv lock --upgrade` within current extra constraints

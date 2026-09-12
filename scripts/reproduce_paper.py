@@ -74,6 +74,13 @@ def _run_fidelity(out_dir: Path) -> None:
         print(result.stdout[-2000:] if result.stdout else "")
         return
 
+    if result.returncode != 0:
+        print(f"[WARN] fidelity pytest exited with code {result.returncode}")
+        if result.stdout:
+            print(result.stdout.rstrip())
+        if result.stderr:
+            print(result.stderr.rstrip(), file=sys.stderr)
+
     tree = ET.parse(xml_path)
     root = tree.getroot()
 

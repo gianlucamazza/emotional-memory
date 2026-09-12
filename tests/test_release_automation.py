@@ -67,6 +67,36 @@ def test_sync_release_metadata_is_idempotent_for_current_repo() -> None:
     assert changed == []
 
 
+def test_sync_readme_doi_badge_migrates_legacy_zenodo_badge() -> None:
+    module = _load_script_module("sync_release_metadata")
+    legacy = (
+        "[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1.svg)]"
+        "(https://doi.org/10.5281/zenodo.1)"
+    )
+
+    updated = module._sync_readme_doi_badge(legacy, "10.5281/zenodo.2")
+
+    assert updated == (
+        "[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2-blue?logo=doi)]"
+        "(https://doi.org/10.5281/zenodo.2)"
+    )
+
+
+def test_sync_readme_doi_badge_updates_icon_badge() -> None:
+    module = _load_script_module("sync_release_metadata")
+    current = (
+        "[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.1-blue?logo=doi)]"
+        "(https://doi.org/10.5281/zenodo.1)"
+    )
+
+    updated = module._sync_readme_doi_badge(current, "10.5281/zenodo.2")
+
+    assert updated == (
+        "[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2-blue?logo=doi)]"
+        "(https://doi.org/10.5281/zenodo.2)"
+    )
+
+
 def test_codemeta_related_link_pins_concept_doi() -> None:
     # Regression: a stale per-version Zenodo DOI sat in relatedLink for 8
     # releases before sync_release_metadata learned to manage the field.
