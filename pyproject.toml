@@ -43,7 +43,7 @@ dev = [
   "pytest-timeout>=2.3",
   "hypothesis>=6.122",
   "ruff>=0.4",
-  "mypy>=1.10,<2",
+  "mypy>=1.10,<3",
   "basedpyright>=1.18",
   "fakeredis>=2.35.1",
 ]
