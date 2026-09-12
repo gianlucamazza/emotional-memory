@@ -3034,7 +3034,7 @@ restarts.  This tutorial covers:</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"emotional-memory[sqlite]"</span><span class="w">    </span><span class="c1"># SQLite backend</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"emotional-memory[qdrant]"</span><span class="w">    </span><span class="c1"># Qdrant backend</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"emotional-memory[chroma]"</span><span class="w">    </span><span class="c1"># ChromaDB backend</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"emotional-memory[chroma]"</span><span class="w">    </span><span class="c1"># ChromaDB HTTP client (remote server required)</span>
 </code></pre></div>
 <p><code>SQLiteStore</code> requires <code>sqlite-vec</code> for approximate-nearest-neighbour search.
 <code>QdrantStore</code> and <code>ChromaStore</code> require embeddings to be provided on every
