@@ -97,6 +97,27 @@ affects = host.replay(frames)  # mood_dt: 0.0, then 16200.0
 
 You can also load a JSONL journal with `HostAdapter.load_journal(...)`.
 
+## Phase 6 measurement log
+
+This host writes fly `measure.jsonl` when you pass `measure_path`. The host
+owns time (`mood_dt` from wall-clock or HostFrame timestamps); the fly only
+supplies affect. Hypothesis taus (300 / 60 / 180) are not retuned here.
+
+```python
+host = FlyAffectHost(measure_path="measure.jsonl")
+host.replay(frames)
+```
+
+```bash
+python examples/fly_affect_source.py --measure measure.jsonl
+python examples/fly_phase6_session.py --measure measure.jsonl
+python -m affective_fly calibrate measure.jsonl
+```
+
+`fly_phase6_session.py` replays HostFrames spanning tens of minutes of *mood
+time* (timestamp deltas). A few 0.03 s live ticks is not a Phase 6 session.
+Do not commit fitted taus or Policy / LaunchGate thresholds from that log.
+
 ## Defaults that stay frozen
 
 | Knob | Value | Notes |
@@ -115,5 +136,6 @@ path; Scherer appraisal stays tag-only. Do not pass `appraisal=` to `encode()`.
 ```bash
 make install-fly
 python examples/fly_affect_source.py
+python examples/fly_phase6_session.py --measure measure.jsonl
 uv run python -m pytest tests/test_fly_adapter.py
 ```
