@@ -19,15 +19,16 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 
 try:
     from affective_fly import (
         AffectiveLoop,
         FakeEmbedder,
         FlyAffectReadout,
-        HostAdapter,
         HostFrame,
         LIFCircuit,
+        MeasurementLog,
         MoodField,
         mood_dts_from_timestamps,
     )
@@ -63,8 +64,9 @@ class FlyAffectHost:
     Follows ``examples/host_owns_loop.py`` and ``docs/HOST_INTEGRATION.md``
     in affective-fly. The host constructs ``EmotionalMemory`` and computes
     ``mood_dt`` (wall-clock or HostFrame timestamps). Each tick calls
-    ``AffectiveLoop`` / ``HostAdapter`` and returns valence, arousal, and
-    approach — not a fly Policy action.
+    ``AffectiveLoop`` and returns valence, arousal, and approach — not a
+    fly Policy action. Pass ``measure_path`` to write fly ``measure.jsonl``
+    from this host (Phase 6); do not retune taus or Policy / LaunchGate.
     """
 
     def __init__(
@@ -75,6 +77,7 @@ class FlyAffectHost:
         memory: EmotionalMemory | None = None,
         fly_circuit: FlyAffectReadout | None = None,
         mood_field: MoodField | None = None,
+        measure_path: Path | str | None = None,
     ) -> None:
         if memory is None:
             self.store = store if store is not None else InMemoryStore()
@@ -93,6 +96,11 @@ class FlyAffectHost:
         # MoodField() is the Phase 6 hypothesis (300 / 60 / 180). Not lab 8/4/5.
         self.mood = mood_field if mood_field is not None else MoodField()
         circuit = fly_circuit or LIFCircuit(n_kc=200, n_dan=20, n_mbon=34, seed=42)
+        # Host owns the Phase 6 JSONL path and persist. Fly fills affect
+        # into ``last_measurement``; this host writes ``measure.jsonl``.
+        self.measure_log = (
+            MeasurementLog(filepath=measure_path) if measure_path is not None else None
+        )
         self.loop = AffectiveLoop(
             fly_circuit=circuit,
             emotional_memory=self.memory,
@@ -102,9 +110,24 @@ class FlyAffectHost:
         )
         self._prev_now: float | None = None
 
+    def _record_measurement(self) -> None:
+        """Persist the fly's last tick into the host-owned ``measure.jsonl``.
+
+        ``mood_dt`` on the record is the value this host passed into
+        ``tick`` / ``tick_wall_clock`` / ``replay``. Fly does not own time.
+        """
+        if self.measure_log is None:
+            return
+        record = self.loop.last_measurement
+        if record is None:
+            return
+        self.measure_log.append(record)
+        self.measure_log.save()
+
     def tick(self, frame: HostFrame, mood_dt: float) -> FlyAffect:
         """Host-owned tick: pass ``mood_dt`` in, read affect back."""
         decision = self.loop.step(frame.to_sensory_frame(), mood_dt=float(mood_dt))
+        self._record_measurement()
         return FlyAffect(
             valence=decision.mood_valence,
             arousal=decision.mood_arousal,
@@ -125,13 +148,4 @@ class FlyAffectHost:
     def replay(self, frames: Sequence[HostFrame]) -> list[FlyAffect]:
         """Replay HostFrames with ``mood_dt`` from their timestamps."""
         dts = mood_dts_from_timestamps(frames)
-        decisions = HostAdapter.replay(list(frames), self.loop, mood_dts=dts)
-        return [
-            FlyAffect(
-                valence=decision.mood_valence,
-                arousal=decision.mood_arousal,
-                approach=decision.approach_tendency,
-                mood_dt=float(mood_dt),
-            )
-            for decision, mood_dt in zip(decisions, dts, strict=True)
-        ]
+        return [self.tick(frame, mood_dt) for frame, mood_dt in zip(frames, dts, strict=True)]
