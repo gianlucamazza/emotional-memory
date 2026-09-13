@@ -211,7 +211,7 @@ Post-v0.10.0 dot-releases shipping CI/CD hardening with no API changes.
 
 ### WS3 — New features (WS3a+WS3b closed; WS3c closure pending Addendum L)
 
-- [x] **WS3a** — `integrations/mem0.py`: `EmotionalMemoryMem0Backend` facade (mem0 API surface, no runtime mem0ai dep), `messages_to_content` helper, 49 tests, `docs/tutorials/mem0.md` tutorial. Exported from integrations subpackage and top-level `emotional_memory`.
+- [x] **WS3a** — `integrations/mem0.py`: `EmotionalMemoryMem0Backend` facade (mem0 API surface, no runtime mem0ai dep), `messages_to_content` helper, 49 tests, `docs/tutorials/fly.md` tutorial. Exported from integrations subpackage and top-level `emotional_memory`.
 - [x] **WS3b** — French multilingual slice. Addendum M FR me5 N=120 Branch A PASS (Δ=+0.18 top1 [0.11, 0.26], p<0.0001, Hedges g=0.424, 2026-05-16). `cross_domain_affect_replication` → `controlled_evidence`. See `benchmarks/preregistration_addendum_m_fr_closure.md`.
 - [x] **WS3c** — `query_classifier.py` (`HeuristicQueryClassifier`, `LLMQueryClassifier`, `QueryClassifier` protocol, `LOCOMO_ROUTING`); `QueryClassifierConfig` in `retrieval.py`; routing injection in `engine.py` + `async_engine.py`. Addendum L closed (2026-05-19, 200-QA smoke test): **Hl1 Branch B FAIL** (Δ=−0.017 vs W2, below +0.02 threshold and in wrong direction). Hl2 FAIL (Δ=−0.081 vs naive_rag). Hl3 data-collection issue (classifier log bug). Routing ships as optional feature.
 
@@ -410,4 +410,5 @@ Items not on this roadmap but worth discussing:
 Shipped on the unreleased line (not a new product surface):
 
 - [x] **affective-fly host adapter** — `FlyAffectHost` owns time / `mood_dt` / store and
-      calls the fly for valence / arousal / approach-avoid. See `docs/tutorials/fly.md`.
+      calls the fly for valence / arousal / approach-avoid. Optional host-owned
+      `measure.jsonl` (`measure_path=`) for Phase 6. See `docs/tutorials/fly.md`.
