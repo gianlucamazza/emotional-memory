@@ -410,4 +410,5 @@ Items not on this roadmap but worth discussing:
 Shipped on the unreleased line (not a new product surface):
 
 - [x] **affective-fly host adapter** — `FlyAffectHost` owns time / `mood_dt` / store and
-      calls the fly for valence / arousal / approach-avoid. See `docs/tutorials/fly.md`.
+      calls the fly for valence / arousal / approach-avoid. Optional host-owned
+      `measure.jsonl` (`measure_path=`) for Phase 6. See `docs/tutorials/fly.md`.
