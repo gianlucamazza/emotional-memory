@@ -406,3 +406,8 @@ Items not on this roadmap but worth discussing:
 - Cross-agent emotional resonance (shared mood fields)
 - Integration with more LLM frameworks (LlamaIndex, CrewAI, AutoGen)
 - Real-time streaming encode (partial affective updates)
+
+Shipped on the unreleased line (not a new product surface):
+
+- [x] **affective-fly host adapter** — `FlyAffectHost` owns time / `mood_dt` / store and
+      calls the fly for valence / arousal / approach-avoid. See `docs/tutorials/fly.md`.

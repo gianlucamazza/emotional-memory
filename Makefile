@@ -2,7 +2,7 @@
 -include .env
 export
 
-.PHONY: venv install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+.PHONY: venv install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-fly install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
 
 venv:
 	@test -n "$$VIRTUAL_ENV" || test -d .venv || uv venv
@@ -49,6 +49,11 @@ install-langchain: venv
 
 install-mem0: venv
 	uv pip install -e ".[dev,mem0]"
+
+# affective-fly is not on PyPI; install from GitHub. Not a locked extra
+# (would cycle: fly depends on emotional-memory).
+install-fly: venv
+	uv pip install "affective-fly @ git+https://github.com/gianlucamazza/affective-fly.git"
 
 install-all: venv
 	uv pip install -e ".[dev,demo,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
@@ -561,6 +566,7 @@ help:
 	@echo "  install-redis              + redis (RedisAffectiveStateStore)"
 	@echo "  install-sentence-transformers  + sentence-transformers (real embeddings)"
 	@echo "  install-langchain              + langchain-core (LangChain adapter)"
+	@echo "  install-fly                    + affective-fly from GitHub (circuit affect source)"
 	@echo "  install-viz                + matplotlib (visualization)"
 	@echo "  install-demo               + Gradio demo runtime (local canonical demo setup)"
 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"

@@ -10,6 +10,7 @@ EXAMPLES_DIR = Path(__file__).parent.parent / "examples"
 
 _sqlite_available = importlib.util.find_spec("sqlite_vec") is not None
 _matplotlib_available = importlib.util.find_spec("matplotlib") is not None
+_fly_available = importlib.util.find_spec("affective_fly") is not None
 
 
 def test_basic_usage_runs() -> None:
@@ -64,3 +65,8 @@ def test_persistence_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> No
 def test_emotional_journal_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.chdir(tmp_path)
     runpy.run_path(str(EXAMPLES_DIR / "emotional_journal.py"), run_name="__main__")
+
+
+@pytest.mark.skipif(not _fly_available, reason="requires affective-fly (GitHub install)")
+def test_fly_affect_source_runs() -> None:
+    runpy.run_path(str(EXAMPLES_DIR / "fly_affect_source.py"), run_name="__main__")

@@ -12,6 +12,7 @@ import pytest
 def _reload_integrations_module():
     sys.modules.pop("emotional_memory.integrations", None)
     sys.modules.pop("emotional_memory.integrations.langchain", None)
+    sys.modules.pop("emotional_memory.integrations.fly", None)
     return importlib.import_module("emotional_memory.integrations")
 
 
@@ -51,6 +52,7 @@ def test_integrations_subpackage_raises_actionable_error_for_optional_exports() 
             _ = integrations.recommended_conversation_policy
 
     sys.modules.pop("emotional_memory.integrations", None)
+    sys.modules.pop("emotional_memory.integrations.fly", None)
 
 
 def test_integrations_subpackage_mem0_always_available() -> None:
@@ -73,3 +75,22 @@ def test_integrations_subpackage_mem0_always_available() -> None:
         )
 
     sys.modules.pop("emotional_memory.integrations", None)
+    sys.modules.pop("emotional_memory.integrations.fly", None)
+
+
+def test_integrations_subpackage_raises_for_missing_fly() -> None:
+    hidden = {
+        name: None
+        for name in list(sys.modules)
+        if name == "affective_fly" or name.startswith("affective_fly.")
+    }
+    hidden["affective_fly"] = None
+    with patch.dict(sys.modules, hidden):
+        integrations = _reload_integrations_module()
+        assert "FlyAffectHost" not in integrations.__all__
+        assert "FlyAffect" not in integrations.__all__
+        with pytest.raises(ImportError, match="affective-fly"):
+            _ = integrations.FlyAffectHost
+
+    sys.modules.pop("emotional_memory.integrations", None)
+    sys.modules.pop("emotional_memory.integrations.fly", None)
