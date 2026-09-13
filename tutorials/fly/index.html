@@ -1424,6 +1424,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#phase-6-measurement-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 measurement log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#defaults-that-stay-frozen" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2941,6 +2952,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#phase-6-measurement-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 measurement log
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#defaults-that-stay-frozen" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3063,6 +3085,20 @@ rewards.</p>
 <a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="n">affects</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>  <span class="c1"># mood_dt: 0.0, then 16200.0</span>
 </code></pre></div>
 <p>You can also load a JSONL journal with <code>HostAdapter.load_journal(...)</code>.</p>
+<h2 id="phase-6-measurement-log">Phase 6 measurement log<a class="headerlink" href="#phase-6-measurement-log" title="Permanent link">&para;</a></h2>
+<p>This host writes fly <code>measure.jsonl</code> when you pass <code>measure_path</code>. The host
+owns time (<code>mood_dt</code> from wall-clock or HostFrame timestamps); the fly only
+supplies affect. Hypothesis taus (300 / 60 / 180) are not retuned here.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">host</span> <span class="o">=</span> <span class="n">FlyAffectHost</span><span class="p">(</span><span class="n">measure_path</span><span class="o">=</span><span class="s2">"measure.jsonl"</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">host</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>examples/fly_affect_source.py<span class="w"> </span>--measure<span class="w"> </span>measure.jsonl
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>examples/fly_phase6_session.py<span class="w"> </span>--measure<span class="w"> </span>measure.jsonl
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>python<span class="w"> </span>-m<span class="w"> </span>affective_fly<span class="w"> </span>calibrate<span class="w"> </span>measure.jsonl
+</code></pre></div>
+<p><code>fly_phase6_session.py</code> replays HostFrames spanning tens of minutes of <em>mood
+time</em> (timestamp deltas). A few 0.03 s live ticks is not a Phase 6 session.
+Do not commit fitted taus or Policy / LaunchGate thresholds from that log.</p>
 <h2 id="defaults-that-stay-frozen">Defaults that stay frozen<a class="headerlink" href="#defaults-that-stay-frozen" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3103,9 +3139,10 @@ rewards.</p>
 <p>This is not a UI or a token-launch product. Circuit <code>CoreAffect</code> is the fast
 path; Scherer appraisal stays tag-only. Do not pass <code>appraisal=</code> to <code>encode()</code>.</p>
 <h2 id="run-the-example">Run the example<a class="headerlink" href="#run-the-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>make<span class="w"> </span>install-fly
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>examples/fly_affect_source.py
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_fly_adapter.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>make<span class="w"> </span>install-fly
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>examples/fly_affect_source.py
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>python<span class="w"> </span>examples/fly_phase6_session.py<span class="w"> </span>--measure<span class="w"> </span>measure.jsonl
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_fly_adapter.py
 </code></pre></div>
 
 
