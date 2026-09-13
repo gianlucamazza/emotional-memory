@@ -18,3 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`make install-fly`); not a locked extra (fly depends on this package and is
   not on PyPI). See `docs/tutorials/fly.md` and `examples/fly_affect_source.py`.
 
+## [0.18.1] - 2026-09-12
