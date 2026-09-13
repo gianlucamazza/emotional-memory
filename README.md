@@ -36,7 +36,7 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 | MemGPT / Letta                  | Hierarchical context (working + archival)                              | ❌                            | ❌                       | None                                 | —                            |
 | mem0                            | Fact extraction + vector store                                         | ❌                            | ❌                       | None                                 | —                            |
 | A-MEM                           | Atomic notes + dynamic links                                           | ❌                            | ❌                       | None                                 | —                            |
-| LangMem                         | Hot/cold memory tiers                                                  | ❌                            | ❌                       | Time-based eviction                  | —                            |
+| LangMem                         | Hot/cold memory tiers                                                  | ❌                            | ❌                       | None                                 | —                            |
 | Generative Agents (Park et al.) | Importance + recency + relevance                                       | Partial (importance only)     | ❌                       | Exponential                          | —                            |
 
 > ✅ means the feature is _implemented and theory-faithful_ — it is **not** a head-to-head performance result. The _measured_ retrieval advantage is regime-specific to affect-discriminative recall under oracle-affect labeling (see [When NOT to use](#when-not-to-use)); under end-to-end automatic appraisal it does not transfer. ❌ marks a feature absent, not a quality judgment.
@@ -459,6 +459,7 @@ from affective_fly import HostFrame
 from emotional_memory.integrations import FlyAffectHost
 
 host = FlyAffectHost()  # constructs EmotionalMemory + InMemoryStore
+# host = FlyAffectHost(measure_path="measure.jsonl")  # Phase 6 host-owned log
 frame = HostFrame(
     visual_hash="note-1",
     context={"context": "journal", "note_id": "n1", "query": "lab note", "sentiment": 0.6},
@@ -467,7 +468,8 @@ affect = host.tick_wall_clock(frame, now=10.0)
 print(affect.valence, affect.arousal, affect.approach, affect.mood_dt)
 ```
 
-See [the fly tutorial](docs/tutorials/fly.md) and `examples/fly_affect_source.py`.
+See [the fly tutorial](docs/tutorials/fly.md), `examples/fly_affect_source.py`,
+and `examples/fly_phase6_session.py` (host-owned Phase 6 `measure.jsonl`).
 
 ## Logging & Observability
 
@@ -551,6 +553,7 @@ any ML dependencies.
 | `retrieval_signals.py`              | 6-signal decomposition, radar chart, weight heatmap   | `[viz]`                 |
 | `query_appraisal.py`                | Query appraisal + gated retrieve (Addenda T/Y)        | —                       |
 | `fly_affect_source.py`              | Host-owned fly tick: store + `mood_dt` → affect       | `affective-fly` (GitHub) |
+| `fly_phase6_session.py`             | Host-owned Phase 6 `measure.jsonl` (mood-time replay) | `affective-fly` (GitHub) |
 
 Run any script: `uv run python examples/<script>.py`
 
