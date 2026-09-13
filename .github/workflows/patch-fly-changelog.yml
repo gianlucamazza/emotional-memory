@@ -1,0 +1,51 @@
+name: patch-fly-changelog
+
+on:
+  push:
+    branches: [cursor/wire-fly-affect-host-a400]
+    paths:
+      - ".github/workflows/patch-fly-changelog.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Insert Unreleased fly-host note and remove this workflow
+        run: |
+          python3 << 'PY'
+          from pathlib import Path
+          p = Path("CHANGELOG.md")
+          text = p.read_text()
+          note = (
+              "## [Unreleased]\n\n"
+              "### Added\n\n"
+              "- **affective-fly host adapter.** `FlyAffectHost` in `emotional_memory.integrations.fly`\n"
+              "  constructs this package's store and `EmotionalMemory`, owns wall-clock /\n"
+              "  HostFrame `mood_dt`, and each tick asks\n"
+              "  [affective-fly](https://github.com/gianlucamazza/affective-fly) for valence /\n"
+              "  arousal / approach-avoid. Fly Policy / LaunchGate thresholds and Phase 6\n"
+              "  hypothesis taus (300 / 60 / 180) are unchanged. Install from GitHub\n"
+              "  (`make install-fly`); not a locked extra (fly depends on this package and is\n"
+              "  not on PyPI). See `docs/tutorials/fly.md` and `examples/fly_affect_source.py`.\n\n"
+          )
+          old = "## [Unreleased]\n\n"
+          if "affective-fly host adapter" in text:
+              print("changelog already patched")
+          elif old not in text:
+              raise SystemExit("Unreleased heading not found")
+          else:
+              p.write_text(text.replace(old, note, 1))
+              print("changelog patched")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/patch-fly-changelog.yml
+          git add CHANGELOG.md
+          git diff --cached --quiet && echo "nothing to commit" && exit 0
+          git commit -m "docs: add fly host adapter to unreleased changelog"
+          git push
