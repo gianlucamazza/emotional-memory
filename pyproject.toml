@@ -104,9 +104,15 @@ branch = true
 # (`extra-tests`, `optional-backends-tests`) which install the matching
 # extras.  The main `test` matrix only installs dev+viz, so including
 # these files in its coverage measurement would yield a misleading
-# under-count.  Re-add an entry here when introducing a new optional-
-# backend adapter that the main matrix can't import.
-omit = ["*/stores/qdrant.py", "*/stores/chroma.py"]
+# under-count.  `integrations/fly.py` is omitted because affective-fly
+# is not on PyPI and is not a locked extra.  Re-add an entry here when
+# introducing a new optional-backend adapter that the main matrix
+# can't import.
+omit = [
+  "*/stores/qdrant.py",
+  "*/stores/chroma.py",
+  "*/integrations/fly.py",
+]
 
 [tool.coverage.report]
 show_missing = true
@@ -192,6 +198,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["httpx"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["affective_fly", "affective_fly.*"]
 ignore_missing_imports = true
 
 [tool.basedpyright]
