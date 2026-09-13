@@ -1,0 +1,95 @@
+diff --git a/Makefile b/Makefile
+index cc0af5a..e44a04b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ -include .env
+ export
+ 
+-.PHONY: venv install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
++.PHONY: venv install install-demo install-sqlite install-redis install-sentence-transformers install-langchain install-mem0 install-fly install-bench install-scored-bench install-llm-test install-viz install-docs install-release install-all lint format test cov typecheck meta-check meta-check-local check check-all check-arxiv-bundle bench-perf bench-perf-profile bench-perf-h13-sim bench-perf-h13-ollama bench-fidelity bench bench-appraisal bench-deps-strict bench-deps-llm-only bench-comparative bench-comparative-sbert bench-comparative-sota bench-realistic bench-realistic-hash bench-multiseed bench-realistic-v2-sbert bench-realistic-v2-e5 bench-realistic-it-sbert bench-realistic-it-e5 bench-realistic-it-me5 bench-realistic-es-sbert bench-realistic-es-me5 bench-realistic-fr-me5 bench-ablation bench-ablation-sbert bench-ablation-hash bench-hi3-sbert bench-hi3-e5 bench-hi3-analyze bench-appraisal-confound bench-appraisal-confound-hash bench-addendum-g bench-addendum-g-hash bench-appraisal-diagnostics bench-appraisal-diagnostics-dry bench-dailydialog bench-dailydialog-dry bench-t2a-dailydialog bench-t2a-dailydialog-dry bench-x-madial bench-x-madial-dry bench-x2-esmem bench-x2-esmem-dry bench-y-gate bench-y-gate-dry bench-z-profile bench-z-profile-dry build-dailydialog-personas build-dailydialog-personas-dry bench-locomo bench-locomo-routing bench-locomo-dry bench-locomo-pareto bench-locomo-pareto-dry bench-a3 bench-a3-dry bench-human-gold bench-human-gold-dry bench-circularity-audit bench-appraisal-vad bench-arousal-calibration bench-arousal-calibration-dump bench-query-appraisal human-eval-packets human-eval-summary reproduce-paper paper test-llm llm-config llm-config-strict demo-check demo-run docs-images research-figures paper-figures figures docs docs-serve dist bump publish publish-pypi-manual verify-pypi-release sync-release-metadata zenodo-draft zenodo-publish release-check release-space clean help
+ 
+ venv:
+ 	@test -n "$$VIRTUAL_ENV" || test -d .venv || uv venv
+@@ -50,6 +50,11 @@ install-langchain: venv
+ install-mem0: venv
+ 	uv pip install -e ".[dev,mem0]"
+ 
++# affective-fly is not on PyPI; install from GitHub. Not a locked extra
++# (would cycle: fly depends on emotional-memory).
++install-fly: venv
++	uv pip install "affective-fly @ git+https://github.com/gianlucamazza/affective-fly.git"
++
+ install-all: venv
+ 	uv pip install -e ".[dev,demo,viz,docs,bench,llm-test,dotenv,sqlite,sentence-transformers,langchain,release]"
+ 
+@@ -561,6 +566,7 @@ help:
+ 	@echo "  install-redis              + redis (RedisAffectiveStateStore)"
+ 	@echo "  install-sentence-transformers  + sentence-transformers (real embeddings)"
+ 	@echo "  install-langchain              + langchain-core (LangChain adapter)"
++	@echo "  install-fly                    + affective-fly from GitHub (circuit affect source)"
+ 	@echo "  install-viz                + matplotlib (visualization)"
+ 	@echo "  install-demo               + Gradio demo runtime (local canonical demo setup)"
+ 	@echo "  install-bench              + pytest-benchmark (performance benchmarks)"
+diff --git a/README.md b/README.md
+index aab125a..4aac2ec 100644
+--- a/README.md
++++ b/README.md
+@@ -439,6 +439,36 @@ messages update affective state without being stored, and control commands such
+ fully-configured `EmotionalMemory` so you control the store backend and embedder.
+ `clear()` removes stored memories, clears the transcript, and resets affective state.
+ 
++## affective-fly integration
++
++`FlyAffectHost` is the host-owned tick loop for the [affective-fly](https://github.com/gianlucamazza/affective-fly)
++mushroom-body circuit. This package owns time, `mood_dt`, and the store; each tick
++asks the fly for valence / arousal / approach-avoid. Fly Policy / LaunchGate stay at
++library defaults and are not the product. Hypothesis mood taus (300 / 60 / 180) are
++not retuned here.
++
++`affective-fly` is not on PyPI:
++
++```bash
++make install-fly
++# or: uv pip install "affective-fly @ git+https://github.com/gianlucamazza/affective-fly.git"
++```
++
++```python
++from affective_fly import HostFrame
++from emotional_memory.integrations import FlyAffectHost
++
++host = FlyAffectHost()  # constructs EmotionalMemory + InMemoryStore
++frame = HostFrame(
++    visual_hash="note-1",
++    context={"context": "journal", "note_id": "n1", "query": "lab note", "sentiment": 0.6},
++)
++affect = host.tick_wall_clock(frame, now=10.0)
++print(affect.valence, affect.arousal, affect.approach, affect.mood_dt)
++```
++
++See [the fly tutorial](docs/tutorials/fly.md) and `examples/fly_affect_source.py`.
++
+ ## Logging & Observability
+ 
+ The library uses the standard `logging` module. Enable debug output to trace the full pipeline:
+@@ -520,6 +550,7 @@ any ML dependencies.
+ | `resonance_network.py`              | Resonance graph and link-type distribution            | `[viz]`                 |
+ | `retrieval_signals.py`              | 6-signal decomposition, radar chart, weight heatmap   | `[viz]`                 |
+ | `query_appraisal.py`                | Query appraisal + gated retrieve (Addenda T/Y)        | —                       |
++| `fly_affect_source.py`              | Host-owned fly tick: store + `mood_dt` → affect       | `affective-fly` (GitHub) |
+ 
+ Run any script: `uv run python examples/<script>.py`
+ 
+diff --git a/ROADMAP.md b/ROADMAP.md
+index 8e50595..f01887a 100644
+--- a/ROADMAP.md
++++ b/ROADMAP.md
+@@ -406,3 +406,8 @@ Items not on this roadmap but worth discussing:
+ - Cross-agent emotional resonance (shared mood fields)
+ - Integration with more LLM frameworks (LlamaIndex, CrewAI, AutoGen)
+ - Real-time streaming encode (partial affective updates)
++
++Shipped on the unreleased line (not a new product surface):
++
++- [x] **affective-fly host adapter** — `FlyAffectHost` owns time / `mood_dt` / store and
++      calls the fly for valence / arousal / approach-avoid. See `docs/tutorials/fly.md`.
