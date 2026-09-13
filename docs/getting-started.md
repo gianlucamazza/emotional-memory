@@ -21,6 +21,6 @@ change the README; the docs site picks it up on next build.
 
 - [Mental Model](mental_model.md) — a 5-minute walkthrough of the AFT pipeline
 - [Module Overview](architecture/module-overview.md) — how the modules compose
-- [Tutorials](tutorials/async.md) — async, persistence, LangChain, query routing, custom appraisal schemas
+- [Tutorials](tutorials/async.md) — async, persistence, LangChain, fly circuit, query routing, custom appraisal schemas
 - [API Reference](api/engine.md) — full symbol-level documentation
 - [Research](research/index.md) — the theory and current evidence behind each layer

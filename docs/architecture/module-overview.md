@@ -53,7 +53,7 @@ no inheritance required. Bring your own implementation, or use the bundled ones:
 | `stores/` | `SQLiteStore` (sqlite-vec ANN), `QdrantStore`, `ChromaStore` — plus the in-memory reference store | [Stores](../api/stores.md) |
 | `state_stores/` | `InMemoryAffectiveStateStore`, `SQLiteAffectiveStateStore`, `RedisAffectiveStateStore` — persist runtime affect across sessions | [State Stores](../api/state_stores.md) |
 | `appraisal_llm.py` | `LLMAppraisalEngine` (LLM-backed, cached) + `KeywordAppraisalEngine` (rule-based fallback) | [Appraisal](../api/appraisal.md) |
-| `integrations/` | LangChain ([tutorial](../tutorials/langchain.md)) and mem0 ([tutorial](../tutorials/mem0.md)) adapters | — |
+| `integrations/` | LangChain ([tutorial](../tutorials/langchain.md)), mem0 ([tutorial](../tutorials/mem0.md)), and affective-fly host ([tutorial](../tutorials/fly.md)) adapters | — |
 
 ## Key data flow
 
