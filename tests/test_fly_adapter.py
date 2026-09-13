@@ -21,6 +21,7 @@ from affective_fly import (
     HYPOTHESIS_TAU_VALENCE,
     HostFrame,
     MockFlyCircuit,
+    load_measurement_records,
 )
 
 from emotional_memory import EmotionalMemory, InMemoryStore
@@ -131,3 +132,44 @@ def test_host_owns_wall_clock_mood_dt() -> None:
     assert second.mood_dt == 2.5
     assert host.loop.last_measurement is not None
     assert host.loop.last_measurement.mood_dt == 2.5
+
+
+def test_host_writes_measure_jsonl(tmp_path: Any) -> None:
+    path = tmp_path / "measure.jsonl"
+    host = FlyAffectHost(fly_circuit=MockFlyCircuit(seed=42), measure_path=path)
+    host.replay(_journal_frames())
+
+    records = load_measurement_records(path)
+    assert [r.mood_dt for r in records] == [0.0, 180.0]
+    assert {r.tau_set for r in records} == {"hypothesis"}
+    assert records[0].tau_valence == HYPOTHESIS_TAU_VALENCE
+    assert records[0].tau_arousal == HYPOTHESIS_TAU_AROUSAL
+    assert records[0].tau_approach == HYPOTHESIS_TAU_APPROACH
+    assert records[0].threshold_act == 0.2
+    assert records[0].threshold_approach == 0.2
+    assert records[0].threshold_calm == 0.0
+    assert records[0].approach_denominator == 20.0
+
+
+def test_host_writes_measure_on_wall_clock(tmp_path: Any) -> None:
+    path = tmp_path / "measure.jsonl"
+    host = FlyAffectHost(fly_circuit=MockFlyCircuit(seed=42), measure_path=path)
+    frame = HostFrame(
+        visual_hash="live-1",
+        context={"context": "journal", "note_id": "live", "sentiment": 0.2},
+    )
+
+    host.tick_wall_clock(frame, now=10.0)
+    host.tick_wall_clock(frame, now=12.5)
+
+    records = load_measurement_records(path)
+    assert [r.mood_dt for r in records] == [0.0, 2.5]
+    assert records[-1].tau_set == "hypothesis"
+
+
+def test_no_measure_path_does_not_write_jsonl(tmp_path: Any) -> None:
+    host = FlyAffectHost(fly_circuit=MockFlyCircuit(seed=42))
+    host.replay(_journal_frames())
+
+    assert host.measure_log is None
+    assert not (tmp_path / "measure.jsonl").exists()

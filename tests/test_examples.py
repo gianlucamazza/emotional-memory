@@ -69,4 +69,21 @@ def test_emotional_journal_runs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch)
 
 @pytest.mark.skipif(not _fly_available, reason="requires affective-fly (GitHub install)")
 def test_fly_affect_source_runs() -> None:
-    runpy.run_path(str(EXAMPLES_DIR / "fly_affect_source.py"), run_name="__main__")
+    spec = runpy.run_path(
+        str(EXAMPLES_DIR / "fly_affect_source.py"),
+        run_name="fly_affect_source",
+    )
+    spec["main"]([])
+
+
+@pytest.mark.skipif(not _fly_available, reason="requires affective-fly (GitHub install)")
+def test_fly_phase6_session_writes_measure(tmp_path: Path) -> None:
+    measure = tmp_path / "measure.jsonl"
+    spec = runpy.run_path(
+        str(EXAMPLES_DIR / "fly_phase6_session.py"),
+        run_name="fly_phase6_session",
+    )
+    spec["main"](["--measure", str(measure), "--ticks", "4", "--step-seconds", "180"])
+    assert measure.is_file()
+    lines = [line for line in measure.read_text().splitlines() if line.strip()]
+    assert len(lines) == 4
