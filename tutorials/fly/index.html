@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/production-readiness/">
+        <link rel="canonical" href="https://gianlucamazza.github.io/emotional-memory/tutorials/fly/">
       
       
-        <link rel="prev" href="../benchmarks/">
+        <link rel="prev" href="../mem0/">
       
       
-        <link rel="next" href="../contributing/claude-code-guide/">
+        <link rel="next" href="../configuration_guide/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Production Readiness - emotional_memory</title>
+        <title>affective-fly host - emotional_memory</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#production-readiness" class="md-skip">
+        <a href="#affective-fly-host" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="emotional_memory" class="md-header__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+    <a href="../.." title="emotional_memory" class="md-header__button md-logo" aria-label="emotional_memory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Production Readiness
+              affective-fly host
             
           </span>
         </div>
@@ -225,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
+      <a href="../../getting-started/" class="md-tabs__link">
         
   
   
@@ -263,7 +263,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../mental_model/" class="md-tabs__link">
+      <a href="../../mental_model/" class="md-tabs__link">
         
   
   
@@ -284,7 +284,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../architecture/module-overview/" class="md-tabs__link">
+        <a href="../../architecture/module-overview/" class="md-tabs__link">
           
   
   
@@ -302,7 +302,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../migration/" class="md-tabs__link">
+      <a href="../../migration/" class="md-tabs__link">
         
   
   
@@ -321,7 +321,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../troubleshooting/" class="md-tabs__link">
+      <a href="../../troubleshooting/" class="md-tabs__link">
         
   
   
@@ -342,7 +342,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../guides/performance_scaling/" class="md-tabs__link">
+        <a href="../../guides/performance_scaling/" class="md-tabs__link">
           
   
   
@@ -358,13 +358,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../comparison/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../comparison/" class="md-tabs__link">
           
   
   
@@ -384,7 +382,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../contributing/claude-code-guide/" class="md-tabs__link">
+        <a href="../../contributing/claude-code-guide/" class="md-tabs__link">
           
   
   
@@ -400,11 +398,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../tutorials/async/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../async/" class="md-tabs__link">
           
   
   
@@ -424,7 +424,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../api/engine/" class="md-tabs__link">
+        <a href="../../api/engine/" class="md-tabs__link">
           
   
   
@@ -444,7 +444,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../research/" class="md-tabs__link">
+        <a href="../../research/" class="md-tabs__link">
           
   
   
@@ -464,7 +464,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../blog/2026-04-kickoff/" class="md-tabs__link">
+        <a href="../../blog/2026-04-kickoff/" class="md-tabs__link">
           
   
   
@@ -498,7 +498,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="emotional_memory" class="md-nav__button md-logo" aria-label="emotional_memory" data-md-component="logo">
+    <a href="../.." title="emotional_memory" class="md-nav__button md-logo" aria-label="emotional_memory" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -528,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -555,7 +555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -582,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mental_model/" class="md-nav__link">
+      <a href="../../mental_model/" class="md-nav__link">
         
   
   
@@ -661,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/module-overview/" class="md-nav__link">
+      <a href="../../architecture/module-overview/" class="md-nav__link">
         
   
   
@@ -696,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
@@ -723,7 +723,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../../troubleshooting/" class="md-nav__link">
         
   
   
@@ -802,7 +802,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/performance_scaling/" class="md-nav__link">
+      <a href="../../guides/performance_scaling/" class="md-nav__link">
         
   
   
@@ -834,31 +834,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -876,7 +871,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
@@ -894,7 +889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../comparison/" class="md-nav__link">
+      <a href="../../comparison/" class="md-nav__link">
         
   
   
@@ -922,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../benchmarks/" class="md-nav__link">
+      <a href="../../benchmarks/" class="md-nav__link">
         
   
   
@@ -947,37 +942,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Production Readiness
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../production-readiness/" class="md-nav__link">
         
   
   
@@ -993,37 +961,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1095,7 +1032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/claude-code-guide/" class="md-nav__link">
+      <a href="../../contributing/claude-code-guide/" class="md-nav__link">
         
   
   
@@ -1123,7 +1060,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/ssot-policy/" class="md-nav__link">
+      <a href="../../contributing/ssot-policy/" class="md-nav__link">
         
   
   
@@ -1151,7 +1088,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/llm-environment/" class="md-nav__link">
+      <a href="../../contributing/llm-environment/" class="md-nav__link">
         
   
   
@@ -1183,26 +1120,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
             
   
   
@@ -1220,7 +1162,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1238,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/async/" class="md-nav__link">
+      <a href="../async/" class="md-nav__link">
         
   
   
@@ -1266,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -1294,7 +1236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         
   
   
@@ -1322,7 +1264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/langchain/" class="md-nav__link">
+      <a href="../langchain/" class="md-nav__link">
         
   
   
@@ -1350,7 +1292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/mem0/" class="md-nav__link">
+      <a href="../mem0/" class="md-nav__link">
         
   
   
@@ -1375,10 +1317,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../tutorials/fly/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    affective-fly host
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1394,6 +1363,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ownership
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live-tick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live tick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defaults-that-stay-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults that stay frozen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run the example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1406,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/configuration_guide/" class="md-nav__link">
+      <a href="../configuration_guide/" class="md-nav__link">
         
   
   
@@ -1434,7 +1489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/query_routing/" class="md-nav__link">
+      <a href="../query_routing/" class="md-nav__link">
         
   
   
@@ -1462,7 +1517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/query_appraisal_retrieval/" class="md-nav__link">
+      <a href="../query_appraisal_retrieval/" class="md-nav__link">
         
   
   
@@ -1490,7 +1545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorials/byo_appraisal_schema/" class="md-nav__link">
+      <a href="../byo_appraisal_schema/" class="md-nav__link">
         
   
   
@@ -1577,7 +1632,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/engine/" class="md-nav__link">
+      <a href="../../api/engine/" class="md-nav__link">
         
   
   
@@ -1605,7 +1660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/async_engine/" class="md-nav__link">
+      <a href="../../api/async_engine/" class="md-nav__link">
         
   
   
@@ -1633,7 +1688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/stores/" class="md-nav__link">
+      <a href="../../api/stores/" class="md-nav__link">
         
   
   
@@ -1661,7 +1716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/state_stores/" class="md-nav__link">
+      <a href="../../api/state_stores/" class="md-nav__link">
         
   
   
@@ -1689,7 +1744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/embedders/" class="md-nav__link">
+      <a href="../../api/embedders/" class="md-nav__link">
         
   
   
@@ -1717,7 +1772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/logging/" class="md-nav__link">
+      <a href="../../api/logging/" class="md-nav__link">
         
   
   
@@ -1745,7 +1800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/telemetry/" class="md-nav__link">
+      <a href="../../api/telemetry/" class="md-nav__link">
         
   
   
@@ -1773,7 +1828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/appraisal/" class="md-nav__link">
+      <a href="../../api/appraisal/" class="md-nav__link">
         
   
   
@@ -1801,7 +1856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/appraisal_schema/" class="md-nav__link">
+      <a href="../../api/appraisal_schema/" class="md-nav__link">
         
   
   
@@ -1829,7 +1884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/query_classifier/" class="md-nav__link">
+      <a href="../../api/query_classifier/" class="md-nav__link">
         
   
   
@@ -1857,7 +1912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/models/" class="md-nav__link">
+      <a href="../../api/models/" class="md-nav__link">
         
   
   
@@ -1885,7 +1940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/interfaces/" class="md-nav__link">
+      <a href="../../api/interfaces/" class="md-nav__link">
         
   
   
@@ -1913,7 +1968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/categorize/" class="md-nav__link">
+      <a href="../../api/categorize/" class="md-nav__link">
         
   
   
@@ -1941,7 +1996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/retrieval/" class="md-nav__link">
+      <a href="../../api/retrieval/" class="md-nav__link">
         
   
   
@@ -1969,7 +2024,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/decay/" class="md-nav__link">
+      <a href="../../api/decay/" class="md-nav__link">
         
   
   
@@ -1997,7 +2052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/resonance/" class="md-nav__link">
+      <a href="../../api/resonance/" class="md-nav__link">
         
   
   
@@ -2025,7 +2080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/mood/" class="md-nav__link">
+      <a href="../../api/mood/" class="md-nav__link">
         
   
   
@@ -2053,7 +2108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/affect/" class="md-nav__link">
+      <a href="../../api/affect/" class="md-nav__link">
         
   
   
@@ -2081,7 +2136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/state/" class="md-nav__link">
+      <a href="../../api/state/" class="md-nav__link">
         
   
   
@@ -2109,7 +2164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/visualization/" class="md-nav__link">
+      <a href="../../api/visualization/" class="md-nav__link">
         
   
   
@@ -2196,7 +2251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/" class="md-nav__link">
+      <a href="../../research/" class="md-nav__link">
         
   
   
@@ -2224,7 +2279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/01_foundations/" class="md-nav__link">
+      <a href="../../research/01_foundations/" class="md-nav__link">
         
   
   
@@ -2252,7 +2307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/02_neuroscience/" class="md-nav__link">
+      <a href="../../research/02_neuroscience/" class="md-nav__link">
         
   
   
@@ -2280,7 +2335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/03_computational_models/" class="md-nav__link">
+      <a href="../../research/03_computational_models/" class="md-nav__link">
         
   
   
@@ -2308,7 +2363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/04_state_of_art/" class="md-nav__link">
+      <a href="../../research/04_state_of_art/" class="md-nav__link">
         
   
   
@@ -2336,7 +2391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/05_design_principles/" class="md-nav__link">
+      <a href="../../research/05_design_principles/" class="md-nav__link">
         
   
   
@@ -2364,7 +2419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/07_related_work/" class="md-nav__link">
+      <a href="../../research/07_related_work/" class="md-nav__link">
         
   
   
@@ -2392,7 +2447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/08_limitations/" class="md-nav__link">
+      <a href="../../research/08_limitations/" class="md-nav__link">
         
   
   
@@ -2420,7 +2475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/09_current_evidence/" class="md-nav__link">
+      <a href="../../research/09_current_evidence/" class="md-nav__link">
         
   
   
@@ -2448,7 +2503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/10_scientific_quality_bar/" class="md-nav__link">
+      <a href="../../research/10_scientific_quality_bar/" class="md-nav__link">
         
   
   
@@ -2476,7 +2531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/11_dominance_design/" class="md-nav__link">
+      <a href="../../research/11_dominance_design/" class="md-nav__link">
         
   
   
@@ -2504,7 +2559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/12_multilingual_followup/" class="md-nav__link">
+      <a href="../../research/12_multilingual_followup/" class="md-nav__link">
         
   
   
@@ -2532,7 +2587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/audit_2026-04/" class="md-nav__link">
+      <a href="../../research/audit_2026-04/" class="md-nav__link">
         
   
   
@@ -2560,7 +2615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/review_response_2026-06/" class="md-nav__link">
+      <a href="../../research/review_response_2026-06/" class="md-nav__link">
         
   
   
@@ -2588,7 +2643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/problem_register_2026-06/" class="md-nav__link">
+      <a href="../../research/problem_register_2026-06/" class="md-nav__link">
         
   
   
@@ -2616,7 +2671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/validation_report_2026-06/" class="md-nav__link">
+      <a href="../../research/validation_report_2026-06/" class="md-nav__link">
         
   
   
@@ -2644,7 +2699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/claim_validation_matrix/" class="md-nav__link">
+      <a href="../../research/claim_validation_matrix/" class="md-nav__link">
         
   
   
@@ -2672,7 +2727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/figure_inventory/" class="md-nav__link">
+      <a href="../../research/figure_inventory/" class="md-nav__link">
         
   
   
@@ -2700,7 +2755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/06_bibliography/" class="md-nav__link">
+      <a href="../../research/06_bibliography/" class="md-nav__link">
         
   
   
@@ -2787,7 +2842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../blog/2026-04-kickoff/" class="md-nav__link">
+      <a href="../../blog/2026-04-kickoff/" class="md-nav__link">
         
   
   
@@ -2842,10 +2897,65 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See also
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ownership
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live-tick" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live tick
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replay
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defaults-that-stay-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults that stay frozen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-the-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run the example
       
     </span>
   </a>
@@ -2872,68 +2982,131 @@
   
 
 
-<h1 id="production-readiness">Production Readiness<a class="headerlink" href="#production-readiness" title="Permanent link">&para;</a></h1>
-<p><code>emotional-memory</code> is production-hardened for teams that need supply-chain assurances:</p>
+<h1 id="affective-fly-host">affective-fly host<a class="headerlink" href="#affective-fly-host" title="Permanent link">&para;</a></h1>
+<p><code>emotional_memory</code> is the host. <a href="https://github.com/gianlucamazza/affective-fly">affective-fly</a>
+is the in-process affect source: a reduced <em>Drosophila</em> mushroom-body circuit that
+returns valence, arousal, and approach/avoid.</p>
+<p>This is the inverse of <code>python -m affective_fly run</code> / <code>study</code>, which construct
+<code>EmotionalMemory</code> inside the fly package. Do not invert that. The fly's Policy
+and LaunchGate stay at library defaults and are not the product. Phase 6
+hypothesis mood taus (300 / 60 / 180 s) are not retuned here.</p>
+<p>The contract is <code>HostFrame</code> v1.0 plus host-owned <code>mood_dt</code>, documented in
+affective-fly's <code>docs/HOST_INTEGRATION.md</code> and <code>examples/host_owns_loop.py</code>.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p><code>affective-fly</code> is not on PyPI (and listing it as a locked extra would cycle:
+fly already depends on this package).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>make<span class="w"> </span>install-fly
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># or:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"affective-fly @ git+https://github.com/gianlucamazza/affective-fly.git"</span>
+</code></pre></div>
+<h2 id="ownership">Ownership<a class="headerlink" href="#ownership" title="Permanent link">&para;</a></h2>
+<ol>
+<li>This package constructs <code>EmotionalMemory</code> and the store.</li>
+<li>This package owns time and computes <code>mood_dt</code> (wall-clock or HostFrame timestamps).</li>
+<li>Each tick calls the fly (<code>AffectiveLoop</code> / <code>HostAdapter</code> / circuit) and reads
+   valence / arousal / approach-avoid.</li>
+</ol>
+<p><code>FlyAffectHost</code> is the thin wrapper. Pass your own <code>store</code>, <code>embedder</code>, and
+<code>memory</code> when you already have an engine; pass the <strong>same</strong> store and embedder
+instances used to construct that memory (<code>AffectiveLoop</code> cannot read engine
+internals).</p>
+<h2 id="live-tick">Live tick<a class="headerlink" href="#live-tick" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">affective_fly</span><span class="w"> </span><span class="kn">import</span> <span class="n">HostFrame</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlyAffectHost</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">host</span> <span class="o">=</span> <span class="n">FlyAffectHost</span><span class="p">()</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">frame</span> <span class="o">=</span> <span class="n">HostFrame</span><span class="p">(</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">visual_hash</span><span class="o">=</span><span class="s2">"note-1"</span><span class="p">,</span>  <span class="c1"># chosen at creation; required for exact visual replay</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">context</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">"context"</span><span class="p">:</span> <span class="s2">"journal"</span><span class="p">,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="s2">"note_id"</span><span class="p">:</span> <span class="s2">"n1"</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"successful replication"</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="s2">"sentiment"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">},</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">affect</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">tick_wall_clock</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">print</span><span class="p">(</span><span class="n">affect</span><span class="o">.</span><span class="n">valence</span><span class="p">,</span> <span class="n">affect</span><span class="o">.</span><span class="n">arousal</span><span class="p">,</span> <span class="n">affect</span><span class="o">.</span><span class="n">approach</span><span class="p">,</span> <span class="n">affect</span><span class="o">.</span><span class="n">mood_dt</span><span class="p">)</span>
+</code></pre></div>
+<p><code>now</code> is seconds from <code>time.monotonic()</code> (or a test double). The first tick is
+<code>mood_dt=0.0</code> — there is no previous sample to invent.</p>
+<h2 id="replay">Replay<a class="headerlink" href="#replay" title="Permanent link">&para;</a></h2>
+<p>Replay recorded <code>HostFrame</code> JSON with <code>mood_dt</code> from timestamps. Report an
+outcome (<code>reward</code> / <code>outcome</code> / <code>pnl</code>) only when you have one — do not invent
+rewards.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">affective_fly</span><span class="w"> </span><span class="kn">import</span> <span class="n">HostAdapter</span><span class="p">,</span> <span class="n">HostFrame</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">emotional_memory.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlyAffectHost</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">frames</span> <span class="o">=</span> <span class="p">[</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">HostFrame</span><span class="p">(</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">timestamp</span><span class="o">=</span><span class="s2">"2026-09-12T10:00:00Z"</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">visual_hash</span><span class="o">=</span><span class="s2">"exp-042-journal"</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">context</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="s2">"context"</span><span class="p">:</span> <span class="s2">"journal"</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="s2">"note_id"</span><span class="p">:</span> <span class="s2">"exp-042-replication"</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>            <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"successful replication of experiment 042"</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>            <span class="s2">"sentiment"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="p">},</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="p">),</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">HostFrame</span><span class="p">(</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">timestamp</span><span class="o">=</span><span class="s2">"2026-09-12T14:30:00Z"</span><span class="p">,</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="n">visual_hash</span><span class="o">=</span><span class="s2">"exp-042-review"</span><span class="p">,</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">context</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>            <span class="s2">"context"</span><span class="p">:</span> <span class="s2">"review"</span><span class="p">,</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>            <span class="s2">"note_id"</span><span class="p">:</span> <span class="s2">"exp-042-replication"</span><span class="p">,</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>            <span class="s2">"query"</span><span class="p">:</span> <span class="s2">"replication failed validation"</span><span class="p">,</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>            <span class="s2">"sentiment"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.9</span><span class="p">,</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>            <span class="s2">"outcome"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">,</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="p">},</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    <span class="p">),</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="p">]</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="n">host</span> <span class="o">=</span> <span class="n">FlyAffectHost</span><span class="p">()</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="n">affects</span> <span class="o">=</span> <span class="n">host</span><span class="o">.</span><span class="n">replay</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>  <span class="c1"># mood_dt: 0.0, then 16200.0</span>
+</code></pre></div>
+<p>You can also load a JSONL journal with <code>HostAdapter.load_journal(...)</code>.</p>
+<h2 id="defaults-that-stay-frozen">Defaults that stay frozen<a class="headerlink" href="#defaults-that-stay-frozen" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Signal</th>
-<th>Status</th>
+<th>Knob</th>
+<th>Value</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>PyPI releases</strong></td>
-<td>Trusted Publishing (OIDC, no long-lived tokens)</td>
+<td>Fly <code>MoodField</code> taus</td>
+<td>300 / 60 / 180 s</td>
+<td>Phase 6 hypothesis; not lab 8 / 4 / 5</td>
 </tr>
 <tr>
-<td><strong>SLSA provenance</strong></td>
-<td>Level 3 — build-provenance attestation on every release</td>
+<td><code>Policy.threshold_act</code></td>
+<td>0.2</td>
+<td>Unchanged</td>
 </tr>
 <tr>
-<td><strong>SBOM</strong></td>
-<td>CycloneDX JSON generated and attested per release (<code>dist/sbom.cdx.json</code>)</td>
+<td><code>Policy.threshold_calm</code></td>
+<td>0.0</td>
+<td>Unchanged</td>
 </tr>
 <tr>
-<td><strong>PEP 740 attestations</strong></td>
-<td>Signed attestations verifiable via <code>gh attestation verify</code></td>
+<td><code>LaunchGate.threshold_approach</code></td>
+<td>0.2</td>
+<td>Unchanged</td>
 </tr>
 <tr>
-<td><strong>SAST</strong></td>
-<td>CodeQL workflow on every push/PR to <code>main</code></td>
-</tr>
-<tr>
-<td><strong>Workflow security</strong></td>
-<td>All third-party GitHub Actions SHA-pinned; zizmor static analysis in CI</td>
-</tr>
-<tr>
-<td><strong>Dependency audit</strong></td>
-<td>pip-audit in CI on every push; no known CVEs</td>
-</tr>
-<tr>
-<td><strong>Coverage</strong></td>
-<td>≥80% branch coverage enforced; informational target 90%</td>
-</tr>
-<tr>
-<td><strong>Type safety</strong></td>
-<td>mypy strict + basedpyright (secondary) on every PR</td>
-</tr>
-<tr>
-<td><strong>Conventional commits</strong></td>
-<td>PR title enforced (amannn/action-semantic-pull-request)</td>
+<td>Default circuit</td>
+<td><code>LIFCircuit(n_kc=200, ...)</code></td>
+<td>Pass <code>MockFlyCircuit</code> only in unit tests</td>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify provenance of a released wheel locally (substitute the version you installed):</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>gh<span class="w"> </span>attestation<span class="w"> </span>verify<span class="w"> </span>emotional_memory-&lt;version&gt;-py3-none-any.whl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--repo<span class="w"> </span>gianlucamazza/emotional-memory
+<p>This is not a UI or a token-launch product. Circuit <code>CoreAffect</code> is the fast
+path; Scherer appraisal stays tag-only. Do not pass <code>appraisal=</code> to <code>encode()</code>.</p>
+<h2 id="run-the-example">Run the example<a class="headerlink" href="#run-the-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>make<span class="w"> </span>install-fly
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>examples/fly_affect_source.py
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_fly_adapter.py
 </code></pre></div>
-<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../getting-started/">Getting Started</a> — install the package</li>
-<li><a href="../guides/performance_scaling/">Performance &amp; Scaling</a> — latency budget and store choice for production deploy</li>
-<li><a href="../contributing/ssot-policy/">Contributing</a> — release and metadata discipline</li>
-</ul>
 
 
 
@@ -2989,10 +3162,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
