@@ -74,6 +74,7 @@ nav:
     - Observability: tutorials/observability.md
     - LangChain integration: tutorials/langchain.md
     - Mem0 integration: tutorials/mem0.md
+    - affective-fly host: tutorials/fly.md
     - Configuration guide: tutorials/configuration_guide.md
     - Query routing: tutorials/query_routing.md
     - Retrieve-time query appraisal: tutorials/query_appraisal_retrieval.md
