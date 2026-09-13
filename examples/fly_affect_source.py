@@ -9,6 +9,10 @@ This script is not a journal app or UI. It shows the ownership shape:
 Hypothesis MoodField taus (300 / 60 / 180) and Policy / LaunchGate
 thresholds stay at library defaults. Do not retune them here.
 
+Pass ``--measure`` to write fly ``measure.jsonl`` from this host. For a
+protocol-length session (tens of minutes of mood time), use
+``examples/fly_phase6_session.py``.
+
 Requires affective-fly (not on PyPI)::
 
     make install-fly
@@ -16,6 +20,8 @@ Requires affective-fly (not on PyPI)::
 """
 
 from __future__ import annotations
+
+import argparse
 
 from affective_fly import HostFrame
 
@@ -53,8 +59,16 @@ def recorded_frames() -> list[HostFrame]:
     ]
 
 
-def main() -> None:
-    host = FlyAffectHost()
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--measure",
+        default=None,
+        help="Optional host-owned Phase 6 measure.jsonl path",
+    )
+    args = parser.parse_args(argv)
+
+    host = FlyAffectHost(measure_path=args.measure)
     affects = host.replay(recorded_frames())
 
     print("host owns EmotionalMemory and mood_dt; fly returns affect")
