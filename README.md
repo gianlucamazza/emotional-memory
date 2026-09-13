@@ -439,6 +439,36 @@ messages update affective state without being stored, and control commands such 
 fully-configured `EmotionalMemory` so you control the store backend and embedder.
 `clear()` removes stored memories, clears the transcript, and resets affective state.
 
+## affective-fly integration
+
+`FlyAffectHost` is the host-owned tick loop for the [affective-fly](https://github.com/gianlucamazza/affective-fly)
+mushroom-body circuit. This package owns time, `mood_dt`, and the store; each tick
+asks the fly for valence / arousal / approach-avoid. Fly Policy / LaunchGate stay at
+library defaults and are not the product. Hypothesis mood taus (300 / 60 / 180) are
+not retuned here.
+
+`affective-fly` is not on PyPI:
+
+```bash
+make install-fly
+# or: uv pip install "affective-fly @ git+https://github.com/gianlucamazza/affective-fly.git"
+```
+
+```python
+from affective_fly import HostFrame
+from emotional_memory.integrations import FlyAffectHost
+
+host = FlyAffectHost()  # constructs EmotionalMemory + InMemoryStore
+frame = HostFrame(
+    visual_hash="note-1",
+    context={"context": "journal", "note_id": "n1", "query": "lab note", "sentiment": 0.6},
+)
+affect = host.tick_wall_clock(frame, now=10.0)
+print(affect.valence, affect.arousal, affect.approach, affect.mood_dt)
+```
+
+See [the fly tutorial](docs/tutorials/fly.md) and `examples/fly_affect_source.py`.
+
 ## Logging & Observability
 
 The library uses the standard `logging` module. Enable debug output to trace the full pipeline:
@@ -520,6 +550,7 @@ any ML dependencies.
 | `resonance_network.py`              | Resonance graph and link-type distribution            | `[viz]`                 |
 | `retrieval_signals.py`              | 6-signal decomposition, radar chart, weight heatmap   | `[viz]`                 |
 | `query_appraisal.py`                | Query appraisal + gated retrieve (Addenda T/Y)        | —                       |
+| `fly_affect_source.py`              | Host-owned fly tick: store + `mood_dt` → affect       | `affective-fly` (GitHub) |
 
 Run any script: `uv run python examples/<script>.py`
 
