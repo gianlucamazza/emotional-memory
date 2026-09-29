@@ -10,11 +10,12 @@ permissions:
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    # Prefer PR author over github.actor (zizmor: spoofable bot actor check)
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,7 +33,6 @@ jobs:
           set -euo pipefail
           # Skip megagroups (>20 deps) — keep majors/groups manual
           IFS=',' read -r -a DEPS <<< "${DEPENDENCY_NAMES:-}"
-          # trim empties
           count=0
           for d in "${DEPS[@]+"${DEPS[@]}"}"; do
             [ -n "${d// }" ] && count=$((count+1))
