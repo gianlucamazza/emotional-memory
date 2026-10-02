@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <rect width="1280" height="640" fill="#121212"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M620 210 C760 170 980 190 1180 250" stroke="#e0a15a" stroke-width="3" opacity="0.9"/>
+    <path d="M600 250 C760 210 1000 230 1200 300" stroke="#c9844a" stroke-width="2.5" opacity="0.75"/>
+    <path d="M610 300 C780 270 990 290 1190 360" stroke="#8fbfb4" stroke-width="2.5" opacity="0.7"/>
+    <path d="M590 350 C770 330 1000 350 1210 420" stroke="#2f8f92" stroke-width="3" opacity="0.85"/>
+    <path d="M610 400 C790 390 1010 410 1200 470" stroke="#1d6d78" stroke-width="2.5" opacity="0.8"/>
+  </g>
+  <circle cx="1120" cy="300" r="70" fill="#2f8f92" opacity="0.18"/>
+  <text x="72" y="300" fill="#f4f4f4" font-family="Inter, Helvetica, Arial, sans-serif" font-size="72" font-weight="700">EMOTIONAL MEMORY</text>
+  <text x="72" y="356" fill="#b7b7b7" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24">Emotional memory for LLMs — Affective Field Theory</text>
+</svg>
