@@ -80,6 +80,7 @@ benchmarks/locomo/results.dryrun.*
 benchmarks/locomo/results.checkpoint.jsonl
 benchmarks/locomo/pareto_results.checkpoint.jsonl
 benchmarks/locomo/routing_results.checkpoint.jsonl
+benchmarks/false_memory/appraisals.checkpoint.jsonl
 
 # Editor/OS hygiene
 *~

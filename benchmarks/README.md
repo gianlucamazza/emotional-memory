@@ -47,6 +47,7 @@ the reader-friendly ladder is
 | X2                   | Third-party retrieval, ES-MemEval/EvoEmo (Hx2)                 | **FAIL, inverted** (Δ=−0.150 powered; distinct failure mode: affect-orthogonal QA gold)              | `preregistration_addendum_x2_esmemeval_third_party_closure.md`                                            |
 | Y                    | Query-affect-conditioned gate (Hg1/Hg2)                        | **PASS (Branch A)** — safe wrapper: recovers the neutral-query penalty, preserves the on-regime gain | `preregistration_addendum_y_query_affect_gate_closure.md`                                                 |
 | Z                    | Held-out learned retrieval profile (Hz1/Hz2)                   | **Branch B** — Hz1 FAIL (0/3 break, no learned linear profile beats cosine); Hz2 PASS (curated +0.185 vs fixed) | `preregistration_addendum_z_learned_profile_closure.md`                                                   |
+| AA                   | Wrong-person memory retrieval stress test                      | Exploratory; no PASS/FAIL claim                                                                         | `preregistration_addendum_aa_false_memory.md`                                                             |
 
 Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
 affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
@@ -59,6 +60,7 @@ affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
 (Addendum S) · `circularity_audit/` (U) · `appraisal_vad/` (V) · `arousal_calibration/`
 (W) · `query_appraisal/` (T) · `madialbench/` (X) · `esmemeval/` (X2) · `gate/` (Y) ·
 `learned_profile/` (Z, `common/ltr.py`) · `appraisal_quality/` ·
+`false_memory/` (AA, exploratory wrong-person decoy stress test) ·
 `appraisal_calibration/` · `appraisal_confound/` · `appraisal_diagnostics/` ·
 `human_eval/` (Gate 2 kit, unrun — issue #27) · `common/` (shared statistics) ·
 `datasets/` (licensing in its README).
