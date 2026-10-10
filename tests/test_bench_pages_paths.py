@@ -48,10 +48,40 @@ def test_workflow_bench_paths_agree() -> None:
     ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     docs = (ROOT / ".github/workflows/docs.yml").read_text(encoding="utf-8")
     assert _scalar(ci, "benchmark-data-dir-path") == bench_dir
+    assert _scalar(ci, "gh-pages-branch") == "bench-data"
+    assert _scalar(ci, "auto-push") == "true"
     assert _docs_output_dir(docs) == bench_dir
     assert "scripts/seed_bench_data_branch.py" in ci
     assert "scripts/recover_bench_history.py" in docs
     assert f"--output site/{bench_dir}" in docs
+
+
+def test_seed_step_auth_is_idempotent_and_not_bearer() -> None:
+    ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    seed_idx = ci.index("Seed bench-data from gh-pages history")
+    store_idx = ci.index("Store benchmark results")
+    extra_idx = ci.index("extra-tests:")
+    seed = ci[seed_idx:store_idx]
+    store = ci[store_idx:extra_idx]
+    job = ci[ci.index("benchmarks:") : extra_idx]
+
+    assert "contents: write" in job
+    assert "github.event_name == 'push'" in job
+    assert "github.ref == 'refs/heads/main'" in job
+    assert "AUTHORIZATION: bearer" not in seed
+    assert "AUTHORIZATION: Bearer" not in seed
+    assert "x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" in seed
+    assert "HEAD:refs/heads/bench-data" in seed
+    assert "set -x" not in seed
+    assert "dev/bench/data.js" in seed
+    for line in seed.splitlines():
+        if "HEAD:refs/heads/bench-data" in line:
+            assert "--force" not in line
+            assert " -f " not in line
+    assert "github-token:" in store
+    assert "if:" not in store
+    assert _scalar(store, "gh-pages-branch") == "bench-data"
+    assert _scalar(store, "auto-push") == "true"
 
 
 def test_no_dest_slash_in_bench_paths() -> None:

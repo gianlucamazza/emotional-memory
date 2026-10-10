@@ -234,8 +234,16 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          if git ls-remote --exit-code origin refs/heads/bench-data; then
-            echo "bench-data already exists"
+          export GIT_TERMINAL_PROMPT=0
+          # Idempotent: no-op when bench-data already has the dashboard payload.
+          # Never force-push over existing history.
+          if git ls-remote --exit-code origin refs/heads/bench-data >/dev/null; then
+            git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data
+            if git cat-file -e origin/bench-data:dev/bench/data.js 2>/dev/null; then
+              echo "bench-data already has dev/bench/data.js"
+              exit 0
+            fi
+            echo "bench-data exists without dev/bench/data.js; not force-pushing"
             exit 0
           fi
           git fetch origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages
@@ -247,10 +255,17 @@ jobs:
           python3 scripts/seed_bench_data_branch.py \
             --recover-dir "$recover_dir" \
             --work "$work"
-          git -C "$work" \
-            -c "http.extraheader=AUTHORIZATION: bearer ${GH_TOKEN}" \
-            push "https://github.com/${GH_REPO}.git" HEAD:refs/heads/bench-data
+          # GitHub's git HTTP endpoint rejects "Authorization: bearer" and
+          # then prompts for a username (the failure on 0e163dee). Use the
+          # documented x-access-token URL instead. Do not echo this URL —
+          # it embeds GH_TOKEN. No --force.
+          git -C "$work" push \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" \
+            HEAD:refs/heads/bench-data
 
+      # Always runs on push to main (this job's `if`). The action authenticates
+      # with github-token via https://x-access-token:…@github.com/… (same as
+      # the seed step) and appends to bench-data; persist-credentials is off.
       - name: Store benchmark results
         uses: benchmark-action/github-action-benchmark@4322e5726e6334590d251fc4f92bec0efafc45dc # v1.22.2
         with:
