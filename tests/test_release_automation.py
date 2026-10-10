@@ -82,35 +82,45 @@ def test_sync_readme_doi_badge_migrates_legacy_zenodo_badge() -> None:
     )
 
 
-def test_sync_demo_readme_preserves_space_card_doi_parentheticals() -> None:
+def test_sync_demo_readme_updates_version_doi_and_cite_note() -> None:
     module = _load_script_module("sync_release_metadata")
-    snippet = "\n".join(
-        [
-            "- **PyPI**: [`emotional-memory 0.1.0`](https://pypi.org/project/emotional-memory/0.1.0/)",
-            "- **Zenodo Concept DOI** (all versions): "
-            "[10.5281/zenodo.1](https://doi.org/10.5281/zenodo.1)",
-            "- **Zenodo Version DOI** (0.1.0): "
-            "[10.5281/zenodo.2](https://doi.org/10.5281/zenodo.2)",
-            "  version = {0.1.0},",
-            "  doi     = {10.5281/zenodo.2},",
-            "To cite all versions rather than 0.1.0, use the concept DOI",
-            "",
-        ]
+    demo_path = ROOT / "demo" / "README.md"
+    original = demo_path.read_text(encoding="utf-8")
+    version = "9.9.9"
+    version_doi = "10.5281/zenodo.99"
+    concept_doi = "10.5281/zenodo.9"
+
+    updated = module._replace(
+        r"- \*\*Zenodo Concept DOI\*\*( \(all versions\))?: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        rf"- **Zenodo Concept DOI**\g<1>: [{concept_doi}](https://doi.org/{concept_doi})",
+        original,
+        "demo README concept DOI",
+    )
+    updated = module._replace(
+        r"- \*\*Zenodo Version DOI\*\* \([^)]+\): \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        f"- **Zenodo Version DOI** ({version}): [{version_doi}](https://doi.org/{version_doi})",
+        updated,
+        "demo README version DOI",
+    )
+    updated = module._replace(
+        r"^To cite all versions rather than [^,]+, use the concept DOI\n\[[^\]]+\]\(https://doi\.org/[^\)]+\)\.$",
+        f"To cite all versions rather than {version}, use the concept DOI\n[{concept_doi}](https://doi.org/{concept_doi}).",
+        updated,
+        "demo README cite-all-versions note",
     )
 
-    updated = module._sync_demo_readme(
-        snippet,
-        version="9.9.9",
-        version_doi="10.5281/zenodo.99",
-        concept_doi="10.5281/zenodo.9",
-    )
-
-    assert "- **Zenodo Concept DOI** (all versions): " in updated
-    assert "https://doi.org/10.5281/zenodo.9" in updated
-    assert "- **Zenodo Version DOI** (9.9.9): " in updated
-    assert "https://doi.org/10.5281/zenodo.99" in updated
-    assert "rather than 9.9.9, use the concept DOI" in updated
-    assert "[`emotional-memory 9.9.9`]" in updated
+    assert (
+        "- **Zenodo Version DOI** (9.9.9): [10.5281/zenodo.99](https://doi.org/10.5281/zenodo.99)"
+    ) in updated
+    assert (
+        "To cite all versions rather than 9.9.9, use the concept DOI\n"
+        "[10.5281/zenodo.9](https://doi.org/10.5281/zenodo.9)."
+    ) in updated
+    assert (
+        "- **Zenodo Concept DOI** (all versions): "
+        "[10.5281/zenodo.9](https://doi.org/10.5281/zenodo.9)"
+    ) in updated
+    assert demo_path.read_text(encoding="utf-8") == original
 
 
 def test_sync_readme_doi_badge_updates_icon_badge() -> None:
