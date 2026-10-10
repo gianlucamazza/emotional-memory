@@ -194,12 +194,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
-      contents: write  # benchmark-action auto-push to gh-pages branch
+      contents: write  # benchmark-action auto-push to the bench-data branch
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
@@ -227,6 +228,35 @@ jobs:
           --benchmark-json=/tmp/benchmark-results.json
           --override-ini="timeout=0"
 
+      - name: Seed bench-data from gh-pages history
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code origin refs/heads/bench-data; then
+            echo "bench-data already exists"
+            exit 0
+          fi
+          git fetch origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages
+          recover_dir="$(mktemp -d)"
+          python3 scripts/recover_bench_history.py \
+            --source origin/gh-pages \
+            --output "$recover_dir"
+          work="$(mktemp -d)"
+          mkdir -p "$work/dev/bench"
+          cp -a "$recover_dir/." "$work/dev/bench/"
+          git init "$work"
+          git -C "$work" checkout --orphan bench-data
+          git -C "$work" add dest/bench
+          git -C "$work" \
+            -c user.name="github-actions[bot]" \
+            -c user.email="github-actions[bot]@users.noreply.github.com" \
+            commit -m "Seed dest/bench from recovered gh-pages history"
+          git -C "$work" \
+            -c "http.extraheader=AUTHORIZATION: bearer ${GH_TOKEN}" \
+            push "https://github.com/${GH_REPO}.git" HEAD:refs/heads/bench-data
+
       - name: Store benchmark results
         uses: benchmark-action/github-action-benchmark@4322e5726e6334590d251fc4f92bec0efafc45dc # v1.22.2
         with:
@@ -238,7 +268,10 @@ jobs:
           comment-on-alert: true
           # 130% balances useful regression signal vs GH-hosted runner noise
           # (a 10% gate is too tight; 150% was too permissive). See CONTRIBUTING.
-          benchmark-data-dir-path: dev/bench
+          # Own branch: docs.yml assembles dest/bench into the Pages artifact.
+          # Sharing gh-pages with mkdocs gh-deploy --force --clean wiped dest/.
+          gh-pages-branch: bench-data
+          benchmark-data-dir-path: dest/bench
 
   extra-tests:
     name: Optional extras tests

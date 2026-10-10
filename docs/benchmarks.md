@@ -99,3 +99,4 @@ See [LLM Environment Variables](contributing/llm-environment.md) for the full co
 
 - [Current Evidence](research/09_current_evidence.md) — experimental results vs baselines
 - [Comparison](comparison.md) — positioning against other memory systems
+- [CI performance dashboard](https://gianlucamazza.github.io/emotional-memory/dev/bench/) — github-action-benchmark charts (assembled into Pages by the Docs workflow)

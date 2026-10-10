@@ -18,12 +18,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`make install-fly`); not a locked extra (fly depends on this package and is
   not on PyPI). See `docs/tutorials/fly.md` and `examples/fly_affect_source.py`.
 
+### CI
+
+- **Docs deploy no longer wipes `/dev/bench/`.** `mkdocs gh-deploy --force --clean`
+  replaced the `gh-pages` branch and dropped the `benchmark-action` dashboard
+  (`index.html` + `data.js`). Benchmark history now lives on its own `bench-data`
+  branch (`benchmark-data-dir-path: dest/bench`). The Docs workflow builds
+  MkDocs, copies `dev/bench` from that branch (or reconstructs it from
+  `gh-pages` git history on first run), and deploys one artifact via
+  `actions/upload-pages-artifact` + `actions/deploy-pages`. Requires the repo
+  Pages source to be **GitHub Actions** (settings change). The README
+  benchmarks badge stays on `docs/benchmarks.md`.
+
 ### Docs
 
 - README: two-line plain intro (what the library is and who it is for) above the
-  existing evaluation stats. The benchmarks badge now links to in-repo
-  `docs/benchmarks.md` instead of the unpublished GitHub Pages `/dev/bench/`
-  dashboard (Pages is not enabled; `has_pages: false`).
+  existing evaluation stats. The benchmarks badge links to in-repo
+  `docs/benchmarks.md` (CoS decides whether to point it back at the Pages
+  `/dev/bench/` dashboard once that URL is stably 200).
 
 - README Quickstart and docs index/getting-started: link the live Hugging Face
   Gradio demo (`https://huggingface.co/spaces/homen3/emotional-memory-demo`) —

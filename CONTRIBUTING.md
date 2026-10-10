@@ -124,12 +124,16 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | `make bench-appraisal` | Scherer CPM prompt quality (requires API key)  | ~60s                   |
 | `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
 
-CI stores `benchmarks/perf/` results via `benchmark-action` (gh-pages
-`dev/bench`) and comments on PRs when a metric regresses beyond **130%** of
-the stored baseline (`alert-threshold: "130%"`, comment-only — not a hard
-fail). The threshold is looser than a local 10% gate because GitHub-hosted
-runners are noisy; treat alerts as investigation signals, not automatic
-reverts. `make bench-perf-profile` is **not** in default CI (SBERT/LLM optional).
+CI stores `benchmarks/perf/` results via `benchmark-action` on the
+`bench-data` branch (`dev/bench`). The Docs workflow copies that directory
+into the GitHub Pages artifact so
+https://gianlucamazza.github.io/emotional-memory/dev/bench/ stays live
+across MkDocs deploys. The job comments when a metric regresses beyond
+**130%** of the stored baseline (`alert-threshold: "130%"`, comment-only —
+not a hard fail). The threshold is looser than a local 10% gate because
+GitHub-hosted runners are noisy; treat alerts as investigation signals, not
+automatic reverts. `make bench-perf-profile` is **not** in default CI
+(SBERT/LLM optional).
 
 `make test` includes Hypothesis algebraic invariants (`tests/test_invariants.py`)
 for decay, retrieval weights, PAD geometry, mood EMA, and cosine similarity.

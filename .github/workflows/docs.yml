@@ -1,27 +1,33 @@
 name: Docs
 
+# Assembles MkDocs (`site/`) plus dest/bench (from the bench-data branch, or
+# reconstructed from gh-pages history) and deploys one artifact.
+# Requires Settings → Pages → Source: GitHub Actions (not the gh-pages branch).
+
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
 
+# Do not cancel an in-flight Pages deploy; a cancelled upload leaves the
+# previous site up, but queued runs should apply the latest artifact in order.
 concurrency:
-  group: docs-${{ github.ref }}
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
-  deploy:
-    name: Deploy MkDocs to GitHub Pages
+  build:
+    name: Build MkDocs + dest/bench
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0
 
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
@@ -36,14 +42,41 @@ jobs:
       - name: Install docs dependencies
         run: uv sync --frozen --extra docs
 
-      - name: Configure Git for gh-deploy
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          # persist-credentials: false strips the token; restore it so mkdocs
-          # gh-deploy can push to the gh-pages branch (contents: write is set).
-          git remote set-url origin \
-            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+      - name: Build docs
+        run: uv run mkdocs build
 
-      - name: Deploy docs
-        run: uv run mkdocs gh-deploy --force --clean
+      - name: Fetch bench-data and gh-pages history
+        run: |
+          set -euo pipefail
+          git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data || true
+          git fetch origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages || true
+
+      - name: Attach dest/bench dashboard
+        run: |
+          set -euo pipefail
+          python3 scripts/recover_bench_history.py \
+            --prefer origin/bench-data \
+            --source origin/gh-pages \
+            --output site/dev/bench
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
