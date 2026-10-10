@@ -42,9 +42,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   concluded anything other than `success` (failed or cancelled superseded
   runs must not deploy). Manual rebuilds are `docs-dispatch.yml`
   (`workflow_dispatch` only) so this file does not share a writable
-  default-branch cache with an untrusted checkout. Docs-only pushes still
-  deploy: CI has no path filter, so it runs on every main push and then
-  triggers Docs.
+  default-branch cache with an untrusted checkout. Jobs also require
+  `workflow_run.event == 'push'`, same-repo `head_repository`, and
+  `head_branch == 'main'` so a fork PR whose branch is named `main`
+  cannot deploy. Docs-only pushes still deploy: CI has no path filter,
+  so it runs on every main push and then triggers Docs.
 
 - **Docs deploy no longer wipes `/dev/bench/`.** `mkdocs gh-deploy --force --clean`
   replaced the `gh-pages` branch and dropped the `benchmark-action` dashboard

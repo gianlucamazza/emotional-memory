@@ -31,7 +31,13 @@ permissions: {}
 jobs:
   build:
     name: Build MkDocs + dev/bench
-    if: github.event.workflow_run.conclusion == 'success'
+    # branches: [main] matches a FORK PR whose head branch is also named
+    # main. Require a same-repo push to this repository's main.
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -82,7 +88,11 @@ jobs:
 
   deploy:
     name: Deploy GitHub Pages
-    if: github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5

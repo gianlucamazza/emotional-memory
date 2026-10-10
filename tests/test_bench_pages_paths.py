@@ -83,8 +83,15 @@ def test_docs_deploys_after_successful_ci_on_main() -> None:
     assert "push:" not in dispatch_on
 
     assert "github.event.workflow_run.head_sha" in docs
-    assert "github.event.workflow_run.conclusion == 'success'" in build
-    assert "github.event.workflow_run.conclusion == 'success'" in deploy
+    same_repo_push_main = (
+        "github.event.workflow_run.conclusion == 'success'",
+        "github.event.workflow_run.event == 'push'",
+        "github.event.workflow_run.head_repository.full_name == github.repository",
+        "github.event.workflow_run.head_branch == 'main'",
+    )
+    for cond in same_repo_push_main:
+        assert cond in build
+        assert cond in deploy
     assert "conclusion == 'failure'" not in docs
     assert "conclusion == 'cancelled'" not in docs
 
