@@ -5,6 +5,8 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   publish:
     name: Build and publish
@@ -143,6 +145,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
           JOB_STATUS: ${{ job.status }}
+          GH_REPOSITORY: ${{ github.repository }}
         run: |
           {
             echo "## Release workflow"
@@ -154,7 +157,7 @@ jobs:
             echo "- SBOM: CycloneDX attestation generated"
             if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
               echo "- PyPI path: trusted publishing + PEP 740 attestations"
-              echo "- Verify locally: \`gh attestation verify <wheel> -R ${{ github.repository }}\`"
+              echo "- Verify locally: \`gh attestation verify <wheel> -R ${GH_REPOSITORY}\`"
               echo "- Manual fallback: \`make publish-pypi-manual\`"
             else
               echo "- Publish step skipped for workflow_dispatch"

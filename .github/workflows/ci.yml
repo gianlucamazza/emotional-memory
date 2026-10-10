@@ -334,9 +334,13 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install ${{ matrix.backend }} extra
-        run: uv sync --frozen --extra dev --extra ${{ matrix.backend }}
+        env:
+          BACKEND: ${{ matrix.backend }}
+        run: uv sync --frozen --extra dev --extra "$BACKEND"
       - name: Run ${{ matrix.backend }} store tests
-        run: uv run python -m pytest ${{ matrix.test_file }} -v
+        env:
+          TEST_FILE: ${{ matrix.test_file }}
+        run: uv run python -m pytest "$TEST_FILE" -v
 
   fly-tests:
     name: affective-fly host adapter

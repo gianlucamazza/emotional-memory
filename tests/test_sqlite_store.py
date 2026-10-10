@@ -535,6 +535,22 @@ class TestEnsureVec:
         store.delete(m.id)  # must not raise
         assert store.get(m.id) is None
 
+    def test_empty_embedding_rejected_before_ddl(self):
+        """Empty vectors must not be interpolated into CREATE VIRTUAL TABLE."""
+        store = SQLiteStore(":memory:")
+        with pytest.raises(ValueError, match="embedding dimension"):
+            store.save(make_test_memory("empty", embedding=[]))
+        assert not store._vec_ready
+
+    def test_oversized_embedding_rejected_before_ddl(self):
+        """Oversized vectors must not be interpolated into CREATE VIRTUAL TABLE."""
+        from emotional_memory.stores.sqlite import _MAX_VEC_DIM
+
+        store = SQLiteStore(":memory:")
+        with pytest.raises(ValueError, match="embedding dimension"):
+            store.save(make_test_memory("huge", embedding=[0.0] * (_MAX_VEC_DIM + 1)))
+        assert not store._vec_ready
+
 
 # ---------------------------------------------------------------------------
 # _init_vec_from_db with empty vec table (Task 4 bug fix)

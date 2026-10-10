@@ -93,6 +93,20 @@ _CREATE_VEC_LEGACY = (
     "CREATE VIRTUAL TABLE IF NOT EXISTS memory_vec "
     "USING vec0(id TEXT PRIMARY KEY, embedding float[{dim}]);"
 )
+# sqlite-vec requires the dimension in the DDL (it cannot be a bound parameter).
+# Only a bounded positive integer is interpolated, so the schema string cannot
+# carry attacker-controlled SQL.
+_MAX_VEC_DIM = 65_536
+_VEC_DIM_RE = re.compile(r"[1-9][0-9]{0,4}")
+
+
+def _require_vec_dim(dim: int) -> int:
+    """Return ``dim`` if it is a safe sqlite-vec embedding width, else raise."""
+    if not _VEC_DIM_RE.fullmatch(str(dim)) or dim > _MAX_VEC_DIM:
+        raise ValueError(
+            f"SQLiteStore embedding dimension must be in 1..{_MAX_VEC_DIM}, got {dim}"
+        )
+    return dim
 
 
 class SQLiteStore:
@@ -232,7 +246,7 @@ class SQLiteStore:
         """Create the vec virtual table on the first memory with an embedding."""
         if self._vec_ready or memory.embedding is None:
             return
-        dim = len(memory.embedding)
+        dim = _require_vec_dim(len(memory.embedding))
         try:
             self._conn.execute(_CREATE_VEC.format(dim=dim))
         except sqlite3.OperationalError:
@@ -267,7 +281,7 @@ class SQLiteStore:
                 # Table exists but is empty — parse dimension from schema SQL.
                 m = re.search(r"float\[(\d+)\]", schema_row[0])
                 if m:
-                    self._dim = int(m.group(1))
+                    self._dim = _require_vec_dim(int(m.group(1)))
             schema_sql = schema_row[0] if schema_row is not None and schema_row[0] else ""
             self._vec_cosine = "distance_metric=cosine" in schema_sql.replace(" ", "")
             if not self._vec_cosine:
