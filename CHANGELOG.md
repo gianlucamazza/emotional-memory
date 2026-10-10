@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **Lock urllib3 2.8.0.** `uv.lock` now pins urllib3 2.8.0, the first release
+  that fixes GHSA-vxq7-64xx-v4gw (unbounded chunk-size buffering,
+  CVE-2026-97689) and GHSA-8988-9cw3-xx77 (HTTPS proxy TLS configuration
+  ignored).
+
+- **Harden Dependabot auto-merge.** Pin `dependabot/fetch-metadata` to a commit
+  SHA (v3.1.0), gate on the pull-request author plus same-repo head instead of
+  spoofable `github.actor`, and keep write permissions job-scoped.
+
+- **Bound SQLite vec DDL dimension.** `SQLiteStore` rejects empty or oversized
+  embeddings before interpolating the `float[dim]` virtual-table schema.
+
 ### Added
 
 - **affective-fly host adapter.** `FlyAffectHost` in `emotional_memory.integrations.fly`
