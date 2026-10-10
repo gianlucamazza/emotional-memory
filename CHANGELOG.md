@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`make install-fly`); not a locked extra (fly depends on this package and is
   not on PyPI). See `docs/tutorials/fly.md` and `examples/fly_affect_source.py`.
 
+### Docs
+
+- README: two-line plain intro (what the library is and who it is for) above the
+  existing evaluation stats. The benchmarks badge now links to in-repo
+  `docs/benchmarks.md` instead of the unpublished GitHub Pages `/dev/bench/`
+  dashboard (Pages is not enabled; `has_pages: false`).
+
 ## [0.18.1] - 2026-09-12
 
 ### Fixed

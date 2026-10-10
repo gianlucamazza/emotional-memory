@@ -6,9 +6,13 @@
 [![Last commit](https://img.shields.io/github/last-commit/gianlucamazza/emotional-memory)](https://github.com/gianlucamazza/emotional-memory/commits/main)
 [![Python](https://img.shields.io/pypi/pyversions/emotional_memory)](https://pypi.org/project/emotional_memory/)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.19972258-blue?logo=doi)](https://doi.org/10.5281/zenodo.19972258)
-[![Benchmarks](https://img.shields.io/badge/benchmarks-tracked-blue)](https://gianlucamazza.github.io/emotional-memory/dev/bench/)
+[![Benchmarks](https://img.shields.io/badge/benchmarks-docs-blue)](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/benchmarks.md)
 [![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://github.com/gianlucamazza/emotional-memory/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+`emotional_memory` is a Python library that gives LLM agents affect-aware episodic memory: `EmotionalMemory` stores each episode with valence, arousal, mood, and appraisal, then ranks recall by meaning plus that affective context — not cosine similarity alone.
+
+It is for researchers and engineers who need mood-congruent recall in multi-session agents (journaling, long-horizon conversational memory), not a drop-in replacement for general-purpose RAG.
 
 Emotional memory for LLMs based on **Affective Field Theory (AFT)** — a 5-layer model that encodes not just _what_ happened, but _how it felt_, _how that feeling was moving_, and _what mood colored the moment_.
 
