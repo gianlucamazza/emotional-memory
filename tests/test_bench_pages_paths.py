@@ -59,6 +59,42 @@ def test_workflow_bench_paths_agree() -> None:
     assert f"--output site/{bench_dir}" in docs
 
 
+def test_docs_deploys_after_successful_ci_on_main() -> None:
+    docs = (ROOT / ".github/workflows/docs.yml").read_text(encoding="utf-8")
+    header, _, jobs = docs.partition("\njobs:")
+    on_block = header.split("on:", 1)[1].split("concurrency:", 1)[0]
+    build = jobs.split("name: Deploy GitHub Pages", 1)[0]
+    deploy = jobs.split("name: Deploy GitHub Pages", 1)[1]
+
+    assert "workflow_run:" in on_block
+    assert '"CI"' in on_block
+    assert "completed" in on_block
+    assert 'branches: ["main"]' in on_block
+    assert "workflow_dispatch:" in on_block
+    # CI already runs on every main push (no path filter), including docs-only.
+    # A parallel push trigger redeploys stale bench-data before Seed/Store.
+    assert "push:" not in on_block
+
+    assert "github.event.workflow_run.head_sha" in docs
+    assert "github.event.workflow_run.head_sha || github.sha" in docs
+    assert "github.event.workflow_run.conclusion == 'success'" in build
+    assert "github.event.workflow_run.conclusion == 'success'" in deploy
+    assert "conclusion == 'failure'" not in docs
+    assert "conclusion == 'cancelled'" not in docs
+
+    assert "permissions: {}" in header
+    assert "pages: write" not in header
+    assert "id-token: write" not in header
+    assert "contents: read" in build
+    assert "pages: write" not in build
+    assert "id-token: write" not in build
+    assert "pages: write" in deploy
+    assert "id-token: write" in deploy
+
+    assert _scalar(header, "group") == "pages"
+    assert _scalar(header, "cancel-in-progress") == "false"
+
+
 def test_seed_step_auth_is_idempotent_and_not_bearer() -> None:
     ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     seed_idx = ci.index("Seed bench-data from gh-pages history")

@@ -3,14 +3,24 @@ name: Docs
 # Assembles MkDocs (`site/`) plus dev/bench (from the bench-data branch, or
 # reconstructed from gh-pages history) and deploys one artifact.
 # Requires Settings → Pages → Source: GitHub Actions (not the gh-pages branch).
+#
+# Triggered after the CI workflow completes on main so Benchmarks Seed/Store
+# has updated bench-data first. No direct `push` trigger: CI already runs on
+# every main push (including docs-only), and a parallel push-triggered Docs
+# run was deploying a stale 1-entry chart ~5 min before Seed/Store finished.
+# workflow_dispatch remains for a manual rebuild.
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
     branches: ["main"]
   workflow_dispatch:
 
-# Do not cancel an in-flight Pages deploy; a cancelled upload leaves the
-# previous site up, but queued runs should apply the latest artifact in order.
+# One Pages pipeline. cancel-in-progress: false so a newer run queues instead
+# of aborting an in-flight post-Benchmarks upload (a cancelled deploy can
+# leave the previous artifact). The later run still wins once it deploys.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -20,6 +30,10 @@ permissions: {}
 jobs:
   build:
     name: Build MkDocs + dev/bench
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -28,6 +42,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # workflow_run's github.sha is default-branch HEAD at event time,
+          # which can be newer than the CI run. Pin the triggering commit.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
@@ -67,6 +84,10 @@ jobs:
 
   deploy:
     name: Deploy GitHub Pages
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success')
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5
