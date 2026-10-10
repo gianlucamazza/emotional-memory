@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **affective-fly host adapter test.** Read `AffectiveLoop.action_gate`
+  (fly 0.2.6 renamed `launch_gate`; the old property now emits
+  `DeprecationWarning`, which CI treats as a failure).
+
 ### Security
 
 - **Lock urllib3 2.8.0.** `uv.lock` now pins urllib3 2.8.0, the first release
