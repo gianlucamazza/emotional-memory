@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v1",
   "version": "1.4",
+  "license": "CC-BY-4.0",
   "description": "Scripted multi-session retrieval scenarios for replayable affect-aware evaluation (50 scenarios, 100 queries, rebalanced for per-challenge statistical power).",
   "default_top_k": 2,
   "scenarios": [

@@ -1,0 +1,24 @@
+# Owner-authored benchmark sets only.
+# This list is the machine-checkable allow-list for the planned Hugging Face
+# dataset `emotional-memory-benchmarks` (target publish date 26 Oct; no upload
+# in this PR). One dataset id per line. Comments start with `#`.
+#
+# Third-party or third-party-derived sets MUST NOT appear here:
+#   emobank_v1                  (EmoBank sample, CC-BY-SA-4.0)
+#   madialbench / evo_emo       (MADial-Bench MIT; ES-MemEval/EvoEmo CC-BY-4.0)
+#   dailydialog_personas_v1     (DailyDialog-derived, CC BY-NC-SA 4.0)
+# Guard: tests/test_publishable_datasets.py
+#
+# Licence on owner-authored sets (affect_reference_v1 and realistic_recall_*)
+# is CC-BY-4.0 (owner decision; see DATASET.md).
+
+affect_reference_v1
+realistic_recall_v1
+realistic_recall_v2
+realistic_recall_v2_it
+realistic_recall_v2_es
+realistic_recall_v2_fr
+realistic_recall_v3
+realistic_recall_v3_noAF
+realistic_recall_v4_noAF
+realistic_recall_v5_gate

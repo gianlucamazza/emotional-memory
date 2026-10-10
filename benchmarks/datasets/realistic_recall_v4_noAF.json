@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v4_noAF",
   "version": "1.0.0",
+  "license": "CC-BY-4.0",
   "description": "Affect-free scenarios for Addendum P (Hg1 re-run with the recalibrated SEC->affect mapping). Scenario ids use the pNN_ namespace, thematically disjoint from realistic_recall_v3 to avoid train/test leakage with the Addendum O calibration set. No preset valence/arousal; LLM must infer affect.",
   "default_top_k": 2,
   "scenarios": [

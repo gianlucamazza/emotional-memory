@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v2_es",
   "version": "1.0",
+  "license": "CC-BY-4.0",
   "language": "es",
   "description": "Segmento español de realistic_recall_v2 — 20 escenarios con consultas de desafío afectivo",
   "default_top_k": 2,

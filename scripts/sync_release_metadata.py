@@ -163,10 +163,22 @@ def sync_release_metadata(
     demo_readme = ROOT / "demo" / "README.md"
     demo_text = demo_readme.read_text(encoding="utf-8")
     updated_demo = _replace(
-        r"- \*\*Zenodo Concept DOI\*\*: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
-        f"- **Zenodo Concept DOI**: [{concept_doi}](https://doi.org/{concept_doi})",
+        r"- \*\*Zenodo Concept DOI\*\*( \(all versions\))?: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        rf"- **Zenodo Concept DOI**\g<1>: [{concept_doi}](https://doi.org/{concept_doi})",
         demo_text,
         "demo README concept DOI",
+    )
+    updated_demo = _replace(
+        r"- \*\*Zenodo Version DOI\*\* \([^)]+\): \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        f"- **Zenodo Version DOI** ({version}): [{version_doi}](https://doi.org/{version_doi})",
+        updated_demo,
+        "demo README version DOI",
+    )
+    updated_demo = _replace(
+        r"^To cite all versions rather than [^,]+, use the concept DOI\n\[[^\]]+\]\(https://doi\.org/[^\)]+\)\.$",
+        f"To cite all versions rather than {version}, use the concept DOI\n[{concept_doi}](https://doi.org/{concept_doi}).",
+        updated_demo,
+        "demo README cite-all-versions note",
     )
     updated_demo = _replace(
         r"doi\s+= \{10\.5281/zenodo\.[0-9]+\},",

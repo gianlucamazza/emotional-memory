@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v3",
   "version": "3.0",
+  "license": "CC-BY-4.0",
   "description": "realistic_recall_v3: v2 (200 queries, 50 scenarios) extended with 75 new scenarios (300 queries) for a total of 500 queries across 125 scenarios. Each scenario uses a 4-of-5 challenge-type combo (rotating across 5 combos). v3_noAF (realistic_recall_v3_noAF.json) is a separate affect-free dataset for Add. G (Hg1). All v3 scenarios include preset valence/arousal.",
   "default_top_k": 2,
   "scenarios": [

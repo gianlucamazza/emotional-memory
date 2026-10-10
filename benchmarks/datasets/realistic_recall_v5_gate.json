@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v5_gate",
   "version": "1.0.0",
+  "license": "CC-BY-4.0",
   "description": "Mixed-gate scenarios for Addendum Q (affect-aware gating). Each scenario carries 2 affect-free + 2 affective queries with ground-truth gate_label. Scenario ids use the qNN_ namespace, thematically disjoint from v3 and v4. No preset valence/arousal; the LLM appraisal engine is the only affect source. Affective targets (e4) are tone-congruent with the end of the arc while their semantic distractor (e5) is more recent and opposite in tone.",
   "default_top_k": 2,
   "scenarios": [

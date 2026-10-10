@@ -3,7 +3,10 @@
 This directory holds the pre-registered study documents (`preregistration_*.md`, one
 pre-registration + one closure per executed study), the benchmark harnesses (one
 subdirectory per benchmark family), and the vendored datasets (`datasets/`, with
-licensing in `datasets/README.md`).
+licensing in `datasets/README.md`). Owner-authored sets intended for a future
+Hugging Face dataset are listed in `datasets/PUBLISHABLE.txt`; the draft Hub
+card is `datasets/DATASET.md`. Third-party corpora stay in-repo and are not
+on that list.
 
 Every scored study is **committed before execution** (pre-registration integrity); the
 closure records realized numbers, the pre-declared verdict, and propagation targets.

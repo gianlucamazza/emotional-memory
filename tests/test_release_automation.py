@@ -82,6 +82,47 @@ def test_sync_readme_doi_badge_migrates_legacy_zenodo_badge() -> None:
     )
 
 
+def test_sync_demo_readme_updates_version_doi_and_cite_note() -> None:
+    module = _load_script_module("sync_release_metadata")
+    demo_path = ROOT / "demo" / "README.md"
+    original = demo_path.read_text(encoding="utf-8")
+    version = "9.9.9"
+    version_doi = "10.5281/zenodo.99"
+    concept_doi = "10.5281/zenodo.9"
+
+    updated = module._replace(
+        r"- \*\*Zenodo Concept DOI\*\*( \(all versions\))?: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        rf"- **Zenodo Concept DOI**\g<1>: [{concept_doi}](https://doi.org/{concept_doi})",
+        original,
+        "demo README concept DOI",
+    )
+    updated = module._replace(
+        r"- \*\*Zenodo Version DOI\*\* \([^)]+\): \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        f"- **Zenodo Version DOI** ({version}): [{version_doi}](https://doi.org/{version_doi})",
+        updated,
+        "demo README version DOI",
+    )
+    updated = module._replace(
+        r"^To cite all versions rather than [^,]+, use the concept DOI\n\[[^\]]+\]\(https://doi\.org/[^\)]+\)\.$",
+        f"To cite all versions rather than {version}, use the concept DOI\n[{concept_doi}](https://doi.org/{concept_doi}).",
+        updated,
+        "demo README cite-all-versions note",
+    )
+
+    assert (
+        "- **Zenodo Version DOI** (9.9.9): [10.5281/zenodo.99](https://doi.org/10.5281/zenodo.99)"
+    ) in updated
+    assert (
+        "To cite all versions rather than 9.9.9, use the concept DOI\n"
+        "[10.5281/zenodo.9](https://doi.org/10.5281/zenodo.9)."
+    ) in updated
+    assert (
+        "- **Zenodo Concept DOI** (all versions): "
+        "[10.5281/zenodo.9](https://doi.org/10.5281/zenodo.9)"
+    ) in updated
+    assert demo_path.read_text(encoding="utf-8") == original
+
+
 def test_sync_readme_doi_badge_updates_icon_badge() -> None:
     module = _load_script_module("sync_release_metadata")
     current = (

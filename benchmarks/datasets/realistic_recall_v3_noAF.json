@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v3_noAF",
   "version": "1.0.0",
+  "license": "CC-BY-4.0",
   "description": "Affect-free variant of realistic_recall_v2. Memory events carry no preset valence/arousal fields; query state is omitted. Designed for Addendum G (Hg1): tests whether LLMAppraisalEngine in dual-path mode provides a net retrieval advantage over naive_cosine when affect must be inferred entirely by the LLM.",
   "default_top_k": 2,
   "scenarios": [

@@ -62,6 +62,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   an interactive chat that encodes messages as memories and recalls them with
   affect-aware ranking. The Space may take a few seconds to wake.
 
+- Benchmark dataset inventory and Hugging Face dataset-card draft
+  (`benchmarks/datasets/DATASET.md`, `PUBLISHABLE.txt`): owner-authored
+  sets only for a planned `emotional-memory-benchmarks` Hub upload (no
+  upload in this change). Third-party corpora stay in-repo with
+  ATTRIBUTION notes and are rejected by
+  `tests/test_publishable_datasets.py` if listed as publishable.
+  Owner-authored `realistic_recall_*` JSON metadata and the draft Hub
+  card use `CC-BY-4.0` (owner decision). Project code remains MIT.
+
+- `demo/README.md` replaced with the Copy-final Hugging Face Space card
+  (`pinned: true`, Scope and limits, author/DOI links) so GitHub→Space
+  sync will not revert the Hub README.
+
+- `scripts/sync_release_metadata.py` matches the Space card Concept DOI
+  `(all versions)` line, the Version DOI line, and the
+  "To cite all versions rather than …" closer so a version bump cannot
+  leave those stale. `make sync-metadata` stays idempotent.
+
 ## [0.18.1] - 2026-09-12
 
 ### Fixed
