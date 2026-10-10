@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Pages source to be **GitHub Actions** (settings change). The README
   benchmarks badge stays on `docs/benchmarks.md`.
 
+- **Bench-data seed push uses `x-access-token` auth.** GitHub's git HTTP
+  endpoint rejects `Authorization: bearer`, so the first-run seed of the
+  `bench-data` branch failed with `could not read Username for 'https://github.com'`.
+  The seed step now pushes to `https://x-access-token:${GH_TOKEN}@github.com/…`
+  (same scheme `github-action-benchmark` uses), stays a no-op when
+  `bench-data` already has `dev/bench/data.js`, and never force-pushes.
+
 ### Docs
 
 - README: two-line plain intro (what the library is and who it is for) above the
