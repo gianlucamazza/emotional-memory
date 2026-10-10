@@ -80,10 +80,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Docs
 
 - README "How it compares": mem0 reconsolidation now quotes
-  `docs/comparison.md` (`✅ auto update/remove`) instead of ❌; Letta
-  is dropped from that table (never measured in-repo). comparison.md
-  marks Letta reconsolidation as `not measured` rather than
-  `✅ tool-call edit`.
+  `docs/comparison.md` (`✅ auto update/remove`) instead of ❌. The
+  MemGPT/Letta row is dropped (comparison.md has no measured or cited
+  MemGPT entry for every cell in that row; MemGPT is Letta's former
+  name, and ❌ reconsolidation was unsourced). comparison.md marks
+  unsourced Letta ❌/✅ cells as `not measured` (reconsolidation,
+  LLM-agnostic, LangChain integration, external benchmark). Emotion
+  model and persistent mood state stay ❌ per
+  `docs/research/04_state_of_art.md` (Packer et al. 2023: no
+  emotional representation).
 
 - `demo/README.md` Space front matter now matches the live Hub card
   (`huggingface.co/spaces/homen3/emotional-memory-demo`, HF commit
