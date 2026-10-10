@@ -25,7 +25,7 @@ X2 (`..._x2_esmemeval_..._closure.md`, affect-orthogonal FAIL — which named th
 ## Motivation
 
 The X2 closure named the untested variant verbatim: _"affect-gating: engage the affect
-channel only when the query carries affect (45.2% here do not)… a query-affect-conditioned
+channel only when the query carries affect (45.2% here do not; corrected run: 45.5%)… a query-affect-conditioned
 gate is the untested variant."_ Addendum Q closed **state-based** gating (safe wrapper, no
 gain, because the query is never appraised). Addendum T then made query appraisal available
 at retrieve time. This study is their composition: gate the affect channel **on the

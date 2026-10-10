@@ -257,7 +257,7 @@ inputs: appraisal faithful (D1 AUC=0.950 [0.901, 0.988]) and — contrary to the
 pre-registered low-D2 prior — the corpus is affect-discriminative (D2=63.0%). Post-hoc
 (exploratory): unlike MADial-Bench, the gold is **not counter-congruent**
 (corr(query valence, gold valence)=+0.25; only 13.1% opposite-sign vs X's 40%) — it is
-**affect-orthogonal**: 45.2% of queries are affectively neutral and the right session is
+**affect-orthogonal**: 45.5% of queries are affectively neutral and the right session is
 determined by content, so the affect channel buys ranking variance with no gold-directed
 signal. Two third-party corpora, two distinct failure modes (counter-congruent construct
 on X; affect-orthogonal gold on X2); what they share is that the gold relation was not

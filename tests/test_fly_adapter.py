@@ -75,7 +75,11 @@ def test_host_constructs_its_own_store_and_memory() -> None:
     assert host.mood.tau_arousal == HYPOTHESIS_TAU_AROUSAL
     assert host.mood.tau_approach == HYPOTHESIS_TAU_APPROACH
     assert host.loop.policy.threshold_act == 0.2
-    assert host.loop.launch_gate.threshold_approach == 0.2
+    # affective-fly 0.2.6+: ActionGate is `action_gate`; `launch_gate` warns.
+    gate = getattr(host.loop, "action_gate", None)
+    if gate is None:
+        gate = host.loop.launch_gate
+    assert gate.threshold_approach == 0.2
     assert host.loop.policy.threshold_calm == 0.0
 
 

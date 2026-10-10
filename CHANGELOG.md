@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **affective-fly host adapter test.** Read `AffectiveLoop.action_gate`
+  (fly 0.2.6 renamed `launch_gate`; the old property now emits
+  `DeprecationWarning`, which CI treats as a failure).
+
 ### Security
 
 - **Lock urllib3 2.8.0.** `uv.lock` now pins urllib3 2.8.0, the first release
@@ -72,6 +78,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   current `bench-data` tip by commit id and never replaces the branch.
 
 ### Docs
+
+- `demo/README.md` Space front matter now matches the live Hub card
+  (`huggingface.co/spaces/homen3/emotional-memory-demo`, HF commit
+  `e48a82a2`): extra tags (`agent-memory`, `emotion`, `retrieval`) and
+  `models: sentence-transformers/all-MiniLM-L6-v2`. Body unchanged so
+  GitHub→Space sync will not wipe Hub metadata.
+
+- README Quickstart, docs index, and `DATASET.md` link the live Hub
+  dataset [`homen3/emotional-memory-benchmarks`](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks).
+
+- Hugging Face account rename `homen3` → `gianlucamazza`: live Space and
+  dataset links now use `huggingface.co/spaces/gianlucamazza/…` and
+  `huggingface.co/datasets/gianlucamazza/…` (old repo URLs redirect;
+  profile/post URLs do not).
+
+- Align the ES-MemEval neutral-query share to the corrected Addendum X2
+  run: **45.5%** (`|valence|<0.2`). Downstream docs that stated the
+  original post-hoc 45.2% as the current figure now match the closure
+  (L32: corrected run is canonical). The X2 L32–33 note, Addendum Y
+  prereg pedigree, dated `validation_report_2026-06.md`, and CHANGELOG
+  history keep 45.2% as the then-known value.
 
 - Paper bibliography audit (`paper/refs.bib`): corrected author lists, titles,
   venues, and DOIs against arXiv/Crossref/proceedings (Emotional RAG, LUFY,

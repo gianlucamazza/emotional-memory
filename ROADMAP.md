@@ -29,7 +29,7 @@ Patch releases fixing regressions and improving developer experience. No new API
 - [x] Dataset `affect_reference_v1` (258 examples)
 - [x] arXiv-style paper updated (Zenodo DOI `10.5281/zenodo.19640250`, PyPI `0.6.0`)
 - [x] mkdocs-material site source (`docs/`) with async, LangChain, persistence tutorials
-- [x] HuggingFace Space `homen3/emotional-memory-demo` live
+- [x] HuggingFace Space `gianlucamazza/emotional-memory-demo` live
 - [x] `Development Status :: 4 - Beta`
 
 ---
@@ -296,7 +296,7 @@ Post-v0.11.0 dot-release research closing the automatic-vs-oracle appraisal gap.
       (u_nDCG@4 0.284 vs 0.133, Δ=−0.150 [−0.165, −0.136], powered, MDE 0.018) with
       faithful appraisal (D1 AUC=0.950) and an affect-discriminative corpus (D2=63.0%,
       ex-ante low-D2 prior wrong). Post-hoc: failure mode distinct from X — the gold is
-      **affect-orthogonal** (content-determined QA; 45.2% of queries affectively
+      **affect-orthogonal** (content-determined QA; 45.5% of queries affectively
       neutral), not counter-congruent. Provenance bound hardened: positive retrieval
       evidence remains confined to author-crafted corpora; operative boundary = the gold
       relation itself must be affect-conditioned. Residual at close (a

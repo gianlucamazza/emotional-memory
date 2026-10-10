@@ -21,6 +21,7 @@ The planned Hub dataset will contain **only** the owner-authored sets listed in
 corpora stay in this git repository with their upstream licences and are
 excluded by `tests/test_publishable_datasets.py`.
 
+- **Hub copy:** [`gianlucamazza/emotional-memory-benchmarks`](https://huggingface.co/datasets/gianlucamazza/emotional-memory-benchmarks)
 - **Owner:** Gianluca Mazza
 - **Library:** [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory)
 - **Target Hub publish date:** 26 October (this inventory is meant to merge first)
@@ -133,7 +134,7 @@ From the same `allowed_public_wording`:
 > aft_query_appraised significantly below naive cosine (upstream-verbatim
 > nDCG@4 0.133 vs 0.284, Δ=-0.150 [-0.165, -0.136], p_one=1.0000, powered:
 > MDE 0.018) […] failure mode distinct from X — the gold is
-> affect-orthogonal (content-determined; 45.2% of queries affectively
+> affect-orthogonal (content-determined; 45.5% of queries affectively
 > neutral […])
 
 `benchmarks/README.md`: **FAIL, inverted** (Δ=−0.150 powered; distinct
