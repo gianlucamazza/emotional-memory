@@ -93,6 +93,7 @@ def test_docs_deploys_after_successful_ci_on_main() -> None:
 
     assert _scalar(header, "group") == "pages"
     assert _scalar(header, "cancel-in-progress") == "false"
+    assert _scalar(docs, "enable-cache") == "false"
 
 
 def test_seed_step_auth_is_idempotent_and_not_bearer() -> None:
