@@ -68,6 +68,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README Quickstart, docs index, and `DATASET.md` link the live Hub
   dataset [`homen3/emotional-memory-benchmarks`](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks).
 
+- Align the ES-MemEval neutral-query share to the corrected Addendum X2
+  run: **45.5%** (`|valence|<0.2`). Downstream docs that stated the
+  original post-hoc 45.2% as the current figure now match the closure
+  (L32: corrected run is canonical). The X2 L32–33 note, Addendum Y
+  prereg pedigree, dated `validation_report_2026-06.md`, and CHANGELOG
+  history keep 45.2% as the then-known value.
+
 - Paper bibliography audit (`paper/refs.bib`): corrected author lists, titles,
   venues, and DOIs against arXiv/Crossref/proceedings (Emotional RAG, LUFY,
   DAM-LLM, MemEmo, and 20 other mismatches). Related-work sentences in

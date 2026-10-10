@@ -71,7 +71,7 @@ Re-appraising all 1,133 queries and 401 sessions with the same schema:
 
 - corr(query valence, gold-set mean valence) r = **+0.25** — weakly _aligned_, not
   counter-congruent (Addendum X: 40.0% opposite-sign gold sets; here **13.1%**);
-- **45.2% of queries are affectively neutral** (|valence| < 0.2) — QA questions about
+- **45.5% of queries are affectively neutral** (|valence| < 0.2) — QA questions about
   facts, sequences, and consistency mostly carry no affect;
 - mean query valence −0.166 vs mean gold valence −0.130 — both mildly negative, aligned.
 
@@ -125,7 +125,7 @@ construct analysis is invalidated.
   failure mode is orthogonality, not counter-congruence, so a support-mode profile
   would not have rescued it. The theory-level fix X2 suggests instead is
   **affect-gating**: engage the affect channel only when the query carries affect
-  (45.2% here do not) — note Addendum Q found state-based gating recovers the always-on
+  (45.5% here do not) — note Addendum Q found state-based gating recovers the always-on
   penalty but does not produce gains; a query-affect-conditioned gate is the untested
   variant.
 - Third released third-party corpus: none currently available (HLME unreleased,

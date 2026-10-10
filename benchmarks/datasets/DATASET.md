@@ -134,7 +134,7 @@ From the same `allowed_public_wording`:
 > aft_query_appraised significantly below naive cosine (upstream-verbatim
 > nDCG@4 0.133 vs 0.284, Δ=-0.150 [-0.165, -0.136], p_one=1.0000, powered:
 > MDE 0.018) […] failure mode distinct from X — the gold is
-> affect-orthogonal (content-determined; 45.2% of queries affectively
+> affect-orthogonal (content-determined; 45.5% of queries affectively
 > neutral […])
 
 `benchmarks/README.md`: **FAIL, inverted** (Δ=−0.150 powered; distinct
