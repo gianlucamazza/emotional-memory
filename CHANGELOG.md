@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docs/benchmarks.md` instead of the unpublished GitHub Pages `/dev/bench/`
   dashboard (Pages is not enabled; `has_pages: false`).
 
+- README Quickstart and docs index/getting-started: link the live Hugging Face
+  Gradio demo (`https://huggingface.co/spaces/homen3/emotional-memory-demo`) —
+  an interactive chat that encodes messages as memories and recalls them with
+  affect-aware ranking. The Space may take a few seconds to wake.
+
 ## [0.18.1] - 2026-09-12
 
 ### Fixed

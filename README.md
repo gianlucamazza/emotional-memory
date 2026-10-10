@@ -108,6 +108,8 @@ make install-demo
 
 ## Quickstart
 
+Try it in the browser: [Hugging Face demo](https://huggingface.co/spaces/homen3/emotional-memory-demo) — a Gradio chat that encodes messages as memories and recalls them with affect-aware ranking (a free Space; it may take a few seconds to wake up).
+
 ```bash
 uv pip install "emotional-memory[sentence-transformers]"
 ```
