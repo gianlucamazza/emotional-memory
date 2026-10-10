@@ -9,10 +9,10 @@ third-party-derived set appears in `PUBLISHABLE.txt`.
 
 Owner-authored (publishable) files:
 
-- `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe (CC0 1.0)
+- `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe (CC-BY-4.0)
 - `realistic_recall_v1.json` … `realistic_recall_v5_gate.json`, including
   `_it` / `_es` / `_fr` and the `_noAF` / `_gate` variants (licence
-  **proposed CC0-1.0** — see `DATASET.md` and the open owner decision)
+  **CC-BY-4.0** — owner decision; see `DATASET.md`)
 
 Third-party or third-party-derived (kept in git, **not** publishable):
 
@@ -88,8 +88,9 @@ Requires only the Python standard library. Set `seed` for reproducibility.
 
 ## License
 
-Texts are original synthetic compositions. Dataset is released under **CC0 1.0**
-(public domain dedication) — use without restriction.
+Texts are original synthetic compositions. Dataset is released under **CC-BY-4.0**.
+Credit the citation and concept DOI [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
+(see `DATASET.md`).
 
 ## Version history
 
@@ -188,9 +189,8 @@ Addendum P. **v4_noAF**: 40 scenarios, 160 queries.
 (`qNN_` ids), LLM-drafted by `generate_v5_gate.py` (gpt-5-mini).
 **v5_gate**: 50 scenarios, 200 queries (100/100 `gate_label`).
 
-Proposed licence for every `realistic_recall_*` file above: **CC0-1.0**
-(JSON `license` field). Owner confirmation required before treating that
-as final — see `DATASET.md`.
+Licence for every `realistic_recall_*` file above: **CC-BY-4.0**
+(JSON `license` field; owner decision). See `DATASET.md`.
 
 ## dailydialog_personas_v1
 

@@ -103,13 +103,13 @@ def test_third_party_sets_remain_in_repo_and_stay_off_the_list() -> None:
         assert Path(relative).parts[0] not in listed
 
 
-def test_realistic_recall_publishable_json_declares_proposed_cc0() -> None:
+def test_realistic_recall_publishable_json_declares_cc_by_4_0() -> None:
     for dataset_id, relative in OWNER_RELATIVE_PATHS.items():
         if not dataset_id.startswith("realistic_recall_"):
             continue
         payload = json.loads((DATASETS_DIR / relative).read_text(encoding="utf-8"))
-        assert payload.get("license") == "CC0-1.0", (
-            f"{relative} must carry proposed license CC0-1.0 in top-level metadata "
+        assert payload.get("license") == "CC-BY-4.0", (
+            f"{relative} must carry license CC-BY-4.0 in top-level metadata "
             f"(got {payload.get('license')!r})"
         )
 

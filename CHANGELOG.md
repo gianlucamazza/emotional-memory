@@ -48,8 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   upload in this change). Third-party corpora stay in-repo with
   ATTRIBUTION notes and are rejected by
   `tests/test_publishable_datasets.py` if listed as publishable.
-  `realistic_recall_*` JSON metadata proposes `CC0-1.0` pending owner
-  confirmation.
+  Owner-authored `realistic_recall_*` JSON metadata and the draft Hub
+  card use `CC-BY-4.0` (owner decision). Project code remains MIT.
 
 - `demo/README.md` replaced with the Copy-final Hugging Face Space card
   (`pinned: true`, Scope and limits, author/DOI links) so GitHub→Space

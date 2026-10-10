@@ -1,5 +1,5 @@
 ---
-license: cc0-1.0
+license: cc-by-4.0
 language:
   - en
   - it
@@ -26,12 +26,15 @@ excluded by `tests/test_publishable_datasets.py`.
 - **Target Hub publish date:** 26 October (this inventory is meant to merge first)
 - **Concept DOI (software / project):** [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258)
   (`release.toml`, `codemeta.json`, `RELEASING.md`)
+- **Attribution:** credit this dataset by using the [citation](#citation)
+  below and the concept DOI
+  [10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258).
 
-`license: cc0-1.0` in the YAML is **declared today** for `affect_reference_v1`
-([`README.md`](README.md) §License) and **proposed** for the owner-authored
-`realistic_recall_*` sets so they can share one Hub licence. Confirmation is an
-**owner decision** (see [Licence](#licence) below). It does **not** apply to
-any third-party file in this directory.
+`license: cc-by-4.0` in the YAML is the **owner-decided** Hub licence for
+`affect_reference_v1` ([`README.md`](README.md) §License) and every
+owner-authored `realistic_recall_*` set listed in `PUBLISHABLE.txt`. It does
+**not** apply to any third-party file in this directory. Project code remains
+MIT.
 
 ## Intended use
 
@@ -181,7 +184,7 @@ addenda, or README notes; **unknown** where the repo is silent.
 | File | `affect_reference_v1.jsonl` |
 | Rows | **258** examples (one JSON object per line) |
 | Language | en |
-| Licence | **CC0 1.0** (`README.md` §License) |
+| Licence | **CC-BY-4.0** (`README.md` §License) |
 | Origin | **Script-generated** from hardcoded seed texts in `generate_dataset.py` (`source`: `synthetic-v1`). README: “original synthetic compositions.” Whether the seed strings were LLM-drafted is **unknown** (no generation log). |
 | First commit | `69785c9` (2026-04-17) |
 
@@ -194,7 +197,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v1.json` |
 | Size | **50** scenarios, **100** queries, 100 sessions, 300 events (file + `README.md` v1.4) |
 | Language | en |
-| Licence | **proposed CC0-1.0** (metadata field; pending owner confirmation) |
+| Licence | **CC-BY-4.0** (metadata field; owner decision) |
 | Origin | **Hand-authored / scripted** multi-session scenarios. No generator script in-repo. `README.md`: “scripted multi-session replay scenarios.” Introduced `82dff45`; expanded 10→50 scenarios in `5345b2f`. LLM involvement in composing the texts is **unknown**. |
 | Not third-party-derived | No repo evidence of DailyDialog/EmoBank seeding. |
 
@@ -205,7 +208,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v2.json` |
 | Size | **50** scenarios, **200** queries (5 challenge types × 40); 100 sessions, 300 events |
 | Language | en |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Hand-authored.** `docs/research/08_limitations.md` §2.4 / Addendum U: affect labels were “hand-crafted by the author with AFT theory in mind.” Added in `194d857`. No generator script. Construction rules: `benchmarks/preregistration_addendum_v2.md`. |
 | Primary use | Headline realistic-replay benchmark (S2, Hd2, G4/G5, S3, Addenda R/T/U/Y/Z). |
 
@@ -216,7 +219,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v2_it.json` |
 | Size | **30** scenarios, **120** queries, 60 sessions, 228 events (file). JSON `description` still says “20 scenarios” (stale header from the G6 slice). |
 | Language | it |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Two layers.** Scenarios 1–20: **translated** to Italian (`README.md`; added `2d8b397`). Whether that translation was human or LLM is **unknown**. Scenarios 21–30: **LLM-assisted** (`gpt-4.1-mini`, seed=42) via `scripts/generate_realistic_v2_topup.py`; valence/arousal assigned programmatically; calls logged in `realistic_recall_v2_topup_provenance.jsonl` (`benchmarks/preregistration_addendum_hd2_powertopup.md`, commit `e308e94`). |
 | Not third-party-derived | Translation / top-up of the owner v2 family, not DailyDialog/EmoBank. |
 
@@ -227,7 +230,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v2_es.json` |
 | Size | **30** scenarios, **120** queries, 60 sessions, 228 events (file). JSON `description` still says “20 escenarios”. |
 | Language | es |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Two layers.** Scenarios 1–20: **translated / localized** to Spanish — “only text and identifiers translated” (`898e132` commit message; `README.md`). Translation tool (human vs LLM) is **unknown**. Scenarios 21–30: **translated from the Italian top-up** by the same generator (`--lang es --translate-from` … `_it.json`; `e308e94`). |
 | Not third-party-derived | Same as `_it`. |
 
@@ -238,7 +241,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v2_fr.json` |
 | Size | **30** scenarios, **120** queries, 60 sessions, **210** events (file + `README.md`; freeze commit `a864485` notes 210 vs a prereg ‘~228’ estimate) |
 | Language | fr |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Hand-authored native French**, not translated from Italian (`benchmarks/preregistration_addendum_m_fr.md`, `…_m_fr_closure.md`). |
 
 ### `realistic_recall_v3`
@@ -248,7 +251,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v3.json` |
 | Size | **125** scenarios, **500** queries (v2’s 50/200 plus 75 new / 300 queries); 250 sessions, 750 events |
 | Language | en |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Script-assembled** by `scripts/generate_realistic_v3.py` from scenario literals in that file (commit `320cd23`, author-blind). The first 50 scenarios are the v2 set. How the 75 new scenario texts were drafted (hand vs LLM) is **unknown** — no LLM call log. |
 
 ### `realistic_recall_v3_noAF`
@@ -258,7 +261,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v3_noAF.json` |
 | Size | **50** scenarios, **200** queries |
 | Language | en |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **Derived from owner `realistic_recall_v2`** by removing event valence/arousal and query `state` (`055a78a`; `benchmarks/appraisal_confound/runner_hg1.py` `dataset_note`; Addendum G). Not third-party text. |
 
 ### `realistic_recall_v4_noAF`
@@ -268,7 +271,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v4_noAF.json` |
 | Size | **40** scenarios, **160** queries (`pNN_` ids; 80 sessions, 240 events) |
 | Language | en |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **LLM-assisted**, author-blind: `generate_v4_noAF.py` drafts one structured-JSON scenario per call with **gpt-5-mini**; Python fixes ids / session split / challenge mapping (`benchmarks/preregistration_addendum_p_hg1_rerun.md`). Themes chosen disjoint from v3. Frozen `66dd3cc`. |
 
 ### `realistic_recall_v5_gate`
@@ -278,7 +281,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | File | `realistic_recall_v5_gate.json` |
 | Size | **50** scenarios, **200** queries (100 affective / 100 affect-free `gate_label`; 100 sessions, 300 events) |
 | Language | en |
-| Licence | **proposed CC0-1.0** |
+| Licence | **CC-BY-4.0** |
 | Origin | **LLM-assisted**, author-blind: `generate_v5_gate.py` with **gpt-5-mini** (`benchmarks/preregistration_addendum_q_affect_gating.md`). Mechanical lexical-leakage gate before inclusion. Frozen with Addendum Q (`e68d2cc`). |
 
 Supporting owner artifact **not** listed in `PUBLISHABLE.txt` (LLM audit log,
@@ -297,10 +300,11 @@ appear in `PUBLISHABLE.txt`.
 | ES-MemEval / EvoEmo | `esmemeval/evo_emo.json` | 18 seekers, 401 sessions, 1,427 QA / 1,133 in-family | Vendored v1.0.0, sha256-pinned | CC-BY-4.0 | [`esmemeval/ATTRIBUTION.md`](esmemeval/ATTRIBUTION.md) |
 | `dailydialog_personas_v1` | `dailydialog_personas_v1.json` | 120 personas, 396 queries, 536 sessions | Built from DailyDialog via `persona_builder.py` | CC BY-NC-SA 4.0 | [`dailydialog_personas_v1.ATTRIBUTION.md`](dailydialog_personas_v1.ATTRIBUTION.md) |
 
-`dailydialog_personas_v1` **cannot** be CC0: it is DailyDialog-derived
-(`benchmarks/dailydialog/README.md`). No `realistic_recall_*` set is recorded
-as seeded from DailyDialog or EmoBank; if that were true it would also be
-excluded from CC0 and from `PUBLISHABLE.txt`.
+`dailydialog_personas_v1` **cannot** use the owner Hub licence: it is
+DailyDialog-derived (`benchmarks/dailydialog/README.md`). No
+`realistic_recall_*` set is recorded as seeded from DailyDialog or EmoBank;
+if that were true it would also be excluded from the Hub licence and from
+`PUBLISHABLE.txt`.
 
 LoCoMo is used by `benchmarks/locomo/` but is **not** stored under
 `benchmarks/datasets/` (absent from this directory listing).
@@ -311,8 +315,8 @@ Owner JSON sets share the realistic-replay schema (`ReplayDataset` in
 `benchmarks/realistic/runner.py`): top-level `name`, `version`,
 `description`, `default_top_k`, `scenarios[]` with `sessions[]` of
 `events[]` and `queries[]`. Multilingual slices also have `language`.
-Owner `realistic_recall_*` files now carry `"license": "CC0-1.0"` as the
-proposed licence line.
+Owner `realistic_recall_*` files now carry `"license": "CC-BY-4.0"` as the
+owner-decided licence line.
 
 `affect_reference_v1.jsonl` fields: `id`, `text`, `valence`, `arousal`,
 `dominance`, `expected_label`, `source` (`README.md`).
@@ -323,8 +327,8 @@ No Hub configs or Parquet shards are produced in this PR.
 
 | Set | Licence | Status |
 | --- | --- | --- |
-| `affect_reference_v1` | CC0 1.0 | Declared in `README.md` |
-| `realistic_recall_*` (all publishable ids) | CC0-1.0 | **Proposed** for consistency with `affect_reference_v1`; written into each JSON `license` field. **Owner / CoS confirmation required before merge.** |
+| `affect_reference_v1` | CC-BY-4.0 | Owner decision; declared in `README.md` |
+| `realistic_recall_*` (all publishable ids) | CC-BY-4.0 | Owner decision (Gianluca); written into each JSON `license` field. |
 | `emobank_v1` | CC-BY-SA 4.0 | Upstream; not publishable here |
 | MADial-Bench vendored files | MIT | Upstream; not publishable here |
 | ES-MemEval / EvoEmo | CC-BY-4.0 | Upstream; not publishable here |
@@ -333,6 +337,9 @@ No Hub configs or Parquet shards are produced in this PR.
 Project **code** remains MIT (`LICENSE`, `pyproject.toml`).
 
 ## Citation
+
+**How to credit:** use the citation below and the concept DOI
+[10.5281/zenodo.19972258](https://doi.org/10.5281/zenodo.19972258).
 
 Use the project concept DOI for the library and these owner sets:
 

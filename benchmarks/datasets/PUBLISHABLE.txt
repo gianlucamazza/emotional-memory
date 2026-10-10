@@ -9,8 +9,8 @@
 #   dailydialog_personas_v1     (DailyDialog-derived, CC BY-NC-SA 4.0)
 # Guard: tests/test_publishable_datasets.py
 #
-# Licence on realistic_recall_* is proposed CC0-1.0 pending owner confirmation
-# (see DATASET.md and the PR body OWNER DECISION).
+# Licence on owner-authored sets (affect_reference_v1 and realistic_recall_*)
+# is CC-BY-4.0 (owner decision; see DATASET.md).
 
 affect_reference_v1
 realistic_recall_v1

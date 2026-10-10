@@ -25,7 +25,7 @@ JSON is derived from that corpus and is included for reproducibility under
 the same CC BY-NC-SA 4.0 terms (`benchmarks/dailydialog/README.md`).
 
 Because the texts are third-party-derived, this set **cannot** be released
-under CC0 and must not appear in `PUBLISHABLE.txt`.
+under the owner Hub licence and must not appear in `PUBLISHABLE.txt`.
 
 ## Citation
 
