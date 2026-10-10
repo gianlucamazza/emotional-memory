@@ -1,4 +1,4 @@
-"""Reconstruct github-action-benchmark dest/bench history from gh-pages.
+"""Reconstruct github-action-benchmark dev/bench history from gh-pages.
 
 ``mkdocs gh-deploy --force --clean`` replaces the ``gh-pages`` branch and
 drops ``dev/bench/``. Each later ``benchmark-action`` commit then re-adds a
@@ -21,8 +21,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-DATA_JS_PATH = "dev/bench/data.js"
-INDEX_HTML_PATH = "dev/bench/index.html"
+BENCH_DIR = "dev/bench"
+DATA_JS_PATH = f"{BENCH_DIR}/data.js"
+INDEX_HTML_PATH = f"{BENCH_DIR}/index.html"
 _DATA_JS_RE = re.compile(
     r"window\.BENCHMARK_DATA\s*=\s*(\{.*\})\s*;?\s*\Z",
     re.DOTALL,
@@ -153,7 +154,7 @@ def merge_history(source: str, cwd: Path) -> tuple[dict[str, Any], str | None]:
                 bucket.append(point)
 
     if not any(entries_by_name.values()):
-        raise RuntimeError(f"no dest/bench entries recovered from {source}")
+        raise RuntimeError(f"no dev/bench entries recovered from {source}")
 
     for points in entries_by_name.values():
         points.sort(key=lambda item: int(item.get("date") or 0))
@@ -183,12 +184,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--source",
         default="origin/gh-pages",
-        help="git ref whose history holds dest/bench snapshots (default: origin/gh-pages)",
+        help="git ref whose history holds dev/bench snapshots (default: origin/gh-pages)",
     )
     parser.add_argument(
         "--prefer",
         default=None,
-        help="if this ref already has dest/bench/data.js, copy it and skip the merge",
+        help="if this ref already has dev/bench/data.js, copy it and skip the merge",
     )
     parser.add_argument(
         "--output",
@@ -214,13 +215,13 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     if not _git_ok("rev-parse", "--verify", args.source, cwd=cwd):
-        print(f"missing source ref {args.source}; skipping dest/bench", file=sys.stderr)
+        print(f"missing source ref {args.source}; skipping dev/bench", file=sys.stderr)
         return 0
 
     try:
         data, index_html = merge_history(args.source, cwd)
     except RuntimeError as exc:
-        print(f"warning: {exc}; skipping dest/bench", file=sys.stderr)
+        print(f"warning: {exc}; skipping dev/bench", file=sys.stderr)
         return 0
     write_dashboard(args.output, data, index_html)
     return 0

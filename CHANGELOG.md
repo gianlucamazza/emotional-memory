@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Docs deploy no longer wipes `/dev/bench/`.** `mkdocs gh-deploy --force --clean`
   replaced the `gh-pages` branch and dropped the `benchmark-action` dashboard
   (`index.html` + `data.js`). Benchmark history now lives on its own `bench-data`
-  branch (`benchmark-data-dir-path: dest/bench`). The Docs workflow builds
+  branch (`benchmark-data-dir-path: dev/bench`). The Docs workflow builds
   MkDocs, copies `dev/bench` from that branch (or reconstructs it from
   `gh-pages` git history on first run), and deploys one artifact via
   `actions/upload-pages-artifact` + `actions/deploy-pages`. Requires the repo

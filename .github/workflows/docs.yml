@@ -1,6 +1,6 @@
 name: Docs
 
-# Assembles MkDocs (`site/`) plus dest/bench (from the bench-data branch, or
+# Assembles MkDocs (`site/`) plus dev/bench (from the bench-data branch, or
 # reconstructed from gh-pages history) and deploys one artifact.
 # Requires Settings → Pages → Source: GitHub Actions (not the gh-pages branch).
 
@@ -19,7 +19,7 @@ permissions: {}
 
 jobs:
   build:
-    name: Build MkDocs + dest/bench
+    name: Build MkDocs + dev/bench
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -51,7 +51,7 @@ jobs:
           git fetch origin +refs/heads/bench-data:refs/remotes/origin/bench-data || true
           git fetch origin +refs/heads/gh-pages:refs/remotes/origin/gh-pages || true
 
-      - name: Attach dest/bench dashboard
+      - name: Attach dev/bench dashboard
         run: |
           set -euo pipefail
           python3 scripts/recover_bench_history.py \

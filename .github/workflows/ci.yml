@@ -244,15 +244,9 @@ jobs:
             --source origin/gh-pages \
             --output "$recover_dir"
           work="$(mktemp -d)"
-          mkdir -p "$work/dev/bench"
-          cp -a "$recover_dir/." "$work/dev/bench/"
-          git init "$work"
-          git -C "$work" checkout --orphan bench-data
-          git -C "$work" add dest/bench
-          git -C "$work" \
-            -c user.name="github-actions[bot]" \
-            -c user.email="github-actions[bot]@users.noreply.github.com" \
-            commit -m "Seed dest/bench from recovered gh-pages history"
+          python3 scripts/seed_bench_data_branch.py \
+            --recover-dir "$recover_dir" \
+            --work "$work"
           git -C "$work" \
             -c "http.extraheader=AUTHORIZATION: bearer ${GH_TOKEN}" \
             push "https://github.com/${GH_REPO}.git" HEAD:refs/heads/bench-data
@@ -268,10 +262,10 @@ jobs:
           comment-on-alert: true
           # 130% balances useful regression signal vs GH-hosted runner noise
           # (a 10% gate is too tight; 150% was too permissive). See CONTRIBUTING.
-          # Own branch: docs.yml assembles dest/bench into the Pages artifact.
-          # Sharing gh-pages with mkdocs gh-deploy --force --clean wiped dest/.
+          # Own branch: docs.yml assembles dev/bench into the Pages artifact.
+          # Sharing gh-pages with mkdocs gh-deploy --force --clean wiped dev/.
           gh-pages-branch: bench-data
-          benchmark-data-dir-path: dest/bench
+          benchmark-data-dir-path: dev/bench
 
   extra-tests:
     name: Optional extras tests
