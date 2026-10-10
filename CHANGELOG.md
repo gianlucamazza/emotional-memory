@@ -34,8 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   endpoint rejects `Authorization: bearer`, so the first-run seed of the
   `bench-data` branch failed with `could not read Username for 'https://github.com'`.
   The seed step now pushes to `https://x-access-token:${GH_TOKEN}@github.com/…`
-  (same scheme `github-action-benchmark` uses), stays a no-op when
-  `bench-data` already has `dev/bench/data.js`, and never force-pushes.
+  (same scheme `github-action-benchmark` uses) and never force-pushes.
+
+- **Bench-data `data.js` matches github-action-benchmark.** `format_data_js`
+  no longer emits a trailing `;`. The action strips only
+  `window.BENCHMARK_DATA = ` and then `JSON.parse`s; the semicolon on the
+  73d1cfb seed made it drop 114 entries and rewrite a 1-point dashboard.
+  The seed step now unions recovered history (from 73d1cfb) into the
+  current `bench-data` tip by commit id and never replaces the branch.
 
 ### Docs
 
