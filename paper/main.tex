@@ -549,31 +549,34 @@ relevant here.
 in a memory stream for autonomous agents but include no affective modulation.
 \citet{packer2023memgpt} introduce a virtual OS model for large context but
 focus on persistence rather than emotional depth.
-\citet{fountas2024emllm} draw on the Complementary Learning Systems framework
-for episodic memory segmentation, approaching human-like memory boundaries
-without affective weighting.
+\citet{fountas2024emllm} segment long context into episodic events via Bayesian
+surprise and retrieve them without affective weighting.
 
 \paragraph{Emotion-aware retrieval.}
-\citet{sumida2024lufy} select history entries by emotion similarity, validating
-that arousal-modulated selection improves downstream dialogue quality — an
+\citet{sumida2024lufy} introduce LUFY, which retains emotionally arousing
+memories and forgets the rest of the conversation history, finding that
+arousal-based importance improves long-term RAG chatbot experience — an
 empirical confirmation of AFT's Layer 1 design choices.
-\citet{huang2024emotionalrag} augment RAG pipelines with emotional context
-vectors, finding significant quality improvement in emotional support dialogues.
-\citet{wang2025anna} propose a cognitive architecture with emotion-driven memory
-most similar to AFT in spirit, but without Russell circumplex formalization,
+\citet{huang2024emotionalrag} augment RAG for role-playing agents with
+emotion-aware retrieval inspired by mood-dependent memory, improving
+personality consistency on role-playing benchmarks.
+\citet{wang2025anna} propose AnnaAgent, an emotional and cognitive
+seeker-simulation system with tertiary multi-session memory, similar in spirit
+to AFT's persistent state but without Russell circumplex formalization,
 Hebbian strengthening, or APE-gated reconsolidation.
-\citet{mememo2026} introduce MemEmo, a recent holistic benchmark for memory
-systems with emotional context, which our affect\_reference\_v1 dataset complements.
+\citet{mememo2026} introduce MemEmo, a benchmark for evaluating emotion in
+agent memory systems (extraction, updating, and QA), which our
+affect\_reference\_v1 dataset complements.
 
 \paragraph{Reconsolidation and updating.}
-\citet{wei2026fademem} model forgetting-aware memory decay in dialogue but use
-heuristic schedules rather than the ACT-R power-law modulated by encoding
+\citet{wei2026fademem} model biologically-inspired forgetting with adaptive
+exponential decay, but without the ACT-R power-law modulated by encoding
 arousal. No paper in our survey implements APE-gated reconsolidation windows.
 
 \paragraph{Appraisal-based architectures.}
-\citet{croissant2024chain} implement a Scherer-inspired chain-of-emotion step
-before LLM response generation, mapping appraisal dimensions to emotional
-states to improve emotional support dialogue — the closest prior antecedent to
+\citet{croissant2024chain} implement a Scherer-inspired chain-of-emotion
+architecture for affective language-model game agents, mapping appraisal to
+simulated emotion before generation — the closest prior antecedent to
 AFT Layer~4. Unlike AFT, that work does not maintain a persistent affective
 memory state, resonance graph, or multi-session retrieval pipeline.
 
@@ -581,15 +584,15 @@ memory state, resonance graph, or multi-session retrieval pipeline.
 \citet{gutierrez2024hipporag} use Personalized PageRank over a knowledge graph
 as a spreading-activation retrieval mechanism, demonstrating its efficacy over
 pure cosine retrieval on multi-hop QA.
-\citet{jiang2026synapse} apply semantic spreading activation to long-context
-LLM memory — both are architecturally related to AFT Layer~5, but without
+\citet{jiang2026synapse} apply spreading activation over an episodic-semantic
+memory graph — both are architecturally related to AFT Layer~5, but without
 valence-arousal grounding or Hebbian co-retrieval strengthening.
 
 \paragraph{Affective computing and LLM emotion understanding.}
 Several recent works examine whether LLMs can model human affect.
 \citet{gandhi2024humanlike} demonstrate human-like affective cognition in
 foundation models; \citet{martinez2024llmvalence} show that LLMs can estimate
-valence and arousal with moderate accuracy; and \citet{liu2024emollms} release
+concreteness, valence, and arousal from text; and \citet{liu2024emollms} release
 a suite of emotion-tuned LLMs and annotation tools.
 \citet{zhang2024affective} survey the emerging intersection of affective computing
 and LLMs. In the memory-specific domain, \citet{xu2025amem} propose A-MEM, an

@@ -45,6 +45,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- Paper bibliography audit (`paper/refs.bib`): corrected author lists, titles,
+  venues, and DOIs against arXiv/Crossref/proceedings (Emotional RAG, LUFY,
+  DAM-LLM, MemEmo, and 20 other mismatches). Related-work sentences in
+  `paper/main.tex` now describe the actual papers. Endorsement note in
+  `paper/SUBMISSION.md` points at Zenodo version DOI `10.5281/zenodo.22724258`
+  (v0.18.1). A follow-up pass adds `howpublished`/`url` locators so plainnat
+  prints arXiv IDs; MemoryBank now cites AAAI-24 (`10.1609/aaai.v38i17.29946`).
 - README: two-line plain intro (what the library is and who it is for) above the
   existing evaluation stats. The benchmarks badge links to in-repo
   `docs/benchmarks.md` (CoS decides whether to point it back at the Pages
