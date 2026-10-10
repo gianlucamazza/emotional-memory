@@ -23,10 +23,12 @@ def test_dependabot_auto_merge_pins_fetch_metadata_to_sha() -> None:
 
 
 def test_dependabot_auto_merge_does_not_trust_github_actor() -> None:
-    text = _workflow_text()
-    assert "github.actor" not in text
-    assert "github.event.pull_request.user.login == 'dependabot[bot]'" in text
-    assert "github.event.pull_request.head.repo.full_name" in text
+    code = "\n".join(
+        line for line in _workflow_text().splitlines() if not line.lstrip().startswith("#")
+    )
+    assert "github.actor" not in code
+    assert "github.event.pull_request.user.login == 'dependabot[bot]'" in code
+    assert "github.event.pull_request.head.repo.full_name" in code
 
 
 def test_dependabot_auto_merge_scopes_write_permissions_to_job() -> None:
