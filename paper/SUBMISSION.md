@@ -45,7 +45,7 @@ from source).
 | Secondary categories | `cs.AI`, `cs.CL` (optional cross-list) |
 | MSC class | 68T07, 68T50 (optional) |
 | ACM class | I.2.7 (optional) |
-| Comments | 20 pages, 4 figures, 3 tables. Software: emotional-memory v0.18.1 |
+| Comments | 21 pages, 4 figures, 3 tables. Software: emotional-memory v0.18.1 |
 | License | CC BY 4.0 (recommended) |
 | DOI | 10.5281/zenodo.22724258 (Zenodo software record for v0.18.1) |
 
@@ -55,7 +55,8 @@ from source).
 
 **Blocked (2026-01-21 policy).** Issue #31 stays open until endorsement is
 obtained. The submission bundle is ready; the software is already citable via
-Zenodo `10.5281/zenodo.21870707`.
+Zenodo version DOI `10.5281/zenodo.22724258` (v0.18.1). Concept DOI
+`10.5281/zenodo.19972258`.
 
 As of [21 January 2026](https://blog.arxiv.org/2026/01/21/attention-authors-updated-endorsement-policy),
 new submitters in **all categories** (including `cs.LG`) need one of:

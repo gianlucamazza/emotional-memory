@@ -1,12 +1,16 @@
 % emotional-memory paper bibliography
 % Combines classical foundations with recent LLM memory literature
+% Audited 2026-10-10 against arXiv API, Crossref, ACL Anthology, and proceedings.
 
 @inproceedings{buechel2017emobank,
   author    = {Buechel, Sven and Hahn, Udo},
   title     = {{EmoBank}: Studying the Impact of Annotation Perspective and Representation Format on Dimensional Emotion Analysis},
-  booktitle = {Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics (EACL)},
+  booktitle = {Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 2, Short Papers},
   year      = {2017},
   pages     = {578--585},
+  address   = {Valencia, Spain},
+  publisher = {Association for Computational Linguistics},
+  doi       = {10.18653/v1/E17-2092},
 }
 
 % ─── Classical Foundations ───────────────────────────────────────────────────
@@ -19,6 +23,7 @@
   volume  = {39},
   number  = {6},
   pages   = {1161--1178},
+  doi     = {10.1037/h0077714},
 }
 
 @article{bower1981mood,
@@ -29,22 +34,28 @@
   volume  = {36},
   number  = {2},
   pages   = {129--148},
+  doi     = {10.1037/0003-066X.36.2.129},
 }
 
-@article{scherer1984appraisal,
-  author  = {Scherer, Klaus R.},
-  title   = {On the Nature and Function of Emotion: A Component Process Approach},
-  journal = {Approaches to Emotion},
-  year    = {1984},
-  pages   = {293--317},
+@incollection{scherer1984appraisal,
+  author    = {Scherer, Klaus R.},
+  title     = {On the Nature and Function of Emotion: A Component Process Approach},
+  booktitle = {Approaches to Emotion},
+  editor    = {Scherer, Klaus R. and Ekman, Paul},
+  publisher = {Lawrence Erlbaum Associates},
+  year      = {1984},
+  pages     = {293--317},
 }
 
-@article{plutchik1980general,
-  author  = {Plutchik, Robert},
-  title   = {A General Psychoevolutionary Theory of Emotion},
-  journal = {Theories of Emotion},
-  year    = {1980},
-  pages   = {3--33},
+@incollection{plutchik1980general,
+  author    = {Plutchik, Robert},
+  title     = {A General Psychoevolutionary Theory of Emotion},
+  booktitle = {Theories of Emotion},
+  editor    = {Plutchik, Robert and Kellerman, Henry},
+  publisher = {Academic Press},
+  year      = {1980},
+  pages     = {3--33},
+  doi       = {10.1016/B978-0-12-558701-3.50007-7},
 }
 
 @book{ledoux1996emotional,
@@ -61,6 +72,7 @@
   year    = {2004},
   volume  = {27},
   pages   = {1--28},
+  doi     = {10.1146/annurev.neuro.27.070203.144157},
 }
 
 @article{nader2000fear,
@@ -69,7 +81,9 @@
   journal = {Nature},
   year    = {2000},
   volume  = {406},
+  number  = {6797},
   pages   = {722--726},
+  doi     = {10.1038/35021052},
 }
 
 @article{collins1975spreading,
@@ -80,6 +94,7 @@
   volume  = {82},
   number  = {6},
   pages   = {407--428},
+  doi     = {10.1037/0033-295X.82.6.407},
 }
 
 @book{hebb1949organization,
@@ -116,15 +131,18 @@
   volume  = {101},
   number  = {9},
   pages   = {3310--3315},
+  doi     = {10.1073/pnas.0306408101},
 }
 
 @article{pearce1980hall,
   author  = {Pearce, John M. and Hall, Geoffrey},
-  title   = {A Model for Pavlovian Learning: Variations in the Effectiveness of Conditioned but not Unconditioned Stimuli},
+  title   = {A Model for Pavlovian Learning: Variations in the Effectiveness of Conditioned but not of Unconditioned Stimuli},
   journal = {Psychological Review},
   year    = {1980},
   volume  = {87},
+  number  = {6},
   pages   = {532--552},
+  doi     = {10.1037/0033-295X.87.6.532},
 }
 
 @book{mehrabian1974approach,
@@ -146,16 +164,18 @@
 % ─── LLM Memory Architectures ────────────────────────────────────────────────
 
 @inproceedings{park2023generative,
-  author    = {Park, Joon Sung and O'Brien, Joseph C. and Cai, Carrie J. and Morris, Meredith Ringel and Liang, Percy and Bernstein, Michael S.},
+  author    = {Park, Joon Sung and O'Brien, Joseph and Cai, Carrie Jun and Morris, Meredith Ringel and Liang, Percy and Bernstein, Michael S.},
   title     = {Generative Agents: Interactive Simulacra of Human Behavior},
-  booktitle = {Proceedings of UIST 2023},
+  booktitle = {Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology},
   year      = {2023},
+  pages     = {1--22},
+  doi       = {10.1145/3586183.3606763},
   eprint    = {2304.03442},
   archivePrefix = {arXiv},
 }
 
 @misc{packer2023memgpt,
-  author        = {Packer, Charles and Fang, Vivian and Patil, Shishir G. and Zhang, Kevin and Wooders, Sarah and Gonzalez, Joseph E.},
+  author        = {Packer, Charles and Wooders, Sarah and Lin, Kevin and Fang, Vivian and Patil, Shishir G. and Stoica, Ion and Gonzalez, Joseph E.},
   title         = {{MemGPT}: Towards {LLMs} as Operating Systems},
   year          = {2023},
   eprint        = {2310.08560},
@@ -163,40 +183,44 @@
 }
 
 @misc{zhong2023memorybank,
-  author        = {Zhong, Wanjun and Guo, Lianghong and Gao, Qiqi and Wang, Yanlin},
+  author        = {Zhong, Wanjun and Guo, Lianghong and Gao, Qiqi and Ye, He and Wang, Yanlin},
   title         = {{MemoryBank}: Enhancing Large Language Models with Long-Term Memory},
   year          = {2023},
   eprint        = {2305.10250},
   archivePrefix = {arXiv},
 }
 
-@misc{xu2025amem,
-  author        = {Xu, Wujiang and others},
+@inproceedings{xu2025amem,
+  author        = {Xu, Wujiang and Liang, Zujie and Mei, Kai and Gao, Hang and Tan, Juntao and Zhang, Yongfeng},
   title         = {{A-MEM}: Agentic Memory for {LLM} Agents},
+  booktitle     = {Advances in Neural Information Processing Systems 38 (NeurIPS 2025)},
   year          = {2025},
+  pages         = {20004--20031},
+  doi           = {10.52202/085713-0593},
   eprint        = {2502.12110},
   archivePrefix = {arXiv},
 }
 
 @misc{chhikara2025mem0,
-  author        = {Chhikara, Prateek and others},
+  author        = {Chhikara, Prateek and Khant, Dev and Aryan, Saket and Singh, Taranjeet and Yadav, Deshraj},
   title         = {Mem0: Building Production-Ready {AI} Agents with Scalable Long-Term Memory},
   year          = {2025},
   eprint        = {2504.19413},
   archivePrefix = {arXiv},
 }
 
-@misc{fountas2024emllm,
-  author        = {Fountas, Zafeirios and others},
-  title         = {{EM-LLM}: Human-like Episodic Memory for Infinite Context {LLMs}},
-  year          = {2024},
+@inproceedings{fountas2024emllm,
+  author        = {Fountas, Zafeirios and Benfeghoul, Martin A. and Oomerjee, Adnan and Christopoulou, Fenia and Lampouras, Gerasimos and {Bou-Ammar}, Haitham and Wang, Jun},
+  title         = {Human-inspired Episodic Memory for Infinite Context {LLMs}},
+  booktitle     = {Proceedings of the Thirteenth International Conference on Learning Representations (ICLR 2025)},
+  year          = {2025},
   eprint        = {2407.09450},
   archivePrefix = {arXiv},
 }
 
 @misc{jiang2026synapse,
-  author        = {Jiang, Zhengyi and others},
-  title         = {{SYNAPSE}: Semantic Spreading Activation Memory for Long-Context {LLM} Agents},
+  author        = {Jiang, Hanqi and Chen, Junhao and Pan, Yi and Chen, Ling and You, Weihang and Zhou, Yifan and Zhang, Ruidong and Sikora, Andrea and Zhao, Lin and Abate, Yohannes and Liu, Tianming},
+  title         = {{SYNAPSE}: Empowering {LLM} Agents with Episodic-Semantic Memory via Spreading Activation},
   year          = {2026},
   eprint        = {2601.02744},
   archivePrefix = {arXiv},
@@ -204,9 +228,10 @@
 
 % ─── Spreading Activation in RAG ─────────────────────────────────────────────
 
-@misc{gutierrez2024hipporag,
-  author        = {Gutiérrez, Bernal Jiménez and others},
+@inproceedings{gutierrez2024hipporag,
+  author        = {Guti{\'e}rrez, Bernal Jim{\'e}nez and Shu, Yiheng and Gu, Yu and Yasunaga, Michihiro and Su, Yu},
   title         = {{HippoRAG}: Neurobiologically Inspired Long-Term Memory for Large Language Models},
+  booktitle     = {Advances in Neural Information Processing Systems 37 (NeurIPS 2024)},
   year          = {2024},
   eprint        = {2405.14831},
   archivePrefix = {arXiv},
@@ -235,8 +260,8 @@
 % ─── Appraisal-Theory Approaches ─────────────────────────────────────────────
 
 @article{croissant2024chain,
-  author  = {Croissant, Benoit and Deterding, Sebastian and Cowley, Stephen},
-  title   = {An appraisal-based chain-of-emotion architecture for emotional support dialogue systems},
+  author  = {Croissant, Maximilian and Frister, Madeleine and Schofield, Guy and McCall, Cade},
+  title   = {An appraisal-based chain-of-emotion architecture for affective language model game agents},
   journal = {{PLOS ONE}},
   year    = {2024},
   volume  = {19},
@@ -248,41 +273,51 @@
 % ─── Emotion-Aware Retrieval ─────────────────────────────────────────────────
 
 @misc{huang2024emotionalrag,
-  author        = {Huang, Yukang and others},
+  author        = {Huang, Le and Lan, Hengzhi and Sun, Zijun and Shi, Chuan and Bai, Ting},
   title         = {Emotional {RAG}: Enhancing Role-Playing Agents through Emotional Retrieval},
   year          = {2024},
   eprint        = {2410.23041},
   archivePrefix = {arXiv},
 }
 
-@misc{sumida2024lufy,
-  author        = {Sumida, Takafumi and others},
-  title         = {{LUFY}: Emotion-Based Memorable Conversation History Selection for Dialogue Systems},
-  year          = {2024},
+@article{sumida2024lufy,
+  author        = {Sumida, Ryuichi and Inoue, Koji and Kawahara, Tatsuya},
+  title         = {Enhancing Long-term {RAG} Chatbots with Psychological Models of Memory Importance and Forgetting},
+  journal       = {Dialogue \& Discourse},
+  year          = {2025},
+  volume        = {16},
+  number        = {2},
+  pages         = {74--110},
+  doi           = {10.5210/dad.2025.203},
   eprint        = {2409.12524},
   archivePrefix = {arXiv},
 }
 
 @misc{damllm2025,
-  author        = {Anonymous},
-  title         = {{DAM-LLM}: Dynamic Affective Memory for Large Language Models},
+  author        = {Lu, Junfeng and Li, Yueyan},
+  title         = {Dynamic Affective Memory Management for Personalized {LLM} Agents},
   year          = {2025},
   eprint        = {2510.27418},
   archivePrefix = {arXiv},
 }
 
 @misc{mememo2026,
-  author        = {Anonymous},
-  title         = {{MemEmo}: Holistic Long-term Memory and Emotion Benchmark},
+  author        = {Liu, Peng and Tao, Zhen and Zhao, Jihao and Chen, Ding and Zhang, Yansong and Li, Cuiping and Li, Zhiyu and Chen, Hong},
+  title         = {{MemEmo}: Evaluating Emotion in Memory Systems of Agents},
   year          = {2026},
   eprint        = {2602.23944},
   archivePrefix = {arXiv},
 }
 
-@misc{wang2025anna,
-  author        = {Wang, Xinyi and others},
-  title         = {{AnnaAgent}: A Cognitive Agent with Emotion-Driven Memory Architecture},
+@inproceedings{wang2025anna,
+  author        = {Wang, Ming and Wang, Peidong and Wu, Lin and Yang, Xiaocui and Wang, Daling and Feng, Shi and Chen, Yuxin and Wang, Bixuan and Zhang, Yifei},
+  title         = {{AnnaAgent}: Dynamic Evolution Agent System with Multi-Session Memory for Realistic Seeker Simulation},
+  booktitle     = {Findings of the Association for Computational Linguistics: ACL 2025},
   year          = {2025},
+  pages         = {23221--23235},
+  address       = {Vienna, Austria},
+  publisher     = {Association for Computational Linguistics},
+  doi           = {10.18653/v1/2025.findings-acl.1192},
   eprint        = {2506.00551},
   archivePrefix = {arXiv},
 }
@@ -298,33 +333,39 @@
 % ─── Affective Computing Foundations ─────────────────────────────────────────
 
 @misc{zhang2024affective,
-  author        = {Zhang, Yuanchen and others},
-  title         = {Affective Computing in the Era of Large Language Models: A Survey},
+  author        = {Zhang, Yiqun and Yang, Xiaocui and Xu, Xingle and Gao, Zeran and Huang, Yijie and Mu, Shiyi and Feng, Shi and Wang, Daling and Zhang, Yifei and Song, Kaisong and Yu, Ge},
+  title         = {Affective Computing in the Era of Large Language Models: A Survey from the {NLP} Perspective},
   year          = {2024},
   eprint        = {2408.04638},
   archivePrefix = {arXiv},
 }
 
 @misc{gandhi2024humanlike,
-  author        = {Gandhi, Kanishk and others},
+  author        = {Gandhi, Kanishk and Lynch, Zoe and Fr{\"a}nken, Jan-Philipp and Patterson, Kayla and Wambu, Sharon and Gerstenberg, Tobias and Ong, Desmond C. and Goodman, Noah D.},
   title         = {Human-like Affective Cognition in Foundation Models},
   year          = {2024},
   eprint        = {2409.11733},
   archivePrefix = {arXiv},
 }
 
-@misc{liu2024emollms,
-  author        = {Liu, Zhiwei and others},
-  title         = {{EmoLLMs}: A Series of Emotional Large Language Models and Annotation Tools},
+@inproceedings{liu2024emollms,
+  author        = {Liu, Zhiwei and Yang, Kailai and Xie, Qianqian and Zhang, Tianlin and Ananiadou, Sophia},
+  title         = {{EmoLLMs}: A Series of Emotional Large Language Models and Annotation Tools for Comprehensive Affective Analysis},
+  booktitle     = {Proceedings of the 30th ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
   year          = {2024},
+  pages         = {5487--5496},
+  doi           = {10.1145/3637528.3671552},
   eprint        = {2401.08508},
   archivePrefix = {arXiv},
 }
 
-@misc{martinez2024llmvalence,
-  author        = {Mart{\'i}nez, Sebastián and others},
-  title         = {{LLMs} Understand and Estimate Valence and Arousal},
-  year          = {2024},
+@article{martinez2024llmvalence,
+  author        = {Mart{\'i}nez, Gonzalo and Molero, Juan Diego and Gonz{\'a}lez, Sandra and Conde, Javier and Brysbaert, Marc and Reviriego, Pedro},
+  title         = {Using large language models to estimate features of multi-word expressions: Concreteness, valence, arousal},
+  journal       = {Behavior Research Methods},
+  year          = {2025},
+  volume        = {57},
+  doi           = {10.3758/s13428-024-02515-z},
   eprint        = {2408.16012},
   archivePrefix = {arXiv},
 }
@@ -342,6 +383,10 @@
   title   = {Aware Yet Biased: Investigating Emotional Reasoning and Appraisal Bias in Large Language Models},
   journal = {IEEE Transactions on Affective Computing},
   year    = {2025},
+  volume  = {16},
+  number  = {4},
+  pages   = {2871--2880},
+  doi     = {10.1109/TAFFC.2025.3581461},
 }
 
 @misc{fang2025personalization,
@@ -355,26 +400,35 @@
 % ─── Reconsolidation and Memory Updating ─────────────────────────────────────
 
 @misc{wei2026fademem,
-  author        = {Wei, Shengnan and others},
-  title         = {{FadeMem}: Forgetting-Aware Dynamic Memory for Long-term Dialogue},
+  author        = {Wei, Lei and Peng, Xiao and Dong, Xu and Xie, Niantao and Wang, Bin},
+  title         = {{FadeMem}: Biologically-Inspired Forgetting for Efficient Agent Memory},
   year          = {2026},
   eprint        = {2601.18642},
   archivePrefix = {arXiv},
 }
 
-@misc{tan2025prospective,
-  author        = {Tan, Jiaqing and others},
-  title         = {Prospective and Retrospective Reflection for {LLM} Agents},
+@inproceedings{tan2025prospective,
+  author        = {Tan, Zhen and Yan, Jun and Hsu, I-Hung and Han, Rujun and Wang, Zifeng and Le, Long and Song, Yiwen and Chen, Yanfei and Palangi, Hamid and Lee, George and Iyer, Anand Rajan and Chen, Tianlong and Liu, Huan and Lee, Chen-Yu and Pfister, Tomas},
+  title         = {In Prospect and Retrospect: Reflective Memory Management for Long-term Personalized Dialogue Agents},
+  booktitle     = {Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
   year          = {2025},
+  pages         = {8416--8439},
+  address       = {Vienna, Austria},
+  publisher     = {Association for Computational Linguistics},
+  doi           = {10.18653/v1/2025.acl-long.413},
   eprint        = {2503.08026},
   archivePrefix = {arXiv},
 }
 
 @inproceedings{he2025madialbench,
-  author        = {He, Junqing and others},
+  author        = {He, Junqing and Zhu, Liang and Wang, Rui and Wang, Xi and Haffari, Gholamreza and Zhang, Jiaxing},
   title         = {{MADial-Bench}: Towards Real-world Evaluation of Memory-Augmented Dialogue Generation},
-  booktitle     = {Proceedings of NAACL 2025 (Long Papers)},
+  booktitle     = {Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},
   year          = {2025},
+  pages         = {9902--9921},
+  address       = {Albuquerque, New Mexico},
+  publisher     = {Association for Computational Linguistics},
+  doi           = {10.18653/v1/2025.naacl-long.499},
   eprint        = {2409.15240},
   archivePrefix = {arXiv},
 }
@@ -382,8 +436,9 @@
 @inproceedings{chen2026esmemeval,
   author        = {Chen, Tiantian and Lu, Jiaqi and Shen, Ying and Zhang, Lin},
   title         = {{ES-MemEval}: Benchmarking Conversational Agents on Personalized Long-Term Emotional Support},
-  booktitle     = {Proceedings of the ACM Web Conference (WWW) 2026},
+  booktitle     = {Proceedings of the ACM Web Conference 2026},
   year          = {2026},
+  pages         = {5810--5821},
   doi           = {10.1145/3774904.3792143},
   eprint        = {2602.01885},
   archivePrefix = {arXiv},
@@ -392,8 +447,9 @@
 @inproceedings{li2017dailydialog,
   author    = {Li, Yanran and Su, Hui and Shen, Xiaoyu and Li, Wenjie and Cao, Ziqiang and Niu, Shuzi},
   title     = {{DailyDialog}: A Manually Labelled Multi-turn Dialogue Dataset},
-  booktitle = {Proceedings of the Eighth International Joint Conference on Natural Language Processing (IJCNLP 2017)},
+  booktitle = {Proceedings of the Eighth International Joint Conference on Natural Language Processing (Volume 1: Long Papers)},
   year      = {2017},
   pages     = {986--995},
   address   = {Taipei, Taiwan},
+  publisher = {Asian Federation of Natural Language Processing},
 }
