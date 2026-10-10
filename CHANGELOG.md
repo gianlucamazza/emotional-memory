@@ -74,6 +74,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README Quickstart, docs index, and `DATASET.md` link the live Hub
   dataset [`homen3/emotional-memory-benchmarks`](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks).
 
+- Hugging Face account rename `homen3` → `gianlucamazza`: live Space and
+  dataset links now use `huggingface.co/spaces/gianlucamazza/…` and
+  `huggingface.co/datasets/gianlucamazza/…` (old repo URLs redirect;
+  profile/post URLs do not).
+
 - Align the ES-MemEval neutral-query share to the corrected Addendum X2
   run: **45.5%** (`|valence|<0.2`). Downstream docs that stated the
   original post-hoc 45.2% as the current figure now match the closure

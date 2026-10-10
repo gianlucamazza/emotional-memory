@@ -29,7 +29,7 @@ Patch releases fixing regressions and improving developer experience. No new API
 - [x] Dataset `affect_reference_v1` (258 examples)
 - [x] arXiv-style paper updated (Zenodo DOI `10.5281/zenodo.19640250`, PyPI `0.6.0`)
 - [x] mkdocs-material site source (`docs/`) with async, LangChain, persistence tutorials
-- [x] HuggingFace Space `homen3/emotional-memory-demo` live
+- [x] HuggingFace Space `gianlucamazza/emotional-memory-demo` live
 - [x] `Development Status :: 4 - Beta`
 
 ---
