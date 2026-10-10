@@ -77,8 +77,7 @@ def test_publishable_list_exists_and_is_owner_only() -> None:
 
     forbidden_hits = [entry for entry in ids if _entry_tokens(entry) & FORBIDDEN_IDS]
     assert forbidden_hits == [], (
-        "third-party or third-party-derived set(s) listed as publishable: "
-        f"{forbidden_hits}"
+        f"third-party or third-party-derived set(s) listed as publishable: {forbidden_hits}"
     )
 
     assert set(ids) == set(OWNER_RELATIVE_PATHS), (
