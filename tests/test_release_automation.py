@@ -82,6 +82,37 @@ def test_sync_readme_doi_badge_migrates_legacy_zenodo_badge() -> None:
     )
 
 
+def test_sync_demo_readme_preserves_space_card_doi_parentheticals() -> None:
+    module = _load_script_module("sync_release_metadata")
+    snippet = "\n".join(
+        [
+            "- **PyPI**: [`emotional-memory 0.1.0`](https://pypi.org/project/emotional-memory/0.1.0/)",
+            "- **Zenodo Concept DOI** (all versions): "
+            "[10.5281/zenodo.1](https://doi.org/10.5281/zenodo.1)",
+            "- **Zenodo Version DOI** (0.1.0): "
+            "[10.5281/zenodo.2](https://doi.org/10.5281/zenodo.2)",
+            "  version = {0.1.0},",
+            "  doi     = {10.5281/zenodo.2},",
+            "To cite all versions rather than 0.1.0, use the concept DOI",
+            "",
+        ]
+    )
+
+    updated = module._sync_demo_readme(
+        snippet,
+        version="9.9.9",
+        version_doi="10.5281/zenodo.99",
+        concept_doi="10.5281/zenodo.9",
+    )
+
+    assert "- **Zenodo Concept DOI** (all versions): " in updated
+    assert "https://doi.org/10.5281/zenodo.9" in updated
+    assert "- **Zenodo Version DOI** (9.9.9): " in updated
+    assert "https://doi.org/10.5281/zenodo.99" in updated
+    assert "rather than 9.9.9, use the concept DOI" in updated
+    assert "[`emotional-memory 9.9.9`]" in updated
+
+
 def test_sync_readme_doi_badge_updates_icon_badge() -> None:
     module = _load_script_module("sync_release_metadata")
     current = (

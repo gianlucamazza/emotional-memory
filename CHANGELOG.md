@@ -53,7 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `demo/README.md` replaced with the Copy-final Hugging Face Space card
   (`pinned: true`, Scope and limits, author/DOI links) so GitHub→Space
-  sync will not revert the Hub README.
+  sync will not revert the Hub README. `scripts/sync_release_metadata.py`
+  now matches the card's Concept/Version DOI lines (including
+  parentheticals) so `make sync-metadata` stays idempotent.
 
 ## [0.18.1] - 2026-09-12
 

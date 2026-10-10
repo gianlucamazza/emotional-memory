@@ -85,6 +85,51 @@ def _replace(pattern: str, repl: str, text: str, description: str) -> str:
     return updated
 
 
+def _sync_demo_readme(demo_text: str, *, version: str, version_doi: str, concept_doi: str) -> str:
+    """Rewrite version/DOI fields in the Hugging Face Space card.
+
+    The Copy-final Space README may keep parentheticals after the DOI labels
+    (``(all versions)``, ``(0.18.1)``). Those labels stay; only the DOI /
+    version tokens are updated so GitHub→Space sync does not rewrite prose.
+    """
+    updated = _replace(
+        r"- \*\*Zenodo Concept DOI\*\*( \([^)]+\))?: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        rf"- **Zenodo Concept DOI**\g<1>: [{concept_doi}](https://doi.org/{concept_doi})",
+        demo_text,
+        "demo README concept DOI",
+    )
+    updated = _replace(
+        r"- \*\*Zenodo Version DOI\*\*( \([^)]+\))?: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
+        f"- **Zenodo Version DOI** ({version}): [{version_doi}](https://doi.org/{version_doi})",
+        updated,
+        "demo README version DOI",
+    )
+    updated = _replace(
+        r"To cite all versions rather than [0-9][\w.\-+]*, use the concept DOI",
+        f"To cite all versions rather than {version}, use the concept DOI",
+        updated,
+        "demo README concept-DOI citation note",
+    )
+    updated = _replace(
+        r"doi\s+= \{10\.5281/zenodo\.[0-9]+\},",
+        f"doi     = {{{version_doi}}},",
+        updated,
+        "demo README BibTeX DOI",
+    )
+    updated = _replace(
+        r"- \*\*PyPI\*\*: \[`emotional-memory [^`]+`\]\(https://pypi\.org/project/emotional-memory/[^/]+/\)",
+        f"- **PyPI**: [`emotional-memory {version}`](https://pypi.org/project/emotional-memory/{version}/)",
+        updated,
+        "demo README PyPI link",
+    )
+    return _replace(
+        r"^  version = \{[^}]+\},$",
+        f"  version = {{{version}}},",
+        updated,
+        "demo README BibTeX version",
+    )
+
+
 def _sync_readme_doi_badge(readme_text: str, concept_doi: str) -> str:
     """Update either supported README DOI badge to the canonical icon badge."""
     encoded_doi = quote(concept_doi, safe="")
@@ -162,29 +207,8 @@ def sync_release_metadata(
 
     demo_readme = ROOT / "demo" / "README.md"
     demo_text = demo_readme.read_text(encoding="utf-8")
-    updated_demo = _replace(
-        r"- \*\*Zenodo Concept DOI\*\*: \[[^\]]+\]\(https://doi\.org/[^\)]+\)",
-        f"- **Zenodo Concept DOI**: [{concept_doi}](https://doi.org/{concept_doi})",
-        demo_text,
-        "demo README concept DOI",
-    )
-    updated_demo = _replace(
-        r"doi\s+= \{10\.5281/zenodo\.[0-9]+\},",
-        f"doi     = {{{version_doi}}},",
-        updated_demo,
-        "demo README BibTeX DOI",
-    )
-    updated_demo = _replace(
-        r"- \*\*PyPI\*\*: \[`emotional-memory [^`]+`\]\(https://pypi\.org/project/emotional-memory/[^/]+/\)",
-        f"- **PyPI**: [`emotional-memory {version}`](https://pypi.org/project/emotional-memory/{version}/)",
-        updated_demo,
-        "demo README PyPI link",
-    )
-    updated_demo = _replace(
-        r"^  version = \{[^}]+\},$",
-        f"  version = {{{version}}},",
-        updated_demo,
-        "demo README BibTeX version",
+    updated_demo = _sync_demo_readme(
+        demo_text, version=version, version_doi=version_doi, concept_doi=concept_doi
     )
     if updated_demo != demo_text:
         changes.append((demo_readme, updated_demo))
