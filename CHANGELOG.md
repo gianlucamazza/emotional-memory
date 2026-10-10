@@ -40,8 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `main` only) plus `workflow_dispatch`, checks out
   `github.event.workflow_run.head_sha`, and skips when the CI run
   concluded anything other than `success` (failed or cancelled superseded
-  runs must not deploy). Docs-only pushes still deploy: CI has no path
-  filter, so it runs on every main push and then triggers Docs.
+  runs must not deploy). The Docs `setup-uv` cache is off so checking out
+  `head_sha` is not a cache-poisoning vector. Docs-only pushes still
+  deploy: CI has no path filter, so it runs on every main push and then
+  triggers Docs.
 
 - **Docs deploy no longer wipes `/dev/bench/`.** `mkdocs gh-deploy --force --clean`
   replaced the `gh-pages` branch and dropped the `benchmark-action` dashboard
