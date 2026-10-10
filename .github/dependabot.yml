@@ -44,3 +44,32 @@ updates:
       github-actions:
         patterns:
           - "*"
+
+  # Security updates only (limit 0 disables version updates): group coupled stacks in uv.lock
+  - package-ecosystem: uv
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+    groups:
+      langchain:
+        applies-to: security-updates
+        patterns:
+          - "langchain*"
+          - "langgraph*"
+          - "langsmith"
+      pydantic:
+        applies-to: security-updates
+        patterns:
+          - "pydantic"
+          - "pydantic-core"
+          - "pydantic-settings"
+      opentelemetry:
+        applies-to: security-updates
+        patterns:
+          - "opentelemetry-*"
+      fastapi:
+        applies-to: security-updates
+        patterns:
+          - "fastapi"
+          - "starlette"
