@@ -10,7 +10,7 @@ the underlying numbers see [Current Evidence](research/09_current_evidence.md).
 | **Persistence** | InMemory / SQLite / Qdrant / Chroma | Qdrant, Chroma, Pinecone, PG, MongoDB | PostgreSQL / SQLite | Neo4j (self-hosted) / Cloud | In-memory / custom |
 | **BYO embedder** | ✅ any `Embedder` protocol | ✅ (OpenAI default) | ⚠️ partial | ⚠️ partial | ✅ |
 | **Emotion model** | ✅ 5-layer AFT (valence, arousal, dominance, mood, appraisal, resonance) | ❌ | ❌ | ❌ | ❌ |
-| **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | ✅ tool-call edit | ✅ edge invalidation | ❌ |
+| **Reconsolidation** | ✅ APE-gated lability window | ✅ auto update/remove | not measured | ✅ edge invalidation | ❌ |
 | **Persistent mood state** | ✅ MoodField (Heidegger EMA) | ❌ | ❌ | ❌ | ❌ |
 | **LLM-agnostic** | ✅ | ✅ | ✅ | ✅ | ✅ |
 | **LangChain integration** | ✅ `EmotionalMemoryChatHistory` | ✅ official | ✅ tools interop | ✅ ZepVectorStore | ✅ native |

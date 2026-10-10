@@ -79,6 +79,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- README "How it compares": mem0 reconsolidation now quotes
+  `docs/comparison.md` (`✅ auto update/remove`) instead of ❌; Letta
+  is dropped from that table (never measured in-repo). comparison.md
+  marks Letta reconsolidation as `not measured` rather than
+  `✅ tool-call edit`.
+
 - `demo/README.md` Space front matter now matches the live Hub card
   (`huggingface.co/spaces/homen3/emotional-memory-demo`, HF commit
   `e48a82a2`): extra tags (`agent-memory`, `emotion`, `retrieval`) and
