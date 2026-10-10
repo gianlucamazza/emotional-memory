@@ -21,6 +21,7 @@ The planned Hub dataset will contain **only** the owner-authored sets listed in
 corpora stay in this git repository with their upstream licences and are
 excluded by `tests/test_publishable_datasets.py`.
 
+- **Hub copy:** [`homen3/emotional-memory-benchmarks`](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks)
 - **Owner:** Gianluca Mazza
 - **Library:** [`emotional-memory`](https://github.com/gianlucamazza/emotional-memory)
 - **Target Hub publish date:** 26 October (this inventory is meant to merge first)

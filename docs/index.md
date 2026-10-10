@@ -27,6 +27,7 @@ See **[Getting Started](getting-started.md)** for install recipes (extras, dev s
 runnable quickstart — both sourced from the README so they stay in sync with PyPI.
 
 Try it in the browser: [Hugging Face demo](https://huggingface.co/spaces/homen3/emotional-memory-demo) — a Gradio chat that encodes messages as memories and recalls them with affect-aware ranking (a free Space; it may take a few seconds to wake up).
+Benchmark dataset on Hugging Face: [emotional-memory-benchmarks](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks).
 
 ## The 5 Layers
 

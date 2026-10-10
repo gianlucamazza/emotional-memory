@@ -15,6 +15,11 @@ tags:
   - llm
   - gradio
   - research
+  - agent-memory
+  - emotion
+  - retrieval
+models:
+  - sentence-transformers/all-MiniLM-L6-v2
 suggested_hardware: cpu-basic
 short_description: Live demo of Affective Field Theory memory for LLM agents
 ---

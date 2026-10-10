@@ -59,6 +59,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- `demo/README.md` Space front matter now matches the live Hub card
+  (`huggingface.co/spaces/homen3/emotional-memory-demo`, HF commit
+  `e48a82a2`): extra tags (`agent-memory`, `emotion`, `retrieval`) and
+  `models: sentence-transformers/all-MiniLM-L6-v2`. Body unchanged so
+  GitHub→Space sync will not wipe Hub metadata.
+
+- README Quickstart, docs index, and `DATASET.md` link the live Hub
+  dataset [`homen3/emotional-memory-benchmarks`](https://huggingface.co/datasets/homen3/emotional-memory-benchmarks).
+
 - Paper bibliography audit (`paper/refs.bib`): corrected author lists, titles,
   venues, and DOIs against arXiv/Crossref/proceedings (Emotional RAG, LUFY,
   DAM-LLM, MemEmo, and 20 other mismatches). Related-work sentences in
