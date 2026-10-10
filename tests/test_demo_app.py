@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -238,3 +239,11 @@ def test_event_loop_cleanup_patch_is_import_safe() -> None:
     demo_app = _load_demo_module()
 
     demo_app._patch_event_loop_cleanup()
+
+
+def test_demo_disables_gradio_and_hub_telemetry() -> None:
+    _load_demo_module()
+
+    assert os.environ.get("GRADIO_ANALYTICS_ENABLED") == "False"
+    assert os.environ.get("HF_HUB_DISABLE_TELEMETRY") == "1"
+    assert os.environ.get("DO_NOT_TRACK") == "1"

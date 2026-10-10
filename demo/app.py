@@ -25,6 +25,11 @@ import importlib.util
 import io
 import logging
 import os
+
+# No telemetry from this process. Gradio / hub clients honour these flags.
+os.environ.setdefault("GRADIO_ANALYTICS_ENABLED", "False")
+os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+os.environ.setdefault("DO_NOT_TRACK", "1")
 from functools import lru_cache
 
 logger = logging.getLogger(__name__)
@@ -56,14 +61,14 @@ def _patch_event_loop_cleanup() -> None:
 
 _patch_event_loop_cleanup()
 
-import gradio as gr  # noqa: E402
-import matplotlib  # noqa: E402
-from PIL import Image  # noqa: E402
+import gradio as gr
+import matplotlib
+from PIL import Image
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
-from emotional_memory import (  # noqa: E402
+from emotional_memory import (
     EmotionalMemory,
     InMemoryStore,
     KeywordAppraisalEngine,
@@ -71,7 +76,7 @@ from emotional_memory import (  # noqa: E402
     LLMAppraisalEngine,
     __version__,
 )
-from emotional_memory.llm_http import (  # noqa: E402
+from emotional_memory.llm_http import (
     OpenAICompatibleLLMConfig,
     make_httpx_llm,
 )
