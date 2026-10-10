@@ -1,15 +1,35 @@
 # Benchmark Datasets
 
-This directory contains:
+Owner-authored sets that may go to the planned Hugging Face dataset
+`emotional-memory-benchmarks` are listed in [`PUBLISHABLE.txt`](PUBLISHABLE.txt)
+and described in the draft Hub card [`DATASET.md`](DATASET.md). **This
+repository does not upload anything to Hugging Face.** A unit test
+(`tests/test_publishable_datasets.py`) fails if a third-party or
+third-party-derived set appears in `PUBLISHABLE.txt`.
 
-- `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe
-- `realistic_recall_v1.json`: scripted multi-session replay scenarios
-- `emobank_v1.json`: **human-annotated** VAD affect subset (third-party,
-  CC-BY-SA 4.0) for appraisal construct validity — see its own section below
+Owner-authored (publishable) files:
 
-The first is strongest for controlled retrieval behavior. The second is a small
-but more realistic bridge toward multi-session evaluation. The third is the only
-third-party, human-labeled set and carries a different license (CC-BY-SA 4.0).
+- `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe (CC0 1.0)
+- `realistic_recall_v1.json` … `realistic_recall_v5_gate.json`, including
+  `_it` / `_es` / `_fr` and the `_noAF` / `_gate` variants (licence
+  **proposed CC0-1.0** — see `DATASET.md` and the open owner decision)
+
+Third-party or third-party-derived (kept in git, **not** publishable):
+
+- `emobank_v1.json`: human-annotated VAD subset (CC-BY-SA 4.0) —
+  [`emobank_v1.ATTRIBUTION.md`](emobank_v1.ATTRIBUTION.md)
+- `madialbench/`: MADial-Bench EN (MIT) —
+  [`madialbench/ATTRIBUTION.md`](madialbench/ATTRIBUTION.md)
+- `esmemeval/`: ES-MemEval / EvoEmo (CC-BY-4.0) —
+  [`esmemeval/ATTRIBUTION.md`](esmemeval/ATTRIBUTION.md)
+- `dailydialog_personas_v1.json`: DailyDialog-derived personas
+  (CC BY-NC-SA 4.0) —
+  [`dailydialog_personas_v1.ATTRIBUTION.md`](dailydialog_personas_v1.ATTRIBUTION.md)
+
+The first owner set is strongest for controlled retrieval behavior. The
+`realistic_recall_*` family is a scripted multi-session bridge. Third-party
+files carry their upstream licences and must not be mixed into the Hub
+upload.
 
 ## affect_reference_v1
 
@@ -112,17 +132,24 @@ Used in: Hd2 (Gate 3 confirmatory), G4/G5 cross-embedder, S3 ablation.
 
 `realistic_recall_v2_it.json` is the Italian-language slice used in G6 (multilingual).
 
-**v2_it**: 20 scenarios, 80 queries — same schema as v2, translated to Italian.
-Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
-`semantic_confound`. Used with SBERT bge-small-en-v1.5 and multilingual-e5-small.
+**v2_it (file today):** 30 scenarios, 120 queries (G6 started at 20/80;
+scenarios 21–30 are the Addendum Hd2 power top-up). Same schema as v2,
+translated to Italian for the first 20; the extra 10 are LLM-assisted
+(`scripts/generate_realistic_v2_topup.py`, provenance
+`realistic_recall_v2_topup_provenance.jsonl`). Challenge types:
+`affective_arc`, `momentum_alignment`, `same_topic_distractor`,
+`semantic_confound`, `recency_confound`. Used with SBERT bge-small-en-v1.5
+and multilingual-e5-small. IT me5 at N=120 **FAIL** at declared power —
+see `DATASET.md`.
 
 ## realistic_recall_v2_es
 
 `realistic_recall_v2_es.json` is the Spanish-language slice used in Hd2_ES.
 
-**v2_es**: 20 scenarios, 80 queries — same schema as v2, translated to Spanish.
-Challenge types: `affective_arc`, `momentum_alignment`, `same_topic_distractor`,
-`semantic_confound`. Used with SBERT bge-small-en-v1.5 and multilingual-e5-small.
+**v2_es (file today):** 30 scenarios, 120 queries (Hd2_ES started at 20/80;
+scenarios 21–30 translated from the Italian top-up). Same schema as v2,
+localized to Spanish for the first 20. ES me5 at N=120 **FAIL** at declared
+power — see `DATASET.md`.
 
 ## realistic_recall_v2_fr
 
@@ -136,6 +163,41 @@ French, 2-session design (session_1 encode, session_2 query). Challenge types:
 Result: Addendum M Branch A PASS — AFT top1=0.31 [0.23, 0.39] vs naive_cosine=0.12
 [0.07, 0.18], Δ=+0.18 [0.11, 0.26], p_bootstrap<0.0001, Hedges g=0.424.
 See `benchmarks/preregistration_addendum_m_fr_closure.md`.
+
+## realistic_recall_v3
+
+`realistic_recall_v3.json` extends v2 with 75 new scenarios (script
+`scripts/generate_realistic_v3.py`, commit `320cd23`). **v3**: 125
+scenarios, 500 queries. Used by Addendum I (Hi3).
+
+## realistic_recall_v3_noAF
+
+`realistic_recall_v3_noAF.json` is the affect-free variant of v2 (valence /
+arousal and query `state` stripped) for Addendum G (Hg1). **v3_noAF**: 50
+scenarios, 200 queries.
+
+## realistic_recall_v4_noAF
+
+`realistic_recall_v4_noAF.json` is a leakage-free affect-free set disjoint
+from v3 (`pNN_` ids), LLM-drafted by `generate_v4_noAF.py` (gpt-5-mini) for
+Addendum P. **v4_noAF**: 40 scenarios, 160 queries.
+
+## realistic_recall_v5_gate
+
+`realistic_recall_v5_gate.json` is the mixed-gate set for Addendum Q
+(`qNN_` ids), LLM-drafted by `generate_v5_gate.py` (gpt-5-mini).
+**v5_gate**: 50 scenarios, 200 queries (100/100 `gate_label`).
+
+Proposed licence for every `realistic_recall_*` file above: **CC0-1.0**
+(JSON `license` field). Owner confirmation required before treating that
+as final — see `DATASET.md`.
+
+## dailydialog_personas_v1
+
+`dailydialog_personas_v1.json` is **DailyDialog-derived** (120 personas,
+396 queries) and is **not** owner-original. Licence: CC BY-NC-SA 4.0.
+See [`dailydialog_personas_v1.ATTRIBUTION.md`](dailydialog_personas_v1.ATTRIBUTION.md)
+and `benchmarks/dailydialog/README.md`. Not listed in `PUBLISHABLE.txt`.
 
 ## emobank_v1
 

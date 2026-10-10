@@ -42,6 +42,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   an interactive chat that encodes messages as memories and recalls them with
   affect-aware ranking. The Space may take a few seconds to wake.
 
+- Benchmark dataset inventory and Hugging Face dataset-card draft
+  (`benchmarks/datasets/DATASET.md`, `PUBLISHABLE.txt`): owner-authored
+  sets only for a planned `emotional-memory-benchmarks` Hub upload (no
+  upload in this change). Third-party corpora stay in-repo with
+  ATTRIBUTION notes and are rejected by
+  `tests/test_publishable_datasets.py` if listed as publishable.
+  `realistic_recall_*` JSON metadata proposes `CC0-1.0` pending owner
+  confirmation.
+
 ## [0.18.1] - 2026-09-12
 
 ### Fixed

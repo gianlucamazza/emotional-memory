@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v2_fr",
   "version": "1.0",
+  "license": "CC0-1.0",
   "language": "fr",
   "description": "Slice francophone de realistic_recall_v2 — 30 scénarios natifs en français avec requêtes d'évaluation affective.",
   "default_top_k": 2,

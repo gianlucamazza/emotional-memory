@@ -1,6 +1,7 @@
 {
   "name": "realistic_recall_v2_it",
   "version": "1.0",
+  "license": "CC0-1.0",
   "language": "it",
   "description": "Italian slice of realistic_recall_v2 — 20 scenarios with affective challenge queries",
   "default_top_k": 2,
