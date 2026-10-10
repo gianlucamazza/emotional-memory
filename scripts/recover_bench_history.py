@@ -24,6 +24,11 @@ from typing import Any
 BENCH_DIR = "dev/bench"
 DATA_JS_PATH = f"{BENCH_DIR}/data.js"
 INDEX_HTML_PATH = f"{BENCH_DIR}/index.html"
+# github-action-benchmark loadDataJs: script.slice('window.BENCHMARK_DATA = ').
+# A trailing ';' after the JSON is what wiped 73d1cfb (114 entries) down to 1.
+SCRIPT_PREFIX = "window.BENCHMARK_DATA = "
+# First-run seed on bench-data that still has the recovered 114-entry payload.
+HISTORY_SHA = "73d1cfb069f026fad8b03e9163d0fb290d500d47"
 _DATA_JS_RE = re.compile(
     r"window\.BENCHMARK_DATA\s*=\s*(\{.*\})\s*;?\s*\Z",
     re.DOTALL,
@@ -66,9 +71,102 @@ def parse_data_js(raw: str) -> dict[str, Any]:
     return data
 
 
+def parse_action_data_js(raw: str) -> dict[str, Any]:
+    """Parse the way github-action-benchmark does: strip prefix, json.loads.
+
+    Does not strip a trailing ``;`` — that is the bug this module must not emit.
+    """
+    if not raw.startswith(SCRIPT_PREFIX):
+        raise ValueError("not a github-action-benchmark data.js payload")
+    data = json.loads(raw[len(SCRIPT_PREFIX) :])
+    if not isinstance(data, dict):
+        raise ValueError("BENCHMARK_DATA is not an object")
+    return data
+
+
+def load_data_js(raw: str) -> dict[str, Any]:
+    """Read action-format or legacy semicolon-terminated payloads."""
+    if raw.startswith(SCRIPT_PREFIX):
+        try:
+            return parse_action_data_js(raw)
+        except (ValueError, json.JSONDecodeError):
+            pass
+    return parse_data_js(raw)
+
+
 def format_data_js(data: dict[str, Any]) -> str:
+    # Match storeDataJs: prefix + JSON.stringify(data, null, 2) + newline. No ';'.
     body = json.dumps(data, indent=2, ensure_ascii=False)
-    return f"window.BENCHMARK_DATA = {body};\n"
+    return f"{SCRIPT_PREFIX}{body}\n"
+
+
+def entry_commit_id(point: dict[str, Any]) -> str:
+    commit_meta = point.get("commit")
+    if isinstance(commit_meta, dict):
+        commit_id = str(commit_meta.get("id") or "")
+        if commit_id:
+            return commit_id
+    return str(point.get("date") or "")
+
+
+def count_entries(data: dict[str, Any]) -> int:
+    entries = data.get("entries")
+    if not isinstance(entries, dict):
+        return 0
+    total = 0
+    for points in entries.values():
+        if isinstance(points, list):
+            total += len(points)
+    return total
+
+
+def _entry_ids(data: dict[str, Any]) -> set[tuple[str, str]]:
+    found: set[tuple[str, str]] = set()
+    entries = data.get("entries")
+    if not isinstance(entries, dict):
+        return found
+    for name, points in entries.items():
+        if not isinstance(points, list):
+            continue
+        for point in points:
+            if isinstance(point, dict):
+                found.add((str(name), entry_commit_id(point)))
+    return found
+
+
+def has_all_recovered(existing: dict[str, Any], recovered: dict[str, Any]) -> bool:
+    """True when every recovered (name, commit id) is already in existing."""
+    return _entry_ids(recovered) <= _entry_ids(existing)
+
+
+def union_entries(existing: dict[str, Any], recovered: dict[str, Any]) -> dict[str, Any]:
+    """Union points by commit id per benchmark name; sort each series by date."""
+    merged_entries: dict[str, list[dict[str, Any]]] = {}
+    seen: set[tuple[str, str]] = set()
+    for source in (existing, recovered):
+        entries = source.get("entries")
+        if not isinstance(entries, dict):
+            continue
+        for name, points in entries.items():
+            if not isinstance(points, list):
+                continue
+            bucket = merged_entries.setdefault(str(name), [])
+            for point in points:
+                if not isinstance(point, dict):
+                    continue
+                key = (str(name), entry_commit_id(point))
+                if key in seen:
+                    continue
+                seen.add(key)
+                bucket.append(point)
+    for points in merged_entries.values():
+        points.sort(key=lambda item: int(item.get("date") or 0))
+    last_update = max(
+        int(existing.get("lastUpdate") or 0),
+        int(recovered.get("lastUpdate") or 0),
+    )
+    repo_url = str(existing.get("repoUrl") or recovered.get("repoUrl") or "")
+    return {"lastUpdate": last_update, "repoUrl": repo_url, "entries": merged_entries}
 
 
 def _show_file(ref: str, path: str, cwd: Path) -> str | None:

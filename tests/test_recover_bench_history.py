@@ -58,6 +58,87 @@ def test_parse_roundtrip() -> None:
     assert mod.parse_data_js(mod.format_data_js(data))["repoUrl"] == "u"
 
 
+def test_format_data_js_matches_action_parse_rule() -> None:
+    mod = _load()
+    data = {
+        "lastUpdate": 1,
+        "repoUrl": "u",
+        "entries": {
+            "Benchmark": [
+                {
+                    "commit": {"id": "abc"},
+                    "date": 10,
+                    "tool": "pytest",
+                    "benches": [],
+                }
+            ]
+        },
+    }
+    raw = mod.format_data_js(data)
+    assert raw.startswith(mod.SCRIPT_PREFIX)
+    assert raw.endswith("\n")
+    assert ";" not in raw[len(mod.SCRIPT_PREFIX) :].lstrip()[:1]
+    assert not raw.rstrip().endswith(";")
+    parsed = json.loads(raw[len(mod.SCRIPT_PREFIX) :])
+    assert parsed == data
+    assert mod.parse_action_data_js(raw) == data
+
+
+def test_action_parse_fails_on_trailing_semicolon() -> None:
+    mod = _load()
+    data = {"lastUpdate": 1, "repoUrl": "u", "entries": {}}
+    bad = mod.SCRIPT_PREFIX + json.dumps(data, indent=2) + ";\n"
+    try:
+        json.loads(bad[len(mod.SCRIPT_PREFIX) :])
+    except json.JSONDecodeError:
+        pass
+    else:
+        raise AssertionError("action parse rule must fail on a trailing ';'")
+    try:
+        mod.parse_action_data_js(bad)
+    except json.JSONDecodeError:
+        pass
+    else:
+        raise AssertionError("parse_action_data_js must fail on a trailing ';'")
+    assert mod.load_data_js(bad)["lastUpdate"] == 1
+
+
+def test_union_entries_by_commit_id_sorted_by_date() -> None:
+    mod = _load()
+    existing = {
+        "lastUpdate": 300,
+        "repoUrl": "https://example.invalid/existing",
+        "entries": {
+            "Benchmark": [
+                {"commit": {"id": "new1"}, "date": 300},
+            ]
+        },
+    }
+    recovered = {
+        "lastUpdate": 200,
+        "repoUrl": "https://example.invalid/recovered",
+        "entries": {
+            "Benchmark": [
+                {"commit": {"id": "old1"}, "date": 100},
+                {"commit": {"id": "old2"}, "date": 200},
+                {"commit": {"id": "new1"}, "date": 300},
+            ]
+        },
+    }
+    assert not mod.has_all_recovered(existing, recovered)
+    merged = mod.union_entries(existing, recovered)
+    ids = [point["commit"]["id"] for point in merged["entries"]["Benchmark"]]
+    assert ids == ["old1", "old2", "new1"]
+    assert merged["lastUpdate"] == 300
+    assert merged["repoUrl"] == "https://example.invalid/existing"
+    assert mod.has_all_recovered(merged, recovered)
+    assert mod.count_entries(merged) == 3
+    assert (
+        mod.union_entries(merged, recovered)["entries"]["Benchmark"]
+        == merged["entries"]["Benchmark"]
+    )
+
+
 def test_merge_unique_entries_across_wipes(tmp_path: Path) -> None:
     repo = tmp_path / "gh"
     repo.mkdir()

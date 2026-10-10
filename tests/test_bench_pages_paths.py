@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -53,6 +54,8 @@ def test_workflow_bench_paths_agree() -> None:
     assert _docs_output_dir(docs) == bench_dir
     assert "scripts/seed_bench_data_branch.py" in ci
     assert "scripts/recover_bench_history.py" in docs
+    assert recover_bench_history.HISTORY_SHA in ci
+    assert "--existing-ref origin/bench-data" in ci
     assert f"--output site/{bench_dir}" in docs
 
 
@@ -74,6 +77,9 @@ def test_seed_step_auth_is_idempotent_and_not_bearer() -> None:
     assert "HEAD:refs/heads/bench-data" in seed
     assert "set -x" not in seed
     assert "dev/bench/data.js" in seed
+    assert recover_bench_history.HISTORY_SHA in seed
+    assert "--existing-ref origin/bench-data" in seed
+    assert "exit 0" not in seed
     for line in seed.splitlines():
         if "HEAD:refs/heads/bench-data" in line:
             assert "--force" not in line
@@ -127,3 +133,137 @@ def test_seed_step_commits_and_pushes_dev_bench(tmp_path: Path) -> None:
     assert (clone / "dev" / "bench" / "data.js").is_file()
     assert (clone / "dev" / "bench" / "index.html").is_file()
     assert not (clone / "dest").exists()
+    seeded = (clone / "dev" / "bench" / "data.js").read_text(encoding="utf-8")
+    assert not seeded.rstrip().endswith(";")
+    assert json.loads(seeded[len(recover_bench_history.SCRIPT_PREFIX) :]) == {}
+
+
+def _point(commit_id: str, date: int) -> dict[str, object]:
+    return {
+        "commit": {"id": commit_id, "message": commit_id},
+        "date": date,
+        "tool": "pytest",
+        "benches": [{"name": "x", "value": 1.0, "unit": "iter/sec"}],
+    }
+
+
+def _write_dashboard(dir_path: Path, points: list[dict[str, object]], *, last_update: int) -> None:
+    payload = {
+        "lastUpdate": last_update,
+        "repoUrl": "https://github.com/gianlucamazza/emotional-memory",
+        "entries": {"Benchmark": points},
+    }
+    dir_path.mkdir(parents=True, exist_ok=True)
+    (dir_path / "data.js").write_text(
+        recover_bench_history.format_data_js(payload),
+        encoding="utf-8",
+    )
+    (dir_path / "index.html").write_text("<html></html>\n", encoding="utf-8")
+
+
+def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_merge_unions_existing_with_recovered_history(tmp_path: Path) -> None:
+    src = tmp_path / "src"
+    src.mkdir()
+    _git(src, "init")
+    _git(src, "config", "user.email", "ci@example.com")
+    _git(src, "config", "user.name", "ci")
+    wiped = [_point("new1", 300)]
+    _write_dashboard(src / "dev" / "bench", wiped, last_update=300)
+    _git(src, "checkout", "-b", "bench-data")
+    _git(src, "add", "dev/bench")
+    _git(src, "commit", "-m", "wiped to one entry")
+    parent = _git(src, "rev-parse", "HEAD").stdout.strip()
+
+    recover = tmp_path / "recover"
+    recovered_points = [_point("old1", 100), _point("old2", 200), _point("new1", 300)]
+    _write_dashboard(recover, recovered_points, last_update=200)
+    # Legacy semicolon payload must still merge (73d1cfb format).
+    recover_data = json.loads(
+        (recover / "data.js").read_text(encoding="utf-8")[
+            len(recover_bench_history.SCRIPT_PREFIX) :
+        ]
+    )
+    (recover / "data.js").write_text(
+        recover_bench_history.SCRIPT_PREFIX + json.dumps(recover_data, indent=2) + ";\n",
+        encoding="utf-8",
+    )
+
+    work = tmp_path / "work"
+    assert (
+        seed_bench_data_branch.main(
+            [
+                "--recover-dir",
+                str(recover),
+                "--work",
+                str(work),
+                "--existing-ref",
+                "bench-data",
+                "--src-repo",
+                str(src),
+            ]
+        )
+        == 0
+    )
+
+    head = _git(work, "rev-parse", "HEAD").stdout.strip()
+    parents = _git(work, "rev-parse", "HEAD^").stdout.strip()
+    assert head != parent
+    assert parents == parent
+    log = _git(work, "log", "--oneline").stdout.splitlines()
+    assert len(log) == 2
+
+    raw = (work / "dev" / "bench" / "data.js").read_text(encoding="utf-8")
+    assert not raw.rstrip().endswith(";")
+    data = json.loads(raw[len(recover_bench_history.SCRIPT_PREFIX) :])
+    ids = [entry["commit"]["id"] for entry in data["entries"]["Benchmark"]]
+    assert ids == ["old1", "old2", "new1"]
+    assert data["lastUpdate"] == 300
+
+
+def test_merge_is_noop_when_existing_has_all_recovered(tmp_path: Path) -> None:
+    src = tmp_path / "src"
+    src.mkdir()
+    _git(src, "init")
+    _git(src, "config", "user.email", "ci@example.com")
+    _git(src, "config", "user.name", "ci")
+    points = [_point("old1", 100), _point("new1", 300)]
+    _write_dashboard(src / "dev" / "bench", points, last_update=300)
+    _git(src, "checkout", "-b", "bench-data")
+    _git(src, "add", "dev/bench")
+    _git(src, "commit", "-m", "complete history")
+    parent = _git(src, "rev-parse", "HEAD").stdout.strip()
+
+    recover = tmp_path / "recover"
+    _write_dashboard(recover, [_point("old1", 100)], last_update=100)
+
+    work = tmp_path / "work"
+    assert (
+        seed_bench_data_branch.main(
+            [
+                "--recover-dir",
+                str(recover),
+                "--work",
+                str(work),
+                "--existing-ref",
+                "bench-data",
+                "--src-repo",
+                str(src),
+            ]
+        )
+        == 0
+    )
+    assert _git(work, "rev-parse", "HEAD").stdout.strip() == parent
+    raw = (work / "dev" / "bench" / "data.js").read_text(encoding="utf-8")
+    data = json.loads(raw[len(recover_bench_history.SCRIPT_PREFIX) :])
+    ids = [entry["commit"]["id"] for entry in data["entries"]["Benchmark"]]
+    assert ids == ["old1", "new1"]
