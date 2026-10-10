@@ -34,6 +34,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### CI
 
+- **Docs/Pages deploys after CI Benchmarks.** The Docs workflow no longer
+  runs on `push` to `main` (that raced Seed/Store and published a stale
+  1-entry chart). It now runs on `workflow_run` of `CI` (`completed`,
+  `main` only) plus `workflow_dispatch`, checks out
+  `github.event.workflow_run.head_sha`, and skips when the CI run
+  concluded anything other than `success` (failed or cancelled superseded
+  runs must not deploy). Manual rebuilds are `docs-dispatch.yml`
+  (`workflow_dispatch` only) so this file does not share a writable
+  default-branch cache with an untrusted checkout. Jobs also require
+  `workflow_run.event == 'push'`, same-repo `head_repository`, and
+  `head_branch == 'main'` so a fork PR whose branch is named `main`
+  cannot deploy. Docs-only pushes still deploy: CI has no path filter,
+  so it runs on every main push and then triggers Docs.
+
 - **Docs deploy no longer wipes `/dev/bench/`.** `mkdocs gh-deploy --force --clean`
   replaced the `gh-pages` branch and dropped the `benchmark-action` dashboard
   (`index.html` + `data.js`). Benchmark history now lives on its own `bench-data`

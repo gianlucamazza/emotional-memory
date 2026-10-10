@@ -14,6 +14,7 @@ WRONG_PREFIX = "d" + "e" + "s" + "t" + "/"
 BENCH_FILES = (
     Path(".github/workflows/ci.yml"),
     Path(".github/workflows/docs.yml"),
+    Path(".github/workflows/docs-dispatch.yml"),
     Path("scripts/recover_bench_history.py"),
     Path("scripts/seed_bench_data_branch.py"),
     Path("CHANGELOG.md"),
@@ -57,6 +58,57 @@ def test_workflow_bench_paths_agree() -> None:
     assert recover_bench_history.HISTORY_SHA in ci
     assert "--existing-ref origin/bench-data" in ci
     assert f"--output site/{bench_dir}" in docs
+
+
+def test_docs_deploys_after_successful_ci_on_main() -> None:
+    docs = (ROOT / ".github/workflows/docs.yml").read_text(encoding="utf-8")
+    dispatch = (ROOT / ".github/workflows/docs-dispatch.yml").read_text(encoding="utf-8")
+    header, _, jobs = docs.partition("\njobs:")
+    on_block = header.split("on:", 1)[1].split("concurrency:", 1)[0]
+    build = jobs.split("name: Deploy GitHub Pages", 1)[0]
+    deploy = jobs.split("name: Deploy GitHub Pages", 1)[1]
+    dispatch_on = dispatch.split("on:", 1)[1].split("concurrency:", 1)[0]
+
+    assert "workflow_run:" in on_block
+    assert '"CI"' in on_block
+    assert "completed" in on_block
+    assert 'branches: ["main"]' in on_block
+    # Dispatch is a sibling workflow so this file's cache scope stays
+    # workflow_run-only (read-only default-branch cache; no CodeQL hit).
+    assert "workflow_dispatch:" not in on_block
+    assert "workflow_dispatch:" in dispatch_on
+    # CI already runs on every main push (no path filter), including docs-only.
+    # A parallel push trigger redeploys stale bench-data before Seed/Store.
+    assert "push:" not in on_block
+    assert "push:" not in dispatch_on
+
+    assert "github.event.workflow_run.head_sha" in docs
+    same_repo_push_main = (
+        "github.event.workflow_run.conclusion == 'success'",
+        "github.event.workflow_run.event == 'push'",
+        "github.event.workflow_run.head_repository.full_name == github.repository",
+        "github.event.workflow_run.head_branch == 'main'",
+    )
+    for cond in same_repo_push_main:
+        assert cond in build
+        assert cond in deploy
+    assert "conclusion == 'failure'" not in docs
+    assert "conclusion == 'cancelled'" not in docs
+
+    assert "permissions: {}" in header
+    assert "pages: write" not in header
+    assert "id-token: write" not in header
+    assert "contents: read" in build
+    assert "pages: write" not in build
+    assert "id-token: write" not in build
+    assert "pages: write" in deploy
+    assert "id-token: write" in deploy
+
+    assert _scalar(header, "group") == "pages"
+    assert _scalar(header, "cancel-in-progress") == "false"
+    assert _scalar(dispatch.split("jobs:")[0], "group") == "pages"
+    assert _scalar(docs, "enable-cache") == "false"
+    assert _scalar(dispatch, "enable-cache") == "false"
 
 
 def test_seed_step_auth_is_idempotent_and_not_bearer() -> None:

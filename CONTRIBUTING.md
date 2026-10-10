@@ -125,8 +125,9 @@ Use `.env` only for local CLI secrets that need to be read by tools in this repo
 | `make demo-check`      | Demo wiring + runtime regression tests         | ~seconds to model-load |
 
 CI stores `benchmarks/perf/` results via `benchmark-action` on the
-`bench-data` branch (`dev/bench`). The Docs workflow copies that directory
-into the GitHub Pages artifact so
+`bench-data` branch (`dev/bench`). The Docs workflow runs after CI
+completes on `main` (so Seed/Store has updated `bench-data`) and copies
+that directory into the GitHub Pages artifact so
 https://gianlucamazza.github.io/emotional-memory/dev/bench/ stays live
 across MkDocs deploys. The job comments when a metric regresses beyond
 **130%** of the stored baseline (`alert-threshold: "130%"`, comment-only —
