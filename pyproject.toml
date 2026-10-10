@@ -160,7 +160,7 @@ select = [
 # ruff no longer needs fails the lint gate under RUF100.
 "scripts/**" = ["T201", "S603", "S314", "S311", "S306", "S607", "E501", "S310"]
 "tools/**" = ["T201", "S603", "S314", "S311"]
-"demo/**" = ["T201", "TCH"]
+"demo/**" = ["T201", "TCH", "E402"]
 "src/**" = ["TCH"]
 
 [tool.ruff.lint.isort]

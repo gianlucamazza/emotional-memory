@@ -77,6 +77,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The seed step now unions recovered history (from 73d1cfb) into the
   current `bench-data` tip by commit id and never replaces the branch.
 
+### Changed
+
+- Demo process sets `GRADIO_ANALYTICS_ENABLED=False`, `HF_HUB_DISABLE_TELEMETRY=1`,
+  and `DO_NOT_TRACK=1` before importing Gradio (same as the affective-fly Space).
+
 ### Docs
 
 - `demo/README.md` Space front matter now matches the live Hub card
