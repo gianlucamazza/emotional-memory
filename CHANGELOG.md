@@ -51,6 +51,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `realistic_recall_*` JSON metadata proposes `CC0-1.0` pending owner
   confirmation.
 
+- `demo/README.md` replaced with the Copy-final Hugging Face Space card
+  (`pinned: true`, Scope and limits, author/DOI links) so GitHub→Space
+  sync will not revert the Hub README.
+
 ## [0.18.1] - 2026-09-12
 
 ### Fixed
