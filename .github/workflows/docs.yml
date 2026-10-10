@@ -8,7 +8,9 @@ name: Docs
 # has updated bench-data first. No direct `push` trigger: CI already runs on
 # every main push (including docs-only), and a parallel push-triggered Docs
 # run was deploying a stale 1-entry chart ~5 min before Seed/Store finished.
-# workflow_dispatch remains for a manual rebuild.
+# Manual rebuilds live in docs-dispatch.yml (workflow_dispatch only). Combining
+# dispatch with this workflow_run checkout made CodeQL treat head_sha as a
+# cache-poisoning source.
 
 on:
   workflow_run:
@@ -16,11 +18,10 @@ on:
     types:
       - completed
     branches: ["main"]
-  workflow_dispatch:
 
-# One Pages pipeline. cancel-in-progress: false so a newer run queues instead
-# of aborting an in-flight post-Benchmarks upload (a cancelled deploy can
-# leave the previous artifact). The later run still wins once it deploys.
+# One Pages pipeline shared with docs-dispatch.yml. cancel-in-progress: false
+# so a newer run queues instead of aborting an in-flight post-Benchmarks
+# upload (a cancelled deploy can leave the previous artifact).
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -30,10 +31,7 @@ permissions: {}
 jobs:
   build:
     name: Build MkDocs + dev/bench
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success')
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -44,14 +42,11 @@ jobs:
           persist-credentials: false
           # workflow_run's github.sha is default-branch HEAD at event time,
           # which can be newer than the CI run. Pin the triggering commit.
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
-          # Off: checkout of workflow_run.head_sha + a writable cache is
-          # CodeQL cache-poisoning (even though branches: [main] means the
-          # SHA is already on main). Docs runs once per successful CI.
           enable-cache: false
 
       - name: Set up Python 3.13
@@ -87,10 +82,7 @@ jobs:
 
   deploy:
     name: Deploy GitHub Pages
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'workflow_run' &&
-       github.event.workflow_run.conclusion == 'success')
+    if: github.event.workflow_run.conclusion == 'success'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5
