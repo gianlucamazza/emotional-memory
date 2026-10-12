@@ -24,7 +24,6 @@ Exit codes:
 from __future__ import annotations
 
 import json
-import re
 import sys
 import tomllib
 from pathlib import Path
@@ -40,41 +39,58 @@ def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _unquote_cff_scalar(value: str) -> str:
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        return value[1:-1]
+    return value
+
+
 def _read_cff_field(text: str, field: str) -> str | None:
-    """Extract a top-level scalar field from a CITATION.cff. Naive but enough
-    for `license`, since we only need exact equality."""
-    m = re.search(rf"^{field}:\s*(.+?)$", text, re.MULTILINE)
-    if not m:
-        return None
-    val = m.group(1).strip()
-    if val.startswith(('"', "'")) and val.endswith(('"', "'")):
-        val = val[1:-1]
-    return val
+    """Extract a top-level scalar field from a CITATION.cff. Line-based so the
+    scan stays linear even on adversarial input (no nested/overlapping regex)."""
+    prefix = f"{field}:"
+    for raw in text.splitlines():
+        if raw.startswith(prefix):
+            return _unquote_cff_scalar(raw[len(prefix) :].strip())
+    return None
 
 
 def _cff_first_author(text: str) -> dict[str, str]:
-    """Parse the first author block from CITATION.cff (top-level `authors:`)."""
-    # Match the first `- family-names: ...` block under `authors:` (one indent level).
-    block = re.search(
-        r"^authors:\s*\n((?:  -[\s\S]*?)+?)(?=^[^\s]|\Z)",
-        text,
-        re.MULTILINE,
-    )
-    if not block:
+    """Parse the first author block from CITATION.cff (top-level `authors:`).
+
+    Line-oriented (no nested wildcards or overlapping reluctant quantifiers)
+    so the scan is linear in the file size. CodeQL flagged the previous
+    block matcher as polynomial ReDoS on uncontrolled CFF text.
+    """
+    lines = text.splitlines()
+    in_authors = False
+    in_first = False
+    result: dict[str, str] = {}
+    wanted = ("family-names", "given-names", "email")
+    for raw in lines:
+        if not in_authors:
+            if raw.startswith("authors:"):
+                in_authors = True
+            continue
+        if raw and not raw[0].isspace():
+            break
+        stripped = raw.strip()
+        if stripped.startswith("-"):
+            if in_first:
+                break
+            in_first = True
+            stripped = stripped[1:].strip()
+        if not in_first or not stripped:
+            continue
+        for key in wanted:
+            prefix = f"{key}:"
+            if stripped.startswith(prefix):
+                result[key] = _unquote_cff_scalar(stripped[len(prefix) :].strip())
+                break
+    if "family-names" not in result or "given-names" not in result:
         return {}
-    first_entry = re.search(
-        r"-\s*family-names:\s*(.+?)\s*\n"
-        r"\s+given-names:\s*(.+?)\s*\n"
-        r"(?:\s+email:\s*(.+?)\s*\n)?",
-        block.group(1),
-    )
-    if not first_entry:
-        return {}
-    return {
-        "family-names": first_entry.group(1).strip(),
-        "given-names": first_entry.group(2).strip(),
-        "email": (first_entry.group(3) or "").strip(),
-    }
+    result.setdefault("email", "")
+    return result
 
 
 def _expected_author(pyproject: dict) -> dict[str, str]:

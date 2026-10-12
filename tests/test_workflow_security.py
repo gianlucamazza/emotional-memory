@@ -1,17 +1,21 @@
-"""Guards for the Dependabot auto-merge workflow hardening."""
+"""Guards for workflow hardening (Dependabot auto-merge + Docs deploy)."""
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-WORKFLOW = (
-    Path(__file__).resolve().parents[1] / ".github" / "workflows" / "dependabot-auto-merge.yml"
-)
+WORKFLOWS = Path(__file__).resolve().parents[1] / ".github" / "workflows"
+WORKFLOW = WORKFLOWS / "dependabot-auto-merge.yml"
+DOCS_WORKFLOW = WORKFLOWS / "docs.yml"
 
 
 def _workflow_text() -> str:
     return WORKFLOW.read_text(encoding="utf-8")
+
+
+def _docs_text() -> str:
+    return DOCS_WORKFLOW.read_text(encoding="utf-8")
 
 
 def test_dependabot_auto_merge_pins_fetch_metadata_to_sha() -> None:
@@ -38,3 +42,38 @@ def test_dependabot_auto_merge_scopes_write_permissions_to_job() -> None:
     assert "permissions: {}" in head
     assert "contents: write" not in head
     assert "contents: write" in rest
+
+
+def test_docs_workflow_keeps_post_ci_workflow_run() -> None:
+    text = _docs_text()
+    assert "workflow_run:" in text
+    assert 'workflows: ["CI"]' in text
+    assert "zizmor: ignore[dangerous-triggers]" in text
+
+
+def test_docs_workflow_does_not_checkout_workflow_run_head() -> None:
+    text = _docs_text()
+    assert "ref: ${{ github.event.workflow_run.head_sha }}" not in text
+    assert "ref: ${{ github.event.workflow_run.head_branch }}" not in text
+    assert "github.event.pull_request.head" not in text
+
+
+def test_docs_workflow_write_job_does_not_checkout() -> None:
+    text = _docs_text()
+    head, _, jobs = text.partition("jobs:")
+    assert "permissions: {}" in head
+    deploy = jobs.split("deploy:", 1)[1]
+    assert "actions/checkout@" not in deploy
+    assert "pages: write" in deploy
+    assert "id-token: write" in deploy
+    build = jobs.split("build:", 1)[1].split("deploy:", 1)[0]
+    assert "contents: read" in build
+    assert "pages: write" not in build
+
+
+def test_docs_workflow_requires_successful_same_repo_main_push() -> None:
+    text = _docs_text()
+    assert "github.event.workflow_run.event == 'push'" in text
+    assert "github.event.workflow_run.head_repository.full_name == github.repository" in text
+    assert "github.event.workflow_run.head_branch == 'main'" in text
+    assert "github.event.workflow_run.conclusion == 'success'" in text

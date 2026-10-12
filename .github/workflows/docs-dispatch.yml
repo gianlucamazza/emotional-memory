@@ -1,8 +1,8 @@
 name: Docs (manual)
 
 # Same Pages pipeline as docs.yml, for workflow_dispatch only. Kept separate
-# so the post-CI workflow can pin workflow_run.head_sha without CodeQL
-# cache-poisoning (dispatch makes the default-branch cache writable).
+# so the post-CI workflow_run file does not share a writable default-branch
+# cache with a dispatch trigger (CodeQL cache-poisoning).
 
 on:
   workflow_dispatch:
