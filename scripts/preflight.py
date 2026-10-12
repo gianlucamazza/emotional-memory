@@ -37,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).parent.parent
 
@@ -342,6 +343,19 @@ def gate_smoke_install(dist_dir: Path, version: str) -> Gate:
     return g
 
 
+_ZENODO_HOSTS = frozenset({"zenodo.org", "sandbox.zenodo.org"})
+
+
+def _is_zenodo_webhook_url(url: object) -> bool:
+    """True when the webhook host is exactly a Zenodo host.
+
+    Parses with ``urllib.parse`` and checks hostname equality so a
+    lookalike (``https://evil.example/zenodo.org``, ``notzenodo.org``)
+    cannot satisfy a substring test. CodeQL: incomplete URL sanitization.
+    """
+    return isinstance(url, str) and urlparse(url).hostname in _ZENODO_HOSTS
+
+
 def gate_zenodo_webhook_off() -> Gate:
     g = Gate("G14", "GitHub→Zenodo webhook disabled")
     try:
@@ -363,7 +377,8 @@ def gate_zenodo_webhook_off() -> Gate:
         active_zenodo = [
             h
             for h in hooks
-            if "zenodo.org" in h.get("config", {}).get("url", "") and h.get("active", False)
+            if _is_zenodo_webhook_url(h.get("config", {}).get("url", ""))
+            and h.get("active", False)
         ]
         if active_zenodo:
             url = active_zenodo[0].get("config", {}).get("url", "?")

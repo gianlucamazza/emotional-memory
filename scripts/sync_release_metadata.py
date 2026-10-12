@@ -20,7 +20,7 @@ import re
 import tomllib
 import urllib.request
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,14 +55,30 @@ def _record_id_from_doi(version_doi: str) -> str:
     return version_doi.rsplit(".", maxsplit=1)[-1]
 
 
+_ZENODO_HOSTS = frozenset({"zenodo.org", "sandbox.zenodo.org"})
+
+
 def _normalize_base_url(base_url: str) -> str:
     return base_url.rstrip("/")
+
+
+def _require_zenodo_base_url(base_url: str) -> str:
+    """Return the stripped base URL after checking host equality.
+
+    ``urlparse(...).hostname`` is compared with ``==`` against the known
+    Zenodo hosts so lookalikes (``notzenodo.org``, ``zenodo.org.evil``)
+    cannot pass a substring check. CodeQL: incomplete URL sanitization.
+    """
+    host = urlparse(base_url).hostname
+    if host not in _ZENODO_HOSTS:
+        raise SystemExit(f"Refusing non-Zenodo base URL host {host!r}: {base_url!r}")
+    return _normalize_base_url(base_url)
 
 
 def _fetch_concept_doi(base_url: str, version_doi: str) -> str:
     record_id = _record_id_from_doi(version_doi)
     with urllib.request.urlopen(
-        f"{_normalize_base_url(base_url)}/api/records/{record_id}", timeout=20
+        f"{_require_zenodo_base_url(base_url)}/api/records/{record_id}", timeout=20
     ) as response:
         payload = json.load(response)
     concept_doi = str(payload.get("conceptdoi", "")).strip()

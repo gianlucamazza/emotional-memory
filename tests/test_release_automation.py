@@ -6,10 +6,10 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import pytest
+
 if TYPE_CHECKING:
     from types import ModuleType
-
-    import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -148,6 +148,29 @@ def test_codemeta_related_link_pins_concept_doi() -> None:
         link for link in data["relatedLink"] if link.startswith("https://doi.org/10.5281/zenodo.")
     ]
     assert zenodo_links == [f"https://doi.org/{_current_readme_concept_doi()}"]
+
+
+def test_require_zenodo_base_url_accepts_official_hosts() -> None:
+    module = _load_script_module("sync_release_metadata")
+    assert module._require_zenodo_base_url("https://zenodo.org/") == "https://zenodo.org"
+    assert (
+        module._require_zenodo_base_url("https://sandbox.zenodo.org")
+        == "https://sandbox.zenodo.org"
+    )
+
+
+def test_require_zenodo_base_url_rejects_lookalike_hosts() -> None:
+    module = _load_script_module("sync_release_metadata")
+    lookalikes = (
+        "https://evil.example/zenodo.org",
+        "https://notzenodo.org",
+        "https://zenodo.org.evil.example",
+        "https://zenodo.org@evil.example",
+        "https://example.com/?next=https://zenodo.org",
+    )
+    for url in lookalikes:
+        with pytest.raises(SystemExit, match="Refusing non-Zenodo"):
+            module._require_zenodo_base_url(url)
 
 
 def test_verify_pypi_release_succeeds_when_version_is_visible(

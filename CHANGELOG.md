@@ -15,6 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- **Close code-scanning alerts on release scripts and Docs deploy.** Parse
+  CITATION.cff author/license fields line-by-line in
+  `scripts/check_metadata_ssot.py` (CodeQL polynomial ReDoS). Validate Zenodo
+  hosts with `urllib.parse` hostname equality in
+  `scripts/sync_release_metadata.py` and `scripts/preflight.py` (incomplete URL
+  sanitization). Docs `workflow_run` still deploys after successful same-repo
+  main CI, but checks out this repository's default branch instead of
+  `workflow_run.head_sha` (CodeQL untrusted checkout) and does not run
+  PR-controlled code under write permissions; zizmor `dangerous-triggers` is
+  acknowledged on that trigger only.
+
 - **Lock urllib3 2.8.0.** `uv.lock` now pins urllib3 2.8.0, the first release
   that fixes GHSA-vxq7-64xx-v4gw (unbounded chunk-size buffering,
   CVE-2026-97689) and GHSA-8988-9cw3-xx77 (HTTPS proxy TLS configuration
@@ -43,8 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Docs/Pages deploys after CI Benchmarks.** The Docs workflow no longer
   runs on `push` to `main` (that raced Seed/Store and published a stale
   1-entry chart). It now runs on `workflow_run` of `CI` (`completed`,
-  `main` only) plus `workflow_dispatch`, checks out
-  `github.event.workflow_run.head_sha`, and skips when the CI run
+  `main` only) plus `workflow_dispatch`, checks out this repository's
+  default branch (not `workflow_run.head_sha`), and skips when the CI run
   concluded anything other than `success` (failed or cancelled superseded
   runs must not deploy). Manual rebuilds are `docs-dispatch.yml`
   (`workflow_dispatch` only) so this file does not share a writable

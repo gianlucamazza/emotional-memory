@@ -11,9 +11,13 @@ name: Docs
 # Manual rebuilds live in docs-dispatch.yml (workflow_dispatch only). Combining
 # dispatch with this workflow_run checkout made CodeQL treat head_sha as a
 # cache-poisoning source.
+#
+# Security: do not check out or execute workflow_run.head_sha / PR-controlled
+# code. Checkout uses this repository's default-branch SHA (trusted). Write
+# permissions stay on the deploy job, which never checks out the tree.
 
 on:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] post-CI Pages; same-repo main push only; trusted default-branch checkout; write perms only on deploy (no checkout)
     workflows: ["CI"]
     types:
       - completed
@@ -43,12 +47,11 @@ jobs:
     permissions:
       contents: read
     steps:
+      # Default-branch SHA only. Do not pass workflow_run.head_sha — CodeQL
+      # treats that ref as an untrusted checkout even after the guards above.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          # workflow_run's github.sha is default-branch HEAD at event time,
-          # which can be newer than the CI run. Pin the triggering commit.
-          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Set up uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
