@@ -82,7 +82,10 @@ def test_docs_deploys_after_successful_ci_on_main() -> None:
     assert "push:" not in on_block
     assert "push:" not in dispatch_on
 
-    assert "github.event.workflow_run.head_sha" in docs
+    # Trusted default-branch checkout. Pinning workflow_run.head_sha is
+    # CodeQL untrusted-checkout even with the same-repo / push / main guards.
+    assert "ref: ${{ github.event.workflow_run.head_sha }}" not in docs
+    assert "github.event.workflow_run.head_sha" not in docs
     same_repo_push_main = (
         "github.event.workflow_run.conclusion == 'success'",
         "github.event.workflow_run.event == 'push'",
