@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 import tomllib
 from pathlib import Path
@@ -200,6 +201,92 @@ def test_is_arxiv_identifier_rejects_lookalike_hosts() -> None:
     for url in lookalikes:
         assert not module._is_arxiv_identifier(url), url
     assert not module._is_arxiv_identifier(None)
+
+
+_SYNC_FIXTURE_FILES = (
+    "pyproject.toml",
+    "README.md",
+    "CITATION.cff",
+    ".zenodo.json",
+    "codemeta.json",
+    "demo/README.md",
+    "demo/app.py",
+    "demo/requirements.txt",
+    "paper/SUBMISSION.md",
+    "paper/main.tex",
+)
+
+_LOOKALIKE_ARXIV_IDENTIFIERS = (
+    "https://arxiv.org.evil.com/abs/1111.11111",
+    "https://evilarxiv.org/abs/1111.11111",
+    "https://evil.example/arxiv.org",
+)
+
+
+def _prepare_sync_root(tmp_path: Path) -> Path:
+    """Copy only the files ``sync_release_metadata`` reads or writes."""
+    for rel in _SYNC_FIXTURE_FILES:
+        src = ROOT / rel
+        dest = tmp_path / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(src.read_bytes())
+    return tmp_path
+
+
+def _write_related_identifiers(root: Path, identifiers: list[str]) -> None:
+    path = root / ".zenodo.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["related_identifiers"] = [
+        {"identifier": value, "relation": "isSupplementTo", "scheme": "url"}
+        for value in identifiers
+    ]
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def _related_identifier_values(root: Path) -> list[str]:
+    data = json.loads((root / ".zenodo.json").read_text(encoding="utf-8"))
+    return [str(entry["identifier"]) for entry in data["related_identifiers"]]
+
+
+def _run_arxiv_related_identifier_sync(root: Path, arxiv_id: str) -> list[str]:
+    module = _load_script_module("sync_release_metadata")
+    module.ROOT = root
+    module.sync_release_metadata(
+        _current_citation_doi(),
+        _current_readme_concept_doi(),
+        dry_run=False,
+        arxiv_id=arxiv_id,
+    )
+    return _related_identifier_values(root)
+
+
+def test_sync_release_metadata_preserves_lookalike_arxiv_identifiers(
+    tmp_path: Path,
+) -> None:
+    """Sync must not treat lookalike hosts as arXiv related identifiers.
+
+    The helper tests call ``_is_arxiv_identifier`` directly. This exercises
+    the ``.zenodo.json`` update branch with a bare ``arxiv_id`` so a
+    regression to ``"arxiv.org" in identifier`` would fail.
+    """
+    github = "https://github.com/gianlucamazza/emotional-memory"
+    arxiv_id = "2601.00001"
+    expected = f"https://arxiv.org/abs/{arxiv_id}"
+
+    append_root = _prepare_sync_root(tmp_path / "append")
+    _write_related_identifiers(append_root, [github, *_LOOKALIKE_ARXIV_IDENTIFIERS])
+    append_values = _run_arxiv_related_identifier_sync(append_root, arxiv_id)
+    assert append_values == [github, *_LOOKALIKE_ARXIV_IDENTIFIERS, expected]
+
+    stale_arxiv = "https://arxiv.org/abs/1111.11111"
+    stale_export = "https://export.arxiv.org/pdf/1111.11111"
+    update_root = _prepare_sync_root(tmp_path / "update")
+    _write_related_identifiers(
+        update_root,
+        [github, *_LOOKALIKE_ARXIV_IDENTIFIERS, stale_arxiv, stale_export],
+    )
+    update_values = _run_arxiv_related_identifier_sync(update_root, arxiv_id)
+    assert update_values == [github, *_LOOKALIKE_ARXIV_IDENTIFIERS, expected, expected]
 
 
 def test_verify_pypi_release_succeeds_when_version_is_visible(
