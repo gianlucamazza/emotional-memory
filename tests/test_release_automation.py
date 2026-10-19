@@ -173,6 +173,35 @@ def test_require_zenodo_base_url_rejects_lookalike_hosts() -> None:
             module._require_zenodo_base_url(url)
 
 
+def test_is_arxiv_identifier_accepts_arxiv_hosts() -> None:
+    module = _load_script_module("sync_release_metadata")
+    accepted = (
+        "https://arxiv.org/abs/2601.00001",
+        "http://arxiv.org/pdf/2601.00001",
+        "https://export.arxiv.org/pdf/2601.00001.pdf",
+        "https://www.arxiv.org/abs/2601.00001",
+    )
+    for url in accepted:
+        assert module._is_arxiv_identifier(url), url
+
+
+def test_is_arxiv_identifier_rejects_lookalike_hosts() -> None:
+    module = _load_script_module("sync_release_metadata")
+    lookalikes = (
+        "https://evil.example/arxiv.org",
+        "https://notarxiv.org/abs/2601.00001",
+        "https://arxiv.org.evil.example/abs/2601.00001",
+        "https://arxiv.org@evil.example/abs/2601.00001",
+        "https://example.com/?next=https://arxiv.org",
+        "https://arxiv.org.attacker.test",
+        "not-a-url",
+        "",
+    )
+    for url in lookalikes:
+        assert not module._is_arxiv_identifier(url), url
+    assert not module._is_arxiv_identifier(None)
+
+
 def test_verify_pypi_release_succeeds_when_version_is_visible(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
