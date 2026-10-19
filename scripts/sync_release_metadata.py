@@ -56,10 +56,24 @@ def _record_id_from_doi(version_doi: str) -> str:
 
 
 _ZENODO_HOSTS = frozenset({"zenodo.org", "sandbox.zenodo.org"})
+_ARXIV_HOST = "arxiv.org"
 
 
 def _normalize_base_url(base_url: str) -> str:
     return base_url.rstrip("/")
+
+
+def _is_arxiv_identifier(identifier: object) -> bool:
+    """True when *identifier* is an arXiv URL (exact host or subdomain).
+
+    Parses with ``urllib.parse`` and checks hostname equality / suffix so a
+    lookalike (``https://evil.example/arxiv.org``, ``notarxiv.org``) cannot
+    satisfy a substring test. CodeQL: incomplete URL sanitization.
+    """
+    if not isinstance(identifier, str):
+        return False
+    host = urlparse(identifier).hostname
+    return host == _ARXIV_HOST or (host is not None and host.endswith(f".{_ARXIV_HOST}"))
 
 
 def _require_zenodo_base_url(base_url: str) -> str:
@@ -369,7 +383,7 @@ def sync_release_metadata(
         zj_data = json.loads(zj_text)
         identifiers = zj_data.get("related_identifiers", [])
         arxiv_entry = {"identifier": arxiv_url, "relation": "isDescribedBy", "scheme": "url"}
-        existing = [i for i in identifiers if "arxiv.org" in i.get("identifier", "")]
+        existing = [i for i in identifiers if _is_arxiv_identifier(i.get("identifier", ""))]
         if not existing:
             identifiers.append(arxiv_entry)
         else:

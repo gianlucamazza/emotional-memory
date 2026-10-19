@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- **Identify arXiv related identifiers by parsed hostname.**
+  `scripts/sync_release_metadata.py` no longer treats `"arxiv.org"` as a
+  substring of `.zenodo.json` related-identifier URLs. It parses with
+  `urllib.parse` and accepts only `arxiv.org` or a subdomain (CodeQL
+  `py/incomplete-url-substring-sanitization`).
+
 - **Close code-scanning alerts on release scripts and Docs deploy.** Parse
   CITATION.cff author/license fields line-by-line in
   `scripts/check_metadata_ssot.py` (CodeQL polynomial ReDoS). Validate Zenodo
