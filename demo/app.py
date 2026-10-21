@@ -158,18 +158,136 @@ def _runtime_mode_badge() -> str:
 
 
 # ---------------------------------------------------------------------------
-# Global state (one instance per Gradio session via State)
+# Global state (one isolated engine per retrieval mode, per Gradio session)
 # ---------------------------------------------------------------------------
 
 
-def _build_engine() -> tuple[EmotionalMemory, str]:
-    appraisal_engine, appraisal_mode = _make_appraisal_engine()
-    em = EmotionalMemory(
+class DemoSession:
+    """Per-session pair of ``EmotionalMemory`` engines, one per retrieval mode.
+
+    Non-recall turns encode once and replicate into the other engine. Recall
+    write-backs and the ``observe(reply)`` that follows a recall stay on the
+    mode that ran the recall, so a comparison is not confounded by the other
+    mode's retrieval side-effects.
+    """
+
+    __slots__ = (
+        "appraisal_engine",
+        "appraisal_mode",
+        "diverged",
+        "embedder",
+        "gated",
+        "mood",
+    )
+
+    def __init__(
+        self,
+        mood: EmotionalMemory,
+        gated: EmotionalMemory,
+        embedder: object,
+        appraisal_engine: AppraisalEngine,
+        appraisal_mode: str = "",
+    ) -> None:
+        self.mood = mood
+        self.gated = gated
+        self.embedder = embedder
+        self.appraisal_engine = appraisal_engine
+        self.appraisal_mode = appraisal_mode
+        self.diverged = False
+        # Fresh engines have distinct timestamps; align them so the first
+        # non-recall encode can replicate instead of encoding twice.
+        _replicate_from(self.mood, self.gated)
+
+    def __repr__(self) -> str:
+        return (
+            f"DemoSession(mood={self.mood!r}, gated={self.gated!r}, "
+            f"appraisal_mode={self.appraisal_mode!r})"
+        )
+
+    def engine_for(self, retrieval_mode: str) -> EmotionalMemory:
+        if retrieval_mode == RETRIEVAL_MODE_QUERY_GATED:
+            return self.gated
+        return self.mood
+
+    def list_all(self) -> list[object]:
+        return self.mood.list_all()
+
+    def get_state(self) -> object:
+        return self.mood.get_state()
+
+
+def _new_engine(
+    embedder: object,
+    appraisal_engine: AppraisalEngine,
+) -> EmotionalMemory:
+    return EmotionalMemory(
         store=InMemoryStore(),
-        embedder=_make_embedder(),
+        embedder=embedder,
         appraisal_engine=appraisal_engine,
     )
-    return em, f"{appraisal_mode}  \n{_embedder_mode_badge()}"
+
+
+def _build_engine() -> tuple[DemoSession, str]:
+    appraisal_engine, appraisal_mode = _make_appraisal_engine()
+    embedder = _make_embedder()
+    session = DemoSession(
+        mood=_new_engine(embedder, appraisal_engine),
+        gated=_new_engine(embedder, appraisal_engine),
+        embedder=embedder,
+        appraisal_engine=appraisal_engine,
+        appraisal_mode=appraisal_mode,
+    )
+    return session, f"{appraisal_mode}  \n{_embedder_mode_badge()}"
+
+
+def _ensure_session(em_state: object) -> DemoSession:
+    """Return a live session, rebuilding when Gradio handed us the factory."""
+    if isinstance(em_state, DemoSession):
+        return em_state
+    session, _mode = _build_engine()
+    return session
+
+
+def _replicate_from(source: EmotionalMemory, dest: EmotionalMemory) -> None:
+    dest.import_memories(source.export_memories(), overwrite=True)
+    dest.load_state(source.save_state())
+
+
+def _encode_user_both(session: DemoSession, content: str, metadata: dict[str, str]) -> None:
+    """Appraise/encode once, then replicate into the other mode.
+
+    Before any recall, copy the full store and affective state with the public
+    export/import + save/load API. After a recall has diverged the modes,
+    import only the new memory and advance the other engine with the same
+    appraisal so write-backs are not copied across.
+    """
+    memory = session.mood.encode(content, metadata=metadata)
+    if not session.diverged:
+        _replicate_from(session.mood, session.gated)
+        return
+    dest_ids = {item["id"] for item in session.gated.export_memories()}
+    new_items = [item for item in session.mood.export_memories() if item["id"] not in dest_ids]
+    session.gated.import_memories(new_items)
+    session.gated.observe(content, appraisal=memory.tag.appraisal, metadata=metadata)
+
+
+def _observe_both(session: DemoSession, content: str, metadata: dict[str, str]) -> None:
+    tag = session.mood.observe(content, metadata=metadata)
+    if not session.diverged:
+        session.gated.load_state(session.mood.save_state())
+        return
+    session.gated.observe(content, appraisal=tag.appraisal, metadata=metadata)
+
+
+def _scratch_from(session: DemoSession, source: EmotionalMemory) -> EmotionalMemory:
+    scratch = _new_engine(session.embedder, session.appraisal_engine)
+    _replicate_from(source, scratch)
+    return scratch
+
+
+def _memory_excerpt(memory: object) -> str:
+    content = getattr(memory, "content", "")
+    return f'"{content[:60]}…"'
 
 
 def _env_flag(name: str) -> bool | None:
@@ -295,24 +413,77 @@ def _retrieve_query_gated(
     return results, branch, _keyword_fallback_active(appraisal_engine, appraisal_mode)
 
 
+def _format_top_memories(results: list[object]) -> str:
+    if not results:
+        return "_No memories yet._"
+    return "\n".join(
+        f"{index}. {_memory_excerpt(memory)}" for index, memory in enumerate(results[:3], start=1)
+    )
+
+
+def compare_both_modes(
+    query: str,
+    em_state: object,
+    retrieval_mode: str = RETRIEVAL_MODE_MOOD_STATE,
+) -> str:
+    """Run both retrieval arms on scratch copies of one snapshot. No write-back."""
+    session = _ensure_session(em_state)
+    raw = query.strip()
+    if not raw:
+        return "Type a query (or `recall …`) then click **Compare both modes**."
+    parsed = _parse_recall_query(raw)
+    retrieval_query = parsed if parsed else raw
+    source = session.engine_for(retrieval_mode)
+    mood_scratch = _scratch_from(session, source)
+    gated_scratch = _scratch_from(session, source)
+    mood_results = mood_scratch.retrieve(retrieval_query, top_k=3)
+    try:
+        appraisal_engine, appraisal_mode = _make_appraisal_engine()
+        gated_results, branch, keyword_fallback = _retrieve_query_gated(
+            gated_scratch,
+            retrieval_query,
+            top_k=3,
+            appraisal_engine=appraisal_engine,
+            appraisal_mode=appraisal_mode,
+        )
+    except Exception as exc:
+        logger.warning("compare-both gated path failed (%s)", exc)
+        gated_results, branch, keyword_fallback = [], "unavailable", False
+    fallback = (
+        "\n\n_Query-gated comparison used the keyword appraisal fallback (English only)._"
+        if keyword_fallback
+        else ""
+    )
+    return (
+        "### Compare both modes (snapshot — no write-back)\n\n"
+        f"Query: `{retrieval_query}`\n\n"
+        f"**{RETRIEVAL_MODE_MOOD_STATE}**\n\n"
+        f"{_format_top_memories(mood_results)}\n\n"
+        f"**{RETRIEVAL_MODE_QUERY_GATED}** — {branch}\n\n"
+        f"{_format_top_memories(gated_results)}"
+        f"{fallback}"
+    )
+
+
 def chat(
     user_msg: str,
     chat_history: list[dict[str, str]],
-    em_state: EmotionalMemory,
+    em_state: object,
     pad_history: list[tuple[float, float, float]],
     msg_count: int,
     retrieval_mode: str = RETRIEVAL_MODE_MOOD_STATE,
 ) -> tuple[
     list[dict[str, str]],
-    EmotionalMemory,
+    DemoSession,
     list[tuple[float, float, float]],
     Image.Image,
     str,
     int,
 ]:
+    session = _ensure_session(em_state)
     if not user_msg.strip():
         plot = _pad_plot(pad_history) if pad_history else _pad_plot([(0.0, 0.5, 0.0)])
-        return chat_history, em_state, pad_history, plot, "", msg_count
+        return chat_history, session, pad_history, plot, "", msg_count
 
     if msg_count >= MAX_MSG_PER_SESSION:
         gr.Info(
@@ -321,7 +492,7 @@ def chat(
         )
         return (
             chat_history,
-            em_state,
+            session,
             pad_history,
             _pad_plot(pad_history),
             "",
@@ -332,7 +503,7 @@ def chat(
     is_recall_request = recall_query is not None
     if not is_recall_request:
         try:
-            em_state.encode(user_msg, metadata={"role": "user"})
+            _encode_user_both(session, user_msg, {"role": "user"})
         except Exception as exc:
             logger.exception("encode failed: %s", exc)
             error_reply = f"⚠️ Could not encode memory: {exc}"
@@ -341,9 +512,19 @@ def chat(
                 {"role": "user", "content": user_msg},
                 {"role": "assistant", "content": error_reply},
             ]
-            return chat_history, em_state, pad_history, _pad_plot(pad_history), "", msg_count + 1
+            return chat_history, session, pad_history, _pad_plot(pad_history), "", msg_count + 1
 
-    state = em_state.get_state()
+    use_gated_recall = bool(
+        is_recall_request and retrieval_mode == RETRIEVAL_MODE_QUERY_GATED and recall_query
+    )
+    if use_gated_recall:
+        active = session.gated
+    elif is_recall_request:
+        active = session.mood
+    else:
+        active = session.engine_for(retrieval_mode)
+
+    state = active.get_state()
     v = state.core_affect.valence
     a = state.core_affect.arousal
 
@@ -362,20 +543,19 @@ def chat(
     reply = (
         f"[{tone}] I heard you. "
         f"Current state — valence: {v:+.2f}, arousal: {a:.2f}. "
-        f"I have {len(em_state.list_all())} memories stored. "
+        f"I have {len(active.list_all())} memories stored. "
         "Ask me to 'recall project success' to see semantic + mood-aware retrieval."
     )
 
     # Handle recall requests
     if is_recall_request:
         retrieval_query = recall_query if recall_query else user_msg
-        use_gated = retrieval_mode == RETRIEVAL_MODE_QUERY_GATED and bool(recall_query)
         gated_note = ""
-        if use_gated:
+        if use_gated_recall:
             try:
                 appraisal_engine, appraisal_mode = _make_appraisal_engine()
                 results, branch, keyword_fallback = _retrieve_query_gated(
-                    em_state,
+                    session.gated,
                     retrieval_query,
                     top_k=3,
                     appraisal_engine=appraisal_engine,
@@ -387,7 +567,7 @@ def chat(
                         "(English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for LLM appraisal)."
                     )
                 if results:
-                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    excerpts = "; ".join(_memory_excerpt(m) for m in results[:3])
                     reply = (
                         f"[{tone}] Top memories (query-gated, {branch}): {excerpts}{gated_note}"
                     )
@@ -397,9 +577,10 @@ def chat(
                     )
             except Exception as exc:
                 logger.warning("query-gated recall failed (%s); using mood-state recall", exc)
-                results = em_state.retrieve(retrieval_query, top_k=3)
+                active = session.mood
+                results = session.mood.retrieve(retrieval_query, top_k=3)
                 if results:
-                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    excerpts = "; ".join(_memory_excerpt(m) for m in results[:3])
                     reply = (
                         f"[{tone}] Top memories matching your query and current mood: {excerpts} "
                         "(query-gated recall unavailable, used mood-state recall)"
@@ -407,9 +588,9 @@ def chat(
                 else:
                     reply = f"[{tone}] No memories yet — keep chatting to build them up!"
         else:
-            results = em_state.retrieve(retrieval_query, top_k=3)
+            results = session.mood.retrieve(retrieval_query, top_k=3)
             if results:
-                excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                excerpts = "; ".join(_memory_excerpt(m) for m in results[:3])
                 if recall_query:
                     reply = (
                         f"[{tone}] Top memories matching your query and current mood: {excerpts}"
@@ -425,11 +606,17 @@ def chat(
                 reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
     try:
-        em_state.observe(reply, metadata={"role": "assistant"})
+        if is_recall_request:
+            # Write-backs already applied by retrieve(); observe the reply on
+            # the same mode only so the other mode's state is untouched.
+            active.observe(reply, metadata={"role": "assistant"})
+            session.diverged = True
+        else:
+            _observe_both(session, reply, {"role": "assistant"})
     except Exception as exc:
         logger.warning("observe failed (non-fatal): %s", exc)
 
-    state = em_state.get_state()
+    state = active.get_state()
     mood = state.mood
     pad_history = [
         *pad_history,
@@ -444,25 +631,28 @@ def chat(
         {"role": "assistant", "content": reply},
     ]
     plot = _pad_plot(pad_history)
-    return chat_history, em_state, pad_history, plot, "", msg_count + 1
+    return chat_history, session, pad_history, plot, "", msg_count + 1
 
 
-def reset_session() -> tuple[
+def reset_session(
+    *_args: object,
+) -> tuple[
     list,
-    EmotionalMemory,
+    DemoSession,
     list,
     Image.Image,
     str,
     int,
 ]:
-    em, mode = _build_engine()
+    # Guard: API clients may pass the unbound State factory; ignore and rebuild.
+    session, mode = _build_engine()
     plot = _initial_pad_plot().copy()
-    return [], em, list(_INITIAL_PAD_HISTORY), plot, mode, 0
+    return [], session, list(_INITIAL_PAD_HISTORY), plot, mode, 0
 
 
-def _initial_em_state() -> EmotionalMemory:
-    em, _mode = _build_engine()
-    return em
+def _initial_em_state() -> DemoSession:
+    session, _mode = _build_engine()
+    return session
 
 
 # ---------------------------------------------------------------------------
@@ -537,6 +727,13 @@ def build_demo() -> gr.Blocks:
                         "ranking when that query is affectively neutral."
                     ),
                 )
+                gr.Markdown(
+                    "Normal recall updates memory (retrieval count, reconsolidation, "
+                    "link strengthening) as part of the mechanism; each mode keeps its "
+                    "own memory so the comparison stays fair."
+                )
+                compare_btn = gr.Button("Compare both modes", variant="secondary", size="sm")
+                compare_output = gr.Markdown("")
                 gr.Examples(examples=_EXAMPLES, inputs=msg_box)
                 reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
                 appraisal_badge = gr.Markdown(initial_runtime_badge, elem_id="appraisal-badge")
@@ -564,6 +761,7 @@ def build_demo() -> gr.Blocks:
                 appraisal_badge,
                 msg_count,
             ],
+            api_name=False,
         )
 
         send_btn.click(
@@ -571,12 +769,20 @@ def build_demo() -> gr.Blocks:
             inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
+            api_name="chat",
         )
         msg_box.submit(
             fn=chat,
             inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
+            api_name=False,
+        )
+        compare_btn.click(
+            fn=compare_both_modes,
+            inputs=[msg_box, em_state, retrieval_mode],
+            outputs=[compare_output],
+            api_name="compare_both",
         )
         reset_btn.click(
             fn=reset_session,
@@ -588,6 +794,12 @@ def build_demo() -> gr.Blocks:
                 appraisal_badge,
                 msg_count,
             ],
+            api_name="reset_session",
+        )
+        reset_btn.click(
+            fn=lambda: "",
+            outputs=[compare_output],
+            api_name=False,
         )
 
     return demo

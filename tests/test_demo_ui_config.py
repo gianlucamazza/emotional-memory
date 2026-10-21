@@ -225,6 +225,15 @@ def test_retrieval_mode_radio_defaults_to_mood_state() -> None:
     assert radio_keywords["value"].id == "RETRIEVAL_MODE_MOOD_STATE"
 
 
+def test_demo_mentions_recall_writebacks_and_per_mode_memory() -> None:
+    source = (
+        Path(__file__).resolve().parents[1].joinpath("demo", "app.py").read_text(encoding="utf-8")
+    )
+    assert "retrieval count, reconsolidation" in source
+    assert "each mode keeps its" in source
+    assert "Compare both modes" in source
+
+
 def test_chatbot_explicitly_disables_tags() -> None:
     tree = _load_demo_tree()
     chatbot_calls = [

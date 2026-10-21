@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Demo retrieval-mode isolation.** Each Hugging Face demo retrieval mode
+  keeps its own `EmotionalMemory` so a recall — and the `observe(reply)` that
+  follows — cannot confound the other mode. Non-recall turns encode once and
+  replicate with the public `export_memories` / `import_memories` and
+  `save_state` / `load_state` API. `/chat` API clients that skip page load no
+  longer crash when Gradio 6.13.0 leaves `gr.State` as the factory function.
+
 - **affective-fly host adapter test.** Read `AffectiveLoop.action_gate`
   (fly 0.2.6 renamed `launch_gate`; the old property now emits
   `DeprecationWarning`, which CI treats as a failure).
@@ -45,6 +52,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   embeddings before interpolating the `float[dim]` virtual-table schema.
 
 ### Added
+
+- **Demo compare-both action.** The Hugging Face demo snapshots one store and
+  affective state, runs mood-state and query-gated recall on scratch copies,
+  shows both top-3 lists with the gate branch label, and writes back to
+  nothing.
 
 - **Demo retrieval-mode selector.** The Hugging Face demo can switch between
   mood-state recall (default, mechanism demo) and query-gated recall that

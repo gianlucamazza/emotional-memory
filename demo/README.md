@@ -48,7 +48,9 @@ read **Scope and limits** below before using it.
 - **Retrieval mode toggle**: the default is mood-state recall (the mechanism
   demo). Query-gated recall appraises the recall query and uses cosine-only
   ranking when that query is affectively neutral. A bare `recall` command
-  always uses mood-state recall.
+  always uses mood-state recall. Normal recall updates memory (retrieval
+  count, reconsolidation, link strengthening) as part of the mechanism; each
+  mode keeps its own memory so the comparison stays fair.
 - **Memory policy**: assistant replies and recall commands stay out of the
   retrievable corpus, so the agent does not retrieve its own output.
 - **Example prompts**: click any pre-filled example to see the pipeline run.
