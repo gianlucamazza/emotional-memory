@@ -46,6 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Demo retrieval-mode selector.** The Hugging Face demo can switch between
+  mood-state recall (default, mechanism demo) and query-gated recall that
+  reproduces `retrieve_query_gated()` from one appraisal plus the public
+  retrieve arms. Bare `recall` stays on the mood-state path. Gated replies
+  show which gate arm fired and note the keyword-appraisal fallback when no
+  LLM key is set.
+
 - **affective-fly host adapter.** `FlyAffectHost` in `emotional_memory.integrations.fly`
   constructs this package's store and `EmotionalMemory`, owns wall-clock /
   HostFrame `mood_dt`, and each tick asks

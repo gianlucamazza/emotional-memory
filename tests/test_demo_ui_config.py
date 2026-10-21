@@ -209,6 +209,22 @@ def test_event_loop_cleanup_patch_is_narrow_and_idempotent() -> None:
     assert "Invalid file descriptor" in source
 
 
+def test_retrieval_mode_radio_defaults_to_mood_state() -> None:
+    tree = _load_demo_tree()
+    radio_calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "Radio"
+    ]
+
+    assert radio_calls
+    radio_keywords = _keyword_map(radio_calls[0])
+    assert isinstance(radio_keywords.get("value"), ast.Name)
+    assert radio_keywords["value"].id == "RETRIEVAL_MODE_MOOD_STATE"
+
+
 def test_chatbot_explicitly_disables_tags() -> None:
     tree = _load_demo_tree()
     chatbot_calls = [

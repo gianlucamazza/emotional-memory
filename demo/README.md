@@ -45,6 +45,10 @@ read **Scope and limits** below before using it.
   dominant mood update with each exchange.
 - **Semantic + affect-aware retrieval**: type "recall X" to retrieve memories
   ranked by semantic similarity and the current emotional state.
+- **Retrieval mode toggle**: the default is mood-state recall (the mechanism
+  demo). Query-gated recall appraises the recall query and uses cosine-only
+  ranking when that query is affectively neutral. A bare `recall` command
+  always uses mood-state recall.
 - **Memory policy**: assistant replies and recall commands stay out of the
   retrievable corpus, so the agent does not retrieve its own output.
 - **Example prompts**: click any pre-filled example to see the pipeline run.

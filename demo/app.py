@@ -69,6 +69,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from emotional_memory import (
+    AppraisalEngine,
     EmotionalMemory,
     InMemoryStore,
     KeywordAppraisalEngine,
@@ -76,10 +77,18 @@ from emotional_memory import (
     LLMAppraisalEngine,
     __version__,
 )
+from emotional_memory.engine_shared import (
+    DEFAULT_QUERY_AFFECT_GATE_TAU,
+    is_query_affect_neutral,
+    semantic_only_weights,
+)
 from emotional_memory.llm_http import (
     OpenAICompatibleLLMConfig,
     make_httpx_llm,
 )
+
+RETRIEVAL_MODE_MOOD_STATE = "Mood-state recall (mechanism demo)"
+RETRIEVAL_MODE_QUERY_GATED = "Query-gated recall"
 
 # ---------------------------------------------------------------------------
 # Embedder — use SentenceTransformer if available, fall back to Hash
@@ -250,12 +259,49 @@ def _is_recall_request(text: str) -> bool:
     return _parse_recall_query(text) is not None
 
 
+def _keyword_fallback_active(engine: object, mode: str) -> bool:
+    return isinstance(engine, KeywordAppraisalEngine) or "Keyword fallback" in mode
+
+
+def _retrieve_query_gated(
+    em_state: EmotionalMemory,
+    query: str,
+    *,
+    top_k: int = 3,
+    appraisal_engine: AppraisalEngine | None = None,
+    appraisal_mode: str | None = None,
+) -> tuple[list[object], str, bool]:
+    """Reproduce 0.18.1 ``retrieve_query_gated`` from one appraisal + public retrieve.
+
+    Package 0.18.1 does not expose the gate decision (no return value, hook, or
+    public appraise-query helper). Appraise once, then call the same public
+    ``retrieve`` arms the library uses.
+    """
+    if appraisal_engine is None or appraisal_mode is None:
+        factory_engine, factory_mode = _make_appraisal_engine()
+        if appraisal_engine is None:
+            appraisal_engine = factory_engine
+        if appraisal_mode is None:
+            appraisal_mode = factory_mode
+    query_affect = appraisal_engine.appraise(query).to_core_affect()
+    if is_query_affect_neutral(query_affect.valence, DEFAULT_QUERY_AFFECT_GATE_TAU):
+        results = em_state.retrieve(
+            query, top_k=top_k, precomputed_weights=semantic_only_weights()
+        )
+        branch = "neutral query, cosine only"
+    else:
+        results = em_state.retrieve(query, top_k=top_k, query_affect=query_affect)
+        branch = "affect-aware"
+    return results, branch, _keyword_fallback_active(appraisal_engine, appraisal_mode)
+
+
 def chat(
     user_msg: str,
     chat_history: list[dict[str, str]],
     em_state: EmotionalMemory,
     pad_history: list[tuple[float, float, float]],
     msg_count: int,
+    retrieval_mode: str = RETRIEVAL_MODE_MOOD_STATE,
 ) -> tuple[
     list[dict[str, str]],
     EmotionalMemory,
@@ -323,15 +369,60 @@ def chat(
     # Handle recall requests
     if is_recall_request:
         retrieval_query = recall_query if recall_query else user_msg
-        results = em_state.retrieve(retrieval_query, top_k=3)
-        if results:
-            excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
-            if recall_query:
-                reply = f"[{tone}] Top memories matching your query and current mood: {excerpts}"
-            else:
-                reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
+        use_gated = retrieval_mode == RETRIEVAL_MODE_QUERY_GATED and bool(recall_query)
+        gated_note = ""
+        if use_gated:
+            try:
+                appraisal_engine, appraisal_mode = _make_appraisal_engine()
+                results, branch, keyword_fallback = _retrieve_query_gated(
+                    em_state,
+                    retrieval_query,
+                    top_k=3,
+                    appraisal_engine=appraisal_engine,
+                    appraisal_mode=appraisal_mode,
+                )
+                if keyword_fallback:
+                    gated_note = (
+                        " Query-gated recall is using the keyword appraisal fallback "
+                        "(English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for LLM appraisal)."
+                    )
+                if results:
+                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    reply = (
+                        f"[{tone}] Top memories (query-gated, {branch}): {excerpts}{gated_note}"
+                    )
+                else:
+                    reply = (
+                        f"[{tone}] No memories yet — keep chatting to build them up!{gated_note}"
+                    )
+            except Exception as exc:
+                logger.warning("query-gated recall failed (%s); using mood-state recall", exc)
+                results = em_state.retrieve(retrieval_query, top_k=3)
+                if results:
+                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    reply = (
+                        f"[{tone}] Top memories matching your query and current mood: {excerpts} "
+                        "(query-gated recall unavailable, used mood-state recall)"
+                    )
+                else:
+                    reply = f"[{tone}] No memories yet — keep chatting to build them up!"
         else:
-            reply = f"[{tone}] No memories yet — keep chatting to build them up!"
+            results = em_state.retrieve(retrieval_query, top_k=3)
+            if results:
+                excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                if recall_query:
+                    reply = (
+                        f"[{tone}] Top memories matching your query and current mood: {excerpts}"
+                    )
+                elif retrieval_mode == RETRIEVAL_MODE_QUERY_GATED:
+                    reply = (
+                        f"[{tone}] Top memories matching your current mood "
+                        f"(bare recall stays on mood-state recall): {excerpts}"
+                    )
+                else:
+                    reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
+            else:
+                reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
     try:
         em_state.observe(reply, metadata={"role": "assistant"})
@@ -436,6 +527,16 @@ def build_demo() -> gr.Blocks:
                         scale=4,
                     )
                     send_btn = gr.Button("Send", variant="primary", scale=1)
+                retrieval_mode = gr.Radio(
+                    choices=[RETRIEVAL_MODE_MOOD_STATE, RETRIEVAL_MODE_QUERY_GATED],
+                    value=RETRIEVAL_MODE_MOOD_STATE,
+                    label="Retrieval mode",
+                    info=(
+                        "Mood-state recall scores against the running conversation affect. "
+                        "Query-gated recall appraises the recall query and uses cosine-only "
+                        "ranking when that query is affectively neutral."
+                    ),
+                )
                 gr.Examples(examples=_EXAMPLES, inputs=msg_box)
                 reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
                 appraisal_badge = gr.Markdown(initial_runtime_badge, elem_id="appraisal-badge")
@@ -467,13 +568,13 @@ def build_demo() -> gr.Blocks:
 
         send_btn.click(
             fn=chat,
-            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
         )
         msg_box.submit(
             fn=chat,
-            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
         )
