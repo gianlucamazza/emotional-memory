@@ -76,10 +76,17 @@ from emotional_memory import (
     LLMAppraisalEngine,
     __version__,
 )
+from emotional_memory.engine_shared import (
+    DEFAULT_QUERY_AFFECT_GATE_TAU,
+    is_query_affect_neutral,
+)
 from emotional_memory.llm_http import (
     OpenAICompatibleLLMConfig,
     make_httpx_llm,
 )
+
+RETRIEVAL_MODE_MOOD_STATE = "Mood-state recall (mechanism demo)"
+RETRIEVAL_MODE_QUERY_GATED = "Query-gated recall"
 
 # ---------------------------------------------------------------------------
 # Embedder — use SentenceTransformer if available, fall back to Hash
@@ -250,12 +257,33 @@ def _is_recall_request(text: str) -> bool:
     return _parse_recall_query(text) is not None
 
 
+def _gate_tau(em_state: EmotionalMemory) -> float:
+    """Use the engine's configured tau, else the package default (no local copy)."""
+    config = getattr(em_state, "_config", None)
+    return getattr(config, "query_affect_gate_tau", DEFAULT_QUERY_AFFECT_GATE_TAU)
+
+
+def _gate_branch_label(query: str, em_state: EmotionalMemory) -> str:
+    """Describe which ``retrieve_query_gated`` arm the library gate selects."""
+    appraisal_engine, _mode = _make_appraisal_engine()
+    valence = appraisal_engine.appraise(query).to_core_affect().valence
+    if is_query_affect_neutral(valence, _gate_tau(em_state)):
+        return "neutral query, cosine only"
+    return "affect-aware"
+
+
+def _keyword_fallback_active() -> bool:
+    engine, mode = _make_appraisal_engine()
+    return isinstance(engine, KeywordAppraisalEngine) or "Keyword fallback" in mode
+
+
 def chat(
     user_msg: str,
     chat_history: list[dict[str, str]],
     em_state: EmotionalMemory,
     pad_history: list[tuple[float, float, float]],
     msg_count: int,
+    retrieval_mode: str = RETRIEVAL_MODE_MOOD_STATE,
 ) -> tuple[
     list[dict[str, str]],
     EmotionalMemory,
@@ -323,15 +351,54 @@ def chat(
     # Handle recall requests
     if is_recall_request:
         retrieval_query = recall_query if recall_query else user_msg
-        results = em_state.retrieve(retrieval_query, top_k=3)
-        if results:
-            excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
-            if recall_query:
-                reply = f"[{tone}] Top memories matching your query and current mood: {excerpts}"
-            else:
-                reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
+        use_gated = retrieval_mode == RETRIEVAL_MODE_QUERY_GATED and bool(recall_query)
+        gated_note = ""
+        if use_gated:
+            try:
+                results = em_state.retrieve_query_gated(retrieval_query, top_k=3)
+                branch = _gate_branch_label(retrieval_query, em_state)
+                if _keyword_fallback_active():
+                    gated_note = (
+                        " Query-gated recall is using the keyword appraisal fallback "
+                        "(English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for LLM appraisal)."
+                    )
+                if results:
+                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    reply = (
+                        f"[{tone}] Top memories (query-gated, {branch}): {excerpts}{gated_note}"
+                    )
+                else:
+                    reply = (
+                        f"[{tone}] No memories yet — keep chatting to build them up!{gated_note}"
+                    )
+            except Exception as exc:
+                logger.warning("retrieve_query_gated failed (%s); using mood-state recall", exc)
+                results = em_state.retrieve(retrieval_query, top_k=3)
+                if results:
+                    excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                    reply = (
+                        f"[{tone}] Top memories matching your query and current mood: {excerpts} "
+                        f"(query-gated recall unavailable: {exc})"
+                    )
+                else:
+                    reply = f"[{tone}] No memories yet — keep chatting to build them up!"
         else:
-            reply = f"[{tone}] No memories yet — keep chatting to build them up!"
+            results = em_state.retrieve(retrieval_query, top_k=3)
+            if results:
+                excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
+                if recall_query:
+                    reply = (
+                        f"[{tone}] Top memories matching your query and current mood: {excerpts}"
+                    )
+                elif retrieval_mode == RETRIEVAL_MODE_QUERY_GATED:
+                    reply = (
+                        f"[{tone}] Top memories matching your current mood "
+                        f"(bare recall stays on mood-state recall): {excerpts}"
+                    )
+                else:
+                    reply = f"[{tone}] Top memories matching your current mood: {excerpts}"
+            else:
+                reply = f"[{tone}] No memories yet — keep chatting to build them up!"
 
     try:
         em_state.observe(reply, metadata={"role": "assistant"})
@@ -436,6 +503,16 @@ def build_demo() -> gr.Blocks:
                         scale=4,
                     )
                     send_btn = gr.Button("Send", variant="primary", scale=1)
+                retrieval_mode = gr.Radio(
+                    choices=[RETRIEVAL_MODE_MOOD_STATE, RETRIEVAL_MODE_QUERY_GATED],
+                    value=RETRIEVAL_MODE_MOOD_STATE,
+                    label="Retrieval mode",
+                    info=(
+                        "Mood-state recall scores against the running conversation affect. "
+                        "Query-gated recall appraises the recall query and uses cosine-only "
+                        "ranking when that query is affectively neutral."
+                    ),
+                )
                 gr.Examples(examples=_EXAMPLES, inputs=msg_box)
                 reset_btn = gr.Button("🔄 New session", variant="secondary", size="sm")
                 appraisal_badge = gr.Markdown(initial_runtime_badge, elem_id="appraisal-badge")
@@ -467,13 +544,13 @@ def build_demo() -> gr.Blocks:
 
         send_btn.click(
             fn=chat,
-            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
         )
         msg_box.submit(
             fn=chat,
-            inputs=[msg_box, chatbot, em_state, pad_history, msg_count],
+            inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
         )

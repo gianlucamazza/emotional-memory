@@ -69,6 +69,144 @@ def test_parse_recall_query_extracts_payload_and_handles_empty_command() -> None
     assert demo_app._parse_recall_query("tell me more") is None
 
 
+def _seed_chat_with_memory(demo_app):  # type: ignore[no-untyped-def]
+    chatbot, em_state, pad_history, _plot, _mode, msg_count = demo_app.reset_session()
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "I got promoted and everyone celebrated with me.",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+    return chatbot, em_state, pad_history, msg_count
+
+
+def test_retrieval_mode_dispatch_defaults_gated_and_bare_recall(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    chatbot, em_state, pad_history, msg_count = _seed_chat_with_memory(demo_app)
+
+    seen: dict[str, str] = {}
+
+    def _fake_retrieve(self, query: str, top_k: int = 5, **_kwargs):  # type: ignore[no-untyped-def]
+        seen["retrieve"] = query
+        return self.list_all()[:top_k]
+
+    def _fake_gated(self, query: str, top_k: int = 5, *, tau=None):  # type: ignore[no-untyped-def]
+        seen["gated"] = query
+        seen["gated_top_k"] = str(top_k)
+        return self.list_all()[:top_k]
+
+    monkeypatch.setattr(demo_app.EmotionalMemory, "retrieve", _fake_retrieve)
+    monkeypatch.setattr(demo_app.EmotionalMemory, "retrieve_query_gated", _fake_gated)
+
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+    )
+    assert seen == {"retrieve": "project success"}
+    assert "Top memories matching your query and current mood" in chatbot[-1]["content"]
+
+    seen.clear()
+    chatbot, em_state, pad_history, _plot, _msg_box, msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+        demo_app.RETRIEVAL_MODE_QUERY_GATED,
+    )
+    assert seen == {"gated": "project success", "gated_top_k": "3"}
+    reply = chatbot[-1]["content"]
+    assert "query-gated" in reply.lower()
+    assert "cosine only" in reply.lower() or "affect-aware" in reply.lower()
+
+    seen.clear()
+    chatbot, em_state, pad_history, _plot, _msg_box, _msg_count = demo_app.chat(
+        "recall",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+        demo_app.RETRIEVAL_MODE_QUERY_GATED,
+    )
+    assert seen == {"retrieve": "recall"}
+    assert "Top memories matching your current mood" in chatbot[-1]["content"]
+    assert "mood-state" in chatbot[-1]["content"].lower()
+
+
+def test_gate_branch_label_uses_package_neutral_check(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from emotional_memory.affect import CoreAffect
+    from emotional_memory.engine_shared import (
+        DEFAULT_QUERY_AFFECT_GATE_TAU,
+        is_query_affect_neutral,
+    )
+
+    demo_app = _load_demo_module()
+    em_state = demo_app._initial_em_state()
+
+    class _StubAppraisal:
+        def __init__(self, valence: float) -> None:
+            self.valence = valence
+
+        def appraise(self, text: str, context: dict | None = None):  # type: ignore[type-arg]
+            valence = self.valence
+
+            class _Result:
+                @staticmethod
+                def to_core_affect() -> CoreAffect:
+                    return CoreAffect(valence=valence, arousal=0.3)
+
+            return _Result()
+
+    monkeypatch.setattr(
+        demo_app,
+        "_make_appraisal_engine",
+        lambda: (_StubAppraisal(0.05), "📝 Keyword fallback active"),
+    )
+    assert is_query_affect_neutral(0.05, DEFAULT_QUERY_AFFECT_GATE_TAU)
+    assert "cosine only" in demo_app._gate_branch_label("neutral query", em_state).lower()
+
+    monkeypatch.setattr(
+        demo_app,
+        "_make_appraisal_engine",
+        lambda: (_StubAppraisal(0.8), "📝 Keyword fallback active"),
+    )
+    assert not is_query_affect_neutral(0.8, DEFAULT_QUERY_AFFECT_GATE_TAU)
+    assert "affect-aware" in demo_app._gate_branch_label("success query", em_state).lower()
+
+
+def test_gated_recall_notes_keyword_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    demo_app = _load_demo_module()
+    chatbot, em_state, pad_history, msg_count = _seed_chat_with_memory(demo_app)
+
+    def _fake_gated(self, query: str, top_k: int = 5, *, tau=None):  # type: ignore[no-untyped-def]
+        return self.list_all()[:top_k]
+
+    monkeypatch.setattr(demo_app.EmotionalMemory, "retrieve_query_gated", _fake_gated)
+    monkeypatch.setattr(
+        demo_app,
+        "_make_appraisal_engine",
+        lambda: (demo_app.KeywordAppraisalEngine(), "📝 Keyword fallback active"),
+    )
+
+    chatbot, _em_state, _pad_history, _plot, _msg_box, _msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        em_state,
+        pad_history,
+        msg_count,
+        demo_app.RETRIEVAL_MODE_QUERY_GATED,
+    )
+    assert "keyword" in chatbot[-1]["content"].lower()
+
+
 def test_recall_uses_only_payload_for_retrieval(monkeypatch: pytest.MonkeyPatch) -> None:
     demo_app = _load_demo_module()
 
