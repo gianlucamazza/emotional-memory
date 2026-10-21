@@ -412,3 +412,209 @@ def test_demo_disables_gradio_and_hub_telemetry() -> None:
     assert os.environ.get("GRADIO_ANALYTICS_ENABLED") == "False"
     assert os.environ.get("HF_HUB_DISABLE_TELEMETRY") == "1"
     assert os.environ.get("DO_NOT_TRACK") == "1"
+
+
+class _CountingAppraisal:
+    """Wraps KeywordAppraisalEngine and counts ``appraise`` calls."""
+
+    def __init__(self, inner: object) -> None:
+        self.inner = inner
+        self.calls = 0
+        self.texts: list[str] = []
+
+    def appraise(self, event_text: str, context: dict[str, object] | None = None) -> object:
+        self.calls += 1
+        self.texts.append(event_text)
+        return self.inner.appraise(event_text, context=context)
+
+
+def _offline_session(demo_app, appraisal: object | None = None):  # type: ignore[no-untyped-def]
+    embedder = demo_app._HashEmbedder()
+    appraisal = appraisal or demo_app.KeywordAppraisalEngine()
+    return demo_app.DemoSession(
+        mood=demo_app.EmotionalMemory(
+            store=demo_app.InMemoryStore(),
+            embedder=embedder,
+            appraisal_engine=appraisal,
+        ),
+        gated=demo_app.EmotionalMemory(
+            store=demo_app.InMemoryStore(),
+            embedder=embedder,
+            appraisal_engine=appraisal,
+        ),
+        embedder=embedder,
+        appraisal_engine=appraisal,
+        appraisal_mode="📝 Keyword fallback active",
+    )
+
+
+def _force_offline_factories(
+    monkeypatch: pytest.MonkeyPatch,
+    demo_app,  # type: ignore[no-untyped-def]
+    appraisal: object | None = None,
+) -> object:
+    embedder = demo_app._HashEmbedder()
+    appraisal = appraisal or demo_app.KeywordAppraisalEngine()
+    monkeypatch.setattr(demo_app, "_make_embedder", lambda: embedder)
+    monkeypatch.setattr(
+        demo_app,
+        "_make_appraisal_engine",
+        lambda: (appraisal, "📝 Keyword fallback active"),
+    )
+    return appraisal
+
+
+def _snapshot(engine: object) -> tuple[list[object], object]:
+    return engine.export_memories(), engine.save_state()
+
+
+def test_recall_in_one_mode_leaves_the_other_unchanged(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    appraisal = demo_app.KeywordAppraisalEngine()
+    _force_offline_factories(monkeypatch, demo_app, appraisal)
+    session = _offline_session(demo_app, appraisal)
+
+    chatbot: list[dict[str, str]] = []
+    pad_history = list(demo_app._INITIAL_PAD_HISTORY)
+    msg_count = 0
+    for text in (
+        "I succeeded! My project is complete and it's a great personal victory.",
+        "I failed and made a terrible mistake — everything is broken.",
+        "The meeting is at three o'clock in the conference room.",
+    ):
+        chatbot, session, pad_history, _plot, _box, msg_count = demo_app.chat(
+            text, chatbot, session, pad_history, msg_count
+        )
+
+    gated_before = _snapshot(session.gated)
+    mood_before = _snapshot(session.mood)
+    assert gated_before == mood_before
+
+    chatbot, session, pad_history, _plot, _box, msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        session,
+        pad_history,
+        msg_count,
+        demo_app.RETRIEVAL_MODE_MOOD_STATE,
+    )
+    assert _snapshot(session.gated) == gated_before
+    assert _snapshot(session.mood) != mood_before
+
+    mood_after_own_recall = _snapshot(session.mood)
+    chatbot, session, pad_history, _plot, _box, _msg_count = demo_app.chat(
+        "recall project success",
+        chatbot,
+        session,
+        pad_history,
+        msg_count,
+        demo_app.RETRIEVAL_MODE_QUERY_GATED,
+    )
+    assert _snapshot(session.mood) == mood_after_own_recall
+    assert _snapshot(session.gated) != gated_before
+
+
+def test_compare_both_leaves_both_sessions_unchanged(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    appraisal = demo_app.KeywordAppraisalEngine()
+    _force_offline_factories(monkeypatch, demo_app, appraisal)
+    session = _offline_session(demo_app, appraisal)
+
+    chatbot: list[dict[str, str]] = []
+    pad_history = list(demo_app._INITIAL_PAD_HISTORY)
+    msg_count = 0
+    chatbot, session, pad_history, _plot, _box, msg_count = demo_app.chat(
+        "I succeeded! My project is complete and it's a great personal victory.",
+        chatbot,
+        session,
+        pad_history,
+        msg_count,
+    )
+    chatbot, session, pad_history, _plot, _box, msg_count = demo_app.chat(
+        "The meeting is at three o'clock in the conference room.",
+        chatbot,
+        session,
+        pad_history,
+        msg_count,
+    )
+
+    before_mood = _snapshot(session.mood)
+    before_gated = _snapshot(session.gated)
+    rendered = demo_app.compare_both_modes("recall project success", session)
+
+    assert _snapshot(session.mood) == before_mood
+    assert _snapshot(session.gated) == before_gated
+    assert demo_app.RETRIEVAL_MODE_MOOD_STATE in rendered
+    assert demo_app.RETRIEVAL_MODE_QUERY_GATED in rendered
+    assert "affect-aware" in rendered
+    assert "snapshot" in rendered.lower()
+
+
+def test_non_recall_replicates_with_single_appraisal(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    counting = _CountingAppraisal(demo_app.KeywordAppraisalEngine())
+    _force_offline_factories(monkeypatch, demo_app, counting)
+    session = _offline_session(demo_app, counting)
+
+    demo_app._encode_user_both(
+        session,
+        "I feel relieved and proud after finishing this project.",
+        {"role": "user"},
+    )
+    assert counting.calls == 1
+    assert session.mood.export_memories() == session.gated.export_memories()
+    assert session.mood.save_state() == session.gated.save_state()
+
+    counting.calls = 0
+    session = _offline_session(demo_app, counting)
+    _chatbot, session, _pad, _plot, _box, _count = demo_app.chat(
+        "I feel relieved and proud after finishing this project.",
+        [],
+        session,
+        list(demo_app._INITIAL_PAD_HISTORY),
+        0,
+    )
+    # One appraisal for the user encode, one for observe(reply); both modes share them.
+    assert counting.calls == 2
+    assert session.mood.export_memories() == session.gated.export_memories()
+    assert session.mood.save_state() == session.gated.save_state()
+
+
+def test_chat_guard_rebuilds_uninitialised_state(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    _force_offline_factories(monkeypatch, demo_app)
+
+    chatbot, session, _pad_history, _plot, _box, msg_count = demo_app.chat(
+        "recall happy moments",
+        [],
+        demo_app._initial_em_state,
+        list(demo_app._INITIAL_PAD_HISTORY),
+        demo_app._INITIAL_MSG_COUNT,
+    )
+    assert isinstance(session, demo_app.DemoSession)
+    assert msg_count == 1
+    assert chatbot[-1]["role"] == "assistant"
+
+    chatbot, session, _pad_history, _plot, _box, msg_count = demo_app.chat(
+        "I feel calm and ready to start.",
+        [],
+        demo_app._initial_em_state,
+        list(demo_app._INITIAL_PAD_HISTORY),
+        demo_app._INITIAL_MSG_COUNT,
+    )
+    assert isinstance(session, demo_app.DemoSession)
+    stored = [memory.content for memory in session.mood.list_all()]
+    assert stored == ["I feel calm and ready to start."]
+    assert [memory.content for memory in session.gated.list_all()] == stored
+
+    reset = demo_app.reset_session(demo_app._initial_em_state)
+    assert len(reset) == 6
+    assert isinstance(reset[1], demo_app.DemoSession)
