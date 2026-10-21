@@ -69,6 +69,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from emotional_memory import (
+    AppraisalEngine,
     EmotionalMemory,
     InMemoryStore,
     KeywordAppraisalEngine,
@@ -79,6 +80,7 @@ from emotional_memory import (
 from emotional_memory.engine_shared import (
     DEFAULT_QUERY_AFFECT_GATE_TAU,
     is_query_affect_neutral,
+    semantic_only_weights,
 )
 from emotional_memory.llm_http import (
     OpenAICompatibleLLMConfig,
@@ -257,24 +259,40 @@ def _is_recall_request(text: str) -> bool:
     return _parse_recall_query(text) is not None
 
 
-def _gate_tau(em_state: EmotionalMemory) -> float:
-    """Use the engine's configured tau, else the package default (no local copy)."""
-    config = getattr(em_state, "_config", None)
-    return getattr(config, "query_affect_gate_tau", DEFAULT_QUERY_AFFECT_GATE_TAU)
-
-
-def _gate_branch_label(query: str, em_state: EmotionalMemory) -> str:
-    """Describe which ``retrieve_query_gated`` arm the library gate selects."""
-    appraisal_engine, _mode = _make_appraisal_engine()
-    valence = appraisal_engine.appraise(query).to_core_affect().valence
-    if is_query_affect_neutral(valence, _gate_tau(em_state)):
-        return "neutral query, cosine only"
-    return "affect-aware"
-
-
-def _keyword_fallback_active() -> bool:
-    engine, mode = _make_appraisal_engine()
+def _keyword_fallback_active(engine: object, mode: str) -> bool:
     return isinstance(engine, KeywordAppraisalEngine) or "Keyword fallback" in mode
+
+
+def _retrieve_query_gated(
+    em_state: EmotionalMemory,
+    query: str,
+    *,
+    top_k: int = 3,
+    appraisal_engine: AppraisalEngine | None = None,
+    appraisal_mode: str | None = None,
+) -> tuple[list[object], str, bool]:
+    """Reproduce 0.18.1 ``retrieve_query_gated`` from one appraisal + public retrieve.
+
+    Package 0.18.1 does not expose the gate decision (no return value, hook, or
+    public appraise-query helper). Appraise once, then call the same public
+    ``retrieve`` arms the library uses.
+    """
+    if appraisal_engine is None or appraisal_mode is None:
+        factory_engine, factory_mode = _make_appraisal_engine()
+        if appraisal_engine is None:
+            appraisal_engine = factory_engine
+        if appraisal_mode is None:
+            appraisal_mode = factory_mode
+    query_affect = appraisal_engine.appraise(query).to_core_affect()
+    if is_query_affect_neutral(query_affect.valence, DEFAULT_QUERY_AFFECT_GATE_TAU):
+        results = em_state.retrieve(
+            query, top_k=top_k, precomputed_weights=semantic_only_weights()
+        )
+        branch = "neutral query, cosine only"
+    else:
+        results = em_state.retrieve(query, top_k=top_k, query_affect=query_affect)
+        branch = "affect-aware"
+    return results, branch, _keyword_fallback_active(appraisal_engine, appraisal_mode)
 
 
 def chat(
@@ -355,9 +373,15 @@ def chat(
         gated_note = ""
         if use_gated:
             try:
-                results = em_state.retrieve_query_gated(retrieval_query, top_k=3)
-                branch = _gate_branch_label(retrieval_query, em_state)
-                if _keyword_fallback_active():
+                appraisal_engine, appraisal_mode = _make_appraisal_engine()
+                results, branch, keyword_fallback = _retrieve_query_gated(
+                    em_state,
+                    retrieval_query,
+                    top_k=3,
+                    appraisal_engine=appraisal_engine,
+                    appraisal_mode=appraisal_mode,
+                )
+                if keyword_fallback:
                     gated_note = (
                         " Query-gated recall is using the keyword appraisal fallback "
                         "(English only — set `EMOTIONAL_MEMORY_LLM_API_KEY` for LLM appraisal)."
@@ -372,13 +396,13 @@ def chat(
                         f"[{tone}] No memories yet — keep chatting to build them up!{gated_note}"
                     )
             except Exception as exc:
-                logger.warning("retrieve_query_gated failed (%s); using mood-state recall", exc)
+                logger.warning("query-gated recall failed (%s); using mood-state recall", exc)
                 results = em_state.retrieve(retrieval_query, top_k=3)
                 if results:
                     excerpts = "; ".join(f'"{m.content[:60]}…"' for m in results[:3])
                     reply = (
                         f"[{tone}] Top memories matching your query and current mood: {excerpts} "
-                        f"(query-gated recall unavailable: {exc})"
+                        "(query-gated recall unavailable, used mood-state recall)"
                     )
                 else:
                     reply = f"[{tone}] No memories yet — keep chatting to build them up!"
