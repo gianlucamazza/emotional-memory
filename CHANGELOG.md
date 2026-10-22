@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Demo post-divergence gated encode.** After a recall, the Hugging Face
+  demo encodes new user turns on the gated engine with the shared appraisal
+  instead of importing the mood-engine memory by id. Import skipped reverse
+  back-links on existing memories and copied the mood engine's
+  `mood_snapshot`, `consolidation_strength`, momentum, and forward-link
+  strengths. Proposed by dipankarsarkar (Hugging Face).
+
+- **Demo Gradio API listing.** The reset handler that clears the compare pane
+  is registered as `clear_compare` with `api_visibility="private"`, so it no
+  longer appears as a `/False` API endpoint.
+
 - **Demo retrieval-mode isolation.** Each Hugging Face demo retrieval mode
   keeps its own `EmotionalMemory` so a recall — and the `observe(reply)` that
   follows — cannot confound the other mode. Non-recall turns encode once and

@@ -234,6 +234,31 @@ def test_demo_mentions_recall_writebacks_and_per_mode_memory() -> None:
     assert "Compare both modes" in source
 
 
+def test_compare_clear_click_is_hidden_from_api() -> None:
+    tree = _load_demo_tree()
+    clicks = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "click"
+    ]
+    hidden = []
+    for call in clicks:
+        keywords = _keyword_map(call)
+        api_name = keywords.get("api_name")
+        if not (isinstance(api_name, ast.Constant) and api_name.value == "clear_compare"):
+            continue
+        hidden.append(call)
+        visibility = keywords.get("api_visibility")
+        assert isinstance(visibility, ast.Constant)
+        assert visibility.value == "private"
+        fn = keywords.get("fn")
+        assert isinstance(fn, ast.Name)
+        assert fn.id == "_clear_compare_output"
+    assert hidden, "expected a named clear_compare click hidden from the API listing"
+
+
 def test_chatbot_explicitly_disables_tags() -> None:
     tree = _load_demo_tree()
     chatbot_calls = [
