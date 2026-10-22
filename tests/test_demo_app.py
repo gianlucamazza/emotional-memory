@@ -4,10 +4,17 @@ from __future__ import annotations
 
 import importlib.util
 import os
+from datetime import UTC, datetime, timedelta
 from functools import lru_cache
 from pathlib import Path
 
 import pytest
+
+import emotional_memory.engine as eng_mod
+import emotional_memory.models as models_mod
+import emotional_memory.mood as mood_mod
+import emotional_memory.state as state_mod
+from emotional_memory import EmotionalMemory, InMemoryStore
 
 pytestmark = pytest.mark.slow
 
@@ -618,3 +625,219 @@ def test_chat_guard_rebuilds_uninitialised_state(
     reset = demo_app.reset_session(demo_app._initial_em_state)
     assert len(reset) == 6
     assert isinstance(reset[1], demo_app.DemoSession)
+
+
+_CLOCK_T0 = datetime(2026, 10, 22, 8, 0, tzinfo=UTC)
+_BEFORE_DIVERGENCE_TURNS = (
+    "I succeeded! My project is complete and it's a great personal victory.",
+    "I failed and made a terrible mistake — everything is broken.",
+    "There is danger here — this crisis is a serious risk I cannot handle.",
+    "How surprising and unexpected! I am completely amazed by this news.",
+    "The project meeting is at three o'clock in the conference room.",
+)
+_RECALL_TURN = "recall project success"
+_AFTER_DIVERGENCE_TURNS = (
+    "My project review went well and the team celebrated the success.",
+    "I lost the project files and I am scared of the deadline.",
+    "I feel calm and ready to start the next project.",
+)
+
+
+class _Clock:
+    t = _CLOCK_T0
+
+
+class _FrozenDateTime(datetime):
+    @classmethod
+    def now(cls, *args: object, **kwargs: object) -> datetime:
+        return _Clock.t
+
+
+def _freeze_engine_clock(monkeypatch: pytest.MonkeyPatch) -> None:
+    for module in (eng_mod, models_mod, mood_mod, state_mod):
+        monkeypatch.setattr(module, "datetime", _FrozenDateTime)
+
+
+def _memories_by_content(engine: object) -> dict[str, object]:
+    return {memory.content: memory for memory in engine.list_all()}
+
+
+def _old_to_new_backlinks(engine: object) -> int:
+    memories = _memories_by_content(engine)
+    new_ids = {memories[content].id for content in _AFTER_DIVERGENCE_TURNS}
+    return sum(
+        1
+        for content in _BEFORE_DIVERGENCE_TURNS
+        for link in memories[content].tag.resonance_links
+        if link.target_id in new_ids
+    )
+
+
+def _links_by_target_content(engine: object) -> dict[str, list[tuple[str, float]]]:
+    memories = _memories_by_content(engine)
+    id_to_content = {memory.id: content for content, memory in memories.items()}
+    return {
+        content: sorted(
+            (id_to_content[link.target_id], link.strength) for link in memory.tag.resonance_links
+        )
+        for content, memory in memories.items()
+    }
+
+
+def _replay_reference(
+    demo_app,  # type: ignore[no-untyped-def]
+    session: object,
+    log: list[tuple[int, str, str, str]],
+    *,
+    recall_on_ref: bool,
+    appraisal: object,
+) -> EmotionalMemory:
+    ref = EmotionalMemory(
+        store=InMemoryStore(),
+        embedder=session.embedder,
+        appraisal_engine=appraisal,
+    )
+    mood_by_content = _memories_by_content(session.mood)
+    _Clock.t = _CLOCK_T0
+    ref.load_state(
+        EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=session.embedder,
+            appraisal_engine=appraisal,
+        ).save_state()
+    )
+    for step, text, reply, _mode in log:
+        _Clock.t = _CLOCK_T0 + timedelta(minutes=step)
+        if text == _RECALL_TURN:
+            if recall_on_ref:
+                demo_app._retrieve_query_gated(
+                    ref,
+                    "project success",
+                    top_k=3,
+                    appraisal_engine=appraisal,
+                    appraisal_mode="📝 Keyword fallback active",
+                )
+                ref.observe(reply, metadata={"role": "assistant"})
+            continue
+        source = mood_by_content[text]
+        ref.encode(text, appraisal=source.tag.appraisal, metadata={"role": "user"})
+        ref.observe(reply, metadata={"role": "assistant"})
+    return ref
+
+
+@pytest.mark.parametrize("recall_in_gated_mode", [False, True])
+def test_post_divergence_encode_matches_fresh_reference(
+    monkeypatch: pytest.MonkeyPatch,
+    recall_in_gated_mode: bool,
+) -> None:
+    demo_app = _load_demo_module()
+    counting = _CountingAppraisal(demo_app.KeywordAppraisalEngine())
+    _force_offline_factories(monkeypatch, demo_app, counting)
+    _freeze_engine_clock(monkeypatch)
+    _Clock.t = _CLOCK_T0
+    session = _offline_session(demo_app, counting)
+    recall_mode = (
+        demo_app.RETRIEVAL_MODE_QUERY_GATED
+        if recall_in_gated_mode
+        else demo_app.RETRIEVAL_MODE_MOOD_STATE
+    )
+
+    chatbot: list[dict[str, str]] = []
+    pad_history = list(demo_app._INITIAL_PAD_HISTORY)
+    msg_count = 0
+    log: list[tuple[int, str, str, str]] = []
+    for step, text in enumerate(
+        [*_BEFORE_DIVERGENCE_TURNS, _RECALL_TURN, *_AFTER_DIVERGENCE_TURNS],
+        start=1,
+    ):
+        _Clock.t = _CLOCK_T0 + timedelta(minutes=step)
+        calls_before = counting.calls
+        mode = recall_mode if text == _RECALL_TURN else demo_app.RETRIEVAL_MODE_MOOD_STATE
+        chatbot, session, pad_history, _plot, _box, msg_count = demo_app.chat(
+            text, chatbot, session, pad_history, msg_count, mode
+        )
+        if text != _RECALL_TURN:
+            assert counting.calls - calls_before == 2
+        log.append((step, text, chatbot[-1]["content"], mode))
+
+    calls_after_session = counting.calls
+    ref = _replay_reference(
+        demo_app,
+        session,
+        log,
+        recall_on_ref=recall_in_gated_mode,
+        appraisal=counting.inner,
+    )
+    assert counting.calls == calls_after_session
+
+    gated_backlinks = _old_to_new_backlinks(session.gated)
+    ref_backlinks = _old_to_new_backlinks(ref)
+    assert gated_backlinks > 0
+    assert gated_backlinks == ref_backlinks
+
+    gated_memories = _memories_by_content(session.gated)
+    ref_memories = _memories_by_content(ref)
+    assert set(gated_memories) == set(ref_memories)
+    gated_links = _links_by_target_content(session.gated)
+    ref_links = _links_by_target_content(ref)
+    for content, gated_memory in gated_memories.items():
+        ref_memory = ref_memories[content]
+        assert gated_memory.tag.mood_snapshot == ref_memory.tag.mood_snapshot
+        assert gated_memory.tag.consolidation_strength == ref_memory.tag.consolidation_strength
+        assert gated_memory.tag.momentum == ref_memory.tag.momentum
+        assert gated_memory.tag.core_affect == ref_memory.tag.core_affect
+        assert gated_links[content] == ref_links[content]
+
+    assert session.gated.save_state() == ref.save_state()
+
+    mood_ids = {memory.content: memory.id for memory in session.mood.list_all()}
+    gated_ids = {memory.content: memory.id for memory in session.gated.list_all()}
+    for content in _BEFORE_DIVERGENCE_TURNS:
+        assert mood_ids[content] == gated_ids[content]
+    for content in _AFTER_DIVERGENCE_TURNS:
+        assert mood_ids[content] != gated_ids[content]
+
+    rendered = demo_app.compare_both_modes("recall project success", session)
+    assert demo_app.RETRIEVAL_MODE_MOOD_STATE in rendered
+    assert demo_app.RETRIEVAL_MODE_QUERY_GATED in rendered
+    assert _snapshot(session.gated)[1] == ref.save_state()
+
+
+def test_post_divergence_missing_appraisal_imports_without_reappraise(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    counting = _CountingAppraisal(demo_app.KeywordAppraisalEngine())
+    session = _offline_session(demo_app, counting)
+    demo_app._encode_user_both(
+        session,
+        "I succeeded! My project is complete and it's a great personal victory.",
+        {"role": "user"},
+    )
+    session.diverged = True
+
+    real_encode = demo_app.EmotionalMemory.encode
+
+    def encode_without_stored_appraisal(
+        self: object,
+        content: str,
+        appraisal: object | None = None,
+        metadata: dict[str, str] | None = None,
+    ) -> object:
+        memory = real_encode(self, content, appraisal=appraisal, metadata=metadata)
+        if self is session.mood:
+            return memory.model_copy(
+                update={"tag": memory.tag.model_copy(update={"appraisal": None})}
+            )
+        return memory
+
+    monkeypatch.setattr(demo_app.EmotionalMemory, "encode", encode_without_stored_appraisal)
+    counting.calls = 0
+    demo_app._encode_user_both(
+        session,
+        "I feel calm and ready to start the next project.",
+        {"role": "user"},
+    )
+    assert counting.calls == 1
+    gated_contents = [memory.content for memory in session.gated.list_all()]
+    assert "I feel calm and ready to start the next project." in gated_contents

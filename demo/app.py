@@ -165,7 +165,10 @@ def _runtime_mode_badge() -> str:
 class DemoSession:
     """Per-session pair of ``EmotionalMemory`` engines, one per retrieval mode.
 
-    Non-recall turns encode once and replicate into the other engine. Recall
+    Before any recall, non-recall turns encode once on the mood engine and
+    replicate the full store and affective state into the gated engine. After
+    a recall has diverged the modes, each engine encodes the new turn with the
+    shared appraisal so reverse links and per-engine tags stay local. Recall
     write-backs and the ``observe(reply)`` that follows a recall stay on the
     mode that ran the recall, so a comparison is not confounded by the other
     mode's retrieval side-effects.
@@ -254,21 +257,30 @@ def _replicate_from(source: EmotionalMemory, dest: EmotionalMemory) -> None:
 
 
 def _encode_user_both(session: DemoSession, content: str, metadata: dict[str, str]) -> None:
-    """Appraise/encode once, then replicate into the other mode.
+    """Appraise/encode once, then apply the same appraisal on the other mode.
 
     Before any recall, copy the full store and affective state with the public
-    export/import + save/load API. After a recall has diverged the modes,
-    import only the new memory and advance the other engine with the same
-    appraisal so write-backs are not copied across.
+    export/import + save/load API so ids stay aligned while the stores match.
+    After a recall has diverged the modes, encode on the gated engine with the
+    mood engine's appraisal: that writes reverse back-links on gated's existing
+    memories and builds the new tag from gated's own state. A missing appraisal
+    falls back to importing only the new memory, without a second appraisal.
     """
     memory = session.mood.encode(content, metadata=metadata)
     if not session.diverged:
         _replicate_from(session.mood, session.gated)
         return
-    dest_ids = {item["id"] for item in session.gated.export_memories()}
-    new_items = [item for item in session.mood.export_memories() if item["id"] not in dest_ids]
-    session.gated.import_memories(new_items)
-    session.gated.observe(content, appraisal=memory.tag.appraisal, metadata=metadata)
+    appraisal = memory.tag.appraisal
+    if appraisal is None:
+        logger.warning(
+            "post-divergence encode has no stored appraisal; importing the new "
+            "memory without a second appraisal"
+        )
+        dest_ids = {item["id"] for item in session.gated.export_memories()}
+        new_items = [item for item in session.mood.export_memories() if item["id"] not in dest_ids]
+        session.gated.import_memories(new_items)
+        return
+    session.gated.encode(content, appraisal=appraisal, metadata=metadata)
 
 
 def _observe_both(session: DemoSession, content: str, metadata: dict[str, str]) -> None:
@@ -288,6 +300,10 @@ def _scratch_from(session: DemoSession, source: EmotionalMemory) -> EmotionalMem
 def _memory_excerpt(memory: object) -> str:
     content = getattr(memory, "content", "")
     return f'"{content[:60]}…"'
+
+
+def _clear_compare_output() -> str:
+    return ""
 
 
 def _env_flag(name: str) -> bool | None:
@@ -797,9 +813,10 @@ def build_demo() -> gr.Blocks:
             api_name="reset_session",
         )
         reset_btn.click(
-            fn=lambda: "",
+            fn=_clear_compare_output,
             outputs=[compare_output],
-            api_name=False,
+            api_name="clear_compare",
+            api_visibility="private",
         )
 
     return demo
