@@ -442,7 +442,7 @@ def compare_both_modes(
     em_state: object,
     retrieval_mode: str = RETRIEVAL_MODE_MOOD_STATE,
 ) -> str:
-    """Run both retrieval arms on scratch copies of one snapshot. No write-back."""
+    """Diagnose one selected snapshot; retrieval writes only to disposable copies."""
     session = _ensure_session(em_state)
     raw = query.strip()
     if not raw:
@@ -471,7 +471,10 @@ def compare_both_modes(
         else ""
     )
     return (
-        "### Compare both modes (snapshot — no write-back)\n\n"
+        "### Compare both modes (snapshot — no live memory write-back)\n\n"
+        f"Source snapshot: **{retrieval_mode}**\n\n"
+        "Both strategies start from this selected engine's current memory and affective state. "
+        "This is a point-in-time diagnostic, not a longitudinal benchmark.\n\n"
         f"Query: `{retrieval_query}`\n\n"
         f"**{RETRIEVAL_MODE_MOOD_STATE}**\n\n"
         f"{_format_top_memories(mood_results)}\n\n"
@@ -746,7 +749,8 @@ def build_demo() -> gr.Blocks:
                 gr.Markdown(
                     "Normal recall updates memory (retrieval count, reconsolidation, "
                     "link strengthening) as part of the mechanism; each mode keeps its "
-                    "own memory so the comparison stays fair."
+                    "own memory. Compare runs both strategies on disposable copies of the "
+                    "selected mode's snapshot; it does not compare their accumulated histories."
                 )
                 compare_btn = gr.Button("Compare both modes", variant="secondary", size="sm")
                 compare_output = gr.Markdown("")

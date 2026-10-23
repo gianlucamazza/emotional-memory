@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Clarify Compare snapshot provenance, disposable retrieval writes, and diagnostic limits.
+
 ### Fixed
 
 - **Demo post-divergence gated encode.** After a recall, the Hugging Face
