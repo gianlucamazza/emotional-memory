@@ -73,3 +73,69 @@ Every generated result set should report:
 - challenge-type aggregates
 - per-query candidate counts and expected target recency ranks
 - the interpretation caveats above
+
+## Shared-history longitudinal mode (opt-in)
+
+`--shared-history --embedder hash` selects `shared_history_v1`. This is a new
+protocol, not a reinterpretation of earlier benchmark reports. Each scenario
+starts with an identical empty checkpoint in three independent engine instances:
+
+| Arm | Ranking | Retrieval write-back |
+|---|---|---|
+| cosine | Semantic-only weights | Retained locally |
+| gated | Cosine for neutral recorded query affect; affect-aware otherwise | Retained locally |
+| always_on | Query-affect ranking on every query | Retained locally |
+
+The cosine arm controls ranking inside the same engine; it is distinct from the
+legacy `naive_cosine` adapter, which has no reconsolidation. The always-on arm uses
+query affect, not the demo's mood-state strategy. The manifest records the gate
+threshold and complete effective engine configuration.
+
+Events and queries follow dataset order: session start, all session encode events,
+all session queries, session end. No synchronization of states occurs after the
+initial checkpoint. Session boundaries round-trip the affective state through its
+public serialization API. Query affect is a recorded oracle input, never a claim
+about appraisal model accuracy. Missing query affect fails validation.
+
+Reports include ordered external inputs, timestamps, deterministic IDs and full
+post-event snapshots for every arm. Divergence is reported against cosine as
+snapshot equality, affective-state equality and the count of changed memories.
+A difference is not evidence of better memory. Recall can change tags, predictions
+and links without changing the affective state.
+
+### Relevance and ranking metrics
+
+Expected memory IDs are dataset judgments fixed before executing any strategy.
+They must all reference already encoded memories. Relevance is binary, not graded;
+this protocol does not invent graded labels for nDCG.
+
+- Recall@k: distinct relevant returned IDs divided by all relevant IDs.
+- nDCG@k: binary gain discounted by `log2(rank + 1)`, divided by ideal DCG@k.
+- MRR@k: mean reciprocal rank of the first relevant result within the returned k;
+  zero for a miss. This is truncated MRR, not an estimate of unobserved ranks.
+- A repeated returned ID earns no additional relevance gain.
+- With one relevant ID, Recall@k equals Hit@k.
+
+All three are macro-averaged by query, scenario and challenge type. Existing
+headline metrics stay unchanged. Pairing uses `(scenario_id, session_id, query_id)`
+to avoid collisions across sessions or scenarios. Existing query-level bootstrap
+intervals are descriptive: dependent queries within a scenario do not provide
+independent experimental samples. Confirmatory claims require a preregistered
+scenario-level resampling design and held-out evaluation; no new superiority
+claim is made here.
+
+### Reproducibility scope
+
+The JSON and protocol exports include dataset hash, source-file hashes, Git
+revision when available, package/Python/dependency versions, platform, seed,
+configuration, embedder and clock policy. Source hashes identify working-tree code
+even when it differs from the Git revision. The seed controls deterministic IDs
+and bootstrap resampling. The clock advances one second per operation from a
+fixed UTC epoch. Traces are deterministic in the declared environment; portability
+across floating-point runtimes is not promised.
+
+The offline TokenHashEmbedder fixture validates mechanics, not semantic quality.
+Use a dedicated single-threaded process because clock substitutions are scoped
+module patches. Scaling to neural embedders or external appraisal requires frozen,
+versioned outputs and a separately declared protocol. Full snapshots can be large;
+these reports are research artifacts, not an online telemetry format.

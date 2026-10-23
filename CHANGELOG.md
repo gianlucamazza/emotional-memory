@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Export binary ranking metrics, shared-history reproducibility manifests and state divergence;
+  validate relevance references and scope paired query IDs by scenario/session.
+
 - Add opt-in offline shared-history replay with controlled time/IDs and independent write-backs.
 
 - Bind Compare to session appraisal and cover repeated, failed and nested-copy isolation.

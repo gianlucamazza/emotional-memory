@@ -28,6 +28,7 @@ from benchmarks.realistic.adapters.base import (
     ReplaySessionStart,
     TokenHashEmbedder,
 )
+from benchmarks.realistic.evaluation import reproducibility_manifest, state_divergence
 from emotional_memory import CoreAffect, EmotionalMemory, EmotionalMemoryConfig, InMemoryStore
 from emotional_memory.engine_shared import is_query_affect_neutral, semantic_only_weights
 
@@ -91,7 +92,11 @@ class SharedHistoryAdapter(ReplayAdapter):
         self.checkpoint = self.snapshot()
 
     def snapshot(self) -> dict[str, Any]:
-        return {"memories": self.engine.export_memories(), "state": self.engine.save_state()}
+        return json.loads(
+            json.dumps(
+                {"memories": self.engine.export_memories(), "state": self.engine.save_state()}
+            )
+        )
 
     @contextmanager
     def operation(self, kind: str, payload: dict[str, Any]) -> Iterator[None]:
@@ -283,7 +288,13 @@ def run_shared_history(
             "while tags diverge.",
         ],
     )
+    effective_config = config or EmotionalMemoryConfig()
+    manifest = reproducibility_manifest(dataset, effective_config, seed=seed, top_k=effective_k)
+    manifest["query_affect_gate_tau"] = effective_config.query_affect_gate_tau
+    protocol["manifest"] = manifest
     return {
+        "manifest": manifest,
+        "state_divergence": state_divergence(systems),
         "benchmark": dataset.name,
         "version": dataset.version,
         "top_k": effective_k,
