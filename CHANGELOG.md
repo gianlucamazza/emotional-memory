@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Reframe public claims around unestablished naturalistic retrieval utility. Addendum T
+  removes the query oracle only. The MSC protocol is a planned study and has not been executed.
+
 - Export binary ranking metrics, shared-history reproducibility manifests and state divergence;
   validate relevance references and scope paired query IDs by scenario/session.
 
