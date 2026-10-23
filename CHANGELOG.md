@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Preparatory MSC human-grounded retrieval harness: grouped source preparation, blinded
+  annotation, hybrid baseline, and power planning. No human study has been executed.
+
 ### Changed
 
 - Reframe public claims around unestablished naturalistic retrieval utility. Addendum T
