@@ -1,0 +1,39 @@
+{
+  "status": "PREPARATORY_NOT_EXECUTED",
+  "source_url": "https://parl.ai/downloads/msc/msc_v0.1.tar.gz",
+  "archive_sha256": "e640e37cf4317cd09fc02a4cd57ef130a185f23635f4003b0cee341ffcb45e60",
+  "member_sha256": {
+    "msc/msc_dialogue/session_2/test.txt": "fd0ca62ebcd91fd9d25d3a3933b40d3df3033efb0d26a2b8205738a285067a75",
+    "msc/msc_dialogue/session_2/train.txt": "b61045cbc1045c007e35ca8f57147df539d58d48b0a9610bfb261fb0ca7d4636",
+    "msc/msc_dialogue/session_2/valid.txt": "650916cb1fcd430d9b7f83ffbac6b6711b9e6c2ddf3b1a9cac9696cb3b66a0b4",
+    "msc/msc_dialogue/session_3/test.txt": "1f114489f05d3ce69291f8f5b6d1adc2d36f77268a2cf3bd286a68dab69018fe",
+    "msc/msc_dialogue/session_3/train.txt": "1d4301339ea4f6d4f3b559b94f88995c3317457dc89e85ff643139a9ce5ba349",
+    "msc/msc_dialogue/session_3/valid.txt": "752caabd8a56dce86861a81ec579d1f2c56411495a461a7c08d0266f5eec5b66",
+    "msc/msc_dialogue/session_4/test.txt": "3710f6c7a76b3d421c412a8f285ce89bd699154b5ea8270dd9dadb7a06fd85e5",
+    "msc/msc_dialogue/session_4/train.txt": "0094d6374541e3b8e690e1b5b2f56d6121d268db41257d81b7afae3d647d453c",
+    "msc/msc_dialogue/session_4/valid.txt": "fa228f7e06c79a45c3586571a0b2ae3d7bab73b9bcd226c17c61e78a84f740ab",
+    "msc/msc_dialogue/session_5/test.txt": "8807776265cc3bde441d18b4864449753f874bb8a06aaea352a519925b054d46",
+    "msc/msc_dialogue/session_5/valid.txt": "8bb7a4bd621c9dcd0692a2ad4ec5171dc62a419e168767a80731fe00923faebb"
+  },
+  "seed": 20261004,
+  "source_records": 13005,
+  "independent_histories": 5001,
+  "license_status": "REVIEW_REQUIRED: archive contains no license file",
+  "splits": {
+    "development": {
+      "sha256": "08c11f9e22a20560db3a0784d7fa13684c61302bd523dd7d55d8ec5db7b696a2",
+      "count": 200,
+      "candidate_count": 3286
+    },
+    "pilot": {
+      "sha256": "afac8866ef5c777a27efc45ed377c6702b951f47273227d43d71fe847417fb06",
+      "count": 100,
+      "candidate_count": 1608
+    },
+    "reserve": {
+      "sha256": "ba1ebccb379fdd321765865a7a9a4e9b1530af6a5393265ceeb084e764538609",
+      "count": 4701,
+      "candidate_count": 79304
+    }
+  }
+}
