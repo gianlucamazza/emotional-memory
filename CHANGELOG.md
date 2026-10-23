@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bind Compare to session appraisal and cover repeated, failed and nested-copy isolation.
+
 - Clarify Compare snapshot provenance, disposable retrieval writes, and diagnostic limits.
 
 ### Fixed
