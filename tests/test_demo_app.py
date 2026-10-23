@@ -879,13 +879,14 @@ def test_compare_selected_snapshot_isolated_on_repeat_and_failure(
 
         monkeypatch.setattr(appraisal, "appraise", fail)
 
+    calls_before_compare = appraisal.calls
     for _ in range(2):
         rendered = demo.compare_both_modes("recall success", session, mode)
         assert f"Source snapshot: **{mode}**" in rendered
         assert ("unavailable" in rendered) == fail_appraisal
         assert (_snapshot(session.mood), _snapshot(session.gated)) == before
     if not fail_appraisal:
-        assert appraisal.calls >= 2
+        assert appraisal.calls - calls_before_compare == 2
     # Probe nested mutable objects, not just top-level engine identity.
     first = copies[0].list_all()[0]
     first.metadata["nested"]["items"].append(99)
