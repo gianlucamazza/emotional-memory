@@ -845,6 +845,21 @@ def write_results(
     out_protocol.write_text(json.dumps(results["protocol"], indent=2), encoding="utf-8")
 
 
+def shared_history_output_paths(
+    out_json: Path,
+    out_md: Path,
+    out_protocol: Path,
+) -> tuple[Path, Path, Path]:
+    """Keep an opt-in replay from replacing the published realistic results."""
+    if out_json == DEFAULT_OUT_JSON:
+        out_json = DEFAULT_OUT_JSON.with_name("results.shared_history.json")
+    if out_md == DEFAULT_OUT_MD:
+        out_md = DEFAULT_OUT_MD.with_name("results.shared_history.md")
+    if out_protocol == DEFAULT_PROTOCOL:
+        out_protocol = DEFAULT_PROTOCOL.with_name("results.shared_history.protocol.json")
+    return out_json, out_md, out_protocol
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the realistic replay benchmark.")
     parser.add_argument(
@@ -887,13 +902,21 @@ def main() -> None:
 
     _seed_everything(args.seed)
     dataset = load_dataset(args.dataset)
+    out_json, out_md, out_protocol = args.out_json, args.out_md, args.out_protocol
     if args.shared_history:
         if args.embedder != "hash" or args.systems != DEFAULT_SYSTEMS:
             parser.error("--shared-history requires --embedder hash and the default --systems")
         from benchmarks.realistic.shared_history import run_shared_history
 
+        out_json, out_md, out_protocol = shared_history_output_paths(
+            out_json, out_md, out_protocol
+        )
         results = run_shared_history(
-            dataset, seed=args.seed, n_bootstrap=args.n_bootstrap, top_k=args.top_k
+            dataset,
+            seed=args.seed,
+            n_bootstrap=args.n_bootstrap,
+            top_k=args.top_k,
+            dataset_path=args.dataset,
         )
     else:
         emb = _build_embedder(args.embedder)
@@ -908,9 +931,9 @@ def main() -> None:
         )
     write_results(
         results,
-        out_json=args.out_json,
-        out_md=args.out_md,
-        out_protocol=args.out_protocol,
+        out_json=out_json,
+        out_md=out_md,
+        out_protocol=out_protocol,
     )
 
     aggregates = ", ".join(

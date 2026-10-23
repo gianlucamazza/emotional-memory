@@ -12,6 +12,7 @@ from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any
 
@@ -28,11 +29,7 @@ from benchmarks.realistic.adapters.base import (
     TokenHashEmbedder,
 )
 from emotional_memory import CoreAffect, EmotionalMemory, EmotionalMemoryConfig, InMemoryStore
-from emotional_memory.engine_shared import (
-    DEFAULT_QUERY_AFFECT_GATE_TAU,
-    is_query_affect_neutral,
-    semantic_only_weights,
-)
+from emotional_memory.engine_shared import is_query_affect_neutral, semantic_only_weights
 
 EPOCH = datetime(2026, 1, 1, tzinfo=UTC)
 ARMS = ("cosine", "gated", "always_on")
@@ -166,7 +163,7 @@ class SharedHistoryAdapter(ReplayAdapter):
             query_affect = CoreAffect(valence=valence, arousal=arousal)
             use_cosine = self.name == "cosine" or (
                 self.name == "gated"
-                and is_query_affect_neutral(valence, DEFAULT_QUERY_AFFECT_GATE_TAU)
+                and is_query_affect_neutral(valence, self.config.query_affect_gate_tau)
             )
             memories = self.engine.retrieve_with_explanations(
                 query,
@@ -191,11 +188,33 @@ class SharedHistoryAdapter(ReplayAdapter):
         self.engine.close()
 
 
+def _pairwise_inputs(systems: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Copy reports so repeated query ids across scenarios stay distinct."""
+    copied = deepcopy(systems)
+    for system in copied:
+        for scenario in system["scenarios"]:
+            scenario_id = scenario["scenario_id"]
+            for session in scenario["sessions"]:
+                session_id = session["session_id"]
+                for position, query in enumerate(session["queries"]):
+                    query["query_id"] = (
+                        f"{scenario_id}:{session_id}:{position}:{query['query_id']}"
+                    )
+    return copied
+
+
 def run_shared_history(
-    dataset, *, seed: int = 0, n_bootstrap: int = 1000, top_k: int | None = None, config=None
+    dataset,
+    *,
+    seed: int = 0,
+    n_bootstrap: int = 1000,
+    top_k: int | None = None,
+    config=None,
+    dataset_path: Path | None = None,
 ) -> dict[str, Any]:
     """Run isolated scenarios with a common empty checkpoint, no state resets at queries."""
     from benchmarks.realistic.runner import (
+        DATASET,
         _aggregate_by_challenge_type,
         _aggregate_query_metrics,
         _build_pairwise_comparisons,
@@ -246,7 +265,10 @@ def run_shared_history(
             }
         )
     protocol = build_protocol_metadata(
-        dataset, system_names=list(ARMS), difficulty_profile=difficulty
+        dataset,
+        system_names=list(ARMS),
+        difficulty_profile=difficulty,
+        dataset_path=DATASET if dataset_path is None else dataset_path,
     )
     protocol.update(
         mode="shared_history_v1",
@@ -275,6 +297,6 @@ def run_shared_history(
         },
         "systems": systems,
         "pairwise_comparisons": _build_pairwise_comparisons(
-            systems, baseline="cosine", seed=seed, n_bootstrap=n_bootstrap
+            _pairwise_inputs(systems), baseline="cosine", seed=seed, n_bootstrap=n_bootstrap
         ),
     }

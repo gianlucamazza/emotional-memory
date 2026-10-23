@@ -101,7 +101,8 @@ uv run python -m benchmarks.realistic.runner --shared-history --embedder hash \
 ```
 
 This separate mode reuses the dataset and report pipeline without changing legacy
-results. Every scenario starts from the same empty checkpoint in three independent
+results. With no output flags it writes `results.shared_history.json`,
+`results.shared_history.md` and `results.shared_history.protocol.json`. Every scenario starts from the same empty checkpoint in three independent
 engines: cosine, query-gated and always-on query-affect ranking. All retain retrieval
 write-backs. Events encode the dataset's affect; query `state` supplies recorded query
 affect to the scorer without resetting runtime state. Missing query affect is rejected.
