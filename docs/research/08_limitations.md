@@ -5,6 +5,14 @@
 
 ---
 
+**Interpretation correction (2026-10-04):** Addendum T's encoding path still uses
+dataset valence/arousal; only the query oracle is removed. Its result remains on
+the curated corpus. Addendum U's 62.5% counts queries in a partition using affect
+separation and cosine errors, not the causal proportion of explained benefit.
+Neither non-significance nor appraisal correlation establishes equivalence or a
+causal explanation of retrieval failures. See the current evidence page for the
+planned external human-grounded study; it has not been executed.
+
 ## 1. Limits of the Affective Model
 
 ### 1.1 Affect dimensionality
@@ -203,12 +211,13 @@ closed. See `benchmarks/preregistration_addendum_q_affect_gating_closure.md`.
 
 **Update (Addendum T, 2026-06-27) — the boundary is partially dissolved.** Replacing the
 oracle `query.state` with the query's affect **appraised at retrieve-time** (direct-VAD on
-the query text, then injected as the state) makes AFT beat cosine **without any oracle**:
+the query text, then injected as the state) makes AFT beat cosine **without query-state
+labels, while retaining preset event affect**:
 Δ=+0.115 [0.055, 0.180], p<0.001 on `realistic_recall_v2` (N=200, SBERT), recovering ~59%
 of the oracle advantage overall and ~82% on the affect-discriminative subset. The appraised
 query affect tracks the oracle state (valence r=0.80, arousal r=0.56). So the headline
-advantage is **largely production-reachable** — the oracle is not required for the
-affect-discriminative regime. Caveat: bounded to that regime (Addendum U).
+query-state contribution is **partly recoverable from text** — query-state labels are not
+required for the affect-discriminative regime. Caveat: bounded to that regime (Addendum U).
 See `benchmarks/preregistration_addendum_t_query_appraisal_closure.md`.
 
 **Update (Addendum T2A, 2026-06-27) — the recovery is regime-bound.** The natural follow-up

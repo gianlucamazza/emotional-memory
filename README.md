@@ -30,7 +30,7 @@ Most LLM memory libraries treat retrieval as semantic-only: vector similarity ov
 - **Dual-path encoding** — fast affective signal precedes slow appraisal (LeDoux 1996)
 - **3D affect** — perceived control (dominance) discriminates fear from anger (Mehrabian & Russell 1974; PAD)
 
-`emotional_memory` operationalizes these as a single retrieval pipeline. Validated against 20 published psychological phenomena (127 fidelity tests) and 25+ pre-registered confirmatory studies — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
+`emotional_memory` operationalizes these as a single retrieval pipeline. Checked for intra-theory coherence with 127 fidelity tests across 20 phenomena and studied in a pre-registered evidence programme — including [committed negative results](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json).
 
 ### How it compares
 
@@ -57,7 +57,7 @@ This is **not** a replacement for those tools — `emotional_memory` is a focuse
 - **Emotional-support recall (counter-congruent)** — on the first third-party emotional retrieval benchmark (MADial-Bench, NAACL 2025; Addendum X) cosine is _significantly better_ (nDCG@5 0.304 vs 0.221, Δ=−0.083), even with near-perfect appraisal: supportive assistants are expected to recall _positive_ memories for a _distressed_ user (interpersonal emotion regulation) — the opposite of AFT's mood-congruence prior. If your gold behavior is counter-congruent, AFT's affect channel actively hurts.
 - **Content-determined QA over emotional history (affect-orthogonal)** — on the second third-party benchmark (ES-MemEval/EvoEmo, WWW 2026; Addendum X2) cosine is again _significantly better_ (nDCG@4 0.284 vs 0.133, Δ=−0.150, powered), with faithful appraisal: the right memory is fixed by _content_ (what was said, when), 45.5% of queries carry no affect, and the affect channel buys ranking variance with no gold-directed signal. If your gold is content-determined, plain cosine wins.
 
-**Recommended for:** multi-session episodic memory where mood-congruent retrieval matters and affect is available at encode time (e.g. journaling, long-horizon conversational agents). For the full record see the [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json) and [current evidence](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md).
+**Research use:** exploring mood-congruent retrieval under explicit affect assumptions. Utility in journaling, care or deployed conversational agents has not been established. For the full record see the [claim-validation matrix](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/claim_validation_matrix.json) and [current evidence](https://github.com/gianlucamazza/emotional-memory/blob/main/docs/research/09_current_evidence.md).
 
 ### 30-second example
 
@@ -307,29 +307,24 @@ above gives the one-line summary.
 
 ## Validation & Benchmarks
 
-AFT is validated against 20 published psychological phenomena (127 fidelity tests) and 25+
-pre-registered confirmatory studies, **including committed negative results**. On
-affect-discriminative recall the advantage is real and embedder-robust (English N=200, SBERT
-Δ=+0.21, d=0.49; French N=120, me5, Δ=+0.18, p<0.0001) — but it does **not** generalize:
-external QA (LoCoMo F1 0.168 vs 0.271), naturalistic dialogue (DailyDialog), end-to-end LLM
-appraisal (Hg1/Addendum P), query-type routing (Addendum L), and state-based affect gating
-(Addendum Q — recovers the always-on penalty but cannot exceed cosine) all **FAIL**. The AFT advantage is
-regime-specific to affect-discriminative recall, not a general superiority claim.
-Within that affect-discriminative regime, two pre-registered results are positive:
-the ranking edge **converts downstream** (Addendum R: encode→retrieve→generate→judge,
-N=200, AFT LLM-judged answer accuracy 0.595 vs cosine 0.440, Δ=+0.155, p<0.001), and
-the appraisal signal is **validated against human labels** (Addendum S: LLM valence
-r=0.70 [0.66, 0.75] vs EmoBank human VAD; arousal/dominance weaker; keyword engine not
-human-validated).
+**No retrieval advantage has been demonstrated on the evaluated naturalistic and
+third-party tasks.** Positive evidence remains on author-constructed,
+affect-conditioned replay with preset affect at encoding. Fidelity tests check
+implementation coherence with the theory, not human memory validity or the
+necessity of five layers. Oracle replay details and LLM-judged downstream results
+are controlled reference conditions, not human utility validation.
 
 A pre-registered circularity audit (**Addendum U**) bounds the headline further: ~62.5% of
 `realistic_recall_v2` queries are affect-discriminative by construction, and the advantage
-concentrates there (null on the rest). Two findings hold independent of the curated
-benchmark: direct-LLM VAD rating beats the theory-driven Scherer projection on every axis
+concentrates there (no significant gain on the rest, not an equivalence result).
+The partition uses both affect separation and cosine errors; it is not an independent
+human relevance measure or the percentage of gain causally explained. Separately,
+direct-LLM VAD rating beats the theory-driven Scherer projection on every axis
 vs EmoBank human gold (**Addendum V**, valence r=0.79, arousal r=0.58; shipped opt-in as
 `DIRECT_VAD_SCHEMA`, with a measurement-only affine arousal calibration adopted in
 **Addendum W**), and appraising the query at retrieve time recovers ~59% of the oracle
-advantage with no oracle (**Addendum T**, Δ=+0.115, p<0.001 — production-reachable via the
+advantage without query-state labels, **while retaining preset affect in the memories**
+(**Addendum T**, Δ=+0.115, p<0.001 — available via the
 public `query_affect` API). That recovery is bounded: it does not extend to naturalistic
 dialogue (**Addendum T2A** FAIL, Δ=−0.008), and on both released third-party emotional
 retrieval corpora cosine is significantly ahead: MADial-Bench (**Addendum X**, N=160,
@@ -360,8 +355,8 @@ affect-conditioned by construction (see "When NOT to use").
 
 The advantage is **regime-specific**, not a general superiority claim: controlled evidence on
 `realistic_recall_v2` under oracle affect (EN/FR), with committed **negative** results on
-external QA (LoCoMo) and naturalistic dialogue (DailyDialog), and automatic LLM appraisal not
-yet recovering the oracle-affect advantage. The authoritative per-claim status — including which
+external QA (LoCoMo) and naturalistic dialogue (DailyDialog), and no demonstrated external advantage from automatic appraisal. Query-only appraisal
+recovers part of the curated gain but retains oracle affect at encoding. The authoritative per-claim status — including which
 claims require oracle affect and which are falsified — is the
 **current claim-to-evidence matrix**: [`docs/research/claim_validation_matrix.json`](docs/research/claim_validation_matrix.json).
 
