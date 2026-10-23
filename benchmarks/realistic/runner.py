@@ -42,6 +42,7 @@ from benchmarks.realistic.adapters import (
     ReplayAdapter,
     ReplayRetrievedItem,
 )
+from benchmarks.realistic.evaluation import ranking_metrics
 from emotional_memory import Embedder, EmotionalMemoryConfig
 
 
@@ -201,6 +202,35 @@ def validate_dataset_difficulty(
     *,
     top_k: int,
 ) -> dict[str, Any]:
+    if top_k < 1:
+        raise ValueError("top_k must be positive")
+    scenario_ids: set[str] = set()
+    for scenario in dataset.scenarios:
+        if scenario.scenario_id in scenario_ids:
+            raise ValueError("Duplicate scenario_id")
+        scenario_ids.add(scenario.scenario_id)
+        memory_ids: set[str] = set()
+        session_ids: set[str] = set()
+        for session in scenario.sessions:
+            if session.session_id in session_ids:
+                raise ValueError("Duplicate session_id within scenario")
+            session_ids.add(session.session_id)
+            for event in session.events:
+                if event.memory_id in memory_ids:
+                    raise ValueError("Duplicate memory_id within scenario")
+                memory_ids.add(event.memory_id)
+            query_ids: set[str] = set()
+            for query in session.queries:
+                if query.query_id in query_ids:
+                    raise ValueError("Duplicate query_id within session")
+                query_ids.add(query.query_id)
+                if query.top_k is not None and query.top_k < 1:
+                    raise ValueError("Query top_k must be positive")
+                if (
+                    not query.expected_memory_ids
+                    or not set(query.expected_memory_ids) <= memory_ids
+                ):
+                    raise ValueError("Every expected memory must be encoded before retrieval")
     profile = analyze_dataset_difficulty(dataset, top_k=top_k)
     errors: list[str] = []
 
@@ -300,6 +330,9 @@ def build_protocol_metadata(
         "systems": system_names,
         "primary_metrics": ["top1_accuracy", "hit@k"],
         "secondary_metrics": [
+            "recall_at_k",
+            "ndcg_at_k",
+            "mrr_at_k",
             "stateful_session_rate",
             "memory_count_growth",
             "candidate_count",
@@ -353,6 +386,14 @@ def _aggregate_query_metrics(
     hit_ci = bootstrap_ci(hit_flags, n_bootstrap=n_bootstrap, seed=seed)
     nontrivial_ci = bootstrap_ci(nontrivial_flags, n_bootstrap=n_bootstrap, seed=seed)
     return {
+        **{
+            target: sum(query[source] for query in query_reports) / max(1, len(query_reports))
+            for source, target in (
+                ("recall_at_k", "recall_at_k"),
+                ("ndcg_at_k", "ndcg_at_k"),
+                ("reciprocal_rank_at_k", "mrr_at_k"),
+            )
+        },
         "query_count": len(query_reports),
         "top1_accuracy": round(top1_ci[0], 4),
         "hit_at_k": round(hit_ci[0], 4),
@@ -536,6 +577,7 @@ def run_system_on_scenario(
                     ],
                     "hit": hit,
                     "top1_hit": top1_hit,
+                    **ranking_metrics(retrieved_ids, expected_actual_ids, effective_top_k),
                     "results": [
                         _serialize_result(item, alias_by_actual=actual_to_alias)
                         for item in retrieved
@@ -577,13 +619,15 @@ def _build_pairwise_comparisons(
     seed: int = 0,
 ) -> list[dict[str, Any]]:
     """Paired bootstrap + McNemar comparisons for each system vs *baseline*."""
-    baseline_queries: dict[str, dict[str, Any]] = {}
+    baseline_queries: dict[tuple[str, str, str], dict[str, Any]] = {}
     for sys in system_results:
         if sys["system"] == baseline:
             for scenario in sys["scenarios"]:
                 for session in scenario["sessions"]:
                     for q in session["queries"]:
-                        baseline_queries[q["query_id"]] = q
+                        baseline_queries[
+                            (scenario["scenario_id"], session["session_id"], q["query_id"])
+                        ] = q
             break
 
     if not baseline_queries:
@@ -593,11 +637,13 @@ def _build_pairwise_comparisons(
     for sys in system_results:
         if sys["system"] == baseline:
             continue
-        sys_queries: dict[str, dict[str, Any]] = {}
+        sys_queries: dict[tuple[str, str, str], dict[str, Any]] = {}
         for scenario in sys["scenarios"]:
             for session in scenario["sessions"]:
                 for q in session["queries"]:
-                    sys_queries[q["query_id"]] = q
+                    sys_queries[
+                        (scenario["scenario_id"], session["session_id"], q["query_id"])
+                    ] = q
 
         common_ids = sorted(set(sys_queries) & set(baseline_queries))
         if not common_ids:
@@ -763,6 +809,45 @@ def _render_markdown(results: dict[str, Any]) -> str:
             f"{_fmt_ci_cell(metrics, 'nontrivial_query_rate')} | "
             f"{metrics['stateful_session_rate']:.2f} |"
         )
+    lines.extend(
+        [
+            "",
+            "## Binary relevance ranking metrics",
+            "",
+            "MRR@k is truncated at each query's k; no relevant result gives zero.",
+            "",
+            "| System | Recall@k | nDCG@k | MRR@k |",
+            "|---|---:|---:|---:|",
+        ]
+    )
+    for system in results["systems"]:
+        metrics = system["aggregate_metrics"]
+        if "recall_at_k" in metrics:
+            lines.append(
+                f"| {system['system']} | {metrics['recall_at_k']:.4f} | "
+                f"{metrics['ndcg_at_k']:.4f} | {metrics['mrr_at_k']:.4f} |"
+            )
+    if "state_divergence" in results:
+        rows = results["state_divergence"]
+        lines.extend(
+            [
+                "",
+                "## State divergence",
+                "",
+                f"{sum(not row['state_equal'] for row in rows)} of {len(rows)} "
+                "paired event snapshots differ from cosine. Difference is not quality.",
+            ]
+        )
+    if "manifest" in results:
+        lines.extend(
+            [
+                "",
+                "## Reproducibility",
+                "",
+                f"Source digest: `{results['manifest']['source_sha256']}`.",
+                "Full configuration, dataset hash and environment are in JSON/protocol.",
+            ]
+        )
     lines.extend(["", "## Per Scenario", ""])
     for system in results["systems"]:
         lines.append(f"### `{system['system']}`")
@@ -807,7 +892,7 @@ def _render_markdown(results: dict[str, Any]) -> str:
     if pairwise:
         lines.extend(
             [
-                "## Pairwise vs naive_cosine",
+                f"## Pairwise vs {pairwise[0]['baseline']}",
                 "",
                 "Two-sided tests: paired bootstrap p-value and exact McNemar p-value.",
                 "H0: no difference. CI excludes 0 ↔ difference is credible at 95% level.",
