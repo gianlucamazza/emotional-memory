@@ -847,6 +847,11 @@ def write_results(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the realistic replay benchmark.")
+    parser.add_argument(
+        "--shared-history",
+        action="store_true",
+        help="Offline longitudinal replay; requires --embedder hash.",
+    )
     parser.add_argument("--dataset", type=Path, default=DATASET)
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
@@ -882,16 +887,25 @@ def main() -> None:
 
     _seed_everything(args.seed)
     dataset = load_dataset(args.dataset)
-    emb = _build_embedder(args.embedder)
-    results = run_benchmark(
-        dataset,
-        systems=args.systems,
-        top_k=args.top_k,
-        dataset_path=args.dataset,
-        n_bootstrap=args.n_bootstrap,
-        seed=args.seed,
-        embedder=emb,
-    )
+    if args.shared_history:
+        if args.embedder != "hash" or args.systems != DEFAULT_SYSTEMS:
+            parser.error("--shared-history requires --embedder hash and the default --systems")
+        from benchmarks.realistic.shared_history import run_shared_history
+
+        results = run_shared_history(
+            dataset, seed=args.seed, n_bootstrap=args.n_bootstrap, top_k=args.top_k
+        )
+    else:
+        emb = _build_embedder(args.embedder)
+        results = run_benchmark(
+            dataset,
+            systems=args.systems,
+            top_k=args.top_k,
+            dataset_path=args.dataset,
+            n_bootstrap=args.n_bootstrap,
+            seed=args.seed,
+            embedder=emb,
+        )
     write_results(
         results,
         out_json=args.out_json,
