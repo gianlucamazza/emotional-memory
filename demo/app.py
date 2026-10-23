@@ -454,13 +454,12 @@ def compare_both_modes(
     gated_scratch = _scratch_from(session, source)
     mood_results = mood_scratch.retrieve(retrieval_query, top_k=3)
     try:
-        appraisal_engine, appraisal_mode = _make_appraisal_engine()
         gated_results, branch, keyword_fallback = _retrieve_query_gated(
             gated_scratch,
             retrieval_query,
             top_k=3,
-            appraisal_engine=appraisal_engine,
-            appraisal_mode=appraisal_mode,
+            appraisal_engine=session.appraisal_engine,
+            appraisal_mode=session.appraisal_mode,
         )
     except Exception as exc:
         logger.warning("compare-both gated path failed (%s)", exc)

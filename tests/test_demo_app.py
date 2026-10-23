@@ -841,3 +841,55 @@ def test_post_divergence_missing_appraisal_imports_without_reappraise(
     assert counting.calls == 1
     gated_contents = [memory.content for memory in session.gated.list_all()]
     assert "I feel calm and ready to start the next project." in gated_contents
+
+
+@pytest.mark.parametrize("mode_attr", ["RETRIEVAL_MODE_MOOD_STATE", "RETRIEVAL_MODE_QUERY_GATED"])
+@pytest.mark.parametrize("fail_appraisal", [False, True])
+def test_compare_selected_snapshot_isolated_on_repeat_and_failure(
+    monkeypatch: pytest.MonkeyPatch,
+    mode_attr: str,
+    fail_appraisal: bool,
+) -> None:
+    demo = _load_demo_module()
+    appraisal = _CountingAppraisal(demo.KeywordAppraisalEngine())
+    session = _offline_session(demo, appraisal)
+    session.mood.encode("mood source", metadata={"nested": {"items": [1]}})
+    session.gated.encode("gated source", metadata={"nested": {"items": [2]}})
+    mode = getattr(demo, mode_attr)
+    source = session.engine_for(mode)
+    before = (_snapshot(session.mood), _snapshot(session.gated))
+    copies = []
+    original_scratch = demo._scratch_from
+
+    def capture(session, source):
+        scratch = original_scratch(session, source)
+        assert _snapshot(scratch) == _snapshot(source)
+        copies.append(scratch)
+        return scratch
+
+    def unexpected_factory():
+        raise AssertionError("Compare must use the session appraisal service")
+
+    monkeypatch.setattr(demo, "_scratch_from", capture)
+    monkeypatch.setattr(demo, "_make_appraisal_engine", unexpected_factory)
+    if fail_appraisal:
+
+        def fail(*args, **kwargs):
+            raise RuntimeError("appraisal unavailable")
+
+        monkeypatch.setattr(appraisal, "appraise", fail)
+
+    for _ in range(2):
+        rendered = demo.compare_both_modes("recall success", session, mode)
+        assert f"Source snapshot: **{mode}**" in rendered
+        assert ("unavailable" in rendered) == fail_appraisal
+        assert (_snapshot(session.mood), _snapshot(session.gated)) == before
+    if not fail_appraisal:
+        assert appraisal.calls >= 2
+    # Probe nested mutable objects, not just top-level engine identity.
+    first = copies[0].list_all()[0]
+    first.metadata["nested"]["items"].append(99)
+    first.embedding[0] += 1
+    assert copies[1].list_all()[0].metadata == source.list_all()[0].metadata
+    assert copies[1].list_all()[0].embedding == source.list_all()[0].embedding
+    assert (_snapshot(session.mood), _snapshot(session.gated)) == before
