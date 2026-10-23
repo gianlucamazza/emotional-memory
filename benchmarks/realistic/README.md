@@ -90,3 +90,26 @@ Current interpretation (v2, N=200):
   advantage; momentum_alignment weak (0.12) consistent with EN findings.
 - 4 of 5 challenge types in v2 are by construction favourable to affective retrieval —
   aggregate advantage should be read as scope-conditional, not general superiority.
+
+
+## Opt-in shared-history replay
+
+```bash
+uv run python -m benchmarks.realistic.runner --shared-history --embedder hash \
+  --seed 7 --out-json /tmp/shared.json --out-md /tmp/shared.md \
+  --out-protocol /tmp/shared.protocol.json
+```
+
+This separate mode reuses the dataset and report pipeline without changing legacy
+results. Every scenario starts from the same empty checkpoint in three independent
+engines: cosine, query-gated and always-on query-affect ranking. All retain retrieval
+write-backs. Events encode the dataset's affect; query `state` supplies recorded query
+affect to the scorer without resetting runtime state. Missing query affect is rejected.
+
+The deterministic offline backend uses TokenHashEmbedder, UUID5 IDs and a fixed UTC
+clock advancing one second per operation (including session boundaries). It is a
+mechanism/reproducibility fixture, not a semantic-quality benchmark. Run it in a
+dedicated single-threaded process: scoped library clock substitutions are not safe
+alongside concurrent production engine calls. No remote models or LLM calls occur.
+Each report includes input hashes and full memory/state snapshots after every operation.
+Affective state can remain equal while retrieval counts, predictions or links diverge.

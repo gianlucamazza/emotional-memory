@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add opt-in offline shared-history replay with controlled time/IDs and independent write-backs.
+
 - Bind Compare to session appraisal and cover repeated, failed and nested-copy isolation.
 
 - Clarify Compare snapshot provenance, disposable retrieval writes, and diagnostic limits.
