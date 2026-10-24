@@ -11,8 +11,8 @@ name: Shared-history receipts
 #   this workflow tests its own change. Path-filtered; not a general gate.
 #   Publishable receipts come only from push-to-main or workflow_dispatch.
 #
-# Artifacts expire after 90 days (public-repo maximum). A score-publishing
-# PR must copy SHA256SUMS + receipt.json into the repo.
+# Artifact retention is 90 days (public-repo maximum).
+# Because CI artifacts expire, the score PR also commits the run's `SHA256SUMS` and `receipt.json` next to the scores.
 
 on:
   workflow_dispatch:
@@ -247,10 +247,7 @@ jobs:
               "run_url": os.environ["RUN_URL"],
               "python_version": os.environ["PYTHON_VERSION"],
               "platform": os.environ["PLATFORM"],
-              "receipt_policy": (
-                  "artifacts expire after 90 days; the score-publishing PR "
-                  "must copy SHA256SUMS + receipt.json into the repo"
-              ),
+              "receipt_policy": "Because CI artifacts expire, the score PR also commits the run's `SHA256SUMS` and `receipt.json` next to the scores.",
               "commands": commands,
           }
           (artifact / "receipt.json").write_text(
