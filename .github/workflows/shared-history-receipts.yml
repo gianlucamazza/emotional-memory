@@ -1,0 +1,382 @@
+name: Shared-history receipts
+
+# Offline hash-embedder receipts for the shared-history runner.
+# Not a pull_request job and not a required check: scores are not asserted
+# here. Reproduction against a reference run is checked outside CI.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: >-
+          Git SHA or ref to check out and reproduce. Empty uses the
+          triggering SHA of this run.
+        type: string
+        required: false
+        default: ""
+  push:
+    branches: ["main"]
+    paths:
+      - "src/emotional_memory/**"
+      - "emotional_memory/**"
+      - "benchmarks/**"
+      - ".github/workflows/shared-history-receipts.yml"
+
+concurrency:
+  group: shared-history-receipts-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  receipts:
+    name: Shared-history CI receipts
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      ARTIFACT_DIR: ${{ github.workspace }}/shared-history-receipts-out
+
+    steps:
+      - name: Resolve reproduction ref
+        id: repro
+        env:
+          INPUT_REF: ${{ inputs.ref }}
+          FALLBACK_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_REF}" ]; then
+            printf 'ref=%s\n' "${INPUT_REF}" >> "${GITHUB_OUTPUT}"
+          else
+            printf 'ref=%s\n' "${FALLBACK_SHA}" >> "${GITHUB_OUTPUT}"
+          fi
+
+      # workflow_dispatch `ref` is repo-write only (not a PR-controlled
+      # checkout). push events always resolve to github.sha.
+      - name: Checkout reproduction ref
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.repro.outputs.ref }}
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --frozen --extra dev
+
+      - name: Record environment
+        id: env
+        run: |
+          set -euo pipefail
+          mkdir -p "${ARTIFACT_DIR}"
+          uv run python - <<'PY'
+          import os
+          import platform
+          from pathlib import Path
+
+          artifact = Path(os.environ["ARTIFACT_DIR"])
+          (artifact / "python_version.txt").write_text(
+              platform.python_version() + "\n", encoding="utf-8"
+          )
+          (artifact / "platform.txt").write_text(
+              platform.platform() + "\n", encoding="utf-8"
+          )
+          print(f"python={platform.python_version()}")
+          print(f"platform={platform.platform()}")
+          PY
+
+      - name: Run shared-history arms
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "${ARTIFACT_DIR}"
+          COMMIT_SHA="$(git rev-parse HEAD)"
+          PYTHON_VERSION="$(tr -d '\n' < "${ARTIFACT_DIR}/python_version.txt")"
+          PLATFORM="$(tr -d '\n' < "${ARTIFACT_DIR}/platform.txt")"
+          printf 'commit_sha=%s\n' "${COMMIT_SHA}"
+          printf 'python=%s\n' "${PYTHON_VERSION}"
+          printf 'platform=%s\n' "${PLATFORM}"
+
+          run_arm() {
+            local name="$1"
+            shift
+            local start end rc
+            start="$(date +%s)"
+            set +e
+            uv run python -m benchmarks.realistic.runner "$@" \
+              >"${ARTIFACT_DIR}/${name}.stdout.log" \
+              2>"${ARTIFACT_DIR}/${name}.stderr.log"
+            rc=$?
+            set -e
+            end="$(date +%s)"
+            printf '%s %s\n' "${name}" "$((end - start))" >> "${ARTIFACT_DIR}/timings.txt"
+            if [ "${rc}" -ne 0 ]; then
+              echo "::error::${name} failed with exit ${rc}"
+              cat "${ARTIFACT_DIR}/${name}.stderr.log" >&2
+              exit "${rc}"
+            fi
+          }
+
+          run_arm arm1_replay_writeback \
+            --shared-history --embedder hash --seed 7 \
+            --out-json "${ARTIFACT_DIR}/arm1_replay_writeback.json" \
+            --out-md "${ARTIFACT_DIR}/arm1_replay_writeback.md" \
+            --out-protocol "${ARTIFACT_DIR}/arm1_replay_writeback.protocol.json"
+
+          run_arm arm2_replay_readonly \
+            --shared-history --embedder hash --seed 7 --read-only-retrieves \
+            --out-json "${ARTIFACT_DIR}/arm2_replay_readonly.json" \
+            --out-md "${ARTIFACT_DIR}/arm2_replay_readonly.md" \
+            --out-protocol "${ARTIFACT_DIR}/arm2_replay_readonly.protocol.json"
+
+          run_arm arm3_timeline_writeback \
+            --shared-history --embedder hash --seed 7 \
+            --dataset benchmarks/datasets/shared_history_recall_v1.json \
+            --out-json "${ARTIFACT_DIR}/arm3_timeline_writeback.json" \
+            --out-md "${ARTIFACT_DIR}/arm3_timeline_writeback.md" \
+            --out-protocol "${ARTIFACT_DIR}/arm3_timeline_writeback.protocol.json"
+
+          run_arm arm4_timeline_readonly \
+            --shared-history --embedder hash --seed 7 \
+            --dataset benchmarks/datasets/shared_history_recall_v1.json \
+            --read-only-retrieves \
+            --out-json "${ARTIFACT_DIR}/arm4_timeline_readonly.json" \
+            --out-md "${ARTIFACT_DIR}/arm4_timeline_readonly.md" \
+            --out-protocol "${ARTIFACT_DIR}/arm4_timeline_readonly.protocol.json"
+
+          (
+            cd "${ARTIFACT_DIR}"
+            sha256sum \
+              arm1_replay_writeback.json \
+              arm1_replay_writeback.protocol.json \
+              arm1_replay_writeback.md \
+              arm1_replay_writeback.stdout.log \
+              arm1_replay_writeback.stderr.log \
+              arm2_replay_readonly.json \
+              arm2_replay_readonly.protocol.json \
+              arm2_replay_readonly.md \
+              arm2_replay_readonly.stdout.log \
+              arm2_replay_readonly.stderr.log \
+              arm3_timeline_writeback.json \
+              arm3_timeline_writeback.protocol.json \
+              arm3_timeline_writeback.md \
+              arm3_timeline_writeback.stdout.log \
+              arm3_timeline_writeback.stderr.log \
+              arm4_timeline_readonly.json \
+              arm4_timeline_readonly.protocol.json \
+              arm4_timeline_readonly.md \
+              arm4_timeline_readonly.stdout.log \
+              arm4_timeline_readonly.stderr.log \
+              > SHA256SUMS
+          )
+
+          export COMMIT_SHA RUN_URL PYTHON_VERSION PLATFORM
+          uv run python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          artifact = Path(os.environ["ARTIFACT_DIR"])
+          commands = [
+              (
+                  "uv run python -m benchmarks.realistic.runner "
+                  "--shared-history --embedder hash --seed 7 "
+                  f"--out-json {artifact / 'arm1_replay_writeback.json'} "
+                  f"--out-md {artifact / 'arm1_replay_writeback.md'} "
+                  f"--out-protocol {artifact / 'arm1_replay_writeback.protocol.json'}"
+              ),
+              (
+                  "uv run python -m benchmarks.realistic.runner "
+                  "--shared-history --embedder hash --seed 7 --read-only-retrieves "
+                  f"--out-json {artifact / 'arm2_replay_readonly.json'} "
+                  f"--out-md {artifact / 'arm2_replay_readonly.md'} "
+                  f"--out-protocol {artifact / 'arm2_replay_readonly.protocol.json'}"
+              ),
+              (
+                  "uv run python -m benchmarks.realistic.runner "
+                  "--shared-history --embedder hash --seed 7 "
+                  "--dataset benchmarks/datasets/shared_history_recall_v1.json "
+                  f"--out-json {artifact / 'arm3_timeline_writeback.json'} "
+                  f"--out-md {artifact / 'arm3_timeline_writeback.md'} "
+                  f"--out-protocol {artifact / 'arm3_timeline_writeback.protocol.json'}"
+              ),
+              (
+                  "uv run python -m benchmarks.realistic.runner "
+                  "--shared-history --embedder hash --seed 7 "
+                  "--dataset benchmarks/datasets/shared_history_recall_v1.json "
+                  "--read-only-retrieves "
+                  f"--out-json {artifact / 'arm4_timeline_readonly.json'} "
+                  f"--out-md {artifact / 'arm4_timeline_readonly.md'} "
+                  f"--out-protocol {artifact / 'arm4_timeline_readonly.protocol.json'}"
+              ),
+          ]
+          receipt = {
+              "commit_sha": os.environ["COMMIT_SHA"],
+              "run_url": os.environ["RUN_URL"],
+              "python_version": os.environ["PYTHON_VERSION"],
+              "platform": os.environ["PLATFORM"],
+              "commands": commands,
+          }
+          (artifact / "receipt.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+
+      - name: Write job summary
+        if: always() && hashFiles('shared-history-receipts-out/arm1_replay_writeback.json') != ''
+        run: |
+          set -euo pipefail
+          uv run python - <<'PY'
+          import os
+          from pathlib import Path
+
+          artifact = Path(os.environ["ARTIFACT_DIR"])
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+
+          def load_json(name: str) -> dict:
+              return __import__("json").loads((artifact / name).read_text(encoding="utf-8"))
+
+          timings: dict[str, str] = {}
+          timings_path = artifact / "timings.txt"
+          if timings_path.exists():
+              for line in timings_path.read_text(encoding="utf-8").splitlines():
+                  if not line.strip():
+                      continue
+                  name, seconds = line.split()
+                  timings[name] = seconds
+
+          arms = (
+              ("arm1_replay_writeback", "Replay write-back"),
+              ("arm2_replay_readonly", "Replay read-only"),
+              ("arm3_timeline_writeback", "Timeline write-back"),
+              ("arm4_timeline_readonly", "Timeline read-only"),
+          )
+
+          lines: list[str] = [
+              "# Shared-history receipts",
+              "",
+              "Values are read from this run's result files. This job does not",
+              "compare them to a hardcoded expected score.",
+              "",
+          ]
+          if (artifact / "receipt.json").exists():
+              receipt = load_json("receipt.json")
+              lines.extend(
+                  [
+                      f"- commit: `{receipt.get('commit_sha', '')}`",
+                      f"- run: {receipt.get('run_url', '')}",
+                      f"- python: `{receipt.get('python_version', '')}`",
+                      f"- platform: `{receipt.get('platform', '')}`",
+                      "",
+                  ]
+              )
+
+          lines.extend(
+              [
+                  "| Arm | seconds | system | top1 [95% CI] | hit@k [95% CI] |",
+                  "| --- | ---: | --- | --- | --- |",
+              ]
+          )
+          for name, label in arms:
+              path = artifact / f"{name}.json"
+              if not path.exists():
+                  lines.append(f"| {label} | {timings.get(name, '')} | | missing | missing |")
+                  continue
+              data = load_json(f"{name}.json")
+              seconds = timings.get(name, "")
+              for system in data.get("systems", []):
+                  metrics = system.get("aggregate_metrics", {})
+                  ci = metrics.get("ci", {})
+                  top1 = metrics.get("top1_accuracy")
+                  hit = metrics.get("hit_at_k")
+                  top1_ci = ci.get("top1_accuracy", {})
+                  hit_ci = ci.get("hit_at_k", {})
+                  top1_txt = (
+                      f"{top1} [{top1_ci.get('ci_lower')}, {top1_ci.get('ci_upper')}]"
+                  )
+                  hit_txt = (
+                      f"{hit} [{hit_ci.get('ci_lower')}, {hit_ci.get('ci_upper')}]"
+                  )
+                  lines.append(
+                      f"| {label} (`{name}`) | {seconds} | `{system.get('system')}` "
+                      f"| {top1_txt} | {hit_txt} |"
+                  )
+
+          lines.extend(["", "## Pairwise vs cosine", ""])
+          lines.append(
+              "| Arm | system | metric | Δ [95% CI] | p (bootstrap) | p (McNemar) |"
+          )
+          lines.append("| --- | --- | --- | --- | ---: | ---: |")
+          for name, label in arms:
+              path = artifact / f"{name}.json"
+              if not path.exists():
+                  continue
+              data = load_json(f"{name}.json")
+              for row in data.get("pairwise_comparisons", []):
+                  lines.append(
+                      f"| {label} | `{row.get('system')}` | {row.get('metric')} | "
+                      f"{row.get('diff')} [{row.get('ci_lower')}, {row.get('ci_upper')}] | "
+                      f"{row.get('p_bootstrap')} | {row.get('p_mcnemar')} |"
+                  )
+
+          lines.extend(["", "## Protocol input hashes", ""])
+          lines.append("| Arm | dataset_sha256 | source_sha256 | python | platform |")
+          lines.append("| --- | --- | --- | --- | --- |")
+          for name, label in arms:
+              path = artifact / f"{name}.protocol.json"
+              if not path.exists():
+                  continue
+              protocol = load_json(f"{name}.protocol.json")
+              manifest = protocol.get("manifest", {})
+              lines.append(
+                  f"| {label} | `{manifest.get('dataset_sha256', '')}` | "
+                  f"`{manifest.get('source_sha256', '')}` | "
+                  f"`{manifest.get('python', '')}` | `{manifest.get('platform', '')}` |"
+              )
+
+          summary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload receipts artifact
+        if: always() && hashFiles('shared-history-receipts-out/SHA256SUMS') != ''
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: shared-history-receipts
+          path: |
+            ${{ env.ARTIFACT_DIR }}/arm1_replay_writeback.json
+            ${{ env.ARTIFACT_DIR }}/arm1_replay_writeback.protocol.json
+            ${{ env.ARTIFACT_DIR }}/arm1_replay_writeback.md
+            ${{ env.ARTIFACT_DIR }}/arm1_replay_writeback.stdout.log
+            ${{ env.ARTIFACT_DIR }}/arm1_replay_writeback.stderr.log
+            ${{ env.ARTIFACT_DIR }}/arm2_replay_readonly.json
+            ${{ env.ARTIFACT_DIR }}/arm2_replay_readonly.protocol.json
+            ${{ env.ARTIFACT_DIR }}/arm2_replay_readonly.md
+            ${{ env.ARTIFACT_DIR }}/arm2_replay_readonly.stdout.log
+            ${{ env.ARTIFACT_DIR }}/arm2_replay_readonly.stderr.log
+            ${{ env.ARTIFACT_DIR }}/arm3_timeline_writeback.json
+            ${{ env.ARTIFACT_DIR }}/arm3_timeline_writeback.protocol.json
+            ${{ env.ARTIFACT_DIR }}/arm3_timeline_writeback.md
+            ${{ env.ARTIFACT_DIR }}/arm3_timeline_writeback.stdout.log
+            ${{ env.ARTIFACT_DIR }}/arm3_timeline_writeback.stderr.log
+            ${{ env.ARTIFACT_DIR }}/arm4_timeline_readonly.json
+            ${{ env.ARTIFACT_DIR }}/arm4_timeline_readonly.protocol.json
+            ${{ env.ARTIFACT_DIR }}/arm4_timeline_readonly.md
+            ${{ env.ARTIFACT_DIR }}/arm4_timeline_readonly.stdout.log
+            ${{ env.ARTIFACT_DIR }}/arm4_timeline_readonly.stderr.log
+            ${{ env.ARTIFACT_DIR }}/SHA256SUMS
+            ${{ env.ARTIFACT_DIR }}/receipt.json
+            ${{ env.ARTIFACT_DIR }}/timings.txt
+          if-no-files-found: error
+          retention-days: 30
