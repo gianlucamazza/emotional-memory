@@ -198,7 +198,11 @@ can follow recalls (for example `E E E R E R E R`). A documented share of
 queries is near-neutral (`|valence| < query_affect_gate_tau`, default 0.2);
 a few sit on the gate boundary (`|valence|` equal to that tau). Use only with
 `--shared-history --embedder hash`. Protocol mode is `shared_history_timeline`.
-No scores are published from this file. The #170 shared-history replay on
+This dataset file contains no scores. Shared-history scores live under
+[`benchmarks/realistic/receipts/`](../realistic/receipts/) and are published
+only with a receipt (commit, report, embedder, seed, CI run), labelled
+«mechanism test (hash embedder), not a semantic-quality benchmark». See
+benchmarks/realistic/README.md. The #170 shared-history replay on
 `realistic_recall_v1` is unchanged.
 
 **Encode-after-recall count:** 24 across the whole scenario (an encode in a

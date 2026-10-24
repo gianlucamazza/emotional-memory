@@ -1,0 +1,25 @@
+{
+  "commit_sha": "ce2e6579853ef272b03ba5577624a42fdcf1ada6",
+  "run_url": "https://github.com/gianlucamazza/emotional-memory/actions/runs/40084829068",
+  "run_id": "40084829068",
+  "python_version": "3.13.16",
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.43",
+  "embedder": {
+    "class": "TokenHashEmbedder",
+    "dimension": 64
+  },
+  "seed": 7,
+  "read_only_retrieves": {
+    "arm1_replay_writeback": false,
+    "arm2_replay_readonly": true,
+    "arm3_timeline_writeback": false,
+    "arm4_timeline_readonly": true
+  },
+  "receipt_policy": "Because CI artifacts expire, the score PR also commits the run's `SHA256SUMS` and `receipt.json` next to the scores.",
+  "commands": [
+    "uv run python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 --out-json /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm1_replay_writeback.json --out-md /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm1_replay_writeback.md --out-protocol /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm1_replay_writeback.protocol.json",
+    "uv run python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 --read-only-retrieves --out-json /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm2_replay_readonly.json --out-md /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm2_replay_readonly.md --out-protocol /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm2_replay_readonly.protocol.json",
+    "uv run python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 --dataset benchmarks/datasets/shared_history_recall_v1.json --out-json /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm3_timeline_writeback.json --out-md /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm3_timeline_writeback.md --out-protocol /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm3_timeline_writeback.protocol.json",
+    "uv run python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 --dataset benchmarks/datasets/shared_history_recall_v1.json --read-only-retrieves --out-json /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm4_timeline_readonly.json --out-md /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm4_timeline_readonly.md --out-protocol /home/runner/work/emotional-memory/emotional-memory/shared-history-receipts-out/arm4_timeline_readonly.protocol.json"
+  ]
+}
