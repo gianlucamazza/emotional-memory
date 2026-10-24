@@ -51,6 +51,7 @@ OWNER_RELATIVE_PATHS: dict[str, str] = {
     "realistic_recall_v3_noAF": "realistic_recall_v3_noAF.json",
     "realistic_recall_v4_noAF": "realistic_recall_v4_noAF.json",
     "realistic_recall_v5_gate": "realistic_recall_v5_gate.json",
+    "realistic_recall_shared_history_v2": "realistic_recall_shared_history_v2.json",
 }
 
 

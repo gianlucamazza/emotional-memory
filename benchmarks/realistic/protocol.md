@@ -91,11 +91,28 @@ legacy `naive_cosine` adapter, which has no reconsolidation. The always-on arm u
 query affect, not the demo's mood-state strategy. The manifest records the gate
 threshold and complete effective engine configuration.
 
-Events and queries follow dataset order: session start, all session encode events,
-all session queries, session end. No synchronization of states occurs after the
-initial checkpoint. Session boundaries round-trip the affective state through its
-public serialization API. Query affect is a recorded oracle input, never a claim
-about appraisal model accuracy. Missing query affect fails validation.
+Events and queries follow dataset order.
+
+For `realistic_recall_v1` and any session without a `timeline`, that order is:
+session start, all session encode events, all session queries, session end. This
+is the `shared_history_v1` event order and remains byte-identical.
+
+For `realistic_recall_shared_history_v2` (`interleave: true`), each session
+declares a `timeline` of `{kind, id}` steps. Shared-history mode honors that
+order, so encodes may follow recalls inside a session (for example
+`E E E R E R E R`). Expected memory IDs may only name events already encoded at
+that query. The comparative runner rejects interleaved datasets; they are for
+`--shared-history` only. Reports use protocol mode `shared_history_v2` and
+`event_order: dataset_timeline`. `--read-only-retrieves` restores a deep-copied
+engine snapshot after each retrieve so write-backs do not persist; use it as a
+control when measuring write-back cost.
+
+No synchronization of states occurs after the initial checkpoint. Session
+boundaries round-trip the affective state through its public serialization API.
+Query affect is a recorded oracle input, never a claim about appraisal model
+accuracy. Missing query affect fails validation. Near-neutral queries use the
+production rule `|valence| < query_affect_gate_tau` (default `0.2`, strict `<`);
+values exactly at `0.2` are not gated to cosine.
 
 Reports include ordered external inputs, timestamps, deterministic IDs and full
 post-event snapshots for every arm. Divergence is reported against cosine as

@@ -100,6 +100,25 @@ uv run python -m benchmarks.realistic.runner --shared-history --embedder hash \
   --out-protocol /tmp/shared.protocol.json
 ```
 
+Interleaved shared-history v2 (encodes after recalls; declared near-neutral
+query share) is offline with the hash embedder:
+
+```bash
+python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 \
+  --dataset benchmarks/datasets/realistic_recall_shared_history_v2.json
+```
+
+To measure write-back cost, restore a deep-copied snapshot after each retrieve:
+
+```bash
+python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 \
+  --dataset benchmarks/datasets/realistic_recall_shared_history_v2.json \
+  --read-only-retrieves
+```
+
+Do not treat hash-embedder output as a quality result; do not commit scores from
+these commands.
+
 This separate mode reuses the dataset and report pipeline without changing legacy
 results. With no output flags it writes `results.shared_history.json`,
 `results.shared_history.md` and `results.shared_history.protocol.json`. Every scenario starts from the same empty checkpoint in three independent
