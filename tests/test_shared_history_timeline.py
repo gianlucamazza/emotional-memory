@@ -1,4 +1,4 @@
-"""Shared-history v2 dataset: interleaving, gate share, and read-only control."""
+"""Interleaved shared-history dataset: timeline order, gate share, read-only control."""
 
 from __future__ import annotations
 
@@ -24,28 +24,28 @@ from emotional_memory import EmotionalMemory
 from emotional_memory.engine_shared import is_query_affect_neutral
 
 ROOT = Path(__file__).resolve().parents[1]
-V1_PATH = ROOT / "benchmarks" / "datasets" / "realistic_recall_v1.json"
-V2_PATH = ROOT / "benchmarks" / "datasets" / "realistic_recall_shared_history_v2.json"
+REPLAY_V1_PATH = ROOT / "benchmarks" / "datasets" / "realistic_recall_v1.json"
+TIMELINE_PATH = ROOT / "benchmarks" / "datasets" / "shared_history_recall_v1.json"
 GATE_TAU = 0.2
 
 
-def load_v2() -> InterleavedReplayDataset:
-    dataset = load_dataset(V2_PATH)
+def load_timeline_dataset() -> InterleavedReplayDataset:
+    dataset = load_dataset(TIMELINE_PATH)
     assert isinstance(dataset, InterleavedReplayDataset)
     return dataset
 
 
 def test_v1_shared_history_protocol_mode_unchanged() -> None:
-    dataset = load_dataset(V1_PATH)
+    dataset = load_dataset(REPLAY_V1_PATH)
     dataset = dataset.model_copy(update={"scenarios": dataset.scenarios[:1]})
-    result = run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=V1_PATH)
+    result = run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=REPLAY_V1_PATH)
     assert result["protocol"]["mode"] == "shared_history_v1"
     assert "event_order" not in result["protocol"]
     assert "read_only_retrieves" not in result["protocol"]
 
 
 def test_v1_dump_omits_timeline_and_interleave_extensions() -> None:
-    dataset = load_dataset(V1_PATH)
+    dataset = load_dataset(REPLAY_V1_PATH)
     dumped = dataset.model_dump(mode="json")
     assert set(dumped) == {"name", "version", "description", "default_top_k", "scenarios"}
     assert set(dumped["scenarios"][0]["sessions"][0]) == {
@@ -58,8 +58,8 @@ def test_v1_dump_omits_timeline_and_interleave_extensions() -> None:
     assert count_encode_after_recall(dataset) == 0
 
 
-def test_shared_history_v2_dataset_has_encode_after_recall() -> None:
-    dataset = load_v2()
+def test_shared_history_timeline_dataset_has_encode_after_recall() -> None:
+    dataset = load_timeline_dataset()
     encode_after_recall = count_encode_after_recall(dataset)
     assert encode_after_recall > 0
     assert any(
@@ -68,10 +68,11 @@ def test_shared_history_v2_dataset_has_encode_after_recall() -> None:
         for session in scenario.sessions
     )
     assert dataset.interleave is True
+    assert dataset.name == "shared_history_recall_v1"
 
 
-def test_shared_history_v2_neutral_share_matches_declaration() -> None:
-    dataset = load_v2()
+def test_shared_history_timeline_neutral_share_matches_declaration() -> None:
+    dataset = load_timeline_dataset()
     assert dataset.query_affect_gate_tau == GATE_TAU
     assert count_neutral_queries(dataset, tau=GATE_TAU) == dataset.declared_neutral_query_count
     queries = iter_dataset_queries(dataset)
@@ -84,8 +85,8 @@ def test_shared_history_v2_neutral_share_matches_declaration() -> None:
     assert any(query.state is not None and abs(query.state.valence) >= 0.5 for query in queries)
 
 
-def test_shared_history_v2_expected_ids_already_encoded() -> None:
-    dataset = load_v2()
+def test_shared_history_timeline_expected_ids_already_encoded() -> None:
+    dataset = load_timeline_dataset()
     profile = validate_dataset_difficulty(dataset, top_k=dataset.default_top_k)
     assert profile["minimum_candidate_count"] > dataset.default_top_k
     for scenario in dataset.scenarios:
@@ -103,13 +104,13 @@ def test_shared_history_v2_expected_ids_already_encoded() -> None:
                 assert set(query.expected_memory_ids) <= encoded
 
 
-def test_shared_history_v2_repeat_reports_seed_7() -> None:
-    dataset = load_v2()
+def test_shared_history_timeline_repeat_reports_seed_7() -> None:
+    dataset = load_timeline_dataset()
     before = dataset.model_dump(mode="json")
-    first = run_shared_history(dataset, seed=7, n_bootstrap=20, dataset_path=V2_PATH)
-    assert first == run_shared_history(dataset, seed=7, n_bootstrap=20, dataset_path=V2_PATH)
+    first = run_shared_history(dataset, seed=7, n_bootstrap=20, dataset_path=TIMELINE_PATH)
+    assert first == run_shared_history(dataset, seed=7, n_bootstrap=20, dataset_path=TIMELINE_PATH)
     assert dataset.model_dump(mode="json") == before
-    assert first["protocol"]["mode"] == "shared_history_v2"
+    assert first["protocol"]["mode"] == "shared_history_timeline"
     assert first["protocol"]["event_order"] == "dataset_timeline"
     kinds = [
         event["kind"]
@@ -121,10 +122,10 @@ def test_shared_history_v2_repeat_reports_seed_7() -> None:
     assert "encode" in kinds[first_retrieve + 1 :]
 
 
-def test_shared_history_v2_gated_always_on_routes_diverge_on_neutral_queries(
+def test_shared_history_timeline_gated_always_on_routes_diverge_on_neutral_queries(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    dataset = load_v2()
+    dataset = load_timeline_dataset()
     calls: list[tuple[float, bool]] = []
     original = EmotionalMemory.retrieve_with_explanations
 
@@ -135,7 +136,7 @@ def test_shared_history_v2_gated_always_on_routes_diverge_on_neutral_queries(
         return original(self, query, top_k=top_k, **kwargs)
 
     monkeypatch.setattr(EmotionalMemory, "retrieve_with_explanations", spy)
-    run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=V2_PATH)
+    run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=TIMELINE_PATH)
     query_count = len(iter_dataset_queries(dataset))
     assert len(calls) == 3 * query_count
     gated = calls[query_count : 2 * query_count]
@@ -156,13 +157,13 @@ def test_shared_history_v2_gated_always_on_routes_diverge_on_neutral_queries(
 
 
 def test_shared_history_read_only_retrieves_do_not_persist_writebacks() -> None:
-    dataset = load_v2()
-    writable = run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=V2_PATH)
+    dataset = load_timeline_dataset()
+    writable = run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=TIMELINE_PATH)
     readonly = run_shared_history(
         dataset,
         seed=7,
         n_bootstrap=8,
-        dataset_path=V2_PATH,
+        dataset_path=TIMELINE_PATH,
         read_only_retrieves=True,
     )
     assert "read_only_retrieves" not in writable["protocol"]
@@ -189,13 +190,13 @@ def test_shared_history_read_only_retrieves_do_not_persist_writebacks() -> None:
 
 
 def test_comparative_runner_rejects_interleaved_dataset() -> None:
-    dataset = load_v2()
+    dataset = load_timeline_dataset()
     with pytest.raises(ValueError, match="require --shared-history"):
         run_benchmark(dataset, systems=["recency"], n_bootstrap=8, seed=7)
 
 
-def test_shared_history_v2_difficulty_profile_uses_query_time_candidates() -> None:
-    dataset = load_v2()
+def test_shared_history_timeline_difficulty_profile_uses_query_time_candidates() -> None:
+    dataset = load_timeline_dataset()
     profile = analyze_dataset_difficulty(dataset, top_k=dataset.default_top_k)
     first = profile["queries"][0]
     assert first["candidate_count"] == 3

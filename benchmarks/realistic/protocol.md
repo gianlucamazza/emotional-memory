@@ -76,7 +76,8 @@ Every generated result set should report:
 
 ## Shared-history longitudinal mode (opt-in)
 
-`--shared-history --embedder hash` selects `shared_history_v1`. This is a new
+`--shared-history --embedder hash` selects the #170 shared-history replay
+(`shared_history_v1`) when the dataset has no `timeline`. This is a new
 protocol, not a reinterpretation of earlier benchmark reports. Each scenario
 starts with an identical empty checkpoint in three independent engine instances:
 
@@ -94,15 +95,15 @@ threshold and complete effective engine configuration.
 Events and queries follow dataset order.
 
 For `realistic_recall_v1` and any session without a `timeline`, that order is:
-session start, all session encode events, all session queries, session end. This
-is the `shared_history_v1` event order and remains byte-identical.
+session start, all session encode events, all session queries, session end. That
+is the #170 shared-history replay and remains byte-identical.
 
-For `realistic_recall_shared_history_v2` (`interleave: true`), each session
-declares a `timeline` of `{kind, id}` steps. Shared-history mode honors that
-order, so encodes may follow recalls inside a session (for example
-`E E E R E R E R`). Expected memory IDs may only name events already encoded at
-that query. The comparative runner rejects interleaved datasets; they are for
-`--shared-history` only. Reports use protocol mode `shared_history_v2` and
+For `shared_history_recall_v1` (`interleave: true`), each session declares a
+`timeline` of `{kind, id}` steps. Shared-history mode honors that order, so
+encodes may follow recalls inside a session (for example `E E E R E R E R`).
+Expected memory IDs may only name events already encoded at that query. The
+comparative runner rejects interleaved datasets; they are for `--shared-history`
+only. Reports use protocol mode `shared_history_timeline` and
 `event_order: dataset_timeline`. `--read-only-retrieves` restores a deep-copied
 engine snapshot after each retrieve so write-backs do not persist; use it as a
 control when measuring write-back cost.

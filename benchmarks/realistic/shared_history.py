@@ -293,7 +293,7 @@ def run_shared_history(
     )
     interleaved = dataset_declares_interleave(dataset)
     protocol.update(
-        mode="shared_history_v2" if interleaved else "shared_history_v1",
+        mode="shared_history_timeline" if interleaved else "shared_history_v1",
         system_capabilities={
             arm: {"persisted_state": True, "explanations": False} for arm in ARMS
         },

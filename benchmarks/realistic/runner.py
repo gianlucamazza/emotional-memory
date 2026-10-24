@@ -130,7 +130,7 @@ class InterleavedReplayScenario(ReplayScenario):
 
 
 class InterleavedReplayDataset(ReplayDataset):
-    """Shared-history v2 dataset: declared timeline plus gate-share metadata."""
+    """Interleaved shared-history dataset: declared timeline plus gate-share metadata."""
 
     interleave: bool = True
     query_affect_gate_tau: float = 0.2
@@ -1142,7 +1142,12 @@ def main() -> None:
     parser.add_argument(
         "--shared-history",
         action="store_true",
-        help="Offline longitudinal replay; requires --embedder hash.",
+        help=(
+            "Offline longitudinal replay; requires --embedder hash. "
+            "Default dataset is the #170 shared-history replay. "
+            "Pass --dataset benchmarks/datasets/shared_history_recall_v1.json "
+            "for declared timelines (protocol mode shared_history_timeline)."
+        ),
     )
     parser.add_argument(
         "--read-only-retrieves",
@@ -1152,7 +1157,15 @@ def main() -> None:
             "retrieve so write-backs do not persist. Use to measure write-back cost."
         ),
     )
-    parser.add_argument("--dataset", type=Path, default=DATASET)
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=DATASET,
+        help=(
+            "Replay dataset JSON. Default: realistic_recall_v1.json. "
+            "For interleaved shared-history use shared_history_recall_v1.json."
+        ),
+    )
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     parser.add_argument("--out-protocol", type=Path, default=DEFAULT_PROTOCOL)

@@ -100,19 +100,19 @@ uv run python -m benchmarks.realistic.runner --shared-history --embedder hash \
   --out-protocol /tmp/shared.protocol.json
 ```
 
-Interleaved shared-history v2 (encodes after recalls; declared near-neutral
-query share) is offline with the hash embedder:
+Interleaved shared-history (`shared_history_recall_v1`; encodes after recalls;
+declared near-neutral query share) is offline with the hash embedder:
 
 ```bash
 python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 \
-  --dataset benchmarks/datasets/realistic_recall_shared_history_v2.json
+  --dataset benchmarks/datasets/shared_history_recall_v1.json
 ```
 
 To measure write-back cost, restore a deep-copied snapshot after each retrieve:
 
 ```bash
 python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 \
-  --dataset benchmarks/datasets/realistic_recall_shared_history_v2.json \
+  --dataset benchmarks/datasets/shared_history_recall_v1.json \
   --read-only-retrieves
 ```
 

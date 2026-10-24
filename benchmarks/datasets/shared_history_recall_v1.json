@@ -1,6 +1,6 @@
 {
-  "name": "realistic_recall_shared_history_v2",
-  "version": "2.0",
+  "name": "shared_history_recall_v1",
+  "version": "1.0",
   "license": "CC-BY-4.0",
   "description": "Shared-history interleaved replay scenarios. Encodes appear after recalls (declared session timelines such as E E E R E R E R) so retrieval write-backs can affect later ranking. Query affect is a recorded oracle. 14 of 36 queries are near-neutral (|valence| < query_affect_gate_tau = 0.2, strict <); 4 sit exactly on the boundary (|valence| = 0.2); the rest are strongly affective. Expected IDs reference only memories already encoded at query time. Hand-authored; no committed scores.",
   "default_top_k": 2,

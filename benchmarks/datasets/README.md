@@ -12,7 +12,7 @@ Owner-authored (publishable) files:
 - `affect_reference_v1.jsonl`: synthetic quadrant-based retrieval probe (CC-BY-4.0)
 - `realistic_recall_v1.json` … `realistic_recall_v5_gate.json`, including
   `_it` / `_es` / `_fr` and the `_noAF` / `_gate` variants, plus
-  `realistic_recall_shared_history_v2.json` (licence
+  `shared_history_recall_v1.json` (licence
   **CC-BY-4.0** — owner decision; see `DATASET.md`)
 
 Third-party or third-party-derived (kept in git, **not** publishable):
@@ -190,14 +190,15 @@ Addendum P. **v4_noAF**: 40 scenarios, 160 queries.
 (`qNN_` ids), LLM-drafted by `generate_v5_gate.py` (gpt-5-mini).
 **v5_gate**: 50 scenarios, 200 queries (100/100 `gate_label`).
 
-## realistic_recall_shared_history_v2
+## shared_history_recall_v1
 
-`realistic_recall_shared_history_v2.json` is a hand-authored shared-history
-dataset for interleaved encode/retrieve order. Sessions declare a `timeline`
-so encodes can follow recalls (for example `E E E R E R E R`). A documented
-share of queries is near-neutral (`|valence| < 0.2`); a few sit on the
-gate boundary (`|valence| = 0.2`). Use only with
-`--shared-history --embedder hash`. No scores are published from this file.
+`shared_history_recall_v1.json` is a hand-authored shared-history dataset for
+interleaved encode/retrieve order. Sessions declare a `timeline` so encodes
+can follow recalls (for example `E E E R E R E R`). A documented share of
+queries is near-neutral (`|valence| < 0.2`); a few sit on the gate boundary
+(`|valence| = 0.2`). Use only with `--shared-history --embedder hash`.
+Protocol mode is `shared_history_timeline`. No scores are published from this
+file. The #170 shared-history replay on `realistic_recall_v1` is unchanged.
 
 Licence for every `realistic_recall_*` file above: **CC-BY-4.0**
 (JSON `license` field; owner decision). See `DATASET.md`.
