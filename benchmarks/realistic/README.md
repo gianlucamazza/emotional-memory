@@ -116,8 +116,13 @@ python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 
   --read-only-retrieves
 ```
 
-Do not treat hash-embedder output as a quality result; do not commit scores from
-these commands.
+Scores from these commands are a mechanism test, not a semantic-quality result.
+They may be committed or published (including on the Hugging Face dataset card)
+only with a receipt: the repo commit SHA they were produced at; the report
+files (`results.shared_history.json` and `results.shared_history.protocol.json`, with input hashes);
+the embedder and seed; whether `--read-only-retrieves` was set; and the CI run
+that reproduced them. Every published score carries the label «mechanism test
+(hash embedder), not a semantic-quality benchmark». No receipt, no score.
 
 This separate mode reuses the dataset and report pipeline without changing legacy
 results. With no output flags it writes `results.shared_history.json`,
