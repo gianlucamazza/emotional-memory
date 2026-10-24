@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Demo Gradio API internals.** Page-load and Enter-to-send handlers are
+  named (`init_session`, `chat_submit`) with `api_visibility="private"`, and
+  the `gr.State` factory load event is marked private, so `/False` and
+  `/_initial_em_state` no longer appear in `/gradio_api/info`. Reported by
+  dipankarsarkar (Hugging Face).
+
 - **Demo post-divergence gated encode.** After a recall, the Hugging Face
   demo encodes new user turns on the gated engine with the shared appraisal
   instead of importing the mood-engine memory by id. Import skipped reverse

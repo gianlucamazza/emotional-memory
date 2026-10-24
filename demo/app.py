@@ -673,6 +673,19 @@ def _initial_em_state() -> DemoSession:
     return session
 
 
+def _hide_state_factory_from_api(demo: gr.Blocks) -> None:
+    """Keep the State factory load event off the public API listing.
+
+    ``gr.State(value=_initial_em_state)`` is still a per-session factory: Gradio
+    attaches a load event named after the callable. That event stays registered
+    for session init; only ``api_visibility`` changes so ``/_initial_em_state``
+    is not advertised in ``/gradio_api/info``.
+    """
+    for block_fn in demo.fns.values():
+        if block_fn.fn is _initial_em_state:
+            block_fn.api_visibility = "private"
+
+
 # ---------------------------------------------------------------------------
 # Gradio UI
 # ---------------------------------------------------------------------------
@@ -780,7 +793,8 @@ def build_demo() -> gr.Blocks:
                 appraisal_badge,
                 msg_count,
             ],
-            api_name=False,
+            api_name="init_session",
+            api_visibility="private",
         )
 
         send_btn.click(
@@ -795,7 +809,8 @@ def build_demo() -> gr.Blocks:
             inputs=[msg_box, chatbot, em_state, pad_history, msg_count, retrieval_mode],
             outputs=[chatbot, em_state, pad_history, pad_plot, msg_box, msg_count],
             concurrency_limit=2,
-            api_name=False,
+            api_name="chat_submit",
+            api_visibility="private",
         )
         compare_btn.click(
             fn=compare_both_modes,
@@ -822,6 +837,7 @@ def build_demo() -> gr.Blocks:
             api_visibility="private",
         )
 
+    _hide_state_factory_from_api(demo)
     return demo
 
 

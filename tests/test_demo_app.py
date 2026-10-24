@@ -421,6 +421,42 @@ def test_demo_disables_gradio_and_hub_telemetry() -> None:
     assert os.environ.get("DO_NOT_TRACK") == "1"
 
 
+_PUBLIC_GRADIO_API_ENDPOINTS = frozenset({"/chat", "/compare_both", "/reset_session"})
+_FORBIDDEN_GRADIO_API_ENDPOINTS = frozenset({"/False", "/_initial_em_state"})
+
+
+def _named_gradio_endpoints(demo: object) -> set[str]:
+    get_api_info = getattr(demo, "get_api_info", None)
+    assert callable(get_api_info), "installed Gradio must expose get_api_info()"
+    info = get_api_info()
+    assert isinstance(info, dict)
+    named = info.get("named_endpoints")
+    assert isinstance(named, dict)
+    return set(named)
+
+
+def test_public_gradio_api_exposes_only_intended_endpoints(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    demo_app = _load_demo_module()
+    _force_offline_factories(monkeypatch, demo_app)
+    demo = demo_app.build_demo()
+    close = getattr(demo, "close", None)
+    try:
+        named = _named_gradio_endpoints(demo)
+        leaked = named & _FORBIDDEN_GRADIO_API_ENDPOINTS
+        assert not leaked, (
+            f"internal endpoints leaked into the public API listing: {sorted(leaked)}"
+        )
+        assert named == _PUBLIC_GRADIO_API_ENDPOINTS, (
+            "public Gradio API listing drifted; "
+            f"got {sorted(named)}, expected {sorted(_PUBLIC_GRADIO_API_ENDPOINTS)}"
+        )
+    finally:
+        if callable(close):
+            close()
+
+
 class _CountingAppraisal:
     """Wraps KeywordAppraisalEngine and counts ``appraise`` calls."""
 
