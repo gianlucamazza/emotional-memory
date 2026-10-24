@@ -72,12 +72,15 @@ class SharedHistoryAdapter(ReplayAdapter):
         scenario_id: str,
         seed: int,
         config: EmotionalMemoryConfig | None = None,
+        *,
+        read_only_retrieves: bool = False,
     ) -> None:
         if arm not in ARMS:
             raise ValueError(f"Unsupported arm: {arm}")
         self.name = arm
         self.scenario_id = scenario_id
         self.seed = seed
+        self.read_only_retrieves = read_only_retrieves
         self.config = (config or EmotionalMemoryConfig()).model_copy(deep=True)
         self.reset()
 
@@ -165,6 +168,7 @@ class SharedHistoryAdapter(ReplayAdapter):
             raise ValueError("Shared-history queries require explicit recorded query affect")
         payload = {"query": query, "top_k": top_k, "valence": valence, "arousal": arousal}
         with self.operation("retrieve", payload):
+            checkpoint = self.snapshot() if self.read_only_retrieves else None
             query_affect = CoreAffect(valence=valence, arousal=arousal)
             use_cosine = self.name == "cosine" or (
                 self.name == "gated"
@@ -176,6 +180,11 @@ class SharedHistoryAdapter(ReplayAdapter):
                 query_affect=query_affect,
                 precomputed_weights=semantic_only_weights() if use_cosine else None,
             )
+            if checkpoint is not None:
+                self.engine.import_memories(checkpoint["memories"], overwrite=True)
+                self.engine.load_state(checkpoint["state"])
+                if self.snapshot() != checkpoint:
+                    raise RuntimeError("Read-only retrieve left store or affective state changed")
         return [
             ReplayRetrievedItem(id=m.memory.id, text=m.memory.content, score=m.score)
             for m in memories
@@ -216,6 +225,7 @@ def run_shared_history(
     top_k: int | None = None,
     config=None,
     dataset_path: Path | None = None,
+    read_only_retrieves: bool = False,
 ) -> dict[str, Any]:
     """Run isolated scenarios with a common empty checkpoint, no state resets at queries."""
     from benchmarks.realistic.runner import (
@@ -224,10 +234,14 @@ def run_shared_history(
         _aggregate_query_metrics,
         _build_pairwise_comparisons,
         build_protocol_metadata,
+        dataset_declares_interleave,
+        resolve_query_affect_gate_tau,
         run_system_on_scenario,
         validate_dataset_difficulty,
     )
 
+    effective_config = config or EmotionalMemoryConfig()
+    resolve_query_affect_gate_tau(dataset, effective_config)
     effective_k = dataset.default_top_k if top_k is None else top_k
     difficulty = validate_dataset_difficulty(dataset, top_k=effective_k)
     for scenario in dataset.scenarios:
@@ -238,7 +252,13 @@ def run_shared_history(
     for arm in ARMS:
         scenarios = []
         for scenario in dataset.scenarios:
-            adapter = SharedHistoryAdapter(arm, scenario.scenario_id, seed, config)
+            adapter = SharedHistoryAdapter(
+                arm,
+                scenario.scenario_id,
+                seed,
+                config,
+                read_only_retrieves=read_only_retrieves,
+            )
             try:
                 report = run_system_on_scenario(
                     adapter,
@@ -246,6 +266,7 @@ def run_shared_history(
                     default_top_k=effective_k,
                     n_bootstrap=n_bootstrap,
                     seed=seed,
+                    honor_session_order=True,
                 )
                 report.update(checkpoint=adapter.checkpoint, trace=adapter.trace)
                 scenarios.append(report)
@@ -275,8 +296,9 @@ def run_shared_history(
         difficulty_profile=difficulty,
         dataset_path=DATASET if dataset_path is None else dataset_path,
     )
+    interleaved = dataset_declares_interleave(dataset)
     protocol.update(
-        mode="shared_history_v1",
+        mode="shared_history_timeline" if interleaved else "shared_history_v1",
         system_capabilities={
             arm: {"persisted_state": True, "explanations": False} for arm in ARMS
         },
@@ -288,7 +310,10 @@ def run_shared_history(
             "while tags diverge.",
         ],
     )
-    effective_config = config or EmotionalMemoryConfig()
+    if interleaved:
+        protocol["event_order"] = "dataset_timeline"
+    if read_only_retrieves:
+        protocol["read_only_retrieves"] = True
     manifest = reproducibility_manifest(dataset, effective_config, seed=seed, top_k=effective_k)
     manifest["query_affect_gate_tau"] = effective_config.query_affect_gate_tau
     protocol["manifest"] = manifest

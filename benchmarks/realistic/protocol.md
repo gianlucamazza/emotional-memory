@@ -76,7 +76,8 @@ Every generated result set should report:
 
 ## Shared-history longitudinal mode (opt-in)
 
-`--shared-history --embedder hash` selects `shared_history_v1`. This is a new
+`--shared-history --embedder hash` selects the #170 shared-history replay
+(`shared_history_v1`) when the dataset has no `timeline`. This is a new
 protocol, not a reinterpretation of earlier benchmark reports. Each scenario
 starts with an identical empty checkpoint in three independent engine instances:
 
@@ -91,11 +92,35 @@ legacy `naive_cosine` adapter, which has no reconsolidation. The always-on arm u
 query affect, not the demo's mood-state strategy. The manifest records the gate
 threshold and complete effective engine configuration.
 
-Events and queries follow dataset order: session start, all session encode events,
-all session queries, session end. No synchronization of states occurs after the
-initial checkpoint. Session boundaries round-trip the affective state through its
-public serialization API. Query affect is a recorded oracle input, never a claim
-about appraisal model accuracy. Missing query affect fails validation.
+Events and queries follow dataset order.
+
+For `realistic_recall_v1` and any session without a `timeline`, that order is:
+session start, all session encode events, all session queries, session end. That
+is the #170 shared-history replay and remains byte-identical.
+
+For `shared_history_recall_v1` (`interleave: true`), each session declares a
+`timeline` of `{kind, id}` steps. Shared-history mode honors that order, so
+encodes may follow recalls inside a session (for example `E E E R E R E R`).
+An empty `timeline` is rejected; omit the field entirely for the #170
+events-then-queries order. Expected memory IDs may only name events already
+encoded at that query. The comparative runner rejects interleaved datasets;
+they are for `--shared-history` only. Reports use protocol mode
+`shared_history_timeline` and `event_order: dataset_timeline`.
+`--read-only-retrieves` restores a deep-copied engine snapshot after each
+retrieve so write-backs do not persist; the read-only path asserts that store
+and affective-state snapshots are unchanged after every retrieve, on every
+arm. Use it as a control when measuring write-back cost.
+
+Encode-after-recall counts are scenario-wide (24 on this dataset). Counted
+within a single session they are 22: two encodes sit after a recall in an
+earlier session of the same scenario.
+
+No synchronization of states occurs after the initial checkpoint. Session
+boundaries round-trip the affective state through its public serialization API.
+Query affect is a recorded oracle input, never a claim about appraisal model
+accuracy. Missing query affect fails validation. Near-neutral queries use the
+production rule `|valence| < query_affect_gate_tau` (default `0.2`, strict `<`);
+values exactly at `0.2` are not gated to cosine.
 
 Reports include ordered external inputs, timestamps, deterministic IDs and full
 post-event snapshots for every arm. Divergence is reported against cosine as

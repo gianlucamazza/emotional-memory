@@ -1,0 +1,1642 @@
+{
+  "name": "shared_history_recall_v1",
+  "version": "1.0",
+  "license": "CC-BY-4.0",
+  "description": "Shared-history interleaved replay scenarios. Encodes appear after recalls (declared session timelines such as E E E R E R E R) so retrieval write-backs can affect later ranking. Query affect is a recorded oracle. 14 of 36 queries are near-neutral (|valence| < query_affect_gate_tau = 0.2, strict <); 4 sit exactly on the boundary (|valence| = 0.2); the rest are strongly affective. Expected IDs reference only memories already encoded at query time. Hand-authored; no committed scores.",
+  "default_top_k": 2,
+  "interleave": true,
+  "query_affect_gate_tau": 0.2,
+  "declared_neutral_query_count": 14,
+  "declared_neutral_query_share": 0.3889,
+  "declared_boundary_query_count": 4,
+  "scenarios": [
+    {
+      "scenario_id": "kitchen_renovation_pivot",
+      "description": "A kitchen renovation absorbs a burst pipe, then recovers through inspection and a plumber return.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Leak, cleanup, inspection, and the later valve walkthrough.",
+          "events": [
+            {
+              "memory_id": "kr_burst_pipe",
+              "content": "On Tuesday morning a burst pipe soaked the new kitchen subfloor and the contractor called in a panic.",
+              "valence": -0.85,
+              "arousal": 0.9,
+              "metadata": {
+                "topic": "renovation",
+                "phase": "incident"
+              }
+            },
+            {
+              "memory_id": "kr_wrong_tile",
+              "content": "A crate of the wrong tile arrived the same afternoon, which looked like another disaster until someone checked the packing slip.",
+              "valence": -0.35,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "renovation",
+                "phase": "mixup"
+              }
+            },
+            {
+              "memory_id": "kr_weekend_cleanup",
+              "content": "Over the weekend the crew pulled the wet boards and the house finally stopped smelling like standing water.",
+              "valence": 0.25,
+              "arousal": 0.35,
+              "metadata": {
+                "topic": "renovation",
+                "phase": "cleanup"
+              }
+            },
+            {
+              "memory_id": "kr_inspector_signoff",
+              "content": "After the first recap, the city inspector signed off on the dry-down plan and said the joists were sound.",
+              "valence": 0.7,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "renovation",
+                "phase": "approval"
+              }
+            },
+            {
+              "memory_id": "kr_plumber_return",
+              "content": "The plumber later returned to replace the shutoff and walked through the new valve with the owners.",
+              "valence": 0.4,
+              "arousal": 0.25,
+              "metadata": {
+                "topic": "renovation",
+                "phase": "repair"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "kr_q_first_panic",
+              "query": "Which kitchen event was the actual burst-pipe panic on Tuesday morning, not the later wrong-tile crate?",
+              "expected_memory_ids": [
+                "kr_burst_pipe"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.0,
+                "arousal": 0.15
+              }
+            },
+            {
+              "query_id": "kr_q_inspector",
+              "query": "After we already talked through the wet floor, who signed off that the joists were sound?",
+              "expected_memory_ids": [
+                "kr_inspector_signoff"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.7,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "kr_q_pipe_not_tile",
+              "query": "What caused the soaked subfloor before any tile crate showed up?",
+              "expected_memory_ids": [
+                "kr_burst_pipe"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.75
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "kr_burst_pipe"
+            },
+            {
+              "kind": "encode",
+              "id": "kr_wrong_tile"
+            },
+            {
+              "kind": "encode",
+              "id": "kr_weekend_cleanup"
+            },
+            {
+              "kind": "query",
+              "id": "kr_q_first_panic"
+            },
+            {
+              "kind": "encode",
+              "id": "kr_inspector_signoff"
+            },
+            {
+              "kind": "query",
+              "id": "kr_q_inspector"
+            },
+            {
+              "kind": "encode",
+              "id": "kr_plumber_return"
+            },
+            {
+              "kind": "query",
+              "id": "kr_q_pipe_not_tile"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "grant_review_reversal",
+      "description": "A grant rejection is rewritten and later reversed after a tighter aims page.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Rejection, rewrite, and the later award call.",
+          "events": [
+            {
+              "memory_id": "gr_rejection_email",
+              "content": "The foundation rejection landed at 8:12 a.m. and said the aims were too broad for this cycle.",
+              "valence": -0.8,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "grant",
+                "phase": "rejection"
+              }
+            },
+            {
+              "memory_id": "gr_rubric_confusion",
+              "content": "A later note claimed the rubric scores were missing, which briefly made the team think the file had been lost.",
+              "valence": -0.45,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "grant",
+                "phase": "confusion"
+              }
+            },
+            {
+              "memory_id": "gr_hallway_talk",
+              "content": "In the hallway after the staff meeting, Priya said the rejection stung but the core idea was still worth a rewrite.",
+              "valence": 0.2,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "grant",
+                "phase": "consolation"
+              }
+            },
+            {
+              "memory_id": "gr_revised_aims",
+              "content": "After we revisited the rejection, Priya sent a tighter one-page aims sheet that dropped the extra site.",
+              "valence": 0.55,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "grant",
+                "phase": "revision"
+              }
+            },
+            {
+              "memory_id": "gr_award_call",
+              "content": "Two weeks later the program officer called to say the revised aims had been funded after all.",
+              "valence": 0.9,
+              "arousal": 0.7,
+              "metadata": {
+                "topic": "grant",
+                "phase": "award"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "gr_q_rejection",
+              "query": "Which message was the actual 8:12 rejection about broad aims, not the later missing-rubric scare?",
+              "expected_memory_ids": [
+                "gr_rejection_email"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.05,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "gr_q_revised_aims",
+              "query": "After we already named the rejection, what did Priya send that dropped the extra site?",
+              "expected_memory_ids": [
+                "gr_revised_aims"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.2,
+                "arousal": 0.35
+              }
+            },
+            {
+              "query_id": "gr_q_original_no",
+              "query": "What was the first official no from the foundation, before any rewrite or award call?",
+              "expected_memory_ids": [
+                "gr_rejection_email"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.65
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "gr_rejection_email"
+            },
+            {
+              "kind": "encode",
+              "id": "gr_rubric_confusion"
+            },
+            {
+              "kind": "encode",
+              "id": "gr_hallway_talk"
+            },
+            {
+              "kind": "query",
+              "id": "gr_q_rejection"
+            },
+            {
+              "kind": "encode",
+              "id": "gr_revised_aims"
+            },
+            {
+              "kind": "query",
+              "id": "gr_q_revised_aims"
+            },
+            {
+              "kind": "encode",
+              "id": "gr_award_call"
+            },
+            {
+              "kind": "query",
+              "id": "gr_q_original_no"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "bakery_opening_delay",
+      "description": "A bakery fails inspection, recleans overnight, then opens on a temporary permit.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Inspection, permit, and opening morning.",
+          "events": [
+            {
+              "memory_id": "bk_failed_inspection",
+              "content": "The health inspector failed the bakery opening after finding a warm cooler and a sticky prep board.",
+              "valence": -0.75,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "bakery",
+                "phase": "inspection"
+              }
+            },
+            {
+              "memory_id": "bk_fridge_blame",
+              "content": "Someone first blamed the walk-in gasket, but that gasket was not what the inspector had written up.",
+              "valence": -0.3,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "bakery",
+                "phase": "misdiagnosis"
+              }
+            },
+            {
+              "memory_id": "bk_midnight_reclean",
+              "content": "The crew stayed until midnight recleaning the board and logging cooler temperatures every hour.",
+              "valence": 0.15,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "bakery",
+                "phase": "cleanup"
+              }
+            },
+            {
+              "memory_id": "bk_temp_permit",
+              "content": "After that first recap, the city issued a temporary permit so they could bake for the Saturday market.",
+              "valence": 0.75,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "bakery",
+                "phase": "permit"
+              }
+            },
+            {
+              "memory_id": "bk_opening_morning",
+              "content": "On opening morning the line wrapped past the florist and the first trays sold out before nine.",
+              "valence": 0.85,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "bakery",
+                "phase": "opening"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "bk_q_failed_sheet",
+              "query": "What did the inspector actually fail the bakery for, rather than the later gasket guess?",
+              "expected_memory_ids": [
+                "bk_failed_inspection"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.1,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "bk_q_temp_permit",
+              "query": "After we already talked about the failed sheet, what let them bake for Saturday market?",
+              "expected_memory_ids": [
+                "bk_temp_permit"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.8,
+                "arousal": 0.45
+              }
+            },
+            {
+              "query_id": "bk_q_inspection_not_gasket",
+              "query": "Which write-up closed the shop before any temporary permit, the inspection or the gasket story?",
+              "expected_memory_ids": [
+                "bk_failed_inspection"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.7
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "bk_failed_inspection"
+            },
+            {
+              "kind": "encode",
+              "id": "bk_fridge_blame"
+            },
+            {
+              "kind": "encode",
+              "id": "bk_midnight_reclean"
+            },
+            {
+              "kind": "query",
+              "id": "bk_q_failed_sheet"
+            },
+            {
+              "kind": "encode",
+              "id": "bk_temp_permit"
+            },
+            {
+              "kind": "query",
+              "id": "bk_q_temp_permit"
+            },
+            {
+              "kind": "encode",
+              "id": "bk_opening_morning"
+            },
+            {
+              "kind": "query",
+              "id": "bk_q_inspection_not_gasket"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "orchestra_chair_challenge",
+      "description": "A cracked Strauss excerpt is followed by a callback and a first rehearsal in the chair.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Audition, callback, and first rehearsal.",
+          "events": [
+            {
+              "memory_id": "or_missed_excerpt",
+              "content": "During the principal-chair audition, Nadia cracked the Strauss excerpt and left the stage shaking.",
+              "valence": -0.8,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "orchestra",
+                "phase": "audition"
+              }
+            },
+            {
+              "memory_id": "or_wrong_bowing",
+              "content": "A committee member later mentioned a bowing disagreement in another excerpt that was not the cracked Strauss.",
+              "valence": -0.25,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "orchestra",
+                "phase": "aside"
+              }
+            },
+            {
+              "memory_id": "or_stand_partner",
+              "content": "Her stand partner waited in the hallway with water and said the rest of the round had still been clean.",
+              "valence": 0.35,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "orchestra",
+                "phase": "support"
+              }
+            },
+            {
+              "memory_id": "or_callback",
+              "content": "After she named the cracked excerpt, the personnel manager called to schedule a Saturday callback.",
+              "valence": 0.6,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "orchestra",
+                "phase": "callback"
+              }
+            },
+            {
+              "memory_id": "or_first_rehearsal",
+              "content": "At the first rehearsal after the callback, Nadia sat principal and the Strauss finally sat in the hand.",
+              "valence": 0.8,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "orchestra",
+                "phase": "rehearsal"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "or_q_cracked_strauss",
+              "query": "Which audition moment was the cracked Strauss excerpt, not the later bowing aside?",
+              "expected_memory_ids": [
+                "or_missed_excerpt"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.15,
+                "arousal": 0.25
+              }
+            },
+            {
+              "query_id": "or_q_callback",
+              "query": "After we already named the cracked excerpt, who called to set the Saturday callback?",
+              "expected_memory_ids": [
+                "or_callback"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": -0.2,
+                "arousal": 0.4
+              }
+            },
+            {
+              "query_id": "or_q_original_miss",
+              "query": "What was the failure that sent Nadia offstage shaking, before any callback?",
+              "expected_memory_ids": [
+                "or_missed_excerpt"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.75,
+                "arousal": 0.8
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "or_missed_excerpt"
+            },
+            {
+              "kind": "encode",
+              "id": "or_wrong_bowing"
+            },
+            {
+              "kind": "encode",
+              "id": "or_stand_partner"
+            },
+            {
+              "kind": "query",
+              "id": "or_q_cracked_strauss"
+            },
+            {
+              "kind": "encode",
+              "id": "or_callback"
+            },
+            {
+              "kind": "query",
+              "id": "or_q_callback"
+            },
+            {
+              "kind": "encode",
+              "id": "or_first_rehearsal"
+            },
+            {
+              "kind": "query",
+              "id": "or_q_original_miss"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "community_garden_conflict",
+      "description": "A garden theft is followed by a pantry harvest and a later apology note.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Theft, harvest share, and apology.",
+          "events": [
+            {
+              "memory_id": "cg_stolen_tomatoes",
+              "content": "Overnight someone stripped the ripe tomatoes from the community-garden beds and left the vines broken.",
+              "valence": -0.7,
+              "arousal": 0.75,
+              "metadata": {
+                "topic": "garden",
+                "phase": "theft"
+              }
+            },
+            {
+              "memory_id": "cg_neighbor_blame",
+              "content": "A neighbor was briefly blamed because of a late watering, but that watering was not when the fruit disappeared.",
+              "valence": -0.4,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "garden",
+                "phase": "accusation"
+              }
+            },
+            {
+              "memory_id": "cg_new_lock",
+              "content": "The garden board installed a new gate lock and posted a sign asking people to close it after dusk.",
+              "valence": 0.1,
+              "arousal": 0.25,
+              "metadata": {
+                "topic": "garden",
+                "phase": "lock"
+              }
+            },
+            {
+              "memory_id": "cg_harvest_share",
+              "content": "After we talked about the stripped beds, the Saturday harvest share still filled twelve boxes for the pantry.",
+              "valence": 0.65,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "garden",
+                "phase": "harvest"
+              }
+            },
+            {
+              "memory_id": "cg_apology_note",
+              "content": "A handwritten apology later appeared on the tool shed, saying a visiting kid had taken tomatoes without asking.",
+              "valence": 0.3,
+              "arousal": 0.2,
+              "metadata": {
+                "topic": "garden",
+                "phase": "apology"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "cg_q_stripped_beds",
+              "query": "What actually happened to the ripe tomatoes overnight, not the late-watering accusation?",
+              "expected_memory_ids": [
+                "cg_stolen_tomatoes"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.0,
+                "arousal": 0.1
+              }
+            },
+            {
+              "query_id": "cg_q_harvest_share",
+              "query": "After we already named the stripped beds, what still filled twelve pantry boxes?",
+              "expected_memory_ids": [
+                "cg_harvest_share"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.65,
+                "arousal": 0.35
+              }
+            },
+            {
+              "query_id": "cg_q_theft_not_watering",
+              "query": "Which event removed the fruit from the vines, the overnight stripping or the watering argument?",
+              "expected_memory_ids": [
+                "cg_stolen_tomatoes"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.55,
+                "arousal": 0.6
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "cg_stolen_tomatoes"
+            },
+            {
+              "kind": "encode",
+              "id": "cg_neighbor_blame"
+            },
+            {
+              "kind": "encode",
+              "id": "cg_new_lock"
+            },
+            {
+              "kind": "query",
+              "id": "cg_q_stripped_beds"
+            },
+            {
+              "kind": "encode",
+              "id": "cg_harvest_share"
+            },
+            {
+              "kind": "query",
+              "id": "cg_q_harvest_share"
+            },
+            {
+              "kind": "encode",
+              "id": "cg_apology_note"
+            },
+            {
+              "kind": "query",
+              "id": "cg_q_theft_not_watering"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "parent_teacher_conference",
+      "description": "A failing-math note is followed by kitchen tutoring, a warmer conference, and a science-fair ribbon.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Notice, conference, and science fair.",
+          "events": [
+            {
+              "memory_id": "pt_failing_math",
+              "content": "The midterm note said Jonah was failing math and asked for a conference before the next quiz.",
+              "valence": -0.65,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "school",
+                "phase": "notice"
+              }
+            },
+            {
+              "memory_id": "pt_bus_excuse",
+              "content": "Jonah first said the late bus caused the zeros, but the zeros were from unfinished homework, not the bus.",
+              "valence": -0.2,
+              "arousal": 0.35,
+              "metadata": {
+                "topic": "school",
+                "phase": "excuse"
+              }
+            },
+            {
+              "memory_id": "pt_evening_tutoring",
+              "content": "That evening they sat at the kitchen table and worked through the fraction packet without the television on.",
+              "valence": 0.25,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "school",
+                "phase": "tutoring"
+              }
+            },
+            {
+              "memory_id": "pt_conference_praise",
+              "content": "After we named the failing note, Ms. Okonkwo opened the conference by saying Jonah's last two quizzes had jumped.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "school",
+                "phase": "conference"
+              }
+            },
+            {
+              "memory_id": "pt_science_fair",
+              "content": "At the science fair Jonah's volcano poster won a ribbon and he asked Ms. Okonkwo to take a photo.",
+              "valence": 0.75,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "school",
+                "phase": "fair"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "pt_q_failing_note",
+              "query": "Which school message asked for a conference because of failing math, not the late-bus story?",
+              "expected_memory_ids": [
+                "pt_failing_math"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.05,
+                "arousal": 0.15
+              }
+            },
+            {
+              "query_id": "pt_q_conference",
+              "query": "After we already named the failing note, what did Ms. Okonkwo say about the last two quizzes?",
+              "expected_memory_ids": [
+                "pt_conference_praise"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.75,
+                "arousal": 0.35
+              }
+            },
+            {
+              "query_id": "pt_q_notice_not_bus",
+              "query": "What was the actual midterm warning before any conference praise?",
+              "expected_memory_ids": [
+                "pt_failing_math"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.6,
+                "arousal": 0.55
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "pt_failing_math"
+            },
+            {
+              "kind": "encode",
+              "id": "pt_bus_excuse"
+            },
+            {
+              "kind": "encode",
+              "id": "pt_evening_tutoring"
+            },
+            {
+              "kind": "query",
+              "id": "pt_q_failing_note"
+            },
+            {
+              "kind": "encode",
+              "id": "pt_conference_praise"
+            },
+            {
+              "kind": "query",
+              "id": "pt_q_conference"
+            },
+            {
+              "kind": "encode",
+              "id": "pt_science_fair"
+            },
+            {
+              "kind": "query",
+              "id": "pt_q_notice_not_bus"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "ferry_strike_homecoming",
+      "description": "A strike-cancelled ferry is followed by a union deal and a delayed homecoming.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Cancellation, deal, and the morning reunion.",
+          "events": [
+            {
+              "memory_id": "fs_cancelled_sailing",
+              "content": "The evening ferry was cancelled for a strike and the loudspeaker said no more sailings until further notice.",
+              "valence": -0.7,
+              "arousal": 0.8,
+              "metadata": {
+                "topic": "travel",
+                "phase": "cancel"
+              }
+            },
+            {
+              "memory_id": "fs_hotel_scramble",
+              "content": "A nearby hotel still had one twin room, which felt like a separate hassle from the cancelled boat itself.",
+              "valence": -0.3,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "travel",
+                "phase": "hotel"
+              }
+            },
+            {
+              "memory_id": "fs_dock_rumor",
+              "content": "On the dock someone claimed a midnight relief boat was coming, but the harbor office never posted it.",
+              "valence": -0.15,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "travel",
+                "phase": "rumor"
+              }
+            },
+            {
+              "memory_id": "fs_union_deal",
+              "content": "After we named the cancellation, the union deal came through and sailings were posted for 6 a.m.",
+              "valence": 0.6,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "travel",
+                "phase": "deal"
+              }
+            },
+            {
+              "memory_id": "fs_reunion_hug",
+              "content": "On the morning boat home, Elena's father was waiting at the ramp and they held on longer than usual.",
+              "valence": 0.85,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "travel",
+                "phase": "reunion"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "fs_q_cancellation",
+              "query": "Which announcement actually cancelled the evening ferry, not the midnight-boat rumor?",
+              "expected_memory_ids": [
+                "fs_cancelled_sailing"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.12,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "fs_q_union_deal",
+              "query": "After we already named the cancellation, what put 6 a.m. sailings back on the board?",
+              "expected_memory_ids": [
+                "fs_union_deal"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": 0.2,
+                "arousal": 0.35
+              }
+            },
+            {
+              "query_id": "fs_q_no_sailing",
+              "query": "What stopped the evening crossing before any union deal or reunion on the ramp?",
+              "expected_memory_ids": [
+                "fs_cancelled_sailing"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.85,
+                "arousal": 0.75
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "fs_cancelled_sailing"
+            },
+            {
+              "kind": "encode",
+              "id": "fs_hotel_scramble"
+            },
+            {
+              "kind": "encode",
+              "id": "fs_dock_rumor"
+            },
+            {
+              "kind": "query",
+              "id": "fs_q_cancellation"
+            },
+            {
+              "kind": "encode",
+              "id": "fs_union_deal"
+            },
+            {
+              "kind": "query",
+              "id": "fs_q_union_deal"
+            },
+            {
+              "kind": "encode",
+              "id": "fs_reunion_hug"
+            },
+            {
+              "kind": "query",
+              "id": "fs_q_no_sailing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "archive_digitization_scare",
+      "description": "A deleted correspondence box is restored overnight before a donor visit.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Deletion, restore, donor visit, and catalog note.",
+          "events": [
+            {
+              "memory_id": "ad_deleted_box",
+              "content": "A volunteer deleted the 1974 correspondence box from the working drive and the catalog went blank.",
+              "valence": -0.8,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "archive",
+                "phase": "deletion"
+              }
+            },
+            {
+              "memory_id": "ad_wrong_folder",
+              "content": "Someone first thought the files had been dragged into a personal folder, but that folder was empty.",
+              "valence": -0.35,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "archive",
+                "phase": "misdiagnosis"
+              }
+            },
+            {
+              "memory_id": "ad_overnight_restore",
+              "content": "The night backup finished at 3:40 a.m. and the correspondence thumbnails reappeared in the catalog.",
+              "valence": 0.45,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "archive",
+                "phase": "restore"
+              }
+            },
+            {
+              "memory_id": "ad_donor_visit",
+              "content": "After we named the deletion, the donor still came at ten and spent an hour with the restored letters.",
+              "valence": 0.5,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "archive",
+                "phase": "donor"
+              }
+            },
+            {
+              "memory_id": "ad_catalog_note",
+              "content": "The archivist added a one-line catalog note about the overnight restore so the next shift would know.",
+              "valence": 0.15,
+              "arousal": 0.15,
+              "metadata": {
+                "topic": "archive",
+                "phase": "note"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "ad_q_deleted_box",
+              "query": "Which action blanked the 1974 correspondence catalog, not the empty-folder guess?",
+              "expected_memory_ids": [
+                "ad_deleted_box"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.15,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "ad_q_donor_visit",
+              "query": "After we already named the deletion, who still came at ten to sit with the letters?",
+              "expected_memory_ids": [
+                "ad_donor_visit"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": 0.1,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "ad_q_deletion_not_folder",
+              "query": "What actually removed the 1974 box from the working drive before any restore note?",
+              "expected_memory_ids": [
+                "ad_deleted_box"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.7,
+                "arousal": 0.7
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "ad_deleted_box"
+            },
+            {
+              "kind": "encode",
+              "id": "ad_wrong_folder"
+            },
+            {
+              "kind": "encode",
+              "id": "ad_overnight_restore"
+            },
+            {
+              "kind": "query",
+              "id": "ad_q_deleted_box"
+            },
+            {
+              "kind": "encode",
+              "id": "ad_donor_visit"
+            },
+            {
+              "kind": "query",
+              "id": "ad_q_donor_visit"
+            },
+            {
+              "kind": "encode",
+              "id": "ad_catalog_note"
+            },
+            {
+              "kind": "query",
+              "id": "ad_q_deletion_not_folder"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "foster_cat_adoption",
+      "description": "A kitten crash at intake is followed by a foster gain and an adoption-day name.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Intake scare and the first stable night.",
+          "events": [
+            {
+              "memory_id": "fc_intake_scare",
+              "content": "The intake volunteer found the kitten not breathing for a few seconds and shouted for the crash box.",
+              "valence": -0.9,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "shelter",
+                "phase": "intake"
+              }
+            },
+            {
+              "memory_id": "fc_vet_mixup",
+              "content": "A chart briefly listed the wrong weight, which made a second volunteer think a different kitten was crashing.",
+              "valence": -0.4,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "shelter",
+                "phase": "mixup"
+              }
+            },
+            {
+              "memory_id": "fc_first_night",
+              "content": "By night the kitten was eating on a heating pad and the intake volunteer finally sat down.",
+              "valence": 0.35,
+              "arousal": 0.3,
+              "metadata": {
+                "topic": "shelter",
+                "phase": "stabilize"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "fc_q_intake",
+              "query": "Which intake moment was the actual not-breathing scare, not the wrong-weight chart?",
+              "expected_memory_ids": [
+                "fc_intake_scare"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.08,
+                "arousal": 0.25
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "fc_intake_scare"
+            },
+            {
+              "kind": "encode",
+              "id": "fc_vet_mixup"
+            },
+            {
+              "kind": "encode",
+              "id": "fc_first_night"
+            },
+            {
+              "kind": "query",
+              "id": "fc_q_intake"
+            }
+          ]
+        },
+        {
+          "session_id": "session_2",
+          "description": "Foster update and adoption day after the first recall.",
+          "events": [
+            {
+              "memory_id": "fc_foster_update",
+              "content": "After we named the crash, the foster texted that the kitten had gained eighty grams and started purring on laps.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "shelter",
+                "phase": "foster"
+              }
+            },
+            {
+              "memory_id": "fc_adoption_day",
+              "content": "On adoption day a family named her Pepper and the intake volunteer cried in the parking lot.",
+              "valence": 0.85,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "shelter",
+                "phase": "adoption"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "fc_q_foster",
+              "query": "After we already named the crash, what did the foster text about the weight gain?",
+              "expected_memory_ids": [
+                "fc_foster_update"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.55,
+                "arousal": 0.35
+              }
+            },
+            {
+              "query_id": "fc_q_original_scare",
+              "query": "What happened at intake before any foster update or adoption-day name?",
+              "expected_memory_ids": [
+                "fc_intake_scare"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.65,
+                "arousal": 0.8
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "fc_foster_update"
+            },
+            {
+              "kind": "query",
+              "id": "fc_q_foster"
+            },
+            {
+              "kind": "encode",
+              "id": "fc_adoption_day"
+            },
+            {
+              "kind": "query",
+              "id": "fc_q_original_scare"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "mountain_rescue_training",
+      "description": "A failed backup knot is followed by a passed retest and a badge night.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Failed inspection and night debrief.",
+          "events": [
+            {
+              "memory_id": "mr_failed_rope",
+              "content": "On the training cliff, Sam's backup knot failed inspection and the lead called a freeze.",
+              "valence": -0.75,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "rescue",
+                "phase": "fail"
+              }
+            },
+            {
+              "memory_id": "mr_radio_mixup",
+              "content": "A radio call used the wrong channel for a minute, which sounded urgent but was not the knot failure.",
+              "valence": -0.25,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "rescue",
+                "phase": "radio"
+              }
+            },
+            {
+              "memory_id": "mr_night_debrief",
+              "content": "At the night debrief the lead drew the failed knot on a whiteboard and had everyone tie it twice.",
+              "valence": 0.1,
+              "arousal": 0.35,
+              "metadata": {
+                "topic": "rescue",
+                "phase": "debrief"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "mr_q_failed_knot",
+              "query": "Which training moment was the failed backup knot, not the wrong-channel radio call?",
+              "expected_memory_ids": [
+                "mr_failed_rope"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": -0.18,
+                "arousal": 0.3
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "mr_failed_rope"
+            },
+            {
+              "kind": "encode",
+              "id": "mr_radio_mixup"
+            },
+            {
+              "kind": "encode",
+              "id": "mr_night_debrief"
+            },
+            {
+              "kind": "query",
+              "id": "mr_q_failed_knot"
+            }
+          ]
+        },
+        {
+          "session_id": "session_2",
+          "description": "Retest and badge after the first recall.",
+          "events": [
+            {
+              "memory_id": "mr_retest_pass",
+              "content": "After we named the failed knot, Sam's Saturday retest passed on the first drop and the lead nodded.",
+              "valence": 0.8,
+              "arousal": 0.55,
+              "metadata": {
+                "topic": "rescue",
+                "phase": "retest"
+              }
+            },
+            {
+              "memory_id": "mr_badge_night",
+              "content": "Badge night the team handed Sam a patch and the lead said the freeze had done its job.",
+              "valence": 0.7,
+              "arousal": 0.4,
+              "metadata": {
+                "topic": "rescue",
+                "phase": "badge"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "mr_q_retest",
+              "query": "After we already named the failed knot, what happened on the Saturday retest?",
+              "expected_memory_ids": [
+                "mr_retest_pass"
+              ],
+              "challenge_type": "affective_arc",
+              "state": {
+                "valence": 0.85,
+                "arousal": 0.5
+              }
+            },
+            {
+              "query_id": "mr_q_original_fail",
+              "query": "What stopped the climb on the training cliff before any retest or badge?",
+              "expected_memory_ids": [
+                "mr_failed_rope"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": -0.9,
+                "arousal": 0.8
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "mr_retest_pass"
+            },
+            {
+              "kind": "query",
+              "id": "mr_q_retest"
+            },
+            {
+              "kind": "encode",
+              "id": "mr_badge_night"
+            },
+            {
+              "kind": "query",
+              "id": "mr_q_original_fail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "immigration_paperwork_scare",
+      "description": "A missing affidavit is refiled, then followed by biometrics and an approval letter.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Missing form, biometrics, and approval.",
+          "events": [
+            {
+              "memory_id": "im_missing_form",
+              "content": "The clerk said the I-864 was missing from the packet and the window closed while they were still arguing.",
+              "valence": -0.8,
+              "arousal": 0.85,
+              "metadata": {
+                "topic": "immigration",
+                "phase": "missing"
+              }
+            },
+            {
+              "memory_id": "im_translator_mixup",
+              "content": "The translator briefly used the wrong file number, which sounded like a different person's case.",
+              "valence": -0.35,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "immigration",
+                "phase": "mixup"
+              }
+            },
+            {
+              "memory_id": "im_late_filing",
+              "content": "They refiled at 4:50 p.m. with a stamped copy and sat on the courthouse steps until the receipt printed.",
+              "valence": 0.15,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "immigration",
+                "phase": "refile"
+              }
+            },
+            {
+              "memory_id": "im_biometrics",
+              "content": "After we named the missing form, the biometrics letter arrived with a Tuesday slot at the field office.",
+              "valence": 0.45,
+              "arousal": 0.35,
+              "metadata": {
+                "topic": "immigration",
+                "phase": "biometrics"
+              }
+            },
+            {
+              "memory_id": "im_approval_letter",
+              "content": "The approval letter came on a Thursday and Rosa read the welcome sentence out loud twice.",
+              "valence": 0.95,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "immigration",
+                "phase": "approval"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "im_q_missing_form",
+              "query": "Which clerk moment was the missing I-864, not the wrong file number?",
+              "expected_memory_ids": [
+                "im_missing_form"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.0,
+                "arousal": 0.2
+              }
+            },
+            {
+              "query_id": "im_q_biometrics",
+              "query": "After we already named the missing form, what letter set the Tuesday field-office slot?",
+              "expected_memory_ids": [
+                "im_biometrics"
+              ],
+              "challenge_type": "momentum_alignment",
+              "state": {
+                "valence": -0.2,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "im_q_window_closed",
+              "query": "What closed the window before any biometrics letter or approval?",
+              "expected_memory_ids": [
+                "im_missing_form"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": 0.9,
+                "arousal": 0.55
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "im_missing_form"
+            },
+            {
+              "kind": "encode",
+              "id": "im_translator_mixup"
+            },
+            {
+              "kind": "encode",
+              "id": "im_late_filing"
+            },
+            {
+              "kind": "query",
+              "id": "im_q_missing_form"
+            },
+            {
+              "kind": "encode",
+              "id": "im_biometrics"
+            },
+            {
+              "kind": "query",
+              "id": "im_q_biometrics"
+            },
+            {
+              "kind": "encode",
+              "id": "im_approval_letter"
+            },
+            {
+              "kind": "query",
+              "id": "im_q_window_closed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "startup_outage_postmortem",
+      "description": "A regional checkout outage is rolled back, then followed by a customer call and a written postmortem.",
+      "sessions": [
+        {
+          "session_id": "session_1",
+          "description": "Outage, customer call, and postmortem.",
+          "events": [
+            {
+              "memory_id": "so_prod_outage",
+              "content": "Checkout went dark at 14:03 and the on-call channel filled with pages from three regions.",
+              "valence": -0.85,
+              "arousal": 0.95,
+              "metadata": {
+                "topic": "outage",
+                "phase": "incident"
+              }
+            },
+            {
+              "memory_id": "so_cache_blame",
+              "content": "An engineer first blamed a stale cache key, but that key was not what had taken checkout down.",
+              "valence": -0.4,
+              "arousal": 0.6,
+              "metadata": {
+                "topic": "outage",
+                "phase": "misdiagnosis"
+              }
+            },
+            {
+              "memory_id": "so_rollback",
+              "content": "The rollback to the previous deploy restored checkout in nine minutes and the pages slowed.",
+              "valence": 0.35,
+              "arousal": 0.5,
+              "metadata": {
+                "topic": "outage",
+                "phase": "rollback"
+              }
+            },
+            {
+              "memory_id": "so_customer_call",
+              "content": "After we named the outage, Mira from Northwind called and asked whether any orders had been double-charged.",
+              "valence": -0.2,
+              "arousal": 0.45,
+              "metadata": {
+                "topic": "outage",
+                "phase": "customer"
+              }
+            },
+            {
+              "memory_id": "so_postmortem",
+              "content": "The written postmortem later pinned a bad migration, not the cache key, and listed the rollback time.",
+              "valence": 0.2,
+              "arousal": 0.25,
+              "metadata": {
+                "topic": "outage",
+                "phase": "postmortem"
+              }
+            }
+          ],
+          "queries": [
+            {
+              "query_id": "so_q_outage",
+              "query": "Which event took checkout dark at 14:03, not the stale-cache guess?",
+              "expected_memory_ids": [
+                "so_prod_outage"
+              ],
+              "challenge_type": "recency_confound",
+              "state": {
+                "valence": 0.19,
+                "arousal": 0.25
+              }
+            },
+            {
+              "query_id": "so_q_customer",
+              "query": "After we already named the outage, who called to ask about double charges?",
+              "expected_memory_ids": [
+                "so_customer_call"
+              ],
+              "challenge_type": "same_topic_distractor",
+              "state": {
+                "valence": -0.12,
+                "arousal": 0.3
+              }
+            },
+            {
+              "query_id": "so_q_dark_checkout",
+              "query": "What actually took checkout down before the postmortem named the migration?",
+              "expected_memory_ids": [
+                "so_prod_outage"
+              ],
+              "challenge_type": "semantic_confound",
+              "state": {
+                "valence": -0.8,
+                "arousal": 0.85
+              }
+            }
+          ],
+          "timeline": [
+            {
+              "kind": "encode",
+              "id": "so_prod_outage"
+            },
+            {
+              "kind": "encode",
+              "id": "so_cache_blame"
+            },
+            {
+              "kind": "encode",
+              "id": "so_rollback"
+            },
+            {
+              "kind": "query",
+              "id": "so_q_outage"
+            },
+            {
+              "kind": "encode",
+              "id": "so_customer_call"
+            },
+            {
+              "kind": "query",
+              "id": "so_q_customer"
+            },
+            {
+              "kind": "encode",
+              "id": "so_postmortem"
+            },
+            {
+              "kind": "query",
+              "id": "so_q_dark_checkout"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -51,6 +51,7 @@ OWNER_RELATIVE_PATHS: dict[str, str] = {
     "realistic_recall_v3_noAF": "realistic_recall_v3_noAF.json",
     "realistic_recall_v4_noAF": "realistic_recall_v4_noAF.json",
     "realistic_recall_v5_gate": "realistic_recall_v5_gate.json",
+    "shared_history_recall_v1": "shared_history_recall_v1.json",
 }
 
 
@@ -105,7 +106,10 @@ def test_third_party_sets_remain_in_repo_and_stay_off_the_list() -> None:
 
 def test_realistic_recall_publishable_json_declares_cc_by_4_0() -> None:
     for dataset_id, relative in OWNER_RELATIVE_PATHS.items():
-        if not dataset_id.startswith("realistic_recall_"):
+        if not (
+            dataset_id.startswith("realistic_recall_")
+            or dataset_id.startswith("shared_history_recall_")
+        ):
             continue
         payload = json.loads((DATASETS_DIR / relative).read_text(encoding="utf-8"))
         assert payload.get("license") == "CC-BY-4.0", (

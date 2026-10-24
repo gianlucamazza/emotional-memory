@@ -9,7 +9,7 @@ import os
 import random
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 try:
     from dotenv import load_dotenv
@@ -44,6 +44,7 @@ from benchmarks.realistic.adapters import (
 )
 from benchmarks.realistic.evaluation import ranking_metrics
 from emotional_memory import Embedder, EmotionalMemoryConfig
+from emotional_memory.engine_shared import DEFAULT_QUERY_AFFECT_GATE_TAU
 
 
 def _seed_everything(seed: int) -> None:
@@ -114,8 +115,177 @@ class ReplayDataset(BaseModel):
     scenarios: list[ReplayScenario]
 
 
+class TimelineStep(BaseModel):
+    """Declared encode/query order for shared-history interleaving only."""
+
+    kind: Literal["encode", "query"]
+    id: str = Field(min_length=1)
+
+
+class InterleavedReplaySession(ReplaySession):
+    timeline: list[TimelineStep] = Field(min_length=1)
+
+
+class InterleavedReplayScenario(ReplayScenario):
+    sessions: list[InterleavedReplaySession]
+
+
+class InterleavedReplayDataset(ReplayDataset):
+    """Interleaved shared-history dataset: declared timeline plus gate-share metadata."""
+
+    interleave: bool = True
+    query_affect_gate_tau: float = DEFAULT_QUERY_AFFECT_GATE_TAU
+    declared_neutral_query_count: int
+    declared_neutral_query_share: float
+    declared_boundary_query_count: int
+    scenarios: list[InterleavedReplayScenario]
+
+
+def session_timeline(session: ReplaySession) -> list[TimelineStep] | None:
+    """Return the declared timeline, or None when the field is omitted."""
+    timeline = getattr(session, "timeline", None)
+    if timeline is None:
+        return None
+    if len(timeline) == 0:
+        raise ValueError(
+            "Session timeline must not be empty; omit the field for events-then-queries"
+        )
+    return list(timeline)
+
+
+def dataset_declares_interleave(dataset: ReplayDataset) -> bool:
+    return any(
+        session_timeline(session) is not None
+        for scenario in dataset.scenarios
+        for session in scenario.sessions
+    )
+
+
+def iter_session_operations(
+    session: ReplaySession,
+) -> list[tuple[Literal["encode", "query"], ReplayEvent | ReplayQuery]]:
+    """Dataset-declared order; v1 sessions without a timeline stay events then queries."""
+    timeline = session_timeline(session)
+    if timeline is None:
+        return [("encode", event) for event in session.events] + [
+            ("query", query) for query in session.queries
+        ]
+    events_by_id = {event.memory_id: event for event in session.events}
+    queries_by_id = {query.query_id: query for query in session.queries}
+    steps: list[tuple[Literal["encode", "query"], ReplayEvent | ReplayQuery]] = []
+    for step in timeline:
+        if step.kind == "encode":
+            try:
+                steps.append(("encode", events_by_id[step.id]))
+            except KeyError as exc:
+                raise ValueError(f"Timeline encode id is not a session event: {step.id}") from exc
+        else:
+            try:
+                steps.append(("query", queries_by_id[step.id]))
+            except KeyError as exc:
+                raise ValueError(f"Timeline query id is not a session query: {step.id}") from exc
+    return steps
+
+
+def count_encode_after_recall(dataset: ReplayDataset, *, within_session: bool = False) -> int:
+    """Count encodes that follow at least one prior query.
+
+    Default (``within_session=False``) counts across the whole scenario, so an
+    encode in a later session still counts after a recall in an earlier one.
+    ``within_session=True`` resets after each session boundary.
+    """
+    total = 0
+    for scenario in dataset.scenarios:
+        seen_query = False
+        for session in scenario.sessions:
+            if within_session:
+                seen_query = False
+            for kind, _item in iter_session_operations(session):
+                if kind == "query":
+                    seen_query = True
+                elif seen_query:
+                    total += 1
+    return total
+
+
+def iter_dataset_queries(
+    dataset: ReplayDataset,
+) -> list[ReplayQuery]:
+    return [
+        query
+        for scenario in dataset.scenarios
+        for session in scenario.sessions
+        for query in session.queries
+    ]
+
+
+def resolve_query_affect_gate_tau(
+    dataset: ReplayDataset,
+    config: EmotionalMemoryConfig | None = None,
+) -> float:
+    """Return the effective gate tau, or raise if the dataset disagrees with config."""
+    config_tau = (config or EmotionalMemoryConfig()).query_affect_gate_tau
+    dataset_tau = getattr(dataset, "query_affect_gate_tau", None)
+    if dataset_tau is not None and dataset_tau != config_tau:
+        raise ValueError(
+            "Dataset query_affect_gate_tau "
+            f"({dataset_tau}) differs from config query_affect_gate_tau ({config_tau})"
+        )
+    return config_tau
+
+
+def count_neutral_queries(dataset: ReplayDataset, *, tau: float) -> int:
+    return sum(
+        1
+        for query in iter_dataset_queries(dataset)
+        if query.state is not None and abs(query.state.valence) < tau
+    )
+
+
+def count_boundary_queries(dataset: ReplayDataset, *, tau: float) -> int:
+    return sum(
+        1
+        for query in iter_dataset_queries(dataset)
+        if query.state is not None and abs(query.state.valence) == tau
+    )
+
+
+def _validate_session_timeline(session: ReplaySession, timeline: list[TimelineStep]) -> None:
+    if not timeline:
+        raise ValueError(
+            "Session timeline must not be empty; omit the field for events-then-queries"
+        )
+    encode_ids = [step.id for step in timeline if step.kind == "encode"]
+    query_ids = [step.id for step in timeline if step.kind == "query"]
+    event_ids = [event.memory_id for event in session.events]
+    declared_query_ids = [query.query_id for query in session.queries]
+    if sorted(encode_ids) != sorted(event_ids):
+        raise ValueError("Timeline encode ids must match session events exactly once")
+    if sorted(query_ids) != sorted(declared_query_ids):
+        raise ValueError("Timeline query ids must match session queries exactly once")
+    if len(encode_ids) != len(set(encode_ids)) or len(query_ids) != len(set(query_ids)):
+        raise ValueError("Timeline contains duplicate ids")
+
+
+def _raw_declares_interleave(raw: dict[str, Any]) -> bool:
+    if raw.get("interleave") is True:
+        return True
+    for scenario in raw.get("scenarios", []):
+        if not isinstance(scenario, dict):
+            continue
+        for session in scenario.get("sessions", []):
+            if isinstance(session, dict) and "timeline" in session:
+                return True
+    return False
+
+
 def load_dataset(path: Path = DATASET) -> ReplayDataset:
-    return ReplayDataset.model_validate(json.loads(path.read_text(encoding="utf-8")))
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError("Replay dataset must be a JSON object")
+    if _raw_declares_interleave(raw):
+        return InterleavedReplayDataset.model_validate(raw)
+    return ReplayDataset.model_validate(raw)
 
 
 def analyze_dataset_difficulty(
@@ -130,9 +300,20 @@ def analyze_dataset_difficulty(
         scenario_queries: list[dict[str, Any]] = []
         encoded_aliases: list[str] = []
         for session in scenario.sessions:
-            encoded_aliases.extend(event.memory_id for event in session.events)
-            recency_order = list(reversed(encoded_aliases))
-            for query in session.queries:
+            timeline = session_timeline(session)
+            if timeline is None:
+                encoded_aliases.extend(event.memory_id for event in session.events)
+                query_contexts = [(query, list(encoded_aliases)) for query in session.queries]
+            else:
+                queries_by_id = {query.query_id: query for query in session.queries}
+                query_contexts = []
+                for step in timeline:
+                    if step.kind == "encode":
+                        encoded_aliases.append(step.id)
+                    else:
+                        query_contexts.append((queries_by_id[step.id], list(encoded_aliases)))
+            for query, aliases_at_query in query_contexts:
+                recency_order = list(reversed(aliases_at_query))
                 effective_top_k = query.top_k or top_k
                 expected_recency_ranks = [
                     recency_order.index(memory_alias) + 1
@@ -147,11 +328,11 @@ def analyze_dataset_difficulty(
                     "session_id": session.session_id,
                     "query_id": query.query_id,
                     "challenge_type": query.challenge_type,
-                    "candidate_count": len(encoded_aliases),
+                    "candidate_count": len(aliases_at_query),
                     "top_k": effective_top_k,
                     "expected_memory_ids": query.expected_memory_ids,
                     "expected_recency_ranks": expected_recency_ranks,
-                    "trivial_candidate_window": len(encoded_aliases) <= effective_top_k,
+                    "trivial_candidate_window": len(aliases_at_query) <= effective_top_k,
                     "recency_would_hit_at_k": any(
                         rank <= effective_top_k for rank in expected_recency_ranks
                     ),
@@ -215,12 +396,37 @@ def validate_dataset_difficulty(
             if session.session_id in session_ids:
                 raise ValueError("Duplicate session_id within scenario")
             session_ids.add(session.session_id)
-            for event in session.events:
-                if event.memory_id in memory_ids:
-                    raise ValueError("Duplicate memory_id within scenario")
-                memory_ids.add(event.memory_id)
-            query_ids: set[str] = set()
-            for query in session.queries:
+            timeline = session_timeline(session)
+            if timeline is None:
+                for event in session.events:
+                    if event.memory_id in memory_ids:
+                        raise ValueError("Duplicate memory_id within scenario")
+                    memory_ids.add(event.memory_id)
+                query_ids = set()
+                for query in session.queries:
+                    if query.query_id in query_ids:
+                        raise ValueError("Duplicate query_id within session")
+                    query_ids.add(query.query_id)
+                    if query.top_k is not None and query.top_k < 1:
+                        raise ValueError("Query top_k must be positive")
+                    if (
+                        not query.expected_memory_ids
+                        or not set(query.expected_memory_ids) <= memory_ids
+                    ):
+                        raise ValueError("Every expected memory must be encoded before retrieval")
+                continue
+            _validate_session_timeline(session, timeline)
+            events_by_id = {event.memory_id: event for event in session.events}
+            queries_by_id = {query.query_id: query for query in session.queries}
+            query_ids = set()
+            for step in timeline:
+                if step.kind == "encode":
+                    event = events_by_id[step.id]
+                    if event.memory_id in memory_ids:
+                        raise ValueError("Duplicate memory_id within scenario")
+                    memory_ids.add(event.memory_id)
+                    continue
+                query = queries_by_id[step.id]
                 if query.query_id in query_ids:
                     raise ValueError("Duplicate query_id within session")
                 query_ids.add(query.query_id)
@@ -507,11 +713,72 @@ def run_system_on_scenario(
     default_top_k: int,
     n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
     seed: int = 0,
+    honor_session_order: bool = False,
 ) -> dict[str, Any]:
     alias_to_actual: dict[str, str] = {}
     actual_to_alias: dict[str, str] = {}
     actual_id_order: list[str] = []
     session_reports: list[dict[str, Any]] = []
+
+    def encode_event(event: ReplayEvent) -> None:
+        actual_id = adapter.encode(
+            memory_alias=event.memory_id,
+            content=event.content,
+            valence=event.valence,
+            arousal=event.arousal,
+            metadata=event.metadata,
+        )
+        alias_to_actual[event.memory_id] = actual_id
+        actual_to_alias[actual_id] = event.memory_id
+        actual_id_order.append(actual_id)
+
+    def evaluate_query(query: ReplayQuery, session_report: dict[str, Any]) -> None:
+        effective_top_k = query.top_k or default_top_k
+        retrieved = adapter.retrieve(
+            query.query,
+            top_k=effective_top_k,
+            valence=None if query.state is None else query.state.valence,
+            arousal=None if query.state is None else query.state.arousal,
+        )
+        expected_actual_ids = {
+            alias_to_actual[memory_alias]
+            for memory_alias in query.expected_memory_ids
+            if memory_alias in alias_to_actual
+        }
+        recency_order = list(reversed(actual_id_order))
+        expected_recency_ranks = {
+            actual_to_alias[memory_id]: recency_order.index(memory_id) + 1
+            for memory_id in expected_actual_ids
+            if memory_id in recency_order
+        }
+        retrieved_ids = [item.id for item in retrieved]
+        hit = any(memory_id in expected_actual_ids for memory_id in retrieved_ids)
+        top1_hit = bool(retrieved_ids) and retrieved_ids[0] in expected_actual_ids
+        session_report["queries"].append(
+            {
+                "query_id": query.query_id,
+                "query": query.query,
+                "challenge_type": query.challenge_type,
+                "top_k": effective_top_k,
+                "candidate_count": len(actual_id_order),
+                "expected_memory_ids": query.expected_memory_ids,
+                "expected_recency_ranks": expected_recency_ranks,
+                "trivial_candidate_window": len(actual_id_order) <= effective_top_k,
+                "recency_would_hit_at_k": any(
+                    rank <= effective_top_k for rank in expected_recency_ranks.values()
+                ),
+                "retrieved_memory_ids": retrieved_ids,
+                "retrieved_memory_aliases": [
+                    actual_to_alias.get(memory_id) for memory_id in retrieved_ids
+                ],
+                "hit": hit,
+                "top1_hit": top1_hit,
+                **ranking_metrics(retrieved_ids, expected_actual_ids, effective_top_k),
+                "results": [
+                    _serialize_result(item, alias_by_actual=actual_to_alias) for item in retrieved
+                ],
+            }
+        )
 
     for session in scenario.sessions:
         session_start = adapter.begin_session(session.session_id)
@@ -524,66 +791,20 @@ def run_system_on_scenario(
             "queries": [],
         }
 
-        for event in session.events:
-            actual_id = adapter.encode(
-                memory_alias=event.memory_id,
-                content=event.content,
-                valence=event.valence,
-                arousal=event.arousal,
-                metadata=event.metadata,
-            )
-            alias_to_actual[event.memory_id] = actual_id
-            actual_to_alias[actual_id] = event.memory_id
-            actual_id_order.append(actual_id)
-
-        for query in session.queries:
-            effective_top_k = query.top_k or default_top_k
-            retrieved = adapter.retrieve(
-                query.query,
-                top_k=effective_top_k,
-                valence=None if query.state is None else query.state.valence,
-                arousal=None if query.state is None else query.state.arousal,
-            )
-            expected_actual_ids = {
-                alias_to_actual[memory_alias]
-                for memory_alias in query.expected_memory_ids
-                if memory_alias in alias_to_actual
-            }
-            recency_order = list(reversed(actual_id_order))
-            expected_recency_ranks = {
-                actual_to_alias[memory_id]: recency_order.index(memory_id) + 1
-                for memory_id in expected_actual_ids
-                if memory_id in recency_order
-            }
-            retrieved_ids = [item.id for item in retrieved]
-            hit = any(memory_id in expected_actual_ids for memory_id in retrieved_ids)
-            top1_hit = bool(retrieved_ids) and retrieved_ids[0] in expected_actual_ids
-            session_report["queries"].append(
-                {
-                    "query_id": query.query_id,
-                    "query": query.query,
-                    "challenge_type": query.challenge_type,
-                    "top_k": effective_top_k,
-                    "candidate_count": len(actual_id_order),
-                    "expected_memory_ids": query.expected_memory_ids,
-                    "expected_recency_ranks": expected_recency_ranks,
-                    "trivial_candidate_window": len(actual_id_order) <= effective_top_k,
-                    "recency_would_hit_at_k": any(
-                        rank <= effective_top_k for rank in expected_recency_ranks.values()
-                    ),
-                    "retrieved_memory_ids": retrieved_ids,
-                    "retrieved_memory_aliases": [
-                        actual_to_alias.get(memory_id) for memory_id in retrieved_ids
-                    ],
-                    "hit": hit,
-                    "top1_hit": top1_hit,
-                    **ranking_metrics(retrieved_ids, expected_actual_ids, effective_top_k),
-                    "results": [
-                        _serialize_result(item, alias_by_actual=actual_to_alias)
-                        for item in retrieved
-                    ],
-                }
-            )
+        timeline = session_timeline(session) if honor_session_order else None
+        if timeline is None:
+            for event in session.events:
+                encode_event(event)
+            for query in session.queries:
+                evaluate_query(query, session_report)
+        else:
+            events_by_id = {event.memory_id: event for event in session.events}
+            queries_by_id = {query.query_id: query for query in session.queries}
+            for step in timeline:
+                if step.kind == "encode":
+                    encode_event(events_by_id[step.id])
+                else:
+                    evaluate_query(queries_by_id[step.id], session_report)
 
         session_end = adapter.end_session()
         session_report["memory_count_end"] = session_end.memory_count_end
@@ -688,6 +909,8 @@ def run_benchmark(
     embedder: Embedder | None = None,
 ) -> dict[str, Any]:
     selected_systems = DEFAULT_SYSTEMS if systems is None else systems
+    if dataset_declares_interleave(dataset):
+        raise ValueError("Interleaved shared-history datasets require --shared-history")
     effective_top_k = dataset.default_top_k if top_k is None else top_k
     difficulty_profile = validate_dataset_difficulty(dataset, top_k=effective_top_k)
     system_results: list[dict[str, Any]] = []
@@ -950,9 +1173,30 @@ def main() -> None:
     parser.add_argument(
         "--shared-history",
         action="store_true",
-        help="Offline longitudinal replay; requires --embedder hash.",
+        help=(
+            "Offline longitudinal replay; requires --embedder hash. "
+            "Default dataset is the #170 shared-history replay. "
+            "Pass --dataset benchmarks/datasets/shared_history_recall_v1.json "
+            "for declared timelines (protocol mode shared_history_timeline)."
+        ),
     )
-    parser.add_argument("--dataset", type=Path, default=DATASET)
+    parser.add_argument(
+        "--read-only-retrieves",
+        action="store_true",
+        help=(
+            "Shared-history only: restore a deep-copied engine snapshot after each "
+            "retrieve so write-backs do not persist. Use to measure write-back cost."
+        ),
+    )
+    parser.add_argument(
+        "--dataset",
+        type=Path,
+        default=DATASET,
+        help=(
+            "Replay dataset JSON. Default: realistic_recall_v1.json. "
+            "For interleaved shared-history use shared_history_recall_v1.json."
+        ),
+    )
     parser.add_argument("--out-json", type=Path, default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-md", type=Path, default=DEFAULT_OUT_MD)
     parser.add_argument("--out-protocol", type=Path, default=DEFAULT_PROTOCOL)
@@ -988,6 +1232,8 @@ def main() -> None:
     _seed_everything(args.seed)
     dataset = load_dataset(args.dataset)
     out_json, out_md, out_protocol = args.out_json, args.out_md, args.out_protocol
+    if args.read_only_retrieves and not args.shared_history:
+        parser.error("--read-only-retrieves requires --shared-history")
     if args.shared_history:
         if args.embedder != "hash" or args.systems != DEFAULT_SYSTEMS:
             parser.error("--shared-history requires --embedder hash and the default --systems")
@@ -1002,6 +1248,7 @@ def main() -> None:
             n_bootstrap=args.n_bootstrap,
             top_k=args.top_k,
             dataset_path=args.dataset,
+            read_only_retrieves=args.read_only_retrieves,
         )
     else:
         emb = _build_embedder(args.embedder)
