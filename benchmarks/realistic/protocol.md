@@ -101,12 +101,19 @@ is the #170 shared-history replay and remains byte-identical.
 For `shared_history_recall_v1` (`interleave: true`), each session declares a
 `timeline` of `{kind, id}` steps. Shared-history mode honors that order, so
 encodes may follow recalls inside a session (for example `E E E R E R E R`).
-Expected memory IDs may only name events already encoded at that query. The
-comparative runner rejects interleaved datasets; they are for `--shared-history`
-only. Reports use protocol mode `shared_history_timeline` and
-`event_order: dataset_timeline`. `--read-only-retrieves` restores a deep-copied
-engine snapshot after each retrieve so write-backs do not persist; use it as a
-control when measuring write-back cost.
+An empty `timeline` is rejected; omit the field entirely for the #170
+events-then-queries order. Expected memory IDs may only name events already
+encoded at that query. The comparative runner rejects interleaved datasets;
+they are for `--shared-history` only. Reports use protocol mode
+`shared_history_timeline` and `event_order: dataset_timeline`.
+`--read-only-retrieves` restores a deep-copied engine snapshot after each
+retrieve so write-backs do not persist; the read-only path asserts that store
+and affective-state snapshots are unchanged after every retrieve, on every
+arm. Use it as a control when measuring write-back cost.
+
+Encode-after-recall counts are scenario-wide (24 on this dataset). Counted
+within a single session they are 22: two encodes sit after a recall in an
+earlier session of the same scenario.
 
 No synchronization of states occurs after the initial checkpoint. Session
 boundaries round-trip the affective state through its public serialization API.

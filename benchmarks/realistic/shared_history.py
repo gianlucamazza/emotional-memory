@@ -183,6 +183,8 @@ class SharedHistoryAdapter(ReplayAdapter):
             if checkpoint is not None:
                 self.engine.import_memories(checkpoint["memories"], overwrite=True)
                 self.engine.load_state(checkpoint["state"])
+                if self.snapshot() != checkpoint:
+                    raise RuntimeError("Read-only retrieve left store or affective state changed")
         return [
             ReplayRetrievedItem(id=m.memory.id, text=m.memory.content, score=m.score)
             for m in memories
@@ -233,10 +235,13 @@ def run_shared_history(
         _build_pairwise_comparisons,
         build_protocol_metadata,
         dataset_declares_interleave,
+        resolve_query_affect_gate_tau,
         run_system_on_scenario,
         validate_dataset_difficulty,
     )
 
+    effective_config = config or EmotionalMemoryConfig()
+    resolve_query_affect_gate_tau(dataset, effective_config)
     effective_k = dataset.default_top_k if top_k is None else top_k
     difficulty = validate_dataset_difficulty(dataset, top_k=effective_k)
     for scenario in dataset.scenarios:
@@ -309,7 +314,6 @@ def run_shared_history(
         protocol["event_order"] = "dataset_timeline"
     if read_only_retrieves:
         protocol["read_only_retrieves"] = True
-    effective_config = config or EmotionalMemoryConfig()
     manifest = reproducibility_manifest(dataset, effective_config, seed=seed, top_k=effective_k)
     manifest["query_affect_gate_tau"] = effective_config.query_affect_gate_tau
     protocol["manifest"] = manifest

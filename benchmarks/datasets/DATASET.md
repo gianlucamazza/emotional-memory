@@ -290,7 +290,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | | |
 | --- | --- |
 | File | `shared_history_recall_v1.json` |
-| Size | **12** scenarios, **36** queries, 14 sessions, 60 events (24 encodes after a prior recall) |
+| Size | **12** scenarios, **36** queries, 14 sessions, 60 events. Encode-after-recall count is 24 across the whole scenario and 22 when counted within a single session. |
 | Language | en |
 | Licence | **CC-BY-4.0** |
 | Origin | **Hand-authored** interleaved shared-history scenarios. Declared session `timeline` allows encodes after recalls. Query affect is a recorded oracle; 14/36 queries have `|valence| < 0.2` and 4 sit at `|valence| = 0.2`. No generator script. No committed scores. |

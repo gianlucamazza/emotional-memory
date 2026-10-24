@@ -195,10 +195,16 @@ Addendum P. **v4_noAF**: 40 scenarios, 160 queries.
 `shared_history_recall_v1.json` is a hand-authored shared-history dataset for
 interleaved encode/retrieve order. Sessions declare a `timeline` so encodes
 can follow recalls (for example `E E E R E R E R`). A documented share of
-queries is near-neutral (`|valence| < 0.2`); a few sit on the gate boundary
-(`|valence| = 0.2`). Use only with `--shared-history --embedder hash`.
-Protocol mode is `shared_history_timeline`. No scores are published from this
-file. The #170 shared-history replay on `realistic_recall_v1` is unchanged.
+queries is near-neutral (`|valence| < query_affect_gate_tau`, default 0.2);
+a few sit on the gate boundary (`|valence|` equal to that tau). Use only with
+`--shared-history --embedder hash`. Protocol mode is `shared_history_timeline`.
+No scores are published from this file. The #170 shared-history replay on
+`realistic_recall_v1` is unchanged.
+
+**Encode-after-recall count:** 24 across the whole scenario (an encode in a
+later session still counts after a recall in an earlier one). Counted within
+a single session the total is 22. Omit `timeline` for events-then-queries;
+an empty `timeline` is rejected.
 
 Licence for every `realistic_recall_*` file above: **CC-BY-4.0**
 (JSON `license` field; owner decision). See `DATASET.md`.

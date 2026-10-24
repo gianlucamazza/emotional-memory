@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   after recalls and a declared near-neutral query share. Timeline execution is
   opt-in in `--shared-history` only (protocol mode `shared_history_timeline`);
   the #170 shared-history replay is unchanged. `--read-only-retrieves` restores
-  a deep-copied snapshot after each retrieve so write-back cost can be measured.
-  No benchmark scores are committed.
+  a deep-copied snapshot after each retrieve so write-back cost can be measured
+  and asserts store and state equality on every arm. Gate-share counters read
+  tau from the engine config. An empty `timeline` is rejected. No benchmark
+  scores are committed.
 
 - Preparatory MSC human-grounded retrieval harness: grouped source preparation, blinded
   annotation, hybrid baseline, and power planning. No human study has been executed.

@@ -44,6 +44,7 @@ from benchmarks.realistic.adapters import (
 )
 from benchmarks.realistic.evaluation import ranking_metrics
 from emotional_memory import Embedder, EmotionalMemoryConfig
+from emotional_memory.engine_shared import DEFAULT_QUERY_AFFECT_GATE_TAU
 
 
 def _seed_everything(seed: int) -> None:
@@ -122,7 +123,7 @@ class TimelineStep(BaseModel):
 
 
 class InterleavedReplaySession(ReplaySession):
-    timeline: list[TimelineStep]
+    timeline: list[TimelineStep] = Field(min_length=1)
 
 
 class InterleavedReplayScenario(ReplayScenario):
@@ -133,7 +134,7 @@ class InterleavedReplayDataset(ReplayDataset):
     """Interleaved shared-history dataset: declared timeline plus gate-share metadata."""
 
     interleave: bool = True
-    query_affect_gate_tau: float = 0.2
+    query_affect_gate_tau: float = DEFAULT_QUERY_AFFECT_GATE_TAU
     declared_neutral_query_count: int
     declared_neutral_query_share: float
     declared_boundary_query_count: int
@@ -141,10 +142,14 @@ class InterleavedReplayDataset(ReplayDataset):
 
 
 def session_timeline(session: ReplaySession) -> list[TimelineStep] | None:
-    """Return the declared timeline, or None for the implicit events-then-queries order."""
+    """Return the declared timeline, or None when the field is omitted."""
     timeline = getattr(session, "timeline", None)
-    if not timeline:
+    if timeline is None:
         return None
+    if len(timeline) == 0:
+        raise ValueError(
+            "Session timeline must not be empty; omit the field for events-then-queries"
+        )
     return list(timeline)
 
 
@@ -182,12 +187,19 @@ def iter_session_operations(
     return steps
 
 
-def count_encode_after_recall(dataset: ReplayDataset) -> int:
-    """Count encodes that follow at least one prior query in the same scenario."""
+def count_encode_after_recall(dataset: ReplayDataset, *, within_session: bool = False) -> int:
+    """Count encodes that follow at least one prior query.
+
+    Default (``within_session=False``) counts across the whole scenario, so an
+    encode in a later session still counts after a recall in an earlier one.
+    ``within_session=True`` resets after each session boundary.
+    """
     total = 0
     for scenario in dataset.scenarios:
         seen_query = False
         for session in scenario.sessions:
+            if within_session:
+                seen_query = False
             for kind, _item in iter_session_operations(session):
                 if kind == "query":
                     seen_query = True
@@ -207,7 +219,22 @@ def iter_dataset_queries(
     ]
 
 
-def count_neutral_queries(dataset: ReplayDataset, *, tau: float = 0.2) -> int:
+def resolve_query_affect_gate_tau(
+    dataset: ReplayDataset,
+    config: EmotionalMemoryConfig | None = None,
+) -> float:
+    """Return the effective gate tau, or raise if the dataset disagrees with config."""
+    config_tau = (config or EmotionalMemoryConfig()).query_affect_gate_tau
+    dataset_tau = getattr(dataset, "query_affect_gate_tau", None)
+    if dataset_tau is not None and dataset_tau != config_tau:
+        raise ValueError(
+            "Dataset query_affect_gate_tau "
+            f"({dataset_tau}) differs from config query_affect_gate_tau ({config_tau})"
+        )
+    return config_tau
+
+
+def count_neutral_queries(dataset: ReplayDataset, *, tau: float) -> int:
     return sum(
         1
         for query in iter_dataset_queries(dataset)
@@ -215,7 +242,7 @@ def count_neutral_queries(dataset: ReplayDataset, *, tau: float = 0.2) -> int:
     )
 
 
-def count_boundary_queries(dataset: ReplayDataset, *, tau: float = 0.2) -> int:
+def count_boundary_queries(dataset: ReplayDataset, *, tau: float) -> int:
     return sum(
         1
         for query in iter_dataset_queries(dataset)
@@ -224,6 +251,10 @@ def count_boundary_queries(dataset: ReplayDataset, *, tau: float = 0.2) -> int:
 
 
 def _validate_session_timeline(session: ReplaySession, timeline: list[TimelineStep]) -> None:
+    if not timeline:
+        raise ValueError(
+            "Session timeline must not be empty; omit the field for events-then-queries"
+        )
     encode_ids = [step.id for step in timeline if step.kind == "encode"]
     query_ids = [step.id for step in timeline if step.kind == "query"]
     event_ids = [event.memory_id for event in session.events]
@@ -243,7 +274,7 @@ def _raw_declares_interleave(raw: dict[str, Any]) -> bool:
         if not isinstance(scenario, dict):
             continue
         for session in scenario.get("sessions", []):
-            if isinstance(session, dict) and session.get("timeline"):
+            if isinstance(session, dict) and "timeline" in session:
                 return True
     return False
 
