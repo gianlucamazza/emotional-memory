@@ -234,29 +234,70 @@ def test_demo_mentions_recall_writebacks_and_per_mode_memory() -> None:
     assert "Compare both modes" in source
 
 
-def test_compare_clear_click_is_hidden_from_api() -> None:
-    tree = _load_demo_tree()
-    clicks = [
+def _event_calls(tree: ast.AST, attr: str) -> list[ast.Call]:
+    return [
         node
         for node in ast.walk(tree)
         if isinstance(node, ast.Call)
         and isinstance(node.func, ast.Attribute)
-        and node.func.attr == "click"
+        and node.func.attr == attr
     ]
+
+
+def _assert_named_private_event(call: ast.Call, *, fn_name: str) -> None:
+    keywords = _keyword_map(call)
+    api_name = keywords.get("api_name")
+    assert isinstance(api_name, ast.Constant)
+    assert isinstance(api_name.value, str) and api_name.value
+    visibility = keywords.get("api_visibility")
+    assert isinstance(visibility, ast.Constant)
+    assert visibility.value == "private"
+    fn = keywords.get("fn")
+    assert isinstance(fn, ast.Name)
+    assert fn.id == fn_name
+
+
+def test_compare_clear_click_is_hidden_from_api() -> None:
+    tree = _load_demo_tree()
     hidden = []
-    for call in clicks:
+    for call in _event_calls(tree, "click"):
         keywords = _keyword_map(call)
         api_name = keywords.get("api_name")
         if not (isinstance(api_name, ast.Constant) and api_name.value == "clear_compare"):
             continue
         hidden.append(call)
-        visibility = keywords.get("api_visibility")
-        assert isinstance(visibility, ast.Constant)
-        assert visibility.value == "private"
-        fn = keywords.get("fn")
-        assert isinstance(fn, ast.Name)
-        assert fn.id == "_clear_compare_output"
+        _assert_named_private_event(call, fn_name="_clear_compare_output")
     assert hidden, "expected a named clear_compare click hidden from the API listing"
+
+
+def test_no_event_uses_api_name_false() -> None:
+    tree = _load_demo_tree()
+    offenders = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and any(
+            keyword.arg == "api_name"
+            and isinstance(keyword.value, ast.Constant)
+            and keyword.value.value is False
+            for keyword in node.keywords
+        )
+    ]
+    assert not offenders, "Gradio 6 registers api_name=False as the public /False endpoint"
+
+
+def test_load_event_is_named_and_private() -> None:
+    tree = _load_demo_tree()
+    loads = _event_calls(tree, "load")
+    assert loads, "expected demo.load(...) to initialise the session"
+    _assert_named_private_event(loads[0], fn_name="reset_session")
+
+
+def test_submit_event_is_named_and_private() -> None:
+    tree = _load_demo_tree()
+    submits = _event_calls(tree, "submit")
+    assert submits, "expected msg_box.submit(...) for Enter-to-send"
+    _assert_named_private_event(submits[0], fn_name="chat")
 
 
 def test_chatbot_explicitly_disables_tags() -> None:
