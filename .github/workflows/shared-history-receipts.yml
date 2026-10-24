@@ -21,6 +21,11 @@ on:
       - "emotional_memory/**"
       - "benchmarks/**"
       - ".github/workflows/shared-history-receipts.yml"
+  # GitHub 404s workflow_dispatch until this file exists on the default
+  # branch. Path-filtered so it is not a general PR gate; not required.
+  pull_request:
+    paths:
+      - ".github/workflows/shared-history-receipts.yml"
 
 concurrency:
   group: shared-history-receipts-${{ github.workflow }}-${{ github.ref }}
@@ -46,10 +51,15 @@ jobs:
         env:
           INPUT_REF: ${{ inputs.ref }}
           FALLBACK_SHA: ${{ github.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           if [ -n "${INPUT_REF}" ]; then
             printf 'ref=%s\n' "${INPUT_REF}" >> "${GITHUB_OUTPUT}"
+          elif [ -n "${PR_BASE_SHA}" ]; then
+            # New workflow files cannot be dispatched until they exist on
+            # default. Reproduce the PR base (usually main) instead.
+            printf 'ref=%s\n' "${PR_BASE_SHA}" >> "${GITHUB_OUTPUT}"
           else
             printf 'ref=%s\n' "${FALLBACK_SHA}" >> "${GITHUB_OUTPUT}"
           fi

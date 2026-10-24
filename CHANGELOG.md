@@ -12,8 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shared-history CI receipt workflow (`.github/workflows/shared-history-receipts.yml`):
   offline hash-embedder runs of the four replay/timeline × write-back/read-only
   arms on `ubuntu-latest`, uploaded as the `shared-history-receipts` artifact.
-  `workflow_dispatch` plus path-filtered `push` to `main`; not a pull-request
-  required check. No scores or expected numbers are committed.
+  `workflow_dispatch` plus path-filtered `push` to `main`. A path-filtered
+  `pull_request` trigger exists only because GitHub cannot dispatch a workflow
+  that is not yet on the default branch; it is not a required check. No scores
+  or expected numbers are committed.
 
 - Interleaved shared-history dataset (`shared_history_recall_v1`) with encodes
   after recalls and a declared near-neutral query share. Timeline execution is
