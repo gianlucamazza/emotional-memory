@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   arms on `ubuntu-latest`, uploaded as the `shared-history-receipts` artifact.
   `workflow_dispatch` plus path-filtered `push` to `main` produce publishable
   receipts. A path-filtered `pull_request` trigger checks out the PR HEAD so a
-  workflow-only PR tests its own change; it is not a required check. Artifacts
-  expire after 90 days. No scores or expected numbers are committed.
+  workflow-only PR tests its own change; it is not a required check.
+  Artifacts expire (retention is capped by repository settings), so a score PR commits the run's SHA256SUMS and receipt.json next to the scores.
+  No scores or expected numbers are committed.
 
 - Interleaved shared-history dataset (`shared_history_recall_v1`) with encodes
   after recalls and a declared near-neutral query share. Timeline execution is

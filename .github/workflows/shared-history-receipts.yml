@@ -11,7 +11,7 @@ name: Shared-history receipts
 #   this workflow tests its own change. Path-filtered; not a general gate.
 #   Publishable receipts come only from push-to-main or workflow_dispatch.
 #
-# Artifact retention is 90 days (public-repo maximum).
+# retention-days: 90 is requested; the effective retention is capped by repo/org settings and may be shorter.
 # Because CI artifacts expire, the score PR also commits the run's `SHA256SUMS` and `receipt.json` next to the scores.
 
 on:
@@ -209,6 +209,28 @@ jobs:
           from pathlib import Path
 
           artifact = Path(os.environ["ARTIFACT_DIR"])
+          arm_names = (
+              "arm1_replay_writeback",
+              "arm2_replay_readonly",
+              "arm3_timeline_writeback",
+              "arm4_timeline_readonly",
+          )
+          read_only_retrieves: dict[str, bool] = {}
+          seeds: list[int] = []
+          embedders: list[object] = []
+          for name in arm_names:
+              protocol = json.loads(
+                  (artifact / f"{name}.protocol.json").read_text(encoding="utf-8")
+              )
+              read_only_retrieves[name] = bool(protocol.get("read_only_retrieves", False))
+              manifest = protocol["manifest"]
+              seeds.append(int(manifest["seed"]))
+              embedders.append(manifest["embedder"])
+          if len(set(seeds)) != 1:
+              raise SystemExit(f"seed mismatch across arm protocols: {seeds}")
+          embedder_keys = {json.dumps(item, sort_keys=True) for item in embedders}
+          if len(embedder_keys) != 1:
+              raise SystemExit("embedder mismatch across arm protocols")
           commands = [
               (
                   "uv run python -m benchmarks.realistic.runner "
@@ -245,8 +267,12 @@ jobs:
           receipt = {
               "commit_sha": os.environ["COMMIT_SHA"],
               "run_url": os.environ["RUN_URL"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
               "python_version": os.environ["PYTHON_VERSION"],
               "platform": os.environ["PLATFORM"],
+              "embedder": embedders[0],
+              "seed": seeds[0],
+              "read_only_retrieves": read_only_retrieves,
               "receipt_policy": "Because CI artifacts expire, the score PR also commits the run's `SHA256SUMS` and `receipt.json` next to the scores.",
               "commands": commands,
           }
