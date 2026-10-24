@@ -119,7 +119,7 @@ python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 
 Scores from these commands are a mechanism test, not a semantic-quality result.
 They may be committed or published (including on the Hugging Face dataset card)
 only with a receipt: the repo commit SHA they were produced at; the report
-files (`results.shared_history.json` and `.protocol.json`, with input hashes);
+files (`results.shared_history.json` and `results.shared_history.protocol.json`, with input hashes);
 the embedder and seed; whether `--read-only-retrieves` was set; and the CI run
 that reproduced them. Every published score carries the label «mechanism test
 (hash embedder), not a semantic-quality benchmark». No receipt, no score.
