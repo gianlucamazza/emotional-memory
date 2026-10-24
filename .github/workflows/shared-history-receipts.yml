@@ -1,8 +1,18 @@
 name: Shared-history receipts
 
 # Offline hash-embedder receipts for the shared-history runner.
-# Not a pull_request job and not a required check: scores are not asserted
-# here. Reproduction against a reference run is checked outside CI.
+# Not a required check: scores are not asserted here. Reproduction against
+# a reference run is checked outside CI.
+#
+# Checkout policy:
+#   workflow_dispatch: optional `ref` input, else the triggering SHA.
+#   push to main: the push SHA (publishable receipt).
+#   pull_request: github.event.pull_request.head.sha so a PR that edits
+#   this workflow tests its own change. Path-filtered; not a general gate.
+#   Publishable receipts come only from push-to-main or workflow_dispatch.
+#
+# Artifacts expire after 90 days (public-repo maximum). A score-publishing
+# PR must copy SHA256SUMS + receipt.json into the repo.
 
 on:
   workflow_dispatch:
@@ -51,21 +61,21 @@ jobs:
         env:
           INPUT_REF: ${{ inputs.ref }}
           FALLBACK_SHA: ${{ github.sha }}
-          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           if [ -n "${INPUT_REF}" ]; then
             printf 'ref=%s\n' "${INPUT_REF}" >> "${GITHUB_OUTPUT}"
-          elif [ -n "${PR_BASE_SHA}" ]; then
-            # New workflow files cannot be dispatched until they exist on
-            # default. Reproduce the PR base (usually main) instead.
-            printf 'ref=%s\n' "${PR_BASE_SHA}" >> "${GITHUB_OUTPUT}"
+          elif [ -n "${PR_HEAD_SHA}" ]; then
+            # Test the PR's own tree. Publishable receipts are push/dispatch.
+            printf 'ref=%s\n' "${PR_HEAD_SHA}" >> "${GITHUB_OUTPUT}"
           else
             printf 'ref=%s\n' "${FALLBACK_SHA}" >> "${GITHUB_OUTPUT}"
           fi
 
       # workflow_dispatch `ref` is repo-write only (not a PR-controlled
-      # checkout). push events always resolve to github.sha.
+      # checkout). push events always resolve to github.sha. pull_request
+      # uses the PR head so a workflow-only PR exercises its own YAML.
       - name: Checkout reproduction ref
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -237,6 +247,10 @@ jobs:
               "run_url": os.environ["RUN_URL"],
               "python_version": os.environ["PYTHON_VERSION"],
               "platform": os.environ["PLATFORM"],
+              "receipt_policy": (
+                  "artifacts expire after 90 days; the score-publishing PR "
+                  "must copy SHA256SUMS + receipt.json into the repo"
+              ),
               "commands": commands,
           }
           (artifact / "receipt.json").write_text(
@@ -389,4 +403,4 @@ jobs:
             ${{ env.ARTIFACT_DIR }}/receipt.json
             ${{ env.ARTIFACT_DIR }}/timings.txt
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
