@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `docs/contributing/ssot-policy.md` now names the current version DOI
+  `10.5281/zenodo.22724258` (`release.toml` / `CITATION.cff`). The concept
+  DOI remains `10.5281/zenodo.19972258`.
+
 ### Added
 
 - `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
