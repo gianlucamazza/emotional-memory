@@ -22,7 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   installed). The Space is synced verbatim from a merge SHA. Only MiniLM
   embedding calls run under `@spaces.GPU`; appraisal uses an
   OpenAI-compatible LLM when `EMOTIONAL_MEMORY_LLM_API_KEY` is set,
-  otherwise the English keyword fallback (no in-process open-model appraisal).
+  otherwise the English keyword fallback (no in-process open-model
+  appraisal). The Space README frontmatter includes `pinned: false`,
+  `suggested_hardware: zero-a10g`, and the public dataset
+  `gianlucamazza/emotional-memory-benchmarks`.
 
 - Commit the publishable shared-history CI receipt (workflow push on `main` at
   `ce2e6579`) under `benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/`.

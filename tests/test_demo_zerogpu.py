@@ -248,7 +248,9 @@ def test_zerogpu_readme_is_source_folder_docs() -> None:
     assert "not yet public" in readme
     assert "CHANGED" not in readme
     assert "private draft" not in readme.lower()
-    assert "suggested_hardware" not in readme
+    assert "pinned: false" in readme
+    assert "suggested_hardware: zero-a10g" in readme
+    assert "gianlucamazza/emotional-memory-benchmarks" in readme
     assert "latency" not in readme.lower()
     assert "MiniLM" in readme
     assert "@spaces.GPU" in readme

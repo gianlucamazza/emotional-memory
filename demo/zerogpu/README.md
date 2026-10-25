@@ -7,6 +7,7 @@ sdk: gradio
 sdk_version: "6.13.0"
 python_version: "3.12"
 app_file: app.py
+pinned: false
 license: mit
 tags:
   - affective-computing
@@ -20,6 +21,9 @@ tags:
   - zerogpu
 models:
   - sentence-transformers/all-MiniLM-L6-v2
+datasets:
+  - gianlucamazza/emotional-memory-benchmarks
+suggested_hardware: zero-a10g
 short_description: Source for a private ZeroGPU AFT memory demo
 ---
 
