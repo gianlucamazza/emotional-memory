@@ -13,7 +13,7 @@ The project tracks seven categories of metadata that must stay consistent:
 | Axis | Source of truth | Derived files | Sync mechanism |
 |---|---|---|---|
 | **Project version** | git tag (`vX.Y.Z`) | `pyproject.toml` `[project].version`, `CITATION.cff`, `.zenodo.json`, `codemeta.json` | `make bump VERSION=X.Y.Z` (`scripts/bump_version.py`) |
-| **Release-facing identifiers** (DOIs, repo URL, arXiv ID) | `release.toml` | `README.md` badge, `CITATION.cff`, `.zenodo.json`, `codemeta.json`, `paper/main.tex`, `paper/SUBMISSION.md`, `demo/README.md`, `demo/app.py` | `make sync-metadata` (`scripts/sync_release_metadata.py`). **Note:** Badge and `codemeta.json` intentionally use the **concept** DOI (`10.5281/zenodo.19972258`) while `CITATION.cff` and BibTeX use the **version** DOI (`10.5281/zenodo.21870707`) — this is a deliberate split to provide a stable landing-page DOI for linking while ensuring citations resolve to the specific version. |
+| **Release-facing identifiers** (DOIs, repo URL, arXiv ID) | `release.toml` | `README.md` badge, `CITATION.cff`, `.zenodo.json`, `codemeta.json`, `paper/main.tex`, `paper/SUBMISSION.md`, `demo/README.md`, `demo/app.py`, `demo/zerogpu/app.py` | `make sync-metadata` (`scripts/sync_release_metadata.py`). **Note:** Badge and `codemeta.json` intentionally use the **concept** DOI (`10.5281/zenodo.19972258`) while `CITATION.cff` and BibTeX use the **version** DOI (`10.5281/zenodo.21870707`) — this is a deliberate split to provide a stable landing-page DOI for linking while ensuring citations resolve to the specific version. |
 | **Python version floor** | `pyproject.toml` `[project].requires-python` | `[tool.ruff].target-version`, `[tool.mypy].python_version`, `[tool.basedpyright].pythonVersion`, `[project].classifiers`, `.github/workflows/ci.yml` matrix | `scripts/check_python_version_consistency.py` (validates only — manual fix) |
 | **Author / license / keywords** | `pyproject.toml` `[project]` | `CITATION.cff`, `codemeta.json`, `.zenodo.json` | `scripts/check_metadata_ssot.py` (validates only — manual fix) |
 | **Positioning hero & comparison** (Why, table, 30-sec example) | `README.md` between `<!-- ssot:positioning-start -->` and `<!-- ssot:positioning-end -->` | `docs/index.md` | `mkdocs-include-markdown-plugin` (build-time inclusion) |
@@ -108,6 +108,7 @@ The following files contain machine-managed sections. Each carries a header comm
 - `codemeta.json` — managed by `sync_release_metadata.py`
 - `paper/main.tex` — DOI / URL / arxiv_id macros tagged with `[ssot:*]` comments, managed by `sync_release_metadata.py`
 - `demo/app.py` — constants tagged with `[ssot:*]` comments, managed by `sync_release_metadata.py`
+- `demo/zerogpu/app.py` — same `[ssot:*]` constants as `demo/app.py`
 - `docs/index.md` — positioning hero block included from `README.md` at build time
 - `docs/getting-started.md` — install + quickstart block included from `README.md` at build time
 - `README.md` / `CLAUDE.md` / `CONTRIBUTING.md` — `EMOTIONAL_MEMORY_LLM_*` tables are mirrors of `docs/contributing/llm-environment.md` (kept in sync manually; deliberate duplication per §5.4)

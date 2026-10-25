@@ -448,7 +448,7 @@ bench-deps-llm-only: llm-config-strict
 	uv run python scripts/check_bench_deps.py --strict --skip-embedder
 
 demo-check:
-	uv run python -m pytest tests/test_demo_ui_config.py -q
+	uv run python -m pytest tests/test_demo_ui_config.py tests/test_demo_zerogpu.py -q
 	uv run python -m pytest tests/test_demo_app.py -rs --override-ini="addopts=-q --tb=short" || [ $$? -eq 5 ]  # 5 = demo extra not installed (module importorskip)
 
 demo-run:
