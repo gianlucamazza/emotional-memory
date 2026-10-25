@@ -100,6 +100,21 @@ uv run python -m benchmarks.realistic.runner --shared-history --embedder hash \
   --out-protocol /tmp/shared.protocol.json
 ```
 
+Shared-history embedder flags (hash is the default; omit them for the stock
+unsalted TokenHashEmbedder):
+
+| Flag | Default | Meaning |
+| --- | --- | --- |
+| `--embedder` | `hash` | `hash` or a sentence-transformers alias (`sbert-mini`, `sentence-transformers`, `e5-small-v2`, `sbert-bge`, `multilingual-e5-small`) |
+| `--embedder-model` | `sentence-transformers/all-MiniLM-L6-v2` | Hugging Face model id; ignored for `--embedder hash`. Requires the `sentence-transformers` extra. CPU only |
+| `--hash-salt` | one empty salt | Repeatable salt for the hash embedder |
+| `--hash-salts K` | unset | Generate salts `0..K-1` and run each. Cannot be combined with `--hash-salt` |
+
+Receipt JSON always records `read_only_retrieves` (false when the flag is omitted),
+the embedder name/class/version/model, and the salt list. The semantic extra is
+optional; the runner raises a clear `ImportError` if a semantic embedder is
+requested without it.
+
 Interleaved shared-history (`shared_history_recall_v1`; encodes after recalls;
 declared near-neutral query share) is offline with the hash embedder:
 

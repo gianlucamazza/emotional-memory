@@ -77,7 +77,7 @@ jobs:
         run: >
           uv run python -m pytest
           --cov --cov-report=xml --cov-report=html --cov-fail-under=80
-          --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality'"
+          --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality and not sentence_transformers'"
 
       - name: Upload coverage HTML report
         if: matrix.python-version == '3.13'
@@ -318,6 +318,10 @@ jobs:
         run: uv run python -m pytest tests/test_langchain_adapter.py -v
       - name: SentenceTransformer embedder
         run: uv run python -m pytest tests/test_sentence_transformers_extra.py -v
+      - name: Shared-history semantic embedder
+        run: >
+          uv run python -m pytest tests/test_shared_history.py -m sentence_transformers -v
+          --override-ini="addopts=-q --tb=short"
       - name: Visualization
         run: uv run python -m pytest tests/test_visualization.py tests/test_figure_inventory.py -v
       - name: Verify dotenv importable
@@ -325,7 +329,7 @@ jobs:
       - name: Full core tests with all extras present
         run: >
           uv run python -m pytest tests/ -q
-          -m "not llm and not appraisal_quality"
+          --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality'"
 
   optional-backends-tests:
     name: Optional backend (${{ matrix.backend }})

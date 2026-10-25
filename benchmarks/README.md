@@ -58,7 +58,7 @@ affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
 ## Harness directories
 
 `fidelity/` (127 psychological-invariant tests, `make bench-fidelity`) · `perf/` ·
-`comparative/` (+SOTA) · `realistic/` (v1–v5 datasets) · `ablation/` · `locomo/` ·
+`comparative/` (+SOTA) · `realistic/` (v1–v5 datasets; shared-history runner flags in `realistic/README.md`) · `ablation/` · `locomo/` ·
 `dailydialog/` (Hk1 + T2A) · `downstream/` (Addendum R) · `human_gold_appraisal/`
 (Addendum S) · `circularity_audit/` (U) · `appraisal_vad/` (V) · `arousal_calibration/`
 (W) · `query_appraisal/` (T) · `madialbench/` (X) · `esmemeval/` (X2) · `gate/` (Y) ·
