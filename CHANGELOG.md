@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `demo/zerogpu/` — source for the private ZeroGPU Space
-  `emotional-memory-demo-zerogpu`. The app tracks the public demo, with
-  `@spaces.GPU` on the embedding path, `spaces` in the Space overlay, and
-  `brotli>=1.2.1`. The Space is synced verbatim from a merge SHA.
+- `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
+  The app tracks the public demo, with `@spaces.GPU` on the embedding path,
+  `spaces` in the Space overlay, and `brotli>=1.2.1`. The Space is synced
+  verbatim from a merge SHA.
 
 
 - Commit the publishable shared-history CI receipt (workflow push on `main` at

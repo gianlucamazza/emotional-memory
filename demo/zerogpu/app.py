@@ -87,8 +87,26 @@ _patch_event_loop_cleanup()
 
 import gradio as gr
 import matplotlib
-import spaces
 from PIL import Image
+
+try:
+    import spaces
+except ImportError:
+
+    class _NoOpSpaces:
+        """No-op stand-in when the ``spaces`` package is not installed."""
+
+        @staticmethod
+        def GPU(fn: object | None = None, **_kwargs: object) -> object:
+            if callable(fn):
+                return fn
+
+            def decorator(func: object) -> object:
+                return func
+
+            return decorator
+
+    spaces = _NoOpSpaces()
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

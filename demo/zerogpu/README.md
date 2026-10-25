@@ -20,28 +20,27 @@ tags:
   - zerogpu
 models:
   - sentence-transformers/all-MiniLM-L6-v2
-short_description: Source for the ZeroGPU AFT memory demo Space
+short_description: Source for a private ZeroGPU AFT memory demo
 ---
 
 # `demo/zerogpu/`
 
-This folder is the source tree for the private Hugging Face Space
-`gianlucamazza/emotional-memory-demo-zerogpu`. The Space is synced **verbatim**
-from these files at a merge SHA of this repository: copy `app.py`,
-`requirements.txt`, and this `README.md` as they appear in that commit, with
-no extra markers or generated files.
+This folder is the source tree for a private ZeroGPU Space (not yet public).
+That Space is synced **verbatim** from these files at a merge SHA of this
+repository: copy `app.py`, `requirements.txt`, and this `README.md` as they
+appear in that commit, with no extra markers or generated files.
 
-The app matches the public demo (`demo/app.py` and
-[gianlucamazza/emotional-memory-demo](https://huggingface.co/spaces/gianlucamazza/emotional-memory-demo)),
-with ZeroGPU scheduling on the embedding path.
+The app matches the public demo in `demo/app.py`, with ZeroGPU scheduling on
+the embedding path.
 
 ## Local run (CPU)
 
-Off ZeroGPU, `spaces` is a no-op, so the same app runs on CPU:
+Off ZeroGPU, `@spaces.GPU` is a no-op. If the `spaces` package is not
+installed, `app.py` uses the same no-op shim. The Space overlay still lists
+`spaces` in `requirements.txt`.
 
 ```bash
 make install-demo
-uv pip install spaces
 uv run python demo/zerogpu/app.py
 ```
 

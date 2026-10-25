@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import ast
 import importlib.util
+import os
 import sys
 import types
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -14,30 +16,57 @@ ROOT = Path(__file__).resolve().parents[1]
 ZEROGPU_DIR = ROOT / "demo" / "zerogpu"
 APP_PATH = ZEROGPU_DIR / "app.py"
 
+_TELEMETRY_KEYS = (
+    "GRADIO_ANALYTICS_ENABLED",
+    "HF_HUB_DISABLE_TELEMETRY",
+    "DO_NOT_TRACK",
+)
 
-def _ensure_spaces_stub() -> None:
-    """Install a no-op ``spaces`` module when the package is not installed."""
+
+def _isolate_telemetry_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Restore Gradio/hub telemetry env mutations after the test."""
+    for key in _TELEMETRY_KEYS:
+        current = os.environ.get(key)
+        if current is None:
+            monkeypatch.delenv(key, raising=False)
+        else:
+            monkeypatch.setenv(key, current)
+
+
+def _recording_spaces_module() -> types.ModuleType:
+    stub = types.ModuleType("spaces")
+
+    def GPU(fn: object | None = None, **kwargs: object) -> object:
+        duration = kwargs.get("duration")
+
+        def decorator(func: object) -> object:
+            recorded: Any = func
+            recorded._zerogpu_duration = duration
+            return func
+
+        if callable(fn):
+            return decorator(fn)
+        return decorator
+
+    stub.GPU = GPU  # type: ignore[attr-defined]
+    return stub
+
+
+def _ensure_spaces_stub(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Install a no-op ``spaces`` module for this test only, if needed."""
     try:
         import spaces  # noqa: F401
     except ImportError:
-        stub = types.ModuleType("spaces")
-
-        def GPU(fn: object | None = None, **_kwargs: object) -> object:
-            if callable(fn):
-                return fn
-
-            def decorator(func: object) -> object:
-                return func
-
-            return decorator
-
-        stub.GPU = GPU  # type: ignore[attr-defined]
-        sys.modules["spaces"] = stub
+        monkeypatch.setitem(sys.modules, "spaces", _recording_spaces_module())
 
 
-def _load_zerogpu_module():
-    _ensure_spaces_stub()
-    spec = importlib.util.spec_from_file_location("emotional_memory_zerogpu_demo_app", APP_PATH)
+def _load_zerogpu_module(monkeypatch: pytest.MonkeyPatch):
+    _isolate_telemetry_env(monkeypatch)
+    _ensure_spaces_stub(monkeypatch)
+    spec = importlib.util.spec_from_file_location(
+        f"emotional_memory_zerogpu_demo_app_{id(monkeypatch)}",
+        APP_PATH,
+    )
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -63,7 +92,7 @@ def test_zerogpu_duration_reads_environment(monkeypatch: pytest.MonkeyPatch) -> 
     pytest.importorskip("PIL")
 
     monkeypatch.setenv("EMOTIONAL_MEMORY_ZEROGPU_DURATION", "12")
-    demo_app = _load_zerogpu_module()
+    demo_app = _load_zerogpu_module(monkeypatch)
     assert demo_app._ZEROGPU_DURATION_SECONDS == 12
     assert demo_app._zerogpu_duration_seconds() == 12
 
@@ -76,7 +105,8 @@ def test_zerogpu_app_imports_and_builds_without_gpu(monkeypatch: pytest.MonkeyPa
     pytest.importorskip("matplotlib")
     pytest.importorskip("PIL")
 
-    demo_app = _load_zerogpu_module()
+    _isolate_telemetry_env(monkeypatch)
+    demo_app = _load_zerogpu_module(monkeypatch)
     _force_offline_factories(monkeypatch, demo_app)
 
     demo = demo_app.build_demo()
@@ -92,6 +122,58 @@ def test_zerogpu_app_imports_and_builds_without_gpu(monkeypatch: pytest.MonkeyPa
             close()
 
 
+def test_zerogpu_gpu_scheduled_embedder_uses_decorated_path(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pytest.importorskip("gradio")
+    pytest.importorskip("matplotlib")
+    pytest.importorskip("PIL")
+
+    monkeypatch.delenv("EMOTIONAL_MEMORY_ZEROGPU_DURATION", raising=False)
+    monkeypatch.setitem(sys.modules, "spaces", _recording_spaces_module())
+    demo_app = _load_zerogpu_module(monkeypatch)
+
+    class _FakeSentenceTransformerEmbedder:
+        """Stand-in for the library embedder: no weights, no network."""
+
+        def embed(self, text: str) -> list[float]:
+            return [0.25, 0.75]
+
+        def embed_batch(self, texts: list[str]) -> list[list[float]]:
+            return [[0.25, 0.75] for _ in texts]
+
+    fake = _FakeSentenceTransformerEmbedder()
+    monkeypatch.setattr(demo_app, "_raw_embedder", lambda: fake)
+    demo_app._make_embedder.cache_clear()
+
+    adapter = demo_app._make_embedder()
+    assert isinstance(adapter, demo_app._GpuScheduledEmbedder)
+
+    seen: list[str] = []
+    original_embed = demo_app._embed_on_gpu
+    original_batch = demo_app._embed_batch_on_gpu
+
+    def _embed_probe(text: str) -> list[float]:
+        seen.append("embed")
+        return original_embed(text)
+
+    def _batch_probe(texts: list[str]) -> list[list[float]]:
+        seen.append("batch")
+        return original_batch(texts)
+
+    monkeypatch.setattr(demo_app, "_embed_on_gpu", _embed_probe)
+    monkeypatch.setattr(demo_app, "_embed_batch_on_gpu", _batch_probe)
+
+    assert adapter.embed("hello") == [0.25, 0.75]
+    assert adapter.embed_batch(["a", "b"]) == [[0.25, 0.75], [0.25, 0.75]]
+    assert seen == ["embed", "batch"]
+
+    assert demo_app._ZEROGPU_DURATION_SECONDS == 30
+    assert demo_app._DEFAULT_ZEROGPU_DURATION_SECONDS == 30
+    assert original_embed._zerogpu_duration == 30
+    assert original_batch._zerogpu_duration == 30
+
+
 def test_zerogpu_gpu_decorator_wraps_embed_functions() -> None:
     tree = ast.parse(APP_PATH.read_text(encoding="utf-8"))
     decorated = {
@@ -99,11 +181,19 @@ def test_zerogpu_gpu_decorator_wraps_embed_functions() -> None:
         for node in ast.walk(tree)
         if isinstance(node, ast.FunctionDef)
         and any(
-            isinstance(decorator, ast.Call)
-            and isinstance(decorator.func, ast.Attribute)
-            and isinstance(decorator.func.value, ast.Name)
-            and decorator.func.value.id == "spaces"
-            and decorator.func.attr == "GPU"
+            (
+                isinstance(decorator, ast.Call)
+                and isinstance(decorator.func, ast.Attribute)
+                and isinstance(decorator.func.value, ast.Name)
+                and decorator.func.value.id == "spaces"
+                and decorator.func.attr == "GPU"
+            )
+            or (
+                isinstance(decorator, ast.Attribute)
+                and isinstance(decorator.value, ast.Name)
+                and decorator.value.id == "spaces"
+                and decorator.attr == "GPU"
+            )
             for decorator in node.decorator_list
         )
     }
@@ -145,7 +235,9 @@ def test_zerogpu_readme_is_source_folder_docs() -> None:
     assert "synced **verbatim**" in readme or "synced verbatim" in readme.lower()
     assert "merge SHA" in readme
     assert "uv run python demo/zerogpu/app.py" in readme
+    assert "not yet public" in readme
     assert "CHANGED" not in readme
     assert "private draft" not in readme.lower()
     assert "suggested_hardware" not in readme
     assert "latency" not in readme.lower()
+    assert "huggingface.co/spaces/" not in readme
