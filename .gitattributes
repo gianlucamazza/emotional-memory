@@ -1,0 +1,9 @@
+# Byte-identical shared-history CI receipts — do not normalize line endings.
+# README.md is authored prose and stays text.
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/SHA256SUMS -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/receipt.json -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/timings.txt -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/arm*.md -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/*.protocol.json -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/*.stdout.log -text
+benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/README.md text eol=lf

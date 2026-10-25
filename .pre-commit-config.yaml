@@ -10,18 +10,19 @@ repos:
       - id: check-case-conflict
       # Vendored third-party datasets are sha256-pinned byte-identical to the
       # upstream release (see benchmarks/datasets/README.md) — byte-mutating
-      # and size hooks must not touch them.
+      # and size hooks must not touch them. Shared-history CI receipts are
+      # sha256-pinned to the Actions artifact; same rule (README.md excluded).
       - id: end-of-file-fixer
-        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
+        exclude: ^(benchmarks/datasets/esmemeval/evo_emo\.json|benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/(?!README\.md$).+)$
       - id: trailing-whitespace
-        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
+        exclude: ^(benchmarks/datasets/esmemeval/evo_emo\.json|benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/(?!README\.md$).+)$
       - id: check-added-large-files
         args: [--maxkb=500]
-        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
+        exclude: ^(benchmarks/datasets/esmemeval/evo_emo\.json|benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/(?!README\.md$).+)$
       - id: detect-private-key
       - id: mixed-line-ending
         args: [--fix=lf]
-        exclude: ^benchmarks/datasets/esmemeval/evo_emo\.json$
+        exclude: ^(benchmarks/datasets/esmemeval/evo_emo\.json|benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/(?!README\.md$).+)$
 
   # Self-contained ruff hook (no `uv run` dependency on host).
   # The pinned ruff binary is downloaded by pre-commit's own toolchain so

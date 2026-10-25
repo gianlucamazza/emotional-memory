@@ -293,7 +293,7 @@ Quadrant probe for mood-congruent retrieval (`benchmarks/comparative/`).
 | Size | **12** scenarios, **36** queries, 14 sessions, 60 events. Encode-after-recall count is 24 across the whole scenario and 22 when counted within a single session. |
 | Language | en |
 | Licence | **CC-BY-4.0** |
-| Origin | **Hand-authored** interleaved shared-history scenarios. Declared session `timeline` allows encodes after recalls. Query affect is a recorded oracle; 14/36 queries have `|valence| < 0.2` and 4 sit at `|valence| = 0.2`. No generator script. No committed scores. |
+| Origin | **Hand-authored** interleaved shared-history scenarios. Declared session `timeline` allows encodes after recalls. Query affect is a recorded oracle; 14/36 queries have `|valence| < 0.2` and 4 sit at `|valence| = 0.2`. No generator script. This dataset file contains no scores. Shared-history scores live under [`benchmarks/realistic/receipts/`](../realistic/receipts/) and are published only with a receipt (commit, report, embedder, seed, CI run), labelled «mechanism test (hash embedder), not a semantic-quality benchmark». See benchmarks/realistic/README.md. |
 | Primary use | Opt-in `--shared-history` longitudinal replay only (protocol mode `shared_history_timeline`). Not a comparative-runner dataset. Distinct from the #170 shared-history replay on `realistic_recall_v1`. |
 
 Supporting owner artifact **not** listed in `PUBLISHABLE.txt` (LLM audit log,

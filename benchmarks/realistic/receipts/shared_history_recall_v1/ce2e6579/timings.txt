@@ -1,0 +1,4 @@
+arm1_replay_writeback 7
+arm2_replay_readonly 5
+arm3_timeline_writeback 1
+arm4_timeline_readonly 2

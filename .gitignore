@@ -68,6 +68,8 @@ coverage.xml
 
 # Logs
 *.log
+# Shared-history CI receipt stdout logs are byte-identical artifact files.
+!benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/*.stdout.log
 
 # Release artefacts
 .zenodo_doi

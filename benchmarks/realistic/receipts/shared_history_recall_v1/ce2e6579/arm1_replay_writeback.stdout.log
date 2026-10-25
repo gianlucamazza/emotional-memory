@@ -1,0 +1,1 @@
+realistic benchmark complete: cosine: top1=0.33, hit@k=0.51, gated: top1=0.54, hit@k=0.78, always_on: top1=0.54, hit@k=0.79
