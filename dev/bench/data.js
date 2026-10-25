@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792836958671,
+  "lastUpdate": 1792887532301,
   "repoUrl": "https://github.com/gianlucamazza/emotional-memory",
   "entries": {
     "Benchmark": [
@@ -30248,6 +30248,247 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.000007216977236798878",
             "extra": "mean: 26.40899520274141 usec\nrounds: 28143"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "info@gianlucamazza.it",
+            "name": "Gianluca Mazza",
+            "username": "gianlucamazza"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6615d9732ef46403ee6d3c0906a8d7ea246aa29",
+          "message": "docs: archive shared-history CI receipt from ce2e6579 (#184)\n\n* docs: commit shared-history CI receipt and update score wording\n\nCI artifacts expire. Archive the publishable receipt from the main\npush at ce2e6579 and point DATASET.md / datasets README at receipts/.\n\nCo-authored-by: Gianluca Mazza <gianlucamazza@users.noreply.github.com>\n\n* chore: track shared-history receipt stdout logs\n\n*.log is gitignored; keep the CI receipt stdout logs as a narrow\nexception so the artifact files stay in the published receipt.\n\nCo-authored-by: Gianluca Mazza <gianlucamazza@users.noreply.github.com>\n\n* docs: clarify shared-history receipt verify wording\n\nUse --ignore-missing for omitted reports, note that dataset_sha256\nis a parsed-model hash, and record that the large arm JSON files\nare not committed.\n\nCo-authored-by: Gianluca Mazza <gianlucamazza@users.noreply.github.com>\n\n---------\n\nCo-authored-by: Cursor Agent <cursoragent@cursor.com>\nCo-authored-by: Gianluca Mazza <gianlucamazza@users.noreply.github.com>",
+          "timestamp": "2026-10-24T17:11:10-07:00",
+          "tree_id": "904140b1336bf3e8c4f2dc9ccc91dfa57d57c9fb",
+          "url": "https://github.com/gianlucamazza/emotional-memory/commit/e6615d9732ef46403ee6d3c0906a8d7ea246aa29"
+        },
+        "date": 1792887531841,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_single",
+            "value": 486.4921852063135,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0008462256736815316",
+            "extra": "mean: 2.0555314769874795 msec\nrounds: 1434"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_with_resonance",
+            "value": 484.81944708354246,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0010750209700830645",
+            "extra": "mean: 2.062623531328114 msec\nrounds: 1197"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_no_resonance",
+            "value": 469.09898511628796,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0008220039030436438",
+            "extra": "mean: 2.131746244882844 msec\nrounds: 1368"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[10]",
+            "value": 376.41169431099206,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0012129001079159327",
+            "extra": "mean: 2.656665600760528 msec\nrounds: 1841"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[100]",
+            "value": 483.9581673463148,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0010042027249008655",
+            "extra": "mean: 2.0662942945736296 msec\nrounds: 1161"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[1000]",
+            "value": 304.9792672585229,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000617510748730485",
+            "extra": "mean: 3.2789114125332537 msec\nrounds: 383"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_memory_per_record",
+            "value": 147477.1554980773,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000001470848810587785",
+            "extra": "mean: 6.780711199796888 usec\nrounds: 16804"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[100]",
+            "value": 10.560395371064686,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00027181264316131036",
+            "extra": "mean: 94.69342433333357 msec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[1000]",
+            "value": 0.5210901956985968,
+            "unit": "iter/sec",
+            "range": "stddev: 0.02774142578027872",
+            "extra": "mean: 1.9190535693333384 sec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[5000]",
+            "value": 0.022150331271288737,
+            "unit": "iter/sec",
+            "range": "stddev: 1.4697024866716102",
+            "extra": "mean: 45.14605166633333 sec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[50]",
+            "value": 3156.761416750173,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000014276348384484711",
+            "extra": "mean: 316.7803542877439 usec\nrounds: 2052"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[200]",
+            "value": 832.5278776065162,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00015333007814593026",
+            "extra": "mean: 1.201160978386645 msec\nrounds: 694"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[500]",
+            "value": 345.7796123784736,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00009986292377873688",
+            "extra": "mean: 2.8920155040993234 msec\nrounds: 244"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_encode_with_large_resonance_graph",
+            "value": 423.84121009684753,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000482167980308909",
+            "extra": "mean: 2.359374162251709 msec\nrounds: 604"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[100-1]",
+            "value": 9543.34957265194,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000006741317830960767",
+            "extra": "mean: 104.785012053385 usec\nrounds: 4978"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[100-2]",
+            "value": 9378.717666754432,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000010914687681164432",
+            "extra": "mean: 106.624384647465 usec\nrounds: 7100"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[500-1]",
+            "value": 1734.9964469614965,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000015024622009045709",
+            "extra": "mean: 576.3700564063416 usec\nrounds: 851"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[500-2]",
+            "value": 1682.3819479369965,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000020416775376705295",
+            "extra": "mean: 594.395345971371 usec\nrounds: 1477"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[100]",
+            "value": 987.6205750500582,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000039032121869706914",
+            "extra": "mean: 1.012534596040908 msec\nrounds: 859"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[1000]",
+            "value": 349.1898181910207,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00012478775277393776",
+            "extra": "mean: 2.863771931210664 msec\nrounds: 974"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[10000]",
+            "value": 20.564818004806575,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0018907405097034148",
+            "extra": "mean: 48.62673716666357 msec\nrounds: 264"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[1]",
+            "value": 438.54464457079143,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00006816398624420415",
+            "extra": "mean: 2.2802695515269855 msec\nrounds: 2096"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[5]",
+            "value": 352.3015522682397,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00008729055932797566",
+            "extra": "mean: 2.838477416751794 msec\nrounds: 1003"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[10]",
+            "value": 243.264874416327,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0012709143520037",
+            "extra": "mean: 4.110745550089511 msec\nrounds: 549"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[25]",
+            "value": 174.81993689319484,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0003876943822041189",
+            "extra": "mean: 5.720171381888462 msec\nrounds: 254"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_with_reconsolidation",
+            "value": 822.4506949125896,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000028153638174988267",
+            "extra": "mean: 1.2158783574330623 msec\nrounds: 996"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_cosine_rank_fixed_pool[15]",
+            "value": 5073.339219325035,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00000954917858637308",
+            "extra": "mean: 197.10883833489092 usec\nrounds: 4466"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_cosine_rank_fixed_pool[1000]",
+            "value": 70.21019644028367,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0003900635250913021",
+            "extra": "mean: 14.242945479443808 msec\nrounds: 73"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_aft_plan_fixed_pool[15]",
+            "value": 1722.3892646749107,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000029239855107523848",
+            "extra": "mean: 580.588848589197 usec\nrounds: 1453"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_aft_plan_fixed_pool[1000]",
+            "value": 23.262967163006955,
+            "unit": "iter/sec",
+            "range": "stddev: 0.006641010512564671",
+            "extra": "mean: 42.986777782595674 msec\nrounds: 23"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_inmemory_search_cached",
+            "value": 16937.85851801916,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000006462930857665347",
+            "extra": "mean: 59.039340713358825 usec\nrounds: 12151"
           }
         ]
       }
