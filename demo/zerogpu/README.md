@@ -7,6 +7,7 @@ sdk: gradio
 sdk_version: "6.13.0"
 python_version: "3.12"
 app_file: app.py
+pinned: false
 license: mit
 tags:
   - affective-computing
@@ -20,18 +21,25 @@ tags:
   - zerogpu
 models:
   - sentence-transformers/all-MiniLM-L6-v2
+datasets:
+  - gianlucamazza/emotional-memory-benchmarks
+suggested_hardware: zero-a10g
 short_description: Source for a private ZeroGPU AFT memory demo
 ---
 
 # `demo/zerogpu/`
 
 This folder is the source tree for a private ZeroGPU Space (not yet public).
-That Space is synced **verbatim** from these files at a merge SHA of this
+That Space is to be synced **verbatim** from these files at a merge SHA of this
 repository: copy `app.py`, `requirements.txt`, and this `README.md` as they
 appear in that commit, with no extra markers or generated files.
 
-The app matches the public demo in `demo/app.py`, with ZeroGPU scheduling on
-the embedding path.
+The app matches the public demo in `demo/app.py`. The only GPU work is the
+MiniLM embedding calls (`all-MiniLM-L6-v2`) under `@spaces.GPU`. Appraisal
+uses an OpenAI-compatible LLM only if `EMOTIONAL_MEMORY_LLM_API_KEY` is set;
+otherwise it uses the English keyword fallback. There is no in-process
+open-model appraisal. `gianlucamazza/emotional-memory-benchmarks` is the
+evidence dataset for the benchmarks and is not loaded by the app.
 
 ## Local run (CPU)
 

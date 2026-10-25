@@ -7,13 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `docs/contributing/ssot-policy.md` now names the current version DOI
+  `10.5281/zenodo.22724258` (`release.toml` / `CITATION.cff`). The concept
+  DOI remains `10.5281/zenodo.19972258`.
+
 ### Added
 
 - `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
-  The app tracks the public demo, with `@spaces.GPU` on the embedding path,
-  `spaces` in the Space overlay, and `brotli>=1.2.1`. The Space is synced
-  verbatim from a merge SHA.
-
+  The app tracks the public demo, with `@spaces.GPU` on the embedding path;
+  its Space overlay is the public demo's `requirements.txt` plus `spaces`
+  and a `transformers==5.20.2` build pin (latest 5.x on PyPI when the Space
+  was built, 2026-10-25). The Space is to be synced verbatim from a merge
+  SHA. Only MiniLM embedding calls run under `@spaces.GPU`; appraisal uses
+  an OpenAI-compatible LLM when `EMOTIONAL_MEMORY_LLM_API_KEY` is set,
+  otherwise the English keyword fallback (no in-process open-model
+  appraisal). The Space README frontmatter includes `pinned: false`,
+  `suggested_hardware: zero-a10g`, and the public dataset
+  `gianlucamazza/emotional-memory-benchmarks` (evidence dataset for the
+  benchmarks; the app does not load it).
 
 - Commit the publishable shared-history CI receipt (workflow push on `main` at
   `ce2e6579`) under `benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/`.
