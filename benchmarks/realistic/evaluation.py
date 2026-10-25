@@ -37,7 +37,12 @@ def ranking_metrics(retrieved: list[str], relevant: set[str], k: int) -> dict[st
 
 
 def reproducibility_manifest(
-    dataset: ReplayDataset, config: EmotionalMemoryConfig, *, seed: int, top_k: int
+    dataset: ReplayDataset,
+    config: EmotionalMemoryConfig,
+    *,
+    seed: int,
+    top_k: int,
+    embedder: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Identify effective inputs, implementation and environment, not run wall time."""
     root = Path(__file__).resolve().parents[2]
@@ -68,7 +73,9 @@ def reproducibility_manifest(
         "seed_usage": "UUID5 namespace and bootstrap resampling",
         "top_k": top_k,
         "engine_config": config.model_dump(mode="json"),
-        "embedder": {"class": "TokenHashEmbedder", "dimension": 64},
+        "embedder": embedder
+        if embedder is not None
+        else {"class": "TokenHashEmbedder", "dimension": 64},
         "appraisal": "recorded dataset query affect; no model inference",
         "python": platform.python_version(),
         "platform": platform.platform(),

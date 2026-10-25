@@ -69,7 +69,7 @@ test:
 	uv run python -m pytest
 
 test-all:
-	uv run python -m pytest --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality'"
+	uv run python -m pytest --override-ini="addopts=-q --tb=short -m 'not llm and not appraisal_quality and not sentence_transformers'"
 
 cov:
 	uv run python -m pytest --cov --cov-report=term-missing

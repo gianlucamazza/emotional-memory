@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Shared-history runner: optional CPU sentence-transformers embedder
+  (`--embedder` plus `--embedder-model`, default
+  `sentence-transformers/all-MiniLM-L6-v2`), hash-salt sweep
+  (`--hash-salt` / `--hash-salts`), and always-emitted
+  `read_only_retrieves` plus embedder/salt receipt metadata. The unsalted
+  hash default stays the stock TokenHashEmbedder. Semantic support is the
+  existing optional extra.
+
 - Commit the publishable shared-history CI receipt (workflow push on `main` at
   `ce2e6579`) under `benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/`.
   `DATASET.md` and `benchmarks/datasets/README.md` now say shared-history scores

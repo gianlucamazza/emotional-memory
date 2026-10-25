@@ -45,7 +45,7 @@ def test_v1_shared_history_protocol_mode_unchanged() -> None:
     result = run_shared_history(dataset, seed=7, n_bootstrap=8, dataset_path=REPLAY_V1_PATH)
     assert result["protocol"]["mode"] == "shared_history_v1"
     assert "event_order" not in result["protocol"]
-    assert "read_only_retrieves" not in result["protocol"]
+    assert result["protocol"]["read_only_retrieves"] is False
 
 
 def test_v1_dump_omits_timeline_and_interleave_extensions() -> None:
@@ -184,7 +184,7 @@ def test_shared_history_read_only_retrieves_do_not_persist_writebacks() -> None:
         dataset_path=TIMELINE_PATH,
         read_only_retrieves=True,
     )
-    assert "read_only_retrieves" not in writable["protocol"]
+    assert writable["protocol"]["read_only_retrieves"] is False
     assert readonly["protocol"]["read_only_retrieves"] is True
 
     retrieve_count = 0
