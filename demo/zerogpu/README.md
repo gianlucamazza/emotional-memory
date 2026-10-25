@@ -38,7 +38,8 @@ The app matches the public demo in `demo/app.py`. The only GPU work is the
 MiniLM embedding calls (`all-MiniLM-L6-v2`) under `@spaces.GPU`. Appraisal
 uses an OpenAI-compatible LLM only if `EMOTIONAL_MEMORY_LLM_API_KEY` is set;
 otherwise it uses the English keyword fallback. There is no in-process
-open-model appraisal.
+open-model appraisal. `gianlucamazza/emotional-memory-benchmarks` is the
+evidence dataset for the benchmarks and is not loaded by the app.
 
 ## Local run (CPU)
 

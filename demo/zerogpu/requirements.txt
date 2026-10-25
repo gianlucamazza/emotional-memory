@@ -7,4 +7,4 @@ matplotlib>=3.7
 sentence-transformers>=2.2
 brotli>=1.2.1  # GHSA-9v8h-qqgm-4m35 (gradio pulls brotli unpinned)
 spaces  # Space-only; optional locally (app.py shims ImportError)
-transformers==5.20.2  # receipt pin: version the Space build installed
+transformers==5.20.2  # build pin: latest 5.x on PyPI when the Space was built (2026-10-25)
