@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ce2e6579`) under `benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/`.
   `DATASET.md` and `benchmarks/datasets/README.md` now say shared-history scores
   live with that receipt and carry the label «mechanism test (hash embedder),
-  not a semantic-quality benchmark».
+  not a semantic-quality benchmark». The large `arm*.json` reports (7–40 MB)
+  are not committed.
 
 - Shared-history CI receipt workflow (`.github/workflows/shared-history-receipts.yml`):
   offline hash-embedder runs of the four replay/timeline × write-back/read-only

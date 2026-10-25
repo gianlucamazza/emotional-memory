@@ -3,6 +3,8 @@
 Publishable receipt from workflow **Shared-history receipts**, push on `main`.
 
 This is a **mechanism test (hash embedder), not a semantic-quality benchmark**.
+Any number quoted outside this folder must carry the label «mechanism test
+(hash embedder), not a semantic-quality benchmark».
 
 ## Provenance
 
@@ -11,6 +13,9 @@ This is a **mechanism test (hash embedder), not a semantic-quality benchmark**.
 - Artifact: `shared-history-receipts` (id `12556796823`)
 
 CI artifacts expire. This directory keeps the durable subset of that run.
+
+The manifest's `dataset_sha256` hashes the parsed dataset, not the file bytes,
+so it differs from the file's sha256 (`f748e37f…`).
 
 ## Files from `SHA256SUMS`
 
@@ -52,12 +57,15 @@ Omitted empty stderr logs:
 ## Verify
 
 While the artifact is still available, download `shared-history-receipts` from
-the run above. After it expires, re-run the **Shared-history receipts**
-workflow on this SHA. Then:
+the run above and compare committed files to that original artifact. Then, in
+this directory:
 
 ```bash
-sha256sum -c SHA256SUMS
+sha256sum -c --ignore-missing SHA256SUMS
 ```
 
-Committed files must match their `SHA256SUMS` lines. Omitted files appear only
-in the downloaded artifact or a fresh workflow run.
+`--ignore-missing` is required here: the large `arm*.json` reports and the
+empty stderr logs are listed in `SHA256SUMS` but are excluded from this
+directory. Hashes verify only against that original artifact. A later
+workflow run is not expected to reproduce them, because each `protocol.json`
+records the Python version and platform.
