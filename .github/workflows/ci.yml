@@ -410,7 +410,8 @@ jobs:
         run: uv sync --frozen --extra dev --extra demo --extra viz
       - name: Run demo tests
         run: >
-          uv run python -m pytest tests/test_demo_app.py tests/test_demo_ui_config.py -v
+          uv run python -m pytest tests/test_demo_app.py tests/test_demo_ui_config.py
+          tests/test_demo_zerogpu.py -v
           --override-ini="addopts=-q --tb=short"
 
   llm-tests:

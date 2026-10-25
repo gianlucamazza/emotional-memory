@@ -41,17 +41,19 @@ def test_demo_requirements_pin_current_package_version() -> None:
     pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
     version = pyproject["project"]["version"]
 
-    requirements = (root / "demo" / "requirements.txt").read_text(encoding="utf-8").splitlines()
-    effective_lines = [line for line in requirements if line and not line.startswith("#")]
+    for rel in ("demo/requirements.txt", "demo/zerogpu/requirements.txt"):
+        requirements = (root / rel).read_text(encoding="utf-8").splitlines()
+        effective_lines = [line for line in requirements if line and not line.startswith("#")]
 
-    assert f"emotional-memory=={version}" == effective_lines[0]
-    assert "gradio>=6.13,<7" in effective_lines
+        assert f"emotional-memory=={version}" == effective_lines[0]
+        assert "gradio>=6.13,<7" in effective_lines
 
 
 def test_env_example_lists_demo_ssr_flag() -> None:
     env_example = (_repo_root() / ".env.example").read_text(encoding="utf-8")
 
     assert "EMOTIONAL_MEMORY_DEMO_SSR=" in env_example
+    assert "EMOTIONAL_MEMORY_ZEROGPU_DURATION=" in env_example
 
 
 def test_citation_version_matches_pyproject() -> None:
