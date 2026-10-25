@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import importlib.util
 import os
+import re
 import sys
 import types
 from pathlib import Path
@@ -226,13 +227,22 @@ def test_zerogpu_requirements_match_public_demo_plus_spaces() -> None:
     zerogpu_pins = _pins(zerogpu)
     assert any(pin.startswith("brotli>=1.2.1") for pin in zerogpu_pins)
     assert "spaces" in zerogpu_pins
+    assert "transformers==5.20.2" in zerogpu_pins
     assert public_pins <= zerogpu_pins
-    assert zerogpu_pins - public_pins == {"spaces"}
+    assert zerogpu_pins - public_pins == {"spaces", "transformers==5.20.2"}
+
+
+_NO_PUBLIC_SPACE = re.compile(
+    r"huggingface\.co/spaces/|hf\.space",
+    re.IGNORECASE,
+)
 
 
 def test_zerogpu_readme_is_source_folder_docs() -> None:
     readme = (ZEROGPU_DIR / "README.md").read_text(encoding="utf-8")
+    readme_flat = re.sub(r"\s+", " ", readme.lower())
     assert "synced **verbatim**" in readme or "synced verbatim" in readme.lower()
+    assert "is to be synced" in readme
     assert "merge SHA" in readme
     assert "uv run python demo/zerogpu/app.py" in readme
     assert "not yet public" in readme
@@ -240,4 +250,23 @@ def test_zerogpu_readme_is_source_folder_docs() -> None:
     assert "private draft" not in readme.lower()
     assert "suggested_hardware" not in readme
     assert "latency" not in readme.lower()
-    assert "huggingface.co/spaces/" not in readme
+    assert "MiniLM" in readme
+    assert "@spaces.GPU" in readme
+    assert "OpenAI-compatible" in readme
+    assert "keyword fallback" in readme_flat
+    assert "no in-process open-model appraisal" in readme_flat
+    _assert_zerogpu_source_has_no_public_space()
+
+
+def test_zerogpu_source_does_not_name_a_public_space() -> None:
+    _assert_zerogpu_source_has_no_public_space()
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    unreleased = changelog.split("## [", 2)[1]
+    assert "demo/zerogpu/" in unreleased
+    assert "a private ZeroGPU Space (not yet public)" in unreleased
+
+
+def _assert_zerogpu_source_has_no_public_space() -> None:
+    for name in ("README.md", "requirements.txt", "app.py"):
+        text = (ZEROGPU_DIR / name).read_text(encoding="utf-8")
+        assert _NO_PUBLIC_SPACE.search(text) is None, name
