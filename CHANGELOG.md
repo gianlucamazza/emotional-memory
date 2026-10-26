@@ -108,6 +108,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- **Align `pypa/gh-action-pypi-publish` pin comment.** The SHA
+  `dc37677b2e1c63e2034f94d8a5b11f265b73ba33` in `.github/workflows/release.yml`
+  is annotated tag `v1.14.2`; the trailing comment is now `# v1.14.2` instead
+  of the `release/v1` branch name (zizmor `ref-version-mismatch`).
+
 - **Identify arXiv related identifiers by parsed hostname.**
   `scripts/sync_release_metadata.py` no longer treats `"arxiv.org"` as a
   substring of `.zenodo.json` related-identifier URLs. It parses with
