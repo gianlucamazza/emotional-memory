@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Shared-history receipt workflow checks out the trusted `pull_request`
+  merge SHA (`github.sha`) instead of the PR tip. `persist-credentials`
+  stays false; the job remains `contents: read` with no secrets. A
+  workflow-only PR still exercises its own YAML because Actions runs
+  and checks out that merge.
+
 - `docs/contributing/ssot-policy.md` now names the current version DOI
   `10.5281/zenodo.22724258` (`release.toml` / `CITATION.cff`). The concept
   DOI remains `10.5281/zenodo.19972258`.
@@ -39,8 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   offline hash-embedder runs of the four replay/timeline × write-back/read-only
   arms on `ubuntu-latest`, uploaded as the `shared-history-receipts` artifact.
   `workflow_dispatch` plus path-filtered `push` to `main` produce publishable
-  receipts. A path-filtered `pull_request` trigger checks out the PR HEAD so a
-  workflow-only PR tests its own change; it is not a required check.
+  receipts. A path-filtered `pull_request` trigger checks out the merge SHA
+  so a workflow-only PR tests its own change; it is not a required check.
   Artifacts expire (retention is capped by repository settings), so a score PR commits the run's SHA256SUMS and receipt.json next to the scores.
   No scores or expected numbers are committed.
 

@@ -5,10 +5,17 @@ name: Shared-history receipts
 # a reference run is checked outside CI.
 #
 # Checkout policy:
-#   workflow_dispatch: optional `ref` input, else the triggering SHA.
-#   push to main: the push SHA (publishable receipt).
-#   pull_request: github.event.pull_request.head.sha so a PR that edits
-#   this workflow tests its own change. Path-filtered; not a general gate.
+#   workflow_dispatch: optional `ref` input (repo-write only), else the
+#   triggering SHA.
+#   push to main: default checkout of github.sha (publishable receipt).
+#   pull_request: default checkout of github.sha, the merge commit.
+#   Actions already evaluates this workflow from that merge, so a
+#   path-filtered workflow-only PR still tests its own YAML. Do not pass
+#   a PR-head ref: CodeQL actions/untrusted-checkout/medium flags that
+#   explicit checkout even in this unprivileged job. The pull_request
+#   path is safe as a fork CI run: no secrets, persist-credentials:
+#   false, contents: read only, and the tree is the trusted merge SHA
+#   rather than the PR tip. Path-filtered; not a general gate.
 #   Publishable receipts come only from push-to-main or workflow_dispatch.
 #
 # retention-days: 90 is requested; the effective retention is capped by repo/org settings and may be shorter.
@@ -56,30 +63,22 @@ jobs:
       ARTIFACT_DIR: ${{ github.workspace }}/shared-history-receipts-out
 
     steps:
-      - name: Resolve reproduction ref
-        id: repro
-        env:
-          INPUT_REF: ${{ inputs.ref }}
-          FALLBACK_SHA: ${{ github.sha }}
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-          if [ -n "${INPUT_REF}" ]; then
-            printf 'ref=%s\n' "${INPUT_REF}" >> "${GITHUB_OUTPUT}"
-          elif [ -n "${PR_HEAD_SHA}" ]; then
-            # Test the PR's own tree. Publishable receipts are push/dispatch.
-            printf 'ref=%s\n' "${PR_HEAD_SHA}" >> "${GITHUB_OUTPUT}"
-          else
-            printf 'ref=%s\n' "${FALLBACK_SHA}" >> "${GITHUB_OUTPUT}"
-          fi
-
-      # workflow_dispatch `ref` is repo-write only (not a PR-controlled
-      # checkout). push events always resolve to github.sha. pull_request
-      # uses the PR head so a workflow-only PR exercises its own YAML.
-      - name: Checkout reproduction ref
+      # pull_request and push: omit `ref` so checkout uses github.sha
+      # (merge commit on pull_request). That is the trusted event SHA;
+      # persist-credentials is off; this job has no secrets.
+      - name: Checkout trusted event SHA
+        if: github.event_name != 'workflow_dispatch' || inputs.ref == ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ steps.repro.outputs.ref }}
+          persist-credentials: false
+
+      # workflow_dispatch `ref` is repo-write only (not a PR-controlled
+      # checkout). Empty input uses the trusted event SHA step above.
+      - name: Checkout dispatch reproduction ref
+        if: github.event_name == 'workflow_dispatch' && inputs.ref != ''
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
           persist-credentials: false
 
       - name: Set up uv
