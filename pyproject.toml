@@ -216,3 +216,8 @@ reportMissingTypeStubs = false
 
 [dependency-groups]
 dev = ["fakeredis>=2.35.1"]
+
+# Gradio 6.x still declares pillow>=8,<13. Override that stale upper bound so
+# `uv lock --upgrade-package pillow` can resolve Pillow 13 (required-python 3.11+).
+[tool.uv]
+override-dependencies = ["pillow>=13.0.0"]
