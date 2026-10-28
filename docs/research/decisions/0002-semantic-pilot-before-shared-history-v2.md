@@ -14,6 +14,9 @@ Near-neutral gated routing selects semantic-only weights. Matching cosine on
 the same candidates and embeddings is an implementation invariant, not evidence
 of affective benefit. In longitudinal replay, verify candidate/history equivalence
 before asserting ranking equality across arms: earlier write-backs can differ.
+The reported 8/8 near-neutral agreement in the timeline condition describes the
+gate together with the write-back histories that did not change those rankings;
+it does not isolate the gate or guarantee agreement in future histories.
 Non-neutral gains and near-neutral always-on losses remain empirical observations
 conditional on the dataset, embedder and write-back policy.
 
@@ -32,6 +35,8 @@ Use the existing draft [PR #186](https://github.com/gianlucamazza/emotional-memo
 for runner configuration rather than duplicate its implementation. As inspected
 on 2026-10-28, that PR is open and draft at `b50e57cb6506a4f5eb9613d43a7476b050da4667`;
 this ADR neither merges it nor attests that it satisfies every requirement below.
+
+Track the pre-run protocol and diagnostics in [issue #193](https://github.com/gianlucamazza/emotional-memory/issues/193).
 
 ### Implementation audit and acceptance criteria
 
@@ -93,6 +98,48 @@ uncertainty and planning must respect scenario clusters. With only 12 scenarios,
 report sensitivity to assumptions rather than a precise sample-size promise.
 Any query-level exact paired test is descriptive and must disclose its
 independence assumption. Do not pool write-back modes or hash variants into N.
+
+### Within-scenario discordance and planning sensitivity
+
+The semantic pilot must report within-scenario dependence, not assume it away.
+For each method-versus-cosine comparison, write-back condition and affect
+stratum, define correctness discordance as
+`D_i = 1[top1_correct_method != top1_correct_cosine]`. Retain the signed paired
+outcome `Z_i = top1_correct_method - top1_correct_cosine` separately: correlation
+of discordance incidence does not by itself specify variance of the paired
+effect. Ranking disagreement is not the definition of either variable.
+
+Publish a scenario table with query counts, stratum counts, `b`, `c`, discordance
+rates and signed effects. Predeclare in the separate pilot protocol the
+observed-scale ICC estimator for `D_i`, its uncertainty procedure, and handling
+of sparse strata, unequal cluster sizes and boundary/degenerate estimates.
+Report the exploratory ICC and uncertainty when estimable. If outcomes are
+constant, the fit is unidentified, or a stratum has insufficient informative
+clusters, report it as not estimable with the reason; never substitute zero.
+Do not pool arms, strata or write-back conditions to manufacture replication.
+
+Twelve author-constructed histories may permit a descriptive estimate; they do
+not justify treating it as a precise population ICC for v2. Publish the number
+of informative clusters and limitations alongside any estimate. Freeze these
+rules before execution, and do not choose a sizing assumption from whichever
+pilot ICC gives the smallest N.
+
+As a transparent sensitivity illustration, for equal cluster size `m` and
+exchangeable observed-scale correlation `rho`, the usual mean-variance design
+effect is `DE = 1 + (m - 1) * rho`
+([Campbell et al., 2012, CONSORT cluster extension](https://doi.org/10.1136/bmj.e5661)).
+With three queries per history, `DE = 1 + 2 * rho`; `rho = 0.25` gives `DE = 1.5`
+and nominal `N_eff = 36 / 1.5 = 24`. These are illustrative assumptions, not
+measured pilot results or a validated power calculation for paired correctness.
+Stratum-specific cluster sizes can differ from three.
+
+For planning, show at least `rho = 0, 0.10, 0.25, 0.50, 1.0` as declared
+sensitivity cases, not confidence bounds. Model the joint paired outcomes and
+scenario dependence of the signed effect for the intended primary analysis;
+do not inflate a query-level exact test using the ICC of `D_i` alone. Report
+required independent histories and total queries, including cluster-size
+assumptions. Additional queries in an existing history do not create additional
+independent histories.
 
 ### Gate to v2
 
