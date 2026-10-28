@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Proposed ADR 0002: require a receipted semantic shared-history pilot before
+  sizing v2, with dimension-compatibility checks and scenario-aware paired
+  analysis. Links the existing runner draft PR #186; no new benchmark results.
+
 - `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
   The app tracks the public demo, with `@spaces.GPU` on the embedding path;
   its Space overlay is the public demo's `requirements.txt` plus `spaces`
