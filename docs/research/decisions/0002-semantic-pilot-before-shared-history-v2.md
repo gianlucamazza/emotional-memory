@@ -10,15 +10,24 @@ collisions may contribute to disagreements; their share has not been established
 by this ADR. Repeating a result across hash variants does not establish semantic
 retrieval quality, and variants on the same queries are not independent samples.
 
-Near-neutral gated routing selects semantic-only weights. Matching cosine on
-the same candidates and embeddings is an implementation invariant, not evidence
-of affective benefit. In longitudinal replay, verify candidate/history equivalence
-before asserting ranking equality across arms: earlier write-backs can differ.
-The reported 8/8 near-neutral agreement in the timeline condition describes the
-gate together with the write-back histories that did not change those rankings;
-it does not isolate the gate or guarantee agreement in future histories.
-Non-neutral gains and near-neutral always-on losses remain empirical observations
-conditional on the dataset, embedder and write-back policy.
+Near-neutral gated routing calls the same retrieval path as the cosine arm
+with weights `[1,0,0,0,0,0]` (`engine_shared.semantic_only_weights`,
+`engine_shared.is_query_affect_neutral`; `retrieval.retrieval_breakdown`
+and `retrieval.build_retrieval_plan` then score only query–memory cosine
+via `retrieval._component_values`). Write-back
+(`EmotionalMemory._apply_retrieval_updates`) updates memory tags only
+(counters, reconsolidated affect, predictions, resonance links); it never
+changes content, embeddings, IDs or store membership.
+`InMemoryStore.update` reassigns an existing key, so
+`InMemoryStore.list_all` and `InMemoryStore.search_by_embedding` keep
+candidate order. On near-neutral queries, gated therefore equals cosine
+on the same store even after histories diverge. The reported 8/8
+near-neutral agreement is a wiring check, not evidence of benefit.
+Re-verify only if write-back starts changing content, embeddings or
+membership, the embedder becomes non-deterministic, or an
+approximate-index backend is used.
+Non-neutral gains and near-neutral always-on losses remain empirical
+observations conditional on the dataset, embedder and write-back policy.
 
 The existing 36-query, 12-scenario `shared_history_recall_v1` is a development
 pilot, with oracle affect and author-constructed scenarios. It cannot become an
@@ -59,8 +68,10 @@ Before running the pilot, require:
 2. Explicit CPU execution and lazy optional dependencies, with a clear failure
    when semantic support is unavailable; no silent fallback to hash.
 3. Deterministic synthetic tests with non-64 dimensions, reset and snapshot
-   round trips, mixed-dimension rejection, and same-checkpoint neutral ranking
-   equivalence. Preserve unsalted hash behavior and read-only restoration checks.
+   round trips, mixed-dimension rejection, same-checkpoint neutral ranking
+   equivalence, and neutral ranking equivalence after divergent write-back
+   histories (tags differ, embeddings equal). Preserve unsalted hash behavior
+   and read-only restoration checks.
 4. A separately identified real-model integration test. Synthetic vector tests
    establish plumbing only; neither is a retrieval-quality result.
 5. Receipts with runner commit, dataset SHA256, model id and immutable model
@@ -116,6 +127,8 @@ of sparse strata, unequal cluster sizes and boundary/degenerate estimates.
 Report the exploratory ICC and uncertainty when estimable. If outcomes are
 constant, the fit is unidentified, or a stratum has insufficient informative
 clusters, report it as not estimable with the reason; never substitute zero.
+Near-neutral gated-versus-cosine discordance is identically zero by
+mechanism, so its ICC is not estimable there.
 Do not pool arms, strata or write-back conditions to manufacture replication.
 
 Twelve author-constructed histories may permit a descriptive estimate; they do
@@ -131,7 +144,11 @@ effect is `DE = 1 + (m - 1) * rho`
 With three queries per history, `DE = 1 + 2 * rho`; `rho = 0.25` gives `DE = 1.5`
 and nominal `N_eff = 36 / 1.5 = 24`. These are illustrative assumptions, not
 measured pilot results or a validated power calculation for paired correctness.
-Stratum-specific cluster sizes can differ from three.
+Stratum-specific cluster sizes can differ from three. In
+`shared_history_recall_v1` they are 1–2 per scenario (near-neutral:
+10 scenarios with 1 query and 2 with 2; non-neutral: 10 with 2 and
+2 with 1), so most near-neutral clusters carry no within-scenario
+information.
 
 For planning, show at least `rho = 0, 0.10, 0.25, 0.50, 1.0` as declared
 sensitivity cases, not confidence bounds. Model the joint paired outcomes and

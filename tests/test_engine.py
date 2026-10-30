@@ -7,10 +7,13 @@ from typing import ClassVar
 import pytest
 from conftest import FixedEmbedder
 
+from benchmarks.realistic.adapters.base import TokenHashEmbedder
 from emotional_memory.affect import CoreAffect
 from emotional_memory.appraisal import AppraisalVector, StaticAppraisalEngine
 from emotional_memory.engine import EmotionalMemory, EmotionalMemoryConfig
+from emotional_memory.engine_shared import semantic_only_weights
 from emotional_memory.interfaces import Embedder, SequentialEmbedder
+from emotional_memory.models import Memory
 from emotional_memory.retrieval import RetrievalConfig
 from emotional_memory.state_stores.in_memory import InMemoryAffectiveStateStore
 from emotional_memory.stores.in_memory import InMemoryStore
@@ -318,6 +321,105 @@ class TestQueryAffect:
             ).retrieve("query", top_k=2, query_affect=qa)
         ]
         assert via_method == via_param
+
+
+class TestNearNeutralGatedEqualsCosineAfterDivergentWriteback:
+    """ADR 0002 criterion 3: tag-only write-back cannot change near-neutral ranks."""
+
+    def test_rankings_identical_when_tags_differ_embeddings_equal(self) -> None:
+        embedder = TokenHashEmbedder()
+        appraisal = StaticAppraisalEngine(AppraisalVector.neutral())
+        contents = [f"shared-history event {i} about distinct topic {i}" for i in range(20)]
+        queries = [
+            "which event covered topic 3",
+            "recall the distinct topic 11 episode",
+            "what happened in topic 17",
+        ]
+        top_k = 5
+
+        source = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=embedder,
+            appraisal_engine=appraisal,
+        )
+        for text in contents:
+            source.encode(text)
+
+        gated_em = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=embedder,
+            appraisal_engine=appraisal,
+        )
+        cosine_em = EmotionalMemory(
+            store=InMemoryStore(),
+            embedder=embedder,
+            appraisal_engine=appraisal,
+        )
+        snapshot = source.export_memories()
+        assert gated_em.import_memories(snapshot) == 20
+        assert cosine_em.import_memories(snapshot) == 20
+
+        # Divergent write-backs: only tags change (retrieval counters, reconsolidation).
+        gated_em.retrieve(
+            contents[0],
+            top_k=20,
+            query_affect=CoreAffect(valence=0.95, arousal=0.9),
+        )
+        gated_em.retrieve(
+            contents[7],
+            top_k=8,
+            query_affect=CoreAffect(valence=-0.9, arousal=0.85),
+        )
+        cosine_em.retrieve(
+            contents[15],
+            top_k=6,
+            query_affect=CoreAffect(valence=0.8, arousal=0.7),
+        )
+
+        gated_by_id = {mem.id: mem for mem in gated_em.list_all()}
+        cosine_by_id = {mem.id: mem for mem in cosine_em.list_all()}
+        assert set(gated_by_id) == set(cosine_by_id)
+        assert len(gated_by_id) == 20
+        tags_differ = False
+        for mem_id, gated_mem in gated_by_id.items():
+            cosine_mem = cosine_by_id[mem_id]
+            assert gated_mem.content == cosine_mem.content
+            assert gated_mem.embedding == cosine_mem.embedding
+            if gated_mem.tag != cosine_mem.tag:
+                tags_differ = True
+        assert tags_differ
+
+        def _ids(memories: list[Memory]) -> list[str]:
+            return [mem.id for mem in memories]
+
+        def _cosine_rank(engine: EmotionalMemory, query: str) -> list[tuple[str, float]]:
+            return [
+                (item.memory.id, item.score)
+                for item in engine.retrieve_with_explanations(
+                    query,
+                    top_k=top_k,
+                    precomputed_weights=semantic_only_weights(),
+                )
+            ]
+
+        for query in queries:
+            gated_ids = _ids(gated_em.retrieve_query_gated(query, top_k=top_k))
+            cosine_ids = _ids(
+                cosine_em.retrieve(
+                    query,
+                    top_k=top_k,
+                    precomputed_weights=semantic_only_weights(),
+                )
+            )
+            same_store_cosine_ids = _ids(
+                gated_em.retrieve(
+                    query,
+                    top_k=top_k,
+                    precomputed_weights=semantic_only_weights(),
+                )
+            )
+            assert gated_ids == cosine_ids == same_store_cosine_ids
+            assert _cosine_rank(gated_em, query) == _cosine_rank(cosine_em, query)
 
 
 class TestDelete:
