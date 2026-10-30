@@ -20,12 +20,17 @@ via `retrieval._component_values`). Write-back
 changes content, embeddings, IDs or store membership.
 `InMemoryStore.update` reassigns an existing key, so
 `InMemoryStore.list_all` and `InMemoryStore.search_by_embedding` keep
-candidate order. On near-neutral queries, gated therefore equals cosine
-on the same store even after histories diverge. The reported 8/8
-near-neutral agreement is a wiring check, not evidence of benefit.
-Re-verify only if write-back starts changing content, embeddings or
-membership, the embedder becomes non-deterministic, or an
-approximate-index backend is used.
+candidate order. In the in-memory replay with a deterministic embedder,
+near-neutral gated therefore ranks identically to cosine even after the
+two arms' write-back histories diverge, because both stores keep the
+same content, embeddings, IDs and candidate order. The reported 8/8
+near-neutral agreement across hash-embedder variants is a wiring check,
+not evidence of benefit. Re-verify if write-back starts changing
+content, embeddings or membership, the embedder becomes
+non-deterministic, or a store backend other than `InMemoryStore` is
+used (`SQLiteStore.update` re-inserts the vector row, so tie order is
+not shown to be preserved there; approximate-index backends may also
+reorder).
 Non-neutral gains and near-neutral always-on losses remain empirical
 observations conditional on the dataset, embedder and write-back policy.
 

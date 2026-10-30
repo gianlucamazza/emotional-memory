@@ -359,7 +359,8 @@ class TestNearNeutralGatedEqualsCosineAfterDivergentWriteback:
         assert gated_em.import_memories(snapshot) == 20
         assert cosine_em.import_memories(snapshot) == 20
 
-        # Divergent write-backs: only tags change (retrieval counters, reconsolidation).
+        # Divergent write-backs: only tags change (retrieval counters/timestamps,
+        # predictions, Hebbian resonance links).
         gated_em.retrieve(
             contents[0],
             top_k=20,
