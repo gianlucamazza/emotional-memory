@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Release workflow checks out only the trusted event SHA (`github.sha`)
+  on the unprivileged build job and no longer accepts a user-supplied
+  checkout ref. `workflow_dispatch` is a dry-run (`contents: read`, no
+  secrets, `persist-credentials: false`; reproduce with
+  `gh workflow run --ref`). Privileged publish (OIDC, attestations,
+  GitHub release) runs only on a maintainer-pushed `v*` tag and never
+  checks out the tree — it consumes the build artefacts. Workflow-level
+  permissions stay empty.
+
 - Shared-history receipt workflow checks out the trusted event SHA
   (`github.sha`) on every trigger and no longer accepts a user-supplied
   `inputs.ref`. `pull_request` uses the merge commit rather than the PR
