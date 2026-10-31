@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Release workflow pins `pypa/gh-action-pypi-publish` to
+  `7245906fb61fa33a13554f9d5fb856fe61758086` (`v1.14.3`), the patched
+  release for GHSA-5xjx-3w67-w9x9 (v1.14.2 / `dc37677b` is affected).
+  The unprivileged build job checks out only the trusted event SHA
+  (`github.sha`) and no longer accepts a user-supplied checkout ref.
+  `workflow_dispatch` is a dry-run (`contents: read`, no secrets,
+  `persist-credentials: false`; reproduce with `gh workflow run --ref`).
+  Privileged publish (OIDC, attestations, GitHub release) runs only on
+  a maintainer-pushed `v*` tag and never checks out the tree — it
+  consumes the build artefacts, and `gh` steps set `GH_REPO` so they
+  do not infer the repository from git. Workflow-level permissions
+  stay empty.
+
 - Shared-history receipt workflow checks out the trusted event SHA
   (`github.sha`) on every trigger and no longer accepts a user-supplied
   `inputs.ref`. `pull_request` uses the merge commit rather than the PR

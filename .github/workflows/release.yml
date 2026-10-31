@@ -1,5 +1,17 @@
 name: Release to PyPI
 
+# Checkout policy:
+#   Every trigger uses the default actions/checkout SHA (github.sha).
+#   Do not pass `ref:` — CodeQL actions/untrusted-checkout/medium flags
+#   an explicit checkout of a user-supplied or PR-controlled ref.
+#   push of a v* tag: github.sha is the maintainer-pushed tag (trusted).
+#   workflow_dispatch: dry-run only. Build is contents: read, no secrets,
+#   persist-credentials: false. Reproduce a specific commit with
+#   `gh workflow run --ref <sha-or-tag>`. No user-supplied dispatch input.
+#   Privileged publish (OIDC, attestations, GitHub release) runs only on
+#   a v* tag push and never checks out the tree — it consumes the build
+#   job's artefacts. Write permissions stay off the checkout job.
+
 on:
   push:
     tags: ["v*"]
@@ -8,17 +20,21 @@ on:
 permissions: {}
 
 jobs:
-  publish:
-    name: Build and publish
+  build:
+    name: Build artefacts
     runs-on: ubuntu-latest
-    environment: pypi
     permissions:
-      contents: write
-      id-token: write
-      attestations: write
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Omit `ref` so checkout uses github.sha: the tag commit on a
+      # maintainer tag push, or the SHA GitHub resolved for
+      # `gh workflow run --ref`. persist-credentials is off; this job
+      # has no secrets and no write token.
+      - name: Checkout trusted event SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -73,6 +89,57 @@ jobs:
           upload-artifact: false
           upload-release-assets: false
 
+      - name: Upload release artefacts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: emotional-memory-${{ steps.version.outputs.version }}-dist
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            sbom.cdx.json
+            CHANGELOG.md
+            scripts/verify_pypi_release.py
+
+      - name: Build summary
+        if: always()
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          {
+            echo "## Release build"
+            echo "- Event: ${GITHUB_EVENT_NAME}"
+            echo "- Version: ${RELEASE_VERSION}"
+            echo "- Job status: ${JOB_STATUS}"
+            echo "- Artefacts: uploaded to workflow artifacts (incl. SBOM)"
+            if [ "${GITHUB_EVENT_NAME}" != "push" ]; then
+              echo "- Publish job skipped for workflow_dispatch"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+
+    steps:
+      # No checkout. This job has OIDC, attestations, and contents: write.
+      # Artefacts (wheels, SBOM, changelog, verify script) come from the
+      # unprivileged build of the same trusted tag SHA.
+      # download-artifact restores paths relative to the workspace root
+      # as uploaded (dist/, CHANGELOG.md, scripts/), so dist/*.whl,
+      # CHANGELOG.md, and scripts/verify_pypi_release.py resolve.
+      - name: Download release artefacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: emotional-memory-${{ needs.build.outputs.version }}-dist
+
       - name: Attest build provenance (SLSA)
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
@@ -89,32 +156,21 @@ jobs:
           predicate-type: "https://cyclonedx.org/bom"
           predicate-path: "sbom.cdx.json"
 
-      - name: Upload release artefacts
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: emotional-memory-${{ steps.version.outputs.version }}-dist
-          path: |
-            dist/*.whl
-            dist/*.tar.gz
-            sbom.cdx.json
-
       - name: Publish to PyPI
-        if: github.event_name == 'push'
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           attestations: true
 
       - name: Verify PyPI release
-        if: github.event_name == 'push'
         env:
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
-        run: uv run python scripts/verify_pypi_release.py "$RELEASE_VERSION"
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+        run: python3 scripts/verify_pypi_release.py "$RELEASE_VERSION"
 
       - name: Create GitHub release
-        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
         run: |
           # Extract the matching version section from CHANGELOG.md as release notes.
           notes_file="$(mktemp)"
@@ -143,9 +199,10 @@ jobs:
       - name: Release summary
         if: always()
         env:
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
           JOB_STATUS: ${{ job.status }}
           GH_REPOSITORY: ${{ github.repository }}
+          GH_REPO: ${{ github.repository }}
         run: |
           {
             echo "## Release workflow"
@@ -155,11 +212,7 @@ jobs:
             echo "- Artefacts: uploaded to workflow artifacts (incl. SBOM)"
             echo "- Provenance: SLSA build provenance attestation generated"
             echo "- SBOM: CycloneDX attestation generated"
-            if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
-              echo "- PyPI path: trusted publishing + PEP 740 attestations"
-              echo "- Verify locally: \`gh attestation verify <wheel> -R ${GH_REPOSITORY}\`"
-              echo "- Manual fallback: \`make publish-pypi-manual\`"
-            else
-              echo "- Publish step skipped for workflow_dispatch"
-            fi
+            echo "- PyPI path: trusted publishing + PEP 740 attestations"
+            echo "- Verify locally: \`gh attestation verify <wheel> -R ${GH_REPOSITORY}\`"
+            echo "- Manual fallback: \`make publish-pypi-manual\`"
           } >> "$GITHUB_STEP_SUMMARY"

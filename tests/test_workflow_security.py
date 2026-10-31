@@ -1,4 +1,4 @@
-"""Guards for workflow hardening (Dependabot auto-merge + Docs + receipts)."""
+"""Guards for workflow hardening (Dependabot auto-merge + Docs + receipts + release)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ WORKFLOWS = Path(__file__).resolve().parents[1] / ".github" / "workflows"
 WORKFLOW = WORKFLOWS / "dependabot-auto-merge.yml"
 DOCS_WORKFLOW = WORKFLOWS / "docs.yml"
 RECEIPTS_WORKFLOW = WORKFLOWS / "shared-history-receipts.yml"
+RELEASE_WORKFLOW = WORKFLOWS / "release.yml"
 
 
 def _workflow_text() -> str:
@@ -123,3 +124,108 @@ def test_receipts_workflow_does_not_checkout_dispatch_input_ref() -> None:
     assert code.count("uses: actions/checkout") == 1
     dispatch = code.split("workflow_dispatch:", 1)[1].split("push:", 1)[0]
     assert "inputs:" not in dispatch
+
+
+def _release_text() -> str:
+    return RELEASE_WORKFLOW.read_text(encoding="utf-8")
+
+
+def _release_code() -> str:
+    return "\n".join(
+        line for line in _release_text().splitlines() if not line.lstrip().startswith("#")
+    )
+
+
+def test_release_workflow_does_not_checkout_untrusted_ref() -> None:
+    text = _release_text()
+    code = _release_code()
+    assert "github.event.pull_request.head" not in text
+    assert "github.head_ref" not in code
+    assert "persist-credentials: false" in code
+    assert code.count("persist-credentials: false") == 1
+    assert "name: Checkout trusted event SHA" in code
+    assert code.count("uses: actions/checkout") == 1
+    after_checkout = code.split("uses: actions/checkout", 1)[1]
+    checkout_block = after_checkout.split("\n      - ", 1)[0]
+    assert "ref:" not in checkout_block
+
+
+def test_release_workflow_write_job_does_not_checkout() -> None:
+    text = _release_text()
+    head, _, jobs = text.partition("jobs:")
+    assert "permissions: {}" in head
+    publish = jobs.split("\n  publish:", 1)[1]
+    assert "actions/checkout@" not in publish
+    assert "contents: write" in publish
+    assert "id-token: write" in publish
+    assert "attestations: write" in publish
+    build = jobs.split("\n  build:", 1)[1].split("\n  publish:", 1)[0]
+    assert "contents: read" in build
+    assert "contents: write" not in build
+    assert "id-token: write" not in build
+    assert "attestations: write" not in build
+    assert "actions/checkout@" in build
+
+
+def test_release_workflow_publish_job_is_tag_push_only() -> None:
+    """Privileged publish (OIDC / release) runs only on a maintainer-pushed v* tag."""
+    code = _release_code()
+    text = _release_text()
+    assert "github.event_name == 'push'" in code
+    assert "startsWith(github.ref, 'refs/tags/v')" in code
+    publish = text.split("\n  publish:", 1)[1]
+    publish_code = "\n".join(
+        line for line in publish.splitlines() if not line.lstrip().startswith("#")
+    )
+    assert "github.event_name == 'push'" in publish_code
+    assert "startsWith(github.ref, 'refs/tags/v')" in publish_code
+    assert "gh-action-pypi-publish" in publish_code
+    build = text.split("\n  build:", 1)[1].split("\n  publish:", 1)[0]
+    assert "gh-action-pypi-publish" not in build
+    assert "actions/attest@" not in build
+
+
+def test_release_workflow_does_not_checkout_dispatch_input_ref() -> None:
+    """Dry-run uses `gh workflow run --ref`, not a user-supplied checkout ref."""
+    text = _release_text()
+    code = _release_code()
+    assert "inputs.ref" not in text
+    assert "ref: ${{ inputs." not in code
+    dispatch = code.split("workflow_dispatch:", 1)[1].split("permissions:", 1)[0]
+    assert "inputs:" not in dispatch
+
+
+def test_release_workflow_pins_download_artifact_to_sha() -> None:
+    text = _release_text()
+    assert re.search(
+        r"actions/download-artifact@[0-9a-f]{40}",
+        text,
+    ), "actions/download-artifact must be SHA-pinned"
+    assert "secrets." not in _release_code()
+
+
+def test_release_workflow_pins_pypi_publish_to_patched_sha() -> None:
+    """v1.14.2 (dc37677b) is GHSA-5xjx-3w67-w9x9; pin the patched v1.14.3 SHA."""
+    text = _release_text()
+    assert "pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086" in text
+    assert "dc37677b2e1c63e2034f94d8a5b11f265b73ba33" not in text
+    assert re.search(
+        r"pypa/gh-action-pypi-publish@[0-9a-f]{40}",
+        text,
+    ), "pypa/gh-action-pypi-publish must be SHA-pinned"
+
+
+def test_release_publish_gh_steps_set_gh_repo() -> None:
+    """Publish has no checkout, so every `gh ` invocation needs GH_REPO."""
+    publish = _release_text().split("\n  publish:", 1)[1]
+    gh_steps = 0
+    for step in publish.split("\n      - ")[1:]:
+        if "\n        run:" not in step and not step.lstrip().startswith("run:"):
+            continue
+        run = step.split("run:", 1)[1]
+        if "gh " not in run:
+            continue
+        gh_steps += 1
+        assert "GH_REPO:" in step
+        assert "GH_REPO: ${{ github.repository }}" in step
+    assert gh_steps >= 1, "expected at least one publish step that calls gh"
