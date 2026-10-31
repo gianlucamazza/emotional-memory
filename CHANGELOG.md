@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   secrets, `persist-credentials: false`; reproduce with
   `gh workflow run --ref`). Privileged publish (OIDC, attestations,
   GitHub release) runs only on a maintainer-pushed `v*` tag and never
-  checks out the tree — it consumes the build artefacts. Workflow-level
-  permissions stay empty.
+  checks out the tree — it consumes the build artefacts, and `gh`
+  steps set `GH_REPO` so they do not infer the repository from git.
+  Workflow-level permissions stay empty.
 
 - Shared-history receipt workflow checks out the trusted event SHA
   (`github.sha`) on every trigger and no longer accepts a user-supplied

@@ -202,3 +202,19 @@ def test_release_workflow_pins_download_artifact_to_sha() -> None:
         text,
     ), "actions/download-artifact must be SHA-pinned"
     assert "secrets." not in _release_code()
+
+
+def test_release_publish_gh_steps_set_gh_repo() -> None:
+    """Publish has no checkout, so every `gh ` invocation needs GH_REPO."""
+    publish = _release_text().split("\n  publish:", 1)[1]
+    gh_steps = 0
+    for step in publish.split("\n      - ")[1:]:
+        if "\n        run:" not in step and not step.lstrip().startswith("run:"):
+            continue
+        run = step.split("run:", 1)[1]
+        if "gh " not in run:
+            continue
+        gh_steps += 1
+        assert "GH_REPO:" in step
+        assert "GH_REPO: ${{ github.repository }}" in step
+    assert gh_steps >= 1, "expected at least one publish step that calls gh"
