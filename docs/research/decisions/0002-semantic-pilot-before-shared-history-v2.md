@@ -102,6 +102,23 @@ and non-neutral (`abs(v) >= tau`) strata; identify boundary cases explicitly.
 Use normal write-backs as the primary pilot condition and read-only as a
 mechanism diagnostic, not additional independent observations.
 
+Dipankar Sarkar observed that gated-versus-cosine top-1 discordant pairs
+on `shared_history_recall_v1` (hash embedder, commit
+`441207d13f83b3dbefe4f17039ff68707072085f`) differ by write-back mode.
+Write-back: `b=1`, `c=0` on bakery `bk_q_inspection_not_gasket`.
+Read-only: `b=1`, `c=0` on ferry `fs_q_no_sailing`. Both are query 3 of 3.
+Our follow-up ablation, swapping one tag field at a time before query 3,
+attributed both to carry-over: the reconsolidated `core_affect` for the
+ferry, and `core_affect` together with `retrieval_count` for the bakery.
+
+Freeze this labelled sensitivity rule as part of the pilot protocol.
+Pairs discordant under write-back only are labelled
+`carry-over-dependent`. Pairs discordant under read-only only are
+labelled `carry-over-suppressed`. Report primary `b`, `c` and ICC both
+with and without carry-over-dependent pairs. This is a sensitivity
+analysis, not an exclusion. Dropping only write-back-only pairs would
+bias the result toward read-only.
+
 For each comparison against cosine and each stratum, retain aligned query IDs
 and top-1 correctness, and report both-correct, both-wrong, method-only-correct
 (`b`) and cosine-only-correct (`c`). Report `b+c`, `(b+c)/N` and `(b-c)/N`.
@@ -126,9 +143,12 @@ of discordance incidence does not by itself specify variance of the paired
 effect. Ranking disagreement is not the definition of either variable.
 
 Publish a scenario table with query counts, stratum counts, `b`, `c`, discordance
-rates and signed effects. Predeclare in the separate pilot protocol the
-observed-scale ICC estimator for `D_i`, its uncertainty procedure, and handling
-of sparse strata, unequal cluster sizes and boundary/degenerate estimates.
+rates and signed effects. Include a column that marks each discordant pair
+as write-back only, read-only only, or both. Report that column per arm
+and stratum, listing the discordant query IDs per mode. Predeclare in the
+separate pilot protocol the observed-scale ICC estimator for `D_i`, its
+uncertainty procedure, and handling of sparse strata, unequal cluster sizes
+and boundary/degenerate estimates.
 Report the exploratory ICC and uncertainty when estimable. If outcomes are
 constant, the fit is unidentified, or a stratum has insufficient informative
 clusters, report it as not estimable with the reason; never substitute zero.
