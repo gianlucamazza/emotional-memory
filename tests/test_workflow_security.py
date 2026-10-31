@@ -1,4 +1,4 @@
-"""Guards for workflow hardening (Dependabot auto-merge + Docs deploy)."""
+"""Guards for workflow hardening (Dependabot auto-merge + Docs + receipts)."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ from pathlib import Path
 WORKFLOWS = Path(__file__).resolve().parents[1] / ".github" / "workflows"
 WORKFLOW = WORKFLOWS / "dependabot-auto-merge.yml"
 DOCS_WORKFLOW = WORKFLOWS / "docs.yml"
+RECEIPTS_WORKFLOW = WORKFLOWS / "shared-history-receipts.yml"
 
 
 def _workflow_text() -> str:
@@ -77,3 +78,48 @@ def test_docs_workflow_requires_successful_same_repo_main_push() -> None:
     assert "github.event.workflow_run.head_repository.full_name == github.repository" in text
     assert "github.event.workflow_run.head_branch == 'main'" in text
     assert "github.event.workflow_run.conclusion == 'success'" in text
+
+
+def _receipts_text() -> str:
+    return RECEIPTS_WORKFLOW.read_text(encoding="utf-8")
+
+
+def _receipts_code() -> str:
+    return "\n".join(
+        line for line in _receipts_text().splitlines() if not line.lstrip().startswith("#")
+    )
+
+
+def test_receipts_workflow_does_not_checkout_pr_head() -> None:
+    text = _receipts_text()
+    code = _receipts_code()
+    assert "github.event.pull_request.head" not in text
+    assert "github.head_ref" not in code
+    assert "persist-credentials: false" in code
+    assert code.count("persist-credentials: false") == 1
+    assert "name: Checkout trusted event SHA" in code
+    after_checkout = code.split("uses: actions/checkout", 1)[1]
+    checkout_block = after_checkout.split("\n      - ", 1)[0]
+    assert "ref:" not in checkout_block
+
+
+def test_receipts_workflow_keeps_unprivileged_receipt_permissions() -> None:
+    text = _receipts_text()
+    head, _, jobs = text.partition("jobs:")
+    assert "permissions: {}" in head
+    assert "contents: write" not in text
+    assert "contents: read" in jobs
+    assert "secrets." not in _receipts_code()
+    assert "pull_request:" in head
+    assert "workflow_dispatch:" in head
+
+
+def test_receipts_workflow_does_not_checkout_dispatch_input_ref() -> None:
+    """Reproduction uses `gh workflow run --ref`, not a user-supplied checkout ref."""
+    text = _receipts_text()
+    code = _receipts_code()
+    assert "inputs.ref" not in text
+    assert "ref: ${{ inputs." not in code
+    assert code.count("uses: actions/checkout") == 1
+    dispatch = code.split("workflow_dispatch:", 1)[1].split("push:", 1)[0]
+    assert "inputs:" not in dispatch
