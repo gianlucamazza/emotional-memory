@@ -204,6 +204,17 @@ def test_release_workflow_pins_download_artifact_to_sha() -> None:
     assert "secrets." not in _release_code()
 
 
+def test_release_workflow_pins_pypi_publish_to_patched_sha() -> None:
+    """v1.14.2 (dc37677b) is GHSA-5xjx-3w67-w9x9; pin the patched v1.14.3 SHA."""
+    text = _release_text()
+    assert "pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086" in text
+    assert "dc37677b2e1c63e2034f94d8a5b11f265b73ba33" not in text
+    assert re.search(
+        r"pypa/gh-action-pypi-publish@[0-9a-f]{40}",
+        text,
+    ), "pypa/gh-action-pypi-publish must be SHA-pinned"
+
+
 def test_release_publish_gh_steps_set_gh_repo() -> None:
     """Publish has no checkout, so every `gh ` invocation needs GH_REPO."""
     publish = _release_text().split("\n  publish:", 1)[1]
