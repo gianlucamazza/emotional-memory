@@ -5,17 +5,20 @@ name: Shared-history receipts
 # a reference run is checked outside CI.
 #
 # Checkout policy:
-#   workflow_dispatch: optional `ref` input (repo-write only), else the
-#   triggering SHA.
-#   push to main: default checkout of github.sha (publishable receipt).
-#   pull_request: default checkout of github.sha, the merge commit.
-#   Actions already evaluates this workflow from that merge, so a
-#   path-filtered workflow-only PR still tests its own YAML. Do not pass
-#   a PR-head ref: CodeQL actions/untrusted-checkout/medium flags that
-#   explicit checkout even in this unprivileged job. The pull_request
-#   path is safe as a fork CI run: no secrets, persist-credentials:
-#   false, contents: read only, and the tree is the trusted merge SHA
-#   rather than the PR tip. Path-filtered; not a general gate.
+#   Every trigger uses the default actions/checkout SHA (github.sha).
+#   Do not pass `ref:` — CodeQL actions/untrusted-checkout/medium flags
+#   an explicit checkout of a user-supplied or PR-controlled ref even
+#   in this unprivileged job.
+#   workflow_dispatch: the ref the run was dispatched against
+#   (`gh workflow run --ref <sha-or-branch>`). No user-supplied
+#   dispatch input.
+#   push to main: the push SHA (publishable receipt).
+#   pull_request: the merge commit. Actions already evaluates this
+#   workflow from that merge, so a path-filtered workflow-only PR
+#   still tests its own YAML. The pull_request path is safe as a
+#   fork CI run: no secrets, persist-credentials: false, contents:
+#   read only, and the tree is the trusted merge SHA rather than
+#   the PR tip. Path-filtered; not a general gate.
 #   Publishable receipts come only from push-to-main or workflow_dispatch.
 #
 # retention-days: 90 is requested; the effective retention is capped by repo/org settings and may be shorter.
@@ -23,14 +26,6 @@ name: Shared-history receipts
 
 on:
   workflow_dispatch:
-    inputs:
-      ref:
-        description: >-
-          Git SHA or ref to check out and reproduce. Empty uses the
-          triggering SHA of this run.
-        type: string
-        required: false
-        default: ""
   push:
     branches: ["main"]
     paths:
@@ -63,22 +58,13 @@ jobs:
       ARTIFACT_DIR: ${{ github.workspace }}/shared-history-receipts-out
 
     steps:
-      # pull_request and push: omit `ref` so checkout uses github.sha
-      # (merge commit on pull_request). That is the trusted event SHA;
-      # persist-credentials is off; this job has no secrets.
+      # Omit `ref` so checkout uses github.sha: merge commit on
+      # pull_request, push SHA on main, or the SHA GitHub resolved
+      # for `gh workflow run --ref`. persist-credentials is off;
+      # this job has no secrets.
       - name: Checkout trusted event SHA
-        if: github.event_name != 'workflow_dispatch' || inputs.ref == ''
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          persist-credentials: false
-
-      # workflow_dispatch `ref` is repo-write only (not a PR-controlled
-      # checkout). Empty input uses the trusted event SHA step above.
-      - name: Checkout dispatch reproduction ref
-        if: github.event_name == 'workflow_dispatch' && inputs.ref != ''
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.ref }}
           persist-credentials: false
 
       - name: Set up uv

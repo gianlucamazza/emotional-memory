@@ -96,11 +96,11 @@ def test_receipts_workflow_does_not_checkout_pr_head() -> None:
     assert "github.event.pull_request.head" not in text
     assert "github.head_ref" not in code
     assert "persist-credentials: false" in code
-    assert code.count("persist-credentials: false") >= 2
-    assert "ref: ${{ inputs.ref }}" in code
-    trusted = code.split("Checkout dispatch reproduction ref", 1)[0]
-    assert "name: Checkout trusted event SHA" in trusted
-    assert "ref:" not in trusted.split("uses: actions/checkout", 1)[1]
+    assert code.count("persist-credentials: false") == 1
+    assert "name: Checkout trusted event SHA" in code
+    after_checkout = code.split("uses: actions/checkout", 1)[1]
+    checkout_block = after_checkout.split("\n      - ", 1)[0]
+    assert "ref:" not in checkout_block
 
 
 def test_receipts_workflow_keeps_unprivileged_receipt_permissions() -> None:
@@ -112,3 +112,14 @@ def test_receipts_workflow_keeps_unprivileged_receipt_permissions() -> None:
     assert "secrets." not in _receipts_code()
     assert "pull_request:" in head
     assert "workflow_dispatch:" in head
+
+
+def test_receipts_workflow_does_not_checkout_dispatch_input_ref() -> None:
+    """Reproduction uses `gh workflow run --ref`, not a user-supplied checkout ref."""
+    text = _receipts_text()
+    code = _receipts_code()
+    assert "inputs.ref" not in text
+    assert "ref: ${{ inputs." not in code
+    assert code.count("uses: actions/checkout") == 1
+    dispatch = code.split("workflow_dispatch:", 1)[1].split("push:", 1)[0]
+    assert "inputs:" not in dispatch
