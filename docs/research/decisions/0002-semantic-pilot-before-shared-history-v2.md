@@ -107,8 +107,9 @@ on `shared_history_recall_v1` (hash embedder, commit
 `441207d13f83b3dbefe4f17039ff68707072085f`) differ by write-back mode.
 Write-back: `b=1`, `c=0` on bakery `bk_q_inspection_not_gasket`.
 Read-only: `b=1`, `c=0` on ferry `fs_q_no_sailing`. Both are query 3 of 3.
-A one-field ablation attributed both to carry-over: the reconsolidated
-tag `core_affect`, plus `retrieval_count` for the bakery.
+Our follow-up ablation, swapping one tag field at a time before query 3,
+attributed both to carry-over: the reconsolidated `core_affect` for the
+ferry, and `core_affect` together with `retrieval_count` for the bakery.
 
 Freeze this labelled sensitivity rule as part of the pilot protocol.
 Pairs discordant under write-back only are labelled
