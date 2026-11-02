@@ -29,6 +29,8 @@ short_description: Source for a private ZeroGPU AFT memory demo
 
 # `demo/zerogpu/`
 
+Source: [gianlucamazza/emotional-memory](https://github.com/gianlucamazza/emotional-memory)
+
 This folder is the source tree for a private ZeroGPU Space (not yet public).
 That Space is to be synced **verbatim** from these files at a merge SHA of this
 repository: copy `app.py`, `requirements.txt`, and this `README.md` as they
