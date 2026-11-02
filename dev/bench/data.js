@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1793435357591,
+  "lastUpdate": 1793609417630,
   "repoUrl": "https://github.com/gianlucamazza/emotional-memory",
   "entries": {
     "Benchmark": [
@@ -32658,6 +32658,247 @@ window.BENCHMARK_DATA = {
             "unit": "iter/sec",
             "range": "stddev: 0.000006995554017964119",
             "extra": "mean: 58.20015752320877 usec\nrounds: 8932"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d39e532be345491fd55155c1ef4024a8a48d03d",
+          "message": "build(deps): bump the github-actions group with 5 updates (#198)\n\nBumps the github-actions group with 5 updates:\n\n| Package | From | To |\n| --- | --- | --- |\n| [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv) | `10.3.0` | `10.3.2` |\n| [actions/setup-python](https://github.com/actions/setup-python) | `7.0.0` | `7.1.0` |\n| [github/codeql-action/init](https://github.com/github/codeql-action) | `3.39.1` | `4.39.1` |\n| [github/codeql-action/analyze](https://github.com/github/codeql-action) | `3.39.1` | `4.39.1` |\n| [zizmorcore/zizmor-action](https://github.com/zizmorcore/zizmor-action) | `0.7.1` | `0.8.0` |\n\n\nUpdates `astral-sh/setup-uv` from 10.3.0 to 10.3.2\n- [Release notes](https://github.com/astral-sh/setup-uv/releases)\n- [Commits](https://github.com/astral-sh/setup-uv/compare/1c37ad07a6a961277cf70c0d37d6f313000f5884...07a047e608db84b3d8c06cd9a7c7dcc9c355c18e)\n\nUpdates `actions/setup-python` from 7.0.0 to 7.1.0\n- [Release notes](https://github.com/actions/setup-python/releases)\n- [Commits](https://github.com/actions/setup-python/compare/5fda3b95a4ea91299a34e894583c3862153e4b97...6d4fd22b20465ccc0f7354476588e8df7c9ca0e0)\n\nUpdates `github/codeql-action/init` from 3.39.1 to 4.39.1\n- [Release notes](https://github.com/github/codeql-action/releases)\n- [Changelog](https://github.com/github/codeql-action/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/github/codeql-action/compare/4bfa242aa49c5f7c6770b98670d354a7dfac05f8...9b3254085494b55a0f7c4c2b3d2d52cc712ce370)\n\nUpdates `github/codeql-action/analyze` from 3.39.1 to 4.39.1\n- [Release notes](https://github.com/github/codeql-action/releases)\n- [Changelog](https://github.com/github/codeql-action/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/github/codeql-action/compare/4bfa242aa49c5f7c6770b98670d354a7dfac05f8...9b3254085494b55a0f7c4c2b3d2d52cc712ce370)\n\nUpdates `zizmorcore/zizmor-action` from 0.7.1 to 0.8.0\n- [Release notes](https://github.com/zizmorcore/zizmor-action/releases)\n- [Commits](https://github.com/zizmorcore/zizmor-action/compare/85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e...53290badfa369cb0bf7ad16342cb62c2fa47ac7b)\n\n---\nupdated-dependencies:\n- dependency-name: astral-sh/setup-uv\n  dependency-version: 10.3.2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n  dependency-group: github-actions\n- dependency-name: actions/setup-python\n  dependency-version: 7.1.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n  dependency-group: github-actions\n- dependency-name: github/codeql-action/init\n  dependency-version: 4.39.1\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n  dependency-group: github-actions\n- dependency-name: github/codeql-action/analyze\n  dependency-version: 4.39.1\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n  dependency-group: github-actions\n- dependency-name: zizmorcore/zizmor-action\n  dependency-version: 0.8.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n  dependency-group: github-actions\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-11-02T09:42:41+01:00",
+          "tree_id": "396f43d49040b5b871b840024931b5073b32ad1e",
+          "url": "https://github.com/gianlucamazza/emotional-memory/commit/7d39e532be345491fd55155c1ef4024a8a48d03d"
+        },
+        "date": 1793609417245,
+        "tool": "pytest",
+        "benches": [
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_single",
+            "value": 493.868144015543,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0008437090820180406",
+            "extra": "mean: 2.0248319558925187 msec\nrounds: 1451"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_with_resonance",
+            "value": 478.80006917439965,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000995987991303676",
+            "extra": "mean: 2.088554418390773 msec\nrounds: 1305"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_no_resonance",
+            "value": 452.3366715936812,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000885880656180388",
+            "extra": "mean: 2.210742711787618 msec\nrounds: 1544"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[10]",
+            "value": 327.3543640105097,
+            "unit": "iter/sec",
+            "range": "stddev: 0.001912217719503402",
+            "extra": "mean: 3.0547935507830744 msec\nrounds: 2235"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[100]",
+            "value": 491.81825141181287,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0007459430379040805",
+            "extra": "mean: 2.033271431325294 msec\nrounds: 1245"
+          },
+          {
+            "name": "benchmarks/perf/bench_encode.py::bench_encode_scaling[1000]",
+            "value": 328.5444398880985,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00035168281828272383",
+            "extra": "mean: 3.0437282710996354 msec\nrounds: 391"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_memory_per_record",
+            "value": 155599.27196983027,
+            "unit": "iter/sec",
+            "range": "stddev: 8.224320287292729e-7",
+            "extra": "mean: 6.426765288425603 usec\nrounds: 43219"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[100]",
+            "value": 12.231165056673523,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00010587985170626348",
+            "extra": "mean: 81.75836033333421 msec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[1000]",
+            "value": 0.5590205684602453,
+            "unit": "iter/sec",
+            "range": "stddev: 0.01856993408000186",
+            "extra": "mean: 1.7888429450000014 sec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_footprint.py::bench_store_footprint[5000]",
+            "value": 0.024809819733054583,
+            "unit": "iter/sec",
+            "range": "stddev: 2.20520975908969",
+            "extra": "mean: 40.30662095733334 sec\nrounds: 3"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[50]",
+            "value": 3488.1500889863737,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000009671238018664917",
+            "extra": "mean: 286.6849116262057 usec\nrounds: 2331"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[200]",
+            "value": 891.9065772388652,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0000196437941742744",
+            "extra": "mean: 1.1211936603223251 msec\nrounds: 683"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_resonance_build[500]",
+            "value": 354.4708082495714,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00004850057861589002",
+            "extra": "mean: 2.821106778688338 msec\nrounds: 244"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_encode_with_large_resonance_graph",
+            "value": 440.2161585219229,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0004344390252356401",
+            "extra": "mean: 2.2716112996797224 msec\nrounds: 624"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[100-1]",
+            "value": 12404.461124864778,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000003657711657046888",
+            "extra": "mean: 80.61615816550847 usec\nrounds: 6803"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[100-2]",
+            "value": 12354.198613011737,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00000403433501081944",
+            "extra": "mean: 80.94414144732757 usec\nrounds: 6992"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[500-1]",
+            "value": 1920.5845540411271,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000013038122886252924",
+            "extra": "mean: 520.6748111640735 usec\nrounds: 842"
+          },
+          {
+            "name": "benchmarks/perf/bench_resonance.py::bench_spreading_activation[500-2]",
+            "value": 1931.2349850893063,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000014750807577215313",
+            "extra": "mean: 517.803378522452 usec\nrounds: 1313"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[100]",
+            "value": 1147.7764200995275,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00003502038793298253",
+            "extra": "mean: 871.2498205123318 usec\nrounds: 936"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[1000]",
+            "value": 370.9984060537091,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00005679920669045345",
+            "extra": "mean: 2.6954293702685908 msec\nrounds: 1083"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_top5[10000]",
+            "value": 20.951102468003366,
+            "unit": "iter/sec",
+            "range": "stddev: 0.0028370859101060383",
+            "extra": "mean: 47.73018515503923 msec\nrounds: 645"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[1]",
+            "value": 448.89246301809254,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00004255635036968651",
+            "extra": "mean: 2.227705034913217 msec\nrounds: 2406"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[5]",
+            "value": 371.2218258694973,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00003961794797832765",
+            "extra": "mean: 2.693807126393342 msec\nrounds: 1076"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[10]",
+            "value": 303.91736638914244,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00005024173099716641",
+            "extra": "mean: 3.2903680756419105 msec\nrounds: 661"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_varying_topk[25]",
+            "value": 201.68347135048583,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00005737235988335207",
+            "extra": "mean: 4.958264518673414 msec\nrounds: 241"
+          },
+          {
+            "name": "benchmarks/perf/bench_retrieve.py::bench_retrieve_with_reconsolidation",
+            "value": 924.1689053379047,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00002291277785077456",
+            "extra": "mean: 1.0820532850911806 msec\nrounds: 1147"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_cosine_rank_fixed_pool[15]",
+            "value": 5391.152517564725,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000007904006553517197",
+            "extra": "mean: 185.48909472361154 usec\nrounds: 4814"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_cosine_rank_fixed_pool[1000]",
+            "value": 79.15024806649832,
+            "unit": "iter/sec",
+            "range": "stddev: 0.00013371777173545377",
+            "extra": "mean: 12.634199189872998 msec\nrounds: 79"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_aft_plan_fixed_pool[15]",
+            "value": 2248.739207634187,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000012243547475308733",
+            "extra": "mean: 444.6936294814114 usec\nrounds: 502"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_aft_plan_fixed_pool[1000]",
+            "value": 28.672131509677303,
+            "unit": "iter/sec",
+            "range": "stddev: 0.006020978141343292",
+            "extra": "mean: 34.87707217241536 msec\nrounds: 29"
+          },
+          {
+            "name": "benchmarks/perf/bench_scoring.py::bench_inmemory_search_cached",
+            "value": 20439.81549239092,
+            "unit": "iter/sec",
+            "range": "stddev: 0.000004364676895073683",
+            "extra": "mean: 48.924120688480166 usec\nrounds: 14583"
           }
         ]
       }
