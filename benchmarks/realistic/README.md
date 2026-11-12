@@ -131,6 +131,13 @@ python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 
   --read-only-retrieves
 ```
 
+The semantic exploratory protocol for this same 36-query / 12-scenario file is
+[`benchmarks/preregistration_addendum_ab_semantic_pilot.md`](../preregistration_addendum_ab_semantic_pilot.md)
+(ADR 0002, issue #193). It is unexecuted. Do not treat `--embedder sbert-mini`
+/ MiniLM as that protocol’s model; Addendum AB freezes `sbert-bge` /
+`BAAI/bge-small-en-v1.5` at a pinned Hub revision. Do not run it until that
+protocol is merged. It does not change these hash receipts.
+
 Scores from these commands are a mechanism test, not a semantic-quality result.
 They may be committed or published (including on the Hugging Face dataset card)
 only with a receipt: the repo commit SHA they were produced at; the report

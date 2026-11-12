@@ -38,9 +38,15 @@ contrasts do not demonstrate equivalence. Appraisal correlation alone does not
 identify the cause of a retrieval failure. Historical reports remain intact;
 these qualifications govern their interpretation.
 
-The single planned successor is the [MSC human-grounded study](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/msc/protocol.md)
+The single planned **human-grounded** successor is the [MSC study](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/msc/protocol.md)
 ([accepted decision](decisions/0001-external-human-retrieval.md)). It has not run.
 Human recruitment, pilot, powered N and frozen registration remain prerequisites.
+
+A separate development-set track, [Addendum AB](https://github.com/gianlucamazza/emotional-memory/blob/main/benchmarks/preregistration_addendum_ab_semantic_pilot.md)
+([ADR 0002](decisions/0002-semantic-pilot-before-shared-history-v2.md)),
+pre-registers a semantic-embedder rerun of the existing 36-query / 12-scenario
+`shared_history_recall_v1` set. It has not run. It does not replace ADR 0001,
+change published scores, or authorize a confirmatory sample size.
 
 ---
 

@@ -51,9 +51,12 @@ the reader-friendly ladder is
 | Y                    | Query-affect-conditioned gate (Hg1/Hg2)                        | **PASS (Branch A)** — safe wrapper: recovers the neutral-query penalty, preserves the on-regime gain | `preregistration_addendum_y_query_affect_gate_closure.md`                                                 |
 | Z                    | Held-out learned retrieval profile (Hz1/Hz2)                   | **Branch B** — Hz1 FAIL (0/3 break, no learned linear profile beats cosine); Hz2 PASS (curated +0.185 vs fixed) | `preregistration_addendum_z_learned_profile_closure.md`                                                   |
 | AA                   | Wrong-person memory retrieval stress test                      | Exploratory; no PASS/FAIL claim                                                                         | `preregistration_addendum_aa_false_memory.md`                                                             |
+| AB                   | Semantic shared-history exploratory pilot (ADR 0002 / #193)    | Unexecuted protocol; not confirmation                                                                   | `preregistration_addendum_ab_semantic_pilot.md`                                                           |
 
 Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
-affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`.
+affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`,
+`preregistration_addendum_ab_semantic_pilot.md` (semantic shared-history
+exploratory pilot; 36 queries / 12 scenarios preserved; no scores).
 
 ## Harness directories
 
