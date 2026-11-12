@@ -43,6 +43,12 @@ from benchmarks.realistic.adapters import (
     ReplayRetrievedItem,
 )
 from benchmarks.realistic.evaluation import ranking_metrics
+from benchmarks.realistic.shared_history import (
+    DEFAULT_SEMANTIC_MODEL,
+    DEFAULT_SHARED_HISTORY_EMBEDDER,
+    SEMANTIC_EMBEDDER_ALIASES,
+    resolve_hash_salts,
+)
 from emotional_memory import Embedder, EmotionalMemoryConfig
 from emotional_memory.engine_shared import DEFAULT_QUERY_AFFECT_GATE_TAU
 
@@ -638,6 +644,16 @@ def _aggregate_by_challenge_type(
     return aggregates
 
 
+_EMBEDDER_CHOICES = (
+    "hash",
+    "sbert-bge",
+    "sbert-mini",
+    "e5-small-v2",
+    "multilingual-e5-small",
+    "sentence-transformers",
+)
+
+
 def _build_embedder(embedder_name: str | None) -> Embedder | None:
     """Resolve embedder name to an Embedder instance. Returns None for hash (adapter default)."""
     if embedder_name is None or embedder_name == "hash":
@@ -657,9 +673,12 @@ def _build_embedder(embedder_name: str | None) -> Embedder | None:
         return SentenceTransformerEmbedder("intfloat/e5-small-v2")
     if embedder_name == "multilingual-e5-small":
         return SentenceTransformerEmbedder("intfloat/multilingual-e5-small")
+    if embedder_name == "sentence-transformers":
+        return SentenceTransformerEmbedder(DEFAULT_SEMANTIC_MODEL)
     raise ValueError(
         f"Unknown embedder: {embedder_name!r}. "
-        "Choices: hash, sbert-bge, sbert-mini, e5-small-v2, multilingual-e5-small"
+        "Choices: hash, sbert-bge, sbert-mini, e5-small-v2, multilingual-e5-small, "
+        "sentence-transformers"
     )
 
 
@@ -1174,7 +1193,10 @@ def main() -> None:
         "--shared-history",
         action="store_true",
         help=(
-            "Offline longitudinal replay; requires --embedder hash. "
+            "Offline longitudinal replay. Default embedder is hash "
+            f"({DEFAULT_SHARED_HISTORY_EMBEDDER}). "
+            "Pass --embedder sentence-transformers (or an alias) plus optional "
+            "--embedder-model for a CPU sentence-transformers backend. "
             "Default dataset is the #170 shared-history replay. "
             "Pass --dataset benchmarks/datasets/shared_history_recall_v1.json "
             "for declared timelines (protocol mode shared_history_timeline)."
@@ -1216,15 +1238,48 @@ def main() -> None:
     parser.add_argument(
         "--embedder",
         type=str,
-        default="sbert-bge",
-        choices=["hash", "sbert-bge", "sbert-mini", "e5-small-v2", "multilingual-e5-small"],
+        default=None,
+        choices=list(_EMBEDDER_CHOICES),
         help=(
-            "Embedder backend for AFT and naive_cosine. "
+            "Embedder backend. "
+            "Without --shared-history the default is sbert-bge. "
+            "With --shared-history the default is hash. "
             "'hash' = TokenHashEmbedder (fast, no semantics). "
             "'sbert-bge' = BAAI/bge-small-en-v1.5 (paper-canonical). "
             "'e5-small-v2' = intfloat/e5-small-v2 (Class B cross-embedder). "
             "'multilingual-e5-small' = intfloat/multilingual-e5-small (multilingual, 100+ langs). "
-            "'sbert-mini' = all-MiniLM-L6-v2 (legacy)."
+            "'sbert-mini' / 'sentence-transformers' = "
+            f"{DEFAULT_SEMANTIC_MODEL}."
+        ),
+    )
+    parser.add_argument(
+        "--embedder-model",
+        type=str,
+        default=None,
+        help=(
+            "Hugging Face model id for a sentence-transformers embedder. "
+            f"Default: {DEFAULT_SEMANTIC_MODEL}. "
+            "Ignored when --embedder hash. Shared-history loads the model on CPU."
+        ),
+    )
+    parser.add_argument(
+        "--hash-salt",
+        action="append",
+        default=None,
+        metavar="SALT",
+        help=(
+            "Salt for the shared-history hash embedder. Repeat to run multiple salts. "
+            "Cannot be combined with --hash-salts. Default: one empty salt."
+        ),
+    )
+    parser.add_argument(
+        "--hash-salts",
+        type=int,
+        default=None,
+        metavar="K",
+        help=(
+            "Run the shared-history hash embedder over K generated salts (0..K-1). "
+            "Cannot be combined with --hash-salt."
         ),
     )
     args = parser.parse_args()
@@ -1234,9 +1289,24 @@ def main() -> None:
     out_json, out_md, out_protocol = args.out_json, args.out_md, args.out_protocol
     if args.read_only_retrieves and not args.shared_history:
         parser.error("--read-only-retrieves requires --shared-history")
+    if args.hash_salt is not None and not args.shared_history:
+        parser.error("--hash-salt requires --shared-history")
+    if args.hash_salts is not None and not args.shared_history:
+        parser.error("--hash-salts requires --shared-history")
     if args.shared_history:
-        if args.embedder != "hash" or args.systems != DEFAULT_SYSTEMS:
-            parser.error("--shared-history requires --embedder hash and the default --systems")
+        embedder_name = args.embedder or DEFAULT_SHARED_HISTORY_EMBEDDER
+        if args.systems != DEFAULT_SYSTEMS:
+            parser.error("--shared-history requires the default --systems")
+        if embedder_name != "hash" and embedder_name not in SEMANTIC_EMBEDDER_ALIASES:
+            parser.error(
+                "--shared-history embedder must be 'hash' or a sentence-transformers alias"
+            )
+        if embedder_name != "hash" and (args.hash_salt or args.hash_salts is not None):
+            parser.error("--hash-salt/--hash-salts require --embedder hash")
+        try:
+            salts = resolve_hash_salts(args.hash_salt, args.hash_salts)
+        except ValueError as exc:
+            parser.error(str(exc))
         from benchmarks.realistic.shared_history import run_shared_history
 
         out_json, out_md, out_protocol = shared_history_output_paths(
@@ -1249,9 +1319,12 @@ def main() -> None:
             top_k=args.top_k,
             dataset_path=args.dataset,
             read_only_retrieves=args.read_only_retrieves,
+            embedder_name=embedder_name,
+            embedder_model=args.embedder_model,
+            hash_salts=salts,
         )
     else:
-        emb = _build_embedder(args.embedder)
+        emb = _build_embedder(args.embedder or "sbert-bge")
         results = run_benchmark(
             dataset,
             systems=args.systems,

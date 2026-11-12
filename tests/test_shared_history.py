@@ -2,9 +2,11 @@
 
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from benchmarks.realistic.adapters.base import TokenHashEmbedder
 from benchmarks.realistic.runner import (
     DEFAULT_OUT_JSON,
     DEFAULT_OUT_MD,
@@ -14,9 +16,15 @@ from benchmarks.realistic.runner import (
 )
 from benchmarks.realistic.shared_history import (
     ARMS,
+    DEFAULT_SEMANTIC_MODEL,
+    DEFAULT_SHARED_HISTORY_EMBEDDER,
     EPOCH,
+    HASH_EMBEDDER_VERSION,
     SharedHistoryAdapter,
+    build_shared_history_embedder,
     controlled_runtime,
+    describe_embedder,
+    resolve_hash_salts,
     run_shared_history,
 )
 from emotional_memory import EmotionalMemoryConfig
@@ -143,3 +151,182 @@ def test_shared_history_defaults_do_not_replace_published_results():
     assert out_protocol.name == "results.shared_history.protocol.json"
     explicit = Path("explicit.json")
     assert shared_history_output_paths(explicit, DEFAULT_OUT_MD, DEFAULT_PROTOCOL)[0] == explicit
+
+
+def _ranking_payload(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Comparable ranking fields; ignores receipt metadata that may grow."""
+    payload: list[dict[str, Any]] = []
+    for system in result["systems"]:
+        queries = [
+            {
+                "query_id": query["query_id"],
+                "retrieved_memory_ids": query["retrieved_memory_ids"],
+                "top1_hit": query["top1_hit"],
+                "hit": query["hit"],
+            }
+            for scenario in system["scenarios"]
+            for session in scenario["sessions"]
+            for query in session["queries"]
+        ]
+        payload.append(
+            {
+                "system": system["system"],
+                "metrics": {
+                    key: system["aggregate_metrics"][key]
+                    for key in ("top1_accuracy", "hit_at_k", "query_count")
+                },
+                "queries": queries,
+            }
+        )
+    return payload
+
+
+def test_token_hash_embedder_empty_salt_matches_unsalted() -> None:
+    texts = ["hello world", "same text", "Project Alpha shipped"]
+    unsalted = TokenHashEmbedder()
+    empty_salt = TokenHashEmbedder(salt="")
+    for text in texts:
+        assert unsalted.embed(text) == empty_salt.embed(text)
+
+
+def test_token_hash_embedder_salt_changes_embedding_deterministically() -> None:
+    text = "hello world"
+    baseline = TokenHashEmbedder().embed(text)
+    salted = TokenHashEmbedder(salt="alpha")
+    other = TokenHashEmbedder(salt="beta")
+    assert salted.embed(text) == salted.embed(text)
+    assert salted.embed(text) != baseline
+    assert salted.embed(text) != other.embed(text)
+
+
+def test_resolve_hash_salts_default_and_k() -> None:
+    assert resolve_hash_salts() == [""]
+    assert resolve_hash_salts(hash_salt=["alpha", "beta"]) == ["alpha", "beta"]
+    assert resolve_hash_salts(hash_salts=3) == ["0", "1", "2"]
+    with pytest.raises(ValueError, match="not both"):
+        resolve_hash_salts(hash_salt=["a"], hash_salts=2)
+    with pytest.raises(ValueError, match=">= 1"):
+        resolve_hash_salts(hash_salts=0)
+
+
+def test_shared_history_default_path_matches_explicit_hash() -> None:
+    dataset = small_dataset()
+    implicit = run_shared_history(dataset, seed=7, n_bootstrap=20)
+    explicit = run_shared_history(
+        dataset,
+        seed=7,
+        n_bootstrap=20,
+        embedder=TokenHashEmbedder(),
+        embedder_name=DEFAULT_SHARED_HISTORY_EMBEDDER,
+        hash_salts=[""],
+    )
+    assert _ranking_payload(implicit) == _ranking_payload(explicit)
+    assert implicit["protocol"]["read_only_retrieves"] is False
+    assert implicit["protocol"]["hash_salts"] == [""]
+    assert implicit["protocol"]["embedder"]["name"] == "hash"
+    assert implicit["protocol"]["embedder"]["class"] == "TokenHashEmbedder"
+    assert implicit["protocol"]["embedder"]["version"] == HASH_EMBEDDER_VERSION
+    assert implicit["manifest"]["embedder"]["name"] == "hash"
+    assert implicit["manifest"]["embedder"]["hash_salts"] == [""]
+    assert "salt_runs" not in implicit
+
+
+def test_shared_history_hash_salt_is_recorded_and_changes_ranking_inputs() -> None:
+    dataset = small_dataset()
+    plain = run_shared_history(dataset, seed=7, n_bootstrap=8)
+    salted = run_shared_history(dataset, seed=7, n_bootstrap=8, hash_salts=["alpha"])
+    assert salted["protocol"]["hash_salts"] == ["alpha"]
+    assert salted["protocol"]["embedder"]["hash_salts"] == ["alpha"]
+    assert salted["manifest"]["embedder"]["hash_salts"] == ["alpha"]
+    assert salted["protocol"]["read_only_retrieves"] is False
+    assert TokenHashEmbedder().embed("hello world") != TokenHashEmbedder(salt="alpha").embed(
+        "hello world"
+    )
+    # Different embeddings change stored vectors; ranking payload may or may not
+    # move on this tiny fixture, but traces must differ.
+    assert (
+        plain["systems"][0]["scenarios"][0]["trace"]
+        != salted["systems"][0]["scenarios"][0]["trace"]
+    )
+
+
+def test_shared_history_multiple_hash_salts_emit_salt_runs() -> None:
+    dataset = small_dataset()
+    result = run_shared_history(dataset, seed=7, n_bootstrap=8, hash_salts=["0", "1"])
+    assert result["protocol"]["hash_salts"] == ["0", "1"]
+    assert "salt_runs" in result
+    assert len(result["salt_runs"]) == 2
+    assert result["salt_runs"][0]["protocol"]["hash_salts"] == ["0"]
+    assert result["salt_runs"][1]["protocol"]["hash_salts"] == ["1"]
+    assert (
+        result["salt_runs"][0]["systems"][0]["scenarios"][0]["trace"]
+        != result["salt_runs"][1]["systems"][0]["scenarios"][0]["trace"]
+    )
+
+
+def test_shared_history_read_only_retrieves_always_written() -> None:
+    dataset = small_dataset()
+    writable = run_shared_history(dataset, seed=7, n_bootstrap=8)
+    readonly = run_shared_history(dataset, seed=7, n_bootstrap=8, read_only_retrieves=True)
+    assert writable["protocol"]["read_only_retrieves"] is False
+    assert readonly["protocol"]["read_only_retrieves"] is True
+
+
+def test_semantic_embedder_missing_extra_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    import sys
+    from unittest.mock import patch
+
+    with (
+        patch.dict(sys.modules, {"sentence_transformers": None}),
+        pytest.raises(ImportError, match="sentence-transformers"),
+    ):
+        build_shared_history_embedder("sbert-mini")
+
+
+@pytest.mark.sentence_transformers
+def test_shared_history_semantic_embedder_records_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pytest.importorskip("sentence_transformers")
+    from unittest.mock import MagicMock
+
+    import numpy as np
+
+    fake_model = MagicMock()
+    fake_model.encode.side_effect = lambda input, **_: (
+        np.random.default_rng(0).random((len(input), 384)).astype("float32")
+        if isinstance(input, list)
+        else np.random.default_rng(0).random(384).astype("float32")
+    )
+    mock_cls = MagicMock(return_value=fake_model)
+    monkeypatch.setattr("sentence_transformers.SentenceTransformer", mock_cls)
+
+    embedder = build_shared_history_embedder(
+        "sentence-transformers", embedder_model=DEFAULT_SEMANTIC_MODEL
+    )
+    mock_cls.assert_called_once_with(DEFAULT_SEMANTIC_MODEL, device="cpu")
+    dataset = small_dataset()
+    result = run_shared_history(
+        dataset,
+        seed=7,
+        n_bootstrap=8,
+        embedder=embedder,
+        embedder_name="sentence-transformers",
+        embedder_model=DEFAULT_SEMANTIC_MODEL,
+    )
+    info = result["protocol"]["embedder"]
+    assert info["name"] == "sentence-transformers"
+    assert info["class"] == "SentenceTransformerEmbedder"
+    assert info["model"] == DEFAULT_SEMANTIC_MODEL
+    assert info["device"] == "cpu"
+    assert info["version"]
+    assert result["protocol"]["read_only_retrieves"] is False
+    assert (
+        describe_embedder(
+            embedder,
+            embedder_name="sentence-transformers",
+            embedder_model=DEFAULT_SEMANTIC_MODEL,
+            hash_salts=[""],
+        )["device"]
+        == "cpu"
+    )

@@ -10,15 +10,23 @@ from typing import Any
 
 
 class TokenHashEmbedder:
-    """Deterministic token-hash embedder with light lexical semantics."""
+    """Deterministic token-hash embedder with light lexical semantics.
 
-    def __init__(self, dim: int = 64) -> None:
+    ``salt`` is mixed into each token digest. The empty default is byte-identical
+    to the unsalted SHA-256 token hash used by shared-history receipts.
+    """
+
+    __slots__ = ("_dim", "_salt")
+
+    def __init__(self, dim: int = 64, salt: str = "") -> None:
         self._dim = dim
+        self._salt = salt
 
     def embed(self, text: str) -> list[float]:
         vector = [0.0] * self._dim
         for token in self._tokenize(text):
-            digest = hashlib.sha256(token.encode("utf-8")).digest()
+            payload = token if not self._salt else f"{self._salt}\0{token}"
+            digest = hashlib.sha256(payload.encode("utf-8")).digest()
             index = int.from_bytes(digest[:2], "big") % self._dim
             sign = 1.0 if digest[2] % 2 == 0 else -1.0
             vector[index] += sign
@@ -33,6 +41,9 @@ class TokenHashEmbedder:
     @staticmethod
     def _tokenize(text: str) -> list[str]:
         return ["".join(ch for ch in token.lower() if ch.isalnum()) for token in text.split()]
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}(dim={self._dim}, salt={self._salt!r})"
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:

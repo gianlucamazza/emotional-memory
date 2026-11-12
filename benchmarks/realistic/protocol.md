@@ -76,8 +76,15 @@ Every generated result set should report:
 
 ## Shared-history longitudinal mode (opt-in)
 
-`--shared-history --embedder hash` selects the #170 shared-history replay
-(`shared_history_v1`) when the dataset has no `timeline`. This is a new
+`--shared-history` selects the #170 shared-history replay
+(`shared_history_v1`) when the dataset has no `timeline`. The default embedder
+is the stock hash backend (`--embedder hash`, empty salt). `--embedder` may
+instead name a CPU sentence-transformers alias; `--embedder-model` sets the
+Hugging Face id (default `sentence-transformers/all-MiniLM-L6-v2`) and requires
+the optional `sentence-transformers` extra. `--hash-salt` (repeatable) or
+`--hash-salts K` runs the hash embedder over explicit or generated salts
+(`0..K-1`). Protocol output always includes `read_only_retrieves`, embedder
+name/version/model, and `hash_salts`. This is a new
 protocol, not a reinterpretation of earlier benchmark reports. Each scenario
 starts with an identical empty checkpoint in three independent engine instances:
 

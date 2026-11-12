@@ -40,9 +40,9 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
     :meth:`make_mpnet` — ``all-mpnet-base-v2``, 768 dims, legacy strong baseline.
     """
 
-    __slots__ = ("_model", "_model_name")
+    __slots__ = ("_device", "_model", "_model_name")
 
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2", *, device: str | None = None) -> None:
         try:
             from sentence_transformers import SentenceTransformer
         except ImportError as exc:
@@ -51,8 +51,12 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
                 "Install with: pip install 'emotional-memory[sentence-transformers]'"
             ) from exc
 
-        self._model = SentenceTransformer(model_name)
+        if device is None:
+            self._model = SentenceTransformer(model_name)
+        else:
+            self._model = SentenceTransformer(model_name, device=device)
         self._model_name = model_name
+        self._device = device
 
     def embed(self, text: str) -> list[float]:
         result: list[float] = self._model.encode(text).tolist()
@@ -63,7 +67,9 @@ class SentenceTransformerEmbedder(SequentialEmbedder):
         return result
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(model={self._model_name!r})"
+        if self._device is None:
+            return f"{type(self).__name__}(model={self._model_name!r})"
+        return f"{type(self).__name__}(model={self._model_name!r}, device={self._device!r})"
 
     @classmethod
     def make_bge_small(cls) -> SentenceTransformerEmbedder:

@@ -8,18 +8,19 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from datetime import UTC, datetime, timedelta
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    pass
 from unittest.mock import patch
 from uuid import NAMESPACE_URL, uuid5
+
+if TYPE_CHECKING:
+    from emotional_memory import Embedder
 
 from benchmarks.realistic.adapters.base import (
     ReplayAdapter,
@@ -34,6 +35,102 @@ from emotional_memory.engine_shared import is_query_affect_neutral, semantic_onl
 
 EPOCH = datetime(2026, 1, 1, tzinfo=UTC)
 ARMS = ("cosine", "gated", "always_on")
+DEFAULT_SHARED_HISTORY_EMBEDDER = "hash"
+DEFAULT_SEMANTIC_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+HASH_EMBEDDER_VERSION = "sha256-token-hash"
+SEMANTIC_EMBEDDER_ALIASES: dict[str, str] = {
+    "sbert-mini": DEFAULT_SEMANTIC_MODEL,
+    "sentence-transformers": DEFAULT_SEMANTIC_MODEL,
+    "e5-small-v2": "intfloat/e5-small-v2",
+    "sbert-bge": "BAAI/bge-small-en-v1.5",
+    "multilingual-e5-small": "intfloat/multilingual-e5-small",
+}
+
+
+def resolve_hash_salts(
+    hash_salt: Sequence[str] | None = None,
+    hash_salts: int | None = None,
+) -> list[str]:
+    """Resolve CLI salt flags to the list of salts used for one invocation.
+
+    No flags → a single empty salt (byte-identical to the unsalted hash embedder).
+    ``--hash-salts K`` → ``["0", "1", ..., "K-1"]``.
+    ``--hash-salt`` may be repeated; it cannot be combined with ``--hash-salts``.
+    """
+    if hash_salt and hash_salts is not None:
+        raise ValueError("Pass --hash-salt or --hash-salts, not both")
+    if hash_salts is not None:
+        if hash_salts < 1:
+            raise ValueError("--hash-salts must be >= 1")
+        return [str(index) for index in range(hash_salts)]
+    if hash_salt:
+        return list(hash_salt)
+    return [""]
+
+
+def semantic_model_for(embedder_name: str, embedder_model: str | None = None) -> str:
+    """Return the Hugging Face model id for a semantic shared-history embedder."""
+    if embedder_model:
+        return embedder_model
+    if embedder_name in SEMANTIC_EMBEDDER_ALIASES:
+        return SEMANTIC_EMBEDDER_ALIASES[embedder_name]
+    raise ValueError(
+        f"Unknown shared-history embedder {embedder_name!r}. "
+        "Use 'hash' or a sentence-transformers alias "
+        f"({', '.join(sorted(SEMANTIC_EMBEDDER_ALIASES))}) "
+        "with optional --embedder-model."
+    )
+
+
+def build_shared_history_embedder(
+    embedder_name: str = DEFAULT_SHARED_HISTORY_EMBEDDER,
+    *,
+    embedder_model: str | None = None,
+    hash_salt: str = "",
+) -> Any:
+    """Build the embedder for one shared-history run. Semantic models are CPU-only."""
+    if embedder_name == "hash":
+        return TokenHashEmbedder(salt=hash_salt)
+    model_name = semantic_model_for(embedder_name, embedder_model)
+    try:
+        from emotional_memory.embedders.sentence_transformers import (
+            SentenceTransformerEmbedder,
+        )
+    except ImportError as exc:
+        raise ImportError(
+            "sentence-transformers is required for semantic shared-history embedders.\n"
+            "Install with: pip install 'emotional-memory[sentence-transformers]'"
+        ) from exc
+    return SentenceTransformerEmbedder(model_name, device="cpu")
+
+
+def describe_embedder(
+    embedder: Any,
+    *,
+    embedder_name: str,
+    embedder_model: str | None = None,
+    hash_salts: Sequence[str],
+) -> dict[str, Any]:
+    """Receipt metadata for the embedder actually used."""
+    info: dict[str, Any] = {
+        "name": embedder_name,
+        "class": type(embedder).__name__,
+        "hash_salts": list(hash_salts),
+    }
+    if isinstance(embedder, TokenHashEmbedder):
+        info["dimension"] = embedder._dim
+        info["version"] = HASH_EMBEDDER_VERSION
+        info["model"] = None
+        info["device"] = None
+        return info
+    model_name = getattr(embedder, "_model_name", None)
+    info["model"] = embedder_model or model_name
+    info["device"] = getattr(embedder, "_device", "cpu")
+    try:
+        info["version"] = version("sentence-transformers")
+    except PackageNotFoundError:
+        info["version"] = None
+    return info
 
 
 def digest(value: Any) -> str:
@@ -74,6 +171,7 @@ class SharedHistoryAdapter(ReplayAdapter):
         config: EmotionalMemoryConfig | None = None,
         *,
         read_only_retrieves: bool = False,
+        embedder: Embedder | None = None,
     ) -> None:
         if arm not in ARMS:
             raise ValueError(f"Unsupported arm: {arm}")
@@ -81,6 +179,7 @@ class SharedHistoryAdapter(ReplayAdapter):
         self.scenario_id = scenario_id
         self.seed = seed
         self.read_only_retrieves = read_only_retrieves
+        self.embedder = embedder if embedder is not None else TokenHashEmbedder()
         self.config = (config or EmotionalMemoryConfig()).model_copy(deep=True)
         self.reset()
 
@@ -90,7 +189,7 @@ class SharedHistoryAdapter(ReplayAdapter):
         self.trace: list[dict[str, Any]] = []
         with controlled_runtime(EPOCH, "unused"):
             self.engine = EmotionalMemory(
-                InMemoryStore(), TokenHashEmbedder(), config=self.config.model_copy(deep=True)
+                InMemoryStore(), self.embedder, config=self.config.model_copy(deep=True)
             )
         self.checkpoint = self.snapshot()
 
@@ -217,15 +316,19 @@ def _pairwise_inputs(systems: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return copied
 
 
-def run_shared_history(
+def _run_shared_history_once(
     dataset,
     *,
-    seed: int = 0,
-    n_bootstrap: int = 1000,
-    top_k: int | None = None,
-    config=None,
-    dataset_path: Path | None = None,
-    read_only_retrieves: bool = False,
+    seed: int,
+    n_bootstrap: int,
+    top_k: int | None,
+    config: EmotionalMemoryConfig | None,
+    dataset_path: Path | None,
+    read_only_retrieves: bool,
+    embedder: Embedder,
+    embedder_name: str,
+    embedder_model: str | None,
+    hash_salts: Sequence[str],
 ) -> dict[str, Any]:
     """Run isolated scenarios with a common empty checkpoint, no state resets at queries."""
     from benchmarks.realistic.runner import (
@@ -258,6 +361,7 @@ def run_shared_history(
                 seed,
                 config,
                 read_only_retrieves=read_only_retrieves,
+                embedder=embedder,
             )
             try:
                 report = run_system_on_scenario(
@@ -312,9 +416,22 @@ def run_shared_history(
     )
     if interleaved:
         protocol["event_order"] = "dataset_timeline"
-    if read_only_retrieves:
-        protocol["read_only_retrieves"] = True
-    manifest = reproducibility_manifest(dataset, effective_config, seed=seed, top_k=effective_k)
+    protocol["read_only_retrieves"] = read_only_retrieves
+    embedder_info = describe_embedder(
+        embedder,
+        embedder_name=embedder_name,
+        embedder_model=embedder_model,
+        hash_salts=hash_salts,
+    )
+    protocol["embedder"] = embedder_info
+    protocol["hash_salts"] = list(hash_salts)
+    manifest = reproducibility_manifest(
+        dataset,
+        effective_config,
+        seed=seed,
+        top_k=effective_k,
+        embedder=embedder_info,
+    )
     manifest["query_affect_gate_tau"] = effective_config.query_affect_gate_tau
     protocol["manifest"] = manifest
     return {
@@ -336,3 +453,61 @@ def run_shared_history(
             _pairwise_inputs(systems), baseline="cosine", seed=seed, n_bootstrap=n_bootstrap
         ),
     }
+
+
+def run_shared_history(
+    dataset,
+    *,
+    seed: int = 0,
+    n_bootstrap: int = 1000,
+    top_k: int | None = None,
+    config=None,
+    dataset_path: Path | None = None,
+    read_only_retrieves: bool = False,
+    embedder: Embedder | None = None,
+    embedder_name: str = DEFAULT_SHARED_HISTORY_EMBEDDER,
+    embedder_model: str | None = None,
+    hash_salts: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    """Run isolated scenarios with a common empty checkpoint, no state resets at queries.
+
+    ``hash_salts`` defaults to a single empty salt so the stock hash embedder is
+    byte-identical to the unsalted path. Multiple salts produce one full result
+    per salt under ``salt_runs``; the first salt is also expanded at top level
+    so existing report writers keep working.
+    """
+    salts = list(hash_salts) if hash_salts is not None else [""]
+    if not salts:
+        salts = [""]
+    if embedder is not None and len(salts) > 1:
+        raise ValueError("An explicit embedder cannot be combined with multiple hash salts")
+
+    runs: list[dict[str, Any]] = []
+    for salt in salts:
+        run_embedder = embedder
+        if run_embedder is None:
+            run_embedder = build_shared_history_embedder(
+                embedder_name, embedder_model=embedder_model, hash_salt=salt
+            )
+        runs.append(
+            _run_shared_history_once(
+                dataset,
+                seed=seed,
+                n_bootstrap=n_bootstrap,
+                top_k=top_k,
+                config=config,
+                dataset_path=dataset_path,
+                read_only_retrieves=read_only_retrieves,
+                embedder=run_embedder,
+                embedder_name=embedder_name,
+                embedder_model=embedder_model,
+                hash_salts=[salt],
+            )
+        )
+    result = deepcopy(runs[0]) if len(runs) > 1 else runs[0]
+    result["protocol"]["hash_salts"] = list(salts)
+    result["protocol"]["embedder"]["hash_salts"] = list(salts)
+    result["manifest"]["embedder"]["hash_salts"] = list(salts)
+    if len(runs) > 1:
+        result["salt_runs"] = runs
+    return result
