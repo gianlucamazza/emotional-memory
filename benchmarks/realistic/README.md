@@ -133,10 +133,12 @@ python -m benchmarks.realistic.runner --shared-history --embedder hash --seed 7 
 
 The semantic exploratory protocol for this same 36-query / 12-scenario file is
 [`benchmarks/preregistration_addendum_ab_semantic_pilot.md`](../preregistration_addendum_ab_semantic_pilot.md)
-(ADR 0002, issue #193). It is unexecuted. Do not treat `--embedder sbert-mini`
-/ MiniLM as that protocol’s model; Addendum AB freezes `sbert-bge` /
-`BAAI/bge-small-en-v1.5` at a pinned Hub revision. Do not run it until that
-protocol is merged. It does not change these hash receipts.
+(Proposed ADR 0002, issue #193; protocol Status OPEN). It is unexecuted.
+Do not treat `--embedder sbert-mini` / MiniLM as that protocol’s model;
+Addendum AB records `sbert-bge` / `BAAI/bge-small-en-v1.5` and a looked-up Hub
+revision to re-verify at execution. Do not run it until that protocol is merged
+and a separate code PR pins `revision=` (Refs #193). It does not change these
+hash receipts. ADR acceptance is a separate owner decision.
 
 Scores from these commands are a mechanism test, not a semantic-quality result.
 They may be committed or published (including on the Hugging Face dataset card)

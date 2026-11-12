@@ -53,10 +53,13 @@ the reader-friendly ladder is
 | AA                   | Wrong-person memory retrieval stress test                      | Exploratory; no PASS/FAIL claim                                                                         | `preregistration_addendum_aa_false_memory.md`                                                             |
 | AB                   | Semantic shared-history exploratory pilot (ADR 0002 / #193)    | Unexecuted protocol; not confirmation                                                                   | `preregistration_addendum_ab_semantic_pilot.md`                                                           |
 
-Unexecuted pre-registrations on file: `preregistration_addendum_k_retry.md` (Hk1
-affective-trajectory retry at N≥120), `preregistration_addendum_v3.md`,
-`preregistration_addendum_ab_semantic_pilot.md` (semantic shared-history
-exploratory pilot; 36 queries / 12 scenarios preserved; no scores).
+Unexecuted pre-registrations on file:
+
+- `preregistration_addendum_k_retry.md` (Hk1 affective-trajectory retry at N≥120)
+- `preregistration_addendum_v3.md`
+- `preregistration_addendum_ab_semantic_pilot.md` (OPEN semantic shared-history
+  exploratory pilot; Proposed ADR 0002; 36 queries / 12 scenarios preserved; no
+  scores)
 
 ## Harness directories
 

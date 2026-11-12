@@ -1,8 +1,7 @@
 # ADR 0002: Semantic pilot before shared-history v2 sizing
 
-Status: Accepted for the exploratory-pilot protocol (Addendum AB,
-2026-11-12). Shared-history v2 sizing remains gated on an unrun semantic
-pilot. Documentation-only; no new run or result.
+Status: Proposed — 2026-10-28. Documentation-only decision; no new run or result.
+Exploratory-pilot protocol drafted in Addendum AB (2026-11-12); acceptance is a separate owner decision.
 
 ## Context
 
@@ -60,8 +59,9 @@ The exploratory pilot protocol is
 (issue [#193](https://github.com/gianlucamazza/emotional-memory/issues/193)).
 That protocol must be merged before any scored or smoke run. The MiniLM
 default on the configurable runner is not this pilot’s model; Addendum AB
-freezes `BAAI/bge-small-en-v1.5` at Hub revision
-`5c38ec7c405ec4b44b94cc5a9bb96e735b38267a`.
+records Hub id `BAAI/bge-small-en-v1.5` and a looked-up revision SHA
+(re-verify at execution; not an in-tree receipt). ADR acceptance remains a
+separate owner decision.
 
 ### Implementation audit and acceptance criteria
 

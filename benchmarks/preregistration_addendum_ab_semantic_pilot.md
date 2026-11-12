@@ -1,10 +1,12 @@
 # Addendum AB — Semantic shared-history exploratory pilot
 
-**Status:** OPEN — documentation-only pre-registration. This document does not
-authorize a scored run, a smoke run, or any change to published scores.
+**Status:** OPEN — documentation-only pre-registration. Parent ADR 0002 remains
+Proposed. This document does not authorize a scored run, a smoke run, or any
+change to published scores. Exploratory-pilot protocol drafted 2026-11-12;
+acceptance of ADR 0002 is a separate owner decision.
 **Date (pre-reg):** 2026-11-12
 **Parent decision:** [`docs/research/decisions/0002-semantic-pilot-before-shared-history-v2.md`](../docs/research/decisions/0002-semantic-pilot-before-shared-history-v2.md)
-(ADR 0002, merged via PR #192).
+(Proposed ADR 0002; document merged via PR #192).
 **Tracking issue:** [#193](https://github.com/gianlucamazza/emotional-memory/issues/193).
 **Runner:** PR #186 merged at `b209397816936e90dec6dbe435f145866ab03e84`.
 **Development set:** unchanged `shared_history_recall_v1` (36 queries, 12 scenarios).
@@ -47,8 +49,8 @@ default.
 | --- | --- |
 | Hugging Face id | `BAAI/bge-small-en-v1.5` |
 | Runner alias | `--embedder sbert-bge` |
-| Immutable revision | `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a` |
-| Revision source | Hugging Face Hub `sha` for this model id, `lastModified` 2024-02-22T03:36:23.000Z, looked up 2026-11-12. Not selected by pilot scores. |
+| Immutable revision | `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a` — looked up 2026-11-12, to be re-verified and recorded in the execution receipt |
+| Revision source | Hugging Face Hub `sha` for this model id, `lastModified` 2024-02-22T03:36:23.000Z — looked up 2026-11-12, to be re-verified and recorded in the execution receipt. Not selected by pilot scores. Not an in-tree receipt. |
 
 This choice follows ADR 0002 and the existing benchmark embedder factory
 (`SentenceTransformerEmbedder.make_bge_small`, runner alias `sbert-bge`). It is
@@ -60,9 +62,14 @@ choice for this pilot.
 A model **name** is not sufficient provenance. Execution must construct the
 sentence-transformers backend with this revision (or an equivalent verified
 snapshot digest of the loaded weights) and write the revision on the receipt.
-If the installed runner still calls `SentenceTransformer(model_name, device="cpu")`
-without `revision=`, that is a **pre-execution blocker**, not a licence to
-resolve `main` at download time.
+
+The current embedder (`src/emotional_memory/embedders/sentence_transformers.py`
+lines 55–57) passes no `revision=`: it constructs
+`SentenceTransformer(model_name)` or
+`SentenceTransformer(model_name, device=device)`. That is a **pre-execution
+blocker**, not a licence to resolve `main` at download time. Execution requires
+a **separate follow-up code PR** adding a revision pin on this constructor
+path (Refs #193). This documentation PR does not change that code.
 
 ### 1.2 Preprocessing and device
 
@@ -109,7 +116,7 @@ queries.
 | Path | `benchmarks/datasets/shared_history_recall_v1.json` |
 | Name / version | `shared_history_recall_v1` / `1.0` |
 | File SHA256 | `f748e37f4d7184e8979824873159738eedab661eb11c969bb7b1d42d0a617858` |
-| Parsed `dataset_sha256` | `6d13f55ed51c70e6cdc4bd91ad214d497cafb057fc2492d53f2b3725317ef949` (sort-keyed JSON of the loaded Pydantic dump; already recorded on the hash timeline receipt at `ce2e6579`) |
+| Parsed `dataset_sha256` | `6d13f55ed51c70e6cdc4bd91ad214d497cafb057fc2492d53f2b3725317ef949` (sort-keyed JSON of the loaded Pydantic dump; looked up 2026-11-12 from the hash timeline receipt at `ce2e6579`, which is not a semantic-pilot receipt; to be re-verified and recorded in the execution receipt) |
 | Scenarios / queries | 12 / 36 |
 | Protocol mode | `shared_history_timeline` (`interleave: true`, `event_order: dataset_timeline`) |
 | `default_top_k` | 2 |

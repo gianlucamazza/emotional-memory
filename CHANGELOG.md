@@ -58,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the current tag-only write-back and require exploratory within-scenario
   discordance reporting, non-estimable ICC handling, and cluster-aware
   sizing sensitivity. Reconciled 2026-11-12: runner PR #186 is merged;
-  Addendum AB is the exploratory protocol. No new results.
+  exploratory-pilot protocol drafted in Addendum AB. Acceptance is a
+  separate owner decision. No new results.
 
 - `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
   The app tracks the public demo, with `@spaces.GPU` on the embedding path;
