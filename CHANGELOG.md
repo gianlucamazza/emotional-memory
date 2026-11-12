@@ -44,12 +44,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hash default stays the stock TokenHashEmbedder. Semantic support is the
   existing optional extra.
 
+- Addendum AB: documentation-only pre-registration of the semantic
+  shared-history exploratory pilot (issue #193). Freezes model revision,
+  preprocessing, CPU, dataset digests, runner floor (PR #186, merged),
+  seeds, thresholds, top-k, receipt fields, D/Z definitions, ICC rules,
+  scenario-count limits, illustrative rho cases, and v2 planning/stop
+  rules. Preserves the 36-query / 12-scenario development set. No run,
+  scores, public-benefit claim, or confirmatory sample size.
+
 - Proposed ADR 0002: require a receipted semantic shared-history pilot before
   sizing v2, with dimension-compatibility checks and scenario-aware paired
   analysis. State that near-neutral gated equals cosine by mechanism under
   the current tag-only write-back and require exploratory within-scenario
   discordance reporting, non-estimable ICC handling, and cluster-aware
-  sizing sensitivity. Links runner draft PR #186; no new results.
+  sizing sensitivity. Reconciled 2026-11-12: runner PR #186 is merged;
+  exploratory-pilot protocol drafted in Addendum AB. Acceptance is a
+  separate owner decision. No new results.
 
 - `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
   The app tracks the public demo, with `@spaces.GPU` on the embedding path;

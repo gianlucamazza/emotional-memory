@@ -1,6 +1,7 @@
 # ADR 0002: Semantic pilot before shared-history v2 sizing
 
 Status: Proposed — 2026-10-28. Documentation-only decision; no new run or result.
+Exploratory-pilot protocol drafted in Addendum AB (2026-11-12); acceptance is a separate owner decision.
 
 ## Context
 
@@ -45,12 +46,22 @@ discordance, and only then size and preregister v2. Preserve the hash runner as 
 mechanism/regression control. Do not freeze N from hash-only discordance or treat
 the previously discussed 54/70 query counts as a powered semantic study.
 
-Use the existing draft [PR #186](https://github.com/gianlucamazza/emotional-memory/pull/186)
-for runner configuration rather than duplicate its implementation. As inspected
-on 2026-10-28, that PR is open and draft at `b50e57cb6506a4f5eb9613d43a7476b050da4667`;
-this ADR neither merges it nor attests that it satisfies every requirement below.
+Use the merged runner from [PR #186](https://github.com/gianlucamazza/emotional-memory/pull/186)
+(`b209397816936e90dec6dbe435f145866ab03e84`, 2026-11-12) rather than duplicate
+its implementation. As inspected on 2026-10-28 this ADR recorded that PR as
+open draft at `b50e57cb6506a4f5eb9613d43a7476b050da4667`; that snapshot is
+historical. Merge of #186 does not by itself attest that every acceptance
+criterion below is satisfied at execution time (in particular the immutable
+model `revision=` pin and receipt fields in Addendum AB §1–§2).
 
-Track the pre-run protocol and diagnostics in [issue #193](https://github.com/gianlucamazza/emotional-memory/issues/193).
+The exploratory pilot protocol is
+`benchmarks/preregistration_addendum_ab_semantic_pilot.md`
+(issue [#193](https://github.com/gianlucamazza/emotional-memory/issues/193)).
+That protocol must be merged before any scored or smoke run. The MiniLM
+default on the configurable runner is not this pilot’s model; Addendum AB
+records Hub id `BAAI/bge-small-en-v1.5` and a looked-up revision SHA
+(re-verify at execution; not an in-tree receipt). ADR acceptance remains a
+separate owner decision.
 
 ### Implementation audit and acceptance criteria
 

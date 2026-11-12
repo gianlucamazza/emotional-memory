@@ -111,6 +111,7 @@ nav:
     - Limitations: research/08_limitations.md
     - Current Evidence: research/09_current_evidence.md
     - External Human Study Decision: research/decisions/0001-external-human-retrieval.md
+    - Semantic Pilot Decision: research/decisions/0002-semantic-pilot-before-shared-history-v2.md
     - Scientific Quality Bar: research/10_scientific_quality_bar.md
     - Dominance Design (implemented v0.8.2): research/11_dominance_design.md
     - Multilingual Follow-up: research/12_multilingual_followup.md
