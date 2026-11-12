@@ -212,6 +212,8 @@ _SYNC_FIXTURE_FILES = (
     "demo/README.md",
     "demo/app.py",
     "demo/requirements.txt",
+    "demo/zerogpu/app.py",
+    "demo/zerogpu/requirements.txt",
     "paper/SUBMISSION.md",
     "paper/main.tex",
 )

@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Release workflow pins `pypa/gh-action-pypi-publish` to
+  `7245906fb61fa33a13554f9d5fb856fe61758086` (`v1.14.3`), the patched
+  release for GHSA-5xjx-3w67-w9x9 (v1.14.2 / `dc37677b` is affected).
+  The unprivileged build job checks out only the trusted event SHA
+  (`github.sha`) and no longer accepts a user-supplied checkout ref.
+  `workflow_dispatch` is a dry-run (`contents: read`, no secrets,
+  `persist-credentials: false`; reproduce with `gh workflow run --ref`).
+  Privileged publish (OIDC, attestations, GitHub release) runs only on
+  a maintainer-pushed `v*` tag and never checks out the tree — it
+  consumes the build artefacts, and `gh` steps set `GH_REPO` so they
+  do not infer the repository from git. Workflow-level permissions
+  stay empty.
+
+- Shared-history receipt workflow checks out the trusted event SHA
+  (`github.sha`) on every trigger and no longer accepts a user-supplied
+  `inputs.ref`. `pull_request` uses the merge commit rather than the PR
+  tip; `workflow_dispatch` uses the ref the run was dispatched against
+  (`gh workflow run --ref`). `persist-credentials` stays false; the job
+  remains `contents: read` with no secrets. A workflow-only PR still
+  exercises its own YAML because Actions runs and checks out that merge.
+
+- `docs/contributing/ssot-policy.md` now names the current version DOI
+  `10.5281/zenodo.22724258` (`release.toml` / `CITATION.cff`). The concept
+  DOI remains `10.5281/zenodo.19972258`.
+
 ### Added
 
 - Shared-history runner: optional CPU sentence-transformers embedder
@@ -16,6 +43,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `read_only_retrieves` plus embedder/salt receipt metadata. The unsalted
   hash default stays the stock TokenHashEmbedder. Semantic support is the
   existing optional extra.
+
+- Proposed ADR 0002: require a receipted semantic shared-history pilot before
+  sizing v2, with dimension-compatibility checks and scenario-aware paired
+  analysis. State that near-neutral gated equals cosine by mechanism under
+  the current tag-only write-back and require exploratory within-scenario
+  discordance reporting, non-estimable ICC handling, and cluster-aware
+  sizing sensitivity. Links runner draft PR #186; no new results.
+
+- `demo/zerogpu/` — source for a private ZeroGPU Space (not yet public).
+  The app tracks the public demo, with `@spaces.GPU` on the embedding path;
+  its Space overlay is the public demo's `requirements.txt` plus `spaces`
+  and a `transformers==5.20.2` build pin (latest 5.x on PyPI when the Space
+  was built, 2026-10-25). The Space is to be synced verbatim from a merge
+  SHA. Only MiniLM embedding calls run under `@spaces.GPU`; appraisal uses
+  an OpenAI-compatible LLM when `EMOTIONAL_MEMORY_LLM_API_KEY` is set,
+  otherwise the English keyword fallback (no in-process open-model
+  appraisal). The Space README frontmatter includes `pinned: false`,
+  `suggested_hardware: zero-a10g`, and the public dataset
+  `gianlucamazza/emotional-memory-benchmarks` (evidence dataset for the
+  benchmarks; the app does not load it).
 
 - Commit the publishable shared-history CI receipt (workflow push on `main` at
   `ce2e6579`) under `benchmarks/realistic/receipts/shared_history_recall_v1/ce2e6579/`.
@@ -27,9 +74,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shared-history CI receipt workflow (`.github/workflows/shared-history-receipts.yml`):
   offline hash-embedder runs of the four replay/timeline × write-back/read-only
   arms on `ubuntu-latest`, uploaded as the `shared-history-receipts` artifact.
-  `workflow_dispatch` plus path-filtered `push` to `main` produce publishable
-  receipts. A path-filtered `pull_request` trigger checks out the PR HEAD so a
-  workflow-only PR tests its own change; it is not a required check.
+  `workflow_dispatch` (`gh workflow run --ref`) plus path-filtered `push`
+  to `main` produce publishable receipts. A path-filtered `pull_request`
+  trigger checks out the merge SHA so a workflow-only PR tests its own
+  change; it is not a required check.
   Artifacts expire (retention is capped by repository settings), so a score PR commits the run's SHA256SUMS and receipt.json next to the scores.
   No scores or expected numbers are committed.
 
@@ -90,6 +138,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `DeprecationWarning`, which CI treats as a failure).
 
 ### Security
+
+- **Align `pypa/gh-action-pypi-publish` pin comment.** The SHA
+  `dc37677b2e1c63e2034f94d8a5b11f265b73ba33` in `.github/workflows/release.yml`
+  is annotated tag `v1.14.2`; the trailing comment is now `# v1.14.2` instead
+  of the `release/v1` branch name (zizmor `ref-version-mismatch`).
 
 - **Identify arXiv related identifiers by parsed hostname.**
   `scripts/sync_release_metadata.py` no longer treats `"arxiv.org"` as a

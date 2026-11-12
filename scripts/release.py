@@ -252,6 +252,8 @@ def phase3_commit_tag(state: dict[str, object], version: str) -> None:
         "demo/README.md",
         "demo/requirements.txt",
         "demo/app.py",
+        "demo/zerogpu/requirements.txt",
+        "demo/zerogpu/app.py",
     ]
     existing = [f for f in managed if (ROOT / f).exists()]
     _run(["git", "add", *existing])

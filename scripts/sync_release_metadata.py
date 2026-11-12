@@ -8,7 +8,8 @@ Legacy usage (resolves concept DOI from Zenodo API):
 
 Managed files:
     README.md, CITATION.cff, .zenodo.json, codemeta.json, demo/README.md,
-    demo/requirements.txt, demo/app.py, paper/main.tex, paper/SUBMISSION.md
+    demo/requirements.txt, demo/app.py, demo/zerogpu/requirements.txt,
+    demo/zerogpu/app.py, paper/main.tex, paper/SUBMISSION.md
 """
 
 from __future__ import annotations
@@ -231,22 +232,25 @@ def sync_release_metadata(
     if updated_demo != demo_text:
         changes.append((demo_readme, updated_demo))
 
-    demo_app = ROOT / "demo" / "app.py"
-    demo_app_text = demo_app.read_text(encoding="utf-8")
-    updated_demo_app = _replace(
-        r'(_ZENODO_CONCEPT_DOI\s*=\s*")[^"]*("  # \[ssot:concept_doi\])',
-        rf"\g<1>{concept_doi}\g<2>",
-        demo_app_text,
-        "demo app _ZENODO_CONCEPT_DOI constant",
-    )
-    updated_demo_app = _replace(
-        r'(_REPO_URL\s*=\s*")[^"]*("  # \[ssot:repo_url\])',
-        rf"\g<1>{repo_url}\g<2>",
-        updated_demo_app,
-        "demo app _REPO_URL constant",
-    )
-    if updated_demo_app != demo_app_text:
-        changes.append((demo_app, updated_demo_app))
+    for demo_app, label in (
+        (ROOT / "demo" / "app.py", "demo app"),
+        (ROOT / "demo" / "zerogpu" / "app.py", "demo zerogpu app"),
+    ):
+        demo_app_text = demo_app.read_text(encoding="utf-8")
+        updated_demo_app = _replace(
+            r'(_ZENODO_CONCEPT_DOI\s*=\s*")[^"]*("  # \[ssot:concept_doi\])',
+            rf"\g<1>{concept_doi}\g<2>",
+            demo_app_text,
+            f"{label} _ZENODO_CONCEPT_DOI constant",
+        )
+        updated_demo_app = _replace(
+            r'(_REPO_URL\s*=\s*")[^"]*("  # \[ssot:repo_url\])',
+            rf"\g<1>{repo_url}\g<2>",
+            updated_demo_app,
+            f"{label} _REPO_URL constant",
+        )
+        if updated_demo_app != demo_app_text:
+            changes.append((demo_app, updated_demo_app))
 
     paper_submission = ROOT / "paper" / "SUBMISSION.md"
     paper_text = paper_submission.read_text(encoding="utf-8")
@@ -277,16 +281,19 @@ def sync_release_metadata(
     if updated_paper != paper_text:
         changes.append((paper_submission, updated_paper))
 
-    demo_requirements = ROOT / "demo" / "requirements.txt"
-    demo_req_text = demo_requirements.read_text(encoding="utf-8")
-    updated_demo_req = _replace(
-        r"^emotional-memory==[0-9][\w.\-+]*$",
-        f"emotional-memory=={version}",
-        demo_req_text,
-        "demo requirements pin",
-    )
-    if updated_demo_req != demo_req_text:
-        changes.append((demo_requirements, updated_demo_req))
+    for demo_requirements, label in (
+        (ROOT / "demo" / "requirements.txt", "demo requirements pin"),
+        (ROOT / "demo" / "zerogpu" / "requirements.txt", "demo zerogpu requirements pin"),
+    ):
+        demo_req_text = demo_requirements.read_text(encoding="utf-8")
+        updated_demo_req = _replace(
+            r"^emotional-memory==[0-9][\w.\-+]*$",
+            f"emotional-memory=={version}",
+            demo_req_text,
+            label,
+        )
+        if updated_demo_req != demo_req_text:
+            changes.append((demo_requirements, updated_demo_req))
 
     paper_main = ROOT / "paper" / "main.tex"
     paper_main_text = paper_main.read_text(encoding="utf-8")

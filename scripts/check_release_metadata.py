@@ -74,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     demo_readme = (ROOT / "demo" / "README.md").read_text(encoding="utf-8")
     demo_app = (ROOT / "demo" / "app.py").read_text(encoding="utf-8")
+    demo_zerogpu_app = (ROOT / "demo" / "zerogpu" / "app.py").read_text(encoding="utf-8")
     paper_main = (ROOT / "paper" / "main.tex").read_text(encoding="utf-8")
     paper_submission = (ROOT / "paper" / "SUBMISSION.md").read_text(encoding="utf-8")
 
@@ -86,10 +87,11 @@ def main(argv: list[str] | None = None) -> int:
         errors.append("CITATION.cff doi does not match release.toml version_doi")
 
     # ── demo/requirements.txt ─────────────────────────────────────────────────
-    demo_requirements = _effective_lines(ROOT / "demo" / "requirements.txt")
     expected_pin = f"emotional-memory=={version}"
-    if not demo_requirements or demo_requirements[0] != expected_pin:
-        errors.append("demo/requirements.txt does not pin the current package version")
+    for rel in ("demo/requirements.txt", "demo/zerogpu/requirements.txt"):
+        demo_requirements = _effective_lines(ROOT / rel)
+        if not demo_requirements or demo_requirements[0] != expected_pin:
+            errors.append(f"{rel} does not pin the current package version")
 
     # ── CHANGELOG.md ──────────────────────────────────────────────────────────
     if "## [Unreleased]" not in changelog:
@@ -123,6 +125,12 @@ def main(argv: list[str] | None = None) -> int:
         errors.append("demo/app.py _ZENODO_CONCEPT_DOI does not match release.toml concept_doi")
     if repo_url not in demo_app:
         errors.append("demo/app.py _REPO_URL does not match release.toml repo_url")
+    if concept_doi not in demo_zerogpu_app:
+        errors.append(
+            "demo/zerogpu/app.py _ZENODO_CONCEPT_DOI does not match release.toml concept_doi"
+        )
+    if repo_url not in demo_zerogpu_app:
+        errors.append("demo/zerogpu/app.py _REPO_URL does not match release.toml repo_url")
 
     # ── paper/main.tex ────────────────────────────────────────────────────────
     if concept_doi not in paper_main:
